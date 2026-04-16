@@ -32,13 +32,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class CaseOfficerHomeOfficeResponseUploadedPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    Map<HearingCentre, String> hearingCentreEmailAddressMap;
-    @Mock
-    private FeatureToggler featureToggler;
-
     private final String templateId = "someTemplateId";
     private final String iaExUiFrontendUrl = "http://somefrontendurl";
     private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
@@ -46,7 +39,12 @@ public class CaseOfficerHomeOfficeResponseUploadedPersonalisationTest {
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    Map<HearingCentre, String> hearingCentreEmailAddressMap;
+    @Mock
+    private FeatureToggler featureToggler;
     private CaseOfficerHomeOfficeResponseUploadedPersonalisation caseOfficerHomeOfficeResponseUploadedPersonalisation;
 
     @BeforeEach
@@ -62,7 +60,7 @@ public class CaseOfficerHomeOfficeResponseUploadedPersonalisationTest {
             templateId,
             iaExUiFrontendUrl,
             hearingCentreEmailAddressMap,
-                featureToggler);
+            featureToggler);
     }
 
     @Test
@@ -80,14 +78,14 @@ public class CaseOfficerHomeOfficeResponseUploadedPersonalisationTest {
     @Test
     public void should_return_given_email_address_from_lookup_map_when_feature_flag_is_Off() {
         assertTrue(caseOfficerHomeOfficeResponseUploadedPersonalisation.getRecipientsList(asylumCase)
-                .isEmpty());
+            .isEmpty());
     }
 
     @Test
     public void should_return_given_email_address_from_lookup_map_when_feature_flag_is_On() {
         when(featureToggler.getValue("tcw-notifications-feature", true)).thenReturn(true);
         assertTrue(caseOfficerHomeOfficeResponseUploadedPersonalisation.getRecipientsList(asylumCase)
-                .contains(hearingCentreEmailAddress));
+            .contains(hearingCentreEmailAddress));
     }
 
     @Test
@@ -95,9 +93,8 @@ public class CaseOfficerHomeOfficeResponseUploadedPersonalisationTest {
         when(featureToggler.getValue("tcw-notifications-feature", true)).thenReturn(true);
         when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.empty());
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> caseOfficerHomeOfficeResponseUploadedPersonalisation.getRecipientsList(asylumCase))
-            ;
-assertEquals("hearingCentre is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> caseOfficerHomeOfficeResponseUploadedPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("hearingCentre is not present", exception.getMessage());
     }
 
     @Test
@@ -105,23 +102,21 @@ assertEquals("hearingCentre is not present", exception.getMessage());
         when(featureToggler.getValue("tcw-notifications-feature", true)).thenReturn(true);
         when(hearingCentreEmailAddressMap.get(hearingCentre)).thenReturn(null);
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> caseOfficerHomeOfficeResponseUploadedPersonalisation.getRecipientsList(asylumCase))
-            ;
-assertEquals("Hearing centre email address not found: " + hearingCentre.toString(), exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> caseOfficerHomeOfficeResponseUploadedPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("Hearing centre email address not found: " + hearingCentre, exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> caseOfficerHomeOfficeResponseUploadedPersonalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> caseOfficerHomeOfficeResponseUploadedPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         initializePrefixes(caseOfficerHomeOfficeResponseUploadedPersonalisation);
@@ -140,7 +135,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
 
         initializePrefixes(caseOfficerHomeOfficeResponseUploadedPersonalisation);

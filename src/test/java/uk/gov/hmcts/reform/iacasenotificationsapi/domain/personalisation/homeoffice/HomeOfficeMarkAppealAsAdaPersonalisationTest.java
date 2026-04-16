@@ -23,13 +23,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class HomeOfficeMarkAppealAsAdaPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    EmailAddressFinder emailAddressFinder;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-
     private final String homeOfficeTemplateId = "homeOfficeTemplateId";
     private final String iaExUiFrontendUrl = "http://localhost";
     private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
@@ -40,7 +33,12 @@ public class HomeOfficeMarkAppealAsAdaPersonalisationTest {
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "cust.services@example.com";
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    EmailAddressFinder emailAddressFinder;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
     private HomeOfficeMarkAppealAsAdaPersonalisation homeOfficeMarkAppealAsAdaPersonalisation;
 
     @BeforeEach

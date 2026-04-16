@@ -30,20 +30,18 @@ import static org.mockito.Mockito.when;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class LegalRepresentativeBailApplicationEditedDisposalPersonalisationEmailTest {
 
-    @Mock
-    BailCase bailCase;
-    @Mock
-    UserDetailsProvider userDetailsProvider;
-    @Mock
-    UserDetails userDetails;
-
     private final String templateId = "someTemplateId";
     private final String iaExUiFrontendUrl = "url";
     private final String legalRepEmailAddress = "legalRep@example.com";
     private final String legalRepReference = "someLegalRepReference";
     private final String legalRepName = "someLegalRepName";
     private final String legalRepFamilyName = "someLegalRepFamilyName";
-
+    @Mock
+    BailCase bailCase;
+    @Mock
+    UserDetailsProvider userDetailsProvider;
+    @Mock
+    UserDetails userDetails;
     private LegalRepresentativeBailApplicationEditedDisposalPersonalisationEmail legalRepresentativeBailApplicationEditedDisposalPersonalisationEmail;
 
     @BeforeEach
@@ -74,7 +72,7 @@ class LegalRepresentativeBailApplicationEditedDisposalPersonalisationEmailTest {
     public void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_BAIL_APPLICATION_EDITED_DISPOSAL_LEGAL_REPRESENTATIVE",
-                legalRepresentativeBailApplicationEditedDisposalPersonalisationEmail.getReferenceId(caseId));
+            legalRepresentativeBailApplicationEditedDisposalPersonalisationEmail.getReferenceId(caseId));
     }
 
     @Test
@@ -85,11 +83,10 @@ class LegalRepresentativeBailApplicationEditedDisposalPersonalisationEmailTest {
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
-        NullPointerException exception = 
-assertThrows(NullPointerException.class, 
-            () -> legalRepresentativeBailApplicationEditedDisposalPersonalisationEmail.getPersonalisation((BailCase) null))
-            ;
-assertEquals("bailCase must not be null", exception.getMessage());
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> legalRepresentativeBailApplicationEditedDisposalPersonalisationEmail.getPersonalisation((BailCase) null));
+        assertEquals("bailCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -97,7 +94,7 @@ assertEquals("bailCase must not be null", exception.getMessage());
         // given
         // when
         Map<String, String> personalisation =
-                legalRepresentativeBailApplicationEditedDisposalPersonalisationEmail.getPersonalisation(bailCase);
+            legalRepresentativeBailApplicationEditedDisposalPersonalisationEmail.getPersonalisation(bailCase);
 
         // then
         assertThat(personalisation)
@@ -119,7 +116,7 @@ assertEquals("bailCase must not be null", exception.getMessage());
 
         // when
         Map<String, String> personalisation =
-                legalRepresentativeBailApplicationEditedDisposalPersonalisationEmail.getPersonalisation(bailCase);
+            legalRepresentativeBailApplicationEditedDisposalPersonalisationEmail.getPersonalisation(bailCase);
 
         // then
         assertThat(personalisation)

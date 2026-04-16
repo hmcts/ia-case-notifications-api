@@ -99,11 +99,10 @@ class HomeOfficeDocumentsEditedPersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        NullPointerException exception = 
-assertThrows(NullPointerException.class, 
-            () -> homeOfficeBailDocumentEditedPersonalisation.getPersonalisation((Callback<BailCase>) null))
-            ;
-assertEquals("bailCase must not be null", exception.getMessage());
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> homeOfficeBailDocumentEditedPersonalisation.getPersonalisation((Callback<BailCase>) null));
+        assertEquals("bailCase must not be null", exception.getMessage());
     }
 
     @Test

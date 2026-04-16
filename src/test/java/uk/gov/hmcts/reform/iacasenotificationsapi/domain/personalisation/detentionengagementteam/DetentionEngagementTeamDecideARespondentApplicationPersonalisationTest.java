@@ -41,37 +41,32 @@ import uk.gov.service.notify.NotificationClientException;
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class DetentionEngagementTeamDecideARespondentApplicationPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    private CustomerServicesProvider customerServicesProvider;
-    @Mock
-    private DetentionEmailService detEmailService;
-    @Mock
-    DocumentDownloadClient documentDownloadClient;
-
+    final DocumentWithMetadata decideAnApplicationLetter = TestUtils.getDocumentWithMetadata(
+        "id", "respondent_application_decided", "some other desc", DocumentTag.INTERNAL_DECIDE_HOME_OFFICE_APPLICATION_LETTER);
+    final IdValue<DocumentWithMetadata> document = new IdValue<>("1", decideAnApplicationLetter);
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-
     private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
-
-    final DocumentWithMetadata decideAnApplicationLetter = TestUtils.getDocumentWithMetadata(
-            "id", "respondent_application_decided", "some other desc", DocumentTag.INTERNAL_DECIDE_HOME_OFFICE_APPLICATION_LETTER);
-    final IdValue<DocumentWithMetadata> document = new IdValue<>("1", decideAnApplicationLetter);
-
     private final String detentionEngagementTeamDecideAnApplicationApplicantTemplateId = "Some template id";
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    DocumentDownloadClient documentDownloadClient;
+    @Mock
+    private CustomerServicesProvider customerServicesProvider;
+    @Mock
+    private DetentionEmailService detEmailService;
     private DetentionEngagementTeamDecideARespondentApplicationPersonalisation detentionEngagementTeamDecideARespondentApplicationPersonalisation;
 
     @BeforeEach
     void setup() throws NotificationClientException, IOException {
         detentionEngagementTeamDecideARespondentApplicationPersonalisation = new DetentionEngagementTeamDecideARespondentApplicationPersonalisation(
-                detentionEngagementTeamDecideAnApplicationApplicantTemplateId,
-                customerServicesProvider,
-                detEmailService,
-                documentDownloadClient
+            detentionEngagementTeamDecideAnApplicationApplicantTemplateId,
+            customerServicesProvider,
+            detEmailService,
+            documentDownloadClient
         );
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
@@ -87,14 +82,14 @@ public class DetentionEngagementTeamDecideARespondentApplicationPersonalisationT
     @Test
     void should_return_given_template_id() {
         assertEquals(detentionEngagementTeamDecideAnApplicationApplicantTemplateId,
-                detentionEngagementTeamDecideARespondentApplicationPersonalisation.getTemplateId(asylumCase));
+            detentionEngagementTeamDecideARespondentApplicationPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
     void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_DECIDE_A_RESPONDENT_APPLICATION_DET",
-                detentionEngagementTeamDecideARespondentApplicationPersonalisation.getReferenceId(caseId));
+            detentionEngagementTeamDecideARespondentApplicationPersonalisation.getReferenceId(caseId));
     }
 
     @Test
@@ -105,7 +100,7 @@ public class DetentionEngagementTeamDecideARespondentApplicationPersonalisationT
         when(detEmailService.getDetentionEmailAddress(asylumCase)).thenReturn(detentionEngagementTeamEmail);
 
         assertTrue(
-                detentionEngagementTeamDecideARespondentApplicationPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
+            detentionEngagementTeamDecideARespondentApplicationPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
     }
 
     @Test
@@ -154,10 +149,9 @@ public class DetentionEngagementTeamDecideARespondentApplicationPersonalisationT
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class,
-                        () -> detentionEngagementTeamDecideARespondentApplicationPersonalisation.getPersonalisationForLink(asylumCase))
-                ;
-assertEquals("internalDecideHomeOfficeApplicationLetter document not available", exception.getMessage());
+            assertThrows(IllegalStateException.class,
+                () -> detentionEngagementTeamDecideARespondentApplicationPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("internalDecideHomeOfficeApplicationLetter document not available", exception.getMessage());
     }
 
 }

@@ -33,11 +33,16 @@ public class LegalRepresentativeBailDirectionSentPersonalisationTest {
     private final String applicantGivenNames = "someApplicantGivenNames";
     private final String applicantFamilyName = "someApplicantFamilyName";
     private final String sendDirectionDescription = "someDescriptionOfTheDirectionSent";
-    @Mock BailCase bailCase;
-    @Mock IdValue<BailDirection> oldestDirectionIdValue;
-    @Mock BailDirection oldestDirection;
-    @Mock IdValue<BailDirection> newestDirectionIdValue;
-    @Mock BailDirection newestDirection;
+    @Mock
+    BailCase bailCase;
+    @Mock
+    IdValue<BailDirection> oldestDirectionIdValue;
+    @Mock
+    BailDirection oldestDirection;
+    @Mock
+    IdValue<BailDirection> newestDirectionIdValue;
+    @Mock
+    BailDirection newestDirection;
 
     private LegalRepresentativeBailDirectionSentPersonalisation legalRepresentativeBailDirectionSentPersonalisation;
 
@@ -84,10 +89,9 @@ public class LegalRepresentativeBailDirectionSentPersonalisationTest {
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> legalRepresentativeBailDirectionSentPersonalisation.getPersonalisation((BailCase) null))
-            ;
-assertEquals("bailCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> legalRepresentativeBailDirectionSentPersonalisation.getPersonalisation((BailCase) null));
+        assertEquals("bailCase must not be null", exception.getMessage());
     }
 
     @Test

@@ -30,17 +30,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class RespondentUpdateTribunalDecisionRule31PersonalisationEmailTest {
-    @Mock
-    Callback<AsylumCase> callback;
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    private CaseDetails<AsylumCase> caseDetails;
-    @Mock
-    EmailAddressFinder emailAddressFinder;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-
     private final Long caseId = 12345L;
     private final String respondentUpdateTribunalDecisionRule31EmailTemplateId = "respondentUpdateTribunalDecisionRule31EmailTemplateId";
     private final String exUiFrontendUrl = "http://localhost";
@@ -50,6 +39,16 @@ class RespondentUpdateTribunalDecisionRule31PersonalisationEmailTest {
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "cust.services@example.com";
+    @Mock
+    Callback<AsylumCase> callback;
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    EmailAddressFinder emailAddressFinder;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    private CaseDetails<AsylumCase> caseDetails;
     private RespondentUpdateTribunalDecisionRule31PersonalisationEmail respondentUpdateTribunalDecisionRule31PersonalisationEmail;
 
     @BeforeEach
@@ -82,7 +81,7 @@ class RespondentUpdateTribunalDecisionRule31PersonalisationEmailTest {
     @Test
     void should_return_given_reference_id() {
         assertEquals(caseId + "_RESPONDENT_UPDATE_TRIBUNAL_DECISION_RULE_31_EMAIL",
-                respondentUpdateTribunalDecisionRule31PersonalisationEmail.getReferenceId(caseId));
+            respondentUpdateTribunalDecisionRule31PersonalisationEmail.getReferenceId(caseId));
     }
 
     @Test
@@ -99,18 +98,17 @@ class RespondentUpdateTribunalDecisionRule31PersonalisationEmailTest {
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> respondentUpdateTribunalDecisionRule31PersonalisationEmail.getPersonalisation((Callback<AsylumCase>) null))
-            ;
-assertEquals("callback must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> respondentUpdateTribunalDecisionRule31PersonalisationEmail.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     @Test
     void should_return_personalisation_first_check_when_all_information_given() {
 
         DynamicList dynamicList = new DynamicList(new Value("dismissed", "Yes, change decision to Dismissed"),
-                List.of(
-                        new Value("DISMISSED", "Yes, change decision to Dismissed"),
-                        new Value("ALLOWED", "No")));
+            List.of(
+                new Value("DISMISSED", "Yes, change decision to Dismissed"),
+                new Value("ALLOWED", "No")));
 
         when(asylumCase.read(TYPES_OF_UPDATE_TRIBUNAL_DECISION, DynamicList.class)).thenReturn(Optional.of(dynamicList));
         when(asylumCase.read(UPDATE_TRIBUNAL_DECISION_AND_REASONS_FINAL_CHECK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
@@ -134,9 +132,9 @@ assertEquals("callback must not be null", exception.getMessage());
     void should_return_personalisation_second_check_when_all_information_given() {
 
         DynamicList dynamicList = new DynamicList(new Value("dismissed", "No"),
-                List.of(
-                        new Value("ALLOWED", "Yes, change decision to Allowed"),
-                        new Value("DISMISSED", "No")));
+            List.of(
+                new Value("ALLOWED", "Yes, change decision to Allowed"),
+                new Value("DISMISSED", "No")));
 
         when(asylumCase.read(TYPES_OF_UPDATE_TRIBUNAL_DECISION, DynamicList.class)).thenReturn(Optional.of(dynamicList));
         when(asylumCase.read(UPDATE_TRIBUNAL_DECISION_AND_REASONS_FINAL_CHECK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
@@ -160,9 +158,9 @@ assertEquals("callback must not be null", exception.getMessage());
     void should_return_personalisation_both_checks_when_all_information_given() {
 
         DynamicList dynamicList = new DynamicList(new Value("dismissed", "Yes, change decision to Dismissed"),
-                List.of(
-                        new Value("DISMISSED", "Yes, change decision to Dismissed"),
-                        new Value("ALLOWED", "No")));
+            List.of(
+                new Value("DISMISSED", "Yes, change decision to Dismissed"),
+                new Value("ALLOWED", "No")));
 
         when(asylumCase.read(TYPES_OF_UPDATE_TRIBUNAL_DECISION, DynamicList.class)).thenReturn(Optional.of(dynamicList));
         when(asylumCase.read(UPDATE_TRIBUNAL_DECISION_AND_REASONS_FINAL_CHECK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));

@@ -71,13 +71,13 @@ class AppellantHomeOfficeUploadAddendumEvidencePersonalisationEmailTest {
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         appellantHomeOfficeUploadAddendumEvidencePersonalisationEmail =
-                new AppellantHomeOfficeUploadAddendumEvidencePersonalisationEmail(
-                        templateId,
-                        iaAipFrontendUrl,
-                        recipientsFinder,
-                        customerServicesProvider,
-                        featureToggler
-                );
+            new AppellantHomeOfficeUploadAddendumEvidencePersonalisationEmail(
+                templateId,
+                iaAipFrontendUrl,
+                recipientsFinder,
+                customerServicesProvider,
+                featureToggler
+            );
     }
 
     @Test
@@ -88,18 +88,17 @@ class AppellantHomeOfficeUploadAddendumEvidencePersonalisationEmailTest {
     @Test
     void should_throw_exception_on_recipients_when_case_is_null() {
         when(recipientsFinder.findAll(null, NotificationType.EMAIL))
-                .thenThrow(new NullPointerException("asylumCase must not be null"));
+            .thenThrow(new NullPointerException("asylumCase must not be null"));
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> appellantHomeOfficeUploadAddendumEvidencePersonalisationEmail.getRecipientsList(null))
-                ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> appellantHomeOfficeUploadAddendumEvidencePersonalisationEmail.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     void should_return_given_reference_id() {
         assertEquals(12345L + "_HOME_OFFICE_UPLOADED_ADDENDUM_EVIDENCE_AIP_APPELLANT_EMAIL",
-                appellantHomeOfficeUploadAddendumEvidencePersonalisationEmail.getReferenceId(12345L));
+            appellantHomeOfficeUploadAddendumEvidencePersonalisationEmail.getReferenceId(12345L));
     }
 
 
@@ -107,10 +106,9 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-                () -> appellantHomeOfficeUploadAddendumEvidencePersonalisationEmail.getPersonalisation((AsylumCase) null))
-                ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> appellantHomeOfficeUploadAddendumEvidencePersonalisationEmail.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -118,21 +116,21 @@ assertEquals("asylumCase must not be null", exception.getMessage());
         when(featureToggler.getValue("aip-upload-addendum-evidence-feature", false)).thenReturn(true);
         String appellantEmailAddress = "appellant@example.com";
         when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL))
-                .thenReturn(Collections.singleton(appellantEmailAddress));
+            .thenReturn(Collections.singleton(appellantEmailAddress));
 
         assertTrue(appellantHomeOfficeUploadAddendumEvidencePersonalisationEmail.getRecipientsList(asylumCase)
-                .contains(appellantEmailAddress));
+            .contains(appellantEmailAddress));
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         initializePrefixes(appellantHomeOfficeUploadAddendumEvidencePersonalisationEmail);
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
 
         Map<String, String> personalisation =
-                appellantHomeOfficeUploadAddendumEvidencePersonalisationEmail.getPersonalisation(asylumCase);
+            appellantHomeOfficeUploadAddendumEvidencePersonalisationEmail.getPersonalisation(asylumCase);
         assertThat(personalisation)
             .containsEntry("appealReferenceNumber", appealReferenceNumber)
             .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
@@ -140,14 +138,14 @@ assertEquals("asylumCase must not be null", exception.getMessage());
             .containsEntry("appellantGivenNames", appellantGivenNames)
             .containsEntry("appellantFamilyName", appellantFamilyName);
         String directLinkToNewEvidencePage = iaAipFrontendUrl + "home-office-evidence/addendum";
-            assertEquals(directLinkToNewEvidencePage, personalisation.get("Direct link to new evidence page"));
+        assertEquals(directLinkToNewEvidencePage, personalisation.get("Direct link to new evidence page"));
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
 
         initializePrefixes(appellantHomeOfficeUploadAddendumEvidencePersonalisationEmail);
@@ -159,7 +157,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
-                appellantHomeOfficeUploadAddendumEvidencePersonalisationEmail.getPersonalisation(asylumCase);
+            appellantHomeOfficeUploadAddendumEvidencePersonalisationEmail.getPersonalisation(asylumCase);
 
         assertThat(personalisation)
             .containsEntry("appealReferenceNumber", "")

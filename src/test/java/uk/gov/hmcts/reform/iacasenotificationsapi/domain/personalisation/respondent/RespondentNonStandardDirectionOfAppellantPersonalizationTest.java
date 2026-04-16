@@ -38,6 +38,21 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 @MockitoSettings(strictness = Strictness.LENIENT)
 class RespondentNonStandardDirectionOfAppellantPersonalizationTest {
 
+    private final String templateId = "templateId";
+    private final String iaExUiFrontendUrl = "http://localhost";
+    private final String apcHomeOfficeEmailAddress = "homeoffice-apc@example.com";
+    private final String lartHomeOfficeEmailAddress = "homeoffice-respondent@example.com";
+    private final String homeOfficeHearingCentreEmail = "hc-taylorhouse@example.com";
+    private final String homeOfficeEmail = "ho-taylorhouse@example.com";
+    private final String expectedDirectionDueDate = "27 Aug 2019";
+    private final String directionExplanation = "someExplanation";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String ariaListingReference = "someAriaListingReference";
+    private final String homeOfficeRefNumber = "homeOfficeReference";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -50,24 +65,6 @@ class RespondentNonStandardDirectionOfAppellantPersonalizationTest {
     DirectionFinder directionFinder;
     @Mock
     Direction direction;
-
-    private final String templateId = "templateId";
-    private final String iaExUiFrontendUrl = "http://localhost";
-    private final String apcHomeOfficeEmailAddress = "homeoffice-apc@example.com";
-    private final String lartHomeOfficeEmailAddress = "homeoffice-respondent@example.com";
-    private final String homeOfficeHearingCentreEmail = "hc-taylorhouse@example.com";
-    private final String homeOfficeEmail = "ho-taylorhouse@example.com";
-
-    private final String expectedDirectionDueDate = "27 Aug 2019";
-    private final String directionExplanation = "someExplanation";
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String ariaListingReference = "someAriaListingReference";
-    private final String homeOfficeRefNumber = "homeOfficeReference";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-    private final String customerServicesTelephone = "555 555 555";
-    private final String customerServicesEmail = "cust.services@example.com";
-
     private RespondentNonStandardDirectionOfAppellantPersonalization respondentNonStandardDirectionOfAppellantPersonalization;
 
     @BeforeEach
@@ -191,9 +188,8 @@ class RespondentNonStandardDirectionOfAppellantPersonalizationTest {
             .thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> respondentNonStandardDirectionOfAppellantPersonalization.getRecipientsList(asylumCase))
-            ;
-assertEquals(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL_FLAG_IS_NOT_PRESENT, exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> respondentNonStandardDirectionOfAppellantPersonalization.getRecipientsList(asylumCase));
+        assertEquals(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL_FLAG_IS_NOT_PRESENT, exception.getMessage());
     }
 
     @ParameterizedTest
@@ -218,13 +214,12 @@ assertEquals(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL_FLAG_IS_NOT_PRESENT, 
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> respondentNonStandardDirectionOfAppellantPersonalization.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> respondentNonStandardDirectionOfAppellantPersonalization.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
@@ -245,12 +240,12 @@ assertEquals("asylumCase must not be null", exception.getMessage());
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         Assertions.assertEquals(isAda.equals(YesOrNo.YES)
-                ? "Accelerated detained appeal"
-                : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
+            ? "Accelerated detained appeal"
+            : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
@@ -276,8 +271,8 @@ assertEquals("asylumCase must not be null", exception.getMessage());
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         Assertions.assertEquals(isAda.equals(YesOrNo.YES)
-                ? "Accelerated detained appeal"
-                : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
+            ? "Accelerated detained appeal"
+            : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
     @Test
@@ -285,8 +280,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
         when(directionFinder.findFirst(asylumCase, DirectionTag.NONE)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> respondentNonStandardDirectionOfAppellantPersonalization.getPersonalisation(asylumCase))
-            ;
-assertEquals("non-standard direction is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> respondentNonStandardDirectionOfAppellantPersonalization.getPersonalisation(asylumCase));
+        assertEquals("non-standard direction is not present", exception.getMessage());
     }
 }

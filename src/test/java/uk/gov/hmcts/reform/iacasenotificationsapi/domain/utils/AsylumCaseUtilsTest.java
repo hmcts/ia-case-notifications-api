@@ -91,18 +91,16 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AccessCodeGener
 @ExtendWith(MockitoExtension.class)
 public class AsylumCaseUtilsTest {
 
+    private static final String applyForCostsCreationDate = "2023-11-24";
+    private final MockedStatic<AccessCodeGenerator> generatorMockedStatic = mockStatic(AccessCodeGenerator.class);
+    private final String legalOfficerAddendumUploadedByLabel = "TCW";
+    private final String legalOfficerAddendumUploadSuppliedByLabel = "The respondent";
     @Mock(lenient = true)
     private AsylumCase asylumCase;
     @Spy
     private AsylumCase asylumCaseSpy;
     @Mock
     private Document document;
-    private final MockedStatic<AccessCodeGenerator> generatorMockedStatic = mockStatic(AccessCodeGenerator.class);
-
-
-    private final String legalOfficerAddendumUploadedByLabel = "TCW";
-    private final String legalOfficerAddendumUploadSuppliedByLabel = "The respondent";
-    private static final String applyForCostsCreationDate = "2023-11-24";
     private final IdValue<DocumentWithMetadata> addendumOne = new IdValue<>(
         "1",
         new DocumentWithMetadata(

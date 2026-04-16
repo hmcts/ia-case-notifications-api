@@ -27,19 +27,17 @@ import static org.mockito.Mockito.when;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class LegalRepresentativeBailApplicationStartedDisposalPersonalisationEmailTest {
 
+    private final String templateId = "someTemplateId";
+    private final String iaExUiFrontendUrl = "url";
+    private final String legalRepReference = "someLegalRepReference";
+    private final String legalRepName = "someLegalRepName";
+    private final String legalRepFamilyName = "someLegalRepFamilyName";
     @Mock
     BailCase bailCase;
     @Mock
     UserDetailsProvider userDetailsProvider;
     @Mock
     UserDetails userDetails;
-
-    private final String templateId = "someTemplateId";
-    private final String iaExUiFrontendUrl = "url";
-    private final String legalRepReference = "someLegalRepReference";
-    private final String legalRepName = "someLegalRepName";
-    private final String legalRepFamilyName = "someLegalRepFamilyName";
-
     private LegalRepresentativeBailApplicationStartedDisposalPersonalisationEmail legalRepresentativeBailApplicationStartedDisposalPersonalisationEmail;
 
     @BeforeEach
@@ -81,10 +79,9 @@ class LegalRepresentativeBailApplicationStartedDisposalPersonalisationEmailTest 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> legalRepresentativeBailApplicationStartedDisposalPersonalisationEmail.getPersonalisation((BailCase) null))
-            ;
-assertEquals("bailCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> legalRepresentativeBailApplicationStartedDisposalPersonalisationEmail.getPersonalisation((BailCase) null));
+        assertEquals("bailCase must not be null", exception.getMessage());
     }
 
     @Test

@@ -39,13 +39,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Journey
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppellantMarkAppealAsRemittedNonDetainedPersonalisationEmailTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-
-    private AppellantMarkAppealAsRemittedNonDetainedPersonalisationEmail
-        appellantMarkAppealAsRemittedNonDetainedPersonalisationEmail;
     private final String iaAipFrontendUrl = "https://aip-url";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String appellantGivenNames = "someAppellantGivenNames";
@@ -57,13 +50,17 @@ class AppellantMarkAppealAsRemittedNonDetainedPersonalisationEmailTest {
     private final String appellantEmail = "test@test.com";
     private final String securityCode = "securityCode";
     private final String ccdReferenceNumber = "0000 0000 0000 0001";
-
     private final SourceOfRemittal sourceOfRemittal = SourceOfRemittal.UPPER_TRIBUNAL;
     private final Map<String, String> customerServices = Map.of("customerServicesTelephone", iaServicesPhone,
         "customerServicesEmail", iaServicesEmail);
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
     @Mock
     PinInPostDetails pinInPostDetails;
+    private AppellantMarkAppealAsRemittedNonDetainedPersonalisationEmail
+        appellantMarkAppealAsRemittedNonDetainedPersonalisationEmail;
 
     @BeforeEach
     public void setUp() {
@@ -138,19 +135,17 @@ class AppellantMarkAppealAsRemittedNonDetainedPersonalisationEmailTest {
     public void should_throw_exception_when_callback_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> appellantMarkAppealAsRemittedNonDetainedPersonalisationEmail.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> appellantMarkAppealAsRemittedNonDetainedPersonalisationEmail.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_throw_error_if_remittal_source_missing() {
         when(asylumCase.read(SOURCE_OF_REMITTAL, SourceOfRemittal.class)).thenReturn(Optional.empty());
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> appellantMarkAppealAsRemittedNonDetainedPersonalisationEmail.getPersonalisation(asylumCase))
-                ;
-assertEquals("sourceOfRemittal is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> appellantMarkAppealAsRemittedNonDetainedPersonalisationEmail.getPersonalisation(asylumCase));
+        assertEquals("sourceOfRemittal is not present", exception.getMessage());
     }
 
 }

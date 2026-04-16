@@ -64,13 +64,13 @@ public class ApplicantBailStopLegalRepresentingPersonalisationSmsTest {
     public void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_BAIL_STOP_LEGAL_REPRESENTING_APPLICANT_SMS",
-                applicantBailStopLegalRepresentingPersonalisationSms.getReferenceId(caseId));
+            applicantBailStopLegalRepresentingPersonalisationSms.getReferenceId(caseId));
     }
 
     @Test
     public void should_return_given_mobile_number() {
         assertTrue(
-                applicantBailStopLegalRepresentingPersonalisationSms.getRecipientsList(bailCase).contains(mobileNumber));
+            applicantBailStopLegalRepresentingPersonalisationSms.getRecipientsList(bailCase).contains(mobileNumber));
 
         when(bailCase.read(APPLICANT_MOBILE_NUMBER_1, String.class)).thenReturn(Optional.empty());
 
@@ -81,17 +81,16 @@ public class ApplicantBailStopLegalRepresentingPersonalisationSmsTest {
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> applicantBailStopLegalRepresentingPersonalisationSms.getPersonalisation((BailCase) null))
-            ;
-assertEquals("bailCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> applicantBailStopLegalRepresentingPersonalisationSms.getPersonalisation((BailCase) null));
+        assertEquals("bailCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_return_personalisation_when_all_information_given() {
 
         Map<String, String> personalisation =
-                applicantBailStopLegalRepresentingPersonalisationSms.getPersonalisation(bailCase);
+            applicantBailStopLegalRepresentingPersonalisationSms.getPersonalisation(bailCase);
 
         String expectedApplicantDateOfBirth = "25 Jan 1999";
         assertThat(personalisation)
@@ -107,7 +106,7 @@ assertEquals("bailCase must not be null", exception.getMessage());
         when(bailCase.read(BAIL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
-                applicantBailStopLegalRepresentingPersonalisationSms.getPersonalisation(bailCase);
+            applicantBailStopLegalRepresentingPersonalisationSms.getPersonalisation(bailCase);
         assertThat(personalisation)
             .containsEntry("bailReferenceNumber", "");
     }

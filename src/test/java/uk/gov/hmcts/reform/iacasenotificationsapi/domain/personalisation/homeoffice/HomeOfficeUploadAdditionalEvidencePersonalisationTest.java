@@ -35,6 +35,11 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class HomeOfficeUploadAdditionalEvidencePersonalisationTest {
 
+    private final String beforeListingTemplateId = "beforeListingTemplateId";
+    private final String afterListingTemplateId = "afterListingTemplateId";
+    private final String iaExUiFrontendUrl = "http://localhost";
+    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    private final String homeOfficeEmailAddress = "homeOffice@example.com";
     @Mock
     Callback<AsylumCase> callback;
     @Mock
@@ -45,13 +50,6 @@ public class HomeOfficeUploadAdditionalEvidencePersonalisationTest {
     PersonalisationProvider personalisationProvider;
     @Mock
     CustomerServicesProvider customerServicesProvider;
-
-    private final String beforeListingTemplateId = "beforeListingTemplateId";
-    private final String afterListingTemplateId = "afterListingTemplateId";
-    private final String iaExUiFrontendUrl = "http://localhost";
-    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
-    private final String homeOfficeEmailAddress = "homeOffice@example.com";
-
     private HomeOfficeUploadAdditionalEvidencePersonalisation homeOfficeUploadAdditionalEvidencePersonalisation;
 
     @BeforeEach
@@ -92,7 +90,7 @@ public class HomeOfficeUploadAdditionalEvidencePersonalisationTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
@@ -115,11 +113,10 @@ public class HomeOfficeUploadAdditionalEvidencePersonalisationTest {
     @Test
     public void should_throw_exception_when_callback_is_null() {
 
-        NullPointerException exception = 
-assertThrows(NullPointerException.class, 
-            () -> homeOfficeUploadAdditionalEvidencePersonalisation.getPersonalisation((Callback<AsylumCase>) null))
-            ;
-assertEquals("callback must not be null", exception.getMessage());
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> homeOfficeUploadAdditionalEvidencePersonalisation.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     private Map<String, String> getPersonalisationForHomeOffice() {

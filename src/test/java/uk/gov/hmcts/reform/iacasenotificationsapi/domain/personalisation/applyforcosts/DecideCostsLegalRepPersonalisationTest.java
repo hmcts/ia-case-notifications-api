@@ -38,15 +38,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @MockitoSettings(strictness = Strictness.LENIENT)
 class DecideCostsLegalRepPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    EmailAddressFinder emailAddressFinder;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-    @Mock
-    PersonalisationProvider personalisationProvider;
-
     private final String decideCostsNotificationId = "decideCostsNotificationId";
     private final String homeOfficeEmailAddress = "homeOfficeEmailAddress@gmail.com";
     private final String legalRepEmailAddress = "legalRepEmailAddress@gmail.com";
@@ -56,7 +47,25 @@ class DecideCostsLegalRepPersonalisationTest {
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "cust.services@example.com";
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    EmailAddressFinder emailAddressFinder;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    PersonalisationProvider personalisationProvider;
     private DecideCostsLegalRepPersonalisation decideCostsLegalRepPersonalisation;
+
+    static Stream<Arguments> appliesForCostsProvider() {
+        String homeOffice = "Home office";
+        return Stream.of(
+            Arguments.of(List.of(new IdValue<>("1", new ApplyForCosts("Unreasonable costs", "Legal representative", homeOffice))),
+                new DynamicList(new Value("1", "Costs 1, Unreasonable costs, 24 Nov 2023"), List.of(new Value("1", "Costs 1, Unreasonable costs, 24 Nov 2023")))),
+            Arguments.of(List.of(new IdValue<>("2", new ApplyForCosts("Wasted costs", homeOffice, "Legal representative"))),
+                new DynamicList(new Value("2", "Costs 1, Wasted costs, 24 Nov 2023"), List.of(new Value("2", "Costs 1, Wasted costs, 24 Nov 2023"))))
+        );
+    }
 
     @BeforeEach
     void setup() {
@@ -133,15 +142,5 @@ class DecideCostsLegalRepPersonalisationTest {
             .containsEntry("costsDecisionType", "someCostsDecisionType")
             .containsEntry("ariaListingReference", expectedAriaReferenceNumber)
             .containsEntry("legalRepReferenceNumber", legalRepRefNumber);
-    }
-
-    static Stream<Arguments> appliesForCostsProvider() {
-        String homeOffice = "Home office";
-        return Stream.of(
-            Arguments.of(List.of(new IdValue<>("1", new ApplyForCosts("Unreasonable costs", "Legal representative", homeOffice))),
-                new DynamicList(new Value("1", "Costs 1, Unreasonable costs, 24 Nov 2023"), List.of(new Value("1", "Costs 1, Unreasonable costs, 24 Nov 2023")))),
-            Arguments.of(List.of(new IdValue<>("2", new ApplyForCosts("Wasted costs", homeOffice, "Legal representative"))),
-                new DynamicList(new Value("2", "Costs 1, Wasted costs, 24 Nov 2023"), List.of(new Value("2", "Costs 1, Wasted costs, 24 Nov 2023"))))
-        );
     }
 }

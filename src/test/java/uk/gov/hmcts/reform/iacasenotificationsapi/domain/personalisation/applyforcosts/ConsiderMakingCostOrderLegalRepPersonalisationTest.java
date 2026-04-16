@@ -25,14 +25,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class ConsiderMakingCostOrderLegalRepPersonalisationTest {
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    EmailAddressFinder emailAddressFinder;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-    @Mock
-    PersonalisationProvider personalisationProvider;
     private static final String applyForCostsCreationDate = "2023-11-24";
     private final String templateId = "testTemplateId";
     private final String legalRepEmailAddress = "legalRepEmailAddress@gmail.com";
@@ -43,6 +35,14 @@ class ConsiderMakingCostOrderLegalRepPersonalisationTest {
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "cust.services@example.com";
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    EmailAddressFinder emailAddressFinder;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    PersonalisationProvider personalisationProvider;
     private ConsiderMakingCostOrderLegalRepPersonalisation considerMakingCostOrderLegalRepPersonalisation;
 
     @BeforeEach
@@ -89,9 +89,8 @@ class ConsiderMakingCostOrderLegalRepPersonalisationTest {
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> considerMakingCostOrderLegalRepPersonalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> considerMakingCostOrderLegalRepPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -106,7 +105,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-            assertEquals(legalRepRefNumber, personalisation.get("legalRepReferenceNumber"));
+        assertEquals(legalRepRefNumber, personalisation.get("legalRepReferenceNumber"));
     }
 
 }

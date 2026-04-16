@@ -32,21 +32,18 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class CaseOfficerSubmitCasePersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    EmailAddressFinder emailAddressFinder;
-    @Mock
-    private FeatureToggler featureToggler;
-
-
     private final String templateId = "someTemplateId";
     private final String iaExUiFrontendUrl = "http://somefrontendurl";
     private final String hearingCentreEmailAddress = "hearingCentre@example.com";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    EmailAddressFinder emailAddressFinder;
+    @Mock
+    private FeatureToggler featureToggler;
     private CaseOfficerSubmitCasePersonalisation caseOfficerSubmitCasePersonalisation;
 
     @BeforeEach
@@ -61,7 +58,7 @@ public class CaseOfficerSubmitCasePersonalisationTest {
             templateId,
             iaExUiFrontendUrl,
             emailAddressFinder,
-                featureToggler);
+            featureToggler);
     }
 
     @Test
@@ -86,20 +83,19 @@ public class CaseOfficerSubmitCasePersonalisationTest {
     @Test
     public void should_return_given_email_address_from_lookup_map_when_feature_flag_is_Off() {
         assertTrue(
-                caseOfficerSubmitCasePersonalisation.getRecipientsList(asylumCase).isEmpty());
+            caseOfficerSubmitCasePersonalisation.getRecipientsList(asylumCase).isEmpty());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        NullPointerException exception = 
-assertThrows(NullPointerException.class, () -> caseOfficerSubmitCasePersonalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> caseOfficerSubmitCasePersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         initializePrefixes(caseOfficerSubmitCasePersonalisation);
@@ -118,7 +114,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
 
         initializePrefixes(caseOfficerSubmitCasePersonalisation);

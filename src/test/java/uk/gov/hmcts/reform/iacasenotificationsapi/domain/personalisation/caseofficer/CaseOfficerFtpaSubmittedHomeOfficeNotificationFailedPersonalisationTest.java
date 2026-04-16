@@ -30,6 +30,12 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @MockitoSettings(strictness = Strictness.LENIENT)
 class CaseOfficerFtpaSubmittedHomeOfficeNotificationFailedPersonalisationTest {
 
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String ariaListingReference = "ariaListingReference";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String iaExUiFrontendUrl = "frontend url";
+    private final String ftpaSubmittedHomeOfficeNotificationFailedTemplateId = "ftpaSubmittedHomeOfficeNotificationFailedTemplateId";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -38,15 +44,6 @@ class CaseOfficerFtpaSubmittedHomeOfficeNotificationFailedPersonalisationTest {
     EmailAddressFinder emailAddressFinder;
     @Mock
     private FeatureToggler featureToggler;
-
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String ariaListingReference = "ariaListingReference";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-
-    private final String iaExUiFrontendUrl = "frontend url";
-    private final String ftpaSubmittedHomeOfficeNotificationFailedTemplateId = "ftpaSubmittedHomeOfficeNotificationFailedTemplateId";
-
     private CaseOfficerFtpaSubmittedHomeOfficeNotificationFailedPersonalisation homeOfficeNotificationFailedPersonalisation;
 
     @BeforeEach
@@ -56,7 +53,7 @@ class CaseOfficerFtpaSubmittedHomeOfficeNotificationFailedPersonalisationTest {
             ftpaSubmittedHomeOfficeNotificationFailedTemplateId,
             personalisationProvider,
             emailAddressFinder,
-                featureToggler);
+            featureToggler);
     }
 
     @Test
@@ -77,18 +74,18 @@ class CaseOfficerFtpaSubmittedHomeOfficeNotificationFailedPersonalisationTest {
         String caseOfficerEmailAddress = "caseOfficer@example.com";
         when(emailAddressFinder.getListCaseHearingCentreEmailAddress(asylumCase)).thenReturn(caseOfficerEmailAddress);
         assertTrue(
-                homeOfficeNotificationFailedPersonalisation.getRecipientsList(asylumCase).contains(caseOfficerEmailAddress));
+            homeOfficeNotificationFailedPersonalisation.getRecipientsList(asylumCase).contains(caseOfficerEmailAddress));
     }
 
     @Test
     void should_return_given_email_address_from_lookup_map_when_feature_flag_is_Off() {
         assertTrue(
-                homeOfficeNotificationFailedPersonalisation.getRecipientsList(asylumCase).isEmpty());
+            homeOfficeNotificationFailedPersonalisation.getRecipientsList(asylumCase).isEmpty());
     }
 
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_of_all_information_given(YesOrNo isAda) {
         initializePrefixes(homeOfficeNotificationFailedPersonalisation);
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));

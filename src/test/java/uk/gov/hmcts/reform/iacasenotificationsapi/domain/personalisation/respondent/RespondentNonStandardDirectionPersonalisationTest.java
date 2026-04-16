@@ -29,6 +29,23 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 @MockitoSettings(strictness = Strictness.LENIENT)
 class RespondentNonStandardDirectionPersonalisationTest {
 
+    private final String beforeListingTemplateId = "beforeListingTemplateId";
+    private final String toAppellantAndRespondentBeforeListingTemplateId = "ToAppellantAndRespondentBeforeListingTemplateId";
+    private final String iaExUiFrontendUrl = "http://localhost";
+    private final String apcHomeOfficeEmailAddress = "homeoffice-apc@example.com";
+    private final String lartHomeOfficeEmailAddress = "homeoffice-respondent@example.com";
+    private final String homeOfficeHearingCentreEmail = "hc-taylorhouse@example.com";
+    private final String homeOfficeEmail = "ho-taylorhouse@example.com";
+    private final String homeOfficeFtpaEmailAddress = "ho-ftpa-taylorhouse@example.com";
+    private final String expectedDirectionDueDate = "27 Aug 2019";
+    private final String directionExplanation = "someExplanation";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String ariaListingReference = "someAriaListingReference";
+    private final String homeOfficeRefNumber = "homeOfficeReference";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -41,26 +58,6 @@ class RespondentNonStandardDirectionPersonalisationTest {
     DirectionFinder directionFinder;
     @Mock
     Direction direction;
-
-    private final String beforeListingTemplateId = "beforeListingTemplateId";
-    private final String toAppellantAndRespondentBeforeListingTemplateId = "ToAppellantAndRespondentBeforeListingTemplateId";
-    private final String iaExUiFrontendUrl = "http://localhost";
-    private final String apcHomeOfficeEmailAddress = "homeoffice-apc@example.com";
-    private final String lartHomeOfficeEmailAddress = "homeoffice-respondent@example.com";
-    private final String homeOfficeHearingCentreEmail = "hc-taylorhouse@example.com";
-    private final String homeOfficeEmail = "ho-taylorhouse@example.com";
-    private final String homeOfficeFtpaEmailAddress = "ho-ftpa-taylorhouse@example.com";
-
-    private final String expectedDirectionDueDate = "27 Aug 2019";
-    private final String directionExplanation = "someExplanation";
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String ariaListingReference = "someAriaListingReference";
-    private final String homeOfficeRefNumber = "homeOfficeReference";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-    private final String customerServicesTelephone = "555 555 555";
-    private final String customerServicesEmail = "cust.services@example.com";
-
     private RespondentNonStandardDirectionPersonalisation respondentNonStandardDirectionPersonalisation;
 
     @BeforeEach

@@ -55,7 +55,7 @@ public class CaseOfficerChangeHearingCentrePersonalisationTest {
         when(emailAddressFinder.getHearingCentreEmailAddress(asylumCase)).thenReturn(hearingCentreEmailAddress);
 
         caseOfficerChangeHearingCentrePersonalisation =
-            new CaseOfficerChangeHearingCentrePersonalisation(templateId, emailAddressFinder,listCaseCaseOfficerEmailAddress);
+            new CaseOfficerChangeHearingCentrePersonalisation(templateId, emailAddressFinder, listCaseCaseOfficerEmailAddress);
     }
 
     @Test
@@ -74,23 +74,22 @@ public class CaseOfficerChangeHearingCentrePersonalisationTest {
     public void should_return_given_email_address_from_asylum_case() {
         when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(HearingCentre.GLASGOW));
         assertTrue(caseOfficerChangeHearingCentrePersonalisation.getRecipientsList(asylumCase)
-                .contains(listCaseCaseOfficerEmailAddress));
+            .contains(listCaseCaseOfficerEmailAddress));
         when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(HearingCentre.TAYLOR_HOUSE));
         assertTrue(caseOfficerChangeHearingCentrePersonalisation.getRecipientsList(asylumCase)
-                .contains(hearingCentreEmailAddress));
+            .contains(hearingCentreEmailAddress));
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        NullPointerException exception = 
-assertThrows(NullPointerException.class, () -> caseOfficerChangeHearingCentrePersonalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> caseOfficerChangeHearingCentrePersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         initializePrefixes(caseOfficerChangeHearingCentrePersonalisation);
@@ -108,7 +107,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
 
         initializePrefixes(caseOfficerChangeHearingCentrePersonalisation);

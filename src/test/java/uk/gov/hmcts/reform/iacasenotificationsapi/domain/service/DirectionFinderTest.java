@@ -25,15 +25,15 @@ class DirectionFinderTest {
 
     private final DirectionFinder directionFinder = new DirectionFinder();
     @Mock
+    private final Direction existingDirection1 = mock(Direction.class);
+    @Mock
+    private final Direction existingDirection2 = mock(Direction.class);
+    @Mock
     private AsylumCase asylumCase;
     @Mock
     private IdValue<Direction> existingDirectionById1;
     @Mock
     private IdValue<Direction> existingDirectionById2;
-    @Mock
-    private final Direction existingDirection1 = mock(Direction.class);
-    @Mock
-    private final Direction existingDirection2 = mock(Direction.class);
 
     @Test
     void should_find_first_tagged_direction() {

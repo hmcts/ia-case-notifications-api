@@ -31,26 +31,22 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @ExtendWith(MockitoExtension.class)
 public class AdminOfficerFtpaDecisionRespondentPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    PersonalisationProvider personalisationProvider;
-
     private final String adminOfficeEmailAddress = "some-email@example.com";
     private final String upperTribunalPermissionApplicationsEmailAddress = "upperTribunalPermissionApplicationsEmailAddress";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String ariaListingReference = "ariaListingReference";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-
     private final String grantedTemplateId = "grantedTemplateId";
     private final String grantedWithoutListingTemplateId = "grantedithoutListingTemplateId";
     private final String partiallyGrantedTemplateId = "partiallyGrantedTemplateId";
     private final String partiallyGrantedWithoutListingTemplateId = "partiallyGrantedWithoutListingTemplateId";
-
     private final FtpaDecisionOutcomeType granted = FtpaDecisionOutcomeType.FTPA_GRANTED;
     private final FtpaDecisionOutcomeType partiallyGranted = FtpaDecisionOutcomeType.FTPA_PARTIALLY_GRANTED;
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    PersonalisationProvider personalisationProvider;
     private AdminOfficerFtpaDecisionRespondentPersonalisation adminOfficerFtpaDecisionRespondentPersonalisation;
 
     @BeforeEach
@@ -97,9 +93,8 @@ public class AdminOfficerFtpaDecisionRespondentPersonalisationTest {
         when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class))
             .thenReturn(Optional.empty());
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> adminOfficerFtpaDecisionRespondentPersonalisation.getTemplateId(asylumCase))
-            ;
-assertEquals("ftpaRespondentDecisionOutcomeType is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> adminOfficerFtpaDecisionRespondentPersonalisation.getTemplateId(asylumCase));
+        assertEquals("ftpaRespondentDecisionOutcomeType is not present", exception.getMessage());
     }
 
     @Test
@@ -137,7 +132,7 @@ assertEquals("ftpaRespondentDecisionOutcomeType is not present", exception.getMe
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_of_all_information_given(YesOrNo isAda) {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         when(personalisationProvider.getTribunalHeaderPersonalisation(asylumCase))

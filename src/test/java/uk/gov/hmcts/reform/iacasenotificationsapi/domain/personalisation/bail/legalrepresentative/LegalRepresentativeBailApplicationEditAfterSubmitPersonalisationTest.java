@@ -23,17 +23,15 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.le
 @MockitoSettings(strictness = Strictness.LENIENT)
 class LegalRepresentativeBailApplicationEditAfterSubmitPersonalisationTest {
 
-    @Mock
-    BailCase bailCase;
-
     private final String templateId = "someTemplateId";
     private final String legalRepEmailAddress = "legalRep@example.com";
-
     private final String bailReferenceNumber = "someReferenceNumber";
     private final String applicantGivenNames = "someApplicantGivenNames";
     private final String applicantFamilyName = "someApplicantFamilyName";
     private final String legalRepReference = "someLegalRepReference";
     private final String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
+    @Mock
+    BailCase bailCase;
     private LegalRepresentativeBailApplicationEditAfterSubmitPersonalisation legalRepresentativeBailApplicationEditAfterSubmitPersonalisation;
 
     @BeforeEach

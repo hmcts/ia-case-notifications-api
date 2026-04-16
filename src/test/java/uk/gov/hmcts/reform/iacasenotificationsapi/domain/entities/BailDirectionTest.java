@@ -39,8 +39,8 @@ public class BailDirectionTest {
     @Test
     public void should_not_allow_null_arguments() {
 
-        assertThrows(NullPointerException.class, 
-() -> new BailDirection(null, null, null, null, null, null, null));
+        assertThrows(NullPointerException.class,
+            () -> new BailDirection(null, null, null, null, null, null, null));
 
     }
 }

@@ -47,11 +47,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantFtpaApplicationDecisionPersonalisationSmsTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    RecipientsFinder recipientsFinder;
-
     private final String iaAipFrontendUrl = "frontendHyperlink";
     private final String referenceNumber = "someReferenceNumber";
     private final String respondentGrantedPartiallyGrantedEmailTemplateId = "respondentGrantedPartiallyGrantedEmailTemplateId";
@@ -66,8 +61,24 @@ public class AppellantFtpaApplicationDecisionPersonalisationSmsTest {
     private final LocalDate today = LocalDate.now();
     private final String expectedDueDateOoc = today.plusDays(oocDays).format(DateTimeFormatter.ofPattern("d MMM yyyy"));
     private final String expectedDueDateInCountry = today.plusDays(inCountryDays).format(DateTimeFormatter.ofPattern("d MMM yyyy"));
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    RecipientsFinder recipientsFinder;
     private AppellantFtpaApplicationDecisionPersonalisationSms appellantFtpaApplicationDecisionPersonalisationSms;
+
+    static Stream<Arguments> decisionScenarios() {
+        return Stream.of(
+            Arguments.of(Optional.of(FTPA_GRANTED), Optional.empty()),
+            Arguments.of(Optional.of(FTPA_PARTIALLY_GRANTED), Optional.empty()),
+            Arguments.of(Optional.of(FTPA_NOT_ADMITTED), Optional.empty()),
+            Arguments.of(Optional.of(FTPA_REFUSED), Optional.empty()),
+            Arguments.of(Optional.empty(), Optional.of(FTPA_GRANTED)),
+            Arguments.of(Optional.empty(), Optional.of(FTPA_PARTIALLY_GRANTED)),
+            Arguments.of(Optional.empty(), Optional.of(FTPA_NOT_ADMITTED)),
+            Arguments.of(Optional.empty(), Optional.of(FTPA_REFUSED))
+        );
+    }
 
     @BeforeEach
     public void setup() {
@@ -83,19 +94,6 @@ public class AppellantFtpaApplicationDecisionPersonalisationSmsTest {
             oocDays,
             inCountryDays,
             recipientsFinder);
-    }
-
-    static Stream<Arguments> decisionScenarios() {
-        return Stream.of(
-            Arguments.of(Optional.of(FTPA_GRANTED), Optional.empty()),
-            Arguments.of(Optional.of(FTPA_PARTIALLY_GRANTED), Optional.empty()),
-            Arguments.of(Optional.of(FTPA_NOT_ADMITTED), Optional.empty()),
-            Arguments.of(Optional.of(FTPA_REFUSED), Optional.empty()),
-            Arguments.of(Optional.empty(), Optional.of(FTPA_GRANTED)),
-            Arguments.of(Optional.empty(), Optional.of(FTPA_PARTIALLY_GRANTED)),
-            Arguments.of(Optional.empty(), Optional.of(FTPA_NOT_ADMITTED)),
-            Arguments.of(Optional.empty(), Optional.of(FTPA_REFUSED))
-        );
     }
 
     @ParameterizedTest
@@ -161,9 +159,8 @@ public class AppellantFtpaApplicationDecisionPersonalisationSmsTest {
     @Test
     public void should_throw_error_if_ftpa_applicant_type_missing() {
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> appellantFtpaApplicationDecisionPersonalisationSms.getTemplateId(asylumCase))
-            ;
-assertEquals("ftpaApplicantType is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> appellantFtpaApplicationDecisionPersonalisationSms.getTemplateId(asylumCase));
+        assertEquals("ftpaApplicantType is not present", exception.getMessage());
     }
 
     @Test
@@ -172,9 +169,8 @@ assertEquals("ftpaApplicantType is not present", exception.getMessage());
         Mockito.when(asylumCase.read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.empty());
         Mockito.when(asylumCase.read(FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.empty());
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> appellantFtpaApplicationDecisionPersonalisationSms.getTemplateId(asylumCase))
-            ;
-assertEquals("ftpaAppellantDecisionOutcomeType is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> appellantFtpaApplicationDecisionPersonalisationSms.getTemplateId(asylumCase));
+        assertEquals("ftpaAppellantDecisionOutcomeType is not present", exception.getMessage());
     }
 
     @Test
@@ -183,9 +179,8 @@ assertEquals("ftpaAppellantDecisionOutcomeType is not present", exception.getMes
         Mockito.when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.empty());
         Mockito.when(asylumCase.read(FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.empty());
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> appellantFtpaApplicationDecisionPersonalisationSms.getTemplateId(asylumCase))
-            ;
-assertEquals("ftpaRespondentDecisionOutcomeType is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> appellantFtpaApplicationDecisionPersonalisationSms.getTemplateId(asylumCase));
+        assertEquals("ftpaRespondentDecisionOutcomeType is not present", exception.getMessage());
     }
 
     @Test
@@ -221,9 +216,8 @@ assertEquals("ftpaRespondentDecisionOutcomeType is not present", exception.getMe
         when(recipientsFinder.findAll(null, NotificationType.SMS)).thenCallRealMethod();
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> appellantFtpaApplicationDecisionPersonalisationSms.getRecipientsList(null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> appellantFtpaApplicationDecisionPersonalisationSms.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -248,25 +242,25 @@ assertEquals("asylumCase must not be null", exception.getMessage());
                 if (ljDecision.map(decision -> decision.equals(FTPA_GRANTED)).orElse(false)
                     || rjDecision.map(decision -> decision.equals(FTPA_GRANTED)).orElse(false)) {
 
-                        assertEquals("granted", personalisation.get("applicationDecision"));
+                    assertEquals("granted", personalisation.get("applicationDecision"));
                 }
 
                 if (ljDecision.map(decision -> decision.equals(FTPA_PARTIALLY_GRANTED)).orElse(false)
                     || rjDecision.map(decision -> decision.equals(FTPA_PARTIALLY_GRANTED)).orElse(false)) {
 
-                        assertEquals("partially granted", personalisation.get("applicationDecision"));
+                    assertEquals("partially granted", personalisation.get("applicationDecision"));
                 }
 
                 if (ljDecision.map(decision -> decision.equals(FTPA_NOT_ADMITTED)).orElse(false)
                     || rjDecision.map(decision -> decision.equals(FTPA_NOT_ADMITTED)).orElse(false)) {
 
-                        assertEquals("not admitted", personalisation.get("applicationDecision"));
+                    assertEquals("not admitted", personalisation.get("applicationDecision"));
                 }
 
                 if (ljDecision.map(decision -> decision.equals(FTPA_REFUSED)).orElse(false)
                     || rjDecision.map(decision -> decision.equals(FTPA_REFUSED)).orElse(false)) {
 
-                        assertEquals("refused", personalisation.get("applicationDecision"));
+                    assertEquals("refused", personalisation.get("applicationDecision"));
                 }
             });
     }
@@ -286,7 +280,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_for_appellant_ftpa_decision(YesOrNo appellantInUk) {
         when(asylumCase.read(FTPA_APPLICANT_TYPE, ApplicantType.class)).thenReturn(Optional.of(ApplicantType.APPELLANT));
         when(asylumCase.read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.of(FTPA_REFUSED));
@@ -300,8 +294,8 @@ assertEquals("asylumCase must not be null", exception.getMessage());
             .containsEntry("appealReferenceNumber", referenceNumber)
             .containsEntry("linkToService", iaAipFrontendUrl);
         assertEquals(appellantInUk.equals(YES)
-            ? expectedDueDateInCountry
-            : expectedDueDateOoc,
+                ? expectedDueDateInCountry
+                : expectedDueDateOoc,
             personalisation.get("dueDate"));
     }
 }

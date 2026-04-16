@@ -40,6 +40,19 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 @MockitoSettings(strictness = Strictness.LENIENT)
 class CaseOfficerRemoveRepresentationPersonalisationTest {
 
+    private final Long ccdCaseId = 12345L;
+    private final String beforeListingTemplateId = "beforeListingTemplateId";
+    private final String afterListingTemplateId = "afterListingTemplateId";
+    private final String iaExUiFrontendUrl = "http://somefrontendurl";
+    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    private final String hearingCentreEmailAddress = "hearingCentre@example.com";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String ariaListingReference = "someAriaListingReference";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String securityCode = "securityCode";
+    private final String validDateFormatted = "31 Dec 2022";
+    private final String linkToPiPStartPage = "iaAipFrontendUrl/iaAipPathToSelfRepresentation";
     @Mock
     Callback<AsylumCase> callback;
     @Mock
@@ -52,22 +65,6 @@ class CaseOfficerRemoveRepresentationPersonalisationTest {
     EmailAddressFinder emailAddressFinder;
     @Mock
     PinInPostDetails pinInPostDetails;
-
-    private final Long ccdCaseId = 12345L;
-    private final String beforeListingTemplateId = "beforeListingTemplateId";
-    private final String afterListingTemplateId = "afterListingTemplateId";
-    private final String iaExUiFrontendUrl = "http://somefrontendurl";
-    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
-    private final String hearingCentreEmailAddress = "hearingCentre@example.com";
-
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String ariaListingReference = "someAriaListingReference";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-    private final String securityCode = "securityCode";
-    private final String validDateFormatted = "31 Dec 2022";
-    private final String linkToPiPStartPage = "iaAipFrontendUrl/iaAipPathToSelfRepresentation";
-
     private CaseOfficerRemoveRepresentationPersonalisation caseOfficerRemoveRepresentationPersonalisation;
 
     @BeforeEach
@@ -119,20 +116,19 @@ class CaseOfficerRemoveRepresentationPersonalisationTest {
     @Test
     void should_return_given_email_address_from_lookup_map() {
         assertTrue(
-                caseOfficerRemoveRepresentationPersonalisation.getRecipientsList(asylumCase).contains(hearingCentreEmailAddress));
+            caseOfficerRemoveRepresentationPersonalisation.getRecipientsList(asylumCase).contains(hearingCentreEmailAddress));
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        NullPointerException exception = 
-assertThrows(NullPointerException.class, () -> caseOfficerRemoveRepresentationPersonalisation.getPersonalisation((Callback<AsylumCase>) null))
-            ;
-assertEquals("callback must not be null", exception.getMessage());
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> caseOfficerRemoveRepresentationPersonalisation.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_information_given_and_case_listed(YesOrNo isAda) {
         initializePrefixes(caseOfficerRemoveRepresentationPersonalisation);
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
@@ -156,7 +152,7 @@ assertEquals("callback must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_information_given_and_case_not_listed(YesOrNo isAda) {
 
         initializePrefixes(caseOfficerRemoveRepresentationPersonalisation);
@@ -178,7 +174,7 @@ assertEquals("callback must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
 
         initializePrefixes(caseOfficerRemoveRepresentationPersonalisation);

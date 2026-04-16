@@ -33,9 +33,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesO
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class LegalRepresentativeForceCaseProgressionToCaseUnderReviewPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-
     private final String templateId = "someTemplateId";
     private final String legalRepEmailAddress = "legalrep@example.com";
     private final String appealReferenceNumber = "someReferenceNumber";
@@ -43,7 +40,8 @@ public class LegalRepresentativeForceCaseProgressionToCaseUnderReviewPersonalisa
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String linkToOnlineService = "https://immigration-appeal.demo.platform.hmcts.net/start-appeal";
-
+    @Mock
+    AsylumCase asylumCase;
     private LegalRepresentativeForceCaseProgressionToCaseUnderReviewPersonalisation
         forceCaseProgressionToCaseUnderReviewPersonalisation;
 
@@ -84,23 +82,21 @@ public class LegalRepresentativeForceCaseProgressionToCaseUnderReviewPersonalisa
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> forceCaseProgressionToCaseUnderReviewPersonalisation.getRecipientsList(asylumCase))
-            ;
-assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> forceCaseProgressionToCaseUnderReviewPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> forceCaseProgressionToCaseUnderReviewPersonalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> forceCaseProgressionToCaseUnderReviewPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
@@ -120,7 +116,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));

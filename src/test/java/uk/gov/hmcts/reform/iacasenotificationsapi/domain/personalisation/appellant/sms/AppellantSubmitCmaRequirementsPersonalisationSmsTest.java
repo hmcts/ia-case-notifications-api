@@ -29,18 +29,15 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvi
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantSubmitCmaRequirementsPersonalisationSmsTest {
 
+    private final String smsTemplateId = "someSmsTemplateId";
+    private final String iaAipFrontendUrl = "http://localhost";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
     @Mock
     AsylumCase asylumCase;
     @Mock
     RecipientsFinder recipientsFinder;
     @Mock
     SystemDateProvider systemDateProvider;
-
-    private final String smsTemplateId = "someSmsTemplateId";
-    private final String iaAipFrontendUrl = "http://localhost";
-
-    private final String mockedAppealReferenceNumber = "someReferenceNumber";
-
     private AppellantSubmitCmaRequirementsPersonalisationSms appellantCmaRequirementsSubmittedPersonalisationSms;
 
     @BeforeEach
@@ -78,9 +75,8 @@ public class AppellantSubmitCmaRequirementsPersonalisationSmsTest {
             .thenThrow(new NullPointerException("asylumCase must not be null"));
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> appellantCmaRequirementsSubmittedPersonalisationSms.getRecipientsList(null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> appellantCmaRequirementsSubmittedPersonalisationSms.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -98,10 +94,9 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> appellantCmaRequirementsSubmittedPersonalisationSms.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> appellantCmaRequirementsSubmittedPersonalisationSms.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test

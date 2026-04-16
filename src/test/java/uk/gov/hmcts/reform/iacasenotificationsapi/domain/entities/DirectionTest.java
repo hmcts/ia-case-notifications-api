@@ -21,27 +21,27 @@ class DirectionTest {
     private final String directionType = "someEventDirectionType";
 
     private final Direction direction = new Direction(
-            explanation,
-            parties,
-            dateDue,
-            dateSent,
-            tag,
-            previousDates,
-            Collections.emptyList(),
-            UUID.randomUUID().toString(),
-            "someDirectionType"
+        explanation,
+        parties,
+        dateDue,
+        dateSent,
+        tag,
+        previousDates,
+        Collections.emptyList(),
+        UUID.randomUUID().toString(),
+        "someDirectionType"
     );
 
     private final Direction directionWithQuestions = new Direction(
-            explanation,
-            parties,
-            dateDue,
-            dateSent,
-            tag,
-            previousDates,
-            clarifyingQuestions,
-            uniqueId,
-            directionType
+        explanation,
+        parties,
+        dateDue,
+        dateSent,
+        tag,
+        previousDates,
+        clarifyingQuestions,
+        uniqueId,
+        directionType
     );
 
     @Test

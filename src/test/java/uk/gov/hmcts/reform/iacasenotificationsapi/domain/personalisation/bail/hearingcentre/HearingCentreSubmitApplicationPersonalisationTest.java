@@ -39,8 +39,10 @@ public class HearingCentreSubmitApplicationPersonalisationTest {
     private final String legalRepReferenceNumber = "someLegalRepRefNumber";
     private final String applicantGivenNames = "someAppellantGivenNames";
     private final String applicantFamilyName = "someAppellantFamilyName";
-    @Mock BailCase bailCase;
-    @Mock private EmailAddressFinder emailAddressFinder;
+    @Mock
+    BailCase bailCase;
+    @Mock
+    private EmailAddressFinder emailAddressFinder;
     private HearingCentreSubmitApplicationPersonalisation hearingCentreSubmitApplicationPersonalisation;
 
     @BeforeEach
@@ -81,10 +83,9 @@ public class HearingCentreSubmitApplicationPersonalisationTest {
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> hearingCentreSubmitApplicationPersonalisation.getPersonalisation((BailCase) null))
-            ;
-assertEquals("bailCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> hearingCentreSubmitApplicationPersonalisation.getPersonalisation((BailCase) null));
+        assertEquals("bailCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -109,7 +110,7 @@ assertEquals("bailCase must not be null", exception.getMessage());
             hearingCentreSubmitApplicationPersonalisation.getPersonalisation(bailCase);
 
         assertEquals(templateIdWithoutLR, hearingCentreSubmitApplicationPersonalisation.getTemplateId(bailCase));
-            assertEquals(bailReferenceNumber, personalisation.get("bailReferenceNumber"));
+        assertEquals(bailReferenceNumber, personalisation.get("bailReferenceNumber"));
         assertNull(personalisation.get("legalRepReference"));
         assertThat(personalisation)
             .containsEntry("applicantGivenNames", applicantGivenNames)

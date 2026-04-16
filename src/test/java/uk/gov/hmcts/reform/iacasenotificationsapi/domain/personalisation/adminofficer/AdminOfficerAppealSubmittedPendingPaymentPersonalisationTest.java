@@ -21,18 +21,16 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AdminOfficerAppealSubmittedPendingPaymentPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
-
     private final String templateId = "someTemplateId";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String adminOfficerEmailAddress = "adminOfficer@example.com";
     private final String iaExUiFrontendUrl = "http://localhost";
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
     private AdminOfficerAppealSubmittedPendingPaymentPersonalisation
         adminOfficerAppealSubmittedPendingPaymentPersonalisation;
 
@@ -80,10 +78,9 @@ class AdminOfficerAppealSubmittedPendingPaymentPersonalisationTest {
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> adminOfficerAppealSubmittedPendingPaymentPersonalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> adminOfficerAppealSubmittedPendingPaymentPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test

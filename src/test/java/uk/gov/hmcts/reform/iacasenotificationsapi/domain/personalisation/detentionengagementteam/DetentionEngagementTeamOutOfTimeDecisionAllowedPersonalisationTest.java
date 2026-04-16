@@ -33,25 +33,22 @@ import uk.gov.service.notify.NotificationClientException;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class DetentionEngagementTeamOutOfTimeDecisionAllowedPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    DetentionEmailService detentionEmailService;
-    @Mock
-    DocumentDownloadClient documentDownloadClient;
-
+    final DocumentWithMetadata outOfTimeDecisionAllowedLetter = getDocumentWithMetadata(
+        "1", "internal-detained-out-of-time-decision-allowed-letter", "Internal detained out of time decision allowed letter", DocumentTag.INTERNAL_DETAINED_OUT_OF_TIME_DECISION_ALLOWED_LETTER);
+    final IdValue<DocumentWithMetadata> outOfTimeDecisionAllowedLetterId = new IdValue<>("1", outOfTimeDecisionAllowedLetter);
     private final String templateId = "someTemplateId";
     private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-
-    final DocumentWithMetadata outOfTimeDecisionAllowedLetter = getDocumentWithMetadata(
-            "1", "internal-detained-out-of-time-decision-allowed-letter", "Internal detained out of time decision allowed letter", DocumentTag.INTERNAL_DETAINED_OUT_OF_TIME_DECISION_ALLOWED_LETTER);
-    final IdValue<DocumentWithMetadata> outOfTimeDecisionAllowedLetterId = new IdValue<>("1", outOfTimeDecisionAllowedLetter);
     private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
-    
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    DetentionEmailService detentionEmailService;
+    @Mock
+    DocumentDownloadClient documentDownloadClient;
     private DetentionEngagementTeamOutOfTimeDecisionAllowedPersonalisation detentionEngagementTeamOutOfTimeDecisionAllowedPersonalisation;
 
     DetentionEngagementTeamOutOfTimeDecisionAllowedPersonalisationTest() {
@@ -60,12 +57,12 @@ class DetentionEngagementTeamOutOfTimeDecisionAllowedPersonalisationTest {
     @BeforeEach
     void setup() throws NotificationClientException, IOException {
         detentionEngagementTeamOutOfTimeDecisionAllowedPersonalisation = new DetentionEngagementTeamOutOfTimeDecisionAllowedPersonalisation(
-                templateId,
-                nonAdaPrefix,
-                detentionEmailService,
-                documentDownloadClient
+            templateId,
+            nonAdaPrefix,
+            detentionEmailService,
+            documentDownloadClient
         );
-        
+
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
@@ -78,7 +75,7 @@ class DetentionEngagementTeamOutOfTimeDecisionAllowedPersonalisationTest {
     void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_INTERNAL_DETAINED_OUT_OF_TIME_DECISION_ALLOWED_LETTER",
-                detentionEngagementTeamOutOfTimeDecisionAllowedPersonalisation.getReferenceId(caseId));
+            detentionEngagementTeamOutOfTimeDecisionAllowedPersonalisation.getReferenceId(caseId));
     }
 
     @Test
@@ -93,18 +90,17 @@ class DetentionEngagementTeamOutOfTimeDecisionAllowedPersonalisationTest {
         when(detentionEmailService.getDetentionEmailAddress(asylumCase)).thenReturn(detentionEngagementTeamEmail);
 
         assertTrue(
-                detentionEngagementTeamOutOfTimeDecisionAllowedPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
+            detentionEngagementTeamOutOfTimeDecisionAllowedPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
     }
 
     @Test
     public void should_throw_exception_when_no_detention_facility() {
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.empty());
         when(detentionEmailService.getDetentionEmailAddress(asylumCase)).thenThrow(new IllegalStateException("Detention facility is not present"));
-        
+
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> detentionEngagementTeamOutOfTimeDecisionAllowedPersonalisation.getRecipientsList(asylumCase))
-                ;
-assertEquals("Detention facility is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamOutOfTimeDecisionAllowedPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("Detention facility is not present", exception.getMessage());
     }
 
     @Test
@@ -141,35 +137,31 @@ assertEquals("Detention facility is not present", exception.getMessage());
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> detentionEngagementTeamOutOfTimeDecisionAllowedPersonalisation.getPersonalisationForLink((AsylumCase) null))
-                ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> detentionEngagementTeamOutOfTimeDecisionAllowedPersonalisation.getPersonalisationForLink((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_out_of_time_decision_allowed_document_is_empty() {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> detentionEngagementTeamOutOfTimeDecisionAllowedPersonalisation.getPersonalisationForLink(asylumCase))
-                ;
-assertEquals("internalDetainedOutOfTimeDecisionAllowedLetter document not available", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamOutOfTimeDecisionAllowedPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("internalDetainedOutOfTimeDecisionAllowedLetter document not available", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_notification_client_throws_Exception() throws NotificationClientException, IOException {
         when(documentDownloadClient.getJsonObjectFromDocument(outOfTimeDecisionAllowedLetter)).thenThrow(new NotificationClientException("File size is more than 2MB"));
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> detentionEngagementTeamOutOfTimeDecisionAllowedPersonalisation.getPersonalisationForLink(asylumCase))
-                ;
-assertEquals("Failed to get Internal 'Appeal can proceed' Letter in compatible format", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamOutOfTimeDecisionAllowedPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("Failed to get Internal 'Appeal can proceed' Letter in compatible format", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_io_exception_occurs() throws NotificationClientException, IOException {
         when(documentDownloadClient.getJsonObjectFromDocument(outOfTimeDecisionAllowedLetter)).thenThrow(new IOException("IO Exception occurred"));
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> detentionEngagementTeamOutOfTimeDecisionAllowedPersonalisation.getPersonalisationForLink(asylumCase))
-                ;
-assertEquals("Failed to get Internal 'Appeal can proceed' Letter in compatible format", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamOutOfTimeDecisionAllowedPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("Failed to get Internal 'Appeal can proceed' Letter in compatible format", exception.getMessage());
     }
 }

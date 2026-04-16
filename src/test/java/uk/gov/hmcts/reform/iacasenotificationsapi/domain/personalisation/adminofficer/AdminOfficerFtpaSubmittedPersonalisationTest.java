@@ -27,6 +27,9 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @ExtendWith(MockitoExtension.class)
 public class AdminOfficerFtpaSubmittedPersonalisationTest {
 
+    private final String templateId = "ftpaSubmittedTemplateId";
+    private final String iaExUiFrontendUrl = "http://localhost";
+    private final String adminOfficerEmailAddress = "adminOfficer@example.com";
     @Mock
     PersonalisationProvider personalisationProvider;
     @Mock
@@ -35,11 +38,6 @@ public class AdminOfficerFtpaSubmittedPersonalisationTest {
     CaseDetails<AsylumCase> caseDetails;
     @Mock
     AsylumCase asylumCase;
-
-    private final String templateId = "ftpaSubmittedTemplateId";
-    private final String iaExUiFrontendUrl = "http://localhost";
-    private final String adminOfficerEmailAddress = "adminOfficer@example.com";
-
     private AdminOfficerFtpaSubmittedPersonalisation adminOfficerFtpaSubmittedPersonalisation;
 
     @BeforeEach

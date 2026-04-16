@@ -34,6 +34,8 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class LegalRepresentativeAppealEditedDisposalPersonalisationTest {
+    private final String templateId = "someTemplateId";
+    private final String legalRepEmailAddress = "legalRep@example.com";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -42,11 +44,6 @@ public class LegalRepresentativeAppealEditedDisposalPersonalisationTest {
     UserDetailsProvider userDetailsProvider;
     @Mock
     UserDetails userDetails;
-
-    private final String templateId = "someTemplateId";
-
-    private final String legalRepEmailAddress = "legalRep@example.com";
-
     private LegalRepresentativeAppealEditedDisposalPersonalisation legalRepresentativeAppealEditedDisposalPersonalisation;
 
     @BeforeEach
@@ -95,10 +92,9 @@ public class LegalRepresentativeAppealEditedDisposalPersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> legalRepresentativeAppealEditedDisposalPersonalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> legalRepresentativeAppealEditedDisposalPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test

@@ -29,11 +29,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmailTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    RecipientsFinder recipientsFinder;
-
     private final String templateId = "someTemplateId";
     private final String appellantEmailAddress = "appellantp@example.com";
     private final String appealReferenceNumber = "someReferenceNumber";
@@ -41,7 +36,10 @@ class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmailTest {
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
     private final String iaExUiFrontendUrl = "https://immigration-appeal.demo.platform.hmcts.net/start-appeal";
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    RecipientsFinder recipientsFinder;
     private AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail
         forceCaseProgressionToCaseUnderReviewPersonalisation;
 

@@ -28,15 +28,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvi
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AiPAppellantRefundRequestedNotificationEmailTest {
 
-    @Mock
-    Callback<AsylumCase> callback;
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    private CaseDetails<AsylumCase> caseDetails;
-    @Mock
-    RecipientsFinder recipientsFinder;
-
     private final Long caseId = 12345L;
     private final String refundRequestedAipPaPayLaterEmailTemplateId = "refundRequestedAipPaPayLaterEmailTemplateId";
     private final String refundRequestedAipEmailTemplateId = "refundRequestedAipEmailTemplateId";
@@ -45,6 +36,14 @@ class AiPAppellantRefundRequestedNotificationEmailTest {
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final SystemDateProvider systemDateProvider = new SystemDateProvider();
+    @Mock
+    Callback<AsylumCase> callback;
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    RecipientsFinder recipientsFinder;
+    @Mock
+    private CaseDetails<AsylumCase> caseDetails;
     private AiPAppellantRefundRequestedNotificationEmail aipAppellantRefundRequestedNotificationEmail;
 
     @BeforeEach

@@ -25,13 +25,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvi
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppellantSendPaymentReminderPersonalisationEmailTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-    @Mock
-    SystemDateProvider systemDateProvider;
-    private AppellantSendPaymentReminderPersonalisationEmail appellantSendPaymentReminderPersonalisationEmail;
     private final int daysAfterNotification = 7;
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String appellantGivenNames = "someAppellantGivenNames";
@@ -44,6 +37,13 @@ class AppellantSendPaymentReminderPersonalisationEmailTest {
     private final String ccdReferenceNumber = "1111 2222 3333 4444";
     private final Map<String, String> customerServices = Map.of("customerServicesTelephone", customerServicesPhone,
         "customerServicesEmail", customerServicesEmail);
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    SystemDateProvider systemDateProvider;
+    private AppellantSendPaymentReminderPersonalisationEmail appellantSendPaymentReminderPersonalisationEmail;
 
     @BeforeEach
     public void setUp() {

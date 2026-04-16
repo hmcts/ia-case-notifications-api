@@ -43,7 +43,7 @@ public class DownStreamHealthIndicatorTest {
         when(healthCheckConfiguration.getServices()).thenReturn(null);
 
         NullPointerException exception = assertThrows(NullPointerException.class,
-() -> new DownStreamHealthIndicator(restTemplate, healthCheckConfiguration));
+            () -> new DownStreamHealthIndicator(restTemplate, healthCheckConfiguration));
         assertEquals("HealthCheckConfiguration cannot be null or empty", exception.getMessage());
     }
 

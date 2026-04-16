@@ -108,8 +108,8 @@ class PrisonEmailMappingServiceTest {
     void should_return_all_prison_emails() {
         Map<String, String> allEmails = prisonEmailMappingService.getAllPrisonEmails();
 
-        assertEquals( "addiewell@example.com", allEmails.get("Addiewell"));
-        assertEquals( "belmarsh@example.com", allEmails.get("Belmarsh"));
+        assertEquals("addiewell@example.com", allEmails.get("Addiewell"));
+        assertEquals("belmarsh@example.com", allEmails.get("Belmarsh"));
         assertEquals("askham-grange@example.com", allEmails.get("Askham Grange"));
         assertEquals(3, allEmails.size());
     }
@@ -141,12 +141,12 @@ class PrisonEmailMappingServiceTest {
     @Test
     void should_handle_malformed_json_structure() {
         String malformedJson = """
-                {
-                  "wrongKey": {
-                    "Addiewell": "addiewell@example.com"
-                  }
-                }
-                """;
+            {
+              "wrongKey": {
+                "Addiewell": "addiewell@example.com"
+              }
+            }
+            """;
 
         PrisonEmailMappingService malformedService = new PrisonEmailMappingService(malformedJson);
         malformedService.init();

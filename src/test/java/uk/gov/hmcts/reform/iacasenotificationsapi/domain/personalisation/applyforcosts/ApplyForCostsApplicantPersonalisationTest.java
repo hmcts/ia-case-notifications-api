@@ -32,16 +32,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class ApplyForCostsApplicantPersonalisationTest {
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    EmailAddressFinder emailAddressFinder;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-    @Mock
-    PersonalisationProvider personalisationProvider;
-
     private static final String applyForCostsCreationDate = "2023-11-24";
+    private static final String homeOffice = "Home office";
     private final String applyForCostsNotificationForApplicantTemplateId = "applyForCostsNotificationForRespondentTemplateId";
     private final String homeOfficeEmailAddress = "homeOfficeEmailAddress@gmail.com";
     private final String legalRepEmailAddress = "legalRepEmailAddress@gmail.com";
@@ -50,12 +42,27 @@ class ApplyForCostsApplicantPersonalisationTest {
     private final String legalRepRefNumber = "someLegalRepRefNumber";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-    private static final String homeOffice = "Home office";
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "cust.services@example.com";
     private final String homeOfficeReferenceNumber = "A1234567/001";
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    EmailAddressFinder emailAddressFinder;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    PersonalisationProvider personalisationProvider;
     private ApplyForCostsApplicantPersonalisation applyForCostsApplicantPersonalisation;
+
+    static Stream<Arguments> appliesForCostsProvider() {
+        String unreasonableCostsType = "Unreasonable costs";
+        String newestApplicationCreatedNumber = "1";
+        return Stream.of(
+            Arguments.of(List.of(new IdValue<>(newestApplicationCreatedNumber, new ApplyForCosts(unreasonableCostsType, "Legal representative", homeOffice, applyForCostsCreationDate)))),
+            Arguments.of(List.of(new IdValue<>(newestApplicationCreatedNumber, new ApplyForCosts("Wasted costs", homeOffice, "Legal representative", applyForCostsCreationDate))))
+        );
+    }
 
     @BeforeEach
     void setup() {
@@ -121,10 +128,9 @@ class ApplyForCostsApplicantPersonalisationTest {
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        NullPointerException exception = 
-assertThrows(NullPointerException.class, () -> applyForCostsApplicantPersonalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> applyForCostsApplicantPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -158,14 +164,5 @@ assertEquals("asylumCase must not be null", exception.getMessage());
                 .containsEntry("recipient", "Your")
                 .containsEntry("recipientReferenceNumber", legalRepRefNumber);
         }
-    }
-
-    static Stream<Arguments> appliesForCostsProvider() {
-        String unreasonableCostsType = "Unreasonable costs";
-        String newestApplicationCreatedNumber = "1";
-        return Stream.of(
-            Arguments.of(List.of(new IdValue<>(newestApplicationCreatedNumber, new ApplyForCosts(unreasonableCostsType, "Legal representative", homeOffice, applyForCostsCreationDate)))),
-            Arguments.of(List.of(new IdValue<>(newestApplicationCreatedNumber, new ApplyForCosts("Wasted costs", homeOffice, "Legal representative", applyForCostsCreationDate))))
-        );
     }
 }

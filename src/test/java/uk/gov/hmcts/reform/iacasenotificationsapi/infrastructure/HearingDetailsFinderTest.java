@@ -39,7 +39,13 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.model.r
 class HearingDetailsFinderTest {
 
     private static final String HEARING_CENTRE_ADDRESS = "hearingCentreAddress";
-
+    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    private final String hearingCentreEmailAddress = "hearingCentre@example.com";
+    private final String hearingCentreName = "some hearing centre name";
+    private final String hearingCentreAddress = "some hearing centre address";
+    private final String hearingDateTime = "2019-08-27T14:25:15.000";
+    private final String hearingDate = "2019-08-27";
+    private final String hearingTime = "14:25";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -48,13 +54,6 @@ class HearingDetailsFinderTest {
     StringProvider stringProvider;
     private HearingDetailsFinder hearingDetailsFinder;
     private CourtVenue hattonCross;
-    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
-    private final String hearingCentreEmailAddress = "hearingCentre@example.com";
-    private final String hearingCentreName = "some hearing centre name";
-    private final String hearingCentreAddress = "some hearing centre address";
-    private final String hearingDateTime = "2019-08-27T14:25:15.000";
-    private final String hearingDate = "2019-08-27";
-    private final String hearingTime = "14:25";
 
     @BeforeEach
     void setUp() {
@@ -66,28 +65,28 @@ class HearingDetailsFinderTest {
         when(stringProvider.get("hearingCentreName", hearingCentre.toString()))
             .thenReturn(Optional.of(hearingCentreName));
         when(bailCase.read(LISTING_LOCATION, BailHearingLocation.class))
-                .thenReturn(Optional.of(BailHearingLocation.GLASGOW_TRIBUNAL_CENTRE));
+            .thenReturn(Optional.of(BailHearingLocation.GLASGOW_TRIBUNAL_CENTRE));
         when(stringProvider.get(HEARING_CENTRE_ADDRESS, BailHearingLocation.GLASGOW_TRIBUNAL_CENTRE.getValue()))
-                .thenReturn(Optional.of(
-                        "IAC Glasgow, " +
-                                "1st Floor, " +
-                                "The Glasgow Tribunals Centre, " +
-                                "Atlantic Quay, " +
-                                "20 York Street, " +
-                                "Glasgow, " +
-                                "G2 8GT"
-                ));
+            .thenReturn(Optional.of(
+                "IAC Glasgow, " +
+                    "1st Floor, " +
+                    "The Glasgow Tribunals Centre, " +
+                    "Atlantic Quay, " +
+                    "20 York Street, " +
+                    "Glasgow, " +
+                    "G2 8GT"
+            ));
         when(bailCase.read(IS_BAILS_LOCATION_REFERENCE_DATA_ENABLED, YesOrNo.class))
-                .thenReturn(Optional.of(YesOrNo.NO));
+            .thenReturn(Optional.of(YesOrNo.NO));
 
         hattonCross = new CourtVenue("Hatton Cross Tribunal Hearing Centre",
-                "Hatton Cross Tribunal Hearing Centre",
-                "386417",
-                "Open",
-                "Y",
-                "Y",
-                "York House And Wellington House, 2-3 Dukes Green, Feltham, Middlesex",
-                "TW14 0LS");
+            "Hatton Cross Tribunal Hearing Centre",
+            "386417",
+            "Open",
+            "Y",
+            "Y",
+            "York House And Wellington House, 2-3 Dukes Green, Feltham, Middlesex",
+            "TW14 0LS");
 
         hearingDetailsFinder = new HearingDetailsFinder(stringProvider);
     }
@@ -157,9 +156,8 @@ class HearingDetailsFinderTest {
         when(stringProvider.get(HEARING_CENTRE_ADDRESS, hearingCentre.toString())).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> hearingDetailsFinder.getHearingCentreAddress(asylumCase))
-            ;
-assertEquals("hearingCentreAddress is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> hearingDetailsFinder.getHearingCentreAddress(asylumCase));
+        assertEquals("hearingCentreAddress is not present", exception.getMessage());
     }
 
     @Test
@@ -172,9 +170,8 @@ assertEquals("hearingCentreAddress is not present", exception.getMessage());
         when(stringProvider.get("hearingCentreName", hearingCentre.toString())).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> hearingDetailsFinder.getHearingCentreName(asylumCase))
-            ;
-assertEquals("listCaseHearingCentreName is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> hearingDetailsFinder.getHearingCentreName(asylumCase));
+        assertEquals("listCaseHearingCentreName is not present", exception.getMessage());
     }
 
     @Test
@@ -230,9 +227,8 @@ assertEquals("listCaseHearingCentreName is not present", exception.getMessage())
             .thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> hearingDetailsFinder.getOldHearingCentreName(asylumCase))
-            ;
-assertEquals("listCaseHearingCentre is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> hearingDetailsFinder.getOldHearingCentreName(asylumCase));
+        assertEquals("listCaseHearingCentre is not present", exception.getMessage());
     }
 
     @Test
@@ -247,9 +243,8 @@ assertEquals("listCaseHearingCentre is not present", exception.getMessage());
         when(bailCase.read(LISTING_LOCATION, BailHearingLocation.class)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> hearingDetailsFinder.getBailHearingCentreLocation(bailCase))
-            ;
-assertEquals("listingLocation is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> hearingDetailsFinder.getBailHearingCentreLocation(bailCase));
+        assertEquals("listingLocation is not present", exception.getMessage());
     }
 
     @Test
@@ -262,9 +257,8 @@ assertEquals("listingLocation is not present", exception.getMessage());
         when(asylumCase.read(LIST_CASE_HEARING_DATE, String.class)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> hearingDetailsFinder.getHearingDateTime(asylumCase))
-            ;
-assertEquals("listCaseHearingDate is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> hearingDetailsFinder.getHearingDateTime(asylumCase));
+        assertEquals("listCaseHearingDate is not present", exception.getMessage());
     }
 
     @Test
@@ -279,9 +273,8 @@ assertEquals("listCaseHearingDate is not present", exception.getMessage());
         when(bailCase.read(LISTING_HEARING_DATE, String.class)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> hearingDetailsFinder.getBailHearingDateTime(bailCase))
-            ;
-assertEquals("listHearingDate is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> hearingDetailsFinder.getBailHearingDateTime(bailCase));
+        assertEquals("listHearingDate is not present", exception.getMessage());
     }
 
     @Test
@@ -289,9 +282,8 @@ assertEquals("listHearingDate is not present", exception.getMessage());
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> hearingDetailsFinder.getHearingCentreAddress(asylumCase))
-            ;
-assertEquals("listCaseHearingCentre is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> hearingDetailsFinder.getHearingCentreAddress(asylumCase));
+        assertEquals("listCaseHearingCentre is not present", exception.getMessage());
     }
 
     @Test
@@ -300,9 +292,8 @@ assertEquals("listCaseHearingCentre is not present", exception.getMessage());
         when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> hearingDetailsFinder.getHearingCentreAddress(asylumCase))
-            ;
-assertEquals("hearingCentre is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> hearingDetailsFinder.getHearingCentreAddress(asylumCase));
+        assertEquals("hearingCentre is not present", exception.getMessage());
     }
 
     @Test
@@ -310,15 +301,14 @@ assertEquals("hearingCentre is not present", exception.getMessage());
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> hearingDetailsFinder.getHearingCentreLocation(asylumCase))
-                ;
-assertEquals("listCaseHearingCentre is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> hearingDetailsFinder.getHearingCentreLocation(asylumCase));
+        assertEquals("listCaseHearingCentre is not present", exception.getMessage());
     }
 
     @Test
     void should_return_remote_hearing_when_list_hearing_centre_is_remote() {
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class))
-                .thenReturn(Optional.of(HearingCentre.REMOTE_HEARING));
+            .thenReturn(Optional.of(HearingCentre.REMOTE_HEARING));
 
         assertEquals("Remote hearing", hearingDetailsFinder.getHearingCentreLocation(asylumCase));
     }
@@ -326,7 +316,7 @@ assertEquals("listCaseHearingCentre is not present", exception.getMessage());
     @Test
     void should_return_hearing_location_address_when_list_hearing_centre_is_not_remote() {
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class))
-                .thenReturn(Optional.of(hearingCentre));
+            .thenReturn(Optional.of(hearingCentre));
 
         assertEquals(hearingCentreAddress, hearingDetailsFinder.getHearingCentreLocation(asylumCase));
     }
@@ -336,36 +326,36 @@ assertEquals("listCaseHearingCentre is not present", exception.getMessage());
 
 
         assertEquals("Glasgow\nIAC Glasgow, " +
-                        "1st Floor, " +
-                        "The Glasgow Tribunals Centre, " +
-                        "Atlantic Quay, " +
-                        "20 York Street, " +
-                        "Glasgow, " +
-                        "G2 8GT",
-                hearingDetailsFinder.getListingLocationAddressFromRefDataOrCcd(bailCase));
+                "1st Floor, " +
+                "The Glasgow Tribunals Centre, " +
+                "Atlantic Quay, " +
+                "20 York Street, " +
+                "Glasgow, " +
+                "G2 8GT",
+            hearingDetailsFinder.getListingLocationAddressFromRefDataOrCcd(bailCase));
     }
 
     @Test
     void should_return_remote_address_with_enabled_ref_data_flag() {
         when(bailCase.read(IS_BAILS_LOCATION_REFERENCE_DATA_ENABLED, YesOrNo.class))
-                .thenReturn(Optional.of(YesOrNo.YES));
+            .thenReturn(Optional.of(YesOrNo.YES));
         when(bailCase.read(IS_REMOTE_HEARING, YesOrNo.class))
-                .thenReturn(Optional.of(YesOrNo.YES));
+            .thenReturn(Optional.of(YesOrNo.YES));
 
         assertEquals("Cloud Video Platform (CVP)",
-                hearingDetailsFinder.getListingLocationAddressFromRefDataOrCcd(bailCase));
+            hearingDetailsFinder.getListingLocationAddressFromRefDataOrCcd(bailCase));
     }
 
     @Test
     void should_return_listing_location_address_from_ref_data_with_enabled_ref_data_flag() {
         when(bailCase.read(IS_BAILS_LOCATION_REFERENCE_DATA_ENABLED, YesOrNo.class))
-                .thenReturn(Optional.of(YesOrNo.YES));
+            .thenReturn(Optional.of(YesOrNo.YES));
         when(bailCase.read(IS_REMOTE_HEARING, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
         when(bailCase.read(REF_DATA_LISTING_LOCATION_DETAIL, CourtVenue.class)).thenReturn(Optional.of(hattonCross));
 
         assertEquals("Hatton Cross Tribunal Hearing Centre, " +
-                        "York House And Wellington House, 2-3 Dukes Green, Feltham, Middlesex, " +
-                        "TW14 0LS",
-                hearingDetailsFinder.getListingLocationAddressFromRefDataOrCcd(bailCase));
+                "York House And Wellington House, 2-3 Dukes Green, Feltham, Middlesex, " +
+                "TW14 0LS",
+            hearingDetailsFinder.getListingLocationAddressFromRefDataOrCcd(bailCase));
     }
 }

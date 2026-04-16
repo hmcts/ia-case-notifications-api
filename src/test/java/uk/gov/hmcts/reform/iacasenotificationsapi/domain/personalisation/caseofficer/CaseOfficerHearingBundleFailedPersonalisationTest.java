@@ -38,6 +38,13 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class CaseOfficerHearingBundleFailedPersonalisationTest {
 
+    private final String templateId = "someTemplateId";
+    private final String iaExUiFrontendUrl = "http://somefrontendurl";
+    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    private final String hearingCentreEmailAddress = "hearingCentre@example.com";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -46,16 +53,6 @@ public class CaseOfficerHearingBundleFailedPersonalisationTest {
     EmailAddressFinder emailAddressFinder;
     @Mock
     CustomerServicesProvider customerServicesProvider;
-
-    private final String templateId = "someTemplateId";
-    private final String iaExUiFrontendUrl = "http://somefrontendurl";
-    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
-    private final String hearingCentreEmailAddress = "hearingCentre@example.com";
-
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-
     private CaseOfficerHearingBundleFailedPersonalisation caseOfficerHearingBundleFailedPersonalisation;
 
     @BeforeEach
@@ -99,20 +96,19 @@ public class CaseOfficerHearingBundleFailedPersonalisationTest {
     public void should_return_given_email_address_from_lookup_map() {
         when(emailAddressFinder.getListCaseHearingCentreEmailAddress(asylumCase)).thenReturn(hearingCentreEmailAddress);
         assertTrue(
-                caseOfficerHearingBundleFailedPersonalisation.getRecipientsList(asylumCase).contains(hearingCentreEmailAddress));
+            caseOfficerHearingBundleFailedPersonalisation.getRecipientsList(asylumCase).contains(hearingCentreEmailAddress));
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> caseOfficerHearingBundleFailedPersonalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> caseOfficerHearingBundleFailedPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         initializePrefixes(caseOfficerHearingBundleFailedPersonalisation);
@@ -132,7 +128,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
 
         initializePrefixes(caseOfficerHearingBundleFailedPersonalisation);
@@ -157,7 +153,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_override_method_is_called(YesOrNo isAda) {
 
         initializePrefixes(caseOfficerHearingBundleFailedPersonalisation);
@@ -173,7 +169,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-            assertEquals("hello", personalisation.get("appealReferenceNumber"));
+        assertEquals("hello", personalisation.get("appealReferenceNumber"));
     }
 
 }

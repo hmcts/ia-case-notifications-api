@@ -22,11 +22,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 class UpperTribunalDecisionRefusedImaPersonalisationTest {
 
-    @Mock
-    BailCase bailCase;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-
     private final String templateId = "someTemplateId";
     private final String upperTribunalEmailAddress = "upperTribunal@example.com";
     private final String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
@@ -37,7 +32,10 @@ class UpperTribunalDecisionRefusedImaPersonalisationTest {
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "cust.services@example.com";
     private final String decisionGranted = " Granted";
-
+    @Mock
+    BailCase bailCase;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
     private UpperTribunalDecisionRefusedImaPersonalisation upperTribunalDecisionRefusedImaPersonalisation;
 
     @BeforeEach

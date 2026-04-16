@@ -28,6 +28,26 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsF
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class HomeOfficeAdaReviewHearingRequirementsPersonalisationTest {
 
+    private final String templateId = "someTemplateId";
+    private final String iaExUiFrontendUrl = "http://somefrontendurl";
+    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    private final String homeOfficeEmailAddress = "homeoffice@example.com";
+    private final String hearingCentreAddress = "some hearing centre address";
+    //Remote hearing
+    private final HearingCentre remoteHearingCentre = HearingCentre.REMOTE_HEARING;
+    private final String hearingDate = "2019-08-27";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String ariaListingReference = "someAriaListingReference";
+    private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String caseOfficerReviewedVulnerabilities = "someCaseOfficerReviewedVulnerabilities";
+    private final String caseOfficerReviewedMultimedia = "someCaseOfficerReviewedMultimedia";
+    private final String caseOfficerReviewedSingleSexCourt = "someCaseOfficerReviewedSingleSexCourt";
+    private final String caseOfficerReviewedInCamera = "someCaseOfficerReviewedInCamera";
+    private final String caseOfficerReviewedOther = "someCaseOfficerReviewedOther";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -40,32 +60,6 @@ public class HomeOfficeAdaReviewHearingRequirementsPersonalisationTest {
     CustomerServicesProvider customerServicesProvider;
     @Mock
     HearingDetailsFinder hearingDetailsFinder;
-
-    private final String templateId = "someTemplateId";
-    private final String iaExUiFrontendUrl = "http://somefrontendurl";
-    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
-    private final String homeOfficeEmailAddress = "homeoffice@example.com";
-    private final String hearingCentreAddress = "some hearing centre address";
-    //Remote hearing
-    private final HearingCentre remoteHearingCentre = HearingCentre.REMOTE_HEARING;
-
-    private final String hearingDate = "2019-08-27";
-
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String ariaListingReference = "someAriaListingReference";
-    private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-
-    private final String caseOfficerReviewedVulnerabilities = "someCaseOfficerReviewedVulnerabilities";
-    private final String caseOfficerReviewedMultimedia = "someCaseOfficerReviewedMultimedia";
-    private final String caseOfficerReviewedSingleSexCourt = "someCaseOfficerReviewedSingleSexCourt";
-    private final String caseOfficerReviewedInCamera = "someCaseOfficerReviewedInCamera";
-    private final String caseOfficerReviewedOther = "someCaseOfficerReviewedOther";
-
-    private final String customerServicesTelephone = "555 555 555";
-    private final String customerServicesEmail = "cust.services@example.com";
-
     private HomeOfficeAdaReviewHearingRequirementsPersonalisation homeOfficeAdaReviewHearingRequirementsPersonalisation;
 
     @BeforeEach
@@ -143,7 +137,7 @@ public class HomeOfficeAdaReviewHearingRequirementsPersonalisationTest {
 
         Map<String, String> personalisation = homeOfficeAdaReviewHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
 
-            assertEquals(remoteHearingCentreAddress, personalisation.get("hearingCentreAddress"));
+        assertEquals(remoteHearingCentreAddress, personalisation.get("hearingCentreAddress"));
     }
 
     @Test

@@ -41,15 +41,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 @MockitoSettings(strictness = Strictness.LENIENT)
 class HomeOfficeRemoveRepresentationPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    AppealService appealService;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-    @Mock
-    EmailAddressFinder emailAddressFinder;
-
     private final String beforeListingTemplateId = "beforeListingTemplateId";
     private final String afterListingTemplateId = "afterListingTemplateId";
     private final String iaExUiFrontendUrl = "http://somefrontendurl";
@@ -64,7 +55,6 @@ class HomeOfficeRemoveRepresentationPersonalisationTest {
     private final String legalRepName = "legalRepName";
     private final String legalRepCompanyAddress = "legalRepCompanyAddress";
     private final String legalRepEmailAddress = "legalRepEmailAddress";
-
     private final String addressLine1 = "A";
     private final String addressLine2 = "B";
     private final String addressLine3 = "C";
@@ -72,7 +62,6 @@ class HomeOfficeRemoveRepresentationPersonalisationTest {
     private final String county = "E";
     private final String postCode = "F";
     private final String country = "G";
-
     private final AddressUk addressUk = new AddressUk(
         addressLine1,
         addressLine2,
@@ -82,7 +71,14 @@ class HomeOfficeRemoveRepresentationPersonalisationTest {
         postCode,
         country
     );
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    AppealService appealService;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    EmailAddressFinder emailAddressFinder;
     private HomeOfficeRemoveRepresentationPersonalisation
         homeOfficeRemoveRepresentationPersonalisation;
 
@@ -219,7 +215,7 @@ class HomeOfficeRemoveRepresentationPersonalisationTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_information_given_case_listed(YesOrNo isAda) {
         when(appealService.isAppealListed(asylumCase)).thenReturn(true);
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
@@ -241,7 +237,7 @@ class HomeOfficeRemoveRepresentationPersonalisationTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_information_given_and_case_not_listed(YesOrNo isAda) {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         initializePrefixes(homeOfficeRemoveRepresentationPersonalisation);

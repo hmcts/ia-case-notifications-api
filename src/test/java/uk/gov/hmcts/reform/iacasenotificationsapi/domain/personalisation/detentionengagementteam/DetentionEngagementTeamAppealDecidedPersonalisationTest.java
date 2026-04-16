@@ -36,23 +36,22 @@ import uk.gov.service.notify.NotificationClientException;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class DetentionEngagementTeamAppealDecidedPersonalisationTest {
 
+    final DocumentWithMetadata appealDecidedDoc = TestUtils.getDocumentWithMetadata(
+        "id", "appeal_decided", "some other desc", DocumentTag.INTERNAL_DET_DECISION_AND_REASONS_LETTER);
+    final IdValue<DocumentWithMetadata> appealDecided = new IdValue<>("1", appealDecidedDoc);
+    private final JSONObject jsonObject = new JSONObject("{\"title\": \"Test JsonDocument\"}");
+    private final AppealDecision appealDismissed = AppealDecision.DISMISSED;
+    private final AppealDecision appealAllowed = AppealDecision.ALLOWED;
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
     @Mock
     AsylumCase asylumCase;
     @Mock
     private DocumentDownloadClient documentDownloadClient;
     @Mock
     private DetentionEmailService detEmailService;
-    private final JSONObject jsonObject = new JSONObject("{\"title\": \"Test JsonDocument\"}");
-    private final AppealDecision appealDismissed = AppealDecision.DISMISSED;
-    private final AppealDecision appealAllowed = AppealDecision.ALLOWED;
-
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-    final DocumentWithMetadata appealDecidedDoc = TestUtils.getDocumentWithMetadata(
-        "id", "appeal_decided", "some other desc", DocumentTag.INTERNAL_DET_DECISION_AND_REASONS_LETTER);
-    final IdValue<DocumentWithMetadata> appealDecided = new IdValue<>("1", appealDecidedDoc);
     private DetentionEngagementTeamAppealDecidedPersonalisation detentionEngagementTeamAppealDecidedPersonalisation;
 
     public DetentionEngagementTeamAppealDecidedPersonalisationTest() {

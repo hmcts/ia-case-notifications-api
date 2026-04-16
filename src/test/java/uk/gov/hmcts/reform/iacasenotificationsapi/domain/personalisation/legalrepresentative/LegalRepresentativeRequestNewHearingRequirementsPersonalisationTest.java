@@ -35,11 +35,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 class LegalRepresentativeRequestNewHearingRequirementsPersonalisationTest {
 
-    @Mock AsylumCase asylumCase;
-    @Mock DirectionFinder directionFinder;
-    @Mock Direction direction;
-    @Mock CustomerServicesProvider customerServicesProvider;
-
     private final String templateId = "someTemplateId";
     private final String legalRepEmailAddress = "legalrep@example.com";
     private final String appealReferenceNumber = "someReferenceNumber";
@@ -47,7 +42,14 @@ class LegalRepresentativeRequestNewHearingRequirementsPersonalisationTest {
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String iaExUiFrontendUrl = "http://localhost";
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    DirectionFinder directionFinder;
+    @Mock
+    Direction direction;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
     private LegalRepresentativeRequestNewHearingRequirementsPersonalisation legalRepresentativeRequestNewHearingRequirementsPersonalisation;
 
     @BeforeEach
@@ -91,13 +93,12 @@ class LegalRepresentativeRequestNewHearingRequirementsPersonalisationTest {
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> legalRepresentativeRequestNewHearingRequirementsPersonalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> legalRepresentativeRequestNewHearingRequirementsPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
@@ -126,8 +127,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
         when(directionFinder.findFirst(asylumCase, DirectionTag.REQUEST_NEW_HEARING_REQUIREMENTS)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> legalRepresentativeRequestNewHearingRequirementsPersonalisation.getPersonalisation(asylumCase))
-            ;
-assertEquals("case officer request hearing requirements direction is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> legalRepresentativeRequestNewHearingRequirementsPersonalisation.getPersonalisation(asylumCase));
+        assertEquals("case officer request hearing requirements direction is not present", exception.getMessage());
     }
 }

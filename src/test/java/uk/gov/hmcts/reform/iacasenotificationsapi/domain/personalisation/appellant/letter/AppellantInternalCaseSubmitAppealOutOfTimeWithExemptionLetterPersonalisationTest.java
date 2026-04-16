@@ -28,17 +28,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvi
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantInternalCaseSubmitAppealOutOfTimeWithExemptionLetterPersonalisationTest {
-    @Mock
-    Callback<AsylumCase> callback;
-    @Mock
-    CaseDetails<AsylumCase> caseDetails;
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-    @Mock
-    AddressUk address;
-
     private final Long ccdCaseId = 12345L;
     private final String letterTemplateId = "someLetterTemplateId";
     private final String appealReferenceNumber = "someAppealRefNumber";
@@ -54,7 +43,16 @@ public class AppellantInternalCaseSubmitAppealOutOfTimeWithExemptionLetterPerson
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "example@example.com";
     private final SystemDateProvider systemDateProvider = new SystemDateProvider();
-
+    @Mock
+    Callback<AsylumCase> callback;
+    @Mock
+    CaseDetails<AsylumCase> caseDetails;
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    AddressUk address;
     private AppellantInternalCaseSubmitAppealOutOfTimeWithExemptionLetterPersonalisation appellantInternalCaseSubmitAppealOutOfTimeWithExemptionLetterPersonalisation;
 
     @BeforeEach
@@ -126,10 +124,9 @@ public class AppellantInternalCaseSubmitAppealOutOfTimeWithExemptionLetterPerson
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
 
 
-        IllegalStateException exception = 
-assertThrows(IllegalStateException.class, () -> appellantInternalCaseSubmitAppealOutOfTimeWithExemptionLetterPersonalisation.getRecipientsList(asylumCase))
-            ;
-assertEquals("appellantAddress is not present", exception.getMessage());
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> appellantInternalCaseSubmitAppealOutOfTimeWithExemptionLetterPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("appellantAddress is not present", exception.getMessage());
     }
 
     @Test
@@ -138,20 +135,18 @@ assertEquals("appellantAddress is not present", exception.getMessage());
         when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_ADDRESS_U_K, AddressUk.class)).thenReturn(Optional.empty());
         when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_HAS_ADDRESS, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
 
-        IllegalStateException exception = 
-assertThrows(IllegalStateException.class, () -> appellantInternalCaseSubmitAppealOutOfTimeWithExemptionLetterPersonalisation.getRecipientsList(asylumCase))
-            ;
-assertEquals("legalRepAddressUK is not present", exception.getMessage());
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> appellantInternalCaseSubmitAppealOutOfTimeWithExemptionLetterPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("legalRepAddressUK is not present", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        NullPointerException exception = 
-assertThrows(NullPointerException.class, 
-            () -> appellantInternalCaseSubmitAppealOutOfTimeWithExemptionLetterPersonalisation.getPersonalisation((Callback<AsylumCase>) null))
-            ;
-assertEquals("callback must not be null", exception.getMessage());
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> appellantInternalCaseSubmitAppealOutOfTimeWithExemptionLetterPersonalisation.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     @Test

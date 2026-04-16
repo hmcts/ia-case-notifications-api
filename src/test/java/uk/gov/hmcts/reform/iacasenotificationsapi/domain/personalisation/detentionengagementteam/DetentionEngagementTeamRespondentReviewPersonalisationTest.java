@@ -38,15 +38,13 @@ import uk.gov.service.notify.NotificationClientException;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class DetentionEngagementTeamRespondentReviewPersonalisationTest {
 
+    private final String detentionEngagementTeamRespondentReviewTemplateId = "detentionEngagementTeamRespondentReviewTemplateId";
     @Mock
     AsylumCase asylumCase;
     @Mock
-    private DetentionEmailService detEmailService;
-    @Mock
     DocumentDownloadClient documentDownloadClient;
-
-    private final String detentionEngagementTeamRespondentReviewTemplateId = "detentionEngagementTeamRespondentReviewTemplateId";
-
+    @Mock
+    private DetentionEmailService detEmailService;
     private DetentionEngagementTeamRespondentReviewPersonalisation detentionEngagementTeamRespondentReviewPersonalisation;
 
     @BeforeEach

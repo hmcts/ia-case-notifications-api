@@ -27,6 +27,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.BailNotificatio
 @ExtendWith(MockitoExtension.class)
 public class BailNotificationHandlerTest {
 
+    private final PreSubmitCallbackStage callbackStage = PreSubmitCallbackStage.ABOUT_TO_SUBMIT;
     @Mock
     Callback<BailCase> callback;
     @Mock
@@ -39,8 +40,6 @@ public class BailNotificationHandlerTest {
     BiPredicate<PreSubmitCallbackStage, Callback<BailCase>> canHandle;
     @Mock
     ErrorHandler<BailCase> errorHandler;
-
-    private final PreSubmitCallbackStage callbackStage = PreSubmitCallbackStage.ABOUT_TO_SUBMIT;
     private BailNotificationHandler bailNotificationHandler;
 
     @BeforeEach
@@ -64,9 +63,8 @@ public class BailNotificationHandlerTest {
         when(canHandle.test(callbackStage, callback)).thenReturn(false);
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> bailNotificationHandler.handle(callbackStage, callback))
-            ;
-assertEquals("Cannot handle callback", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> bailNotificationHandler.handle(callbackStage, callback));
+        assertEquals("Cannot handle callback", exception.getMessage());
 
         verifyNoInteractions(bailNotificationGenerator);
     }
@@ -81,17 +79,15 @@ assertEquals("Cannot handle callback", exception.getMessage());
     @Test
     public void should_throw_exception_when_callback_stage_is_null() {
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> bailNotificationHandler.canHandle(null, callback))
-            ;
-assertEquals("callbackStage must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> bailNotificationHandler.canHandle(null, callback));
+        assertEquals("callbackStage must not be null", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_callback_is_null() {
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> bailNotificationHandler.canHandle(callbackStage, null))
-            ;
-assertEquals("callback must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> bailNotificationHandler.canHandle(callbackStage, null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     @Test
@@ -119,8 +115,7 @@ assertEquals("callback must not be null", exception.getMessage());
         bailNotificationHandler = new BailNotificationHandler(canHandle, Collections.singletonList(bailNotificationGenerator));
 
         RuntimeException exception =
-assertThrows(RuntimeException.class, () -> bailNotificationHandler.handle(callbackStage, callback))
-            ;
-assertEquals(message, exception.getMessage());
+            assertThrows(RuntimeException.class, () -> bailNotificationHandler.handle(callbackStage, callback));
+        assertEquals(message, exception.getMessage());
     }
 }

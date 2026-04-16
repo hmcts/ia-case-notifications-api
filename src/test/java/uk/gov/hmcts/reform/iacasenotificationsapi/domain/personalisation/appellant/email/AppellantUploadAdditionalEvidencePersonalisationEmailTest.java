@@ -74,18 +74,18 @@ class AppellantUploadAdditionalEvidencePersonalisationEmailTest {
     @Test
     void should_return_given_template_id() {
         assertEquals(beforeListingTemplateId,
-                appellantUploadAdditionalEvidencePersonalisationEmail.getTemplateId(asylumCase));
+            appellantUploadAdditionalEvidencePersonalisationEmail.getTemplateId(asylumCase));
 
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
 
         assertEquals(afterListingTemplateId,
-                appellantUploadAdditionalEvidencePersonalisationEmail.getTemplateId(asylumCase));
+            appellantUploadAdditionalEvidencePersonalisationEmail.getTemplateId(asylumCase));
     }
 
     @Test
     void should_return_given_reference_id() {
         assertEquals(12345L + "_UPLOADED_ADDITIONAL_EVIDENCE_AIP_APPELLANT_EMAIL",
-                appellantUploadAdditionalEvidencePersonalisationEmail.getReferenceId(12345L));
+            appellantUploadAdditionalEvidencePersonalisationEmail.getReferenceId(12345L));
     }
 
 
@@ -93,17 +93,16 @@ class AppellantUploadAdditionalEvidencePersonalisationEmailTest {
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> appellantUploadAdditionalEvidencePersonalisationEmail.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> appellantUploadAdditionalEvidencePersonalisationEmail.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     void should_return_personalisation_when_all_information_given() {
 
         Map<String, String> personalisation =
-                appellantUploadAdditionalEvidencePersonalisationEmail.getPersonalisation(asylumCase);
+            appellantUploadAdditionalEvidencePersonalisationEmail.getPersonalisation(asylumCase);
         assertThat(personalisation)
             .containsEntry("appealReferenceNumber", appealReferenceNumber)
             .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
@@ -123,7 +122,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
-                appellantUploadAdditionalEvidencePersonalisationEmail.getPersonalisation(asylumCase);
+            appellantUploadAdditionalEvidencePersonalisationEmail.getPersonalisation(asylumCase);
 
         assertThat(personalisation).allSatisfy((key, value) -> {
             if (!Objects.equals("hyperlink to service", key)) {

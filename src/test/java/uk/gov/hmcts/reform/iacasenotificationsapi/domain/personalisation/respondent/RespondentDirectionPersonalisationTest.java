@@ -30,28 +30,27 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class RespondentDirectionPersonalisationTest {
 
-    @Mock AsylumCase asylumCase;
-    @Mock DirectionFinder directionFinder;
-    @Mock Direction direction;
-    @Mock CustomerServicesProvider customerServicesProvider;
-
     private final String templateId = "someTemplateId";
     private final String detentionAipTemplateId = "someDetentionAipTemplateId";
     private final String detentionLegalRepTemplateId = "someDetentionLegalRepTemplateId";
     private final String iaExUiFrontendUrl = "http://somefrontendurl";
     private final String respondentReviewEmailAddress = "respondentReview@example.com";
-
     private final String expectedDirectionDueDate = "27 Aug 2019";
     private final String directionExplanation = "someExplanation";
-
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "customer.services@example.com";
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    DirectionFinder directionFinder;
+    @Mock
+    Direction direction;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
     private RespondentDirectionPersonalisation respondentDirectionPersonalisation;
 
     @BeforeEach
@@ -134,13 +133,12 @@ public class RespondentDirectionPersonalisationTest {
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> respondentDirectionPersonalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> respondentDirectionPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
@@ -163,7 +161,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
@@ -196,8 +194,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
         when(directionFinder.findFirst(asylumCase, DirectionTag.RESPONDENT_REVIEW)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> respondentDirectionPersonalisation.getPersonalisation(asylumCase))
-            ;
-assertEquals("direction 'respondentReview' is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> respondentDirectionPersonalisation.getPersonalisation(asylumCase));
+        assertEquals("direction 'respondentReview' is not present", exception.getMessage());
     }
 }

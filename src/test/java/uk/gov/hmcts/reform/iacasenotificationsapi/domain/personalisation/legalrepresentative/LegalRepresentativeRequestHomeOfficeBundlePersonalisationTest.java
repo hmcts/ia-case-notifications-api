@@ -25,23 +25,19 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class LegalRepresentativeRequestHomeOfficeBundlePersonalisationTest {
 
+    private final String adaTemplateId = "adaTemplateId";
+    private final String nonAdaTemplateId = "nonAdaTemplateId";
+    private final String legalRepEmailAddress = "legalrep@example.com";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String legalRepRefNumber = "somelegalRepRefNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
     @Mock
     AsylumCase asylumCase;
     @Mock
     DirectionFinder directionFinder;
     @Mock
     Direction direction;
-
-    private final String adaTemplateId = "adaTemplateId";
-    private final String nonAdaTemplateId = "nonAdaTemplateId";
-
-    private final String legalRepEmailAddress = "legalrep@example.com";
-
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String legalRepRefNumber = "somelegalRepRefNumber";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-
     private LegalRepresentativeRequestHomeOfficeBundlePersonalisation
         legalRepresentativeRequestHomeOfficeBundlePersonalisation;
 
@@ -95,20 +91,18 @@ public class LegalRepresentativeRequestHomeOfficeBundlePersonalisationTest {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class,
-            () -> legalRepresentativeRequestHomeOfficeBundlePersonalisation.getRecipientsList(asylumCase))
-            ;
-assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class,
+                () -> legalRepresentativeRequestHomeOfficeBundlePersonalisation.getRecipientsList(asylumCase));
+        assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> legalRepresentativeRequestHomeOfficeBundlePersonalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> legalRepresentativeRequestHomeOfficeBundlePersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -137,9 +131,8 @@ assertEquals("asylumCase must not be null", exception.getMessage());
         when(directionFinder.findFirst(asylumCase, DirectionTag.RESPONDENT_EVIDENCE)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class,
-            () -> legalRepresentativeRequestHomeOfficeBundlePersonalisation.getPersonalisation(asylumCase))
-            ;
-assertEquals("direction 'respondentEvidence' is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class,
+                () -> legalRepresentativeRequestHomeOfficeBundlePersonalisation.getPersonalisation(asylumCase));
+        assertEquals("direction 'respondentEvidence' is not present", exception.getMessage());
     }
 }

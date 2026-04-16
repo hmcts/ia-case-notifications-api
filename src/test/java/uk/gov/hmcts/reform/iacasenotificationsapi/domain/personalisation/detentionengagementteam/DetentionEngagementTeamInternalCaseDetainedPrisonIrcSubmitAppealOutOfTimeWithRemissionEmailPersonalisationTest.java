@@ -40,11 +40,10 @@ class DetentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealOutOfTimeW
     private static final String TEMPLATE_ID = "template123";
     private static final String NON_ADA_PREFIX = "[NON-ADA]";
     private static final long CASE_ID = 1234L;
-    private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
     final DocumentWithMetadata internalAppealSubmissionDoc = getDocumentWithMetadata(
-            "id", "internal_appeal_submission", "some other desc", DocumentTag.INTERNAL_DETAINED_OUT_OF_TIME_REMISSION_IRC_PRISON_LETTER);
+        "id", "internal_appeal_submission", "some other desc", DocumentTag.INTERNAL_DETAINED_OUT_OF_TIME_REMISSION_IRC_PRISON_LETTER);
     final IdValue<DocumentWithMetadata> appealSubmittedBundle = new IdValue<>("1", internalAppealSubmissionDoc);
-
+    private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
     @Mock
     private DetentionEmailService detentionEmailService;
 
@@ -59,12 +58,12 @@ class DetentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealOutOfTimeW
     @BeforeEach
     void setUp() {
         personalisation =
-                new DetentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealOutOfTimeWithRemissionEmailPersonalisation(
-                        TEMPLATE_ID,
-                        NON_ADA_PREFIX,
-                        detentionEmailService,
-                        documentDownloadClient
-                );
+            new DetentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealOutOfTimeWithRemissionEmailPersonalisation(
+                TEMPLATE_ID,
+                NON_ADA_PREFIX,
+                detentionEmailService,
+                documentDownloadClient
+            );
     }
 
     @Test
@@ -133,20 +132,18 @@ class DetentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealOutOfTimeW
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> personalisation.getPersonalisationForLink(asylumCase))
-                ;
-assertEquals("internalDetainedOutOfTimeRemissionIrcPrisonLetter document not available", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> personalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("internalDetainedOutOfTimeRemissionIrcPrisonLetter document not available", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_when_document_download_client_throws_exception() throws IOException, NotificationClientException {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.of(Collections.singletonList(appealSubmittedBundle)));
         when(documentDownloadClient.getJsonObjectFromDocument(any(DocumentWithMetadata.class)))
-                .thenThrow(new NotificationClientException("Download failed"));
+            .thenThrow(new NotificationClientException("Download failed"));
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> personalisation.getPersonalisationForLink(asylumCase))
-                ;
-assertEquals("Failed to get Internal Appeal submission Letter in compatible format", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> personalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("Failed to get Internal Appeal submission Letter in compatible format", exception.getMessage());
     }
 }

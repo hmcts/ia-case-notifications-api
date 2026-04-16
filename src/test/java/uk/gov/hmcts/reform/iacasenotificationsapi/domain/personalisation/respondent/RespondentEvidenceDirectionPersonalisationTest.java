@@ -38,20 +38,10 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class RespondentEvidenceDirectionPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    DirectionFinder directionFinder;
-    @Mock
-    Direction direction;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-
     private final String templateId = "someTemplateId";
     private final String ejpTemplateId = "someEjpTemplateId";
     private final String detentionTemplateId = "someDetentionTemplateId";
     private final String respondentReviewEmailAddress = "respondentReview@example.com";
-
     private final String expectedDirectionDueDate = "27 Aug 2019";
     private final String companyName = "Legal Rep Company Name";
     private final String companyAddress = "45 Lunar House Spa Road London SE1 3HP";
@@ -61,26 +51,29 @@ public class RespondentEvidenceDirectionPersonalisationTest {
     private final String legalRepEmail = "Legal Rep Email";
     private final String legalRepEjpGivenName = "Given Name";
     private final String legalRepEjpFamilyName = "Family Name";
-
     private final String legalRepEjpReference = "Legal Rep Reference Ejp";
     private final String legalRepEjpEmail = "Legal Rep Email Ejp";
     private final String legalRepEjpCompanyName = "Legal Rep Company Name Ejp";
-
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-
     private final AddressUk legalRepCompanyAddress = new AddressUk("45 Lunar House",
         "Spa Road",
         "Woolworth",
         "London",
         "London",
         "SE1 3HP", "UK");
-
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "customer.services@example.com";
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    DirectionFinder directionFinder;
+    @Mock
+    Direction direction;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
     private RespondentEvidenceDirectionPersonalisation respondentEvidenceDirectionPersonalisation;
 
 

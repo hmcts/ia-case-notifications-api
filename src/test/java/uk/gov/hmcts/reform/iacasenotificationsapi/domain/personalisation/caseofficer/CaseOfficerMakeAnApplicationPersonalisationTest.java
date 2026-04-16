@@ -37,6 +37,16 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.MakeAnApplicati
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class CaseOfficerMakeAnApplicationPersonalisationTest {
 
+    private final String makeAnApplicationCaseOfficerBeforeListingTemplateId = "beforeListTemplateId";
+    private final String makeAnApplicationCaseOfficerAfterListingTemplateId = "afterListTemplateId";
+    private final String makeAnApplicationCaseOfficerJudgeReviewBeforeListingTemplateId = "judgeReviewBeforeListTemplateId";
+    private final String makeAnApplicationCaseOfficerJudgeReviewAfterListingTemplateId = "judgeReviewAfterListTemplateId";
+    private final String iaExUiFrontendUrl = "http://somefrontendurl";
+    private final String hearingCentreEmailAddress = "hearingCentre@example.com";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String ariaListingReference = "someAriaListingReference";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -49,19 +59,6 @@ public class CaseOfficerMakeAnApplicationPersonalisationTest {
     MakeAnApplication makeAnApplication;
     @Mock
     private FeatureToggler featureToggler;
-
-    private final String makeAnApplicationCaseOfficerBeforeListingTemplateId = "beforeListTemplateId";
-    private final String makeAnApplicationCaseOfficerAfterListingTemplateId = "afterListTemplateId";
-    private final String makeAnApplicationCaseOfficerJudgeReviewBeforeListingTemplateId = "judgeReviewBeforeListTemplateId";
-    private final String makeAnApplicationCaseOfficerJudgeReviewAfterListingTemplateId = "judgeReviewAfterListTemplateId";
-
-    private final String iaExUiFrontendUrl = "http://somefrontendurl";
-    private final String hearingCentreEmailAddress = "hearingCentre@example.com";
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String ariaListingReference = "someAriaListingReference";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-
     private CaseOfficerMakeAnApplicationPersonalisation caseOfficerMakeAnApplicationPersonalisation;
 
     @BeforeEach
@@ -82,7 +79,7 @@ public class CaseOfficerMakeAnApplicationPersonalisationTest {
             emailAddressFinder,
             appealService,
             makeAnApplicationService,
-                featureToggler);
+            featureToggler);
     }
 
     @ParameterizedTest
@@ -121,27 +118,26 @@ public class CaseOfficerMakeAnApplicationPersonalisationTest {
     @Test
     public void should_return_given_email_address_from_lookup_map_when_feature_flag_is_Off() {
         assertTrue(caseOfficerMakeAnApplicationPersonalisation.getRecipientsList(asylumCase)
-                .isEmpty());
+            .isEmpty());
     }
 
     @Test
     public void should_return_given_email_address_from_lookup_map_when_feature_flag_is_On() {
         when(featureToggler.getValue("tcw-application-notifications-feature", true)).thenReturn(true);
         assertTrue(caseOfficerMakeAnApplicationPersonalisation.getRecipientsList(asylumCase)
-                .contains(hearingCentreEmailAddress));
+            .contains(hearingCentreEmailAddress));
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> caseOfficerMakeAnApplicationPersonalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> caseOfficerMakeAnApplicationPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         initializePrefixes(caseOfficerMakeAnApplicationPersonalisation);
@@ -161,7 +157,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
 
         initializePrefixes(caseOfficerMakeAnApplicationPersonalisation);

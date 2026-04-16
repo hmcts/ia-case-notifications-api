@@ -29,13 +29,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class HomeOfficeHearingBundleReadyPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    EmailAddressFinder emailAddressFinder;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-
     private final String templateId = "someTemplateId";
     private final String iaExUiFrontendUrl = "http://somefrontendurl";
     private final String homeOfficeEmailAddress = "homeoffice@example.com";
@@ -47,6 +40,12 @@ public class HomeOfficeHearingBundleReadyPersonalisationTest {
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "cust.services@example.com";
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    EmailAddressFinder emailAddressFinder;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
     private HomeOfficeHearingBundleReadyPersonalisation homeOfficeHearingBundleReadyPersonalisation;
 
     @BeforeEach

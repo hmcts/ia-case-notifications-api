@@ -39,16 +39,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantInternalUpdateTribunalDecisionRule31LetterPersonalisationTest {
-    @Mock
-    Callback<AsylumCase> callback;
-    @Mock
-    CaseDetails<AsylumCase> caseDetails;
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-    @Mock
-    AddressUk address;
     private final Long ccdCaseId = 12345L;
     private final String letterTemplateId = "someLetterTemplateId";
     private final String appealReferenceNumber = "someAppealRefNumber";
@@ -78,6 +68,16 @@ public class AppellantInternalUpdateTribunalDecisionRule31LetterPersonalisationT
         new Value("dismissed", "No"),
         newArrayList()
     );
+    @Mock
+    Callback<AsylumCase> callback;
+    @Mock
+    CaseDetails<AsylumCase> caseDetails;
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    AddressUk address;
     private AppellantInternalUpdateTribunalDecisionRule31LetterPersonalisation appellantInternalUpdateTribunalDecisionRule31LetterPersonalisation;
 
 
@@ -148,9 +148,8 @@ public class AppellantInternalUpdateTribunalDecisionRule31LetterPersonalisationT
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> appellantInternalUpdateTribunalDecisionRule31LetterPersonalisation.getRecipientsList(asylumCase))
-            ;
-assertEquals("appellantAddress is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> appellantInternalUpdateTribunalDecisionRule31LetterPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("appellantAddress is not present", exception.getMessage());
     }
 
     @Test
@@ -159,19 +158,17 @@ assertEquals("appellantAddress is not present", exception.getMessage());
         when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_ADDRESS_U_K, AddressUk.class)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> appellantInternalUpdateTribunalDecisionRule31LetterPersonalisation.getRecipientsList(asylumCase))
-            ;
-assertEquals("legalRepAddressUK is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> appellantInternalUpdateTribunalDecisionRule31LetterPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("legalRepAddressUK is not present", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> appellantInternalUpdateTribunalDecisionRule31LetterPersonalisation.getPersonalisation((Callback<AsylumCase>) null))
-            ;
-assertEquals("callback must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> appellantInternalUpdateTribunalDecisionRule31LetterPersonalisation.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     @ParameterizedTest

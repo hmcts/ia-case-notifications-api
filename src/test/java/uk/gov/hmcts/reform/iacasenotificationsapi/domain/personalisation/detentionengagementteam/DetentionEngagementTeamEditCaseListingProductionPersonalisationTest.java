@@ -33,17 +33,9 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.fie
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class DetentionEngagementTeamEditCaseListingProductionPersonalisationTest {
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    private DateTimeExtractor dateTimeExtractor;
-    @Mock
-    private DetentionFacilityEmailService detentionFacilityEmailService;
-    @Mock
-    private HearingDetailsFinder hearingDetailsFinder;
-    @Mock
-    JSONObject jsonDocument;
-
+    final DocumentWithMetadata caseListedDoc = TestUtils.getDocumentWithMetadata(
+        "id", "detained-appellant-list-case-letter", "some other desc", DocumentTag.INTERNAL_LIST_CASE_LETTER);
+    final IdValue<DocumentWithMetadata> caseListedBundle = new IdValue<>("1", caseListedDoc);
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
@@ -53,11 +45,17 @@ class DetentionEngagementTeamEditCaseListingProductionPersonalisationTest {
     private final String hearingTime = "12:00:00";
     private final String hearingCentreAddress = "someAddress";
     private final String templateId = "templateId";
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    JSONObject jsonDocument;
+    @Mock
+    private DateTimeExtractor dateTimeExtractor;
+    @Mock
+    private DetentionFacilityEmailService detentionFacilityEmailService;
+    @Mock
+    private HearingDetailsFinder hearingDetailsFinder;
     private DetentionEngagementTeamEditCaseListingProductionPersonalisation personalisation;
-
-    final DocumentWithMetadata caseListedDoc = TestUtils.getDocumentWithMetadata(
-            "id", "detained-appellant-list-case-letter", "some other desc", DocumentTag.INTERNAL_LIST_CASE_LETTER);
-    final IdValue<DocumentWithMetadata> caseListedBundle = new IdValue<>("1", caseListedDoc);
 
     @BeforeEach
     public void setup() {
@@ -65,7 +63,7 @@ class DetentionEngagementTeamEditCaseListingProductionPersonalisationTest {
 
         personalisation = new DetentionEngagementTeamEditCaseListingProductionPersonalisation(
             templateId,
-                detentionFacilityEmailService,
+            detentionFacilityEmailService,
             dateTimeExtractor,
             hearingDetailsFinder
         );

@@ -13,12 +13,11 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 @ExtendWith(MockitoExtension.class)
 class AdminOfficerDecidedOrEndedAppealPendingPaymentTest {
 
+    private final String templateId = "someTemplateId";
     @Mock
     private AsylumCase asylumCase;
     @Mock
     private AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
-    private final String templateId = "someTemplateId";
-
     private AdminOfficerDecidedOrEndedAppealPendingPayment adminOfficerDecidedOrEndedAppealPendingPayment;
 
     @BeforeEach

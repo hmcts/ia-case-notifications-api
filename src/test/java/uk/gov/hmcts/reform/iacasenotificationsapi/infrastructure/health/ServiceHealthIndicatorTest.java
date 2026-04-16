@@ -18,13 +18,11 @@ import org.springframework.web.client.RestTemplate;
 @SuppressWarnings("unchecked")
 public class ServiceHealthIndicatorTest {
 
+    private final String uri = "https://status.notifications.service.gov.uk";
     @Mock
     RestTemplate restTemplate;
     @Mock
     ResponseEntity responseEntity;
-
-    private final String uri = "https://status.notifications.service.gov.uk";
-
     private ServiceHealthIndicator serviceHealthIndicator;
 
     @BeforeEach

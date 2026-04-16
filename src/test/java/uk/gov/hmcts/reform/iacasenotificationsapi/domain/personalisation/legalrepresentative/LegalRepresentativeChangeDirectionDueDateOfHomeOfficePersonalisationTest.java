@@ -34,6 +34,9 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class LegalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisationTest {
 
+    private final String afterListingTemplateId = "afterListingTemplateId";
+    private final String beforeListingTemplateId = "beforeListingTemplateId";
+    private final String iaExUiFrontendUrl = "http://localhost";
     @Mock
     Callback<AsylumCase> callback;
     @Mock
@@ -46,11 +49,6 @@ public class LegalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisatio
     PersonalisationProvider personalisationProvider;
     @Mock
     CustomerServicesProvider customerServicesProvider;
-
-    private final String afterListingTemplateId = "afterListingTemplateId";
-    private final String beforeListingTemplateId = "beforeListingTemplateId";
-    private final String iaExUiFrontendUrl = "http://localhost";
-
     private LegalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisation
         legalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisation;
 

@@ -37,10 +37,10 @@ class HomeOfficeFtpaApplicationDecidedRule31Rule32PersonalisationTest {
     @BeforeEach
     public void setUp() {
         personalisation = new HomeOfficeFtpaApplicationDecidedRule31Rule32Personalisation(
-                homeOfficeEmailAddress,
-                templateId,
-                iaExUiFrontendUrl,
-                customerServicesProvider);
+            homeOfficeEmailAddress,
+            templateId,
+            iaExUiFrontendUrl,
+            customerServicesProvider);
     }
 
     @Test
@@ -61,10 +61,9 @@ class HomeOfficeFtpaApplicationDecidedRule31Rule32PersonalisationTest {
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
-        NullPointerException exception = 
-assertThrows(NullPointerException.class, () -> personalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> personalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
 

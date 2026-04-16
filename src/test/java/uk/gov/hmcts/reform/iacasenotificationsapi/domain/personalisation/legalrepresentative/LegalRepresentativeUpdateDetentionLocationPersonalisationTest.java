@@ -123,7 +123,7 @@ public class LegalRepresentativeUpdateDetentionLocationPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeUpdateDetentionLocationPersonalisation.getPersonalisation(asylumCase);
 
-        String a = personalisation.get("subjectPrefix");
+        personalisation.get("subjectPrefix");
 
         String nonAdaPrefix = "Immigration and Asylum appeal";
         String adaPrefix = "Accelerated detained appeal";

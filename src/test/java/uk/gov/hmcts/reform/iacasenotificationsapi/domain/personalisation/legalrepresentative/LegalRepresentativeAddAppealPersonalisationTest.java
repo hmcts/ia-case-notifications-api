@@ -37,6 +37,13 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class LegalRepresentativeAddAppealPersonalisationTest {
 
+    private final String templateId = "someTemplateId";
+    private final String iaExUiFrontendUrl = "http://somefrontendurl";
+    private final String legalRepEmailAddress = "legalrep@example.com";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String legalRepRefNumber = "somelegalRepRefNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -45,15 +52,6 @@ public class LegalRepresentativeAddAppealPersonalisationTest {
     Direction direction;
     @Mock
     CustomerServicesProvider customerServicesProvider;
-
-    private final String templateId = "someTemplateId";
-    private final String iaExUiFrontendUrl = "http://somefrontendurl";
-    private final String legalRepEmailAddress = "legalrep@example.com";
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String legalRepRefNumber = "somelegalRepRefNumber";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-
     private LegalRepresentativeAddAppealPersonalisation legalRepresentativeAddAppealPersonalisation;
 
     @BeforeEach
@@ -107,22 +105,20 @@ public class LegalRepresentativeAddAppealPersonalisationTest {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> legalRepresentativeAddAppealPersonalisation.getRecipientsList(asylumCase))
-            ;
-assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> legalRepresentativeAddAppealPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> legalRepresentativeAddAppealPersonalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> legalRepresentativeAddAppealPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
@@ -146,7 +142,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
@@ -185,8 +181,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
             .thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> legalRepresentativeAddAppealPersonalisation.getPersonalisation(asylumCase))
-            ;
-assertEquals("legal representative review direction is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> legalRepresentativeAddAppealPersonalisation.getPersonalisation(asylumCase));
+        assertEquals("legal representative review direction is not present", exception.getMessage());
     }
 }

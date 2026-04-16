@@ -37,11 +37,10 @@ class DetentionEngagementTeamInternalCaseDetainedPrisonIrcSubmitAppealWithRemiss
     private static final String TEMPLATE_ID = "template123";
     private static final String NON_ADA_PREFIX = "[NON-ADA]";
     private static final long CASE_ID = 1234L;
-    private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
     final DocumentWithMetadata internalAppealSubmissionDoc = TestUtils.getDocumentWithMetadata(
         "id", "internal_appeal_submission", "some other desc", DocumentTag.INTERNAL_DETAINED_PRISON_IRC_APPEAL_SUBMISSION);
     final IdValue<DocumentWithMetadata> appealSubmittedBundle = new IdValue<>("1", internalAppealSubmissionDoc);
-
+    private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
     @Mock
     private DetentionEmailService detentionEmailService;
 

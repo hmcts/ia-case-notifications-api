@@ -24,8 +24,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecis
 @MockitoSettings(strictness = Strictness.LENIENT)
 class LegalRepRemissionPaymentReminderPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
     private final String paymentRejectedReminderTemplateId = "paymentRejectedReminderTemplateId";
     private final String paymentPartiallyApprovedReminderTemplateId = "paymentPartiallyApprovedReminderTemplateId";
     private final String iaExUiFrontendUrl = "http://localhost";
@@ -34,6 +32,8 @@ class LegalRepRemissionPaymentReminderPersonalisationTest {
     private final String appellantFamilyName = "FamilyName";
     private final String legalRepRefNumber = "somelegalRepRefNumber";
     private final String someTestDateEmail = "14/14/2024";
+    @Mock
+    AsylumCase asylumCase;
     private LegalRepRemissionPaymentReminderPersonalisation legalRepRemissionPaymentReminderPersonalisation;
 
     @BeforeEach

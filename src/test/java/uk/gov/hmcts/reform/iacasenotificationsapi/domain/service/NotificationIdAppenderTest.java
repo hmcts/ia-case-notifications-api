@@ -19,16 +19,14 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdVa
 
 @ExtendWith(MockitoExtension.class)
 public class NotificationIdAppenderTest {
-    private NotificationIdAppender notificationIdAppender;
-
     private final IdValue<String> existingNotification1 = new IdValue<>("foo", "111-222");
     private final IdValue<String> existingNotification2 = new IdValue<>("bar", "333-444");
-
     private final List<IdValue<String>> existingNotificationsSent =
         Arrays.asList(
             existingNotification1,
             existingNotification2
         );
+    private NotificationIdAppender notificationIdAppender;
 
     @BeforeEach
     void setUp() {
@@ -52,7 +50,7 @@ public class NotificationIdAppenderTest {
 
         assertTrue(actualNotificationsSent.get(2).getId().startsWith("something_"));
         assertTrue(actualNotificationsSent.get(2).getId()
-            .substring("something_" .length())
+            .substring("something_".length())
             .matches(timestampRegex));
         assertEquals("555-666", actualNotificationsSent.get(2).getValue());
     }
@@ -85,13 +83,13 @@ public class NotificationIdAppenderTest {
 
         assertTrue(actualNotificationsSent3.getId().startsWith("foo_"));
         assertTrue(actualNotificationsSent3.getId()
-            .substring("foo_" .length())
+            .substring("foo_".length())
             .matches(uuidRegex));
         assertEquals("555-666", actualNotificationsSent3.getValue());
 
         assertTrue(actualNotificationsSent4.getId().startsWith("foo_"));
         assertTrue(actualNotificationsSent4.getId()
-            .substring("foo_" .length())
+            .substring("foo_".length())
             .matches(uuidRegex));
         assertEquals("777-888", actualNotificationsSent4.getValue());
     }

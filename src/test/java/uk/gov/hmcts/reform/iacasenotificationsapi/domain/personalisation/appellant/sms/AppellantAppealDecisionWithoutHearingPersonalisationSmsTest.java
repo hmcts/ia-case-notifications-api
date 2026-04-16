@@ -27,21 +27,19 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppellantAppealDecisionWithoutHearingPersonalisationSmsTest {
 
-    @Mock
-    Callback<AsylumCase> callback;
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    private CaseDetails<AsylumCase> caseDetails;
-    @Mock
-    RecipientsFinder recipientsFinder;
-
     private final Long caseId = 12345L;
     private final String smsTemplateId = "someSmsTemplateId";
     private final String iaAipFrontendUrl = "http://localhost";
     private final String mockedAppealReferenceNumber = "someReferenceNumber";
     private final String mockedAppellantMobilePhone = "07123456789";
-
+    @Mock
+    Callback<AsylumCase> callback;
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    RecipientsFinder recipientsFinder;
+    @Mock
+    private CaseDetails<AsylumCase> caseDetails;
     private AppellantAppealDecisionWithoutHearingPersonalisationSms appellantAppealDecisionWithoutHearingPersonalisationSms;
 
     @BeforeEach
@@ -76,10 +74,9 @@ class AppellantAppealDecisionWithoutHearingPersonalisationSmsTest {
         when(recipientsFinder.findAll(null, NotificationType.SMS))
             .thenThrow(new NullPointerException("asylumCase must not be null"));
 
-        NullPointerException exception = 
-assertThrows(NullPointerException.class, () -> appellantAppealDecisionWithoutHearingPersonalisationSms.getRecipientsList(null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> appellantAppealDecisionWithoutHearingPersonalisationSms.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -95,10 +92,9 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     @Test
     void should_throw_exception_on_personalisation_when_callback_is_null() {
 
-        NullPointerException exception = 
-assertThrows(NullPointerException.class, () -> appellantAppealDecisionWithoutHearingPersonalisationSms.getPersonalisation((Callback<AsylumCase>) null))
-            ;
-assertEquals("callback must not be null", exception.getMessage());
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> appellantAppealDecisionWithoutHearingPersonalisationSms.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     @Test

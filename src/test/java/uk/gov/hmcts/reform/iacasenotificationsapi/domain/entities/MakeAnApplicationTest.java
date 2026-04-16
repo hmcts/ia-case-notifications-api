@@ -51,45 +51,45 @@ public class MakeAnApplicationTest {
     @Test
     public void should_not_allow_null_arguments() {
 
-        assertThrows(NullPointerException.class, 
-() -> new MakeAnApplication(
-            null, type, details, evidence,
-            date, decision, state, applicantRole));
+        assertThrows(NullPointerException.class,
+            () -> new MakeAnApplication(
+                null, type, details, evidence,
+                date, decision, state, applicantRole));
 
-        assertThrows(NullPointerException.class, 
-() -> new MakeAnApplication(
-            applicant, null, details, evidence,
-            date, decision, state, applicantRole));
+        assertThrows(NullPointerException.class,
+            () -> new MakeAnApplication(
+                applicant, null, details, evidence,
+                date, decision, state, applicantRole));
 
-        assertThrows(NullPointerException.class, 
-() -> new MakeAnApplication(
-            applicant, type, null, evidence,
-            date, decision, state, applicantRole));
+        assertThrows(NullPointerException.class,
+            () -> new MakeAnApplication(
+                applicant, type, null, evidence,
+                date, decision, state, applicantRole));
 
-        assertThrows(NullPointerException.class, 
-() -> new MakeAnApplication(
-            applicant, type, details, null,
-            date, decision, state, applicantRole));
+        assertThrows(NullPointerException.class,
+            () -> new MakeAnApplication(
+                applicant, type, details, null,
+                date, decision, state, applicantRole));
 
-        assertThrows(NullPointerException.class, 
-() -> new MakeAnApplication(
-            applicant, type, details, evidence,
-            null, decision, state, applicantRole));
+        assertThrows(NullPointerException.class,
+            () -> new MakeAnApplication(
+                applicant, type, details, evidence,
+                null, decision, state, applicantRole));
 
-        assertThrows(NullPointerException.class, 
-() -> new MakeAnApplication(
-            applicant, type, details, evidence,
-            date, null, state, applicantRole));
+        assertThrows(NullPointerException.class,
+            () -> new MakeAnApplication(
+                applicant, type, details, evidence,
+                date, null, state, applicantRole));
 
-        assertThrows(NullPointerException.class, 
-() -> new MakeAnApplication(
-            applicant, type, details, evidence,
-            date, decision, null, applicantRole));
+        assertThrows(NullPointerException.class,
+            () -> new MakeAnApplication(
+                applicant, type, details, evidence,
+                date, decision, null, applicantRole));
 
-        assertThrows(NullPointerException.class, 
-() -> new MakeAnApplication(
-            applicant, type, details, evidence,
-            date, decision, state, null));
+        assertThrows(NullPointerException.class,
+            () -> new MakeAnApplication(
+                applicant, type, details, evidence,
+                date, decision, state, null));
 
     }
 }

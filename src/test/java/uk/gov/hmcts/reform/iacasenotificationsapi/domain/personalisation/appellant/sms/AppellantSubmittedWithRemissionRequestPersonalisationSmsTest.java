@@ -31,19 +31,16 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantSubmittedWithRemissionRequestPersonalisationSmsTest {
 
+    private final String smsTemplateId = "someSmsTemplateId";
+    private final String paPayLaterSmsTemplateId = "somePaPayLaterSmsTemplateId";
+    private final String iaAipFrontendUrl = "http://localhost";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
     @Mock
     AsylumCase asylumCase;
     @Mock
     RecipientsFinder recipientsFinder;
     @Mock
     SystemDateProvider systemDateProvider;
-
-    private final String smsTemplateId = "someSmsTemplateId";
-    private final String paPayLaterSmsTemplateId = "somePaPayLaterSmsTemplateId";
-    private final String iaAipFrontendUrl = "http://localhost";
-
-    private final String mockedAppealReferenceNumber = "someReferenceNumber";
-
     private AppellantSubmittedWithRemissionRequestPersonalisationSms appellantSubmittedWithRemissionRequestPersonalisationSms;
 
     @BeforeEach
@@ -125,18 +122,16 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationSmsTest {
 
         when(recipientsFinder.findAll(null, NotificationType.SMS)).thenCallRealMethod();
 
-        NullPointerException exception = 
-assertThrows(NullPointerException.class, () -> appellantSubmittedWithRemissionRequestPersonalisationSms.getRecipientsList(null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> appellantSubmittedWithRemissionRequestPersonalisationSms.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_asylum_case_is_null_for_personalisation() {
-        NullPointerException exception = 
-assertThrows(NullPointerException.class, () -> appellantSubmittedWithRemissionRequestPersonalisationSms.getPersonalisation((AsylumCase) null))
-                ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> appellantSubmittedWithRemissionRequestPersonalisationSms.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test

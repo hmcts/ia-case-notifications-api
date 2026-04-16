@@ -69,7 +69,7 @@ class AppellantUploadAddendumEvidencePersonalisationEmailTest {
         appellantUploadAddendumEvidencePersonalisationEmail =
             new AppellantUploadAddendumEvidencePersonalisationEmail(
                 templateId,
-                    iaAipFrontendUrl,
+                iaAipFrontendUrl,
                 recipientsFinder,
                 customerServicesProvider
             );
@@ -83,7 +83,7 @@ class AppellantUploadAddendumEvidencePersonalisationEmailTest {
     @Test
     void should_return_given_reference_id() {
         assertEquals(12345L + "_UPLOADED_ADDENDUM_EVIDENCE_AIP_APPELLANT_EMAIL",
-                appellantUploadAddendumEvidencePersonalisationEmail.getReferenceId(12345L));
+            appellantUploadAddendumEvidencePersonalisationEmail.getReferenceId(12345L));
     }
 
 
@@ -91,21 +91,20 @@ class AppellantUploadAddendumEvidencePersonalisationEmailTest {
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> appellantUploadAddendumEvidencePersonalisationEmail.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> appellantUploadAddendumEvidencePersonalisationEmail.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         initializePrefixes(appellantUploadAddendumEvidencePersonalisationEmail);
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
 
         Map<String, String> personalisation =
-                appellantUploadAddendumEvidencePersonalisationEmail.getPersonalisation(asylumCase);
+            appellantUploadAddendumEvidencePersonalisationEmail.getPersonalisation(asylumCase);
         assertThat(personalisation)
             .containsEntry("appealReferenceNumber", appealReferenceNumber)
             .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
@@ -119,7 +118,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
 
         initializePrefixes(appellantUploadAddendumEvidencePersonalisationEmail);
@@ -131,7 +130,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
-                appellantUploadAddendumEvidencePersonalisationEmail.getPersonalisation(asylumCase);
+            appellantUploadAddendumEvidencePersonalisationEmail.getPersonalisation(asylumCase);
 
         assertThat(personalisation).allSatisfy((key, value) -> {
             if (!List.of(

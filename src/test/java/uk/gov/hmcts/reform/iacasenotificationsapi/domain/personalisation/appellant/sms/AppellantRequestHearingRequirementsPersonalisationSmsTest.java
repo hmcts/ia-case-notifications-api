@@ -77,9 +77,8 @@ public class AppellantRequestHearingRequirementsPersonalisationSmsTest {
             .thenThrow(new NullPointerException("asylumCase must not be null"));
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> appellantRequestHearingRequirementsPersonalisationSms.getRecipientsList(null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> appellantRequestHearingRequirementsPersonalisationSms.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -88,9 +87,8 @@ assertEquals("asylumCase must not be null", exception.getMessage());
         when(directionFinder.findFirst(asylumCase, DirectionTag.LEGAL_REPRESENTATIVE_HEARING_REQUIREMENTS)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> appellantRequestHearingRequirementsPersonalisationSms.getPersonalisation(asylumCase))
-            ;
-assertEquals("Appellant request hearing requirements direction is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> appellantRequestHearingRequirementsPersonalisationSms.getPersonalisation(asylumCase));
+        assertEquals("Appellant request hearing requirements direction is not present", exception.getMessage());
     }
 
 
@@ -109,10 +107,9 @@ assertEquals("Appellant request hearing requirements direction is not present", 
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> appellantRequestHearingRequirementsPersonalisationSms.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> appellantRequestHearingRequirementsPersonalisationSms.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test

@@ -25,22 +25,18 @@ public class BailGovNotifyNotificationSenderTest {
     private static final org.slf4j.Logger LOG = getLogger(BailGovNotifyNotificationSender.class);
 
     private final int deduplicateSendsWithinSeconds = 1;
-
+    private final String templateId = "a-b-c-d-e-f";
+    private final Map<String, String> personalisation = mock(Map.class);
+    private final String reference = "our-reference";
     @Mock
     @Qualifier("BailClient")
     private RetryableNotificationClient notificationBailClient;
-
     @Mock
     private NotificationSenderHelper<BailCase> senderHelper;
     @Mock
     private Callback<BailCase> callback;
     @Mock
     private InputStream stream;
-
-    private final String templateId = "a-b-c-d-e-f";
-    private final Map<String, String> personalisation = mock(Map.class);
-    private final String reference = "our-reference";
-
     private BailGovNotifyNotificationSender bailGovNotifyNotificationSender;
 
     @BeforeEach

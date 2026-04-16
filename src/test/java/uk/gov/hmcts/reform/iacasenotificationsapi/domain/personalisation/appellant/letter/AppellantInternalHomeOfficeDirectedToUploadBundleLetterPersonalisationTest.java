@@ -32,20 +32,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisationTest {
 
-    @Mock
-    Callback<AsylumCase> callback;
-    @Mock
-    CaseDetails<AsylumCase> caseDetails;
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-    @Mock
-    DirectionFinder directionFinder;
-    @Mock
-    Direction direction;
-    @Mock
-    AddressUk address;
     private final Long ccdCaseId = 12345L;
     private final String letterTemplateId = "someLetterTemplateId";
     private final String appealReferenceNumber = "someAppealRefNumber";
@@ -61,6 +47,20 @@ class AppellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisationTest
     private final String postTown = "Town name";
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "example@example.com";
+    @Mock
+    Callback<AsylumCase> callback;
+    @Mock
+    CaseDetails<AsylumCase> caseDetails;
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    DirectionFinder directionFinder;
+    @Mock
+    Direction direction;
+    @Mock
+    AddressUk address;
     private AppellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisation appellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisation;
 
     @BeforeEach

@@ -28,23 +28,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@Import({ CacheConfiguration.class })
+@Import({CacheConfiguration.class})
 @ExtendWith(SpringExtension.class)
 @EnableCaching
 class CacheConfigurationTest {
-
-    private CacheConfiguration cacheConfiguration;
-
-    @Mock
-    private RedisConnectionFactory redisConnectionFactory;
-
-    @Mock
-    private RedisConnection redisConnection;
 
     private static final String REDIS_URL_WITH_TLS = "redis://SOME_KEY@hostname.redis.cache.windows.net:6380?tls=true";
     private static final String REDIS_URL_SSL = "rediss://SOME_KEY@hostname.redis.cache.windows.net:6380";
     private static final String ACCESS_KEY = "some-access-key";
     private static final String TEST_ENCRYPTION_KEY = Base64.getEncoder().encodeToString(new byte[32]);
+    private CacheConfiguration cacheConfiguration;
+    @Mock
+    private RedisConnectionFactory redisConnectionFactory;
+    @Mock
+    private RedisConnection redisConnection;
 
     @DynamicPropertySource
     static void redisProperties(DynamicPropertyRegistry registry) {
@@ -103,7 +100,7 @@ class CacheConfigurationTest {
     @Test
     void redisConnectionFactory_shouldCreateFactory_withTlsParameter() {
         RedisConnectionFactory result = cacheConfiguration.redisConnectionFactory(
-                REDIS_URL_WITH_TLS, ACCESS_KEY
+            REDIS_URL_WITH_TLS, ACCESS_KEY
         );
 
         assertThat(result).isInstanceOf(LettuceConnectionFactory.class);
@@ -114,7 +111,7 @@ class CacheConfigurationTest {
     @Test
     void redisConnectionFactory_shouldCreateFactory_withRedissScheme() {
         RedisConnectionFactory result = cacheConfiguration.redisConnectionFactory(
-                REDIS_URL_SSL, ACCESS_KEY
+            REDIS_URL_SSL, ACCESS_KEY
         );
 
         assertThat(result).isInstanceOf(LettuceConnectionFactory.class);
@@ -125,7 +122,7 @@ class CacheConfigurationTest {
     @Test
     void redisConnectionFactory_shouldCreateFactory_withAccessKey() {
         RedisConnectionFactory result = cacheConfiguration.redisConnectionFactory(
-                REDIS_URL_WITH_TLS, ACCESS_KEY
+            REDIS_URL_WITH_TLS, ACCESS_KEY
         );
 
         assertThat(result).isInstanceOf(LettuceConnectionFactory.class);
@@ -138,7 +135,7 @@ class CacheConfigurationTest {
     @Test
     void redisConnectionFactory_shouldCreateFactory_withoutAccessKey() {
         RedisConnectionFactory result = cacheConfiguration.redisConnectionFactory(
-                REDIS_URL_WITH_TLS, ""
+            REDIS_URL_WITH_TLS, ""
         );
 
         assertThat(result).isInstanceOf(LettuceConnectionFactory.class);
@@ -147,7 +144,7 @@ class CacheConfigurationTest {
     @Test
     void redisConnectionFactory_shouldCreateFactory_withNullAccessKey() {
         RedisConnectionFactory result = cacheConfiguration.redisConnectionFactory(
-                REDIS_URL_WITH_TLS, null
+            REDIS_URL_WITH_TLS, null
         );
 
         assertThat(result).isInstanceOf(LettuceConnectionFactory.class);

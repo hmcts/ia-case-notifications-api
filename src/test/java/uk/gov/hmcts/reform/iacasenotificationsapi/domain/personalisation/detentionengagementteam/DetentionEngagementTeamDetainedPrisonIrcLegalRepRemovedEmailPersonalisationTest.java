@@ -40,11 +40,10 @@ class DetentionEngagementTeamDetainedPrisonIrcLegalRepRemovedEmailPersonalisatio
     private static final String TEMPLATE_ID = "template123";
     private static final String NON_ADA_PREFIX = "[NON-ADA]";
     private static final long CASE_ID = 1234L;
-    private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
     final DocumentWithMetadata detainedLegalRepRemovedDoc = getDocumentWithMetadata(
-            "id", "detained_legal_rep_removed", "some other desc", DocumentTag.DETAINED_LEGAL_REP_REMOVED_IRC_PRISON_LETTER);
+        "id", "detained_legal_rep_removed", "some other desc", DocumentTag.DETAINED_LEGAL_REP_REMOVED_IRC_PRISON_LETTER);
     final IdValue<DocumentWithMetadata> legalRepRemovedBundle = new IdValue<>("1", detainedLegalRepRemovedDoc);
-
+    private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
     @Mock
     private DetentionEmailService detentionEmailService;
 
@@ -59,12 +58,12 @@ class DetentionEngagementTeamDetainedPrisonIrcLegalRepRemovedEmailPersonalisatio
     @BeforeEach
     void setUp() {
         personalisation =
-                new DetentionEngagementTeamDetainedPrisonIrcLegalRepRemovedEmailPersonalisation(
-                        TEMPLATE_ID,
-                        NON_ADA_PREFIX,
-                        detentionEmailService,
-                        documentDownloadClient
-                );
+            new DetentionEngagementTeamDetainedPrisonIrcLegalRepRemovedEmailPersonalisation(
+                TEMPLATE_ID,
+                NON_ADA_PREFIX,
+                detentionEmailService,
+                documentDownloadClient
+            );
     }
 
     @Test
@@ -132,9 +131,8 @@ class DetentionEngagementTeamDetainedPrisonIrcLegalRepRemovedEmailPersonalisatio
     void should_throw_exception_when_asylum_case_is_null() {
         AsylumCase nullAsylumCase = null;
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> personalisation.getPersonalisationForLink(nullAsylumCase))
-                ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> personalisation.getPersonalisationForLink(nullAsylumCase));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -142,32 +140,29 @@ assertEquals("asylumCase must not be null", exception.getMessage());
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> personalisation.getPersonalisationForLink(asylumCase))
-                ;
-assertEquals("detainedLegalRepRemovedIrcPrisonLetter document not available", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> personalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("detainedLegalRepRemovedIrcPrisonLetter document not available", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_when_document_download_client_throws_io_exception() throws IOException, NotificationClientException {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.of(Collections.singletonList(legalRepRemovedBundle)));
         when(documentDownloadClient.getJsonObjectFromDocument(any(DocumentWithMetadata.class)))
-                .thenThrow(new IOException("Download failed"));
+            .thenThrow(new IOException("Download failed"));
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> personalisation.getPersonalisationForLink(asylumCase))
-                ;
-assertEquals("Failed to get detainedLegalRepRemovedIrcPrisonLetter in compatible format", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> personalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("Failed to get detainedLegalRepRemovedIrcPrisonLetter in compatible format", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_when_document_download_client_throws_notification_client_exception() throws IOException, NotificationClientException {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.of(Collections.singletonList(legalRepRemovedBundle)));
         when(documentDownloadClient.getJsonObjectFromDocument(any(DocumentWithMetadata.class)))
-                .thenThrow(new NotificationClientException("Notification client error"));
+            .thenThrow(new NotificationClientException("Notification client error"));
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> personalisation.getPersonalisationForLink(asylumCase))
-                ;
-assertEquals("Failed to get detainedLegalRepRemovedIrcPrisonLetter in compatible format", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> personalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("Failed to get detainedLegalRepRemovedIrcPrisonLetter in compatible format", exception.getMessage());
     }
 }

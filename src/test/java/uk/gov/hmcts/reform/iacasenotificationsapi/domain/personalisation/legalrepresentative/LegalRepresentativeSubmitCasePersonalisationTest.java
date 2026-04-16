@@ -30,12 +30,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class LegalRepresentativeSubmitCasePersonalisationTest {
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-
-
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "cust.services@example.com";
@@ -45,7 +39,10 @@ public class LegalRepresentativeSubmitCasePersonalisationTest {
     private final String iaExUiFrontendUrl = "http://somefrontendurl";
     private final String templateId = "someTemplateId";
     private final String legalRepEmailAddress = "legalRepEmailAddress@example.com";
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
     private LegalRepresentativeSubmitCasePersonalisation legalRepresentativeSubmitCasePersonalisation;
 
 
@@ -80,7 +77,7 @@ public class LegalRepresentativeSubmitCasePersonalisationTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         initializePrefixes(legalRepresentativeSubmitCasePersonalisation);

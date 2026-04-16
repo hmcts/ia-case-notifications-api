@@ -32,18 +32,12 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class HomeOfficeFtpaApplicationDecisionAppellantPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    PersonalisationProvider personalisationProvider;
-
     private final String upperTribunalNoticesEmailAddress = "homeoffice-granted@example.com";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
     private final String ariaListingReference = "ariaListingReference";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-
     private final String otherPartyGrantedTemplateId = "otherPartyGrantedTemplateId";
     private final String otherPartyPartiallyGrantedTemplateId = "otherPartyPartiallyGrantedTemplateId";
     private final String otherPartyNotAdmittedTemplateId = "otherPartyNotAdmittedTemplateId";
@@ -51,7 +45,6 @@ public class HomeOfficeFtpaApplicationDecisionAppellantPersonalisationTest {
     private final String otherPartyReheardTemplateId = "otherPartyReheardTemplateId";
     private final String allowedTemplateId = "allowedTemplateId";
     private final String dismissedTemplateId = "dismissedTemplateId";
-
     private final FtpaDecisionOutcomeType granted = FTPA_GRANTED;
     private final FtpaDecisionOutcomeType partiallyGranted = FTPA_PARTIALLY_GRANTED;
     private final FtpaDecisionOutcomeType notAdmitted = FTPA_NOT_ADMITTED;
@@ -60,7 +53,10 @@ public class HomeOfficeFtpaApplicationDecisionAppellantPersonalisationTest {
     private final FtpaDecisionOutcomeType remade = FTPA_REMADE32;
     private final FtpaDecisionOutcomeType allowed = FTPA_ALLOWED;
     private final FtpaDecisionOutcomeType dismissed = FTPA_DISMISSED;
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    PersonalisationProvider personalisationProvider;
     private HomeOfficeFtpaApplicationDecisionAppellantPersonalisation
         homeOfficeFtpaApplicationDecisionAppellantPersonalisation;
 
@@ -85,10 +81,9 @@ public class HomeOfficeFtpaApplicationDecisionAppellantPersonalisationTest {
     public void should_return_given_template_id_when_outcome_is_empty() {
         when(asylumCase.read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class))
             .thenReturn(Optional.empty());
-        IllegalStateException exception = 
-assertThrows(IllegalStateException.class, () -> homeOfficeFtpaApplicationDecisionAppellantPersonalisation.getTemplateId(asylumCase))
-            ;
-assertEquals("ftpaAppellantDecisionOutcomeType is not present", exception.getMessage());
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> homeOfficeFtpaApplicationDecisionAppellantPersonalisation.getTemplateId(asylumCase));
+        assertEquals("ftpaAppellantDecisionOutcomeType is not present", exception.getMessage());
     }
 
     @Test
@@ -170,10 +165,9 @@ assertEquals("ftpaAppellantDecisionOutcomeType is not present", exception.getMes
         when(asylumCase.read(CURRENT_CASE_STATE_VISIBLE_TO_JUDGE, State.class))
             .thenReturn(Optional.of(State.DECIDED));
 
-        IllegalStateException exception = 
-assertThrows(IllegalStateException.class, () -> homeOfficeFtpaApplicationDecisionAppellantPersonalisation.getRecipientsList(asylumCase))
-            ;
-assertEquals("homeOffice email Address cannot be found", exception.getMessage());
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> homeOfficeFtpaApplicationDecisionAppellantPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("homeOffice email Address cannot be found", exception.getMessage());
     }
 
     @Test
@@ -181,14 +175,13 @@ assertEquals("homeOffice email Address cannot be found", exception.getMessage())
         when(asylumCase.read(CURRENT_CASE_STATE_VISIBLE_TO_JUDGE, State.class))
             .thenReturn(Optional.empty());
 
-        IllegalStateException exception = 
-assertThrows(IllegalStateException.class, () -> homeOfficeFtpaApplicationDecisionAppellantPersonalisation.getRecipientsList(asylumCase))
-            ;
-assertEquals("homeOffice email Address cannot be found", exception.getMessage());
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> homeOfficeFtpaApplicationDecisionAppellantPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("homeOffice email Address cannot be found", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_of_all_information_given(YesOrNo isAda) {
         initializePrefixes(homeOfficeFtpaApplicationDecisionAppellantPersonalisation);
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));

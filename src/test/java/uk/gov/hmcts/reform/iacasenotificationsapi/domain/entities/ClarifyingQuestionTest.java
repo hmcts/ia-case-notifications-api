@@ -21,8 +21,8 @@ public class ClarifyingQuestionTest {
     @Test
     public void should_not_allow_null_arguments() {
 
-        assertThrows(NullPointerException.class, 
-() -> new ClarifyingQuestion(null));
+        assertThrows(NullPointerException.class,
+            () -> new ClarifyingQuestion(null));
 
     }
 }

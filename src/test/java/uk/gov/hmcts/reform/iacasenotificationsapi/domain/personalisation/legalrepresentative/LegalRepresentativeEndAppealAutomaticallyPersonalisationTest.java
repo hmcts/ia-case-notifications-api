@@ -35,11 +35,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class LegalRepresentativeEndAppealAutomaticallyPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-
     private final String templateId = "someTemplateId";
     private final String iaExUiFrontendUrl = "http://localhost";
     private final String legalRepEmailAddress = "legalRep@example.com";
@@ -47,7 +42,10 @@ public class LegalRepresentativeEndAppealAutomaticallyPersonalisationTest {
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
     private LegalRepresentativeEndAppealAutomaticallyPersonalisation legalRepresentativeEndAppealAutomaticallyPersonalisation;
 
     @BeforeEach
@@ -95,24 +93,22 @@ public class LegalRepresentativeEndAppealAutomaticallyPersonalisationTest {
     public void should_throw_exception_when_cannot_find_email_address_for_legal_rep() {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
 
-        IllegalStateException exception = 
-assertThrows(IllegalStateException.class, () -> legalRepresentativeEndAppealAutomaticallyPersonalisation.getRecipientsList(asylumCase))
-            ;
-assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> legalRepresentativeEndAppealAutomaticallyPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        NullPointerException exception = 
-assertThrows(NullPointerException.class, 
-            () -> legalRepresentativeEndAppealAutomaticallyPersonalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> legalRepresentativeEndAppealAutomaticallyPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
@@ -135,7 +131,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));

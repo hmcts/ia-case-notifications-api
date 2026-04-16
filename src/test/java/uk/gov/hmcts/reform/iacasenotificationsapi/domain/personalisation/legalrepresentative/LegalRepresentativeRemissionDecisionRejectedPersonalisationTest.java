@@ -21,14 +21,13 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @ExtendWith(MockitoExtension.class)
 class LegalRepresentativeRemissionDecisionRejectedPersonalisationTest {
 
+    private final String iaExUiFrontendUrl = "http://somefrontendurl";
+    private final String templateId = "someTemplateId";
+    private final String legalRepEmailAddress = "legalRepEmailAddress@example.com";
     @Mock
     CustomerServicesProvider customerServicesProvider;
     @Mock
     private AsylumCase asylumCase;
-    private final String iaExUiFrontendUrl = "http://somefrontendurl";
-    private final String templateId = "someTemplateId";
-    private final String legalRepEmailAddress = "legalRepEmailAddress@example.com";
-
     private LegalRepresentativeRemissionDecisionRejectedPersonalisation
         legalRepresentativeRemissionDecisionRejectedPersonalisation;
 

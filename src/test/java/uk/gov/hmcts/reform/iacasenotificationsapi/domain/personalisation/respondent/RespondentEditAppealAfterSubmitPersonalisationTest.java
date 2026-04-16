@@ -123,9 +123,8 @@ public class RespondentEditAppealAfterSubmitPersonalisationTest {
             .thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> personalisation.getRecipientsList(asylumCase))
-            ;
-assertEquals("currentCaseStateVisibleToHomeOfficeAll flag is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> personalisation.getRecipientsList(asylumCase));
+        assertEquals("currentCaseStateVisibleToHomeOfficeAll flag is not present", exception.getMessage());
     }
 
     @Test
@@ -135,7 +134,7 @@ assertEquals("currentCaseStateVisibleToHomeOfficeAll flag is not present", excep
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
@@ -151,7 +150,7 @@ assertEquals("currentCaseStateVisibleToHomeOfficeAll flag is not present", excep
             .containsEntry("ariaListingReference", ariaListingReference);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-            assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
@@ -170,9 +169,8 @@ assertEquals("currentCaseStateVisibleToHomeOfficeAll flag is not present", excep
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> personalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> personalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
 }

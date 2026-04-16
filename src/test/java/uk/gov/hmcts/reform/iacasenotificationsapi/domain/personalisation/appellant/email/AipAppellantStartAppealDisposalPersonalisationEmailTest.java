@@ -32,23 +32,21 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AipAppellantStartAppealDisposalPersonalisationEmailTest {
+    private final Long caseId = 12345L;
+    private final String emailTemplateId = "someEmailTemplateId";
+    private final String mockedAppellantEmailAddress = "appelant@example.net";
     @Mock
     Callback<AsylumCase> callback;
     @Mock
     AsylumCase asylumCase;
-    @Mock
-    private CaseDetails<AsylumCase> caseDetails;
     @Mock
     CustomerServicesProvider customerServicesProvider;
     @Mock
     UserDetailsProvider userDetailsProvider;
     @Mock
     UserDetails userDetails;
-
-    private final Long caseId = 12345L;
-    private final String emailTemplateId = "someEmailTemplateId";
-    private final String mockedAppellantEmailAddress = "appelant@example.net";
-
+    @Mock
+    private CaseDetails<AsylumCase> caseDetails;
     private AipAppellantStartAppealDisposalPersonalisationEmail aipAppellantStartAppealDisposalPersonalisationEmail;
 
     @BeforeEach
@@ -59,7 +57,7 @@ class AipAppellantStartAppealDisposalPersonalisationEmailTest {
         when(callback.getCaseDetails().getId()).thenReturn(caseId);
 
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class))
-                .thenReturn(Optional.of("someHomeOfficeReferenceNumber"));
+            .thenReturn(Optional.of("someHomeOfficeReferenceNumber"));
 
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of("someAppellantGivenNames"));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of("someAppellantFamilyName"));
@@ -88,19 +86,19 @@ class AipAppellantStartAppealDisposalPersonalisationEmailTest {
     @Test
     void should_return_given_reference_id() {
         assertEquals(caseId + "_APPEAL_STARTED_APPELLANT_AIP_DISPOSAL",
-                aipAppellantStartAppealDisposalPersonalisationEmail.getReferenceId(caseId));
+            aipAppellantStartAppealDisposalPersonalisationEmail.getReferenceId(caseId));
     }
 
     @Test
     void should_return_given_email_address_in_asylum_case_in_non_aip_case() {
         // given
         when(asylumCase.read(EMAIL))
-                .thenReturn(Optional.of(mockedAppellantEmailAddress));
+            .thenReturn(Optional.of(mockedAppellantEmailAddress));
 
         // when
         // then
         assertTrue(aipAppellantStartAppealDisposalPersonalisationEmail.getRecipientsList(asylumCase)
-                .contains(mockedAppellantEmailAddress));
+            .contains(mockedAppellantEmailAddress));
     }
 
     @Test
@@ -108,7 +106,7 @@ class AipAppellantStartAppealDisposalPersonalisationEmailTest {
         // given
         // when
         Map<String, String> personalisation =
-                aipAppellantStartAppealDisposalPersonalisationEmail.getPersonalisation(callback);
+            aipAppellantStartAppealDisposalPersonalisationEmail.getPersonalisation(callback);
 
         // then
         assertThat(personalisation)
@@ -128,7 +126,7 @@ class AipAppellantStartAppealDisposalPersonalisationEmailTest {
 
         // when
         Map<String, String> personalisation =
-                aipAppellantStartAppealDisposalPersonalisationEmail.getPersonalisation(callback);
+            aipAppellantStartAppealDisposalPersonalisationEmail.getPersonalisation(callback);
 
         // then
         assertFalse(personalisation.isEmpty());

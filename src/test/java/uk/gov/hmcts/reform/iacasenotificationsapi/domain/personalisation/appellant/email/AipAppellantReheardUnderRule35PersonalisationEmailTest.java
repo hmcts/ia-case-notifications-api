@@ -30,17 +30,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AipAppellantReheardUnderRule35PersonalisationEmailTest {
-    @Mock
-    Callback<AsylumCase> callback;
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    private CaseDetails<AsylumCase> caseDetails;
-    @Mock
-    RecipientsFinder recipientsFinder;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-
     private final Long caseId = 12345L;
     private final String aipAppellantReheardUnder35RuleEmailTemplateId = "aipAppellantReheardUnder35RuleEmailTemplateId";
     private final String iaAipFrontendUrl = "http://localhost";
@@ -49,6 +38,16 @@ class AipAppellantReheardUnderRule35PersonalisationEmailTest {
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "cust.services@example.com";
+    @Mock
+    Callback<AsylumCase> callback;
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    RecipientsFinder recipientsFinder;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    private CaseDetails<AsylumCase> caseDetails;
     private AipAppellantReheardUnderRule35PersonalisationEmail aipAppellantReheardUnderRule35PersonalisationEmail;
 
     @BeforeEach
@@ -101,9 +100,8 @@ class AipAppellantReheardUnderRule35PersonalisationEmailTest {
             .thenThrow(new NullPointerException("asylumCase must not be null"));
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> aipAppellantReheardUnderRule35PersonalisationEmail.getRecipientsList(null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> aipAppellantReheardUnderRule35PersonalisationEmail.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test

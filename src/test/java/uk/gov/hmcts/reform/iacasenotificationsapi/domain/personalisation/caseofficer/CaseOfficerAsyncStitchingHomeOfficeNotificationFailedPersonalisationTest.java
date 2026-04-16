@@ -28,21 +28,18 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class CaseOfficerAsyncStitchingHomeOfficeNotificationFailedPersonalisationTest {
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String ariaListingReference = "ariaListingReference";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String iaExUiFrontendUrl = "frontend url";
+    private final String asyncStitchingHomeOfficeNotificationFailedTemplateId = "asyncStitchingHomeOfficeNotificationFailedTemplateId";
     @Mock
     AsylumCase asylumCase;
     @Mock
     PersonalisationProvider personalisationProvider;
     @Mock
     EmailAddressFinder emailAddressFinder;
-
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String ariaListingReference = "ariaListingReference";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-
-    private final String iaExUiFrontendUrl = "frontend url";
-    private final String asyncStitchingHomeOfficeNotificationFailedTemplateId = "asyncStitchingHomeOfficeNotificationFailedTemplateId";
-
     private CaseOfficerAsyncStitchingHomeOfficeNotificationFailedPersonalisation homeOfficeNotificationFailedPersonalisation;
 
     @BeforeEach
@@ -71,11 +68,11 @@ class CaseOfficerAsyncStitchingHomeOfficeNotificationFailedPersonalisationTest {
         String caseOfficerEmailAddress = "caseOfficer@example.com";
         when(emailAddressFinder.getListCaseHearingCentreEmailAddress(asylumCase)).thenReturn(caseOfficerEmailAddress);
         assertTrue(
-                homeOfficeNotificationFailedPersonalisation.getRecipientsList(asylumCase).contains(caseOfficerEmailAddress));
+            homeOfficeNotificationFailedPersonalisation.getRecipientsList(asylumCase).contains(caseOfficerEmailAddress));
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_of_all_information_given(YesOrNo isAda) {
         initializePrefixes(homeOfficeNotificationFailedPersonalisation);
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));

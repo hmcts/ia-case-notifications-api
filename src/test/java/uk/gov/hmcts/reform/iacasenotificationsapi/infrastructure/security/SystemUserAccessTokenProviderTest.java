@@ -75,10 +75,9 @@ public class SystemUserAccessTokenProviderTest {
         when(idamApi.token(org.mockito.ArgumentMatchers.any()))
             .thenThrow(FeignException.class);
 
-        IdentityManagerResponseException exception = 
-assertThrows(IdentityManagerResponseException.class, () -> systemUserAccessTokenProvider.getAccessToken())
-            ;
-assertEquals("Could not get system user token from IDAM", exception.getMessage());
+        IdentityManagerResponseException exception =
+            assertThrows(IdentityManagerResponseException.class, () -> systemUserAccessTokenProvider.getAccessToken());
+        assertEquals("Could not get system user token from IDAM", exception.getMessage());
     }
 
     @Test
@@ -86,30 +85,27 @@ assertEquals("Could not get system user token from IDAM", exception.getMessage()
         when(idamApi.token(org.mockito.ArgumentMatchers.any()))
             .thenThrow(FeignException.class);
 
-        IdentityManagerResponseException exception = 
-assertThrows(IdentityManagerResponseException.class, () -> systemUserAccessTokenProvider.tryGetAccessToken())
-            ;
-assertEquals("Could not get system user token from IDAM", exception.getMessage());
+        IdentityManagerResponseException exception =
+            assertThrows(IdentityManagerResponseException.class, () -> systemUserAccessTokenProvider.tryGetAccessToken());
+        assertEquals("Could not get system user token from IDAM", exception.getMessage());
     }
 
     @Test
     public void get_access_token_throws_exception_when_token_response_is_null() {
         when(idamApi.token(org.mockito.ArgumentMatchers.any())).thenReturn(null);
 
-        IdentityManagerResponseException exception = 
-assertThrows(IdentityManagerResponseException.class, () -> systemUserAccessTokenProvider.getAccessToken())
-            ;
-assertEquals("Could not get system user token from IDAM", exception.getMessage());
+        IdentityManagerResponseException exception =
+            assertThrows(IdentityManagerResponseException.class, () -> systemUserAccessTokenProvider.getAccessToken());
+        assertEquals("Could not get system user token from IDAM", exception.getMessage());
     }
 
     @Test
     public void try_get_access_token_throws_exception_when_token_response_is_null() {
         when(idamApi.token(org.mockito.ArgumentMatchers.any())).thenReturn(null);
 
-        IdentityManagerResponseException exception = 
-assertThrows(IdentityManagerResponseException.class, () -> systemUserAccessTokenProvider.tryGetAccessToken())
-            ;
-assertEquals("Could not get system user token from IDAM", exception.getMessage());
+        IdentityManagerResponseException exception =
+            assertThrows(IdentityManagerResponseException.class, () -> systemUserAccessTokenProvider.tryGetAccessToken());
+        assertEquals("Could not get system user token from IDAM", exception.getMessage());
     }
 
     @Test
@@ -118,10 +114,9 @@ assertEquals("Could not get system user token from IDAM", exception.getMessage()
 
         when(idamApi.token(org.mockito.ArgumentMatchers.any())).thenReturn(tokenResponse);
 
-        IdentityManagerResponseException exception = 
-assertThrows(IdentityManagerResponseException.class, () -> systemUserAccessTokenProvider.getAccessToken())
-            ;
-assertEquals("Could not get system user token from IDAM", exception.getMessage());
+        IdentityManagerResponseException exception =
+            assertThrows(IdentityManagerResponseException.class, () -> systemUserAccessTokenProvider.getAccessToken());
+        assertEquals("Could not get system user token from IDAM", exception.getMessage());
     }
 
     @Test
@@ -130,10 +125,9 @@ assertEquals("Could not get system user token from IDAM", exception.getMessage()
 
         when(idamApi.token(org.mockito.ArgumentMatchers.any())).thenReturn(tokenResponse);
 
-        IdentityManagerResponseException exception = 
-assertThrows(IdentityManagerResponseException.class, () -> systemUserAccessTokenProvider.tryGetAccessToken())
-            ;
-assertEquals("Could not get system user token from IDAM", exception.getMessage());
+        IdentityManagerResponseException exception =
+            assertThrows(IdentityManagerResponseException.class, () -> systemUserAccessTokenProvider.tryGetAccessToken());
+        assertEquals("Could not get system user token from IDAM", exception.getMessage());
     }
 
     @Test
@@ -142,10 +136,9 @@ assertEquals("Could not get system user token from IDAM", exception.getMessage()
 
         when(idamApi.token(org.mockito.ArgumentMatchers.any())).thenReturn(tokenResponse);
 
-        IdentityManagerResponseException exception = 
-assertThrows(IdentityManagerResponseException.class, () -> systemUserAccessTokenProvider.getAccessToken())
-            ;
-assertEquals("Could not get system user token from IDAM", exception.getMessage());
+        IdentityManagerResponseException exception =
+            assertThrows(IdentityManagerResponseException.class, () -> systemUserAccessTokenProvider.getAccessToken());
+        assertEquals("Could not get system user token from IDAM", exception.getMessage());
     }
 
     @Test
@@ -154,9 +147,8 @@ assertEquals("Could not get system user token from IDAM", exception.getMessage()
 
         when(idamApi.token(org.mockito.ArgumentMatchers.any())).thenReturn(tokenResponse);
 
-        IdentityManagerResponseException exception = 
-assertThrows(IdentityManagerResponseException.class, () -> systemUserAccessTokenProvider.tryGetAccessToken())
-            ;
-assertEquals("Could not get system user token from IDAM", exception.getMessage());
+        IdentityManagerResponseException exception =
+            assertThrows(IdentityManagerResponseException.class, () -> systemUserAccessTokenProvider.tryGetAccessToken());
+        assertEquals("Could not get system user token from IDAM", exception.getMessage());
     }
 }

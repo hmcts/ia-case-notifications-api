@@ -25,15 +25,15 @@ public class DateTimeExtractorTest {
     @Test
     public void should_throw_when_invalid_iso_8610_date() {
 
-        assertThrows(DateTimeParseException.class, 
-() -> dateTimeExtractor.extractHearingDate(invalidIso8601HearingDate));
+        assertThrows(DateTimeParseException.class,
+            () -> dateTimeExtractor.extractHearingDate(invalidIso8601HearingDate));
     }
 
     @Test
     public void should_throw_when_invalid_iso_8610_time() {
 
-        assertThrows(DateTimeParseException.class, 
-() -> dateTimeExtractor.extractHearingTime(invalidIso8601HearingDate));
+        assertThrows(DateTimeParseException.class,
+            () -> dateTimeExtractor.extractHearingTime(invalidIso8601HearingDate));
     }
 
     @Test

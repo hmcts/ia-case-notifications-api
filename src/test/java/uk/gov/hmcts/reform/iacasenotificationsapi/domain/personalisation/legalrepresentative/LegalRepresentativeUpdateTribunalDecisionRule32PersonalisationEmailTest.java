@@ -26,15 +26,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Hearing
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class LegalRepresentativeUpdateTribunalDecisionRule32PersonalisationEmailTest {
-    @Mock
-    Callback<AsylumCase> callback;
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    private CaseDetails<AsylumCase> caseDetails;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-
     private final Long caseId = 12345L;
     private final String legalRepresentativeUpdateTribunalDecisionRule32EmailTemplateId = "legalRepresentativeUpdateTribunalDecisionRule32EmailTemplateId";
     private final String exUiFrontendUrl = "http://localhost";
@@ -43,6 +34,14 @@ class LegalRepresentativeUpdateTribunalDecisionRule32PersonalisationEmailTest {
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "cust.services@example.com";
+    @Mock
+    Callback<AsylumCase> callback;
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    private CaseDetails<AsylumCase> caseDetails;
     private LegalRepresentativeUpdateTribunalDecisionRule32PersonalisationEmail legalRepresentativeUpdateTribunalDecisionRule32PersonalisationEmail;
 
     @BeforeEach
@@ -76,16 +75,15 @@ class LegalRepresentativeUpdateTribunalDecisionRule32PersonalisationEmailTest {
     @Test
     void should_return_given_reference_id() {
         assertEquals(caseId + "_LEGAL_REPRESENTATIVE_UPDATE_TRIBUNAL_DECISION_RULE_32_EMAIL",
-                legalRepresentativeUpdateTribunalDecisionRule32PersonalisationEmail.getReferenceId(caseId));
+            legalRepresentativeUpdateTribunalDecisionRule32PersonalisationEmail.getReferenceId(caseId));
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> legalRepresentativeUpdateTribunalDecisionRule32PersonalisationEmail.getPersonalisation((Callback<AsylumCase>) null))
-            ;
-assertEquals("callback must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> legalRepresentativeUpdateTribunalDecisionRule32PersonalisationEmail.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     @Test

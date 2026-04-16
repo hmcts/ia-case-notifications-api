@@ -28,11 +28,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class LegalRepresentativeRemissionDecisionApprovedPersonalisationTest {
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-
     private final String templateId = "someTemplateId";
     private final String iaExUiFrontendUrl = "http://localhost";
     private final String legalRepEmailAddress = "legalRep@example.com";
@@ -40,7 +35,10 @@ class LegalRepresentativeRemissionDecisionApprovedPersonalisationTest {
     private final String legalRepRefNumber = "somelegalRepRefNumber";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
     private LegalRepresentativeRemissionDecisionApprovedPersonalisation
         legalRepresentativeRemissionDecisionApprovedPersonalisation;
 
@@ -89,20 +87,18 @@ class LegalRepresentativeRemissionDecisionApprovedPersonalisationTest {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class,
-            () -> legalRepresentativeRemissionDecisionApprovedPersonalisation.getRecipientsList(asylumCase))
-            ;
-assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class,
+                () -> legalRepresentativeRemissionDecisionApprovedPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> legalRepresentativeRemissionDecisionApprovedPersonalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> legalRepresentativeRemissionDecisionApprovedPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test

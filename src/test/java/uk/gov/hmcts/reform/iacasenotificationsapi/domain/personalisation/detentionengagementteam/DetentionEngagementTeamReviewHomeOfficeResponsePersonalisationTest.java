@@ -40,6 +40,18 @@ import uk.gov.service.notify.NotificationClientException;
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class DetentionEngagementTeamReviewHomeOfficeResponsePersonalisationTest {
 
+    final DocumentWithMetadata internalDetainedReviewHomeOfficeResponseDecisionMaintainedLetter = getDocumentWithMetadata(
+        "1", "Detained appellant letter_HO response when decision maintained", "some other desc", DocumentTag.INTERNAL_DETAINED_REQUEST_HO_RESPONSE_REVIEW);
+    final IdValue<DocumentWithMetadata> internalDetainedReviewHomeOfficeResponseDecisionMaintainedLetterId = new IdValue<>("1", internalDetainedReviewHomeOfficeResponseDecisionMaintainedLetter);
+    final DocumentWithMetadata internalDetainedReviewHomeOfficeResponseDecisionWithdrawnLetter = getDocumentWithMetadata(
+        "1", "Detained appellant letter_HO response when decision withdrawn", "some other desc", DocumentTag.INTERNAL_DETAINED_REQUEST_HO_RESPONSE_REVIEW);
+    final IdValue<DocumentWithMetadata> internalDetainedReviewHomeOfficeResponseDecisionWithdrawnLetterId = new IdValue<>("1", internalDetainedReviewHomeOfficeResponseDecisionWithdrawnLetter);
+    private final String templateId = "someTemplateId";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String homeOfficeReferenceNumber = "someReferenceNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String subjectPrefix = "IAFT - SERVE BY POST";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -50,20 +62,6 @@ public class DetentionEngagementTeamReviewHomeOfficeResponsePersonalisationTest 
     DocumentDownloadClient documentDownloadClient;
     @Mock
     private PersonalisationProvider personalisationProvider;
-
-    private final String templateId = "someTemplateId";
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String homeOfficeReferenceNumber = "someReferenceNumber";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-    private final String subjectPrefix = "IAFT - SERVE BY POST";
-    final DocumentWithMetadata internalDetainedReviewHomeOfficeResponseDecisionMaintainedLetter = getDocumentWithMetadata(
-            "1", "Detained appellant letter_HO response when decision maintained", "some other desc", DocumentTag.INTERNAL_DETAINED_REQUEST_HO_RESPONSE_REVIEW);
-    final IdValue<DocumentWithMetadata> internalDetainedReviewHomeOfficeResponseDecisionMaintainedLetterId = new IdValue<>("1", internalDetainedReviewHomeOfficeResponseDecisionMaintainedLetter);
-
-    final DocumentWithMetadata internalDetainedReviewHomeOfficeResponseDecisionWithdrawnLetter = getDocumentWithMetadata(
-            "1", "Detained appellant letter_HO response when decision withdrawn", "some other desc", DocumentTag.INTERNAL_DETAINED_REQUEST_HO_RESPONSE_REVIEW);
-    final IdValue<DocumentWithMetadata> internalDetainedReviewHomeOfficeResponseDecisionWithdrawnLetterId = new IdValue<>("1", internalDetainedReviewHomeOfficeResponseDecisionWithdrawnLetter);
     private DetentionEngagementTeamReviewHomeOfficeResponsePersonalisation detentionEngagementTeamReviewHomeOfficeResponsePersonalisation;
 
 
@@ -79,13 +77,13 @@ public class DetentionEngagementTeamReviewHomeOfficeResponsePersonalisationTest 
         when(asylumCase.read(APPEAL_REVIEW_OUTCOME, AppealReviewOutcome.class)).thenReturn(Optional.of(AppealReviewOutcome.DECISION_MAINTAINED));
 
         detentionEngagementTeamReviewHomeOfficeResponsePersonalisation =
-                new DetentionEngagementTeamReviewHomeOfficeResponsePersonalisation(
-                        templateId,
-                        detEmailService,
-                        documentDownloadClient,
-                        subjectPrefix,
-                        personalisationProvider
-                );
+            new DetentionEngagementTeamReviewHomeOfficeResponsePersonalisation(
+                templateId,
+                detEmailService,
+                documentDownloadClient,
+                subjectPrefix,
+                personalisationProvider
+            );
     }
 
     @Test
@@ -98,7 +96,7 @@ public class DetentionEngagementTeamReviewHomeOfficeResponsePersonalisationTest 
         Long caseId = 12345L;
         String detentionEngagementTeamReviewHomeOfficeResponseersonalisationReferenceId = "_INTERNAL_DETAINED_REVIEW_HOME_OFFICE_RESPONSE_DET";
         assertEquals(caseId + detentionEngagementTeamReviewHomeOfficeResponseersonalisationReferenceId,
-                detentionEngagementTeamReviewHomeOfficeResponsePersonalisation.getReferenceId(caseId));
+            detentionEngagementTeamReviewHomeOfficeResponsePersonalisation.getReferenceId(caseId));
     }
 
     @Test
@@ -108,7 +106,7 @@ public class DetentionEngagementTeamReviewHomeOfficeResponsePersonalisationTest 
         when(detEmailService.getDetEmailAddress(asylumCase)).thenReturn(detEmailAddress);
 
         assertTrue(
-                detentionEngagementTeamReviewHomeOfficeResponsePersonalisation.getRecipientsList(asylumCase).contains(detEmailAddress));
+            detentionEngagementTeamReviewHomeOfficeResponsePersonalisation.getRecipientsList(asylumCase).contains(detEmailAddress));
     }
 
     @Test
@@ -127,10 +125,9 @@ public class DetentionEngagementTeamReviewHomeOfficeResponsePersonalisationTest 
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-                () -> detentionEngagementTeamReviewHomeOfficeResponsePersonalisation.getPersonalisationForLink((AsylumCase) null))
-                ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> detentionEngagementTeamReviewHomeOfficeResponsePersonalisation.getPersonalisationForLink((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -138,10 +135,9 @@ assertEquals("asylumCase must not be null", exception.getMessage());
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class,
-                () -> detentionEngagementTeamReviewHomeOfficeResponsePersonalisation.getPersonalisationForLink(asylumCase))
-                ;
-assertEquals("internalDetainedRequestHomeOfficeResponseReview document not available", exception.getMessage());
+            assertThrows(IllegalStateException.class,
+                () -> detentionEngagementTeamReviewHomeOfficeResponsePersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("internalDetainedRequestHomeOfficeResponseReview document not available", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -149,15 +145,15 @@ assertEquals("internalDetainedRequestHomeOfficeResponseReview document not avail
     public void should_return_correct_letter_based_on_appeal_review_outcome(AppealReviewOutcome appealReviewOutcome) throws NotificationClientException, IOException {
         IdValue<DocumentWithMetadata> documentIdValueMetaDataToUpload;
         documentIdValueMetaDataToUpload = appealReviewOutcome.equals(AppealReviewOutcome.DECISION_MAINTAINED)
-                ? internalDetainedReviewHomeOfficeResponseDecisionMaintainedLetterId
-                : internalDetainedReviewHomeOfficeResponseDecisionWithdrawnLetterId;
+            ? internalDetainedReviewHomeOfficeResponseDecisionMaintainedLetterId
+            : internalDetainedReviewHomeOfficeResponseDecisionWithdrawnLetterId;
 
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.of(newArrayList(documentIdValueMetaDataToUpload)));
 
         DocumentWithMetadata documentToUpload;
         documentToUpload = appealReviewOutcome.equals(AppealReviewOutcome.DECISION_MAINTAINED)
-                ? internalDetainedReviewHomeOfficeResponseDecisionMaintainedLetter
-                : internalDetainedReviewHomeOfficeResponseDecisionWithdrawnLetter;
+            ? internalDetainedReviewHomeOfficeResponseDecisionMaintainedLetter
+            : internalDetainedReviewHomeOfficeResponseDecisionWithdrawnLetter;
 
         when(documentDownloadClient.getJsonObjectFromDocument(documentToUpload)).thenReturn(jsonDocument);
         when(asylumCase.read(APPEAL_REVIEW_OUTCOME, AppealReviewOutcome.class)).thenReturn(Optional.of(appealReviewOutcome));
@@ -165,23 +161,23 @@ assertEquals("internalDetainedRequestHomeOfficeResponseReview document not avail
         String homeOfficeAppealReviewWithdrawnDocumentName = "Withdrawal Letter";
         String homeOfficeAppealReviewMaintainedDocumentName = "Home Office Response";
         String expectedDocumentName = appealReviewOutcome.equals(AppealReviewOutcome.DECISION_MAINTAINED)
-                ? homeOfficeAppealReviewMaintainedDocumentName
-                : homeOfficeAppealReviewWithdrawnDocumentName;
+            ? homeOfficeAppealReviewMaintainedDocumentName
+            : homeOfficeAppealReviewWithdrawnDocumentName;
 
         final Map<String, Object> expectedPersonalisation =
-                ImmutableMap
-                        .<String, Object>builder()
-                        .put("subjectPrefix", subjectPrefix)
-                        .put("appealReferenceNumber", appealReferenceNumber)
-                        .put("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
-                        .put("appellantGivenNames", appellantGivenNames)
-                        .put("appellantFamilyName", appellantFamilyName)
-                        .put("documentName", expectedDocumentName)
-                        .put("documentLink", jsonDocument)
-                        .build();
+            ImmutableMap
+                .<String, Object>builder()
+                .put("subjectPrefix", subjectPrefix)
+                .put("appealReferenceNumber", appealReferenceNumber)
+                .put("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
+                .put("appellantGivenNames", appellantGivenNames)
+                .put("appellantFamilyName", appellantFamilyName)
+                .put("documentName", expectedDocumentName)
+                .put("documentLink", jsonDocument)
+                .build();
 
         Map<String, Object> actualPersonalisation =
-                detentionEngagementTeamReviewHomeOfficeResponsePersonalisation.getPersonalisationForLink(asylumCase);
+            detentionEngagementTeamReviewHomeOfficeResponsePersonalisation.getPersonalisationForLink(asylumCase);
 
         assertTrue(compareStringsAndJsonObjects(expectedPersonalisation, actualPersonalisation));
     }

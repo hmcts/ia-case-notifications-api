@@ -39,23 +39,18 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantRespondentReviewPersonalisationEmailTest {
 
+    private final String emailTemplateId = "someEmailTemplateId";
+    private final String iaAipFrontendUrl = "http://localhost";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
+    private final String homeOfficeReferenceNumber = "someHOReferenceNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
     @Mock
     AsylumCase asylumCase;
     @Mock
     RecipientsFinder recipientsFinder;
     @Mock
     CustomerServicesProvider customerServicesProvider;
-
-    private final String emailTemplateId = "someEmailTemplateId";
-    private final String iaAipFrontendUrl = "http://localhost";
-
-    private final String mockedAppealReferenceNumber = "someReferenceNumber";
-
-    private final String homeOfficeReferenceNumber = "someHOReferenceNumber";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-
-
     private AppellantRespondentReviewPersonalisationEmail appellantRespondentReviewPersonalisationEmail;
 
     @BeforeEach
@@ -119,14 +114,13 @@ public class AppellantRespondentReviewPersonalisationEmailTest {
         when(recipientsFinder.findAll(null, NotificationType.EMAIL)).thenCallRealMethod();
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> appellantRespondentReviewPersonalisationEmail.getRecipientsList(null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> appellantRespondentReviewPersonalisationEmail.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         initializePrefixes(appellantRespondentReviewPersonalisationEmail);
@@ -147,7 +141,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_only_mandatory_information_given(YesOrNo isAda) {
 
         initializePrefixes(appellantRespondentReviewPersonalisationEmail);

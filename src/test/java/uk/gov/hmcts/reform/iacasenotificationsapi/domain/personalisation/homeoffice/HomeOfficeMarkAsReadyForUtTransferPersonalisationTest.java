@@ -34,10 +34,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class HomeOfficeMarkAsReadyForUtTransferPersonalisationTest {
-    @Mock
-    Callback<AsylumCase> callback;
-    @Mock
-    CaseDetails caseDetails;
     private final String beforeListingTemplateId = "beforeListingTemplateId";
     private final String afterListingTemplateId = "afterListingTemplateId";
     private final String iaExUiFrontendUrl = "http://localhost";
@@ -52,8 +48,10 @@ public class HomeOfficeMarkAsReadyForUtTransferPersonalisationTest {
     private final String homeOfficeApcEmailAddress = "homeOfficeAPC@example.com";
     private final String homeOfficeLartEmailAddress = "homeOfficeLART@example.com";
     private final String endAppealEmailAddresses = "HO-end-appeal@example.com";
-
-
+    @Mock
+    Callback<AsylumCase> callback;
+    @Mock
+    CaseDetails caseDetails;
     @Mock
     PersonalisationProvider personalisationProvider;
     @Mock
@@ -63,6 +61,11 @@ public class HomeOfficeMarkAsReadyForUtTransferPersonalisationTest {
     @Mock
     CustomerServicesProvider customerServicesProvider;
     private HomeOfficeMarkAppealReadyForUtTransferPersonalisation homeOfficeMarkAppealReadyForUtTransferPersonalisation;
+
+    public static void initializePrefixes(Object testClass) {
+        ReflectionTestUtils.setField(testClass, "adaPrefix", "Accelerated detained appeal");
+        ReflectionTestUtils.setField(testClass, "nonAdaPrefix", "Immigration and Asylum appeal");
+    }
 
     @BeforeEach
     public void setup() {
@@ -201,11 +204,6 @@ public class HomeOfficeMarkAsReadyForUtTransferPersonalisationTest {
             .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation())
             .containsAllEntriesOf(getPersonalisationForHomeOffice())
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
-    }
-
-    public static void initializePrefixes(Object testClass) {
-        ReflectionTestUtils.setField(testClass, "adaPrefix", "Accelerated detained appeal");
-        ReflectionTestUtils.setField(testClass, "nonAdaPrefix", "Immigration and Asylum appeal");
     }
 
     private Map<String, String> getPersonalisationForHomeOffice() {

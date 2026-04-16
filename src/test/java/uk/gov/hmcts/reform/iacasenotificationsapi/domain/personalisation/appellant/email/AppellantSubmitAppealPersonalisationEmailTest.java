@@ -44,29 +44,11 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvi
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppellantSubmitAppealPersonalisationEmailTest {
 
-    @Mock
-    Callback<AsylumCase> callback;
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    private CaseDetails<AsylumCase> caseDetails;
-    @Mock
-    RecipientsFinder recipientsFinder;
-    @Mock
-    SystemDateProvider systemDateProvider;
-    @Mock
-    AppealService appealService;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-
-
     private final Long caseId = 12345L;
     private final String emailTemplateId = "someEmailTemplateId";
     private final String emailWithoutHoReferenceTemplateId = "anotherEmailTemplateId";
     private final String nonAipEmailTemplateId = "someEmailTemplateId1";
     private final String iaAipFrontendUrl = "http://localhost";
-
-
     private final String mockedLegalRepAppealReferenceNumber = "someReferenceNumber";
     private final String mockedAppealReferenceNumber = "someReferenceNumber";
     private final String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
@@ -77,7 +59,20 @@ class AppellantSubmitAppealPersonalisationEmailTest {
     private final String expectedDateOfBirth = "1 Mar 2020";
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "cust.services@example.com";
-
+    @Mock
+    Callback<AsylumCase> callback;
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    RecipientsFinder recipientsFinder;
+    @Mock
+    SystemDateProvider systemDateProvider;
+    @Mock
+    AppealService appealService;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    private CaseDetails<AsylumCase> caseDetails;
     private AppellantSubmitAppealPersonalisationEmail appellantSubmitAppealPersonalisationEmail;
 
     @BeforeEach
@@ -158,13 +153,12 @@ class AppellantSubmitAppealPersonalisationEmailTest {
 
     @Test
     void should_throw_an_exception_email_address_empty() {
-        when(asylumCase.read(EMAIL,String.class))
+        when(asylumCase.read(EMAIL, String.class))
             .thenReturn(Optional.empty());
         when(appealService.isAppellantInPersonJourney(asylumCase)).thenReturn(false);
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> appellantSubmitAppealPersonalisationEmail.getRecipientsList(asylumCase))
-            ;
-assertEquals("appellantEmailAddress is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> appellantSubmitAppealPersonalisationEmail.getRecipientsList(asylumCase));
+        assertEquals("appellantEmailAddress is not present", exception.getMessage());
 
     }
 
@@ -175,9 +169,8 @@ assertEquals("appellantEmailAddress is not present", exception.getMessage());
             .thenThrow(new NullPointerException("asylumCase must not be null"));
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> appellantSubmitAppealPersonalisationEmail.getRecipientsList(null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> appellantSubmitAppealPersonalisationEmail.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -185,13 +178,12 @@ assertEquals("asylumCase must not be null", exception.getMessage());
         when(asylumCase.read(APPELLANT_DATE_OF_BIRTH, String.class)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> appellantSubmitAppealPersonalisationEmail.getPersonalisation(callback))
-            ;
-assertEquals("Appellant's birth of date is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> appellantSubmitAppealPersonalisationEmail.getPersonalisation(callback));
+        assertEquals("Appellant's birth of date is not present", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         initializePrefixes(appellantSubmitAppealPersonalisationEmail);
@@ -225,7 +217,7 @@ assertEquals("Appellant's birth of date is not present", exception.getMessage())
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_only_mandatory_information_given(YesOrNo isAda) {
 
         initializePrefixes(appellantSubmitAppealPersonalisationEmail);

@@ -24,15 +24,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class LegalRepresentativeReheardUnderRule35PersonalisationTest {
-    @Mock
-    Callback<AsylumCase> callback;
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    private CaseDetails<AsylumCase> caseDetails;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-
     private final Long caseId = 12345L;
     private final String legalRepReheardUnder35RuleEmailTemplateId = "legalRepReheardUnder35RuleEmailTemplateId";
     private final String exUiFrontendUrl = "http://localhost";
@@ -42,6 +33,14 @@ class LegalRepresentativeReheardUnderRule35PersonalisationTest {
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "cust.services@example.com";
+    @Mock
+    Callback<AsylumCase> callback;
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    private CaseDetails<AsylumCase> caseDetails;
     private LegalRepresentativeReheardUnderRule35Personalisation legalRepresentativeReheardUnderRule35Personalisation;
 
     @BeforeEach
@@ -89,18 +88,16 @@ class LegalRepresentativeReheardUnderRule35PersonalisationTest {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> legalRepresentativeReheardUnderRule35Personalisation.getRecipientsList(asylumCase))
-            ;
-assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> legalRepresentativeReheardUnderRule35Personalisation.getRecipientsList(asylumCase));
+        assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> legalRepresentativeReheardUnderRule35Personalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> legalRepresentativeReheardUnderRule35Personalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test

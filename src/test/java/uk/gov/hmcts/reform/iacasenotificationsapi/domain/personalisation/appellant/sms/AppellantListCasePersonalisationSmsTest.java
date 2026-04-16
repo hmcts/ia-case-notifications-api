@@ -34,6 +34,17 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsF
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantListCasePersonalisationSmsTest {
 
+    private final String templateId = "someTemplateId";
+    private final String legallyReppedTemplateId = "legallyReppedTemplateId";
+    private final String iaAipFrontendUrl = "http://somefrontendurl";
+    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    private final String hearingCentreAddress = "some hearing centre address";
+    private final String hearingDate = "2019-08-27";
+    private final String hearingTime = "14:25";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
+    private final String mockedAppellantMobilePhone = "07123456789";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -46,20 +57,6 @@ public class AppellantListCasePersonalisationSmsTest {
     HearingDetailsFinder hearingDetailsFinder;
     @Mock
     RecipientsFinder recipientsFinder;
-
-    private final String templateId = "someTemplateId";
-    private final String legallyReppedTemplateId = "legallyReppedTemplateId";
-    private final String iaAipFrontendUrl = "http://somefrontendurl";
-    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
-    private final String hearingCentreAddress = "some hearing centre address";
-    private final String hearingDate = "2019-08-27";
-    private final String hearingTime = "14:25";
-
-    private final String mockedAppealReferenceNumber = "someReferenceNumber";
-    private final String mockedAppellantMobilePhone = "07123456789";
-    private final String customerServicesTelephone = "555 555 555";
-    private final String customerServicesEmail = "cust.services@example.com";
-
     private AppellantListCasePersonalisationSms appellantListCasePersonalisationSms;
 
     @BeforeEach
@@ -113,9 +110,8 @@ public class AppellantListCasePersonalisationSmsTest {
     @Test
     public void should_throw_exception_on_recipients_when_case_is_null() {
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> appellantListCasePersonalisationSms.getRecipientsList(null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> appellantListCasePersonalisationSms.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -202,9 +198,8 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     void should_throw_personalisation_when_no_hearing_centre() {
         when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.empty());
         IllegalArgumentException exception =
-assertThrows(IllegalArgumentException.class,
-            () -> appellantListCasePersonalisationSms.getPersonalisation(asylumCase))
-            ;
-assertEquals("No hearing centre present", exception.getMessage());
+            assertThrows(IllegalArgumentException.class,
+                () -> appellantListCasePersonalisationSms.getPersonalisation(asylumCase));
+        assertEquals("No hearing centre present", exception.getMessage());
     }
 }

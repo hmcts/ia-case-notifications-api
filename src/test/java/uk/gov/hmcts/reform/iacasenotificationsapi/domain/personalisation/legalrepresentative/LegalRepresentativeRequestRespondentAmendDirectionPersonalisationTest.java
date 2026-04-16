@@ -36,15 +36,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class LegalRepresentativeRequestRespondentAmendDirectionPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    DirectionFinder directionFinder;
-    @Mock
-    Direction direction;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-
     private final String templateId = "someTemplateId";
     private final String iaExUiFrontendUrl = "http://somefrontendurl";
     private final String legalRepEmailAddress = "legalrep@example.com";
@@ -54,7 +45,14 @@ public class LegalRepresentativeRequestRespondentAmendDirectionPersonalisationTe
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "customer.services@example.com";
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    DirectionFinder directionFinder;
+    @Mock
+    Direction direction;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
     private LegalRepresentativeRequestRespondentAmendDirectionPersonalisation
         legalRepresentativeRequestRespondentAmendDirectionPersonalisation;
 

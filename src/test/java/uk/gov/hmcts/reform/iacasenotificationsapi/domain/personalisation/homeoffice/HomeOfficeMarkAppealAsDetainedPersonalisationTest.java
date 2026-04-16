@@ -27,13 +27,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class HomeOfficeMarkAppealAsDetainedPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    EmailAddressFinder emailAddressFinder;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-
     private final String markAppealAsDetainedTemplateId = "removeDetentionStatusTemplateId";
     private final String iaExUiFrontendUrl = "http://localhost";
     private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
@@ -43,11 +36,16 @@ public class HomeOfficeMarkAppealAsDetainedPersonalisationTest {
     private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "cust.services@example.com";
     private final String homeOfficeApcEmailAddress = "homeOfficeAPC@example.com";
     private final String homeOfficeLartEmailAddress = "homeOfficeLART@example.com";
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    EmailAddressFinder emailAddressFinder;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
     private HomeOfficeMarkAppealAsDetainedPersonalisation homeOfficeMarkAppealAsDetainedPersonalisation;
 
     @BeforeEach
@@ -63,12 +61,12 @@ public class HomeOfficeMarkAppealAsDetainedPersonalisationTest {
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         homeOfficeMarkAppealAsDetainedPersonalisation = new HomeOfficeMarkAppealAsDetainedPersonalisation(
-                markAppealAsDetainedTemplateId,
-                homeOfficeApcEmailAddress,
-                homeOfficeLartEmailAddress,
-                iaExUiFrontendUrl,
-                emailAddressFinder,
-                customerServicesProvider
+            markAppealAsDetainedTemplateId,
+            homeOfficeApcEmailAddress,
+            homeOfficeLartEmailAddress,
+            iaExUiFrontendUrl,
+            emailAddressFinder,
+            customerServicesProvider
         );
     }
 
@@ -81,14 +79,14 @@ public class HomeOfficeMarkAppealAsDetainedPersonalisationTest {
     public void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_MARK_APPEAL_AS_DETAINED_HOME_OFFICE",
-                homeOfficeMarkAppealAsDetainedPersonalisation.getReferenceId(caseId));
+            homeOfficeMarkAppealAsDetainedPersonalisation.getReferenceId(caseId));
     }
 
 
     @Test
     public void should_return_the_ho_apc_email_address_until_awaiting_reasons_for_appeal() {
         when(asylumCase.read(AsylumCaseDefinition.CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class))
-                .thenReturn(Optional.of(State.AWAITING_REASONS_FOR_APPEAL));
+            .thenReturn(Optional.of(State.AWAITING_REASONS_FOR_APPEAL));
 
         assertEquals(Collections.singleton(homeOfficeApcEmailAddress), homeOfficeMarkAppealAsDetainedPersonalisation.getRecipientsList(asylumCase));
     }
@@ -96,7 +94,7 @@ public class HomeOfficeMarkAppealAsDetainedPersonalisationTest {
     @Test
     public void should_return_the_ho_apc_email_address_until_awaiting_clarifying_questions_answers() {
         when(asylumCase.read(AsylumCaseDefinition.CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class))
-                .thenReturn(Optional.of(State.AWAITING_CLARIFYING_QUESTIONS_ANSWERS));
+            .thenReturn(Optional.of(State.AWAITING_CLARIFYING_QUESTIONS_ANSWERS));
 
         assertEquals(Collections.singleton(homeOfficeApcEmailAddress), homeOfficeMarkAppealAsDetainedPersonalisation.getRecipientsList(asylumCase));
     }
@@ -104,7 +102,7 @@ public class HomeOfficeMarkAppealAsDetainedPersonalisationTest {
     @Test
     public void should_return_the_ho_apc_email_address_until_reasons_for_appeal_submitted() {
         when(asylumCase.read(AsylumCaseDefinition.CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class))
-                .thenReturn(Optional.of(State.REASONS_FOR_APPEAL_SUBMITTED));
+            .thenReturn(Optional.of(State.REASONS_FOR_APPEAL_SUBMITTED));
 
         assertEquals(Collections.singleton(homeOfficeApcEmailAddress), homeOfficeMarkAppealAsDetainedPersonalisation.getRecipientsList(asylumCase));
     }
@@ -112,7 +110,7 @@ public class HomeOfficeMarkAppealAsDetainedPersonalisationTest {
     @Test
     public void should_return_the_ho_apc_email_address_until_clarifying_questions_answers_submitted() {
         when(asylumCase.read(AsylumCaseDefinition.CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class))
-                .thenReturn(Optional.of(State.CLARIFYING_QUESTIONS_ANSWERS_SUBMITTED));
+            .thenReturn(Optional.of(State.CLARIFYING_QUESTIONS_ANSWERS_SUBMITTED));
 
         assertEquals(Collections.singleton(homeOfficeApcEmailAddress), homeOfficeMarkAppealAsDetainedPersonalisation.getRecipientsList(asylumCase));
     }
@@ -120,7 +118,7 @@ public class HomeOfficeMarkAppealAsDetainedPersonalisationTest {
     @Test
     public void should_return_the_ho_apc_email_address_until_case_under_review() {
         when(asylumCase.read(AsylumCaseDefinition.CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class))
-                .thenReturn(Optional.of(State.CASE_UNDER_REVIEW));
+            .thenReturn(Optional.of(State.CASE_UNDER_REVIEW));
 
         assertEquals(Collections.singleton(homeOfficeApcEmailAddress), homeOfficeMarkAppealAsDetainedPersonalisation.getRecipientsList(asylumCase));
     }
@@ -128,7 +126,7 @@ public class HomeOfficeMarkAppealAsDetainedPersonalisationTest {
     @Test
     public void should_return_the_ho_lart_email_address_until_listing() {
         when(asylumCase.read(AsylumCaseDefinition.CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class))
-                .thenReturn(Optional.of(State.LISTING));
+            .thenReturn(Optional.of(State.LISTING));
 
         assertEquals(Collections.singleton(homeOfficeLartEmailAddress), homeOfficeMarkAppealAsDetainedPersonalisation.getRecipientsList(asylumCase));
     }
@@ -138,7 +136,7 @@ public class HomeOfficeMarkAppealAsDetainedPersonalisationTest {
         String homeOfficeBhamEmailAddress = "ho-birmingham@example.com";
         when(emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase)).thenReturn(homeOfficeBhamEmailAddress);
         when(asylumCase.read(AsylumCaseDefinition.CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class))
-                .thenReturn(Optional.of(State.PRE_HEARING));
+            .thenReturn(Optional.of(State.PRE_HEARING));
 
         assertEquals(Collections.singleton(homeOfficeBhamEmailAddress), homeOfficeMarkAppealAsDetainedPersonalisation.getRecipientsList(asylumCase));
     }
@@ -147,16 +145,15 @@ public class HomeOfficeMarkAppealAsDetainedPersonalisationTest {
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> homeOfficeMarkAppealAsDetainedPersonalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> homeOfficeMarkAppealAsDetainedPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_return_personalisation_when_all_information_given() {
 
         Map<String, String> personalisation =
-                homeOfficeMarkAppealAsDetainedPersonalisation.getPersonalisation(asylumCase);
+            homeOfficeMarkAppealAsDetainedPersonalisation.getPersonalisation(asylumCase);
 
         assertThat(personalisation)
             .containsEntry("appealReferenceNumber", appealReferenceNumber)
@@ -180,7 +177,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
-                homeOfficeMarkAppealAsDetainedPersonalisation.getPersonalisation(asylumCase);
+            homeOfficeMarkAppealAsDetainedPersonalisation.getPersonalisation(asylumCase);
 
         assertThat(personalisation)
             .containsEntry("appealReferenceNumber", "")

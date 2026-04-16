@@ -61,7 +61,7 @@ public class RespondentForceCaseProgressionPersonalisationTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void getPersonalisation(YesOrNo isAda) {
         final ImmutableMap<String, String> customerServicesValues = ImmutableMap
             .<String, String>builder()

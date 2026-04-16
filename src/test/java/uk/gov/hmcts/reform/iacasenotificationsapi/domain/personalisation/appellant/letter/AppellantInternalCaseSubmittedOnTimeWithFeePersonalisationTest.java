@@ -30,17 +30,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvi
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppellantInternalCaseSubmittedOnTimeWithFeePersonalisationTest {
-    @Mock
-    Callback<AsylumCase> callback;
-    @Mock
-    CaseDetails<AsylumCase> caseDetails;
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-    @Mock
-    AddressUk address;
-
     private final Long ccdCaseId = 12345L;
     private final String letterTemplateId = "someLetterTemplateId";
     private final String appealReferenceNumber = "someAppealRefNumber";
@@ -58,6 +47,16 @@ class AppellantInternalCaseSubmittedOnTimeWithFeePersonalisationTest {
     private final SystemDateProvider systemDateProvider = new SystemDateProvider();
     private final String amountLeftToPayInGbp = "140.00";
     private final String feeAmountGbp = "14000";
+    @Mock
+    Callback<AsylumCase> callback;
+    @Mock
+    CaseDetails<AsylumCase> caseDetails;
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    AddressUk address;
     private AppellantInternalCaseSubmittedOnTimeWithFeePersonalisation appellantInternalCaseSubmittedOnTimeWithFeePersonalisation;
 
     @BeforeEach

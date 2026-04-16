@@ -30,6 +30,12 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class CaseOfficerFtpaDecisionPersonalisationTest {
 
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String ariaListingReference = "ariaListingReference";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String applicantReheardTemplateId = "applicantReheardTemplateId";
+    private final String applicantReheardEnabledTemplateId = "applicantReheardEnabledTemplateId";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -38,15 +44,6 @@ public class CaseOfficerFtpaDecisionPersonalisationTest {
     EmailAddressFinder emailAddressFinder;
     @Mock
     private FeatureToggler featureToggler;
-
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String ariaListingReference = "ariaListingReference";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-
-    private final String applicantReheardTemplateId = "applicantReheardTemplateId";
-    private final String applicantReheardEnabledTemplateId = "applicantReheardEnabledTemplateId";
-
     private CaseOfficerFtpaDecisionPersonalisation caseOfficerFtpaDecisionPersonalisation;
 
     @BeforeEach
@@ -56,7 +53,7 @@ public class CaseOfficerFtpaDecisionPersonalisationTest {
             applicantReheardEnabledTemplateId,
             personalisationProvider,
             emailAddressFinder,
-                featureToggler);
+            featureToggler);
     }
 
     @Test
@@ -78,7 +75,7 @@ public class CaseOfficerFtpaDecisionPersonalisationTest {
     @Test
     public void should_return_given_email_address_from_lookup_map_when_feature_flag_is_Off() {
         assertTrue(
-                caseOfficerFtpaDecisionPersonalisation.getRecipientsList(asylumCase).isEmpty());
+            caseOfficerFtpaDecisionPersonalisation.getRecipientsList(asylumCase).isEmpty());
     }
 
     @Test
@@ -87,11 +84,11 @@ public class CaseOfficerFtpaDecisionPersonalisationTest {
         String caseOfficerEmailAddress = "caseOfficer@example.com";
         when(emailAddressFinder.getListCaseHearingCentreEmailAddress(asylumCase)).thenReturn(caseOfficerEmailAddress);
         assertTrue(
-                caseOfficerFtpaDecisionPersonalisation.getRecipientsList(asylumCase).contains(caseOfficerEmailAddress));
+            caseOfficerFtpaDecisionPersonalisation.getRecipientsList(asylumCase).contains(caseOfficerEmailAddress));
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_of_all_information_given(YesOrNo isAda) {
         initializePrefixes(caseOfficerFtpaDecisionPersonalisation);
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));

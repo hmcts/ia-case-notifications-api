@@ -54,11 +54,17 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 public class NotificationSenderHelperTest {
 
     private static final org.slf4j.Logger LOG = getLogger(NotificationSenderHelperTest.class);
-
-    private static class UnknownCase extends HashMap<String, Object> implements CaseData {
-        // noop
-    }
-
+    private final NotificationSenderHelper<AsylumCase> senderHelper = new NotificationSenderHelper<>();
+    private final NotificationSenderHelper<BailCase> bailSenderHelper = new NotificationSenderHelper<>();
+    private final NotificationSenderHelper<UnknownCase> unknownSenderHelper = new NotificationSenderHelper<>();
+    private final int deduplicateSendsWithinSeconds = 1;
+    private final String templateId = "a-b-c-d-e-f";
+    private final String emailAddress = "recipient@example.com";
+    private final String phoneNumber = "07123456789";
+    private final String address = "20_realstreet_London";
+    private final Map<String, String> personalisation = mock(Map.class);
+    private final Map<String, Object> personalisationWithLink = mock(Map.class);
+    private final String reference = "our-reference";
     @Mock
     private RetryableNotificationClient notificationClient;
     @Mock
@@ -83,22 +89,8 @@ public class NotificationSenderHelperTest {
     private StoredNotification storedNotificationMock;
     @Mock
     private StoredNotification storedNotificationMock2;
-
-    private final NotificationSenderHelper<AsylumCase> senderHelper = new NotificationSenderHelper<>();
-    private final NotificationSenderHelper<BailCase> bailSenderHelper = new NotificationSenderHelper<>();
-    private final NotificationSenderHelper<UnknownCase> unknownSenderHelper = new NotificationSenderHelper<>();
-
     @Mock
     private InputStream stream;
-
-    private final int deduplicateSendsWithinSeconds = 1;
-    private final String templateId = "a-b-c-d-e-f";
-    private final String emailAddress = "recipient@example.com";
-    private final String phoneNumber = "07123456789";
-    private final String address = "20_realstreet_London";
-    private final Map<String, String> personalisation = mock(Map.class);
-    private final Map<String, Object> personalisationWithLink = mock(Map.class);
-    private final String reference = "our-reference";
 
     @Test
     public void should_not_send_duplicate_emails_in_short_space_of_time() throws NotificationClientException {
@@ -816,7 +808,6 @@ public class NotificationSenderHelperTest {
         assertEquals("", result.get(0));
     }
 
-
     @Test
     void storeFailedNotification_should_store_for_asylum_case() throws Exception {
         when(asylumCallback.getCaseDetails()).thenReturn(asylumCaseDetails);
@@ -964,5 +955,9 @@ public class NotificationSenderHelperTest {
         assertEquals("future-ref", notifications.get(0).getValue().getNotificationReference());
         assertEquals(reference, notifications.get(1).getValue().getNotificationReference());
         assertEquals("past-ref", notifications.get(2).getValue().getNotificationReference());
+    }
+
+    private static class UnknownCase extends HashMap<String, Object> implements CaseData {
+        // noop
     }
 }

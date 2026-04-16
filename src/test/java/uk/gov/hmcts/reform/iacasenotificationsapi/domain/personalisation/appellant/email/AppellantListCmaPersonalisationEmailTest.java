@@ -34,6 +34,16 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsF
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantListCmaPersonalisationEmailTest {
 
+    private final String templateId = "someTemplateId";
+    private final String iaAipFrontendUrl = "http://somefrontendurl";
+    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    private final String hearingCentreAddress = "some hearing centre address";
+    private final String hearingDate = "2019-08-27";
+    private final String hearingTime = "14:25";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
+    private final String mockedAppellantGivenNames = "someAppellantGivenNames";
+    private final String mockedAppellantFamilyName = "someAppellantFamilyName";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -44,20 +54,6 @@ public class AppellantListCmaPersonalisationEmailTest {
     RecipientsFinder recipientsFinder;
     @Mock
     HearingDetailsFinder hearingDetailsFinder;
-
-    private final String templateId = "someTemplateId";
-    private final String iaAipFrontendUrl = "http://somefrontendurl";
-    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
-    private final String hearingCentreAddress = "some hearing centre address";
-
-    private final String hearingDate = "2019-08-27";
-    private final String hearingTime = "14:25";
-
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
-    private final String mockedAppellantGivenNames = "someAppellantGivenNames";
-    private final String mockedAppellantFamilyName = "someAppellantFamilyName";
-
     private AppellantListCmaPersonalisationEmail appellantListCmaPersonalisationEmail;
 
     @BeforeEach
@@ -114,9 +110,8 @@ public class AppellantListCmaPersonalisationEmailTest {
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> appellantListCmaPersonalisationEmail.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase cannot be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> appellantListCmaPersonalisationEmail.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase cannot be null", exception.getMessage());
     }
 
     @Test

@@ -27,9 +27,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.le
 @MockitoSettings(strictness = Strictness.LENIENT)
 class LegalRepresentativeBailSignedDecisionNoticeUploadedPersonalisationTest {
 
-    @Mock
-    BailCase bailCase;
-
     private final String templateId = "someTemplateId";
     private final String legalRepEmailAddress = "legalRep@example.com";
     private final String bailReferenceNumber = "someReferenceNumber";
@@ -37,7 +34,8 @@ class LegalRepresentativeBailSignedDecisionNoticeUploadedPersonalisationTest {
     private final String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
     private final String applicantGivenNames = "someApplicantGivenNames";
     private final String applicantFamilyName = "someApplicantFamilyName";
-
+    @Mock
+    BailCase bailCase;
     private LegalRepresentativeBailSignedDecisionNoticeUploadedPersonalisation legalRepresentativeBailSignedDecisionNoticeUploadedPersonalisation;
 
     @BeforeEach
@@ -114,7 +112,7 @@ class LegalRepresentativeBailSignedDecisionNoticeUploadedPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeBailSignedDecisionNoticeUploadedPersonalisation.getPersonalisation(bailCase);
 
-            assertEquals("Granted", personalisation.get("decision"));
+        assertEquals("Granted", personalisation.get("decision"));
     }
 
     @Test
@@ -125,7 +123,7 @@ class LegalRepresentativeBailSignedDecisionNoticeUploadedPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeBailSignedDecisionNoticeUploadedPersonalisation.getPersonalisation(bailCase);
 
-            assertEquals("Refused", personalisation.get("decision"));
+        assertEquals("Refused", personalisation.get("decision"));
     }
 
     @Test
@@ -136,7 +134,7 @@ class LegalRepresentativeBailSignedDecisionNoticeUploadedPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeBailSignedDecisionNoticeUploadedPersonalisation.getPersonalisation(bailCase);
 
-            assertEquals("Granted", personalisation.get("decision"));
+        assertEquals("Granted", personalisation.get("decision"));
     }
 
     @Test

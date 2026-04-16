@@ -27,9 +27,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AdminOfficerBailSummaryUploadedPersonalisationTest {
 
-    @Mock
-    BailCase bailCase;
-
     private final String templateId = "someTemplateId";
     private final String templateIdWithoutLR = "someTemplateIdWithoutLR";
     private final String bailReferenceNumber = "someReferenceNumber";
@@ -37,7 +34,8 @@ public class AdminOfficerBailSummaryUploadedPersonalisationTest {
     private final String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
     private final String applicantGivenNames = "someApplicantGivenNames";
     private final String applicantFamilyName = "someApplicantFamilyName";
-
+    @Mock
+    BailCase bailCase;
     @Mock
     private EmailAddressFinder emailAddressFinder;
     private AdminOfficerBailSummaryUploadedPersonalisation adminOfficerBailSummaryUploadedPersonalisation;
@@ -53,9 +51,9 @@ public class AdminOfficerBailSummaryUploadedPersonalisationTest {
         when(bailCase.read(IS_LEGALLY_REPRESENTED_FOR_FLAG, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
 
         adminOfficerBailSummaryUploadedPersonalisation = new AdminOfficerBailSummaryUploadedPersonalisation(
-                templateId,
-                templateIdWithoutLR,
-                emailAddressFinder
+            templateId,
+            templateIdWithoutLR,
+            emailAddressFinder
         );
     }
 
@@ -68,7 +66,7 @@ public class AdminOfficerBailSummaryUploadedPersonalisationTest {
     public void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_BAIL_SUMMARY_UPLOADED_ADMIN_OFFICER",
-                adminOfficerBailSummaryUploadedPersonalisation.getReferenceId(caseId));
+            adminOfficerBailSummaryUploadedPersonalisation.getReferenceId(caseId));
     }
 
     @Test
@@ -76,23 +74,22 @@ public class AdminOfficerBailSummaryUploadedPersonalisationTest {
         String hearingCentreEmail = "someHearingCentre@example.com";
         when(emailAddressFinder.getBailHearingCentreEmailAddress(bailCase)).thenReturn(hearingCentreEmail);
         assertTrue(adminOfficerBailSummaryUploadedPersonalisation.getRecipientsList(bailCase)
-                .contains(hearingCentreEmail));
+            .contains(hearingCentreEmail));
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-                () -> adminOfficerBailSummaryUploadedPersonalisation.getPersonalisation((BailCase) null))
-                ;
-assertEquals("bailCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> adminOfficerBailSummaryUploadedPersonalisation.getPersonalisation((BailCase) null));
+        assertEquals("bailCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_return_personalisation_when_all_information_given() {
 
         Map<String, String> personalisation =
-                adminOfficerBailSummaryUploadedPersonalisation.getPersonalisation(bailCase);
+            adminOfficerBailSummaryUploadedPersonalisation.getPersonalisation(bailCase);
 
         assertThat(personalisation)
             .containsEntry("bailReferenceNumber", bailReferenceNumber)
@@ -112,7 +109,7 @@ assertEquals("bailCase must not be null", exception.getMessage());
         when(bailCase.read(BailCaseFieldDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
-                adminOfficerBailSummaryUploadedPersonalisation.getPersonalisation(bailCase);
+            adminOfficerBailSummaryUploadedPersonalisation.getPersonalisation(bailCase);
 
         assertThat(personalisation).allSatisfy((key, value) -> assertThat(value).isEmpty());
     }
@@ -122,7 +119,7 @@ assertEquals("bailCase must not be null", exception.getMessage());
 
         when(bailCase.read(IS_LEGALLY_REPRESENTED_FOR_FLAG, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
         Map<String, String> personalisation =
-                adminOfficerBailSummaryUploadedPersonalisation.getPersonalisation(bailCase);
+            adminOfficerBailSummaryUploadedPersonalisation.getPersonalisation(bailCase);
 
         assertEquals(templateIdWithoutLR, adminOfficerBailSummaryUploadedPersonalisation.getTemplateId(bailCase));
         assertNull(personalisation.get("legalRepReference"));

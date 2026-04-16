@@ -26,9 +26,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCas
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class LegalRepresentativeBailChangeTribunalCentrePersonalisationTest {
 
-    @Mock
-    BailCase bailCase;
-
     private final String templateId = "someTemplateId";
     private final String bailReferenceNumber = "someReferenceNumber";
     private final String legalRepReference = "someLegalRepReference";
@@ -36,7 +33,8 @@ public class LegalRepresentativeBailChangeTribunalCentrePersonalisationTest {
     private final String applicantGivenNames = "someApplicantGivenNames";
     private final String applicantFamilyName = "someApplicantFamilyName";
     private final String legalRepEmailAddress = "legalRep@example.com";
-
+    @Mock
+    BailCase bailCase;
     private LegalRepresentativeBailChangeTribunalCentrePersonalisation legalRepresentativeBailChangeTribunalCentrePersonalisation;
 
     @BeforeEach
@@ -51,7 +49,7 @@ public class LegalRepresentativeBailChangeTribunalCentrePersonalisationTest {
             .thenReturn(Optional.of(legalRepEmailAddress));
 
         legalRepresentativeBailChangeTribunalCentrePersonalisation = new LegalRepresentativeBailChangeTribunalCentrePersonalisation(
-                templateId
+            templateId
         );
     }
 
@@ -78,18 +76,16 @@ public class LegalRepresentativeBailChangeTribunalCentrePersonalisationTest {
         when(bailCase.read(BailCaseFieldDefinition.LEGAL_REP_EMAIL, String.class)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> legalRepresentativeBailChangeTribunalCentrePersonalisation.getRecipientsList(bailCase))
-            ;
-assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> legalRepresentativeBailChangeTribunalCentrePersonalisation.getRecipientsList(bailCase));
+        assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-                () -> legalRepresentativeBailChangeTribunalCentrePersonalisation.getPersonalisation((BailCase) null))
-                ;
-assertEquals("bailCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> legalRepresentativeBailChangeTribunalCentrePersonalisation.getPersonalisation((BailCase) null));
+        assertEquals("bailCase must not be null", exception.getMessage());
     }
 
     @Test

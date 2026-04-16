@@ -32,16 +32,20 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class RespondentAppellantFtpaSubmittedPersonalisationTest {
 
-    @Mock PersonalisationProvider personalisationProvider;
-    @Mock Callback<AsylumCase> callback;
-    @Mock CaseDetails<AsylumCase> caseDetails;
-    @Mock AsylumCase asylumCase;
-    @Mock CustomerServicesProvider customerServicesProvider;
-    @Mock EmailAddressFinder emailAddressFinder;
-
     private final String tempalteId = "templateId";
     private final String iaExUiFrontendUrl = "http://localhost";
-
+    @Mock
+    PersonalisationProvider personalisationProvider;
+    @Mock
+    Callback<AsylumCase> callback;
+    @Mock
+    CaseDetails<AsylumCase> caseDetails;
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    EmailAddressFinder emailAddressFinder;
     private RespondentAppellantFtpaSubmittedPersonalisation respondentAppellantFtpaSubmittedPersonalisation;
 
     @BeforeEach
@@ -78,7 +82,7 @@ public class RespondentAppellantFtpaSubmittedPersonalisationTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_given_personalisation(YesOrNo isAda) {
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);

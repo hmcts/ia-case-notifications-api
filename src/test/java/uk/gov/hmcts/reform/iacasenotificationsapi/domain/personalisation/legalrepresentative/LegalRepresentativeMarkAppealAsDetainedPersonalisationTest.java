@@ -23,11 +23,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class LegalRepresentativeMarkAppealAsDetainedPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-
     private final String markAppealAsDetainedTemplateId = "removeDetentionStatusTemplateId";
     private final String iaExUiFrontendUrl = "http://localhost";
     private final String appealReferenceNumber = "someReferenceNumber";
@@ -39,7 +34,10 @@ public class LegalRepresentativeMarkAppealAsDetainedPersonalisationTest {
     private final String emailAddress = "legal@example.com";
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "cust.services@example.com";
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
     private LegalRepresentativeMarkAppealAsDetainedPersonalisation legalRepresentativeMarkAppealAsDetainedPersonalisation;
 
     @BeforeEach
@@ -56,9 +54,9 @@ public class LegalRepresentativeMarkAppealAsDetainedPersonalisationTest {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.of(emailAddress));
 
         legalRepresentativeMarkAppealAsDetainedPersonalisation = new LegalRepresentativeMarkAppealAsDetainedPersonalisation(
-                markAppealAsDetainedTemplateId,
-                iaExUiFrontendUrl,
-                customerServicesProvider
+            markAppealAsDetainedTemplateId,
+            iaExUiFrontendUrl,
+            customerServicesProvider
         );
     }
 
@@ -71,30 +69,29 @@ public class LegalRepresentativeMarkAppealAsDetainedPersonalisationTest {
     public void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_MARK_APPEAL_AS_DETAINED_LEGAL_REP",
-                legalRepresentativeMarkAppealAsDetainedPersonalisation.getReferenceId(caseId));
+            legalRepresentativeMarkAppealAsDetainedPersonalisation.getReferenceId(caseId));
     }
 
     @Test
     public void should_return_given_email_address() {
         assertTrue(
-                legalRepresentativeMarkAppealAsDetainedPersonalisation
-                        .getRecipientsList(asylumCase).contains(emailAddress));
+            legalRepresentativeMarkAppealAsDetainedPersonalisation
+                .getRecipientsList(asylumCase).contains(emailAddress));
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> legalRepresentativeMarkAppealAsDetainedPersonalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> legalRepresentativeMarkAppealAsDetainedPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_return_personalisation_when_all_information_given() {
 
         Map<String, String> personalisation =
-                legalRepresentativeMarkAppealAsDetainedPersonalisation.getPersonalisation(asylumCase);
+            legalRepresentativeMarkAppealAsDetainedPersonalisation.getPersonalisation(asylumCase);
 
         assertThat(personalisation)
             .containsEntry("appealReferenceNumber", appealReferenceNumber)
@@ -120,7 +117,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
-                legalRepresentativeMarkAppealAsDetainedPersonalisation.getPersonalisation(asylumCase);
+            legalRepresentativeMarkAppealAsDetainedPersonalisation.getPersonalisation(asylumCase);
 
         assertThat(personalisation)
             .containsEntry("appealReferenceNumber", "")

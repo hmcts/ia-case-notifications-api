@@ -30,6 +30,14 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppellantRemoveRepresentationPersonalisationEmailTest {
 
+    private final Long ccdCaseId = 12345L;
+    private final String emailTemplateId = "someEmailTemplateId";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
+    private final String securityCode = "securityCode";
+    private final String linkToPiPStartPage = "iaAipFrontendUrl/iaAipPathToSelfRepresentation";
     @Mock
     Callback<AsylumCase> callback;
     @Mock
@@ -40,16 +48,6 @@ class AppellantRemoveRepresentationPersonalisationEmailTest {
     CustomerServicesProvider customerServicesProvider;
     @Mock
     PinInPostDetails pinInPostDetails;
-
-    private final Long ccdCaseId = 12345L;
-    private final String emailTemplateId = "someEmailTemplateId";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-    private final String customerServicesTelephone = "555 555 555";
-    private final String customerServicesEmail = "cust.services@example.com";
-    private final String securityCode = "securityCode";
-    private final String linkToPiPStartPage = "iaAipFrontendUrl/iaAipPathToSelfRepresentation";
-
     private AppellantRemoveRepresentationPersonalisationEmail appellantRemoveRepresentationPersonalisationEmail;
 
     @BeforeEach
@@ -95,24 +93,22 @@ class AppellantRemoveRepresentationPersonalisationEmailTest {
     void should_throw_exception_when_cannot_find_email_address_for_appellant() {
         when(asylumCase.read(AsylumCaseDefinition.EMAIL, String.class)).thenReturn(Optional.empty());
 
-        IllegalStateException exception = 
-assertThrows(IllegalStateException.class, () -> appellantRemoveRepresentationPersonalisationEmail.getRecipientsList(asylumCase))
-            ;
-assertEquals("appellantEmailAddress is not present", exception.getMessage());
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> appellantRemoveRepresentationPersonalisationEmail.getRecipientsList(asylumCase));
+        assertEquals("appellantEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        NullPointerException exception = 
-assertThrows(NullPointerException.class, 
-            () -> appellantRemoveRepresentationPersonalisationEmail.getPersonalisation((Callback<AsylumCase>) null))
-            ;
-assertEquals("callback must not be null", exception.getMessage());
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> appellantRemoveRepresentationPersonalisationEmail.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         initializePrefixes(appellantRemoveRepresentationPersonalisationEmail);
@@ -139,7 +135,7 @@ assertEquals("callback must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
 
         initializePrefixes(appellantRemoveRepresentationPersonalisationEmail);

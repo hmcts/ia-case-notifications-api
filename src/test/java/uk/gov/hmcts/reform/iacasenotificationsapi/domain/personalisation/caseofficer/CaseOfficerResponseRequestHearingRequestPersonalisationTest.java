@@ -34,6 +34,13 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class CaseOfficerResponseRequestHearingRequestPersonalisationTest {
 
+    private final String templateId = "someTemplateId";
+    private final String iaExUiFrontendUrl = "http://somefrontendurl";
+    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    private final String hearingCentreEmailAddress = "hearingCentre@example.com";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -42,15 +49,6 @@ public class CaseOfficerResponseRequestHearingRequestPersonalisationTest {
     CustomerServicesProvider customerServicesProvider;
     @Mock
     private FeatureToggler featureToggler;
-
-    private final String templateId = "someTemplateId";
-    private final String iaExUiFrontendUrl = "http://somefrontendurl";
-    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
-    private final String hearingCentreEmailAddress = "hearingCentre@example.com";
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-
     private CaseOfficerRequestHearingRequirementsPersonalisation caseOfficerRequestHearingRequirementsPersonalisation;
 
     @BeforeEach
@@ -67,7 +65,7 @@ public class CaseOfficerResponseRequestHearingRequestPersonalisationTest {
             iaExUiFrontendUrl,
             hearingCentreEmailAddressMap,
             customerServicesProvider,
-                featureToggler);
+            featureToggler);
     }
 
     @Test
@@ -85,14 +83,14 @@ public class CaseOfficerResponseRequestHearingRequestPersonalisationTest {
     @Test
     public void should_return_given_email_address_from_lookup_map_when_feature_flag_is_Off() {
         assertTrue(caseOfficerRequestHearingRequirementsPersonalisation.getRecipientsList(asylumCase)
-                .isEmpty());
+            .isEmpty());
     }
 
     @Test
     public void should_return_given_email_address_from_lookup_map_when_feature_flag_is_On() {
         when(featureToggler.getValue("tcw-notifications-feature", true)).thenReturn(true);
         assertTrue(caseOfficerRequestHearingRequirementsPersonalisation.getRecipientsList(asylumCase)
-                .contains(hearingCentreEmailAddress));
+            .contains(hearingCentreEmailAddress));
     }
 
 
@@ -101,9 +99,8 @@ public class CaseOfficerResponseRequestHearingRequestPersonalisationTest {
         when(featureToggler.getValue("tcw-notifications-feature", true)).thenReturn(true);
         when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.empty());
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> caseOfficerRequestHearingRequirementsPersonalisation.getRecipientsList(asylumCase))
-            ;
-assertEquals("hearingCentre is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> caseOfficerRequestHearingRequirementsPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("hearingCentre is not present", exception.getMessage());
     }
 
     @Test
@@ -111,23 +108,21 @@ assertEquals("hearingCentre is not present", exception.getMessage());
         when(featureToggler.getValue("tcw-notifications-feature", true)).thenReturn(true);
         when(hearingCentreEmailAddressMap.get(hearingCentre)).thenReturn(null);
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> caseOfficerRequestHearingRequirementsPersonalisation.getRecipientsList(asylumCase))
-            ;
-assertEquals("Hearing centre email address not found: " + hearingCentre.toString(), exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> caseOfficerRequestHearingRequirementsPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("Hearing centre email address not found: " + hearingCentre, exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> caseOfficerRequestHearingRequirementsPersonalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> caseOfficerRequestHearingRequirementsPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         initializePrefixes(caseOfficerRequestHearingRequirementsPersonalisation);
@@ -147,7 +142,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
 
         initializePrefixes(caseOfficerRequestHearingRequirementsPersonalisation);

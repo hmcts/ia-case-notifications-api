@@ -27,23 +27,20 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AipAppellantNocRequestDecisionPersonalisationSmsTest {
 
-    @Mock
-    Callback<AsylumCase> callback;
-    @Mock
-    private CaseDetails<AsylumCase> caseDetails;
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    RecipientsFinder recipientsFinder;
-
     private final String smsTemplateId = "someSmsTemplateId";
-
     private final long mockedAppealReferenceNumber = 1236;
     private final String mockedAppellantGivenNames = "someAppellantGivenNames";
     private final String mockedAppellantFamilyName = "someAppellantFamilyName";
     private final String dateOfBirth = "2020-03-01";
     private final String expectedDateOfBirth = "1 Mar 2020";
-
+    @Mock
+    Callback<AsylumCase> callback;
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    RecipientsFinder recipientsFinder;
+    @Mock
+    private CaseDetails<AsylumCase> caseDetails;
     private AipAppellantNocRequestDecisionPersonalisationSms appellantNocRequestDecisionPersonalisationSms;
 
     @BeforeEach
@@ -78,9 +75,8 @@ class AipAppellantNocRequestDecisionPersonalisationSmsTest {
             .thenThrow(new NullPointerException("asylumCase must not be null"));
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> appellantNocRequestDecisionPersonalisationSms.getRecipientsList(null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> appellantNocRequestDecisionPersonalisationSms.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -97,9 +93,8 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> appellantNocRequestDecisionPersonalisationSms.getPersonalisation((Callback<AsylumCase>) null))
-            ;
-assertEquals("callback must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> appellantNocRequestDecisionPersonalisationSms.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     @Test
@@ -121,9 +116,8 @@ assertEquals("callback must not be null", exception.getMessage());
         when(asylumCase.read(APPELLANT_DATE_OF_BIRTH, String.class)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> appellantNocRequestDecisionPersonalisationSms.getPersonalisation(callback))
-            ;
-assertEquals("Appellant's birth of date is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> appellantNocRequestDecisionPersonalisationSms.getPersonalisation(callback));
+        assertEquals("Appellant's birth of date is not present", exception.getMessage());
     }
 
     @Test

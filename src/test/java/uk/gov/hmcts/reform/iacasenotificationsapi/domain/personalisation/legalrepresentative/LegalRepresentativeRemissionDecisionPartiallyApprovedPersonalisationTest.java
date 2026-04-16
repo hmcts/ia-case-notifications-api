@@ -25,16 +25,14 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 class LegalRepresentativeRemissionDecisionPartiallyApprovedPersonalisationTest {
 
+    private final String iaExUiFrontendUrl = "http://somefrontendurl";
+    private final String templateId = "someTemplateId";
     @Mock
     private AsylumCase asylumCase;
     @Mock
     private CustomerServicesProvider customerServicesProvider;
     @Mock
     private FeatureToggler featureToggler;
-
-    private final String iaExUiFrontendUrl = "http://somefrontendurl";
-    private final String templateId = "someTemplateId";
-
     private LegalRepresentativeRemissionDecisionPartiallyApprovedPersonalisation
         legalRepresentativeRemissionDecisionPartiallyApprovedPersonalisation;
 
@@ -59,13 +57,13 @@ class LegalRepresentativeRemissionDecisionPartiallyApprovedPersonalisationTest {
         if (value) {
             String legalRepEmailAddress = "legalRepEmailAddress@example.com";
             when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class))
-                    .thenReturn(Optional.of(legalRepEmailAddress));
+                .thenReturn(Optional.of(legalRepEmailAddress));
             assertTrue(
-                    legalRepresentativeRemissionDecisionPartiallyApprovedPersonalisation
-                            .getRecipientsList(asylumCase).contains("legalRepEmailAddress@example.com"));
+                legalRepresentativeRemissionDecisionPartiallyApprovedPersonalisation
+                    .getRecipientsList(asylumCase).contains("legalRepEmailAddress@example.com"));
         } else {
             assertTrue(legalRepresentativeRemissionDecisionPartiallyApprovedPersonalisation
-                    .getRecipientsList(asylumCase).isEmpty());
+                .getRecipientsList(asylumCase).isEmpty());
         }
     }
 

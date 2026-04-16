@@ -28,17 +28,14 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @ExtendWith(MockitoExtension.class)
 class AdminOfficerRequestFeeRemissionPersonalisationTest {
 
-    @Mock
-    private AsylumCase asylumCase;
-    @Mock
-    protected CustomerServicesProvider customerServicesProvider;
-
     private final String templateId = "applyForLateRemissionTemplateId";
     private final String iaExUiFrontendUrl = "http://localhost";
     private final String paymentExceptionsAdminOfficerEmailAddress = "payment-exceptions-ao@example.com";
-
     private final String nonAdaPrefix = "Immigration and Asylum appeal";
-
+    @Mock
+    protected CustomerServicesProvider customerServicesProvider;
+    @Mock
+    private AsylumCase asylumCase;
     private AdminOfficerRequestFeeRemissionPersonalisation adminOfficerRequestFeeRemissionPersonalisation;
 
     @BeforeEach

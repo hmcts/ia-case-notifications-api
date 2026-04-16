@@ -31,12 +31,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class LegalRepresentativeForceCaseToSubmitHearingRequirementsDetentionPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-
-    @Mock
-    SystemDateProvider systemDateProvider;
-
     private final String templateId = "someTemplateId";
     private final int daysAfterRequestingHearingRequirements = 5;
     private final String legalRepEmailAddress = "legalrep@example.com";
@@ -46,7 +40,10 @@ public class LegalRepresentativeForceCaseToSubmitHearingRequirementsDetentionPer
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String linkToOnlineService = "https://immigration-appeal.demo.platform.hmcts.net/start-appeal";
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    SystemDateProvider systemDateProvider;
     private LegalRepresentativeForceCaseToSubmitHearingRequirementsDetentionPersonalisation
         legalRepresentativeForceCaseToSubmitHearingRequirementsDetentionPersonalisation;
 
@@ -79,7 +76,7 @@ public class LegalRepresentativeForceCaseToSubmitHearingRequirementsDetentionPer
     public void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_FORCE_CASE_TO_SUBMIT_HEARING_REQUIREMENTS_LEGAL_REPRESENTATIVE",
-                legalRepresentativeForceCaseToSubmitHearingRequirementsDetentionPersonalisation.getReferenceId(caseId));
+            legalRepresentativeForceCaseToSubmitHearingRequirementsDetentionPersonalisation.getReferenceId(caseId));
     }
 
     @Test
@@ -93,33 +90,31 @@ public class LegalRepresentativeForceCaseToSubmitHearingRequirementsDetentionPer
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> legalRepresentativeForceCaseToSubmitHearingRequirementsDetentionPersonalisation.getRecipientsList(asylumCase))
-            ;
-assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> legalRepresentativeForceCaseToSubmitHearingRequirementsDetentionPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> legalRepresentativeForceCaseToSubmitHearingRequirementsDetentionPersonalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> legalRepresentativeForceCaseToSubmitHearingRequirementsDetentionPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
         final String dueDate = LocalDate.now().plusDays(daysAfterRequestingHearingRequirements)
-                .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+            .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
 
         when(systemDateProvider.dueDate(daysAfterRequestingHearingRequirements)).thenReturn(dueDate);
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         initializePrefixes(legalRepresentativeForceCaseToSubmitHearingRequirementsDetentionPersonalisation);
         Map<String, String> personalisation =
-                legalRepresentativeForceCaseToSubmitHearingRequirementsDetentionPersonalisation.getPersonalisation(asylumCase);
+            legalRepresentativeForceCaseToSubmitHearingRequirementsDetentionPersonalisation.getPersonalisation(asylumCase);
 
         assertFalse(personalisation.isEmpty());
         assertThat(personalisation)
@@ -131,15 +126,15 @@ assertEquals("asylumCase must not be null", exception.getMessage());
             .containsEntry("linkToOnlineService", linkToOnlineService)
             .containsEntry("dueDate", dueDate);
         assertEquals(isAda.equals(YesOrNo.YES)
-                ? "Accelerated detained appeal"
-                : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
+            ? "Accelerated detained appeal"
+            : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
         final String dueDate = LocalDate.now().plusDays(daysAfterRequestingHearingRequirements)
-                .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+            .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
 
         when(systemDateProvider.dueDate(daysAfterRequestingHearingRequirements)).thenReturn(dueDate);
 
@@ -153,7 +148,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
-                legalRepresentativeForceCaseToSubmitHearingRequirementsDetentionPersonalisation.getPersonalisation(asylumCase);
+            legalRepresentativeForceCaseToSubmitHearingRequirementsDetentionPersonalisation.getPersonalisation(asylumCase);
 
         assertFalse(personalisation.isEmpty());
         assertThat(personalisation)
@@ -165,7 +160,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
             .containsEntry("linkToOnlineService", linkToOnlineService)
             .containsEntry("dueDate", dueDate);
         assertEquals(isAda.equals(YesOrNo.YES)
-                ? "Accelerated detained appeal"
-                : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
+            ? "Accelerated detained appeal"
+            : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 }

@@ -61,7 +61,7 @@ public class AsylumCaseCallbackDeserializerTest {
             .readValue(eq(source), isA(TypeReference.class));
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-() -> asylumCaseCallbackDeserializer.deserialize(source));
+            () -> asylumCaseCallbackDeserializer.deserialize(source));
         assertEquals("Could not deserialize callback", exception.getMessage());
     }
 }

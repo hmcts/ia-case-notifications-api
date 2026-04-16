@@ -33,17 +33,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppellantInternalRefundConfirmationLetterPersonalisationTest {
-    @Mock
-    Callback<AsylumCase> callback;
-    @Mock
-    CaseDetails<AsylumCase> caseDetails;
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-    @Mock
-    AddressUk address;
-
     private final Long ccdCaseId = 12345L;
     private final String letterTemplateId = "someLetterTemplateId";
     private final String appealReferenceNumber = "someAppealRefNumber";
@@ -60,6 +49,16 @@ class AppellantInternalRefundConfirmationLetterPersonalisationTest {
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "example@example.com";
     private final SystemDateProvider systemDateProvider = new SystemDateProvider();
+    @Mock
+    Callback<AsylumCase> callback;
+    @Mock
+    CaseDetails<AsylumCase> caseDetails;
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    AddressUk address;
     private AppellantInternalRefundConfirmationLetterPersonalisation letterNotificationPersonalisation;
 
     @BeforeEach
@@ -85,10 +84,10 @@ class AppellantInternalRefundConfirmationLetterPersonalisationTest {
 
         int afterManageFeeEvent = 14;
         letterNotificationPersonalisation = new AppellantInternalRefundConfirmationLetterPersonalisation(
-                letterTemplateId,
+            letterTemplateId,
             afterManageFeeEvent,
-                customerServicesProvider,
-                systemDateProvider);
+            customerServicesProvider,
+            systemDateProvider);
     }
 
     @Test
@@ -99,7 +98,7 @@ class AppellantInternalRefundConfirmationLetterPersonalisationTest {
     @Test
     void should_return_given_reference_id() {
         assertEquals(ccdCaseId + "_INTERNAL_REFUND_CONFIRMATION_APPELLANT_LETTER",
-                letterNotificationPersonalisation.getReferenceId(ccdCaseId));
+            letterNotificationPersonalisation.getReferenceId(ccdCaseId));
     }
 
     @Test
@@ -134,9 +133,8 @@ class AppellantInternalRefundConfirmationLetterPersonalisationTest {
 
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> letterNotificationPersonalisation.getRecipientsList(asylumCase))
-                ;
-assertEquals("appellantAddress is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> letterNotificationPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("appellantAddress is not present", exception.getMessage());
     }
 
     @Test
@@ -147,26 +145,24 @@ assertEquals("appellantAddress is not present", exception.getMessage());
 
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> letterNotificationPersonalisation.getRecipientsList(asylumCase))
-                ;
-assertEquals("legalRepAddressUK is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> letterNotificationPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("legalRepAddressUK is not present", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-                () -> letterNotificationPersonalisation.getPersonalisation((Callback<AsylumCase>) null))
-                ;
-assertEquals("callback must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> letterNotificationPersonalisation.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     @Test
     void should_return_personalisation_when_all_information_given_appellant_in_country() {
         appellantInCountryDataSetup();
         Map<String, String> personalisation =
-                letterNotificationPersonalisation.getPersonalisation(callback);
+            letterNotificationPersonalisation.getPersonalisation(callback);
 
         assertThat(personalisation)
             .containsEntry("appealReferenceNumber", appealReferenceNumber)
@@ -192,7 +188,7 @@ assertEquals("callback must not be null", exception.getMessage());
     void should_return_personalisation_when_all_information_given_appellant_out_of_country() {
         appellantOutOfCountryDataSetup();
         Map<String, String> personalisation =
-                letterNotificationPersonalisation.getPersonalisation(callback);
+            letterNotificationPersonalisation.getPersonalisation(callback);
 
         assertThat(personalisation)
             .containsEntry("appealReferenceNumber", appealReferenceNumber)
@@ -217,7 +213,7 @@ assertEquals("callback must not be null", exception.getMessage());
     void should_return_personalisation_when_all_information_given_legalRep_in_country() {
         legalRepInCountryDataSetup();
         Map<String, String> personalisation =
-                letterNotificationPersonalisation.getPersonalisation(callback);
+            letterNotificationPersonalisation.getPersonalisation(callback);
 
         assertThat(personalisation)
             .containsEntry("appealReferenceNumber", appealReferenceNumber)
@@ -242,7 +238,7 @@ assertEquals("callback must not be null", exception.getMessage());
     void should_return_personalisation_when_all_information_given_legalRep_out_of_country() {
         legalRepOutOfCountryDataSetup();
         Map<String, String> personalisation =
-                letterNotificationPersonalisation.getPersonalisation(callback);
+            letterNotificationPersonalisation.getPersonalisation(callback);
 
         assertThat(personalisation)
             .containsEntry("appealReferenceNumber", appealReferenceNumber)

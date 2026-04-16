@@ -30,17 +30,11 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class LegalRepresentativeFtpaApplicationDecisionRespondentPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    PersonalisationProvider personalisationProvider;
-
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String ariaListingReference = "ariaListingReference";
     private final String homeOfficeRefNumber = "homeOfficeRefNumber";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-
     private final String otherPartyGrantedTemplateId = "otherPartyGrantedTemplateId";
     private final String otherPartyPartiallyGrantedTemplateId = "otherPartyPartiallyGrantedTemplateId";
     private final String otherPartyNotAdmittedTemplateId = "otherPartyNotAdmittedTemplateId";
@@ -48,8 +42,6 @@ public class LegalRepresentativeFtpaApplicationDecisionRespondentPersonalisation
     private final String otherPartyReheardTemplateId = "otherPartyReheardTemplateId";
     private final String allowedTemplateId = "allowedTemplateId";
     private final String dismissedTemplateId = "dismissedTemplateId";
-
-
     private final FtpaDecisionOutcomeType granted = FtpaDecisionOutcomeType.FTPA_GRANTED;
     private final FtpaDecisionOutcomeType partiallyGranted = FtpaDecisionOutcomeType.FTPA_PARTIALLY_GRANTED;
     private final FtpaDecisionOutcomeType notAdmitted = FtpaDecisionOutcomeType.FTPA_NOT_ADMITTED;
@@ -58,7 +50,10 @@ public class LegalRepresentativeFtpaApplicationDecisionRespondentPersonalisation
     private final FtpaDecisionOutcomeType remade = FtpaDecisionOutcomeType.FTPA_REMADE32;
     private final FtpaDecisionOutcomeType allowed = FtpaDecisionOutcomeType.FTPA_ALLOWED;
     private final FtpaDecisionOutcomeType dismissed = FtpaDecisionOutcomeType.FTPA_DISMISSED;
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    PersonalisationProvider personalisationProvider;
     private LegalRepresentativeFtpaApplicationDecisionRespondentPersonalisation
         legalRepresentativeFtpaApplicationDecisionRespondentPersonalisation;
 
@@ -82,10 +77,9 @@ public class LegalRepresentativeFtpaApplicationDecisionRespondentPersonalisation
         when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class))
             .thenReturn(Optional.empty());
         IllegalStateException exception =
-assertThrows(IllegalStateException.class,
-            () -> legalRepresentativeFtpaApplicationDecisionRespondentPersonalisation.getTemplateId(asylumCase))
-            ;
-assertEquals("ftpaRespondentDecisionOutcomeType is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class,
+                () -> legalRepresentativeFtpaApplicationDecisionRespondentPersonalisation.getTemplateId(asylumCase));
+        assertEquals("ftpaRespondentDecisionOutcomeType is not present", exception.getMessage());
     }
 
     @Test
@@ -139,7 +133,7 @@ assertEquals("ftpaRespondentDecisionOutcomeType is not present", exception.getMe
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_of_all_information_given(YesOrNo isAda) {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         initializePrefixes(legalRepresentativeFtpaApplicationDecisionRespondentPersonalisation);

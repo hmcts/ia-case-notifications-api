@@ -44,13 +44,13 @@ public class EditDocumentServiceTest {
         FormattedDocument expectedFormattedDocumentIsDoc1 =
             new FormattedDocument("some name", "some desc");
 
-        return new Object[] {
-            new Object[] {
+        return new Object[]{
+            new Object[]{
                 asylumCase,
                 doc2IsEditedInCaseNote,
                 new FormattedDocumentList(Collections.singletonList(expectedFormattedDocumentIsDoc2))
             },
-            new Object[] {
+            new Object[]{
                 asylumCase,
                 doc1IsEditedInCaseNote,
                 new FormattedDocumentList(Collections.singletonList(expectedFormattedDocumentIsDoc1))
@@ -83,8 +83,8 @@ public class EditDocumentServiceTest {
         FormattedDocument expectedFormattedDocumentIsDoc3 =
             new FormattedDocument("some hearing doc name", "some hearing desc");
 
-        return new Object[] {
-            new Object[] {
+        return new Object[]{
+            new Object[]{
                 asylumCase,
                 doc1AndDoc2AreEditedInCaseNote,
                 new FormattedDocumentList(
@@ -93,7 +93,7 @@ public class EditDocumentServiceTest {
                         expectedFormattedDocumentIsDoc2
                     ))
             },
-            new Object[] {
+            new Object[]{
                 asylumCase,
                 doc1AndDoc2AndDoc3AreEditedInCaseNote,
                 new FormattedDocumentList(

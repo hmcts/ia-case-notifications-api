@@ -38,24 +38,23 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class DetentionEngagementTeamMarkAppealRemittedAipIrcPrisonPersonalisationTest {
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    private DocumentDownloadClient documentDownloadClient;
-    @Mock
-    private DetentionEmailService detentionEmailService;
-    @Mock
-    JSONObject jsonDocument;
+    final DocumentWithMetadata hearingAdjustmentsChangedDoc = TestUtils.getDocumentWithMetadata(
+        "id", "hearing-adjustments-updated-letter", "some other desc", DocumentTag.INTERNAL_DETAINED_APPEAL_REMITTED_AIP_IRC_PRISON_LETTER);
+    final IdValue<DocumentWithMetadata> hearingAdjustmentsChangedBundle = new IdValue<>("1", hearingAdjustmentsChangedDoc);
     private final String templateId = "templateId";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    JSONObject jsonDocument;
+    @Mock
+    private DocumentDownloadClient documentDownloadClient;
+    @Mock
+    private DetentionEmailService detentionEmailService;
     private DetentionEngagementTeamMarkAppealRemittedAipIrcPrisonPersonalisation detentionEngagementTeamMarkAppealRemittedAipIrcPrisonPersonalisation;
-
-    final DocumentWithMetadata hearingAdjustmentsChangedDoc = TestUtils.getDocumentWithMetadata(
-            "id", "hearing-adjustments-updated-letter", "some other desc", DocumentTag.INTERNAL_DETAINED_APPEAL_REMITTED_AIP_IRC_PRISON_LETTER);
-    final IdValue<DocumentWithMetadata> hearingAdjustmentsChangedBundle = new IdValue<>("1", hearingAdjustmentsChangedDoc);
 
     DetentionEngagementTeamMarkAppealRemittedAipIrcPrisonPersonalisationTest() {
     }
@@ -71,18 +70,18 @@ class DetentionEngagementTeamMarkAppealRemittedAipIrcPrisonPersonalisationTest {
         when(documentDownloadClient.getJsonObjectFromDocument(hearingAdjustmentsChangedDoc)).thenReturn(jsonDocument);
 
         detentionEngagementTeamMarkAppealRemittedAipIrcPrisonPersonalisation =
-                new DetentionEngagementTeamMarkAppealRemittedAipIrcPrisonPersonalisation(
-                        templateId,
-                        detentionEmailService,
-                        documentDownloadClient
-                );
+            new DetentionEngagementTeamMarkAppealRemittedAipIrcPrisonPersonalisation(
+                templateId,
+                detentionEmailService,
+                documentDownloadClient
+            );
     }
 
     @Test
     public void should_return_given_template_id_detained() {
         assertEquals(
-                templateId,
-                detentionEngagementTeamMarkAppealRemittedAipIrcPrisonPersonalisation.getTemplateId()
+            templateId,
+            detentionEngagementTeamMarkAppealRemittedAipIrcPrisonPersonalisation.getTemplateId()
         );
     }
 
@@ -90,7 +89,7 @@ class DetentionEngagementTeamMarkAppealRemittedAipIrcPrisonPersonalisationTest {
     void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_INTERNAL_DETAINED_APPEAL_REMITTED_AIP_IRC_PRISON_LETTER",
-                detentionEngagementTeamMarkAppealRemittedAipIrcPrisonPersonalisation.getReferenceId(caseId));
+            detentionEngagementTeamMarkAppealRemittedAipIrcPrisonPersonalisation.getReferenceId(caseId));
     }
 
     @Test
@@ -100,7 +99,7 @@ class DetentionEngagementTeamMarkAppealRemittedAipIrcPrisonPersonalisationTest {
         when(detentionEmailService.getDetentionEmailAddress(asylumCase)).thenReturn(detentionEngagementTeamEmail);
 
         assertTrue(
-                detentionEngagementTeamMarkAppealRemittedAipIrcPrisonPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
+            detentionEngagementTeamMarkAppealRemittedAipIrcPrisonPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
     }
 
     @Test
@@ -108,18 +107,18 @@ class DetentionEngagementTeamMarkAppealRemittedAipIrcPrisonPersonalisationTest {
 
         String subjectPrefix = "IAFT - SERVE IN PERSON";
         final Map<String, Object> expectedPersonalisation =
-                ImmutableMap
-                        .<String, Object>builder()
-                        .put("subjectPrefix", subjectPrefix)
-                        .put("appealReferenceNumber", appealReferenceNumber)
-                        .put("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
-                        .put("appellantGivenNames", appellantGivenNames)
-                        .put("appellantFamilyName", appellantFamilyName)
-                        .put("documentLink", jsonDocument)
-                        .build();
+            ImmutableMap
+                .<String, Object>builder()
+                .put("subjectPrefix", subjectPrefix)
+                .put("appealReferenceNumber", appealReferenceNumber)
+                .put("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
+                .put("appellantGivenNames", appellantGivenNames)
+                .put("appellantFamilyName", appellantFamilyName)
+                .put("documentLink", jsonDocument)
+                .build();
 
         Map<String, Object> actualPersonalisation =
-                detentionEngagementTeamMarkAppealRemittedAipIrcPrisonPersonalisation.getPersonalisationForLink(asylumCase);
+            detentionEngagementTeamMarkAppealRemittedAipIrcPrisonPersonalisation.getPersonalisationForLink(asylumCase);
 
         assertTrue(compareStringsAndJsonObjects(expectedPersonalisation, actualPersonalisation));
     }
@@ -128,26 +127,23 @@ class DetentionEngagementTeamMarkAppealRemittedAipIrcPrisonPersonalisationTest {
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> detentionEngagementTeamMarkAppealRemittedAipIrcPrisonPersonalisation.getPersonalisationForLink((AsylumCase) null))
-                ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> detentionEngagementTeamMarkAppealRemittedAipIrcPrisonPersonalisation.getPersonalisationForLink((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_appeal_submission_is_empty() {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> detentionEngagementTeamMarkAppealRemittedAipIrcPrisonPersonalisation.getPersonalisationForLink(asylumCase))
-                ;
-assertEquals("internalDetainedAppealRemittedAipIrcPrisonLetter document not available", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamMarkAppealRemittedAipIrcPrisonPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("internalDetainedAppealRemittedAipIrcPrisonLetter document not available", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_notification_client_throws_Exception() throws NotificationClientException, IOException {
         when(documentDownloadClient.getJsonObjectFromDocument(hearingAdjustmentsChangedDoc)).thenThrow(new NotificationClientException("File size is more than 2MB"));
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> detentionEngagementTeamMarkAppealRemittedAipIrcPrisonPersonalisation.getPersonalisationForLink(asylumCase))
-                ;
-assertEquals("Failed to get Mark Appeal as Remitted changed document in compatible format", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamMarkAppealRemittedAipIrcPrisonPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("Failed to get Mark Appeal as Remitted changed document in compatible format", exception.getMessage());
     }
 }

@@ -34,12 +34,16 @@ class HomeOfficeUploadBailSummaryDirectionPersonalisationTest {
     private final String applicantGivenNames = "someApplicantGivenNames";
     private final String applicantFamilyName = "someApplicantFamilyName";
 
-    @Mock BailCase bailCase;
-    @Mock IdValue<BailDirection> oldestDirectionIdValue;
-    @Mock BailDirection oldestDirection;
+    @Mock
+    BailCase bailCase;
+    @Mock
+    IdValue<BailDirection> oldestDirectionIdValue;
+    @Mock
+    BailDirection oldestDirection;
     @Mock
     IdValue<BailDirection> newestDirectionIdValue;
-    @Mock BailDirection newestDirection;
+    @Mock
+    BailDirection newestDirection;
     private HomeOfficeUploadBailSummaryDirectionPersonalisation homeOfficeUploadBailSummaryDirectionPersonalisation;
 
     @BeforeEach
@@ -82,17 +86,16 @@ class HomeOfficeUploadBailSummaryDirectionPersonalisationTest {
     @Test
     public void should_return_given_email_address_from_bail_case() {
         assertTrue(homeOfficeUploadBailSummaryDirectionPersonalisation.getRecipientsList(bailCase)
-                .contains(homeOfficeEmailAddress));
+            .contains(homeOfficeEmailAddress));
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> homeOfficeUploadBailSummaryDirectionPersonalisation.getPersonalisation((BailCase) null))
-            ;
-assertEquals("bailCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> homeOfficeUploadBailSummaryDirectionPersonalisation.getPersonalisation((BailCase) null));
+        assertEquals("bailCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -101,9 +104,9 @@ assertEquals("bailCase must not be null", exception.getMessage());
         Map<String, String> personalisation =
             homeOfficeUploadBailSummaryDirectionPersonalisation.getPersonalisation(bailCase);
 
-            assertEquals(bailReferenceNumber, personalisation.get("bailReferenceNumber"));
+        assertEquals(bailReferenceNumber, personalisation.get("bailReferenceNumber"));
         assertEquals("\nLegal representative reference: " + legalRepReference,
-                personalisation.get("legalRepReference"));
+            personalisation.get("legalRepReference"));
         assertThat(personalisation)
             .containsEntry("applicantGivenNames", applicantGivenNames)
             .containsEntry("applicantFamilyName", applicantFamilyName)

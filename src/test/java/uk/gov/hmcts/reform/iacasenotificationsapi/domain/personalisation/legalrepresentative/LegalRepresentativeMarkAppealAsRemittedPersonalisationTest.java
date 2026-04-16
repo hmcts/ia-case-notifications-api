@@ -30,13 +30,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 class LegalRepresentativeMarkAppealAsRemittedPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-
-    private LegalRepresentativeMarkAppealAsRemittedPersonalisation
-        legalRepresentativeMarkAppealAsRemittedPersonalisation;
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String ariaListingReference = "someReferenceNumber";
     private final String legalRepRefNumber = "somelegalRepRefNumber";
@@ -49,6 +42,12 @@ class LegalRepresentativeMarkAppealAsRemittedPersonalisationTest {
     private final SourceOfRemittal sourceOfRemittal = SourceOfRemittal.UPPER_TRIBUNAL;
     private final Map<String, String> customerServices = Map.of("customerServicesTelephone", iaServicesPhone,
         "customerServicesEmail", iaServicesEmail);
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    private LegalRepresentativeMarkAppealAsRemittedPersonalisation
+        legalRepresentativeMarkAppealAsRemittedPersonalisation;
 
     @BeforeEach
     public void setUp() {

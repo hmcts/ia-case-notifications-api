@@ -32,6 +32,14 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantRequestCmaRequirementsPersonalisationEmailTest {
 
+    private final String emailTemplateId = "someEmailTemplateId";
+    private final String iaAipFrontendUrl = "http://localhost";
+    private final String expectedDirectionDueDate = "27 Aug 2019";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
+    private final String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
+    private final String mockedAppellantGivenNames = "someAppellantGivenNames";
+    private final String mockedAppellantFamilyName = "someAppellantFamilyName";
+    private final String explanation = "You must do this because...";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -40,18 +48,6 @@ public class AppellantRequestCmaRequirementsPersonalisationEmailTest {
     DirectionFinder directionFinder;
     @Mock
     Direction direction;
-
-    private final String emailTemplateId = "someEmailTemplateId";
-    private final String iaAipFrontendUrl = "http://localhost";
-
-    private final String expectedDirectionDueDate = "27 Aug 2019";
-
-    private final String mockedAppealReferenceNumber = "someReferenceNumber";
-    private final String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
-    private final String mockedAppellantGivenNames = "someAppellantGivenNames";
-    private final String mockedAppellantFamilyName = "someAppellantFamilyName";
-    private final String explanation = "You must do this because...";
-
     private AppellantRequestCmaRequirementsPersonalisationEmail appellantRequestCmaRequirementsPersonalisationEmail;
 
     @BeforeEach
@@ -107,9 +103,8 @@ public class AppellantRequestCmaRequirementsPersonalisationEmailTest {
             .thenThrow(new NullPointerException("asylumCase must not be null"));
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> appellantRequestCmaRequirementsPersonalisationEmail.getRecipientsList(null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> appellantRequestCmaRequirementsPersonalisationEmail.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -118,9 +113,8 @@ assertEquals("asylumCase must not be null", exception.getMessage());
         when(directionFinder.findFirst(asylumCase, DirectionTag.REQUEST_CMA_REQUIREMENTS)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> appellantRequestCmaRequirementsPersonalisationEmail.getPersonalisation(asylumCase))
-            ;
-assertEquals("direction 'requestCmaRequirements' is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> appellantRequestCmaRequirementsPersonalisationEmail.getPersonalisation(asylumCase));
+        assertEquals("direction 'requestCmaRequirements' is not present", exception.getMessage());
     }
 
 

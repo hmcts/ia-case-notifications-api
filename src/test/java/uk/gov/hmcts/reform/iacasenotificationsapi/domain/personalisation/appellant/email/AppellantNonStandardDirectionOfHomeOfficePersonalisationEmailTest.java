@@ -29,12 +29,19 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppellantNonStandardDirectionOfHomeOfficePersonalisationEmailTest {
 
+    private final Long caseId = 12345L;
+    private final String emailAfterTemplateId = "someEmailTemplateId";
+    private final String iaAipFrontendUrl = "http://localhost";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
+    private final String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
+    private final String mockedAppellantGivenNames = "someAppellantGivenNames";
+    private final String mockedAppellantFamilyName = "someAppellantFamilyName";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
     @Mock
     Callback<AsylumCase> callback;
     @Mock
     AsylumCase asylumCase;
-    @Mock
-    private CaseDetails<AsylumCase> caseDetails;
     @Mock
     RecipientsFinder recipientsFinder;
     @Mock
@@ -45,18 +52,8 @@ class AppellantNonStandardDirectionOfHomeOfficePersonalisationEmailTest {
     DirectionFinder directionFinder;
     @Mock
     Direction direction;
-
-
-    private final Long caseId = 12345L;
-    private final String emailAfterTemplateId = "someEmailTemplateId";
-    private final String iaAipFrontendUrl = "http://localhost";
-    private final String mockedAppealReferenceNumber = "someReferenceNumber";
-    private final String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
-    private final String mockedAppellantGivenNames = "someAppellantGivenNames";
-    private final String mockedAppellantFamilyName = "someAppellantFamilyName";
-    private final String customerServicesTelephone = "555 555 555";
-    private final String customerServicesEmail = "cust.services@example.com";
-
+    @Mock
+    private CaseDetails<AsylumCase> caseDetails;
     private AppellantNonStandardDirectionOfHomeOfficePersonalisationEmail appellantNonStandardDirectionPersonalisationEmail;
 
     @BeforeEach
@@ -66,9 +63,9 @@ class AppellantNonStandardDirectionOfHomeOfficePersonalisationEmailTest {
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
         when(callback.getCaseDetails().getId()).thenReturn(caseId);
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class))
-                .thenReturn(Optional.of(mockedAppealReferenceNumber));
+            .thenReturn(Optional.of(mockedAppealReferenceNumber));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class))
-                .thenReturn(Optional.of(mockedAppealHomeOfficeReferenceNumber));
+            .thenReturn(Optional.of(mockedAppealHomeOfficeReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(mockedAppellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(mockedAppellantFamilyName));
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
@@ -79,28 +76,28 @@ class AppellantNonStandardDirectionOfHomeOfficePersonalisationEmailTest {
         String emailBeforeTemplateId = "someEmailTemplateId";
         appellantNonStandardDirectionPersonalisationEmail = new AppellantNonStandardDirectionOfHomeOfficePersonalisationEmail(
             emailBeforeTemplateId,
-                emailAfterTemplateId,
+            emailAfterTemplateId,
             toAppellantAndRespondentAfterTemplateId,
             toAppellantAndRespondentBeforeTemplateId,
-                iaAipFrontendUrl,
-                personalisationProvider,
-                customerServicesProvider,
-                recipientsFinder,
-                directionFinder);
+            iaAipFrontendUrl,
+            personalisationProvider,
+            customerServicesProvider,
+            recipientsFinder,
+            directionFinder);
     }
 
     @Test
     public void should_return_given_template_id_before_listing() {
         assertEquals(emailAfterTemplateId,
-                appellantNonStandardDirectionPersonalisationEmail.getTemplateId(asylumCase));
+            appellantNonStandardDirectionPersonalisationEmail.getTemplateId(asylumCase));
     }
 
     @Test
     public void should_return_given_template_id_after_listing() {
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class))
-                .thenReturn(Optional.of(HearingCentre.BELFAST));
+            .thenReturn(Optional.of(HearingCentre.BELFAST));
         assertEquals(emailAfterTemplateId,
-                appellantNonStandardDirectionPersonalisationEmail.getTemplateId(asylumCase));
+            appellantNonStandardDirectionPersonalisationEmail.getTemplateId(asylumCase));
     }
 
     @Test
@@ -109,68 +106,67 @@ class AppellantNonStandardDirectionOfHomeOfficePersonalisationEmailTest {
         when(direction.getParties()).thenReturn(Parties.APPELLANT_AND_RESPONDENT);
 
         assertEquals(emailAfterTemplateId,
-                appellantNonStandardDirectionPersonalisationEmail.getTemplateId(asylumCase));
+            appellantNonStandardDirectionPersonalisationEmail.getTemplateId(asylumCase));
     }
 
     @Test
     public void should_return_given_template_id_after_listing_to_appellant_and_respondent() {
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class))
-                .thenReturn(Optional.of(HearingCentre.BELFAST));
+            .thenReturn(Optional.of(HearingCentre.BELFAST));
         when(directionFinder.findFirst(asylumCase, DirectionTag.NONE)).thenReturn(Optional.of(direction));
         when(direction.getParties()).thenReturn(Parties.APPELLANT_AND_RESPONDENT);
 
         assertEquals(emailAfterTemplateId,
-                appellantNonStandardDirectionPersonalisationEmail.getTemplateId(asylumCase));
+            appellantNonStandardDirectionPersonalisationEmail.getTemplateId(asylumCase));
     }
 
     @Test
     void should_return_given_reference_id() {
         assertEquals(caseId + "_APPELLANT_NON_STANDARD_DIRECTION_OF_HOME_OFFICE_EMAIL",
-                appellantNonStandardDirectionPersonalisationEmail.getReferenceId(caseId));
+            appellantNonStandardDirectionPersonalisationEmail.getReferenceId(caseId));
     }
 
     @Test
     void should_return_given_email_address_list_from_subscribers_in_asylum_case() {
         String mockedAppellantEmailAddress = "appelant@example.net";
         when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL))
-                .thenReturn(Collections.singleton(mockedAppellantEmailAddress));
+            .thenReturn(Collections.singleton(mockedAppellantEmailAddress));
 
         assertTrue(appellantNonStandardDirectionPersonalisationEmail.getRecipientsList(asylumCase)
-                .contains(mockedAppellantEmailAddress));
+            .contains(mockedAppellantEmailAddress));
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         when(recipientsFinder.findAll(null, NotificationType.EMAIL))
-                .thenThrow(new NullPointerException("asylumCase must not be null"));
+            .thenThrow(new NullPointerException("asylumCase must not be null"));
 
-        NullPointerException exception = 
-assertThrows(NullPointerException.class, () -> appellantNonStandardDirectionPersonalisationEmail.getRecipientsList(null))
-                ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> appellantNonStandardDirectionPersonalisationEmail.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     void should_return_personalisation_when_all_information_given() {
         when(personalisationProvider.getTribunalHeaderPersonalisation(asylumCase))
-                .thenReturn(getPersonalisationMapWithGivenValues());
+            .thenReturn(getPersonalisationMapWithGivenValues());
 
         Map<String, String> personalisation = appellantNonStandardDirectionPersonalisationEmail.getPersonalisation(callback);
 
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-            assertEquals(iaAipFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertEquals(iaAipFrontendUrl, personalisation.get("linkToOnlineService"));
 
     }
 
     private Map<String, String> getPersonalisationMapWithGivenValues() {
         return ImmutableMap
-                .<String, String>builder()
-                .put("appealReferenceNumber", mockedAppealReferenceNumber)
-                .put("ariaListingReference", mockedAppealHomeOfficeReferenceNumber)
-                .put("appellantGivenNames", mockedAppellantGivenNames)
-                .put("appellantFamilyName", mockedAppellantFamilyName)
-                .build();
+            .<String, String>builder()
+            .put("appealReferenceNumber", mockedAppealReferenceNumber)
+            .put("ariaListingReference", mockedAppealHomeOfficeReferenceNumber)
+            .put("appellantGivenNames", mockedAppellantGivenNames)
+            .put("appellantFamilyName", mockedAppellantFamilyName)
+            .build();
     }
 }

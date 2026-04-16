@@ -38,30 +38,27 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantUnlinkAppealPersonalisationEmailTest {
 
+    private final String beforeListingEmailTemplateId = "beforeListingEmailTemplateId";
+    private final String afterListingEmailTemplateId = "afterListingEmailTemplateId";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
+    private final String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
+    private final String mockedAppellantGivenNames = "someAppellantGivenNames";
+    private final String mockedAppellantFamilyName = "someAppellantFamilyName";
     @Mock
     AsylumCase asylumCase;
     @Mock
     RecipientsFinder recipientsFinder;
     @Mock
     CustomerServicesProvider customerServicesProvider;
-
-    private final String beforeListingEmailTemplateId = "beforeListingEmailTemplateId";
-    private final String afterListingEmailTemplateId = "afterListingEmailTemplateId";
-
-    private final String mockedAppealReferenceNumber = "someReferenceNumber";
-    private final String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
-    private final String mockedAppellantGivenNames = "someAppellantGivenNames";
-    private final String mockedAppellantFamilyName = "someAppellantFamilyName";
-
     private AppellantUnlinkAppealPersonalisationEmail appellantUnlinkAppealPersonalisationEmail;
 
     @BeforeEach
     public void setup() {
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class))
-                .thenReturn(Optional.of(mockedAppealReferenceNumber));
+            .thenReturn(Optional.of(mockedAppealReferenceNumber));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class))
-                .thenReturn(Optional.of(mockedAppealHomeOfficeReferenceNumber));
+            .thenReturn(Optional.of(mockedAppealHomeOfficeReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(mockedAppellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(mockedAppellantFamilyName));
         String customerServicesTelephone = "555 555 555";
@@ -70,12 +67,12 @@ public class AppellantUnlinkAppealPersonalisationEmailTest {
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         appellantUnlinkAppealPersonalisationEmail =
-                new AppellantUnlinkAppealPersonalisationEmail(
-                        beforeListingEmailTemplateId,
-                        afterListingEmailTemplateId,
-                        recipientsFinder,
-                        customerServicesProvider
-                );
+            new AppellantUnlinkAppealPersonalisationEmail(
+                beforeListingEmailTemplateId,
+                afterListingEmailTemplateId,
+                recipientsFinder,
+                customerServicesProvider
+            );
     }
 
     @Test
@@ -87,7 +84,7 @@ public class AppellantUnlinkAppealPersonalisationEmailTest {
     public void should_return_given_template_id_for_after_listing() {
 
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class))
-                .thenReturn(Optional.of(HearingCentre.BELFAST));
+            .thenReturn(Optional.of(HearingCentre.BELFAST));
 
         assertEquals(afterListingEmailTemplateId, appellantUnlinkAppealPersonalisationEmail.getTemplateId(asylumCase));
     }
@@ -96,7 +93,7 @@ public class AppellantUnlinkAppealPersonalisationEmailTest {
     public void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_UNLINK_APPEAL_AIP_APPELLANT_EMAIL",
-                appellantUnlinkAppealPersonalisationEmail.getReferenceId(caseId));
+            appellantUnlinkAppealPersonalisationEmail.getReferenceId(caseId));
     }
 
     @Test
@@ -104,26 +101,25 @@ public class AppellantUnlinkAppealPersonalisationEmailTest {
 
         String mockedAppellantEmailAddress = "appelant@example.net";
         when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL))
-                .thenReturn(Collections.singleton(mockedAppellantEmailAddress));
+            .thenReturn(Collections.singleton(mockedAppellantEmailAddress));
 
         assertTrue(appellantUnlinkAppealPersonalisationEmail.getRecipientsList(asylumCase)
-                .contains(mockedAppellantEmailAddress));
+            .contains(mockedAppellantEmailAddress));
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         when(recipientsFinder.findAll(null, NotificationType.EMAIL))
-                .thenThrow(new NullPointerException("asylumCase must not be null"));
+            .thenThrow(new NullPointerException("asylumCase must not be null"));
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> appellantUnlinkAppealPersonalisationEmail.getRecipientsList(null))
-                ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> appellantUnlinkAppealPersonalisationEmail.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given_before_listing(YesOrNo isAda) {
 
         initializePrefixes(appellantUnlinkAppealPersonalisationEmail);
@@ -131,7 +127,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
-                appellantUnlinkAppealPersonalisationEmail.getPersonalisation(asylumCase);
+            appellantUnlinkAppealPersonalisationEmail.getPersonalisation(asylumCase);
 
         assertThat(personalisation)
             .containsEntry("appealReferenceNumber", mockedAppealReferenceNumber)
@@ -145,7 +141,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given_after_listing(YesOrNo isAda) {
 
         initializePrefixes(appellantUnlinkAppealPersonalisationEmail);
@@ -155,7 +151,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(ariaListingRef));
 
         Map<String, String> personalisation =
-                appellantUnlinkAppealPersonalisationEmail.getPersonalisation(asylumCase);
+            appellantUnlinkAppealPersonalisationEmail.getPersonalisation(asylumCase);
 
         assertThat(personalisation)
             .containsEntry("appealReferenceNumber", mockedAppealReferenceNumber)
@@ -169,7 +165,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_only_mandatory_information_given(YesOrNo isAda) {
 
         initializePrefixes(appellantUnlinkAppealPersonalisationEmail);
@@ -180,7 +176,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
-                appellantUnlinkAppealPersonalisationEmail.getPersonalisation(asylumCase);
+            appellantUnlinkAppealPersonalisationEmail.getPersonalisation(asylumCase);
 
         assertThat(personalisation)
             .containsEntry("appealReferenceNumber", "")

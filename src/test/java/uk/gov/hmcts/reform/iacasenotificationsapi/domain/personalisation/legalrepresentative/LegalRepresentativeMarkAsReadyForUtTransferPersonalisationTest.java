@@ -49,6 +49,11 @@ public class LegalRepresentativeMarkAsReadyForUtTransferPersonalisationTest {
     CustomerServicesProvider customerServicesProvider;
     private LegalRepresentativeMarkAsReadyForUtTransferPersonalisation legalRepresentativeMarkAsReadyForUtTransferPersonalisation;
 
+    public static void initializePrefixes(Object testClass) {
+        ReflectionTestUtils.setField(testClass, "adaPrefix", "Accelerated detained appeal");
+        ReflectionTestUtils.setField(testClass, "nonAdaPrefix", "Immigration and Asylum appeal");
+    }
+
     @BeforeEach
     public void setup() {
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
@@ -143,11 +148,6 @@ public class LegalRepresentativeMarkAsReadyForUtTransferPersonalisationTest {
             .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal"
                 : "Immigration and Asylum appeal")
             .containsAllEntriesOf(getPersonalisationForLegalRep());
-    }
-
-    public static void initializePrefixes(Object testClass) {
-        ReflectionTestUtils.setField(testClass, "adaPrefix", "Accelerated detained appeal");
-        ReflectionTestUtils.setField(testClass, "nonAdaPrefix", "Immigration and Asylum appeal");
     }
 
     private Map<String, String> getPersonalisationForLegalRep() {

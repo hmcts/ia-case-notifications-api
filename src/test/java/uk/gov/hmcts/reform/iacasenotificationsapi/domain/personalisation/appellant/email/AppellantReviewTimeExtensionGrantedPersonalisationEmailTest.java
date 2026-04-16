@@ -39,6 +39,13 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.TimeExtensionFi
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantReviewTimeExtensionGrantedPersonalisationEmailTest {
 
+    private final String smsTemplateId = "someEmailTemplateId";
+    private final String iaAipFrontendUrl = "http://localhost";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
+    private final String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
+    private final String mockedAppellantGivenNames = "someAppellantGivenNames";
+    private final String mockedAppellantFamilyName = "someAppellantFamilyName";
+    private final String expectedTimeExtensionNewDate = "1 Apr 2020";
     @Mock
     Callback<AsylumCase> callback;
     @Mock
@@ -47,18 +54,6 @@ public class AppellantReviewTimeExtensionGrantedPersonalisationEmailTest {
     RecipientsFinder recipientsFinder;
     @Mock
     TimeExtensionFinder timeExtensionFinder;
-
-    private final String smsTemplateId = "someEmailTemplateId";
-    private final String iaAipFrontendUrl = "http://localhost";
-
-    private final String mockedAppealReferenceNumber = "someReferenceNumber";
-    private final String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
-    private final String mockedAppellantGivenNames = "someAppellantGivenNames";
-    private final String mockedAppellantFamilyName = "someAppellantFamilyName";
-
-    private final String expectedTimeExtensionNewDate = "1 Apr 2020";
-
-
     private IdValue<TimeExtension> mockedTimeExtension;
 
     private AppellantReviewTimeExtensionGrantedPersonalisationEmail
@@ -115,9 +110,8 @@ public class AppellantReviewTimeExtensionGrantedPersonalisationEmailTest {
             .thenThrow(new NullPointerException("asylumCase must not be null"));
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> appellantReviewTimeExtensionGrantedPersonalisationEmail.getRecipientsList(null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> appellantReviewTimeExtensionGrantedPersonalisationEmail.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -135,10 +129,9 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> appellantReviewTimeExtensionGrantedPersonalisationEmail
-            .getPersonalisation((Callback<AsylumCase>) null))
-            ;
-assertEquals("callback must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> appellantReviewTimeExtensionGrantedPersonalisationEmail
+                .getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     @Test

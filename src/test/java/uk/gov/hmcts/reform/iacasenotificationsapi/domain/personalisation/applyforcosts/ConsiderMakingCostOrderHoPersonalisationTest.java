@@ -22,12 +22,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class ConsiderMakingCostOrderHoPersonalisationTest {
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-    @Mock
-    PersonalisationProvider personalisationProvider;
     private final String templateId = "testTemplateId";
     private final String iaExUiFrontendUrl = "http://localhost";
     private final String appealReferenceNumber = "someReferenceNumber";
@@ -37,7 +31,12 @@ class ConsiderMakingCostOrderHoPersonalisationTest {
     private final String customerServicesEmail = "cust.services@example.com";
     private final String homeOfficeEmailAddress = "homeOfficeEmailAddress@gmail.com";
     private final String homeOfficeReferenceNumber = "A1234567/001";
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    PersonalisationProvider personalisationProvider;
     private ConsiderMakingCostOrderHoPersonalisation considerMakingCostOrderHoPersonalisation;
 
     @BeforeEach

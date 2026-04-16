@@ -41,32 +41,29 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantAppealOutcomePersonalisationEmailTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    RecipientsFinder recipientsFinder;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-
     private final String appealOutcomeAllowedAppellantTemplateId = "appealOutcomeAllowedAppellantTemplateId";
     private final String appealOutcomeDismissedAppellantTemplateId = "appealOutcomeDismissedAppellantTemplateId";
-
     private final String mockedAppealReferenceNumber = "someReferenceNumber";
     private final String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
     private final String mockedAppellantGivenNames = "someAppellantGivenNames";
     private final String mockedAppellantFamilyName = "someAppellantFamilyName";
     private final String ariaListingRef = "someAriaListingRef";
     private final String iaAipFrontendUrl = "http://localhost";
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    RecipientsFinder recipientsFinder;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
     private AppellantAppealOutcomePersonalisationEmail appellantAppealOutcomePersonalisationEmail;
 
     @BeforeEach
     public void setup() {
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class))
-                .thenReturn(Optional.of(mockedAppealReferenceNumber));
+            .thenReturn(Optional.of(mockedAppealReferenceNumber));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class))
-                .thenReturn(Optional.of(mockedAppealHomeOfficeReferenceNumber));
+            .thenReturn(Optional.of(mockedAppealHomeOfficeReferenceNumber));
         when(asylumCase.read(IS_DECISION_ALLOWED, AppealDecision.class))
             .thenReturn(Optional.of(AppealDecision.ALLOWED));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(mockedAppellantGivenNames));
@@ -77,13 +74,13 @@ public class AppellantAppealOutcomePersonalisationEmailTest {
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         appellantAppealOutcomePersonalisationEmail =
-                new AppellantAppealOutcomePersonalisationEmail(
-                        appealOutcomeAllowedAppellantTemplateId,
-                        appealOutcomeDismissedAppellantTemplateId,
-                        iaAipFrontendUrl,
-                        recipientsFinder,
-                        customerServicesProvider
-                );
+            new AppellantAppealOutcomePersonalisationEmail(
+                appealOutcomeAllowedAppellantTemplateId,
+                appealOutcomeDismissedAppellantTemplateId,
+                iaAipFrontendUrl,
+                recipientsFinder,
+                customerServicesProvider
+            );
     }
 
     @Test
@@ -102,7 +99,7 @@ public class AppellantAppealOutcomePersonalisationEmailTest {
     public void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_APPEAL_OUTCOME_AIP_APPELLANT_EMAIL",
-                appellantAppealOutcomePersonalisationEmail.getReferenceId(caseId));
+            appellantAppealOutcomePersonalisationEmail.getReferenceId(caseId));
     }
 
     @Test
@@ -110,26 +107,25 @@ public class AppellantAppealOutcomePersonalisationEmailTest {
 
         String mockedAppellantEmailAddress = "appelant@example.net";
         when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL))
-                .thenReturn(Collections.singleton(mockedAppellantEmailAddress));
+            .thenReturn(Collections.singleton(mockedAppellantEmailAddress));
 
         assertTrue(appellantAppealOutcomePersonalisationEmail.getRecipientsList(asylumCase)
-                .contains(mockedAppellantEmailAddress));
+            .contains(mockedAppellantEmailAddress));
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         when(recipientsFinder.findAll(null, NotificationType.EMAIL))
-                .thenThrow(new NullPointerException("asylumCase must not be null"));
+            .thenThrow(new NullPointerException("asylumCase must not be null"));
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> appellantAppealOutcomePersonalisationEmail.getRecipientsList(null))
-                ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> appellantAppealOutcomePersonalisationEmail.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_in_uk(YesOrNo isAda) {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
 
@@ -143,7 +139,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(ariaListingRef));
 
         Map<String, String> personalisation =
-                appellantAppealOutcomePersonalisationEmail.getPersonalisation(asylumCase);
+            appellantAppealOutcomePersonalisationEmail.getPersonalisation(asylumCase);
 
         String twoWeeksToAppeal = "14 days";
         assertThat(personalisation)
@@ -161,7 +157,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_in_ooc(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));

@@ -34,6 +34,16 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.MakeAnApplicati
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantDecideAnApplicationPersonalisationSmsTest {
 
+    private final String refusedSmsTemplateId = "someRefusedSmsTemplateId";
+    private final String grantedSmslTemplateId = "someGrantedSmsTemplateId";
+    private final String otherPartySmsTemplateId = "otherPartySmsTempateId";
+    private final String iaAipFrontendUrl = "http://localhost";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
+    private final String applicationType = "someApplicationType";
+    private final String applicationTypePhrase = "some application type";
+    private final String decisionMaker = "someDecisionMaker";
+    private final String citizenUser = "citizen";
+    private final String homeOfficeUser = "caseworker-ia-homeofficelart";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -46,19 +56,6 @@ public class AppellantDecideAnApplicationPersonalisationSmsTest {
     UserDetailsProvider userDetailsProvider;
     @Mock
     UserDetails userDetails;
-
-    private final String refusedSmsTemplateId = "someRefusedSmsTemplateId";
-    private final String grantedSmslTemplateId = "someGrantedSmsTemplateId";
-    private final String otherPartySmsTemplateId = "otherPartySmsTempateId";
-    private final String iaAipFrontendUrl = "http://localhost";
-
-    private final String mockedAppealReferenceNumber = "someReferenceNumber";
-    private final String applicationType = "someApplicationType";
-    private final String applicationTypePhrase = "some application type";
-    private final String decisionMaker = "someDecisionMaker";
-    private final String citizenUser = "citizen";
-    private final String homeOfficeUser = "caseworker-ia-homeofficelart";
-
     private AppellantDecideAnApplicationPersonalisationSms appellantDecideAnApplicationPersonalisationSms;
 
     @BeforeEach
@@ -91,7 +88,7 @@ public class AppellantDecideAnApplicationPersonalisationSmsTest {
         when(makeAnApplication.getState()).thenReturn("appealSubmitted");
 
         assertEquals(refusedSmsTemplateId,
-                appellantDecideAnApplicationPersonalisationSms.getTemplateId(asylumCase));
+            appellantDecideAnApplicationPersonalisationSms.getTemplateId(asylumCase));
     }
 
     @Test
@@ -101,7 +98,7 @@ public class AppellantDecideAnApplicationPersonalisationSmsTest {
         when(makeAnApplication.getState()).thenReturn("appealSubmitted");
 
         assertEquals(grantedSmslTemplateId,
-                appellantDecideAnApplicationPersonalisationSms.getTemplateId(asylumCase));
+            appellantDecideAnApplicationPersonalisationSms.getTemplateId(asylumCase));
     }
 
     public void should_return_other_party_template_id() {
@@ -109,7 +106,7 @@ public class AppellantDecideAnApplicationPersonalisationSmsTest {
         when(makeAnApplication.getState()).thenReturn("appealSubmitted");
 
         assertEquals(otherPartySmsTemplateId,
-                appellantDecideAnApplicationPersonalisationSms.getTemplateId(asylumCase));
+            appellantDecideAnApplicationPersonalisationSms.getTemplateId(asylumCase));
     }
 
     @Test
@@ -144,14 +141,13 @@ public class AppellantDecideAnApplicationPersonalisationSmsTest {
 
         when(recipientsFinder.findAll(null, NotificationType.SMS)).thenCallRealMethod();
 
-        NullPointerException exception = 
-assertThrows(NullPointerException.class, () -> appellantDecideAnApplicationPersonalisationSms.getRecipientsList(null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> appellantDecideAnApplicationPersonalisationSms.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { citizenUser, homeOfficeUser })
+    @ValueSource(strings = {citizenUser, homeOfficeUser})
     public void should_return_personalisation_when_all_information_given_and_decision_refused(String user) {
         when(userDetails.getRoles()).thenReturn(List.of(user));
         String decision = "Refused";
@@ -174,7 +170,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { citizenUser, homeOfficeUser })
+    @ValueSource(strings = {citizenUser, homeOfficeUser})
     public void should_return_personalisation_when_all_information_given_and_decision_granted(String user) {
         when(userDetails.getRoles()).thenReturn(List.of(user));
         when(makeAnApplication.getDecision()).thenReturn("Granted");

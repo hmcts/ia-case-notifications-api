@@ -26,20 +26,18 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class CaseOfficerPendingPaymentPaidPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    EmailAddressFinder emailAddressFinder;
-    @Mock
-    private FeatureToggler featureToggler;
-
     private final String iaFrontendCcdUrl = "http://somefrontendyurl";
     private final String templateId = "someTemplateId";
     private final String hearingCentreEmailAddress = "hearingCentre@example.com";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    EmailAddressFinder emailAddressFinder;
+    @Mock
+    private FeatureToggler featureToggler;
     private CaseOfficerPendingPaymentPaidPersonalisation caseOfficerPendingPaymentPaidPersonalisation;
 
     @BeforeEach
@@ -54,7 +52,7 @@ public class CaseOfficerPendingPaymentPaidPersonalisationTest {
             templateId,
             iaFrontendCcdUrl,
             emailAddressFinder,
-                featureToggler);
+            featureToggler);
     }
 
     @Test
@@ -72,14 +70,14 @@ public class CaseOfficerPendingPaymentPaidPersonalisationTest {
     @Test
     public void should_return_given_email_address_from_lookup_map_when_feature_flag_is_Off() {
         assertTrue(caseOfficerPendingPaymentPaidPersonalisation.getRecipientsList(asylumCase)
-                .isEmpty());
+            .isEmpty());
     }
 
     @Test
     public void should_return_given_email_address_from_lookup_map_when_feature_flag_is_On() {
         when(featureToggler.getValue("tcw-notifications-feature", false)).thenReturn(true);
         assertTrue(caseOfficerPendingPaymentPaidPersonalisation.getRecipientsList(asylumCase)
-                .contains(hearingCentreEmailAddress));
+            .contains(hearingCentreEmailAddress));
     }
 
 
@@ -87,9 +85,8 @@ public class CaseOfficerPendingPaymentPaidPersonalisationTest {
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> caseOfficerPendingPaymentPaidPersonalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> caseOfficerPendingPaymentPaidPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test

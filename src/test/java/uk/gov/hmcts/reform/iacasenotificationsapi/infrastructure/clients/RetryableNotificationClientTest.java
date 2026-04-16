@@ -70,7 +70,7 @@ class RetryableNotificationClientTest {
 
     @Test
     void should_retry_once_when_sending_letter_failed() throws NotificationClientException {
-        when(notificationClient.sendLetter(anyString(),  anyMap(), anyString()))
+        when(notificationClient.sendLetter(anyString(), anyMap(), anyString()))
             .thenThrow(new NotificationClientException("some exception"))
             .thenReturn(sendLetterResponse);
 
@@ -83,11 +83,11 @@ class RetryableNotificationClientTest {
     void should_retry_once_when_sending_precompiled_letter_failed() throws NotificationClientException {
         InputStream mockStream = mock(InputStream.class);
 
-        when(notificationClient.sendPrecompiledLetterWithInputStream(anyString(),  eq(mockStream)))
+        when(notificationClient.sendPrecompiledLetterWithInputStream(anyString(), eq(mockStream)))
             .thenThrow(new NotificationClientException("some exception"))
             .thenReturn(letterResponse);
 
-        retryableNotificationClient.sendPrecompiledLetter("testReference",  mockStream);
+        retryableNotificationClient.sendPrecompiledLetter("testReference", mockStream);
 
         verify(notificationClient, times(2)).sendPrecompiledLetterWithInputStream(anyString(), eq(mockStream));
     }

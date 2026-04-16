@@ -46,26 +46,13 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsF
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class LegalRepresentativeAdaReviewHearingRequirementsPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    StringProvider stringProvider;
-    @Mock
-    DateTimeExtractor dateTimeExtractor;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-    @Mock
-    HearingDetailsFinder hearingDetailsFinder;
-
     private final String templateId = "someTemplateId";
     private final String iaExUiFrontendUrl = "http://somefrontendurl";
     private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
     private final String legalRepEmailAddress = "legalRepEmailAddress@example.com";
     private final String hearingCentreAddress = "some hearing centre address";
-
     //Remote hearing
     private final HearingCentre remoteHearingCentre = HearingCentre.REMOTE_HEARING;
-
     private final String hearingDate = "2019-08-27";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String ariaListingReference = "someAriaListingReference";
@@ -77,10 +64,18 @@ public class LegalRepresentativeAdaReviewHearingRequirementsPersonalisationTest 
     private final String caseOfficerReviewedSingleSexCourt = "someCaseOfficerReviewedSingleSexCourt";
     private final String caseOfficerReviewedInCamera = "someCaseOfficerReviewedInCamera";
     private final String caseOfficerReviewedOther = "someCaseOfficerReviewedOther";
-
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "cust.services@example.com";
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    StringProvider stringProvider;
+    @Mock
+    DateTimeExtractor dateTimeExtractor;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    HearingDetailsFinder hearingDetailsFinder;
     private LegalRepresentativeAdaReviewHearingRequirementsPersonalisation legalRepresentativeAdaReviewHearingRequirementsPersonalisation;
 
     @BeforeEach
@@ -153,22 +148,20 @@ public class LegalRepresentativeAdaReviewHearingRequirementsPersonalisationTest 
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> legalRepresentativeAdaReviewHearingRequirementsPersonalisation.getRecipientsList(asylumCase))
-            ;
-assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> legalRepresentativeAdaReviewHearingRequirementsPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> legalRepresentativeAdaReviewHearingRequirementsPersonalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> legalRepresentativeAdaReviewHearingRequirementsPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_information_given_in_remote_hearing_case(YesOrNo isAda) {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         initializePrefixes(legalRepresentativeAdaReviewHearingRequirementsPersonalisation);
@@ -180,14 +173,14 @@ assertEquals("asylumCase must not be null", exception.getMessage());
 
         Map<String, String> personalisation = legalRepresentativeAdaReviewHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
 
-            assertEquals(hearingCentreAddress, personalisation.get("hearingCentreAddress"));
+        assertEquals(hearingCentreAddress, personalisation.get("hearingCentreAddress"));
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_lo_records_hearing_response(YesOrNo isAda) {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         initializePrefixes(legalRepresentativeAdaReviewHearingRequirementsPersonalisation);
@@ -215,7 +208,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));

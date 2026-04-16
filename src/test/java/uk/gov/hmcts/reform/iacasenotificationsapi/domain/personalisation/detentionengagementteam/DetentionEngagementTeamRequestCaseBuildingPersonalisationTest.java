@@ -34,15 +34,9 @@ import uk.gov.service.notify.NotificationClientException;
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class DetentionEngagementTeamRequestCaseBuildingPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    DetEmailService detEmailService;
-    @Mock
-    JSONObject jsonDocument;
-    @Mock
-    DocumentDownloadClient documentDownloadClient;
-
+    final DocumentWithMetadata requestCaseBuildingDoc = getDocumentWithMetadata(
+        "1", "ADA appellant letter-appeal reasons", "some other desc", DocumentTag.REQUEST_CASE_BUILDING);
+    final IdValue<DocumentWithMetadata> requestCaseBuildingDocId = new IdValue<>("1", requestCaseBuildingDoc);
     private final String requestCaseBuildingAdaTemplateId = "someAdaTemplateId";
     private final String requestCaseBuildingDetainedTemplateId = "someDetainedTemplateId";
     private final String adaPrefix = "ADA - SERVE IN PERSON";
@@ -51,11 +45,16 @@ public class DetentionEngagementTeamRequestCaseBuildingPersonalisationTest {
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-    final DocumentWithMetadata requestCaseBuildingDoc = getDocumentWithMetadata(
-            "1", "ADA appellant letter-appeal reasons", "some other desc", DocumentTag.REQUEST_CASE_BUILDING);
-    final IdValue<DocumentWithMetadata> requestCaseBuildingDocId = new IdValue<>("1", requestCaseBuildingDoc);
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    DetEmailService detEmailService;
+    @Mock
+    JSONObject jsonDocument;
+    @Mock
+    DocumentDownloadClient documentDownloadClient;
     private DetentionEngagementTeamRequestCaseBuildingPersonalisation
-            detentionEngagementTeamRequestCaseBuildingPersonalisation;
+        detentionEngagementTeamRequestCaseBuildingPersonalisation;
 
     @BeforeEach
     public void setUp() throws NotificationClientException, IOException {
@@ -73,22 +72,22 @@ public class DetentionEngagementTeamRequestCaseBuildingPersonalisationTest {
 
         String detainedPrefix = "IAFT - SERVE IN PERSON";
         detentionEngagementTeamRequestCaseBuildingPersonalisation =
-                new DetentionEngagementTeamRequestCaseBuildingPersonalisation(
-                        requestCaseBuildingAdaTemplateId,
-                        requestCaseBuildingDetainedTemplateId,
-                        adaPrefix,
-                    detainedPrefix,
-                        detEmailService,
-                        documentDownloadClient
-                );
+            new DetentionEngagementTeamRequestCaseBuildingPersonalisation(
+                requestCaseBuildingAdaTemplateId,
+                requestCaseBuildingDetainedTemplateId,
+                adaPrefix,
+                detainedPrefix,
+                detEmailService,
+                documentDownloadClient
+            );
     }
 
     @Test
     public void should_return_given_template_id_ada() {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         assertEquals(
-                requestCaseBuildingAdaTemplateId,
-                detentionEngagementTeamRequestCaseBuildingPersonalisation.getTemplateId(asylumCase)
+            requestCaseBuildingAdaTemplateId,
+            detentionEngagementTeamRequestCaseBuildingPersonalisation.getTemplateId(asylumCase)
         );
     }
 
@@ -106,7 +105,7 @@ public class DetentionEngagementTeamRequestCaseBuildingPersonalisationTest {
         Long caseId = 12345L;
         String requestCaseBuildingPersonalisationReferenceId = "_INTERNAL_DET_REQUEST_CASE_BUILDING_EMAIL";
         assertEquals(caseId + requestCaseBuildingPersonalisationReferenceId,
-                detentionEngagementTeamRequestCaseBuildingPersonalisation.getReferenceId(caseId));
+            detentionEngagementTeamRequestCaseBuildingPersonalisation.getReferenceId(caseId));
     }
 
     @Test
@@ -134,10 +133,9 @@ public class DetentionEngagementTeamRequestCaseBuildingPersonalisationTest {
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-                () -> detentionEngagementTeamRequestCaseBuildingPersonalisation.getPersonalisationForLink((AsylumCase) null))
-                ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> detentionEngagementTeamRequestCaseBuildingPersonalisation.getPersonalisationForLink((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -145,10 +143,9 @@ assertEquals("asylumCase must not be null", exception.getMessage());
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
 
         RequiredFieldMissingException exception =
-assertThrows(RequiredFieldMissingException.class,
-                () -> detentionEngagementTeamRequestCaseBuildingPersonalisation.getPersonalisationForLink(asylumCase))
-                ;
-assertEquals("Request case building document is not present", exception.getMessage());
+            assertThrows(RequiredFieldMissingException.class,
+                () -> detentionEngagementTeamRequestCaseBuildingPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("Request case building document is not present", exception.getMessage());
     }
 
     @Test
@@ -156,18 +153,18 @@ assertEquals("Request case building document is not present", exception.getMessa
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
 
         final Map<String, Object> expectedPersonalisation =
-                ImmutableMap
-                        .<String, Object>builder()
-                        .put("subjectPrefix", adaPrefix)
-                        .put("appealReferenceNumber", appealReferenceNumber)
-                        .put("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
-                        .put("appellantGivenNames", appellantGivenNames)
-                        .put("appellantFamilyName", appellantFamilyName)
-                        .put("documentLink", jsonDocument)
-                        .build();
+            ImmutableMap
+                .<String, Object>builder()
+                .put("subjectPrefix", adaPrefix)
+                .put("appealReferenceNumber", appealReferenceNumber)
+                .put("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
+                .put("appellantGivenNames", appellantGivenNames)
+                .put("appellantFamilyName", appellantFamilyName)
+                .put("documentLink", jsonDocument)
+                .build();
 
         Map<String, Object> actualPersonalisation =
-                detentionEngagementTeamRequestCaseBuildingPersonalisation.getPersonalisationForLink(asylumCase);
+            detentionEngagementTeamRequestCaseBuildingPersonalisation.getPersonalisationForLink(asylumCase);
 
         assertTrue(compareStringsAndJsonObjects(expectedPersonalisation, actualPersonalisation));
     }

@@ -37,15 +37,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @MockitoSettings(strictness = Strictness.LENIENT)
 class DecideCostsHomeOfficePersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    EmailAddressFinder emailAddressFinder;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-    @Mock
-    PersonalisationProvider personalisationProvider;
-
     private final String decideCostsNotificationId = "decideCostsNotificationId";
     private final String homeOfficeEmailAddress = "homeOfficeEmailAddress@gmail.com";
     private final String appealReferenceNumber = "someReferenceNumber";
@@ -54,8 +45,25 @@ class DecideCostsHomeOfficePersonalisationTest {
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "cust.services@example.com";
     private final String homeOfficeReferenceNumber = "A1234567/001";
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    EmailAddressFinder emailAddressFinder;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    PersonalisationProvider personalisationProvider;
     private DecideCostsHomeOfficePersonalisation decideCostsHomeOfficePersonalisation;
+
+    static Stream<Arguments> appliesForCostsProvider() {
+        String homeOffice = "Home office";
+        return Stream.of(
+            Arguments.of(List.of(new IdValue<>("1", new ApplyForCosts("Unreasonable costs", "Legal representative", homeOffice))),
+                new DynamicList(new Value("1", "Costs 1, Unreasonable costs, 24 Nov 2023"), List.of(new Value("1", "Costs 1, Unreasonable costs, 24 Nov 2023")))),
+            Arguments.of(List.of(new IdValue<>("2", new ApplyForCosts("Wasted costs", homeOffice, "Legal representative"))),
+                new DynamicList(new Value("2", "Costs 1, Wasted costs, 24 Nov 2023"), List.of(new Value("2", "Costs 1, Wasted costs, 24 Nov 2023"))))
+        );
+    }
 
     @BeforeEach
     void setup() {
@@ -104,9 +112,8 @@ class DecideCostsHomeOfficePersonalisationTest {
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> decideCostsHomeOfficePersonalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> decideCostsHomeOfficePersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -128,17 +135,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
             .containsEntry("applicationId", applyForCostsList.get(0).getId());
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-            assertEquals("someCostsDecisionType", personalisation.get("costsDecisionType"));
+        assertEquals("someCostsDecisionType", personalisation.get("costsDecisionType"));
 
-    }
-
-    static Stream<Arguments> appliesForCostsProvider() {
-        String homeOffice = "Home office";
-        return Stream.of(
-            Arguments.of(List.of(new IdValue<>("1", new ApplyForCosts("Unreasonable costs", "Legal representative", homeOffice))),
-                new DynamicList(new Value("1", "Costs 1, Unreasonable costs, 24 Nov 2023"), List.of(new Value("1", "Costs 1, Unreasonable costs, 24 Nov 2023")))),
-            Arguments.of(List.of(new IdValue<>("2", new ApplyForCosts("Wasted costs", homeOffice, "Legal representative"))),
-                new DynamicList(new Value("2", "Costs 1, Wasted costs, 24 Nov 2023"), List.of(new Value("2", "Costs 1, Wasted costs, 24 Nov 2023"))))
-        );
     }
 }

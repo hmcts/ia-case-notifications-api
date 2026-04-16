@@ -58,29 +58,29 @@ public class CustomerServicesProviderTest {
     @Test
     public void should_not_allow_null_arguments() {
 
-        assertThrows(NullPointerException.class, 
-() -> new CustomerServicesProvider(
-            null,
-            standardCustomerServicesEmail,
-            internalCaseCustomerServicesEmail,
-            appealIaCustomerServicesEmail));
+        assertThrows(NullPointerException.class,
+            () -> new CustomerServicesProvider(
+                null,
+                standardCustomerServicesEmail,
+                internalCaseCustomerServicesEmail,
+                appealIaCustomerServicesEmail));
 
-        assertThrows(NullPointerException.class, 
-() -> new CustomerServicesProvider(
-            customerServicesTelephone,
-            null,
-            internalCaseCustomerServicesEmail,
-            appealIaCustomerServicesEmail));
+        assertThrows(NullPointerException.class,
+            () -> new CustomerServicesProvider(
+                customerServicesTelephone,
+                null,
+                internalCaseCustomerServicesEmail,
+                appealIaCustomerServicesEmail));
 
-        assertThrows(NullPointerException.class, 
-() -> new CustomerServicesProvider(
-            customerServicesTelephone,
-            standardCustomerServicesEmail,
-            null,
-            appealIaCustomerServicesEmail));
+        assertThrows(NullPointerException.class,
+            () -> new CustomerServicesProvider(
+                customerServicesTelephone,
+                standardCustomerServicesEmail,
+                null,
+                appealIaCustomerServicesEmail));
 
-        assertThrows(NullPointerException.class, 
-() -> new CustomerServicesProvider(
+        assertThrows(NullPointerException.class,
+            () -> new CustomerServicesProvider(
                 customerServicesTelephone,
                 standardCustomerServicesEmail,
                 internalCaseCustomerServicesEmail,
@@ -96,7 +96,7 @@ public class CustomerServicesProviderTest {
     }
 
     @ParameterizedTest
-    @CsvSource({ "YES, YES", "NO, YES", "YES, NO", "NO, NO" })
+    @CsvSource({"YES, YES", "NO, YES", "YES, NO", "NO, NO"})
     public void should_set_correct_email_based_on_asylum_case(YesOrNo isAdmin, YesOrNo isAda) {
         AsylumCase asylumCase = mock(AsylumCase.class);
         when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(isAdmin));

@@ -34,6 +34,8 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class LegalRepresentativeAppealStartedDisposalPersonalisationTest {
+    private final String templateId = "someTemplateId";
+    private final String legalRepEmailAddress = "legalRep@example.com";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -42,11 +44,6 @@ public class LegalRepresentativeAppealStartedDisposalPersonalisationTest {
     UserDetailsProvider userDetailsProvider;
     @Mock
     UserDetails userDetails;
-
-    private final String templateId = "someTemplateId";
-
-    private final String legalRepEmailAddress = "legalRep@example.com";
-
     private LegalRepresentativeAppealStartedDisposalPersonalisation legalRepresentativeAppealStartedDisposalPersonalisation;
 
     @BeforeEach

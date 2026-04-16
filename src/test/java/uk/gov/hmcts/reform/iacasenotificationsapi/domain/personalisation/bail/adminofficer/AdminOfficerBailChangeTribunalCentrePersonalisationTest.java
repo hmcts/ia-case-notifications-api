@@ -27,9 +27,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCas
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AdminOfficerBailChangeTribunalCentrePersonalisationTest {
 
-    @Mock
-    BailCase bailCase;
-
     private final String templateId = "someTemplateId";
     private final String templateIdWithoutLegalRep = "someTemplateIdWithoutLegalRep";
     private final String bailReferenceNumber = "someReferenceNumber";
@@ -37,7 +34,8 @@ public class AdminOfficerBailChangeTribunalCentrePersonalisationTest {
     private final String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
     private final String applicantGivenNames = "someApplicantGivenNames";
     private final String applicantFamilyName = "someApplicantFamilyName";
-
+    @Mock
+    BailCase bailCase;
     @Mock
     private EmailAddressFinder emailAddressFinder;
     private AdminOfficerBailChangeTribunalCentrePersonalisation adminOfficerBailChangeTribunalCentrePersonalisation;
@@ -52,9 +50,9 @@ public class AdminOfficerBailChangeTribunalCentrePersonalisationTest {
         when(bailCase.read(BailCaseFieldDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
 
         adminOfficerBailChangeTribunalCentrePersonalisation = new AdminOfficerBailChangeTribunalCentrePersonalisation(
-                templateId,
-                templateIdWithoutLegalRep,
-                emailAddressFinder
+            templateId,
+            templateIdWithoutLegalRep,
+            emailAddressFinder
         );
     }
 
@@ -78,7 +76,7 @@ public class AdminOfficerBailChangeTribunalCentrePersonalisationTest {
         String hearingCentreEmail = "someHearingCentre@example.com";
         when(emailAddressFinder.getBailHearingCentreEmailAddress(bailCase)).thenReturn(hearingCentreEmail);
         assertTrue(adminOfficerBailChangeTribunalCentrePersonalisation.getRecipientsList(bailCase)
-                .contains(hearingCentreEmail));
+            .contains(hearingCentreEmail));
     }
 
     @Test

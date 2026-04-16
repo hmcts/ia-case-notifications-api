@@ -69,18 +69,18 @@ class AppellantRecordRefundDecisionPersonalisationSmsTest {
 
     @ParameterizedTest
     @EnumSource(
-            value = RemissionDecision.class,
-            names = {"APPROVED", "PARTIALLY_APPROVED", "REJECTED"})
+        value = RemissionDecision.class,
+        names = {"APPROVED", "PARTIALLY_APPROVED", "REJECTED"})
     void should_return_approved_template_id(RemissionDecision remissionDecision) {
         when(asylumCase.read(REMISSION_DECISION, RemissionDecision.class)).thenReturn(Optional.of(remissionDecision));
 
         switch (remissionDecision) {
             case APPROVED ->
-                    assertEquals(appellantRefundApprovedTemplateId, appellantRecordRefundDecisionPersonalisationSms.getTemplateId(asylumCase));
+                assertEquals(appellantRefundApprovedTemplateId, appellantRecordRefundDecisionPersonalisationSms.getTemplateId(asylumCase));
             case PARTIALLY_APPROVED ->
-                    assertEquals(appellantRefundPartiallyApprovedTemplateId, appellantRecordRefundDecisionPersonalisationSms.getTemplateId(asylumCase));
+                assertEquals(appellantRefundPartiallyApprovedTemplateId, appellantRecordRefundDecisionPersonalisationSms.getTemplateId(asylumCase));
             case REJECTED ->
-                    assertEquals(appellantRefundRejectedTemplateId, appellantRecordRefundDecisionPersonalisationSms.getTemplateId(asylumCase));
+                assertEquals(appellantRefundRejectedTemplateId, appellantRecordRefundDecisionPersonalisationSms.getTemplateId(asylumCase));
             default -> throw new IllegalArgumentException("Unexpected remission decision: " + remissionDecision);
         }
     }
@@ -89,7 +89,7 @@ class AppellantRecordRefundDecisionPersonalisationSmsTest {
     void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_REFUND_DECISION_DECIDED_AIP_APPELLANT_SMS",
-                appellantRecordRefundDecisionPersonalisationSms.getReferenceId(caseId));
+            appellantRecordRefundDecisionPersonalisationSms.getReferenceId(caseId));
     }
 
     @Test
@@ -104,11 +104,10 @@ class AppellantRecordRefundDecisionPersonalisationSmsTest {
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
-        NullPointerException exception = 
-assertThrows(NullPointerException.class, 
-            () -> appellantRecordRefundDecisionPersonalisationSms.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> appellantRecordRefundDecisionPersonalisationSms.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -122,7 +121,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
         when(systemDateProvider.dueDate(daysAfterRefundDecision)).thenReturn(dueDate);
 
         Map<String, String> personalisation =
-                appellantRecordRefundDecisionPersonalisationSms.getPersonalisation(asylumCase);
+            appellantRecordRefundDecisionPersonalisationSms.getPersonalisation(asylumCase);
 
         assertThat(personalisation)
             .containsEntry("appealReferenceNumber", appealReferenceNumber)

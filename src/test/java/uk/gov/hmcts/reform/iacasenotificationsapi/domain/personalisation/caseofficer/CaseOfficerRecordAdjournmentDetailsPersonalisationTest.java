@@ -25,21 +25,17 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class CaseOfficerRecordAdjournmentDetailsPersonalisationTest {
 
+    private final String templateId = "someTemplateId";
+    private final String caseOfficerEmailAddress = "caseOfficer@example.com";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
     @Mock
     AsylumCase asylumCase;
     @Mock
     EmailAddressFinder emailAddressFinder;
     @Mock
     FeatureToggler featureToggler;
-
-    private final String templateId = "someTemplateId";
-
-    private final String caseOfficerEmailAddress = "caseOfficer@example.com";
-
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-
     private CaseOfficerRecordAdjournmentDetailsPersonalisation caseOfficerRecordAdjournmentDetailsPersonalisation;
 
     @BeforeEach

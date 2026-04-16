@@ -30,6 +30,35 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.*;
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class HomeOfficeListCasePersonalisationTest {
 
+    private final String adaTemplateId = "adaTemplateId";
+    private final String nonAdaTemplateId = "nonAdaTemplateId";
+    private final String iaExUiFrontendUrl = "http://somefrontendurl";
+    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    private final String homeOfficeEmailAddress = "homeoffice@example.com";
+    private final String hearingCentreAddress = "some hearing centre address";
+    //Remote hearing
+    private final HearingCentre remoteHearingCentre = HearingCentre.REMOTE_HEARING;
+    private final String hearingDate = "2019-08-27";
+    private final String hearingTime = "14:25";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String ariaListingReference = "someAriaListingReference";
+    private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String requirementsVulnerabilities = "someRequirementsVulnerabilities";
+    private final String requirementsMultimedia = "someRequirementsMultimedia";
+    private final String requirementsSingleSexCourt = "someRequirementsSingleSexCourt";
+    private final String requirementsInCamera = "someRequirementsInCamera";
+    private final String requirementsOther = "someRequirementsOther";
+    private final String caseOfficerReviewedVulnerabilities = "someCaseOfficerReviewedVulnerabilities";
+    private final String caseOfficerReviewedMultimedia = "someCaseOfficerReviewedMultimedia";
+    private final String caseOfficerReviewedSingleSexCourt = "someCaseOfficerReviewedSingleSexCourt";
+    private final String caseOfficerReviewedInCamera = "someCaseOfficerReviewedInCamera";
+    private final String caseOfficerReviewedOther = "someCaseOfficerReviewedOther";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
+    private final int appellantProvidingAppealArgumentDeadline = 13;
+    private final int respondentResponseToAppealArgumentDeadline = 15;
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -42,43 +71,6 @@ public class HomeOfficeListCasePersonalisationTest {
     CustomerServicesProvider customerServicesProvider;
     @Mock
     HearingDetailsFinder hearingDetailsFinder;
-
-    private final String adaTemplateId = "adaTemplateId";
-    private final String nonAdaTemplateId = "nonAdaTemplateId";
-    private final String iaExUiFrontendUrl = "http://somefrontendurl";
-    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
-    private final String homeOfficeEmailAddress = "homeoffice@example.com";
-    private final String hearingCentreAddress = "some hearing centre address";
-    //Remote hearing
-    private final HearingCentre remoteHearingCentre = HearingCentre.REMOTE_HEARING;
-
-    private final String hearingDate = "2019-08-27";
-    private final String hearingTime = "14:25";
-
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String ariaListingReference = "someAriaListingReference";
-    private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-
-    private final String requirementsVulnerabilities = "someRequirementsVulnerabilities";
-    private final String requirementsMultimedia = "someRequirementsMultimedia";
-    private final String requirementsSingleSexCourt = "someRequirementsSingleSexCourt";
-    private final String requirementsInCamera = "someRequirementsInCamera";
-    private final String requirementsOther = "someRequirementsOther";
-
-    private final String caseOfficerReviewedVulnerabilities = "someCaseOfficerReviewedVulnerabilities";
-    private final String caseOfficerReviewedMultimedia = "someCaseOfficerReviewedMultimedia";
-    private final String caseOfficerReviewedSingleSexCourt = "someCaseOfficerReviewedSingleSexCourt";
-    private final String caseOfficerReviewedInCamera = "someCaseOfficerReviewedInCamera";
-    private final String caseOfficerReviewedOther = "someCaseOfficerReviewedOther";
-
-    private final String customerServicesTelephone = "555 555 555";
-    private final String customerServicesEmail = "cust.services@example.com";
-
-    private final int appellantProvidingAppealArgumentDeadline = 13;
-    private final int respondentResponseToAppealArgumentDeadline = 15;
-
     private HomeOfficeListCasePersonalisation homeOfficeListCasePersonalisation;
 
     @BeforeEach
@@ -164,8 +156,8 @@ public class HomeOfficeListCasePersonalisationTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
-        public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
+    public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
 
@@ -192,11 +184,11 @@ public class HomeOfficeListCasePersonalisationTest {
         if (isAda.equals(YesOrNo.YES)) {
             String appealArgumentDeadlineDate = LocalDate.now().plusDays(appellantProvidingAppealArgumentDeadline)
                 .format(DateTimeFormatter.ofPattern("dd MMMM yyyy"));
-                assertEquals(appealArgumentDeadlineDate, personalisation.get("appellantProvidingAppealArgumentDeadline"));
+            assertEquals(appealArgumentDeadlineDate, personalisation.get("appellantProvidingAppealArgumentDeadline"));
 
             String respondentResponseDeadlineDate = LocalDate.now().plusDays(respondentResponseToAppealArgumentDeadline)
                 .format(DateTimeFormatter.ofPattern("dd MMMM yyyy"));
-                assertEquals(respondentResponseDeadlineDate, personalisation.get("respondentResponseToAppealArgumentDeadline"));
+            assertEquals(respondentResponseDeadlineDate, personalisation.get("respondentResponseToAppealArgumentDeadline"));
         } else {
             assertFalse(personalisation.containsKey("appellantProvidingAppealArgumentDeadline"));
             assertFalse(personalisation.containsKey("respondentResponseToAppealArgumentDeadline"));
@@ -216,7 +208,7 @@ public class HomeOfficeListCasePersonalisationTest {
 
         Map<String, String> personalisation = homeOfficeListCasePersonalisation.getPersonalisation(asylumCase);
 
-            assertEquals(remoteHearingCentreAddress, personalisation.get("hearingCentreAddress"));
+        assertEquals(remoteHearingCentreAddress, personalisation.get("hearingCentreAddress"));
     }
 
     @Test

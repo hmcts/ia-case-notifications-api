@@ -37,6 +37,11 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class LegalRepresentativeUploadAdditionalEvidencePersonalisationTest {
 
+    private final String beforeListingTemplateId = "beforeListingTemplateId";
+    private final String afterListingTemplateId = "afterListingTemplateId";
+    private final String iaExUiFrontendUrl = "http://localhost";
+    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    private final String legalRepEmailAddress = "legalRep@example.com";
     @Mock
     Callback<AsylumCase> callback;
     @Mock
@@ -47,13 +52,6 @@ public class LegalRepresentativeUploadAdditionalEvidencePersonalisationTest {
     PersonalisationProvider personalisationProvider;
     @Mock
     CustomerServicesProvider customerServicesProvider;
-
-    private final String beforeListingTemplateId = "beforeListingTemplateId";
-    private final String afterListingTemplateId = "afterListingTemplateId";
-    private final String iaExUiFrontendUrl = "http://localhost";
-    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
-    private final String legalRepEmailAddress = "legalRep@example.com";
-
     private LegalRepresentativeUploadAdditionalEvidencePersonalisation
         legalRepresentativeUploadAdditionalEvidencePersonalisation;
 
@@ -73,12 +71,12 @@ public class LegalRepresentativeUploadAdditionalEvidencePersonalisationTest {
     @Test
     public void should_return_given_email_address_from_asylum_case() {
         when(asylumCase.read(CHANGE_ORGANISATION_REQUEST_FIELD, ChangeOrganisationRequest.class))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class))
-                .thenReturn(Optional.of(legalRepEmailAddress));
+            .thenReturn(Optional.of(legalRepEmailAddress));
 
         assertTrue(legalRepresentativeUploadAdditionalEvidencePersonalisation.getRecipientsList(asylumCase)
-                .contains(legalRepEmailAddress));
+            .contains(legalRepEmailAddress));
     }
 
     @Test
@@ -91,27 +89,27 @@ public class LegalRepresentativeUploadAdditionalEvidencePersonalisationTest {
     @Test
     public void should_return_given_email_address_for_change_org_request_field_and_field() {
         Value caseRole =
-                new Value("[LEGALREPRESENTATIVE]", "Legal Representative");
+            new Value("[LEGALREPRESENTATIVE]", "Legal Representative");
         when(asylumCase.read(CHANGE_ORGANISATION_REQUEST_FIELD, ChangeOrganisationRequest.class))
-                .thenReturn(Optional.of(
-                        new ChangeOrganisationRequest(
-                                new DynamicList(caseRole, newArrayList(caseRole)),
-                                LocalDateTime.now().toString(),
-                                "1"
-                        )
-                ));
+            .thenReturn(Optional.of(
+                new ChangeOrganisationRequest(
+                    new DynamicList(caseRole, newArrayList(caseRole)),
+                    LocalDateTime.now().toString(),
+                    "1"
+                )
+            ));
 
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class))
-                .thenReturn(Optional.of(legalRepEmailAddress));
+            .thenReturn(Optional.of(legalRepEmailAddress));
 
         assertTrue(legalRepresentativeUploadAdditionalEvidencePersonalisation.getRecipientsList(asylumCase)
-                .contains(legalRepEmailAddress));
+            .contains(legalRepEmailAddress));
     }
 
     @Test
     public void should_return_given_email_address_for_empty_change_org_request_field_and_field() {
         when(asylumCase.read(CHANGE_ORGANISATION_REQUEST_FIELD, ChangeOrganisationRequest.class))
-                .thenReturn(Optional.of(new ChangeOrganisationRequest(null, null, null)));
+            .thenReturn(Optional.of(new ChangeOrganisationRequest(null, null, null)));
 
         assertTrue(legalRepresentativeUploadAdditionalEvidencePersonalisation.getRecipientsList(asylumCase).isEmpty());
     }
@@ -129,7 +127,7 @@ public class LegalRepresentativeUploadAdditionalEvidencePersonalisationTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_given_personalisation_when_all_information_given(YesOrNo isAda) {
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
@@ -150,10 +148,9 @@ public class LegalRepresentativeUploadAdditionalEvidencePersonalisationTest {
     @Test
     public void should_throw_exception_on_personalistaion_when_case_is_null() {
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> legalRepresentativeUploadAdditionalEvidencePersonalisation
-            .getPersonalisation((Callback<AsylumCase>) null))
-            ;
-assertEquals("callback must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> legalRepresentativeUploadAdditionalEvidencePersonalisation
+                .getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     private Map<String, String> getPersonalisationForLegalRep() {

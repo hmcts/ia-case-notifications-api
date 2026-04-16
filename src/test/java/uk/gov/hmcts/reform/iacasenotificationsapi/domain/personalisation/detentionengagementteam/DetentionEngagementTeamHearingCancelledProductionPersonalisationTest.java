@@ -68,7 +68,7 @@ class DetentionEngagementTeamHearingCancelledProductionPersonalisationTest {
     @BeforeEach
     void setUp() {
         personalisation = new DetentionEngagementTeamHearingCancelledProductionPersonalisation(
-                TEMPLATE_ID, detentionFacilityEmailService, dateTimeExtractor, hearingDetailsFinder, SUBJECT_PREFIX);
+            TEMPLATE_ID, detentionFacilityEmailService, dateTimeExtractor, hearingDetailsFinder, SUBJECT_PREFIX);
 
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
@@ -117,16 +117,16 @@ class DetentionEngagementTeamHearingCancelledProductionPersonalisationTest {
         Map<String, String> personalisationMap = personalisation.getPersonalisation(callback);
 
         assertThat(personalisationMap)
-                .containsEntry("subjectPrefix", SUBJECT_PREFIX)
-                .containsEntry("appealReferenceNumber", "REF123")
-                .containsEntry("homeOfficeReferenceNumber", "HO123")
-                .containsEntry("appellantGivenNames", "John")
-                .containsEntry("appellantFamilyName", "Doe")
-                .containsEntry("nomsRef", "NOMS Ref: ABC123")
-                .containsEntry("hearingDate", "01-06-2024")
-                .containsEntry("hearingTime", "10:00")
-                .containsEntry("hearingCentreAddress", "some address")
-                .containsEntry("detentionBuilding", "Building X");
+            .containsEntry("subjectPrefix", SUBJECT_PREFIX)
+            .containsEntry("appealReferenceNumber", "REF123")
+            .containsEntry("homeOfficeReferenceNumber", "HO123")
+            .containsEntry("appellantGivenNames", "John")
+            .containsEntry("appellantFamilyName", "Doe")
+            .containsEntry("nomsRef", "NOMS Ref: ABC123")
+            .containsEntry("hearingDate", "01-06-2024")
+            .containsEntry("hearingTime", "10:00")
+            .containsEntry("hearingCentreAddress", "some address")
+            .containsEntry("detentionBuilding", "Building X");
     }
 
     @Test

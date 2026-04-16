@@ -30,14 +30,12 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantFtpaSubmittedPersonalisationSmsTest {
 
+    private final String iaAipFrontendUrl = "frontendHyperlink";
+    private final String emailTemplateId = "someEmailTemplateId";
     @Mock
     AsylumCase asylumCase;
     @Mock
     RecipientsFinder recipientsFinder;
-
-    private final String iaAipFrontendUrl = "frontendHyperlink";
-    private final String emailTemplateId = "someEmailTemplateId";
-
     private AppellantFtpaSubmittedPersonalisationSms appellantFtpaSubmittedPersonalisationSms;
 
     @BeforeEach
@@ -86,9 +84,8 @@ public class AppellantFtpaSubmittedPersonalisationSmsTest {
         when(recipientsFinder.findAll(null, NotificationType.SMS)).thenCallRealMethod();
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> appellantFtpaSubmittedPersonalisationSms.getRecipientsList(null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> appellantFtpaSubmittedPersonalisationSms.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
 

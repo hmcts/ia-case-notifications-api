@@ -35,6 +35,9 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @MockitoSettings(strictness = Strictness.LENIENT)
 class CaseOfficerEditListingPersonalisationTest {
 
+    private final String templateId = "someTemplateId";
+    private final String listCaseHearingCentreEmailAddress = "listCaseHearingCentre@example.com";
+    private final String hearingCentreAddress = "hearingCentreAddress";
     @Mock
     Callback<AsylumCase> callback;
     @Mock
@@ -47,11 +50,6 @@ class CaseOfficerEditListingPersonalisationTest {
     PersonalisationProvider personalisationProvider;
     @Mock
     HearingDetailsFinder hearingDetailsFinder;
-
-    private final String templateId = "someTemplateId";
-    private final String listCaseHearingCentreEmailAddress = "listCaseHearingCentre@example.com";
-    private final String hearingCentreAddress = "hearingCentreAddress";
-
     private CaseOfficerEditListingPersonalisation caseOfficerEditListingPersonalisation;
 
     @BeforeEach

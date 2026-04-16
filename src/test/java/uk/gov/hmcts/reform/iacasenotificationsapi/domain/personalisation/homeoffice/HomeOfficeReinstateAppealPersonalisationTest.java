@@ -50,6 +50,22 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class HomeOfficeReinstateAppealPersonalisationTest {
 
+    private final String iaExUiFrontendUrl = "http://somefrontendurl";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String ariaListingReference = "someAriaListingReference";
+    private final String reinstateAppealReason = "someReason";
+    private final String reinstatedDecisionMaker = "someDecisionMaker";
+    private final String homeOfficeReinstateAppealBeforeListingTemplateId = "SomeTemplate";
+    private final String homeOfficeReinstateAppealAfterListingTemplateId = "SomeTemplate";
+    private final String apcPrivateBetaInboxHomeOfficeEmailAddress = "homeoffice-apc@example.com";
+    private final String lartHomeOfficeEmailAddress = "homeoffice-respondent@example.com";
+    private final String endAppealHomeOfficeEmailAddress = "ho-end-appeal@example.com";
+    private final String homeOfficeHearingCentreEmail = "ho-taylorhouse@example.com";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -58,30 +74,6 @@ public class HomeOfficeReinstateAppealPersonalisationTest {
     AppealService appealService;
     @Mock
     EmailAddressFinder emailAddressFinder;
-
-
-    private final String iaExUiFrontendUrl = "http://somefrontendurl";
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
-
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-    private final String ariaListingReference = "someAriaListingReference";
-
-    private final String reinstateAppealReason = "someReason";
-    private final String reinstatedDecisionMaker = "someDecisionMaker";
-
-    private final String homeOfficeReinstateAppealBeforeListingTemplateId = "SomeTemplate";
-    private final String homeOfficeReinstateAppealAfterListingTemplateId = "SomeTemplate";
-
-    private final String apcPrivateBetaInboxHomeOfficeEmailAddress = "homeoffice-apc@example.com";
-    private final String lartHomeOfficeEmailAddress = "homeoffice-respondent@example.com";
-    private final String endAppealHomeOfficeEmailAddress = "ho-end-appeal@example.com";
-    private final String homeOfficeHearingCentreEmail = "ho-taylorhouse@example.com";
-
-    private final String customerServicesTelephone = "555 555 555";
-    private final String customerServicesEmail = "cust.services@example.com";
-
     private HomeOfficeReinstateAppealPersonalisation homeOfficeReinstateAppealPersonalisation;
 
     @BeforeEach
@@ -144,7 +136,7 @@ public class HomeOfficeReinstateAppealPersonalisationTest {
         Set<String> emailAddresses = states.keySet();
 
         when(asylumCase.read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
         for (String emailAddress : emailAddresses) {
             List<State> statesList = states.get(emailAddress);
             for (State state : statesList) {
@@ -158,7 +150,7 @@ public class HomeOfficeReinstateAppealPersonalisationTest {
     @Test
     public void should_return_hearing_centre_homeOffice_email_address_when_appeal_is_listed() {
         when(asylumCase.read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class))
-                .thenReturn(Optional.of(HearingCentre.BIRMINGHAM));
+            .thenReturn(Optional.of(HearingCentre.BIRMINGHAM));
 
         for (State state : State.values()) {
             when(asylumCase.read(STATE_BEFORE_END_APPEAL, State.class)).thenReturn(Optional.of(state));
@@ -170,7 +162,7 @@ public class HomeOfficeReinstateAppealPersonalisationTest {
     @Test
     public void should_return_default_email_address_when_appeal_hearing_centre_is_not_found() {
         when(asylumCase.read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
 
         for (State state : List.of(ADJOURNED, FTPA_SUBMITTED, FTPA_DECIDED, DECISION)) {
             when(asylumCase.read(STATE_BEFORE_END_APPEAL, State.class)).thenReturn(Optional.of(state));
@@ -206,7 +198,7 @@ public class HomeOfficeReinstateAppealPersonalisationTest {
 
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         initializePrefixes(homeOfficeReinstateAppealPersonalisation);
@@ -232,7 +224,7 @@ public class HomeOfficeReinstateAppealPersonalisationTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
 
         initializePrefixes(homeOfficeReinstateAppealPersonalisation);

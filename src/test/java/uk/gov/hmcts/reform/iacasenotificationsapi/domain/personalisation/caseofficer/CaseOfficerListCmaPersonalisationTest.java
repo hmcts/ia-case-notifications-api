@@ -37,6 +37,16 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsF
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class CaseOfficerListCmaPersonalisationTest {
 
+    private final String templateId = "someTemplateId";
+    private final String iaExUiFrontendUrl = "http://somefrontendurl";
+    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    private final String homeOfficeEmailAddress = "homeoffice@example.com";
+    private final String hearingCentreAddress = "some hearing centre address";
+    private final String hearingDate = "2019-08-27";
+    private final String hearingTime = "14:25";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -49,20 +59,6 @@ public class CaseOfficerListCmaPersonalisationTest {
     EmailAddressFinder emailAddressFinder;
     @Mock
     private FeatureToggler featureToggler;
-
-    private final String templateId = "someTemplateId";
-    private final String iaExUiFrontendUrl = "http://somefrontendurl";
-    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
-    private final String homeOfficeEmailAddress = "homeoffice@example.com";
-    private final String hearingCentreAddress = "some hearing centre address";
-
-    private final String hearingDate = "2019-08-27";
-    private final String hearingTime = "14:25";
-
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-
     private CaseOfficerListCmaPersonalisation caseOfficerListCmaPersonalisation;
 
     @BeforeEach
@@ -90,7 +86,7 @@ public class CaseOfficerListCmaPersonalisationTest {
             dateTimeExtractor,
             emailAddressFinder,
             hearingDetailsFinder,
-                featureToggler);
+            featureToggler);
     }
 
     @Test
@@ -119,13 +115,12 @@ public class CaseOfficerListCmaPersonalisationTest {
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> caseOfficerListCmaPersonalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase cannot be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> caseOfficerListCmaPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase cannot be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         initializePrefixes(caseOfficerListCmaPersonalisation);

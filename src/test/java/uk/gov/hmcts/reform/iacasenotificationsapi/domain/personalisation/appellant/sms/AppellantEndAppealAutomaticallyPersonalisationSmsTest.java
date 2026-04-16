@@ -28,31 +28,29 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantEndAppealAutomaticallyPersonalisationSmsTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    RecipientsFinder recipientsFinder;
-
     private final String smsTemplateId = "someSmsTemplateId";
     private final int daysToAskReinstate = 14;
     private final String iaAipFrontendUrl = "http://localhost/";
     private final String mockedAppealReferenceNumber = "someReferenceNumber";
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    RecipientsFinder recipientsFinder;
     private AppellantEndAppealAutomaticallyPersonalisationSms appellantEndAppealAutomaticallyPersonalisationSms;
 
     @BeforeEach
     public void setup() {
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class))
-                .thenReturn(Optional.of(mockedAppealReferenceNumber));
+            .thenReturn(Optional.of(mockedAppealReferenceNumber));
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class))
-                .thenReturn(Optional.of(mockedAppealReferenceNumber));
+            .thenReturn(Optional.of(mockedAppealReferenceNumber));
 
         appellantEndAppealAutomaticallyPersonalisationSms = new AppellantEndAppealAutomaticallyPersonalisationSms(
-                smsTemplateId,
-                daysToAskReinstate,
-                iaAipFrontendUrl,
-                recipientsFinder
+            smsTemplateId,
+            daysToAskReinstate,
+            iaAipFrontendUrl,
+            recipientsFinder
         );
     }
 
@@ -72,12 +70,11 @@ public class AppellantEndAppealAutomaticallyPersonalisationSmsTest {
     public void should_throw_exception_on_recipients_when_case_is_null() {
 
         when(recipientsFinder.findAll(null, NotificationType.SMS))
-                .thenThrow(new NullPointerException("asylumCase must not be null"));
+            .thenThrow(new NullPointerException("asylumCase must not be null"));
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> appellantEndAppealAutomaticallyPersonalisationSms.getRecipientsList(null))
-                ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> appellantEndAppealAutomaticallyPersonalisationSms.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -85,20 +82,19 @@ assertEquals("asylumCase must not be null", exception.getMessage());
 
         String mockedAppellantMobilePhone = "07123456789";
         when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
-                .thenReturn(Collections.singleton(mockedAppellantMobilePhone));
+            .thenReturn(Collections.singleton(mockedAppellantMobilePhone));
 
         assertTrue(appellantEndAppealAutomaticallyPersonalisationSms.getRecipientsList(asylumCase)
-                .contains(mockedAppellantMobilePhone));
+            .contains(mockedAppellantMobilePhone));
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-                () -> appellantEndAppealAutomaticallyPersonalisationSms.getPersonalisation((AsylumCase) null))
-                ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> appellantEndAppealAutomaticallyPersonalisationSms.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test

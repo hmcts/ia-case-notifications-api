@@ -30,6 +30,13 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsF
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantListCmaPersonalisationSmsTest {
 
+    private final String templateId = "someTemplateId";
+    private final String iaAipFrontendUrl = "http://somefrontendurl";
+    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    private final String hearingCentreAddress = "some hearing centre address";
+    private final String hearingDate = "2019-08-27";
+    private final String hearingTime = "14:25";
+    private final String appealReferenceNumber = "someReferenceNumber";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -38,16 +45,6 @@ public class AppellantListCmaPersonalisationSmsTest {
     RecipientsFinder recipientsFinder;
     @Mock
     HearingDetailsFinder hearingDetailsFinder;
-
-    private final String templateId = "someTemplateId";
-    private final String iaAipFrontendUrl = "http://somefrontendurl";
-    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
-    private final String hearingCentreAddress = "some hearing centre address";
-
-    private final String hearingDate = "2019-08-27";
-    private final String hearingTime = "14:25";
-
-    private final String appealReferenceNumber = "someReferenceNumber";
     private AppellantListCmaPersonalisationSms appellantListCmaPersonalisationSms;
 
     @BeforeEach
@@ -99,9 +96,8 @@ public class AppellantListCmaPersonalisationSmsTest {
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> appellantListCmaPersonalisationSms.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase cannot be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> appellantListCmaPersonalisationSms.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase cannot be null", exception.getMessage());
     }
 
     @Test

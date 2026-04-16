@@ -46,6 +46,14 @@ import java.util.Optional;
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class RespondentInternalNonStandardDirectionPersonalisationTest {
 
+    final DocumentWithMetadata sendDirectionLetter = TestUtils.getDocumentWithMetadata(
+        "id", "internal_appeal_submission", "some other desc", DocumentTag.INTERNAL_NON_STANDARD_DIRECTION_RESPONDENT_LETTER);
+    final IdValue<DocumentWithMetadata> document = new IdValue<>("1", sendDirectionLetter);
+    private final String nonAdaPrefix = "IAFT - SERVE BY POST";
+    private final String adaPrefix = "ADA - SERVE BY POST";
+    private final String templateId = "templateId";
+    private final String iaExUiFrontendUrl = "http://localhost";
+    private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
     @Mock
     PersonalisationProvider personalisationProvider;
     @Mock
@@ -54,18 +62,8 @@ public class RespondentInternalNonStandardDirectionPersonalisationTest {
     CaseDetails<AsylumCase> caseDetails;
     @Mock
     AsylumCase asylumCase;
-    private final String nonAdaPrefix = "IAFT - SERVE BY POST";
-    private final String adaPrefix = "ADA - SERVE BY POST";
     @Mock
     DetEmailService detEmailService;
-
-    private final String templateId = "templateId";
-    private final String iaExUiFrontendUrl = "http://localhost";
-    private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
-    final DocumentWithMetadata sendDirectionLetter = TestUtils.getDocumentWithMetadata(
-        "id", "internal_appeal_submission", "some other desc", DocumentTag.INTERNAL_NON_STANDARD_DIRECTION_RESPONDENT_LETTER);
-    final IdValue<DocumentWithMetadata> document = new IdValue<>("1", sendDirectionLetter);
-
     @Mock
     DocumentDownloadClient documentDownloadClient;
 

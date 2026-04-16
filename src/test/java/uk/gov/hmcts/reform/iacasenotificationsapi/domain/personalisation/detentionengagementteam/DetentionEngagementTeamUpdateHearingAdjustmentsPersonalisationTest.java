@@ -34,25 +34,24 @@ import uk.gov.service.notify.NotificationClientException;
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class DetentionEngagementTeamUpdateHearingAdjustmentsPersonalisationTest {
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    private DocumentDownloadClient documentDownloadClient;
-    @Mock
-    private DetEmailService detEmailService;
-    @Mock
-    JSONObject jsonDocument;
+    final DocumentWithMetadata hearingAdjustmentsChangedDoc = TestUtils.getDocumentWithMetadata(
+        "id", "hearing-adjustments-updated-letter", "some other desc", DocumentTag.INTERNAL_HEARING_ADJUSTMENTS_UPDATED_LETTER);
+    final IdValue<DocumentWithMetadata> hearingAdjustmentsChangedBundle = new IdValue<>("1", hearingAdjustmentsChangedDoc);
     private final String templateId = "templateId";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    JSONObject jsonDocument;
+    @Mock
+    private DocumentDownloadClient documentDownloadClient;
+    @Mock
+    private DetEmailService detEmailService;
     private DetentionEngagementTeamUpdateHearingAdjustmentsPersonalisation detentionEngagementTeamUpdateHearingAdjustmentsPersonalisation;
-
-    final DocumentWithMetadata hearingAdjustmentsChangedDoc = TestUtils.getDocumentWithMetadata(
-        "id", "hearing-adjustments-updated-letter", "some other desc", DocumentTag.INTERNAL_HEARING_ADJUSTMENTS_UPDATED_LETTER);
-    final IdValue<DocumentWithMetadata> hearingAdjustmentsChangedBundle = new IdValue<>("1", hearingAdjustmentsChangedDoc);
 
     DetentionEngagementTeamUpdateHearingAdjustmentsPersonalisationTest() {
     }
@@ -139,26 +138,23 @@ class DetentionEngagementTeamUpdateHearingAdjustmentsPersonalisationTest {
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> detentionEngagementTeamUpdateHearingAdjustmentsPersonalisation.getPersonalisationForLink((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> detentionEngagementTeamUpdateHearingAdjustmentsPersonalisation.getPersonalisationForLink((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_appeal_submission_is_empty() {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> detentionEngagementTeamUpdateHearingAdjustmentsPersonalisation.getPersonalisationForLink(asylumCase))
-            ;
-assertEquals("internalHearingAdjustmentsUpdatedLetter document not available", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamUpdateHearingAdjustmentsPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("internalHearingAdjustmentsUpdatedLetter document not available", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_notification_client_throws_Exception() throws NotificationClientException, IOException {
         when(documentDownloadClient.getJsonObjectFromDocument(hearingAdjustmentsChangedDoc)).thenThrow(new NotificationClientException("File size is more than 2MB"));
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> detentionEngagementTeamUpdateHearingAdjustmentsPersonalisation.getPersonalisationForLink(asylumCase))
-            ;
-assertEquals("Failed to get Internal Hearing Adjustments changed document in compatible format", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamUpdateHearingAdjustmentsPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("Failed to get Internal Hearing Adjustments changed document in compatible format", exception.getMessage());
     }
 }

@@ -33,25 +33,22 @@ import uk.gov.service.notify.NotificationClientException;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class DetentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    DetentionEmailService detentionEmailService;
-    @Mock
-    DocumentDownloadClient documentDownloadClient;
-
+    final DocumentWithMetadata appealSubmittedInTimeWithFeeToPayLetter = getDocumentWithMetadata(
+        "1", "internal-detained-appeal-submitted-in-time-with-fee-to-pay-letter", "Internal detained appeal submitted in time with fee to pay letter", DocumentTag.INTERNAL_DETAINED_APPEAL_SUBMITTED_IN_TIME_WITH_FEE_TO_PAY_LETTER);
+    final IdValue<DocumentWithMetadata> appealSubmittedInTimeWithFeeToPayLetterId = new IdValue<>("1", appealSubmittedInTimeWithFeeToPayLetter);
     private final String templateId = "someTemplateId";
     private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-
-    final DocumentWithMetadata appealSubmittedInTimeWithFeeToPayLetter = getDocumentWithMetadata(
-            "1", "internal-detained-appeal-submitted-in-time-with-fee-to-pay-letter", "Internal detained appeal submitted in time with fee to pay letter", DocumentTag.INTERNAL_DETAINED_APPEAL_SUBMITTED_IN_TIME_WITH_FEE_TO_PAY_LETTER);
-    final IdValue<DocumentWithMetadata> appealSubmittedInTimeWithFeeToPayLetterId = new IdValue<>("1", appealSubmittedInTimeWithFeeToPayLetter);
     private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
-    
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    DetentionEmailService detentionEmailService;
+    @Mock
+    DocumentDownloadClient documentDownloadClient;
     private DetentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation detentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation;
 
     DetentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisationTest() {
@@ -60,12 +57,12 @@ class DetentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisationTes
     @BeforeEach
     void setup() throws NotificationClientException, IOException {
         detentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation = new DetentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation(
-                templateId,
-                nonAdaPrefix,
-                detentionEmailService,
-                documentDownloadClient
+            templateId,
+            nonAdaPrefix,
+            detentionEmailService,
+            documentDownloadClient
         );
-        
+
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
@@ -78,7 +75,7 @@ class DetentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisationTes
     void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_INTERNAL_NON_ADA_APPEAL_SUBMITTED_IN_TIME_WITH_FEE_TO_PAY",
-                detentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation.getReferenceId(caseId));
+            detentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation.getReferenceId(caseId));
     }
 
     @Test
@@ -93,18 +90,17 @@ class DetentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisationTes
         when(detentionEmailService.getDetentionEmailAddress(asylumCase)).thenReturn(detentionEngagementTeamEmail);
 
         assertTrue(
-                detentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
+            detentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
     }
 
     @Test
     public void should_throw_exception_when_no_detention_facility() {
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.empty());
         when(detentionEmailService.getDetentionEmailAddress(asylumCase)).thenThrow(new IllegalStateException("Detention facility is not present"));
-        
+
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> detentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation.getRecipientsList(asylumCase))
-                ;
-assertEquals("Detention facility is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("Detention facility is not present", exception.getMessage());
     }
 
     @Test
@@ -141,35 +137,31 @@ assertEquals("Detention facility is not present", exception.getMessage());
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> detentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation.getPersonalisationForLink((AsylumCase) null))
-                ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> detentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation.getPersonalisationForLink((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_appeal_submitted_in_time_with_fee_to_pay_document_is_empty() {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> detentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation.getPersonalisationForLink(asylumCase))
-                ;
-assertEquals("internalDetainedAppealSubmittedInTimeWithFeeToPayLetter document not available", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("internalDetainedAppealSubmittedInTimeWithFeeToPayLetter document not available", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_notification_client_throws_Exception() throws NotificationClientException, IOException {
         when(documentDownloadClient.getJsonObjectFromDocument(appealSubmittedInTimeWithFeeToPayLetter)).thenThrow(new NotificationClientException("File size is more than 2MB"));
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> detentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation.getPersonalisationForLink(asylumCase))
-                ;
-assertEquals("Failed to get Internal 'Appeal submitted in time with fee to pay' Letter in compatible format", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("Failed to get Internal 'Appeal submitted in time with fee to pay' Letter in compatible format", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_io_exception_occurs() throws NotificationClientException, IOException {
         when(documentDownloadClient.getJsonObjectFromDocument(appealSubmittedInTimeWithFeeToPayLetter)).thenThrow(new IOException("IO Exception occurred"));
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> detentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation.getPersonalisationForLink(asylumCase))
-                ;
-assertEquals("Failed to get Internal 'Appeal submitted in time with fee to pay' Letter in compatible format", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("Failed to get Internal 'Appeal submitted in time with fee to pay' Letter in compatible format", exception.getMessage());
     }
 }

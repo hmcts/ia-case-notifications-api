@@ -37,19 +37,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisationTest {
 
-    @Mock
-    Callback<AsylumCase> callback;
-    @Mock
-    CaseDetails<AsylumCase> caseDetails;
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-    @Mock
-    AddressUk address;
-    @Mock
-    SystemDateProvider systemDateProvider;
-
     private final Long ccdCaseId = 12345L;
     private final String approvedLetterTemplateId = "someLetterTemplateId";
     private final String partiallyApprovedLetterTemplateId = "someLetterTemplateId";
@@ -70,7 +57,18 @@ class AppellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisationTest 
     private final NationalityFieldValue oocAddressCountry = mock(NationalityFieldValue.class);
     private final int daysAfterRemissionDecision = 14;
     private final String refundFeeAmountInGbp = "180.00";
-
+    @Mock
+    Callback<AsylumCase> callback;
+    @Mock
+    CaseDetails<AsylumCase> caseDetails;
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    AddressUk address;
+    @Mock
+    SystemDateProvider systemDateProvider;
     private AppellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation;
 
     @BeforeEach

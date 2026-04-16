@@ -36,6 +36,19 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantEditListingPersonalisationSmsTest {
 
+    private final String templateId = "someTemplateId";
+    private final String legallyReppedTemplateId = "legallyReppedTemplateId";
+    private final String iaAipFrontendUrl = "http://localhost";
+    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    private final HearingCentre tribunalCentre = HearingCentre.HATTON_CROSS;
+    private final String hearingCentreAddress = "some hearing centre address";
+    private final String hearingDateTime = "2019-08-27T14:25:15.000";
+    private final String homeOfficeRefNumber = "homeOfficeRefNumber";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
+    private final String mockedAppellantMobilePhone = "07123456789";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
+    private final String hearingCentreName = HearingCentre.TAYLOR_HOUSE.toString();
     @Mock
     Callback<AsylumCase> callback;
     @Mock
@@ -46,25 +59,6 @@ public class AppellantEditListingPersonalisationSmsTest {
     PersonalisationProvider personalisationProvider;
     @Mock
     RecipientsFinder recipientsFinder;
-
-    private final String templateId = "someTemplateId";
-    private final String legallyReppedTemplateId = "legallyReppedTemplateId";
-    private final String iaAipFrontendUrl = "http://localhost";
-    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
-    private final HearingCentre tribunalCentre = HearingCentre.HATTON_CROSS;
-    private final String hearingCentreAddress = "some hearing centre address";
-
-    private final String hearingDateTime = "2019-08-27T14:25:15.000";
-
-    private final String homeOfficeRefNumber = "homeOfficeRefNumber";
-
-    private final String mockedAppealReferenceNumber = "someReferenceNumber";
-    private final String mockedAppellantMobilePhone = "07123456789";
-    private final String customerServicesTelephone = "555 555 555";
-    private final String customerServicesEmail = "cust.services@example.com";
-
-    private final String hearingCentreName = HearingCentre.TAYLOR_HOUSE.toString();
-
     private AppellantEditListingPersonalisationSms appellantEditListingPersonalisationSms;
 
     @BeforeEach

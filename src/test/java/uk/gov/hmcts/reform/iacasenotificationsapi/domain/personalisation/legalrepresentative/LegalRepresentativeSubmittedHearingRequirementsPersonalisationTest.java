@@ -7,6 +7,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -33,6 +34,10 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class LegalRepresentativeSubmittedHearingRequirementsPersonalisationTest {
 
+    private final String templateId = "someTemplateId";
+    private final String adaTemplateId = "someAdaTemplateId";
+    private final String iaExUiFrontendUrl = "http://localhost";
+    private final String legalRepEmailAddress = "legalrep@something.com";
     @Mock
     Callback<AsylumCase> callback;
     @Mock
@@ -43,12 +48,6 @@ public class LegalRepresentativeSubmittedHearingRequirementsPersonalisationTest 
     PersonalisationProvider personalisationProvider;
     @Mock
     CustomerServicesProvider customerServicesProvider;
-
-    private final String templateId = "someTemplateId";
-    private final String adaTemplateId = "someAdaTemplateId";
-    private final String iaExUiFrontendUrl = "http://localhost";
-    private final String legalRepEmailAddress = "legalrep@something.com";
-
     private LegalRepresentativeSubmittedHearingRequirementsPersonalisation
         legalRepresentativeSubmittedHearingRequirementsPersonalisation;
 
@@ -80,7 +79,7 @@ public class LegalRepresentativeSubmittedHearingRequirementsPersonalisationTest 
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
@@ -101,10 +100,9 @@ public class LegalRepresentativeSubmittedHearingRequirementsPersonalisationTest 
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> legalRepresentativeSubmittedHearingRequirementsPersonalisation
-            .getPersonalisation((Callback<AsylumCase>) null))
-            ;
-assertEquals("callback must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> legalRepresentativeSubmittedHearingRequirementsPersonalisation
+                .getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     private Map<String, String> getPersonalisation() {

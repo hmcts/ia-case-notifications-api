@@ -36,6 +36,13 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 public class LegalRepresentativeEditListingPersonalisationTest {
 
     private static final String HEARING_CENTRE_ADDRESS = "hearingCentreAddress";
+    private final String adaTemplateId = "adaTemplateId";
+    private final String nonAdaTemplateId = "nonAdaTemplateId";
+    private final String templateIdRemoteHearing = "remoteTemplateId";
+    private final String iaExUiFrontendUrl = "http://localhost";
+    private final String legalRepEmailAddress = "legalRep@example.com";
+    private final String hearingCentreNameBefore = HearingCentre.MANCHESTER.toString();
+    private final String hearingCentreName = HearingCentre.TAYLOR_HOUSE.toString();
     @Mock
     Callback<AsylumCase> callback;
     @Mock
@@ -46,15 +53,6 @@ public class LegalRepresentativeEditListingPersonalisationTest {
     PersonalisationProvider personalisationProvider;
     @Mock
     CustomerServicesProvider customerServicesProvider;
-    private final String adaTemplateId = "adaTemplateId";
-    private final String nonAdaTemplateId = "nonAdaTemplateId";
-    private final String templateIdRemoteHearing = "remoteTemplateId";
-    private final String iaExUiFrontendUrl = "http://localhost";
-    private final String legalRepEmailAddress = "legalRep@example.com";
-
-    private final String hearingCentreNameBefore = HearingCentre.MANCHESTER.toString();
-    private final String hearingCentreName = HearingCentre.TAYLOR_HOUSE.toString();
-
     private LegalRepresentativeEditListingPersonalisation legalRepresentativeEditListingPersonalisation;
 
     @BeforeEach
@@ -110,23 +108,21 @@ public class LegalRepresentativeEditListingPersonalisationTest {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> legalRepresentativeEditListingPersonalisation.getRecipientsList(asylumCase))
-            ;
-assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> legalRepresentativeEditListingPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> legalRepresentativeEditListingPersonalisation.getPersonalisation((Callback<AsylumCase>) null))
-            ;
-assertEquals("callback must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> legalRepresentativeEditListingPersonalisation.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
         initializePrefixes(legalRepresentativeEditListingPersonalisation);
         when(callback.getCaseDetails()).thenReturn(caseDetails);
@@ -146,7 +142,7 @@ assertEquals("callback must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_optional_fields_are_blank(YesOrNo isAda) {
         initializePrefixes(legalRepresentativeEditListingPersonalisation);
         when(callback.getCaseDetails()).thenReturn(caseDetails);

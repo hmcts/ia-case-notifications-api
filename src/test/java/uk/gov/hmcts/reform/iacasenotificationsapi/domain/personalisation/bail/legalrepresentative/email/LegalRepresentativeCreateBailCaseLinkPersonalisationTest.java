@@ -20,9 +20,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldD
 @MockitoSettings(strictness = Strictness.LENIENT)
 class LegalRepresentativeCreateBailCaseLinkPersonalisationTest {
 
-    @Mock
-    BailCase bailCase;
-
     private final String templateId = "someTemplateId";
     private final String legalRepEmailAddress = "legalRep@example.com";
     private final String bailReferenceNumber = "someReferenceNumber";
@@ -30,7 +27,8 @@ class LegalRepresentativeCreateBailCaseLinkPersonalisationTest {
     private final String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
     private final String applicantGivenNames = "someApplicantGivenNames";
     private final String applicantFamilyName = "someApplicantFamilyName";
-
+    @Mock
+    BailCase bailCase;
     private LegalRepresentativeCreateBailCaseLinkPersonalisation legalRepresentativeCreateBailCaseLinkPersonalisation;
 
     @BeforeEach
@@ -72,18 +70,16 @@ class LegalRepresentativeCreateBailCaseLinkPersonalisationTest {
         when(bailCase.read(BailCaseFieldDefinition.LEGAL_REP_EMAIL, String.class)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> legalRepresentativeCreateBailCaseLinkPersonalisation.getRecipientsList(bailCase))
-            ;
-assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> legalRepresentativeCreateBailCaseLinkPersonalisation.getRecipientsList(bailCase));
+        assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> legalRepresentativeCreateBailCaseLinkPersonalisation.getPersonalisation((BailCase) null))
-            ;
-assertEquals("bailCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> legalRepresentativeCreateBailCaseLinkPersonalisation.getPersonalisation((BailCase) null));
+        assertEquals("bailCase must not be null", exception.getMessage());
     }
 
     @Test

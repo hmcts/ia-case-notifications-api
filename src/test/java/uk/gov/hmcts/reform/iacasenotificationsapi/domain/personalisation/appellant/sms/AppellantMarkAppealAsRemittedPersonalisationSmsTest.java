@@ -29,17 +29,16 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppellantMarkAppealAsRemittedPersonalisationSmsTest {
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    RecipientsFinder recipientsFinder;
-
-    private AppellantMarkAppealAsRemittedPersonalisationSms
-        appellantMarkAppealAsRemittedPersonalisationSms;
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String templateId = "templateId";
     private final String appellantMobileNumber = "07777777777";
     private final SourceOfRemittal sourceOfRemittal = SourceOfRemittal.UPPER_TRIBUNAL;
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    RecipientsFinder recipientsFinder;
+    private AppellantMarkAppealAsRemittedPersonalisationSms
+        appellantMarkAppealAsRemittedPersonalisationSms;
 
     @BeforeEach
     public void setUp() {

@@ -57,21 +57,21 @@ class StoredNotificationTest {
     void should_not_allow_null_arguments_other_than_document() {
 
         StoredNotification.StoredNotificationBuilder builder = StoredNotification.builder();
-        assertThrows(NullPointerException.class, 
-() -> builder.notificationId(null));
-        assertThrows(NullPointerException.class, 
-() -> builder.notificationDateSent(null));
-        assertThrows(NullPointerException.class, 
-() -> builder.notificationSentTo(null));
-        assertThrows(NullPointerException.class, 
-() -> builder.notificationBody(null));
-        assertThrows(NullPointerException.class, 
-() -> builder.notificationMethod(null));
-        assertThrows(NullPointerException.class, 
-() -> builder.notificationStatus(null));
-        assertThrows(NullPointerException.class, 
-() -> builder.notificationReference(null));
-        assertThrows(NullPointerException.class, 
-() -> builder.notificationSubject(null));
+        assertThrows(NullPointerException.class,
+            () -> builder.notificationId(null));
+        assertThrows(NullPointerException.class,
+            () -> builder.notificationDateSent(null));
+        assertThrows(NullPointerException.class,
+            () -> builder.notificationSentTo(null));
+        assertThrows(NullPointerException.class,
+            () -> builder.notificationBody(null));
+        assertThrows(NullPointerException.class,
+            () -> builder.notificationMethod(null));
+        assertThrows(NullPointerException.class,
+            () -> builder.notificationStatus(null));
+        assertThrows(NullPointerException.class,
+            () -> builder.notificationReference(null));
+        assertThrows(NullPointerException.class,
+            () -> builder.notificationSubject(null));
     }
 }

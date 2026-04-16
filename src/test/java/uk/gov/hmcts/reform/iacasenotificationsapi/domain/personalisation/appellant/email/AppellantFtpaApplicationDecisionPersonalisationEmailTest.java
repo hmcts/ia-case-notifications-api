@@ -34,13 +34,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantFtpaApplicationDecisionPersonalisationEmailTest {
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    RecipientsFinder recipientsFinder;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-
     private final String respondentGrantedPartiallyGrantedEmailTemplateId = "respondentGrantedPartiallyGrantedEmailTemplateId";
     private final String respondentNotAdmittedEmailTemplateId = "respondentNotAdmittedEmailTemplateId";
     private final String respondentRefusedEmailTemplateId = "respondentRefusedEmailTemplateId";
@@ -48,12 +41,8 @@ public class AppellantFtpaApplicationDecisionPersonalisationEmailTest {
     private final String appellantPartiallyGrantedEmailTemplateId = "appellantPartiallyGrantedEmailTemplateId";
     private final String appellantNotAdmittedEmailTemplateId = "appellantNotAdmittedEmailTemplateId";
     private final String appellantRefusedEmailTemplateId = "appellantRefusedEmailTemplateId";
-
-
     private final String iaAipFrontendUrl = "http://localhost";
-
     private final String mockedAriaListingReferenceNumber = "ariaListingReferenceNumber";
-
     private final String homeOfficeReferenceNumber = "someHOReferenceNumber";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
@@ -62,8 +51,26 @@ public class AppellantFtpaApplicationDecisionPersonalisationEmailTest {
     private final LocalDate today = LocalDate.now();
     private final String expectedDueDateOoc = today.plusDays(oocDays).format(DateTimeFormatter.ofPattern("d MMM yyyy"));
     private final String expectedDueDateInCountry = today.plusDays(inCountryDays).format(DateTimeFormatter.ofPattern("d MMM yyyy"));
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    RecipientsFinder recipientsFinder;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
     private AppellantFtpaApplicationDecisionPersonalisationEmail appellantFtpaApplicationDecisionPersonalisationEmail;
+
+    static Stream<Arguments> decisionScenarios() {
+        return Stream.of(
+            Arguments.of(Optional.of(FTPA_GRANTED), Optional.empty()),
+            Arguments.of(Optional.of(FTPA_PARTIALLY_GRANTED), Optional.empty()),
+            Arguments.of(Optional.of(FTPA_NOT_ADMITTED), Optional.empty()),
+            Arguments.of(Optional.of(FTPA_REFUSED), Optional.empty()),
+            Arguments.of(Optional.empty(), Optional.of(FTPA_GRANTED)),
+            Arguments.of(Optional.empty(), Optional.of(FTPA_PARTIALLY_GRANTED)),
+            Arguments.of(Optional.empty(), Optional.of(FTPA_NOT_ADMITTED)),
+            Arguments.of(Optional.empty(), Optional.of(FTPA_REFUSED))
+        );
+    }
 
     @BeforeEach
     public void setup() {
@@ -96,19 +103,6 @@ public class AppellantFtpaApplicationDecisionPersonalisationEmailTest {
             recipientsFinder,
             customerServicesProvider);
 
-    }
-
-    static Stream<Arguments> decisionScenarios() {
-        return Stream.of(
-            Arguments.of(Optional.of(FTPA_GRANTED), Optional.empty()),
-            Arguments.of(Optional.of(FTPA_PARTIALLY_GRANTED), Optional.empty()),
-            Arguments.of(Optional.of(FTPA_NOT_ADMITTED), Optional.empty()),
-            Arguments.of(Optional.of(FTPA_REFUSED), Optional.empty()),
-            Arguments.of(Optional.empty(), Optional.of(FTPA_GRANTED)),
-            Arguments.of(Optional.empty(), Optional.of(FTPA_PARTIALLY_GRANTED)),
-            Arguments.of(Optional.empty(), Optional.of(FTPA_NOT_ADMITTED)),
-            Arguments.of(Optional.empty(), Optional.of(FTPA_REFUSED))
-        );
     }
 
     @ParameterizedTest

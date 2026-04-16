@@ -28,15 +28,12 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesO
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AdminOfficerAdjournHearingWithoutDatePersonalisationTest {
 
+    private final String templateId = "someTemplateId";
+    private final String adminOfficerEmailAddress = "adminOfficer@example.com";
     @Mock
     AsylumCase asylumCase;
     @Mock
     AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
-
-    private final String templateId = "someTemplateId";
-
-    private final String adminOfficerEmailAddress = "adminOfficer@example.com";
-
     private AdminOfficerAdjournHearingWithoutDatePersonalisation adminOfficerdjournHearingWithoutDatePersonalisation;
 
     @BeforeEach

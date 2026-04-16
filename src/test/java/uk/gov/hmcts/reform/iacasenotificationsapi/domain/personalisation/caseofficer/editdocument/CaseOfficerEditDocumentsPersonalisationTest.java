@@ -51,7 +51,8 @@ public class CaseOfficerEditDocumentsPersonalisationTest {
 
     private final String beforeListingTemplateId = "beforeListingTemplateId";
     private final String afterListingTemplateId = "afterListingTemplateId";
-
+    @Mock
+    FeatureToggler featureToggler;
     @Mock
     private EmailAddressFinder emailAddressFinder;
     @Mock
@@ -61,18 +62,16 @@ public class CaseOfficerEditDocumentsPersonalisationTest {
     @Mock
     private AsylumCase asylumCase;
     private CaseOfficerEditDocumentsPersonalisation personalisation;
-    @Mock
-    FeatureToggler featureToggler;
     @Captor
     private ArgumentCaptor<List<String>> argCaptor;
 
     private static Object[] generateDifferentCaseNotesScenarios() {
         String multiLineReason = "line 1 reason" + System.lineSeparator() + "line 2 reason";
         String singleLine = "line 1 reason";
-        return new Object[] {
-            new Object[] {generateSingleCaseNoteWithMultiLineReason(), multiLineReason},
-            new Object[] {generateSingleCaseNoteWithSingleLineReason(), singleLine},
-            new Object[] {generateTwoCaseNotesWithMultiLineReasons(), multiLineReason},
+        return new Object[]{
+            new Object[]{generateSingleCaseNoteWithMultiLineReason(), multiLineReason},
+            new Object[]{generateSingleCaseNoteWithSingleLineReason(), singleLine},
+            new Object[]{generateTwoCaseNotesWithMultiLineReasons(), multiLineReason},
         };
     }
 
@@ -157,14 +156,14 @@ public class CaseOfficerEditDocumentsPersonalisationTest {
     @Test
     public void getRecipientsList_when_feature_flag_is_Off() {
         assertTrue(
-                personalisation.getRecipientsList(asylumCase).isEmpty());
+            personalisation.getRecipientsList(asylumCase).isEmpty());
     }
 
     @Test
     public void getRecipientsList_when_feature_flag_is_On() {
         when(featureToggler.getValue("tcw-notifications-feature", false)).thenReturn(true);
         given(emailAddressFinder.getHearingCentreEmailAddress(any(AsylumCase.class)))
-                .willReturn("hearingCentre@email.com");
+            .willReturn("hearingCentre@email.com");
 
         assertTrue(personalisation.getRecipientsList(new AsylumCase()).contains("hearingCentre@email.com"));
     }
@@ -195,9 +194,8 @@ public class CaseOfficerEditDocumentsPersonalisationTest {
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
-        NullPointerException exception = 
-assertThrows(NullPointerException.class, () -> personalisation.getPersonalisation((Callback<AsylumCase>) null))
-            ;
-assertEquals("callback must not be null", exception.getMessage());
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> personalisation.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 }

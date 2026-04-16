@@ -27,17 +27,14 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantAppealOutcomePersonalisationSmsTest {
 
+    private final String appealOutcomeDismissedAppellantTemplateId = "appealOutcomeDismissedAppellantTemplateId";
+    private final String appealOutcomeAllowedAppellantTemplateId = "appealOutcomeAllowedAppellantTemplateId";
+    private final String iaAipFrontendUrl = "http://localhost";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
     @Mock
     AsylumCase asylumCase;
     @Mock
     RecipientsFinder recipientsFinder;
-
-    private final String appealOutcomeDismissedAppellantTemplateId = "appealOutcomeDismissedAppellantTemplateId";
-    private final String appealOutcomeAllowedAppellantTemplateId = "appealOutcomeAllowedAppellantTemplateId";
-    private final String iaAipFrontendUrl = "http://localhost";
-
-    private final String mockedAppealReferenceNumber = "someReferenceNumber";
-
     private AppellantAppealOutcomePersonalisationSms appellantAppealOutcomePersonalisationSms;
 
     @BeforeEach
@@ -47,10 +44,10 @@ public class AppellantAppealOutcomePersonalisationSmsTest {
             .thenReturn(Optional.of(mockedAppealReferenceNumber));
 
         appellantAppealOutcomePersonalisationSms = new AppellantAppealOutcomePersonalisationSms(
-                appealOutcomeAllowedAppellantTemplateId,
+            appealOutcomeAllowedAppellantTemplateId,
             appealOutcomeDismissedAppellantTemplateId,
-                iaAipFrontendUrl,
-                recipientsFinder);
+            iaAipFrontendUrl,
+            recipientsFinder);
     }
 
 
@@ -102,10 +99,9 @@ public class AppellantAppealOutcomePersonalisationSmsTest {
 
         when(recipientsFinder.findAll(null, NotificationType.SMS)).thenCallRealMethod();
 
-        NullPointerException exception = 
-assertThrows(NullPointerException.class, () -> appellantAppealOutcomePersonalisationSms.getRecipientsList(null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> appellantAppealOutcomePersonalisationSms.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test

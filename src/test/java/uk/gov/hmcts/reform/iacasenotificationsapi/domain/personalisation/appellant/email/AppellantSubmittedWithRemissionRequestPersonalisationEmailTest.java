@@ -30,22 +30,19 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantSubmittedWithRemissionRequestPersonalisationEmailTest {
 
+    private final String emailTemplateId = "someEmailTemplateId";
+    private final String paPayLaterEmailTemplateId = "paPayLaterEmailTemplateId";
+    private final String iaAipFrontendUrl = "http://localhost";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
+    private final String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
+    private final String mockedAppellantGivenNames = "someAppellantGivenNames";
+    private final String mockedAppellantFamilyName = "someAppellantFamilyName";
     @Mock
     AsylumCase asylumCase;
     @Mock
     RecipientsFinder recipientsFinder;
     @Mock
     SystemDateProvider systemDateProvider;
-
-    private final String emailTemplateId = "someEmailTemplateId";
-    private final String paPayLaterEmailTemplateId = "paPayLaterEmailTemplateId";
-    private final String iaAipFrontendUrl = "http://localhost";
-
-    private final String mockedAppealReferenceNumber = "someReferenceNumber";
-    private final String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
-    private final String mockedAppellantGivenNames = "someAppellantGivenNames";
-    private final String mockedAppellantFamilyName = "someAppellantFamilyName";
-
     private AppellantSubmittedWithRemissionRequestPersonalisationEmail appellantSubmittedWithRemissionRequestPersonalisationEmail;
 
     @BeforeEach
@@ -130,9 +127,8 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationEmailTest {
             .thenThrow(new NullPointerException("asylumCase must not be null"));
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> appellantSubmittedWithRemissionRequestPersonalisationEmail.getRecipientsList(null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> appellantSubmittedWithRemissionRequestPersonalisationEmail.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -181,7 +177,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     @Test
     public void should_return_pa_personalisation_when_all_info_present() {
         final String refundDueDate = LocalDate.now().plusDays(14)
-                .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+            .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
 
         when(systemDateProvider.dueDate(14)).thenReturn(refundDueDate);
         when(asylumCase.read(APPEAL_TYPE, AppealType.class)).thenReturn(Optional.of(AppealType.PA));
@@ -201,7 +197,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     @Test
     public void should_return_pa_personalisation_with_missing_fields() {
         final String refundDueDate = LocalDate.now().plusDays(14)
-                .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+            .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
 
         when(systemDateProvider.dueDate(14)).thenReturn(refundDueDate);
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());

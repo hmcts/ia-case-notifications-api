@@ -35,6 +35,11 @@ import uk.gov.service.notify.NotificationClientException;
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class DetentionEngagementTeamMarkAppealAsAdaPersonalisationTest {
+    final DocumentWithMetadata markAsAdaLetter = getDocumentWithMetadata(
+        "1", "mark-as-ada", "some other desc", DocumentTag.INTERNAL_DET_MARK_AS_ADA_LETTER);
+    final IdValue<DocumentWithMetadata> markAsAdaLetterId = new IdValue<>("1", markAsAdaLetter);
+    private final String templateId = "someTemplateId";
+    private final String adaPrefix = "Accelerated detained appeal";
     @Mock
     PersonalisationProvider personalisationProvider;
     @Mock
@@ -43,12 +48,6 @@ class DetentionEngagementTeamMarkAppealAsAdaPersonalisationTest {
     DocumentDownloadClient documentDownloadClient;
     @Mock
     AsylumCase asylumCase;
-    private final String templateId = "someTemplateId";
-    private final String adaPrefix = "Accelerated detained appeal";
-
-    final DocumentWithMetadata markAsAdaLetter = getDocumentWithMetadata(
-            "1", "mark-as-ada", "some other desc", DocumentTag.INTERNAL_DET_MARK_AS_ADA_LETTER);
-    final IdValue<DocumentWithMetadata> markAsAdaLetterId = new IdValue<>("1", markAsAdaLetter);
     private JSONObject markAsAdaLetterJsonDocument;
 
     private DetentionEngagementTeamMarkAppealAsAdaPersonalisation detentionEngagementTeamMarkAppealAsAdaPersonalisation;
@@ -70,19 +69,19 @@ class DetentionEngagementTeamMarkAppealAsAdaPersonalisationTest {
         when(detEmailService.getDetEmailAddress(asylumCase)).thenReturn(detEmailAddress);
         when(documentDownloadClient.getJsonObjectFromDocument(any(DocumentWithMetadata.class))).thenReturn(markAsAdaLetterJsonDocument);
 
-        List<IdValue<DocumentWithMetadata>> appealResponseDocuments = TestUtils.getDocumentWithMetadataList("docId", "filename", "description", DocumentTag.INTERNAL_DET_MARK_AS_ADA_LETTER);
+        TestUtils.getDocumentWithMetadataList("docId", "filename", "description", DocumentTag.INTERNAL_DET_MARK_AS_ADA_LETTER);
         markAsAdaLetterJsonDocument = new JSONObject("{\"title\": \"JsonDocument\"}");
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.of(newArrayList(markAsAdaLetterId)));
         when(documentDownloadClient.getJsonObjectFromDocument(markAsAdaLetter)).thenReturn(markAsAdaLetterJsonDocument);
 
         detentionEngagementTeamMarkAppealAsAdaPersonalisation =
-                new DetentionEngagementTeamMarkAppealAsAdaPersonalisation(
-                        templateId,
-                        adaPrefix,
-                        detEmailService,
-                        personalisationProvider,
-                        documentDownloadClient
-                );
+            new DetentionEngagementTeamMarkAppealAsAdaPersonalisation(
+                templateId,
+                adaPrefix,
+                detEmailService,
+                personalisationProvider,
+                documentDownloadClient
+            );
     }
 
     @Test
@@ -94,7 +93,7 @@ class DetentionEngagementTeamMarkAppealAsAdaPersonalisationTest {
     void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_INTERNAL_MARK_APPEAL_AS_ADA",
-                detentionEngagementTeamMarkAppealAsAdaPersonalisation.getReferenceId(caseId));
+            detentionEngagementTeamMarkAppealAsAdaPersonalisation.getReferenceId(caseId));
     }
 
     @Test
@@ -104,7 +103,7 @@ class DetentionEngagementTeamMarkAppealAsAdaPersonalisationTest {
         when(detEmailService.getRecipientsList(asylumCase)).thenReturn(Collections.singleton(detentionEngagementTeamEmail));
 
         assertTrue(
-                detentionEngagementTeamMarkAppealAsAdaPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
+            detentionEngagementTeamMarkAppealAsAdaPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
     }
 
     @Test
@@ -116,34 +115,32 @@ class DetentionEngagementTeamMarkAppealAsAdaPersonalisationTest {
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-                () -> detentionEngagementTeamMarkAppealAsAdaPersonalisation.getPersonalisationForLink((AsylumCase) null))
-                ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> detentionEngagementTeamMarkAppealAsAdaPersonalisation.getPersonalisationForLink((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_letter_for_notification_is_not_found() {
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-                () -> detentionEngagementTeamMarkAppealAsAdaPersonalisation.getPersonalisationForLink((AsylumCase) null))
-                ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> detentionEngagementTeamMarkAppealAsAdaPersonalisation.getPersonalisationForLink((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     void should_return_personalisation_when_all_information_given_maintain() throws NotificationClientException, IOException {
 
         final Map<String, Object> expectedPersonalisation =
-                ImmutableMap
-                        .<String, Object>builder()
-                        .putAll(personalisationProvider.getAppellantPersonalisation(asylumCase))
-                        .put("subjectPrefix", adaPrefix)
-                        .put("documentLink", markAsAdaLetterJsonDocument)
-                        .build();
+            ImmutableMap
+                .<String, Object>builder()
+                .putAll(personalisationProvider.getAppellantPersonalisation(asylumCase))
+                .put("subjectPrefix", adaPrefix)
+                .put("documentLink", markAsAdaLetterJsonDocument)
+                .build();
 
         Map<String, Object> actualPersonalisation =
-                detentionEngagementTeamMarkAppealAsAdaPersonalisation.getPersonalisationForLink(asylumCase);
+            detentionEngagementTeamMarkAppealAsAdaPersonalisation.getPersonalisationForLink(asylumCase);
 
         assertTrue(compareStringsAndJsonObjects(expectedPersonalisation, actualPersonalisation));
     }

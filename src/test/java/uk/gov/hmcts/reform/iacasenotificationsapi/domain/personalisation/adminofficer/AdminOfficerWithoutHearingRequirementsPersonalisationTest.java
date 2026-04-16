@@ -27,13 +27,12 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesO
 @ExtendWith(MockitoExtension.class)
 class AdminOfficerWithoutHearingRequirementsPersonalisationTest {
 
+    private final String templateId = "someTemplateId";
+    private final String reviewReheardHearingRequirementsTemplateId = "anotherTemplateId";
     @Mock
     AsylumCase asylumCase;
     @Mock
     AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
-
-    private final String templateId = "someTemplateId";
-    private final String reviewReheardHearingRequirementsTemplateId = "anotherTemplateId";
     private AdminOfficerWithoutHearingRequirementsPersonalisation adminOfficerWithoutHearingRequirementsPersonalisation;
 
     @BeforeEach

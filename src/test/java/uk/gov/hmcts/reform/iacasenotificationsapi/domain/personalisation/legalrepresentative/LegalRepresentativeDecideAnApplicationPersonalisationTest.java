@@ -49,6 +49,13 @@ public class LegalRepresentativeDecideAnApplicationPersonalisationTest {
         "refusedBeforeListTemplateId";
     private final String legalRepresentativeDecideAnApplicationRefusedOtherPartyAfterListingTemplateId =
         "refusedBeforeListTemplateId";
+    private final String iaExUiFrontendUrl = "http://localhost";
+    private final String legalRepEmailAddress = "legalRep@example.com";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String ariaListingReference = "someReferenceNumber";
+    private final String legalRepRefNumber = "somelegalRepRefNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -57,14 +64,6 @@ public class LegalRepresentativeDecideAnApplicationPersonalisationTest {
     MakeAnApplicationService makeAnApplicationService;
     @Mock
     MakeAnApplication makeAnApplication;
-    private final String iaExUiFrontendUrl = "http://localhost";
-    private final String legalRepEmailAddress = "legalRep@example.com";
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String ariaListingReference = "someReferenceNumber";
-    private final String legalRepRefNumber = "somelegalRepRefNumber";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-
     private LegalRepresentativeDecideAnApplicationPersonalisation legalRepresentativeDecideAnApplicationPersonalisation;
 
     @BeforeEach

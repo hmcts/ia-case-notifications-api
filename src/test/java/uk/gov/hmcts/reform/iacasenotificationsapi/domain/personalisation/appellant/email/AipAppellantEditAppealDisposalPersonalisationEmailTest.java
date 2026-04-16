@@ -36,23 +36,21 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AipAppellantEditAppealDisposalPersonalisationEmailTest {
 
+    private final Long caseId = 12345L;
+    private final String emailTemplateId = "someEmailTemplateId";
+    private final String mockedAppellantEmailAddress = "appelant@example.net";
     @Mock
     Callback<AsylumCase> callback;
     @Mock
     AsylumCase asylumCase;
-    @Mock
-    private CaseDetails<AsylumCase> caseDetails;
     @Mock
     CustomerServicesProvider customerServicesProvider;
     @Mock
     UserDetailsProvider userDetailsProvider;
     @Mock
     UserDetails userDetails;
-
-    private final Long caseId = 12345L;
-    private final String emailTemplateId = "someEmailTemplateId";
-    private final String mockedAppellantEmailAddress = "appelant@example.net";
-
+    @Mock
+    private CaseDetails<AsylumCase> caseDetails;
     private AipAppellantEditAppealDisposalPersonalisationEmail aipAppellantEditAppealDisposalPersonalisationEmail;
 
     @BeforeEach

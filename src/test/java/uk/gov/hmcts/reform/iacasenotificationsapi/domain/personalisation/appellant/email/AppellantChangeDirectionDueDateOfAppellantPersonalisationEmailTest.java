@@ -32,6 +32,13 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantChangeDirectionDueDateOfAppellantPersonalisationEmailTest {
 
+    private final String emailTemplateId = "emailTemplateId";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
+    private final String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
+    private final String mockedAppellantGivenNames = "someAppellantGivenNames";
+    private final String mockedAppellantFamilyName = "someAppellantFamilyName";
+    private final String ariaListingRef = "someAriaListingRef";
+    private final String iaAipFrontendUrl = "iaAipFrontendUrl";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -44,17 +51,7 @@ public class AppellantChangeDirectionDueDateOfAppellantPersonalisationEmailTest 
     CustomerServicesProvider customerServicesProvider;
     @Mock
     PersonalisationProvider personalisationProvider;
-
-    private final String emailTemplateId = "emailTemplateId";
-
-    private final String mockedAppealReferenceNumber = "someReferenceNumber";
-    private final String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
-    private final String mockedAppellantGivenNames = "someAppellantGivenNames";
-    private final String mockedAppellantFamilyName = "someAppellantFamilyName";
-    private final String ariaListingRef = "someAriaListingRef";
-
     private AppellantChangeDirectionDueDateOfAppellantPersonalisationEmail appellantChangeDirectionDueDateOfAppellantPersonalisationEmail;
-    private final String iaAipFrontendUrl = "iaAipFrontendUrl";
 
     @BeforeEach
     public void setup() {
@@ -106,9 +103,8 @@ public class AppellantChangeDirectionDueDateOfAppellantPersonalisationEmailTest 
             .thenThrow(new NullPointerException("asylumCase must not be null"));
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> appellantChangeDirectionDueDateOfAppellantPersonalisationEmail.getRecipientsList(null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> appellantChangeDirectionDueDateOfAppellantPersonalisationEmail.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test

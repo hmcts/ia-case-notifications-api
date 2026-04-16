@@ -38,11 +38,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 class LegalRepresentativeAppealSubmittedPayLaterPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-
     private final String templateId = "someTemplateId";
     private final String remissionTemplateId = "someRemissionTemplateId";
     private final String iaExUiFrontendUrl = "http://localhost";
@@ -51,7 +46,10 @@ class LegalRepresentativeAppealSubmittedPayLaterPersonalisationTest {
     private final String legalRepRefNumber = "somelegalRepRefNumber";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
     private LegalRepresentativeAppealSubmittedPayLaterPersonalisation
         legalRepresentativeAppealSubmittedPayLaterPersonalisation;
 

@@ -30,6 +30,12 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.StringProvider;
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantChangeHearingCentrePersonalisationSmsTest {
 
+    private final String smsTemplateId = "someSmsTemplateId";
+    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    private final String hearingCentreName = "Taylor House";
+    private final HearingCentre oldHearingCentre = HearingCentre.MANCHESTER;
+    private final String oldHearingCentreName = "Manchester";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
     @Mock
     Callback<AsylumCase> callback;
     @Mock
@@ -44,15 +50,6 @@ public class AppellantChangeHearingCentrePersonalisationSmsTest {
     RecipientsFinder recipientsFinder;
     @Mock
     StringProvider stringProvider;
-
-    private final String smsTemplateId = "someSmsTemplateId";
-    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
-    private final String hearingCentreName = "Taylor House";
-    private final HearingCentre oldHearingCentre = HearingCentre.MANCHESTER;
-    private final String oldHearingCentreName = "Manchester";
-
-    private final String mockedAppealReferenceNumber = "someReferenceNumber";
-
     private AppellantChangeHearingCentrePersonalisationSms appellantChangeHearingCentrePersonalisationSms;
 
     @BeforeEach
@@ -69,15 +66,15 @@ public class AppellantChangeHearingCentrePersonalisationSmsTest {
         when(stringProvider.get("hearingCentreName", hearingCentre.toString())).thenReturn(Optional.of(hearingCentreName));
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class))
-                .thenReturn(Optional.of(mockedAppealReferenceNumber));
+            .thenReturn(Optional.of(mockedAppealReferenceNumber));
         String removeAppealReason = "some remove appeal reason";
         when(asylumCase.read(REMOVE_APPEAL_FROM_ONLINE_REASON, String.class))
-                .thenReturn(Optional.of(removeAppealReason));
+            .thenReturn(Optional.of(removeAppealReason));
 
         appellantChangeHearingCentrePersonalisationSms = new AppellantChangeHearingCentrePersonalisationSms(
-                smsTemplateId,
-                recipientsFinder,
-                stringProvider);
+            smsTemplateId,
+            recipientsFinder,
+            stringProvider);
     }
 
     @Test
@@ -89,19 +86,18 @@ public class AppellantChangeHearingCentrePersonalisationSmsTest {
     public void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_CHANGE_HEARING_CENTRE_AIP_APPELLANT_SMS",
-                appellantChangeHearingCentrePersonalisationSms.getReferenceId(caseId));
+            appellantChangeHearingCentrePersonalisationSms.getReferenceId(caseId));
     }
 
     @Test
     public void should_throw_exception_on_recipients_when_case_is_null() {
 
         when(recipientsFinder.findAll(null, NotificationType.SMS))
-                .thenThrow(new NullPointerException("asylumCase must not be null"));
+            .thenThrow(new NullPointerException("asylumCase must not be null"));
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> appellantChangeHearingCentrePersonalisationSms.getRecipientsList(null))
-                ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> appellantChangeHearingCentrePersonalisationSms.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -109,27 +105,26 @@ assertEquals("asylumCase must not be null", exception.getMessage());
 
         String mockedAppellantMobilePhone = "07123456789";
         when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
-                .thenReturn(Collections.singleton(mockedAppellantMobilePhone));
+            .thenReturn(Collections.singleton(mockedAppellantMobilePhone));
 
         assertTrue(appellantChangeHearingCentrePersonalisationSms.getRecipientsList(asylumCase)
-                .contains(mockedAppellantMobilePhone));
+            .contains(mockedAppellantMobilePhone));
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-                () -> appellantChangeHearingCentrePersonalisationSms.getPersonalisation((Callback<AsylumCase>) null))
-                ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> appellantChangeHearingCentrePersonalisationSms.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_return_personalisation_when_all_information_given() {
 
         Map<String, String> personalisation =
-                appellantChangeHearingCentrePersonalisationSms.getPersonalisation(callback);
+            appellantChangeHearingCentrePersonalisationSms.getPersonalisation(callback);
 
         assertThat(personalisation)
             .containsEntry("Appeal Ref Number", mockedAppealReferenceNumber)
@@ -142,10 +137,10 @@ assertEquals("asylumCase must not be null", exception.getMessage());
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(REMOVE_APPEAL_FROM_ONLINE_REASON, String.class))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
-                appellantChangeHearingCentrePersonalisationSms.getPersonalisation(callback);
+            appellantChangeHearingCentrePersonalisationSms.getPersonalisation(callback);
 
         assertThat(personalisation)
             .containsEntry("Appeal Ref Number", "")

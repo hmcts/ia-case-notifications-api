@@ -25,15 +25,15 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AiPRemissionRequestAutomaticReminderSmsTest {
 
-    @Mock
-    RecipientsFinder recipientsFinder;
-    @Mock
-    AsylumCase asylumCase;
     private final String paymentRejectedReminderTemplateId = "paymentRejectedReminderTemplateId";
     private final String paymentPartiallyApprovedReminderTemplateId = "paymentPartiallyApprovedReminderTemplateId";
     private final String appealReferenceNumber = "appealReferenceNumber";
     private final String iaAipFrontendUrl = "http://localhost";
     private final String someTestDateEmail = "14/14/2024";
+    @Mock
+    RecipientsFinder recipientsFinder;
+    @Mock
+    AsylumCase asylumCase;
     private AipRemissionRequestAutomaticReminderSms aipRemissionRequestAutomaticReminderSms;
 
     @BeforeEach

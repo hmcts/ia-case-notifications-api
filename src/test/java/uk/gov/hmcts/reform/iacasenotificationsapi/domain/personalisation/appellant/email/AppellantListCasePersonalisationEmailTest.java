@@ -37,6 +37,22 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsF
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantListCasePersonalisationEmailTest {
 
+    private final String templateId = "someTemplateId";
+    private final String listAssistHearingTemplateId = "listAssistHearingTemplateId";
+    private final String legallyReppedTemplateId = "legallyReppedTemplateId";
+    private final String listAssistHearingLegallyReppedTemplateId = "listAssistHearingLegallyReppedTemplateId";
+    private final String iaAipFrontendUrl = "http://somefrontendurl";
+    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    private final String hearingCentreAddress = "some hearing centre address";
+    private final String hearingDate = "2019-08-27";
+    private final String hearingTime = "14:25";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
+    private final String mockedAppellantGivenNames = "someAppellantGivenNames";
+    private final String mockedAppellantFamilyName = "someAppellantFamilyName";
+    private final String mockedAppellantEmailAddress = "appelant@example.net";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
+    private final String ariaListingReference = "someAriaListingReference";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -49,27 +65,6 @@ public class AppellantListCasePersonalisationEmailTest {
     HearingDetailsFinder hearingDetailsFinder;
     @Mock
     RecipientsFinder recipientsFinder;
-
-    private final String templateId = "someTemplateId";
-    private final String listAssistHearingTemplateId = "listAssistHearingTemplateId";
-    private final String legallyReppedTemplateId = "legallyReppedTemplateId";
-    private final String listAssistHearingLegallyReppedTemplateId = "listAssistHearingLegallyReppedTemplateId";
-    private final String iaAipFrontendUrl = "http://somefrontendurl";
-    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
-    private final String hearingCentreAddress = "some hearing centre address";
-
-    private final String hearingDate = "2019-08-27";
-    private final String hearingTime = "14:25";
-
-    private final String mockedAppealReferenceNumber = "someReferenceNumber";
-    private final String mockedAppellantGivenNames = "someAppellantGivenNames";
-    private final String mockedAppellantFamilyName = "someAppellantFamilyName";
-    private final String mockedAppellantEmailAddress = "appelant@example.net";
-    private final String customerServicesTelephone = "555 555 555";
-    private final String customerServicesEmail = "cust.services@example.com";
-
-    private final String ariaListingReference = "someAriaListingReference";
-
     private AppellantListCasePersonalisationEmail appellantListCasePersonalisationEmail;
 
     @BeforeEach
@@ -166,9 +161,8 @@ public class AppellantListCasePersonalisationEmailTest {
     @Test
     public void should_throw_exception_on_recipients_when_case_is_null() {
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> appellantListCasePersonalisationEmail.getRecipientsList(null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> appellantListCasePersonalisationEmail.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
 
@@ -260,9 +254,8 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     void should_throw_personalisation_when_no_hearing_centre() {
         when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.empty());
         IllegalArgumentException exception =
-assertThrows(IllegalArgumentException.class,
-            () -> appellantListCasePersonalisationEmail.getPersonalisation(asylumCase))
-            ;
-assertEquals("No hearing centre present", exception.getMessage());
+            assertThrows(IllegalArgumentException.class,
+                () -> appellantListCasePersonalisationEmail.getPersonalisation(asylumCase));
+        assertEquals("No hearing centre present", exception.getMessage());
     }
 }

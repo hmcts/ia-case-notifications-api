@@ -36,25 +36,22 @@ import uk.gov.service.notify.NotificationClientException;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class DetentionEngagementTeamAppealSubmittedLateWithExemptionPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    DetentionEmailService detentionEmailService;
-    @Mock
-    DocumentDownloadClient documentDownloadClient;
-
+    final DocumentWithMetadata recordOutOfTimeDecisionLetter = getDocumentWithMetadata(
+        "1", "internal-detained-appeal-submitted-out-of-time-with-exemption-letter", "Internal detained appeal submitted out of time with exemption letter", DocumentTag.INTERNAL_DETAINED_APPEAL_SUBMITTED_OUT_OF_TIME_WITH_EXEMPTION_LETTER);
+    final IdValue<DocumentWithMetadata> recordOutOfTimeDecisionLetterId = new IdValue<>("1", recordOutOfTimeDecisionLetter);
     private final String templateId = "someTemplateId";
     private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-
-    final DocumentWithMetadata recordOutOfTimeDecisionLetter = getDocumentWithMetadata(
-            "1", "internal-detained-appeal-submitted-out-of-time-with-exemption-letter", "Internal detained appeal submitted out of time with exemption letter", DocumentTag.INTERNAL_DETAINED_APPEAL_SUBMITTED_OUT_OF_TIME_WITH_EXEMPTION_LETTER);
-    final IdValue<DocumentWithMetadata> recordOutOfTimeDecisionLetterId = new IdValue<>("1", recordOutOfTimeDecisionLetter);
     private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
-    
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    DetentionEmailService detentionEmailService;
+    @Mock
+    DocumentDownloadClient documentDownloadClient;
     private DetentionEngagementTeamAppealSubmittedLateWithExemptionPersonalisation detentionEngagementTeamAppealSubmittedLateWithExemptionPersonalisation;
 
     DetentionEngagementTeamAppealSubmittedLateWithExemptionPersonalisationTest() {
@@ -63,12 +60,12 @@ class DetentionEngagementTeamAppealSubmittedLateWithExemptionPersonalisationTest
     @BeforeEach
     void setup() throws NotificationClientException, IOException {
         detentionEngagementTeamAppealSubmittedLateWithExemptionPersonalisation = new DetentionEngagementTeamAppealSubmittedLateWithExemptionPersonalisation(
-                templateId,
-                nonAdaPrefix,
-                detentionEmailService,
-                documentDownloadClient
+            templateId,
+            nonAdaPrefix,
+            detentionEmailService,
+            documentDownloadClient
         );
-        
+
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
@@ -82,7 +79,7 @@ class DetentionEngagementTeamAppealSubmittedLateWithExemptionPersonalisationTest
     void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_INTERNAL_NON_ADA_APPEAL_SUBMITTED_LATE_WITH_EXEMPTION",
-                detentionEngagementTeamAppealSubmittedLateWithExemptionPersonalisation.getReferenceId(caseId));
+            detentionEngagementTeamAppealSubmittedLateWithExemptionPersonalisation.getReferenceId(caseId));
     }
 
     @Test
@@ -97,7 +94,7 @@ class DetentionEngagementTeamAppealSubmittedLateWithExemptionPersonalisationTest
         when(detentionEmailService.getDetentionEmailAddress(asylumCase)).thenReturn(detentionEngagementTeamEmail);
 
         assertTrue(
-                detentionEngagementTeamAppealSubmittedLateWithExemptionPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
+            detentionEngagementTeamAppealSubmittedLateWithExemptionPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
     }
 
     @Test
@@ -139,36 +136,32 @@ class DetentionEngagementTeamAppealSubmittedLateWithExemptionPersonalisationTest
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
-        NullPointerException exception = 
-assertThrows(NullPointerException.class, () -> detentionEngagementTeamAppealSubmittedLateWithExemptionPersonalisation.getPersonalisationForLink((AsylumCase) null))
-                ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> detentionEngagementTeamAppealSubmittedLateWithExemptionPersonalisation.getPersonalisationForLink((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_record_out_of_time_decision_document_is_empty() {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
-        IllegalStateException exception = 
-assertThrows(IllegalStateException.class, () -> detentionEngagementTeamAppealSubmittedLateWithExemptionPersonalisation.getPersonalisationForLink(asylumCase))
-                ;
-assertEquals("internalDetainedAppealSubmittedOutOfTimeWithExemptionLetter document not available", exception.getMessage());
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamAppealSubmittedLateWithExemptionPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("internalDetainedAppealSubmittedOutOfTimeWithExemptionLetter document not available", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_notification_client_throws_Exception() throws NotificationClientException, IOException {
         when(documentDownloadClient.getJsonObjectFromDocument(recordOutOfTimeDecisionLetter)).thenThrow(new NotificationClientException("File size is more than 2MB"));
-        IllegalStateException exception = 
-assertThrows(IllegalStateException.class, () -> detentionEngagementTeamAppealSubmittedLateWithExemptionPersonalisation.getPersonalisationForLink(asylumCase))
-                ;
-assertEquals("Failed to get Internal 'Appeal can proceed' Letter in compatible format", exception.getMessage());
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamAppealSubmittedLateWithExemptionPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("Failed to get Internal 'Appeal can proceed' Letter in compatible format", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_io_exception_occurs() throws NotificationClientException, IOException {
         when(documentDownloadClient.getJsonObjectFromDocument(recordOutOfTimeDecisionLetter)).thenThrow(new IOException("IO Exception occurred"));
-        IllegalStateException exception = 
-assertThrows(IllegalStateException.class, () -> detentionEngagementTeamAppealSubmittedLateWithExemptionPersonalisation.getPersonalisationForLink(asylumCase))
-                ;
-assertEquals("Failed to get Internal 'Appeal can proceed' Letter in compatible format", exception.getMessage());
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamAppealSubmittedLateWithExemptionPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("Failed to get Internal 'Appeal can proceed' Letter in compatible format", exception.getMessage());
     }
 }

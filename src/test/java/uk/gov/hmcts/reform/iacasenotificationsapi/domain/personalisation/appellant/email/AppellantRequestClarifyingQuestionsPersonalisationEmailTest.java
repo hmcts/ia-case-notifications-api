@@ -39,25 +39,25 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppellantRequestClarifyingQuestionsPersonalisationEmailTest {
 
-    @Mock AsylumCase asylumCase;
-    @Mock CustomerServicesProvider customerServicesProvider;
-    @Mock RecipientsFinder recipientsFinder;
-    @Mock DirectionFinder directionFinder;
-    @Mock Direction direction;
-
     private final String emailTemplateId = "someEmailTemplateId";
     private final String iaAipFrontendUrl = "http://localhost";
-
     private final String expectedDirectionDueDate = "27 Aug 2019";
-
     private final String mockedAppealReferenceNumber = "someReferenceNumber";
     private final String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
     private final String mockedAppellantGivenNames = "someAppellantGivenNames";
     private final String mockedAppellantFamilyName = "someAppellantFamilyName";
-
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "cust.services@example.com";
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    RecipientsFinder recipientsFinder;
+    @Mock
+    DirectionFinder directionFinder;
+    @Mock
+    Direction direction;
     private AppellantRequestClarifyingQuestionsPersonalisationEmail appellantRequestClarifyingQuestionsSubmissionPersonalisationEmail;
 
     @BeforeEach
@@ -112,9 +112,8 @@ class AppellantRequestClarifyingQuestionsPersonalisationEmailTest {
             .thenThrow(new NullPointerException("asylumCase must not be null"));
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> appellantRequestClarifyingQuestionsSubmissionPersonalisationEmail.getRecipientsList(null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> appellantRequestClarifyingQuestionsSubmissionPersonalisationEmail.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -123,14 +122,13 @@ assertEquals("asylumCase must not be null", exception.getMessage());
         when(directionFinder.findFirst(asylumCase, DirectionTag.REQUEST_CLARIFYING_QUESTIONS)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> appellantRequestClarifyingQuestionsSubmissionPersonalisationEmail.getPersonalisation(asylumCase))
-            ;
-assertEquals("direction 'requestClarifyingQuestions' is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> appellantRequestClarifyingQuestionsSubmissionPersonalisationEmail.getPersonalisation(asylumCase));
+        assertEquals("direction 'requestClarifyingQuestions' is not present", exception.getMessage());
     }
 
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         initializePrefixes(appellantRequestClarifyingQuestionsSubmissionPersonalisationEmail);
@@ -153,7 +151,7 @@ assertEquals("direction 'requestClarifyingQuestions' is not present", exception.
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_only_mandatory_information_given(YesOrNo isAda) {
 
         initializePrefixes(appellantRequestClarifyingQuestionsSubmissionPersonalisationEmail);

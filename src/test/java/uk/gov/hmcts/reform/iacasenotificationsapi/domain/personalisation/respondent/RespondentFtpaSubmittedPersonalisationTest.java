@@ -32,16 +32,20 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class RespondentFtpaSubmittedPersonalisationTest {
 
-    @Mock PersonalisationProvider personalisationProvider;
-    @Mock Callback<AsylumCase> callback;
-    @Mock CaseDetails<AsylumCase> caseDetails;
-    @Mock AsylumCase asylumCase;
-    @Mock CustomerServicesProvider customerServicesProvider;
-    @Mock EmailAddressFinder emailAddressFinder;
-
     private final String templateId = "templateId";
     private final String iaExUiFrontendUrl = "http://localhost";
-
+    @Mock
+    PersonalisationProvider personalisationProvider;
+    @Mock
+    Callback<AsylumCase> callback;
+    @Mock
+    CaseDetails<AsylumCase> caseDetails;
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    EmailAddressFinder emailAddressFinder;
     private RespondentFtpaSubmittedPersonalisation respondentFtpaSubmittedPersonalisation;
 
     @BeforeEach
@@ -77,7 +81,7 @@ public class RespondentFtpaSubmittedPersonalisationTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_given_personalisation(YesOrNo isAda) {
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
@@ -99,7 +103,7 @@ public class RespondentFtpaSubmittedPersonalisationTest {
     public void should_throw_exception_when_personalisation_when_callback_is_null() {
 
         NullPointerException exception = assertThrows(NullPointerException.class,
-() -> respondentFtpaSubmittedPersonalisation.getPersonalisation((Callback<AsylumCase>) null));
+            () -> respondentFtpaSubmittedPersonalisation.getPersonalisation((Callback<AsylumCase>) null));
         assertEquals("callback must not be null", exception.getMessage());
 
     }

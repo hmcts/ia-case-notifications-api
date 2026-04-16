@@ -35,17 +35,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppellantInternalCaseDisposeUnderRule31Or32PersonalisationTest {
-    @Mock
-    Callback<AsylumCase> callback;
-    @Mock
-    CaseDetails<AsylumCase> caseDetails;
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-    @Mock
-    AddressUk address;
-
     private final Long ccdCaseId = 12345L;
     private final String letterTemplateId = "someLetterTemplateId";
     private final String appealReferenceNumber = "someAppealRefNumber";
@@ -63,8 +52,26 @@ class AppellantInternalCaseDisposeUnderRule31Or32PersonalisationTest {
     private final String oocAddressLine2 = "Madrid";
     private final String oocAddressLine3 = "28003";
     private final NationalityFieldValue oocAddressCountry = mock(NationalityFieldValue.class);
-
+    @Mock
+    Callback<AsylumCase> callback;
+    @Mock
+    CaseDetails<AsylumCase> caseDetails;
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    AddressUk address;
     private AppellantInternalCaseDisposeUnderRule31Or32Personalisation appellantInternalCaseDisposeUnderRule31Or32Personalisation;
+
+    private static Stream<Arguments> getTestSource() {
+        return Stream.of(
+            Arguments.of(APPELLANT, YesOrNo.YES),
+            Arguments.of(APPELLANT, YesOrNo.NO),
+            Arguments.of(RESPONDENT, YesOrNo.YES),
+            Arguments.of(RESPONDENT, YesOrNo.NO)
+        );
+    }
 
     @BeforeEach
     public void setup() {
@@ -109,7 +116,6 @@ class AppellantInternalCaseDisposeUnderRule31Or32PersonalisationTest {
             appellantInternalCaseDisposeUnderRule31Or32Personalisation.getReferenceId(ccdCaseId));
     }
 
-
     @Test
     void should_throw_exception_when_cannot_find_address_for_appellant_in_country() {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
@@ -117,9 +123,8 @@ class AppellantInternalCaseDisposeUnderRule31Or32PersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> appellantInternalCaseDisposeUnderRule31Or32Personalisation.getRecipientsList(asylumCase))
-            ;
-assertEquals("appellantAddress is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> appellantInternalCaseDisposeUnderRule31Or32Personalisation.getRecipientsList(asylumCase));
+        assertEquals("appellantAddress is not present", exception.getMessage());
     }
 
     @Test
@@ -129,27 +134,24 @@ assertEquals("appellantAddress is not present", exception.getMessage());
         when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_HAS_ADDRESS, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> appellantInternalCaseDisposeUnderRule31Or32Personalisation.getRecipientsList(asylumCase))
-            ;
-assertEquals("legalRepAddressUK is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> appellantInternalCaseDisposeUnderRule31Or32Personalisation.getRecipientsList(asylumCase));
+        assertEquals("legalRepAddressUK is not present", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> appellantInternalCaseDisposeUnderRule31Or32Personalisation.getPersonalisation((Callback<AsylumCase>) null))
-            ;
-assertEquals("callback must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> appellantInternalCaseDisposeUnderRule31Or32Personalisation.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_applicant_type_is_not_present() {
         IllegalStateException exception =
-assertThrows(IllegalStateException.class,
-            () -> appellantInternalCaseDisposeUnderRule31Or32Personalisation.getPersonalisation((callback)))
-            ;
-assertEquals("ftpaApplicantType is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class,
+                () -> appellantInternalCaseDisposeUnderRule31Or32Personalisation.getPersonalisation((callback)));
+        assertEquals("ftpaApplicantType is not present", exception.getMessage());
     }
 
     @Test
@@ -157,10 +159,9 @@ assertEquals("ftpaApplicantType is not present", exception.getMessage());
         when(asylumCase.read(AsylumCaseDefinition.FTPA_APPLICANT_TYPE, ApplicantType.class)).thenReturn(Optional.of(APPELLANT));
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class,
-            () -> appellantInternalCaseDisposeUnderRule31Or32Personalisation.getPersonalisation((callback)))
-            ;
-assertEquals("ftpaAppellantDecisionRemadeRule32Text is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class,
+                () -> appellantInternalCaseDisposeUnderRule31Or32Personalisation.getPersonalisation((callback)));
+        assertEquals("ftpaAppellantDecisionRemadeRule32Text is not present", exception.getMessage());
     }
 
     @Test
@@ -168,10 +169,9 @@ assertEquals("ftpaAppellantDecisionRemadeRule32Text is not present", exception.g
         when(asylumCase.read(AsylumCaseDefinition.FTPA_APPLICANT_TYPE, ApplicantType.class)).thenReturn(Optional.of(RESPONDENT));
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class,
-            () -> appellantInternalCaseDisposeUnderRule31Or32Personalisation.getPersonalisation((callback)))
-            ;
-assertEquals("ftpaRespondentDecisionRemadeRule32Text is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class,
+                () -> appellantInternalCaseDisposeUnderRule31Or32Personalisation.getPersonalisation((callback)));
+        assertEquals("ftpaRespondentDecisionRemadeRule32Text is not present", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -278,15 +278,6 @@ assertEquals("ftpaRespondentDecisionRemadeRule32Text is not present", exception.
                 .containsEntry("applicant", "the Home Office's")
                 .containsEntry("ftpaDisposedReason", "test2");
         }
-    }
-
-    private static Stream<Arguments> getTestSource() {
-        return Stream.of(
-            Arguments.of(APPELLANT, YesOrNo.YES),
-            Arguments.of(APPELLANT, YesOrNo.NO),
-            Arguments.of(RESPONDENT, YesOrNo.YES),
-            Arguments.of(RESPONDENT, YesOrNo.NO)
-        );
     }
 
 }

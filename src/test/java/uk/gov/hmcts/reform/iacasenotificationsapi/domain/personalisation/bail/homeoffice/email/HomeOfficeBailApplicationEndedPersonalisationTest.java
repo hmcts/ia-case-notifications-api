@@ -32,7 +32,8 @@ class HomeOfficeBailApplicationEndedPersonalisationTest {
     private final String applicantFamilyName = "someApplicantFamilyName";
     private final String outcomeOfApplication = "someOutcome";
     private final String reasonsOfOutcome = "someReason";
-    @Mock BailCase bailCase;
+    @Mock
+    BailCase bailCase;
     private HomeOfficeBailApplicationEndedPersonalisation homeOfficeBailApplicationEndedPersonalisation;
 
     @BeforeEach
@@ -68,11 +69,10 @@ class HomeOfficeBailApplicationEndedPersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        NullPointerException exception = 
-assertThrows(NullPointerException.class, 
-            () -> homeOfficeBailApplicationEndedPersonalisation.getPersonalisation((BailCase) null))
-            ;
-assertEquals("bailCase must not be null", exception.getMessage());
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> homeOfficeBailApplicationEndedPersonalisation.getPersonalisation((BailCase) null));
+        assertEquals("bailCase must not be null", exception.getMessage());
     }
 
     @Test

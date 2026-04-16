@@ -34,18 +34,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppellantNocRequestDecisionPersonalisationEmailTest {
 
-    @Mock
-    Callback<AsylumCase> callback;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    private CaseDetails<AsylumCase> caseDetails;
-
     private final String emailTemplateId = "someEmailTemplateId";
-
-
     private final long mockedAppealReferenceNumber = 1236;
     private final String mockedAppellantGivenNames = "someAppellantGivenNames";
     private final String mockedAppellantFamilyName = "someAppellantFamilyName";
@@ -54,7 +43,14 @@ class AppellantNocRequestDecisionPersonalisationEmailTest {
     private final String expectedDateOfBirth = "1 Mar 2020";
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "customer.services@example.com";
-
+    @Mock
+    Callback<AsylumCase> callback;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    private CaseDetails<AsylumCase> caseDetails;
     private AppellantNocRequestDecisionPersonalisationEmail appellantNocRequestDecisionPersonalisationEmail;
 
     @BeforeEach
@@ -101,9 +97,8 @@ class AppellantNocRequestDecisionPersonalisationEmailTest {
         when(asylumCase.read(EMAIL, String.class)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> appellantNocRequestDecisionPersonalisationEmail.getRecipientsList(asylumCase))
-            ;
-assertEquals("appellantEmailAddress is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> appellantNocRequestDecisionPersonalisationEmail.getRecipientsList(asylumCase));
+        assertEquals("appellantEmailAddress is not present", exception.getMessage());
     }
 
     @Test
@@ -111,13 +106,12 @@ assertEquals("appellantEmailAddress is not present", exception.getMessage());
         when(asylumCase.read(APPELLANT_DATE_OF_BIRTH, String.class)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> appellantNocRequestDecisionPersonalisationEmail.getPersonalisation(callback))
-            ;
-assertEquals("Appellant's birth of date is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> appellantNocRequestDecisionPersonalisationEmail.getPersonalisation(callback));
+        assertEquals("Appellant's birth of date is not present", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         initializePrefixes(appellantNocRequestDecisionPersonalisationEmail);
@@ -139,7 +133,7 @@ assertEquals("Appellant's birth of date is not present", exception.getMessage())
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_only_mandatory_information_given(YesOrNo isAda) {
 
         initializePrefixes(appellantNocRequestDecisionPersonalisationEmail);

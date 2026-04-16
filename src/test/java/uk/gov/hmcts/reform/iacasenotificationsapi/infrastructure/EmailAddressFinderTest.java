@@ -26,23 +26,27 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class EmailAddressFinderTest {
 
-    @Mock AsylumCase asylumCase;
-    @Mock BailCase bailCase;
-    @Mock Map<HearingCentre, String> hearingCentreEmailAddresses;
-    @Mock Map<HearingCentre, String> homeOfficeEmailAddresses;
-    @Mock Map<HearingCentre, String> homeOfficeFtpaEmailAddresses;
-
-    @Mock Map<HearingCentre, String> adminEmailAddresses;
-    @Mock Map<BailHearingCentre, String> bailHearingCentreEmailAddresses;
-
     private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
     private final String hearingCentreEmailAddress = "hearingCentre@example.com";
     private final HearingCentre listCaseHearingCentre = HearingCentre.BRADFORD;
     private final String listCaseHearingCenterEmailAddress = "listCaseHearingCentre@example.com";
     private final String legalRepEmailAddress = "legalRep@example.com";
-
-    private EmailAddressFinder emailAddressFinder;
     private final String listCaseCaseOfficerEmailAddress = "co-list-case@example.com";
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    BailCase bailCase;
+    @Mock
+    Map<HearingCentre, String> hearingCentreEmailAddresses;
+    @Mock
+    Map<HearingCentre, String> homeOfficeEmailAddresses;
+    @Mock
+    Map<HearingCentre, String> homeOfficeFtpaEmailAddresses;
+    @Mock
+    Map<HearingCentre, String> adminEmailAddresses;
+    @Mock
+    Map<BailHearingCentre, String> bailHearingCentreEmailAddresses;
+    private EmailAddressFinder emailAddressFinder;
 
     @BeforeEach
     public void setup() {
@@ -89,10 +93,9 @@ public class EmailAddressFinderTest {
     public void should_throw_exception_on_email_address_when_hearing_centre_is_empty() {
         when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.empty());
 
-        IllegalStateException exception = 
-assertThrows(IllegalStateException.class, () -> emailAddressFinder.getHearingCentreEmailAddress(asylumCase))
-            ;
-assertEquals("hearingCentre is not present", exception.getMessage());
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> emailAddressFinder.getHearingCentreEmailAddress(asylumCase));
+        assertEquals("hearingCentre is not present", exception.getMessage());
     }
 
     @Test
@@ -117,50 +120,45 @@ assertEquals("hearingCentre is not present", exception.getMessage());
     public void should_throw_exception_on_list_case_email_address_when_hearing_centre_is_empty() {
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.empty());
 
-        IllegalStateException exception = 
-assertThrows(IllegalStateException.class, () -> emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase))
-            ;
-assertEquals("listCaseHearingCentre is not present", exception.getMessage());
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase));
+        assertEquals("listCaseHearingCentre is not present", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_list_case_ftpa_email_address_when_hearing_centre_is_empty() {
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.empty());
 
-        IllegalStateException exception = 
-assertThrows(IllegalStateException.class, () -> emailAddressFinder.getListCaseFtpaHomeOfficeEmailAddress(asylumCase))
-                ;
-assertEquals("listCaseHearingCentre is not present", exception.getMessage());
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> emailAddressFinder.getListCaseFtpaHomeOfficeEmailAddress(asylumCase));
+        assertEquals("listCaseHearingCentre is not present", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_list_case_hearing_centre_email_address_when_hearing_centre_is_empty() {
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.empty());
 
-        IllegalStateException exception = 
-assertThrows(IllegalStateException.class, () -> emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase))
-            ;
-assertEquals("listCaseHearingCentre is not present", exception.getMessage());
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase));
+        assertEquals("listCaseHearingCentre is not present", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_home_office_ftpa_email_address_not_submitted() {
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.empty());
 
-        IllegalStateException exception = 
-assertThrows(IllegalStateException.class, () -> emailAddressFinder.getHomeOfficeFtpaEmailAddress(asylumCase))
-                ;
-assertEquals("Hearing centre email address not found: taylorHouse", exception.getMessage());
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> emailAddressFinder.getHomeOfficeFtpaEmailAddress(asylumCase));
+        assertEquals("Hearing centre email address not found: taylorHouse", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_admin_email_when_is_empty() {
         when(asylumCase.read(AsylumCaseDefinition.HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.empty());
 
-        IllegalStateException exception = 
-assertThrows(IllegalStateException.class, () -> emailAddressFinder.getAdminEmailAddress(asylumCase))
-                ;
-assertEquals("hearingCentre is not present", exception.getMessage());
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> emailAddressFinder.getAdminEmailAddress(asylumCase));
+        assertEquals("hearingCentre is not present", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -196,10 +194,9 @@ assertEquals("hearingCentre is not present", exception.getMessage());
     public void should_throw_exception_on_legal_rep_email_address_when_is_empty() {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
 
-        IllegalStateException exception = 
-assertThrows(IllegalStateException.class, () -> emailAddressFinder.getLegalRepEmailAddress(asylumCase))
-            ;
-assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> emailAddressFinder.getLegalRepEmailAddress(asylumCase));
+        assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
@@ -262,10 +259,9 @@ assertEquals("legalRepresentativeEmailAddress is not present", exception.getMess
     public void should_throw_exception_on_bail_hearing_centre_when_is_empty() {
         when(bailCase.read(BailCaseFieldDefinition.HEARING_CENTRE, BailHearingCentre.class)).thenReturn(Optional.empty());
 
-        IllegalStateException exception = 
-assertThrows(IllegalStateException.class, () -> emailAddressFinder.getBailHearingCentreEmailAddress(bailCase))
-            ;
-assertEquals("Bail hearingCentre is not present", exception.getMessage());
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> emailAddressFinder.getBailHearingCentreEmailAddress(bailCase));
+        assertEquals("Bail hearingCentre is not present", exception.getMessage());
     }
 
     @Test
@@ -302,19 +298,19 @@ assertEquals("Bail hearingCentre is not present", exception.getMessage());
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(REMOTE_HEARING));
         when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(GLASGOW));
         assertEquals(listCaseCaseOfficerEmailAddress,
-                emailAddressFinder.getListCaseCaseOfficerHearingCentreEmailAddress(asylumCase));
+            emailAddressFinder.getListCaseCaseOfficerHearingCentreEmailAddress(asylumCase));
 
         when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(NORTH_SHIELDS));
         when(hearingCentreEmailAddresses.get(NORTH_SHIELDS)).thenReturn("ho-north-shields@example.com");
         assertEquals("ho-north-shields@example.com",
-                emailAddressFinder.getListCaseCaseOfficerHearingCentreEmailAddress(asylumCase));
+            emailAddressFinder.getListCaseCaseOfficerHearingCentreEmailAddress(asylumCase));
 
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(GLASGOW));
         assertEquals(listCaseCaseOfficerEmailAddress,
-                emailAddressFinder.getListCaseCaseOfficerHearingCentreEmailAddress(asylumCase));
+            emailAddressFinder.getListCaseCaseOfficerHearingCentreEmailAddress(asylumCase));
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(BRADFORD));
         when(hearingCentreEmailAddresses.get(BRADFORD)).thenReturn("ho-bradford@example.com");
         assertEquals("ho-bradford@example.com",
-                emailAddressFinder.getListCaseCaseOfficerHearingCentreEmailAddress(asylumCase));
+            emailAddressFinder.getListCaseCaseOfficerHearingCentreEmailAddress(asylumCase));
     }
 }

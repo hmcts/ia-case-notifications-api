@@ -48,7 +48,7 @@ class AppellantHearingBundleReadyPersonalisationSmsTest {
             .thenReturn(Optional.of(mockedAppealReferenceNumber));
         String ccdReferenceNumber = "1234 5678 4321 8765";
         when(asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class))
-                .thenReturn(Optional.of(ccdReferenceNumber));
+            .thenReturn(Optional.of(ccdReferenceNumber));
 
         appellantHearingBundleReadyPersonalisationSms =
             new AppellantHearingBundleReadyPersonalisationSms(
@@ -77,10 +77,9 @@ class AppellantHearingBundleReadyPersonalisationSmsTest {
             .thenThrow(new NullPointerException("asylumCase must not be null"));
         when(featureToggler.getValue("aip-hearing-bundle-feature", false)).thenReturn(true);
 
-        NullPointerException exception = 
-assertThrows(NullPointerException.class, () -> appellantHearingBundleReadyPersonalisationSms.getRecipientsList(null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> appellantHearingBundleReadyPersonalisationSms.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -106,11 +105,10 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        NullPointerException exception = 
-assertThrows(NullPointerException.class, 
-            () -> appellantHearingBundleReadyPersonalisationSms.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> appellantHearingBundleReadyPersonalisationSms.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test

@@ -45,6 +45,22 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsF
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class LegalRepresentativeListCaseAdaSendStandardDirectionPersonalisationTest {
 
+    private final String adaListCaseSendDirectionTemplateId = "adaListCaseSendDirectionTemplateId";
+    private final String iaExUiFrontendUrl = "http://somefrontendurl";
+    private final String legalRepEmailAddress = "legalRepEmailAddress@example.com";
+    private final String hearingCentreAddress = "some hearing centre address";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String ariaListingReference = "someAriaListingReference";
+    private final String legalRepRefNumber = "someLegalRepRefNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String requirementsVulnerabilities = "someRequirementsVulnerabilities";
+    private final String requirementsMultimedia = "someRequirementsMultimedia";
+    private final String requirementsSingleSexCourt = "someRequirementsSingleSexCourt";
+    private final String requirementsInCamera = "someRequirementsInCamera";
+    private final String requirementsOther = "someRequirementsOther";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -55,27 +71,6 @@ public class LegalRepresentativeListCaseAdaSendStandardDirectionPersonalisationT
     HearingDetailsFinder hearingDetailsFinder;
     @Mock
     DirectionFinder directionFinder;
-
-    private final String adaListCaseSendDirectionTemplateId = "adaListCaseSendDirectionTemplateId";
-    private final String iaExUiFrontendUrl = "http://somefrontendurl";
-    private final String legalRepEmailAddress = "legalRepEmailAddress@example.com";
-    private final String hearingCentreAddress = "some hearing centre address";
-
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String ariaListingReference = "someAriaListingReference";
-    private final String legalRepRefNumber = "someLegalRepRefNumber";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-
-    private final String requirementsVulnerabilities = "someRequirementsVulnerabilities";
-    private final String requirementsMultimedia = "someRequirementsMultimedia";
-    private final String requirementsSingleSexCourt = "someRequirementsSingleSexCourt";
-    private final String requirementsInCamera = "someRequirementsInCamera";
-    private final String requirementsOther = "someRequirementsOther";
-
-    private final String customerServicesTelephone = "555 555 555";
-    private final String customerServicesEmail = "cust.services@example.com";
-
     private LegalRepresentativeListCaseAdaSendStandardDirectionPersonalisation legalRepresentativeListCaseAdaSendStandardDirectionPersonalisation;
 
     @BeforeEach

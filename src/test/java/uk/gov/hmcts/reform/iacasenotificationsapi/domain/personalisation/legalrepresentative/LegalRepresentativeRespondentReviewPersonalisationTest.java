@@ -35,22 +35,18 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class LegalRepresentativeRespondentReviewPersonalisationTest {
 
+    private final String templateId = "someTemplateId";
+    private final String legalRepEmailAddress = "legalrep@example.com";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String legalRepRefNumber = "somelegalRepRefNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
     @Mock
     AsylumCase asylumCase;
     @Mock
     DirectionFinder directionFinder;
     @Mock
     Direction direction;
-
-    private final String templateId = "someTemplateId";
-
-    private final String legalRepEmailAddress = "legalrep@example.com";
-
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String legalRepRefNumber = "somelegalRepRefNumber";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-
     private LegalRepresentativeRespondentReviewPersonalisation legalRepresentativeRespondentReviewPersonalisation;
 
     @BeforeEach

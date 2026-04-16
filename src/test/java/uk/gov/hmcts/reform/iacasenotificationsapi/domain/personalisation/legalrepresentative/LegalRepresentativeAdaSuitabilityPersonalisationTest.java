@@ -63,12 +63,12 @@ public class LegalRepresentativeAdaSuitabilityPersonalisationTest {
     @Test
     public void should_return_given_template_id() {
         when(asylumCase.read(SUITABILITY_REVIEW_DECISION, AdaSuitabilityReviewDecision.class))
-                .thenReturn(Optional.of(AdaSuitabilityReviewDecision.UNSUITABLE));
+            .thenReturn(Optional.of(AdaSuitabilityReviewDecision.UNSUITABLE));
         assertEquals(adaUnsuitableTemplateId,
             legalRepresentativeAdaSuitabilityPersonalisation.getTemplateId(asylumCase));
 
         when(asylumCase.read(SUITABILITY_REVIEW_DECISION, AdaSuitabilityReviewDecision.class))
-                .thenReturn(Optional.of(AdaSuitabilityReviewDecision.SUITABLE));
+            .thenReturn(Optional.of(AdaSuitabilityReviewDecision.SUITABLE));
         assertEquals(adaSuitableTemplateId,
             legalRepresentativeAdaSuitabilityPersonalisation.getTemplateId(asylumCase));
     }
@@ -90,10 +90,9 @@ public class LegalRepresentativeAdaSuitabilityPersonalisationTest {
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> legalRepresentativeAdaSuitabilityPersonalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> legalRepresentativeAdaSuitabilityPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -101,9 +100,8 @@ assertEquals("asylumCase must not be null", exception.getMessage());
         when(asylumCase.read(SUITABILITY_REVIEW_DECISION, String.class)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> legalRepresentativeAdaSuitabilityPersonalisation.getTemplateId(asylumCase))
-                ;
-assertEquals("suitabilityReviewDecision is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> legalRepresentativeAdaSuitabilityPersonalisation.getTemplateId(asylumCase));
+        assertEquals("suitabilityReviewDecision is not present", exception.getMessage());
     }
 
     @Test

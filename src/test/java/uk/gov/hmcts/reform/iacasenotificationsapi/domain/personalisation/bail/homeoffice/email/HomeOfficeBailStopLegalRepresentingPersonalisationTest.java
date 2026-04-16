@@ -42,9 +42,6 @@ class HomeOfficeBailStopLegalRepresentingPersonalisationTest {
     private final String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
     private final String applicantGivenNames = "someApplicantGivenNames";
     private final String applicantFamilyName = "someApplicantFamilyName";
-    @Mock BailCase bailCase;
-    private HomeOfficeBailStopLegalRepresentingPersonalisation homeOfficeBailStopLegalRepresentingPersonalisation;
-
     private final String addressLine1 = "A";
     private final String addressLine2 = "B";
     private final String addressLine3 = "C";
@@ -52,16 +49,18 @@ class HomeOfficeBailStopLegalRepresentingPersonalisationTest {
     private final String county = "E";
     private final String postCode = "F";
     private final String country = "G";
-
     private final AddressUk addressUk = new AddressUk(
-            addressLine1,
-            addressLine2,
-            addressLine3,
-            postTown,
-            county,
-            postCode,
-            country
+        addressLine1,
+        addressLine2,
+        addressLine3,
+        postTown,
+        county,
+        postCode,
+        country
     );
+    @Mock
+    BailCase bailCase;
+    private HomeOfficeBailStopLegalRepresentingPersonalisation homeOfficeBailStopLegalRepresentingPersonalisation;
 
     @BeforeEach
     public void setup() {
@@ -93,17 +92,16 @@ class HomeOfficeBailStopLegalRepresentingPersonalisationTest {
     @Test
     public void should_return_given_email_address_from_bail_case() {
         assertTrue(homeOfficeBailStopLegalRepresentingPersonalisation.getRecipientsList(bailCase)
-                .contains(homeOfficeEmailAddress));
+            .contains(homeOfficeEmailAddress));
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> homeOfficeBailStopLegalRepresentingPersonalisation.getPersonalisation((BailCase) null))
-            ;
-assertEquals("bailCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> homeOfficeBailStopLegalRepresentingPersonalisation.getPersonalisation((BailCase) null));
+        assertEquals("bailCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -160,13 +158,13 @@ assertEquals("bailCase must not be null", exception.getMessage());
     void should_return_correctly_formatted_company_address_for_missing_fields() {
 
         AddressUk addressUk = new AddressUk(
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                ""
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
         );
 
         when(bailCase.read(LEGAL_REP_COMPANY_ADDRESS, AddressUk.class)).thenReturn(Optional.of(addressUk));

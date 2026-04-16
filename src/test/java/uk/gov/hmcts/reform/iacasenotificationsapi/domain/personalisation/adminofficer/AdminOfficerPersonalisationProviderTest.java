@@ -21,15 +21,13 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AdminOfficerPersonalisationProviderTest {
 
-    @Mock
-    AsylumCase asylumCase;
-
     private final String iaExUiFrontendUrl = "http://somefrontendurl";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String ariaListingReference = "someAriaListingReference";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-
+    @Mock
+    AsylumCase asylumCase;
     private AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
 
     @BeforeEach

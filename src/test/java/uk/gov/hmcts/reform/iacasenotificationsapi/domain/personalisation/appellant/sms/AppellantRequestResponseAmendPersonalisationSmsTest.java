@@ -26,31 +26,27 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesO
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 
 
-
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantRequestResponseAmendPersonalisationSmsTest {
 
+    private final String emailTemplateId = "someEmailTemplateId";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
     @Mock
     AsylumCase asylumCase;
     @Mock
     RecipientsFinder recipientsFinder;
-
-    private final String emailTemplateId = "someEmailTemplateId";
-
-    private final String mockedAppealReferenceNumber = "someReferenceNumber";
-
     private AppellantRequestResponseAmendPersonalisationSms appellantRequestResponseAmendPersonalisationSms;
 
     @BeforeEach
     public void setup() {
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class))
-                .thenReturn(Optional.of(mockedAppealReferenceNumber));
+            .thenReturn(Optional.of(mockedAppealReferenceNumber));
 
         appellantRequestResponseAmendPersonalisationSms = new AppellantRequestResponseAmendPersonalisationSms(
-                emailTemplateId,
-                recipientsFinder);
+            emailTemplateId,
+            recipientsFinder);
     }
 
     @Test
@@ -62,7 +58,7 @@ public class AppellantRequestResponseAmendPersonalisationSmsTest {
     public void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_REQUEST_RESPONSE_AMEND_AIP_SMS",
-                appellantRequestResponseAmendPersonalisationSms.getReferenceId(caseId));
+            appellantRequestResponseAmendPersonalisationSms.getReferenceId(caseId));
     }
 
     @Test
@@ -70,19 +66,19 @@ public class AppellantRequestResponseAmendPersonalisationSmsTest {
 
         String mockedAppellantMobilePhone = "07123456789";
         Subscriber subscriber = new Subscriber(
-                SubscriberType.APPELLANT, //subscriberType
-                "", //email
-                YesOrNo.NO, // wants email
+            SubscriberType.APPELLANT, //subscriberType
+            "", //email
+            YesOrNo.NO, // wants email
             mockedAppellantMobilePhone, //mobileNumber
-                YesOrNo.YES // wants sms
+            YesOrNo.YES // wants sms
         );
 
         when(recipientsFinder.findAll(asylumCase, NotificationType.SMS)).thenCallRealMethod();
         when(asylumCase.read(SUBSCRIPTIONS))
-                .thenReturn(Optional.of(Collections.singletonList(new IdValue<>("foo", subscriber))));
+            .thenReturn(Optional.of(Collections.singletonList(new IdValue<>("foo", subscriber))));
 
         assertTrue(appellantRequestResponseAmendPersonalisationSms.getRecipientsList(asylumCase)
-                .contains(mockedAppellantMobilePhone));
+            .contains(mockedAppellantMobilePhone));
     }
 
     @Test
@@ -91,9 +87,8 @@ public class AppellantRequestResponseAmendPersonalisationSmsTest {
         when(recipientsFinder.findAll(null, NotificationType.SMS)).thenCallRealMethod();
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> appellantRequestResponseAmendPersonalisationSms.getRecipientsList(null))
-                ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> appellantRequestResponseAmendPersonalisationSms.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
 
@@ -101,9 +96,9 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     public void should_return_personalisation_when_all_information_given() {
 
         Map<String, String> personalisation =
-                appellantRequestResponseAmendPersonalisationSms.getPersonalisation(asylumCase);
+            appellantRequestResponseAmendPersonalisationSms.getPersonalisation(asylumCase);
 
-            assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
+        assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
     }
 
     @Test
@@ -112,8 +107,8 @@ assertEquals("asylumCase must not be null", exception.getMessage());
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
-                appellantRequestResponseAmendPersonalisationSms.getPersonalisation(asylumCase);
+            appellantRequestResponseAmendPersonalisationSms.getPersonalisation(asylumCase);
 
-            assertEquals("", personalisation.get("Appeal Ref Number"));
+        assertEquals("", personalisation.get("Appeal Ref Number"));
     }
 }

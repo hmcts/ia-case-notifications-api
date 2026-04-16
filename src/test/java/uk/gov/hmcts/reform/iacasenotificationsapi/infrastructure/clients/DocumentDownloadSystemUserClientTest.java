@@ -23,20 +23,24 @@ public class DocumentDownloadSystemUserClientTest {
 
     private final String someAccessToken = "some-access-token";
     private final String someServiceAuthToken = "some-service-auth-token";
-
-    @Mock
-    private DocumentDownloadClientApi documentDownloadClientApi;
-    @Mock private AccessTokenProvider accessTokenProvider;
-    @Mock private AuthTokenGenerator serviceAuthTokenGenerator;
-    @Mock private UserDetailsProvider userDetailsProvider;
-    @Mock private UserDetails userDetails;
-    @Mock private ResponseEntity<Resource> responseEntity;
-    @Mock private Resource downloadedResource;
-
-    private DocumentDownloadSystemUserClient documentDownloadSystemUserClient;
     private final String someWellFormattedDocumentBinaryDownloadUrl = "http://host:8080/a/b/c";
     private final String someUserRolesString = "some-role,some-other-role";
     private final String someUserId = "some-user-id";
+    @Mock
+    private DocumentDownloadClientApi documentDownloadClientApi;
+    @Mock
+    private AccessTokenProvider accessTokenProvider;
+    @Mock
+    private AuthTokenGenerator serviceAuthTokenGenerator;
+    @Mock
+    private UserDetailsProvider userDetailsProvider;
+    @Mock
+    private UserDetails userDetails;
+    @Mock
+    private ResponseEntity<Resource> responseEntity;
+    @Mock
+    private Resource downloadedResource;
+    private DocumentDownloadSystemUserClient documentDownloadSystemUserClient;
 
     @BeforeEach
     public void setUp() {
@@ -51,29 +55,29 @@ public class DocumentDownloadSystemUserClientTest {
     public void downloads_resource() {
 
         when(documentDownloadClientApi.downloadBinary(
-                someAccessToken,
-                someServiceAuthToken,
-                someUserRolesString,
-                someUserId,
-                "a/b/c")).thenReturn(responseEntity);
+            someAccessToken,
+            someServiceAuthToken,
+            someUserRolesString,
+            someUserId,
+            "a/b/c")).thenReturn(responseEntity);
 
         when(responseEntity.getBody())
-                .thenReturn(downloadedResource);
+            .thenReturn(downloadedResource);
 
         when(accessTokenProvider.getAccessToken())
-                .thenReturn(someAccessToken);
+            .thenReturn(someAccessToken);
 
         when(serviceAuthTokenGenerator.generate())
-                .thenReturn(someServiceAuthToken);
+            .thenReturn(someServiceAuthToken);
 
         when(userDetailsProvider.getUserDetails())
-                .thenReturn(userDetails);
+            .thenReturn(userDetails);
 
         when(userDetails.getRoles())
-                .thenReturn(List.of(someUserRolesString));
+            .thenReturn(List.of(someUserRolesString));
 
         when(userDetails.getId())
-                .thenReturn(someUserId);
+            .thenReturn(someUserId);
 
         Resource resource = documentDownloadSystemUserClient.download(someWellFormattedDocumentBinaryDownloadUrl);
 
@@ -93,9 +97,8 @@ public class DocumentDownloadSystemUserClientTest {
     public void throws_if_document_binary_url_bad() {
 
         IllegalArgumentException exception =
-assertThrows(IllegalArgumentException.class, () -> documentDownloadSystemUserClient.download("bad-url"))
-            ;
-assertEquals("Invalid url for DocumentDownloadClientApi", exception.getMessage());
+            assertThrows(IllegalArgumentException.class, () -> documentDownloadSystemUserClient.download("bad-url"));
+        assertEquals("Invalid url for DocumentDownloadClientApi", exception.getMessage());
 
         verifyNoInteractions(documentDownloadClientApi);
         verifyNoInteractions(serviceAuthTokenGenerator);
@@ -106,37 +109,36 @@ assertEquals("Invalid url for DocumentDownloadClientApi", exception.getMessage()
     public void throws_if_document_api_returns_empty_body() {
 
         when(documentDownloadClientApi.downloadBinary(
-                someAccessToken,
-                someServiceAuthToken,
-                someUserRolesString,
-                someUserId,
-                "a/b/c")).thenReturn(responseEntity);
+            someAccessToken,
+            someServiceAuthToken,
+            someUserRolesString,
+            someUserId,
+            "a/b/c")).thenReturn(responseEntity);
 
         when(responseEntity.getBody())
-                .thenReturn(downloadedResource);
+            .thenReturn(downloadedResource);
 
         when(accessTokenProvider.getAccessToken())
-                .thenReturn(someAccessToken);
+            .thenReturn(someAccessToken);
 
         when(serviceAuthTokenGenerator.generate())
-                .thenReturn(someServiceAuthToken);
+            .thenReturn(someServiceAuthToken);
 
         when(userDetailsProvider.getUserDetails())
-                .thenReturn(userDetails);
+            .thenReturn(userDetails);
 
         when(userDetails.getRoles())
-                .thenReturn(List.of(someUserRolesString));
+            .thenReturn(List.of(someUserRolesString));
 
         when(userDetails.getId())
-                .thenReturn(someUserId);
+            .thenReturn(someUserId);
 
         when(responseEntity.getBody())
             .thenReturn(null);
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> documentDownloadSystemUserClient.download(someWellFormattedDocumentBinaryDownloadUrl))
-            ;
-assertEquals("Document could not be downloaded", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> documentDownloadSystemUserClient.download(someWellFormattedDocumentBinaryDownloadUrl));
+        assertEquals("Document could not be downloaded", exception.getMessage());
     }
 
 }

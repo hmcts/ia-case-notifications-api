@@ -32,24 +32,23 @@ import uk.gov.service.notify.NotificationClientException;
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class DetentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisationTest {
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    private DocumentDownloadClient documentDownloadClient;
-    @Mock
-    private DetentionEmailService detentionEmailService;
-    @Mock
-    JSONObject jsonDocument;
+    final DocumentWithMetadata hearingAdjustmentsChangedDoc = TestUtils.getDocumentWithMetadata(
+        "id", "hearing-adjustments-updated-letter", "some other desc", DocumentTag.INTERNAL_APPEAL_DETAINED_UPDATE_TRIBUNAL_DECISION_RULE_31_IRC_PRISON_LETTER);
+    final IdValue<DocumentWithMetadata> hearingAdjustmentsChangedBundle = new IdValue<>("1", hearingAdjustmentsChangedDoc);
     private final String templateId = "templateId";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    JSONObject jsonDocument;
+    @Mock
+    private DocumentDownloadClient documentDownloadClient;
+    @Mock
+    private DetentionEmailService detentionEmailService;
     private DetentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation detentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation;
-
-    final DocumentWithMetadata hearingAdjustmentsChangedDoc = TestUtils.getDocumentWithMetadata(
-            "id", "hearing-adjustments-updated-letter", "some other desc", DocumentTag.INTERNAL_APPEAL_DETAINED_UPDATE_TRIBUNAL_DECISION_RULE_31_IRC_PRISON_LETTER);
-    final IdValue<DocumentWithMetadata> hearingAdjustmentsChangedBundle = new IdValue<>("1", hearingAdjustmentsChangedDoc);
 
     DetentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisationTest() {
     }
@@ -65,18 +64,18 @@ class DetentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisatio
         when(documentDownloadClient.getJsonObjectFromDocument(hearingAdjustmentsChangedDoc)).thenReturn(jsonDocument);
 
         detentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation =
-                new DetentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation(
-                        templateId,
-                        detentionEmailService,
-                        documentDownloadClient
-                );
+            new DetentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation(
+                templateId,
+                detentionEmailService,
+                documentDownloadClient
+            );
     }
 
     @Test
     public void should_return_given_template_id_detained() {
         assertEquals(
-                templateId,
-                detentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation.getTemplateId()
+            templateId,
+            detentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation.getTemplateId()
         );
     }
 
@@ -84,7 +83,7 @@ class DetentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisatio
     void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_INTERNAL_DETAINED_UPDATE_TRIBUNAL_DECISION_RULE_31_IRC_PRISON",
-                detentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation.getReferenceId(caseId));
+            detentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation.getReferenceId(caseId));
     }
 
     @Test
@@ -94,24 +93,24 @@ class DetentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisatio
         when(detentionEmailService.getDetentionEmailAddress(asylumCase)).thenReturn(detentionEngagementTeamEmail);
 
         assertTrue(
-                detentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
+            detentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
     }
 
     @Test
     public void should_return_personalisation_when_all_information_given_refused() {
 
         final Map<String, Object> expectedPersonalisation =
-                ImmutableMap
-                        .<String, Object>builder()
-                        .put("appealReferenceNumber", appealReferenceNumber)
-                        .put("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
-                        .put("appellantGivenNames", appellantGivenNames)
-                        .put("appellantFamilyName", appellantFamilyName)
-                        .put("documentLink", jsonDocument)
-                        .build();
+            ImmutableMap
+                .<String, Object>builder()
+                .put("appealReferenceNumber", appealReferenceNumber)
+                .put("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
+                .put("appellantGivenNames", appellantGivenNames)
+                .put("appellantFamilyName", appellantFamilyName)
+                .put("documentLink", jsonDocument)
+                .build();
 
         Map<String, Object> actualPersonalisation =
-                detentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation.getPersonalisationForLink(asylumCase);
+            detentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation.getPersonalisationForLink(asylumCase);
 
         assertTrue(compareStringsAndJsonObjects(expectedPersonalisation, actualPersonalisation));
     }
@@ -120,26 +119,23 @@ class DetentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisatio
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> detentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation.getPersonalisationForLink((AsylumCase) null))
-                ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> detentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation.getPersonalisationForLink((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_appeal_submission_is_empty() {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> detentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation.getPersonalisationForLink(asylumCase))
-                ;
-assertEquals("internalDetainedAppealUpdateTribunalDecisionRule31IrcPrisonLetter document not available", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("internalDetainedAppealUpdateTribunalDecisionRule31IrcPrisonLetter document not available", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_notification_client_throws_Exception() throws NotificationClientException, IOException {
         when(documentDownloadClient.getJsonObjectFromDocument(hearingAdjustmentsChangedDoc)).thenThrow(new NotificationClientException("File size is more than 2MB"));
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> detentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation.getPersonalisationForLink(asylumCase))
-                ;
-assertEquals("Failed to get Update Tribunal Decision changed document in compatible format", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("Failed to get Update Tribunal Decision changed document in compatible format", exception.getMessage());
     }
 }

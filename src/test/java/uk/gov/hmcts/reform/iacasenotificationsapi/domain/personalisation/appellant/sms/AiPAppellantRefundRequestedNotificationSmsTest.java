@@ -30,20 +30,19 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvi
 class AiPAppellantRefundRequestedNotificationSmsTest {
 
 
-    @Mock
-    Callback<AsylumCase> callback;
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    private CaseDetails<AsylumCase> caseDetails;
-    @Mock
-    RecipientsFinder recipientsFinder;
-
     private final Long caseId = 12345L;
     private final String iaAipFrontendUrl = "http://localhost";
     private final String mockedAppealReferenceNumber = "someReferenceNumber";
     private final int daysToAskReinstate = 14;
     private final SystemDateProvider systemDateProvider = new SystemDateProvider();
+    @Mock
+    Callback<AsylumCase> callback;
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    RecipientsFinder recipientsFinder;
+    @Mock
+    private CaseDetails<AsylumCase> caseDetails;
     private AiPAppellantRefundRequestedNotificationSms aipAppellantRefundRequestedNotificationSms;
 
     @BeforeEach

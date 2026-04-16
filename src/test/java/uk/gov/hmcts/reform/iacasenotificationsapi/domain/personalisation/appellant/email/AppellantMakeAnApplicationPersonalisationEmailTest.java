@@ -36,6 +36,17 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.MakeAnApplicati
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantMakeAnApplicationPersonalisationEmailTest {
 
+    private final String beforeListingEmailTemplateId = "beforeListingEmailTemplateId";
+    private final String afterListingEmailTemplateId = "afterListingEmailtemplateId";
+    private final String otherBeforeListingEmailTemplateId = "otherBeforeListingEmailTemplateId";
+    private final String otherAfterListingEmailTemplateId = "otherAfterListingEmailtemplateId";
+    private final String iaAipFrontendUrl = "http://localhost";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
+    private final String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
+    private final String mockedAppellantGivenNames = "someAppellantGivenNames";
+    private final String mockedAppellantFamilyName = "someAppellantFamilyName";
+    private final String homeOfficeUser = "caseworker-ia-homeofficelart";
+    private final String citizenUser = "citizen";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -50,20 +61,6 @@ public class AppellantMakeAnApplicationPersonalisationEmailTest {
     UserDetails userDetails;
     @Mock
     MakeAnApplication makeAnApplication;
-
-    private final String beforeListingEmailTemplateId = "beforeListingEmailTemplateId";
-    private final String afterListingEmailTemplateId = "afterListingEmailtemplateId";
-    private final String otherBeforeListingEmailTemplateId = "otherBeforeListingEmailTemplateId";
-    private final String otherAfterListingEmailTemplateId = "otherAfterListingEmailtemplateId";
-    private final String iaAipFrontendUrl = "http://localhost";
-
-    private final String mockedAppealReferenceNumber = "someReferenceNumber";
-    private final String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
-    private final String mockedAppellantGivenNames = "someAppellantGivenNames";
-    private final String mockedAppellantFamilyName = "someAppellantFamilyName";
-    private final String homeOfficeUser = "caseworker-ia-homeofficelart";
-    private final String citizenUser = "citizen";
-
     private AppellantMakeAnApplicationPersonalisationEmail appellantMakeAnApplicationPersonalisationEmail;
 
     @BeforeEach
@@ -132,13 +129,12 @@ public class AppellantMakeAnApplicationPersonalisationEmailTest {
             .thenThrow(new NullPointerException("asylumCase must not be null"));
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> appellantMakeAnApplicationPersonalisationEmail.getRecipientsList(null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> appellantMakeAnApplicationPersonalisationEmail.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { citizenUser, homeOfficeUser })
+    @ValueSource(strings = {citizenUser, homeOfficeUser})
     public void should_return_personalisation_when_all_information_given(String user) {
         initializePrefixes(appellantMakeAnApplicationPersonalisationEmail);
         when(userDetails.getRoles()).thenReturn(List.of(user));
@@ -166,7 +162,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         initializePrefixes(appellantMakeAnApplicationPersonalisationEmail);
@@ -190,15 +186,14 @@ assertEquals("asylumCase must not be null", exception.getMessage());
 
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_only_mandatory_information_given(YesOrNo isAda) {
 
         initializePrefixes(appellantMakeAnApplicationPersonalisationEmail);
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
 
-        final String dueDate =
-            LocalDate.now().plusDays(28)
-                .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+        LocalDate.now().plusDays(28)
+            .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());

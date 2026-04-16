@@ -26,17 +26,17 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AipAppellantDisposeUnderRule31Or32PersonalisationSmsTest {
+    private final String smsTemplateId = "someSmsTemplateId";
+    private final long mockedAppealReferenceNumber = 1236;
+    private final String iaAipFrontendUrl = "http://localhost";
     @Mock
     Callback<AsylumCase> callback;
-    @Mock
-    private CaseDetails<AsylumCase> caseDetails;
     @Mock
     AsylumCase asylumCase;
     @Mock
     RecipientsFinder recipientsFinder;
-    private final String smsTemplateId = "someSmsTemplateId";
-    private final long mockedAppealReferenceNumber = 1236;
-    private final String iaAipFrontendUrl = "http://localhost";
+    @Mock
+    private CaseDetails<AsylumCase> caseDetails;
     private AipAppellantDisposeUnderRule31Or32PersonalisationSms aipAppellantDisposeUnderRule31Or32PersonalisationSms;
 
     @BeforeEach
@@ -68,9 +68,8 @@ class AipAppellantDisposeUnderRule31Or32PersonalisationSmsTest {
             .thenThrow(new NullPointerException("asylumCase must not be null"));
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> aipAppellantDisposeUnderRule31Or32PersonalisationSms.getRecipientsList(null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> aipAppellantDisposeUnderRule31Or32PersonalisationSms.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -87,9 +86,8 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> aipAppellantDisposeUnderRule31Or32PersonalisationSms.getPersonalisation((Callback<AsylumCase>) null))
-            ;
-assertEquals("callback must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> aipAppellantDisposeUnderRule31Or32PersonalisationSms.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     @Test

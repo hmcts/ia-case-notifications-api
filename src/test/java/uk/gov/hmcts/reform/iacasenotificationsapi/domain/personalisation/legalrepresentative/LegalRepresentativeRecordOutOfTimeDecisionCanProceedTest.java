@@ -35,11 +35,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 class LegalRepresentativeRecordOutOfTimeDecisionCanProceedTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-
     private final String iaExUiFrontendUrl = "http://somefrontendurl";
     private final String legalRepEmailAddress = "legalrep@example.com";
     private final String appealReferenceNumber = "someReferenceNumber";
@@ -48,7 +43,10 @@ class LegalRepresentativeRecordOutOfTimeDecisionCanProceedTest {
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "cust.services@example.com";
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
     private LegalRepresentativeRecordOutOfTimeDecisionCanProceed legalRepresentativeRecordOutOfTimeDecisionCanProceed;
 
 
@@ -75,7 +73,7 @@ class LegalRepresentativeRecordOutOfTimeDecisionCanProceedTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
@@ -102,9 +100,8 @@ class LegalRepresentativeRecordOutOfTimeDecisionCanProceedTest {
     void should_throw_error_on_missing_decision_type() {
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> legalRepresentativeRecordOutOfTimeDecisionCanProceed.getPersonalisation(asylumCase))
-            ;
-assertEquals("Out of time decision is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> legalRepresentativeRecordOutOfTimeDecisionCanProceed.getPersonalisation(asylumCase));
+        assertEquals("Out of time decision is not present", exception.getMessage());
     }
 
 
@@ -126,18 +123,16 @@ assertEquals("Out of time decision is not present", exception.getMessage());
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> legalRepresentativeRecordOutOfTimeDecisionCanProceed.getRecipientsList(asylumCase))
-            ;
-assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> legalRepresentativeRecordOutOfTimeDecisionCanProceed.getRecipientsList(asylumCase));
+        assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> legalRepresentativeRecordOutOfTimeDecisionCanProceed.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> legalRepresentativeRecordOutOfTimeDecisionCanProceed.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 }

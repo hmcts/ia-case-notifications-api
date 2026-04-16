@@ -36,6 +36,16 @@ import uk.gov.service.notify.NotificationClientException;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AipmDetainedInPrisonOrIrcReinstateAppealPersonalisationTest {
 
+    final DocumentWithMetadata reinstateAppealDoc = getDocumentWithMetadata(
+        "1", "aipm-detained-in-prison-irc-reinstate-appeal-letter", "some other desc", DocumentTag.AIPM_DETAINED_IN_PRISON_IRC_REINSTATE_APPEAL_LETTER);
+    final IdValue<DocumentWithMetadata> reinstateAppealDocId = new IdValue<>("1", reinstateAppealDoc);
+    private final String detentionEngagementTeamTemplateId = "detentionEngagementTeamTemplateId";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String detEmailAddress = "some@example.com";
+    private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -44,19 +54,7 @@ class AipmDetainedInPrisonOrIrcReinstateAppealPersonalisationTest {
     JSONObject jsonDocument;
     @Mock
     DocumentDownloadClient documentDownloadClient;
-
-    private final String detentionEngagementTeamTemplateId = "detentionEngagementTeamTemplateId";
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-    private final String detEmailAddress = "some@example.com";
-    private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
-
     private AipmDetainedInPrisonOrIrcReinstateAppealPersonalisation aipmDetainedInPrisonOrIrcReinstateAppealPersonalisation;
-    final DocumentWithMetadata reinstateAppealDoc = getDocumentWithMetadata(
-        "1", "aipm-detained-in-prison-irc-reinstate-appeal-letter", "some other desc", DocumentTag.AIPM_DETAINED_IN_PRISON_IRC_REINSTATE_APPEAL_LETTER);
-    final IdValue<DocumentWithMetadata> reinstateAppealDocId = new IdValue<>("1", reinstateAppealDoc);
 
     AipmDetainedInPrisonOrIrcReinstateAppealPersonalisationTest() {
     }
@@ -137,10 +135,9 @@ class AipmDetainedInPrisonOrIrcReinstateAppealPersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> aipmDetainedInPrisonOrIrcReinstateAppealPersonalisation.getPersonalisationForLink((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> aipmDetainedInPrisonOrIrcReinstateAppealPersonalisation.getPersonalisationForLink((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -148,10 +145,9 @@ assertEquals("asylumCase must not be null", exception.getMessage());
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class,
-            () -> aipmDetainedInPrisonOrIrcReinstateAppealPersonalisation.getPersonalisationForLink(asylumCase))
-            ;
-assertEquals("aipmDetainedInPrisonOrIrcReinstateAppealLetter document not available", exception.getMessage());
+            assertThrows(IllegalStateException.class,
+                () -> aipmDetainedInPrisonOrIrcReinstateAppealPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("aipmDetainedInPrisonOrIrcReinstateAppealLetter document not available", exception.getMessage());
     }
 
     @Test
@@ -177,8 +173,7 @@ assertEquals("aipmDetainedInPrisonOrIrcReinstateAppealLetter document not availa
     public void should_throw_exception_when_notification_client_throws_Exception() throws NotificationClientException, IOException {
         when(documentDownloadClient.getJsonObjectFromDocument(reinstateAppealDoc)).thenThrow(new NotificationClientException("File size is more than 2MB"));
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> aipmDetainedInPrisonOrIrcReinstateAppealPersonalisation.getPersonalisationForLink(asylumCase))
-            ;
-assertEquals("Failed to get Internal 'Appeal can proceed' Letter in compatible format", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> aipmDetainedInPrisonOrIrcReinstateAppealPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("Failed to get Internal 'Appeal can proceed' Letter in compatible format", exception.getMessage());
     }
 }

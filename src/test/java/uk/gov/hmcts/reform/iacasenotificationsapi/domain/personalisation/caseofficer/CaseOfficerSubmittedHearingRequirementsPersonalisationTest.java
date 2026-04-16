@@ -34,6 +34,9 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class CaseOfficerSubmittedHearingRequirementsPersonalisationTest {
 
+    private final String templateId = "someTemplateId";
+    private final String iaExUiFrontendUrl = "http://localhost";
+    private final String hearingCentreEmailAddress = "hearingCentre@example.com";
     @Mock
     Callback<AsylumCase> callback;
     @Mock
@@ -46,11 +49,6 @@ public class CaseOfficerSubmittedHearingRequirementsPersonalisationTest {
     PersonalisationProvider personalisationProvider;
     @Mock
     private FeatureToggler featureToggler;
-
-    private final String templateId = "someTemplateId";
-    private final String iaExUiFrontendUrl = "http://localhost";
-    private final String hearingCentreEmailAddress = "hearingCentre@example.com";
-
     private CaseOfficerSubmittedHearingRequirementsPersonalisation
         caseOfficerSubmittedHearingRequirementsPersonalisation;
 

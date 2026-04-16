@@ -24,16 +24,14 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AdminOfficerBailStopLegalRepresentingPersonalisationTest {
 
-    @Mock
-    BailCase bailCase;
-
     private final String templateId = "someTemplateId";
     private final String bailReferenceNumber = "someReferenceNumber";
     private final String legalRepReference = "someLegalRepReference";
     private final String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
     private final String applicantGivenNames = "someApplicantGivenNames";
     private final String applicantFamilyName = "someApplicantFamilyName";
-
+    @Mock
+    BailCase bailCase;
     @Mock
     private EmailAddressFinder emailAddressFinder;
     private AdminOfficerBailStopLegalRepresentingPersonalisation adminOfficerStopLegalRepresentingPersonalisation;
@@ -48,8 +46,8 @@ public class AdminOfficerBailStopLegalRepresentingPersonalisationTest {
         when(bailCase.read(BailCaseFieldDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
 
         adminOfficerStopLegalRepresentingPersonalisation = new AdminOfficerBailStopLegalRepresentingPersonalisation(
-                templateId,
-                emailAddressFinder
+            templateId,
+            emailAddressFinder
         );
     }
 
@@ -62,7 +60,7 @@ public class AdminOfficerBailStopLegalRepresentingPersonalisationTest {
     public void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_BAIL_STOP_LEGAL_REPRESENTING_ADMIN_OFFICER",
-                adminOfficerStopLegalRepresentingPersonalisation.getReferenceId(caseId));
+            adminOfficerStopLegalRepresentingPersonalisation.getReferenceId(caseId));
     }
 
     @Test
@@ -70,23 +68,22 @@ public class AdminOfficerBailStopLegalRepresentingPersonalisationTest {
         String hearingCentreEmail = "someHearingCentre@example.com";
         when(emailAddressFinder.getBailHearingCentreEmailAddress(bailCase)).thenReturn(hearingCentreEmail);
         assertTrue(adminOfficerStopLegalRepresentingPersonalisation.getRecipientsList(bailCase)
-                .contains(hearingCentreEmail));
+            .contains(hearingCentreEmail));
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-                () -> adminOfficerStopLegalRepresentingPersonalisation.getPersonalisation((BailCase) null))
-                ;
-assertEquals("bailCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> adminOfficerStopLegalRepresentingPersonalisation.getPersonalisation((BailCase) null));
+        assertEquals("bailCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_return_personalisation_when_all_information_given() {
 
         Map<String, String> personalisation =
-                adminOfficerStopLegalRepresentingPersonalisation.getPersonalisation(bailCase);
+            adminOfficerStopLegalRepresentingPersonalisation.getPersonalisation(bailCase);
 
         assertThat(personalisation)
             .containsEntry("bailReferenceNumber", bailReferenceNumber)
@@ -106,7 +103,7 @@ assertEquals("bailCase must not be null", exception.getMessage());
         when(bailCase.read(BailCaseFieldDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
-                adminOfficerStopLegalRepresentingPersonalisation.getPersonalisation(bailCase);
+            adminOfficerStopLegalRepresentingPersonalisation.getPersonalisation(bailCase);
 
         assertThat(personalisation).allSatisfy((key, value) -> assertThat(value).isEmpty());
     }

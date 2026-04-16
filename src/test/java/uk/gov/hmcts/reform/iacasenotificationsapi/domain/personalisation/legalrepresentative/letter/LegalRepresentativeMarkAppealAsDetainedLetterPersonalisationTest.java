@@ -28,11 +28,16 @@ class LegalRepresentativeMarkAppealAsDetainedLetterPersonalisationTest {
     private static final String TEMPLATE_ID = "template-xyz";
     private static final long CASE_ID = 11111L;
 
-    @Mock private CustomerServicesProvider customerServicesProvider;
-    @Mock private SystemDateProvider systemDateProvider;
-    @Mock private Callback<AsylumCase> callback;
-    @Mock private CaseDetails<AsylumCase> caseDetails;
-    @Mock private AsylumCase asylumCase;
+    @Mock
+    private CustomerServicesProvider customerServicesProvider;
+    @Mock
+    private SystemDateProvider systemDateProvider;
+    @Mock
+    private Callback<AsylumCase> callback;
+    @Mock
+    private CaseDetails<AsylumCase> caseDetails;
+    @Mock
+    private AsylumCase asylumCase;
 
     private LegalRepresentativeMarkAppealAsDetainedLetterPersonalisation personalisation;
 

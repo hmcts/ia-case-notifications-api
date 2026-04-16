@@ -33,11 +33,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class LegalRepresentativePendingPaymentPaidPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-
     private final String beforeListingTemplateId = "someTemplateId";
     private final String afterListingtemplateId = "someTemplateId";
     private final String iaExUiFrontendUrl = "http://localhost";
@@ -50,7 +45,10 @@ public class LegalRepresentativePendingPaymentPaidPersonalisationTest {
     private final AppealType appealTypePa = AppealType.PA;
     private final AppealType appealTypeHu = AppealType.HU;
     private final AppealType appealTypeEa = AppealType.EA;
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
     private LegalRepresentativePendingPaymentPaidPersonalisation
         legalRepresentativeAppealPendingPaymentPaidPersonalisation;
 
@@ -108,20 +106,18 @@ public class LegalRepresentativePendingPaymentPaidPersonalisationTest {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class,
-            () -> legalRepresentativeAppealPendingPaymentPaidPersonalisation.getRecipientsList(asylumCase))
-            ;
-assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class,
+                () -> legalRepresentativeAppealPendingPaymentPaidPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> legalRepresentativeAppealPendingPaymentPaidPersonalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> legalRepresentativeAppealPendingPaymentPaidPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test

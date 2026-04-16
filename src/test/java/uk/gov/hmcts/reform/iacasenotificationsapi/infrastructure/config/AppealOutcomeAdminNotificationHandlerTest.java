@@ -38,7 +38,7 @@ class AppealOutcomeAdminNotificationHandlerTest {
         NotificationHandlerConfiguration notificationHandlerConfiguration = new NotificationHandlerConfiguration();
         List<NotificationGenerator> notificationGenerators = emptyList();
         asylumCasePreSubmitCallbackHandler =
-                notificationHandlerConfiguration.appealOutcomeAdminNotificationHandler(notificationGenerators);
+            notificationHandlerConfiguration.appealOutcomeAdminNotificationHandler(notificationGenerators);
     }
 
     @ParameterizedTest

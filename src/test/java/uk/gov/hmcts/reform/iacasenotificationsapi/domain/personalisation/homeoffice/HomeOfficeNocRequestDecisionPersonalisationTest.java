@@ -44,36 +44,28 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 @MockitoSettings(strictness = Strictness.LENIENT)
 class HomeOfficeNocRequestDecisionPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    AppealService appealService;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-
-    @Mock
-    EmailAddressFinder emailAddressFinder;
-
     private final String iaExUiFrontendUrl = "http://somefrontendurl";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String ariaListingReference = "someAriaListingReference";
     private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-
     private final String applicationType = "withdraw";
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "cust.services@example.com";
-
     private final String homeOfficeApplyNocDecisionBeforeListingTemplateId = "SomeTemplate";
     private final String homeOfficeApplyNocDecisionAfterListingTemplateId = "SomeTemplate";
-
-
     private final String apcPrivateBetaInboxHomeOfficeEmailAddress = "homeoffice-apc@example.com";
     private final String respondentReviewDirectionEmail = "homeoffice-respondent@example.com";
     private final String homeOfficeHearingCentreEmail = "hc-taylorhouse@example.com";
-
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    AppealService appealService;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    EmailAddressFinder emailAddressFinder;
     private HomeOfficeNocRequestDecisionPersonalisation homeOfficeNocRequestDecisionPersonalisation;
 
     @BeforeEach
@@ -268,10 +260,9 @@ class HomeOfficeNocRequestDecisionPersonalisationTest {
         when(asylumCase.read(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class))
             .thenReturn(Optional.of(State.UNKNOWN));
 
-        IllegalStateException exception = 
-assertThrows(IllegalStateException.class, () -> homeOfficeNocRequestDecisionPersonalisation.getRecipientsList(asylumCase))
-            ;
-assertEquals("homeOffice email Address cannot be found", exception.getMessage());
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> homeOfficeNocRequestDecisionPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("homeOffice email Address cannot be found", exception.getMessage());
     }
 
     @Test
@@ -283,14 +274,13 @@ assertEquals("homeOffice email Address cannot be found", exception.getMessage())
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        NullPointerException exception = 
-assertThrows(NullPointerException.class, () -> homeOfficeNocRequestDecisionPersonalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> homeOfficeNocRequestDecisionPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         initializePrefixes(homeOfficeNocRequestDecisionPersonalisation);
@@ -313,7 +303,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
 
         initializePrefixes(homeOfficeNocRequestDecisionPersonalisation);

@@ -33,11 +33,16 @@ class LegalRepresentativeRemoveDetentionStatusLetterPersonalisationTest {
     private static final String TEMPLATE_ID = "template-123";
     private static final long CASE_ID = 98765L;
 
-    @Mock private CustomerServicesProvider customerServicesProvider;
-    @Mock private Callback<AsylumCase> callback;
-    @Mock private CaseDetails<AsylumCase> caseDetails;
-    @Mock private AsylumCase asylumCase;
-    @Mock private SystemDateProvider systemDateProvider;
+    @Mock
+    private CustomerServicesProvider customerServicesProvider;
+    @Mock
+    private Callback<AsylumCase> callback;
+    @Mock
+    private CaseDetails<AsylumCase> caseDetails;
+    @Mock
+    private AsylumCase asylumCase;
+    @Mock
+    private SystemDateProvider systemDateProvider;
 
     private LegalRepresentativeRemoveDetentionStatusLetterPersonalisation personalisation;
 

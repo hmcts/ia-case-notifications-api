@@ -32,20 +32,18 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class CaseOfficerRespondentEvidenceSubmittedPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    EmailAddressFinder emailAddressFinder;
-    @Mock
-    private FeatureToggler featureToggler;
-
     private final String templateId = "someTemplateId";
     private final String iaExUiFrontendUrl = "http://somefrontendurl";
     private final String hearingCentreEmailAddress = "hearingCentre@example.com";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    EmailAddressFinder emailAddressFinder;
+    @Mock
+    private FeatureToggler featureToggler;
     private CaseOfficerRespondentEvidenceSubmittedPersonalisation caseOfficerRespondentEvidenceSubmittedPersonalisation;
 
     @BeforeEach
@@ -62,7 +60,7 @@ public class CaseOfficerRespondentEvidenceSubmittedPersonalisationTest {
                 templateId,
                 iaExUiFrontendUrl,
                 emailAddressFinder,
-                    featureToggler);
+                featureToggler);
     }
 
     @Test
@@ -80,28 +78,27 @@ public class CaseOfficerRespondentEvidenceSubmittedPersonalisationTest {
     @Test
     public void should_return_given_email_address_from_asylum_case_when_feature_flag_is_Off() {
         assertTrue(caseOfficerRespondentEvidenceSubmittedPersonalisation.getRecipientsList(asylumCase)
-                .isEmpty());
+            .isEmpty());
     }
 
     @Test
     public void should_return_given_email_address_from_asylum_case_when_feature_flag_is_On() {
         when(featureToggler.getValue("tcw-notifications-feature", true)).thenReturn(true);
         assertTrue(caseOfficerRespondentEvidenceSubmittedPersonalisation.getRecipientsList(asylumCase)
-                .contains(hearingCentreEmailAddress), hearingCentreEmailAddress);
+            .contains(hearingCentreEmailAddress), hearingCentreEmailAddress);
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> caseOfficerRespondentEvidenceSubmittedPersonalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> caseOfficerRespondentEvidenceSubmittedPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         initializePrefixes(caseOfficerRespondentEvidenceSubmittedPersonalisation);
@@ -126,7 +123,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
 
         initializePrefixes(caseOfficerRespondentEvidenceSubmittedPersonalisation);

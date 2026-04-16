@@ -24,13 +24,13 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdVa
 @ExtendWith(MockitoExtension.class)
 public class TimeExtensionFinderTest {
 
+    final String decisionReason = "this is the decision reason";
+    final String decisionOutcomeDate = "2020-03-02";
     private final TimeExtensionFinder timeExtensionFinder = new TimeExtensionFinder();
     private final String reason = "the reason";
     private final String requestDate = "2020-03-01";
     private final State state = State.AWAITING_REASONS_FOR_APPEAL;
     private final TimeExtensionStatus status = TimeExtensionStatus.SUBMITTED;
-    final String decisionReason = "this is the decision reason";
-    final String decisionOutcomeDate = "2020-03-02";
     @Mock
     private AsylumCase asylumCase;
 

@@ -33,20 +33,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisationTest {
 
-    @Mock
-    Callback<AsylumCase> callback;
-    @Mock
-    CaseDetails<AsylumCase> caseDetails;
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-    @Mock
-    DirectionFinder directionFinder;
-    @Mock
-    Direction direction;
-    @Mock
-    AddressUk address;
     private final Long ccdCaseId = 12345L;
     private final String letterTemplateId = "someLetterTemplateId";
     private final String appealReferenceNumber = "someAppealRefNumber";
@@ -65,6 +51,20 @@ class AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisationTest {
     private final String oocAddressLine2 = "Madrid";
     private final String oocAddressLine3 = "28003";
     private final NationalityFieldValue oocAddressCountry = mock(NationalityFieldValue.class);
+    @Mock
+    Callback<AsylumCase> callback;
+    @Mock
+    CaseDetails<AsylumCase> caseDetails;
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    DirectionFinder directionFinder;
+    @Mock
+    Direction direction;
+    @Mock
+    AddressUk address;
     private AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisation appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation;
 
     @BeforeEach
@@ -129,9 +129,8 @@ class AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation.getRecipientsList(asylumCase))
-            ;
-assertEquals("appellantAddress is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("appellantAddress is not present", exception.getMessage());
     }
 
     @Test
@@ -140,19 +139,17 @@ assertEquals("appellantAddress is not present", exception.getMessage());
         when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_ADDRESS_U_K, AddressUk.class)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation.getRecipientsList(asylumCase))
-            ;
-assertEquals("legalRepAddressUK is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("legalRepAddressUK is not present", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation.getPersonalisation((Callback<AsylumCase>) null))
-            ;
-assertEquals("callback must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     @Test
@@ -175,7 +172,7 @@ assertEquals("callback must not be null", exception.getMessage());
             .containsEntry("address_line_5", postCode);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-            assertEquals(expectedDirectionDueDate, personalisation.get("directionDueDate"));
+        assertEquals(expectedDirectionDueDate, personalisation.get("directionDueDate"));
 
     }
 
@@ -185,7 +182,7 @@ assertEquals("callback must not be null", exception.getMessage());
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
 
         Map<String, String> personalisation =
-                appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation.getPersonalisation(callback);
+            appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation.getPersonalisation(callback);
 
         assertThat(personalisation)
             .containsEntry("appellantGivenNames", appellantGivenNames)
@@ -198,7 +195,7 @@ assertEquals("callback must not be null", exception.getMessage());
             .containsEntry("address_line_4", Nationality.ES.toString());
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-            assertEquals(expectedDirectionDueDate, personalisation.get("directionDueDate"));
+        assertEquals(expectedDirectionDueDate, personalisation.get("directionDueDate"));
     }
 
     @Test
@@ -219,7 +216,7 @@ assertEquals("callback must not be null", exception.getMessage());
             .containsEntry("address_line_5", postCode);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-            assertEquals(expectedDirectionDueDate, personalisation.get("directionDueDate"));
+        assertEquals(expectedDirectionDueDate, personalisation.get("directionDueDate"));
 
     }
 
@@ -241,7 +238,7 @@ assertEquals("callback must not be null", exception.getMessage());
             .containsEntry("address_line_5", Nationality.ES.toString());
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-            assertEquals(expectedDirectionDueDate, personalisation.get("directionDueDate"));
+        assertEquals(expectedDirectionDueDate, personalisation.get("directionDueDate"));
     }
 
     private void legalRepOutOfCountryDataSetup() {

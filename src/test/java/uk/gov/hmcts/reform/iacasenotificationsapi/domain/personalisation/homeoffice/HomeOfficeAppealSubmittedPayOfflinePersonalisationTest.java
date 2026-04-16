@@ -28,12 +28,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class HomeOfficeAppealSubmittedPayOfflinePersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-
-
     private final String emailTemplateId = "emailTemplateId";
     private final String iaExUiFrontendUrl = "http://somefrontendurl";
     private final String adaPrefix = "Accelerated detained appeal";
@@ -42,9 +36,12 @@ public class HomeOfficeAppealSubmittedPayOfflinePersonalisationTest {
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String homeOfficeEmail = "apchomeoffice@example.com";
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
     private HomeOfficeAppealSubmittedPayOfflinePersonalisation
-            homeOfficeAppealSubmittedPayOfflinePersonalisation;
+        homeOfficeAppealSubmittedPayOfflinePersonalisation;
 
     @BeforeEach
     public void setUp() {
@@ -56,11 +53,11 @@ public class HomeOfficeAppealSubmittedPayOfflinePersonalisationTest {
 
         homeOfficeAppealSubmittedPayOfflinePersonalisation =
             new HomeOfficeAppealSubmittedPayOfflinePersonalisation(
-                    homeOfficeEmail,
+                homeOfficeEmail,
                 emailTemplateId,
                 iaExUiFrontendUrl,
                 customerServicesProvider
-                );
+            );
     }
 
     @Test
@@ -78,11 +75,11 @@ public class HomeOfficeAppealSubmittedPayOfflinePersonalisationTest {
     public void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_APPEAL_SUBMITTED_PAY_OFFLINE_HOME_OFFICE",
-                homeOfficeAppealSubmittedPayOfflinePersonalisation.getReferenceId(caseId));
+            homeOfficeAppealSubmittedPayOfflinePersonalisation.getReferenceId(caseId));
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         initializePrefixes(homeOfficeAppealSubmittedPayOfflinePersonalisation);

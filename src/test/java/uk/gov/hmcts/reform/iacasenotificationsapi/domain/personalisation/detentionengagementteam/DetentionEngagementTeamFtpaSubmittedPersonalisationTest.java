@@ -41,25 +41,23 @@ import uk.gov.service.notify.NotificationClientException;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class DetentionEngagementTeamFtpaSubmittedPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    private DetentionEmailService detEmailService;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-
-    @Mock
-    DocumentDownloadClient documentDownloadClient;
-
+    final DocumentWithMetadata internalFtpaSubmittedLetter = TestUtils.getDocumentWithMetadata(
+        "id", "internal_ftpa_submission", "some other desc", DocumentTag.INTERNAL_FTPA_SUBMITTED_APPELLANT_LETTER);
+    final IdValue<DocumentWithMetadata> document = new IdValue<>("1", internalFtpaSubmittedLetter);
     private final String templateId = "someTemplateId";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
-    final DocumentWithMetadata internalFtpaSubmittedLetter = TestUtils.getDocumentWithMetadata(
-            "id", "internal_ftpa_submission", "some other desc", DocumentTag.INTERNAL_FTPA_SUBMITTED_APPELLANT_LETTER);
-    final IdValue<DocumentWithMetadata> document = new IdValue<>("1", internalFtpaSubmittedLetter);
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    DocumentDownloadClient documentDownloadClient;
+    @Mock
+    private DetentionEmailService detEmailService;
     private DetentionEngagementTeamFtpaSubmittedPersonalisation detentionEngagementTeamFtpaSubmittedPersonalisation;
 
     DetentionEngagementTeamFtpaSubmittedPersonalisationTest() {
@@ -132,10 +130,9 @@ class DetentionEngagementTeamFtpaSubmittedPersonalisationTest {
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> detentionEngagementTeamFtpaSubmittedPersonalisation.getPersonalisationForLink((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> detentionEngagementTeamFtpaSubmittedPersonalisation.getPersonalisationForLink((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest

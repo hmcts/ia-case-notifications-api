@@ -36,15 +36,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppellantMarkAppealAsRemittedPersonalisationEmailTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-    @Mock
-    RecipientsFinder recipientsFinder;
-
-    private AppellantMarkAppealAsRemittedPersonalisationEmail
-        appellantMarkAppealAsRemittedPersonalisationEmail;
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
@@ -53,10 +44,17 @@ class AppellantMarkAppealAsRemittedPersonalisationEmailTest {
     private final String iaServicesEmail = "services@email.com";
     private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
     private final String appellantEmail = "test@test.com";
-
     private final SourceOfRemittal sourceOfRemittal = SourceOfRemittal.UPPER_TRIBUNAL;
     private final Map<String, String> customerServices = Map.of("customerServicesTelephone", iaServicesPhone,
         "customerServicesEmail", iaServicesEmail);
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    RecipientsFinder recipientsFinder;
+    private AppellantMarkAppealAsRemittedPersonalisationEmail
+        appellantMarkAppealAsRemittedPersonalisationEmail;
 
     @BeforeEach
     public void setUp() {

@@ -30,10 +30,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesO
 
 @ExtendWith(MockitoExtension.class)
 public class UpdateTribunalDecisionRule31PersonalisationUtilTest {
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    ImmutableMap.Builder<String, String> personalizationBuilder;
     private final DynamicList dynamicAllowedDecisionList = new DynamicList(
         new Value("allowed", "Yes, change decision to Allowed"),
         newArrayList()
@@ -42,6 +38,10 @@ public class UpdateTribunalDecisionRule31PersonalisationUtilTest {
         new Value("dismissed", "No"),
         newArrayList()
     );
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    ImmutableMap.Builder<String, String> personalizationBuilder;
     private UpdateTribunalDecisionRule31PersonalisationUtil updateTribunalDecisionRule31PersonalisationUtil;
 
     @BeforeEach

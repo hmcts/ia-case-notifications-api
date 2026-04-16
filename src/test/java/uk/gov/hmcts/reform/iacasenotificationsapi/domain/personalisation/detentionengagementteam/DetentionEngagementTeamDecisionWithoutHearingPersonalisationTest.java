@@ -38,6 +38,18 @@ import uk.gov.service.notify.NotificationClientException;
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class DetentionEngagementTeamDecisionWithoutHearingPersonalisationTest {
+    final String adaFormName = "IAFT-ADA4: Make an application – Accelerated detained appeal (ADA)";
+    final String nonAdaFormName = "IAFT-DE4: Make an application – Detained appeal";
+    final String adaFormLink = "https://www.gov.uk/government/publications/make-an-application-accelerated-detained-appeal-form-iaft-ada4";
+    final String nonAdaFormLink = "https://www.gov.uk/government/publications/make-an-application-detained-appeal-form-iaft-de4";
+    final DocumentWithMetadata decisionWithoutHearingDoc = TestUtils.getDocumentWithMetadata(
+        "id", "internal_detained_decision_without_hearing", "some other desc", DocumentTag.INTERNAL_DETAINED_DECISION_WITHOUT_HEARING);
+    final IdValue<DocumentWithMetadata> decisionWithoutHearingBundle = new IdValue<>("1", decisionWithoutHearingDoc);
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -46,20 +58,7 @@ public class DetentionEngagementTeamDecisionWithoutHearingPersonalisationTest {
     private DetentionEmailService detentionEmailService;
     @Mock
     private PersonalisationProvider personalisationProvider;
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-    final String adaFormName = "IAFT-ADA4: Make an application – Accelerated detained appeal (ADA)";
-    final String nonAdaFormName = "IAFT-DE4: Make an application – Detained appeal";
-    final String adaFormLink = "https://www.gov.uk/government/publications/make-an-application-accelerated-detained-appeal-form-iaft-ada4";
-    final String nonAdaFormLink = "https://www.gov.uk/government/publications/make-an-application-detained-appeal-form-iaft-de4";
     private DetentionEngagementTeamDecisionWithoutHearingPersonalisation detentionEngagementTeamDecisionWithoutHearingPersonalisation;
-
-    private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
-    final DocumentWithMetadata decisionWithoutHearingDoc = TestUtils.getDocumentWithMetadata(
-            "id", "internal_detained_decision_without_hearing", "some other desc", DocumentTag.INTERNAL_DETAINED_DECISION_WITHOUT_HEARING);
-    final IdValue<DocumentWithMetadata> decisionWithoutHearingBundle = new IdValue<>("1", decisionWithoutHearingDoc);
 
     DetentionEngagementTeamDecisionWithoutHearingPersonalisationTest() {
     }
@@ -69,9 +68,9 @@ public class DetentionEngagementTeamDecisionWithoutHearingPersonalisationTest {
         String templateId = "templateId";
         detentionEngagementTeamDecisionWithoutHearingPersonalisation = new DetentionEngagementTeamDecisionWithoutHearingPersonalisation(
             templateId,
-                detentionEmailService,
-                personalisationProvider,
-                documentDownloadClient
+            detentionEmailService,
+            personalisationProvider,
+            documentDownloadClient
         );
 
         ReflectionTestUtils.setField(detentionEngagementTeamDecisionWithoutHearingPersonalisation, "adaSubjectPrefix", "ADA - SERVE IN PERSON");
@@ -91,7 +90,7 @@ public class DetentionEngagementTeamDecisionWithoutHearingPersonalisationTest {
     void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_INTERNAL_DET_DECISION_WITHOUT_HEARING_EMAIL",
-                detentionEngagementTeamDecisionWithoutHearingPersonalisation.getReferenceId(caseId));
+            detentionEngagementTeamDecisionWithoutHearingPersonalisation.getReferenceId(caseId));
     }
 
     @Test
@@ -102,7 +101,7 @@ public class DetentionEngagementTeamDecisionWithoutHearingPersonalisationTest {
         when(detentionEmailService.getDetentionEmailAddress(asylumCase)).thenReturn(detentionEngagementTeamEmail);
 
         assertTrue(
-                detentionEngagementTeamDecisionWithoutHearingPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail)
+            detentionEngagementTeamDecisionWithoutHearingPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail)
         );
     }
 
@@ -114,7 +113,7 @@ public class DetentionEngagementTeamDecisionWithoutHearingPersonalisationTest {
         when(detentionEmailService.getDetentionEmailAddress(asylumCase)).thenReturn(detentionEngagementTeamEmail);
 
         assertTrue(
-                detentionEngagementTeamDecisionWithoutHearingPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail)
+            detentionEngagementTeamDecisionWithoutHearingPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail)
         );
     }
 
@@ -124,9 +123,8 @@ public class DetentionEngagementTeamDecisionWithoutHearingPersonalisationTest {
         when(detentionEmailService.getDetentionEmailAddress(asylumCase)).thenThrow(new IllegalStateException("Detention facility is not present"));
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> detentionEngagementTeamDecisionWithoutHearingPersonalisation.getRecipientsList(asylumCase))
-                ;
-assertEquals("Detention facility is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamDecisionWithoutHearingPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("Detention facility is not present", exception.getMessage());
     }
 
     @Test
@@ -135,18 +133,16 @@ assertEquals("Detention facility is not present", exception.getMessage());
         when(detentionEmailService.getDetentionEmailAddress(asylumCase)).thenThrow(new IllegalStateException("Detention facility is not valid"));
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> detentionEngagementTeamDecisionWithoutHearingPersonalisation.getRecipientsList(asylumCase))
-                ;
-assertEquals("Detention facility is not valid", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamDecisionWithoutHearingPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("Detention facility is not valid", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> detentionEngagementTeamDecisionWithoutHearingPersonalisation.getPersonalisationForLink((AsylumCase) null))
-                ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> detentionEngagementTeamDecisionWithoutHearingPersonalisation.getPersonalisationForLink((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest

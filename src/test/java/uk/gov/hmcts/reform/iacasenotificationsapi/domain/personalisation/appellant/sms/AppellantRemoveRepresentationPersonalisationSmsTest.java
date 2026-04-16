@@ -26,6 +26,15 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppellantRemoveRepresentationPersonalisationSmsTest {
 
+    private final long ccdCaseId = 12345L;
+    private final String mobileNumber = "555 555 555";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
+    private final String smsTemplateId = "someTemplateId";
+    private final String securityCode = "securityCode";
+    private final String linkToPiPStartPage = "iaAipFrontendUrl/iaAipPathToSelfRepresentation";
     @Mock
     Callback<AsylumCase> callback;
     @Mock
@@ -36,17 +45,6 @@ class AppellantRemoveRepresentationPersonalisationSmsTest {
     CustomerServicesProvider customerServicesProvider;
     @Mock
     PinInPostDetails pinInPostDetails;
-
-    private final long ccdCaseId = 12345L;
-    private final String mobileNumber = "555 555 555";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-    private final String customerServicesTelephone = "555 555 555";
-    private final String customerServicesEmail = "cust.services@example.com";
-    private final String smsTemplateId = "someTemplateId";
-    private final String securityCode = "securityCode";
-    private final String linkToPiPStartPage = "iaAipFrontendUrl/iaAipPathToSelfRepresentation";
-
     private AppellantRemoveRepresentationPersonalisationSms appellantRemoveRepresentationPersonalisationSms;
 
     @BeforeEach
@@ -55,7 +53,7 @@ class AppellantRemoveRepresentationPersonalisationSmsTest {
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getId()).thenReturn(ccdCaseId);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
-        when(asylumCase.read(AsylumCaseDefinition.MOBILE_NUMBER, String.class)).thenReturn(Optional.of(String.valueOf(mobileNumber)));
+        when(asylumCase.read(AsylumCaseDefinition.MOBILE_NUMBER, String.class)).thenReturn(Optional.of(mobileNumber));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         String appellantDateOfBirth = "2000-01-01";
@@ -96,20 +94,18 @@ class AppellantRemoveRepresentationPersonalisationSmsTest {
 
         when(asylumCase.read(AsylumCaseDefinition.MOBILE_NUMBER, String.class)).thenReturn(Optional.empty());
 
-        IllegalStateException exception = 
-assertThrows(IllegalStateException.class, () -> appellantRemoveRepresentationPersonalisationSms.getRecipientsList(asylumCase))
-            ;
-assertEquals("appellantMobileNumber is not present", exception.getMessage());
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> appellantRemoveRepresentationPersonalisationSms.getRecipientsList(asylumCase));
+        assertEquals("appellantMobileNumber is not present", exception.getMessage());
 
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        NullPointerException exception = 
-assertThrows(NullPointerException.class, () -> appellantRemoveRepresentationPersonalisationSms.getPersonalisation((Callback<AsylumCase>) null))
-            ;
-assertEquals("callback must not be null", exception.getMessage());
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> appellantRemoveRepresentationPersonalisationSms.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     @Test

@@ -37,28 +37,26 @@ import uk.gov.service.notify.NotificationClientException;
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class DetentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    private DocumentDownloadClient documentDownloadClient;
-    @Mock
-    private DetEmailService detEmailService;
-    @Mock
-    private PersonalisationProvider personalisationProvider;
-    @Mock
-    JSONObject jsonDocument;
+    final DocumentWithMetadata doc = TestUtils.getDocumentWithMetadata(
+        "id", "internal-detained-ho-ftpa-decided-letter", "some other desc", DocumentTag.INTERNAL_HO_FTPA_DECIDED_LETTER);
+    final IdValue<DocumentWithMetadata> bundle = new IdValue<>("1", doc);
     private final String grantedTemplateId = "someGrantedTemplateId";
     private final String refusedTemplateId = "someRefusedTemplateId";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    JSONObject jsonDocument;
+    @Mock
+    private DocumentDownloadClient documentDownloadClient;
+    @Mock
+    private DetEmailService detEmailService;
+    @Mock
+    private PersonalisationProvider personalisationProvider;
     private DetentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisation detentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisation;
-
-    final DocumentWithMetadata doc = TestUtils.getDocumentWithMetadata(
-        "id", "internal-detained-ho-ftpa-decided-letter", "some other desc", DocumentTag.INTERNAL_HO_FTPA_DECIDED_LETTER);
-    final IdValue<DocumentWithMetadata> bundle = new IdValue<>("1", doc);
 
     DetentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisationTest() {
     }
@@ -132,27 +130,24 @@ public class DetentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisat
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> detentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisation.getPersonalisationForLink((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> detentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisation.getPersonalisationForLink((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_when_appeal_submission_is_empty() {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> detentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisation.getPersonalisationForLink(asylumCase))
-            ;
-assertEquals("internalHoFtpaDecidedLetter document not available", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("internalHoFtpaDecidedLetter document not available", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_when_notification_client_throws_Exception() throws NotificationClientException, IOException {
         when(documentDownloadClient.getJsonObjectFromDocument(doc)).thenThrow(new NotificationClientException("File size is more than 2MB"));
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> detentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisation.getPersonalisationForLink(asylumCase))
-            ;
-assertEquals("Failed to get HO Ftpa decision Letter in compatible format", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamRespondentFtpaApplicationDecidedPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("Failed to get HO Ftpa decision Letter in compatible format", exception.getMessage());
     }
 
     @ParameterizedTest

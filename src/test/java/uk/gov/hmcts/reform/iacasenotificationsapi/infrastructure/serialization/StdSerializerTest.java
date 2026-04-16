@@ -52,7 +52,7 @@ public class StdSerializerTest {
             .writeValueAsString(source);
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-() -> stdSerializer.serialize(source));
+            () -> stdSerializer.serialize(source));
         assertEquals("Could not serialize data", exception.getMessage());
     }
 }

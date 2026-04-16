@@ -26,13 +26,13 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesO
 @ExtendWith(MockitoExtension.class)
 class AdminOfficerEditPaymentMethodPersonalisationTest {
 
-    @Mock private AsylumCase asylumCase;
-    @Mock private AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
-
     private final String templateEaHuId = "eaHuTemplateId";
     private final String templatePaId = "paTemplateId";
     private final String adminOfficerEmailAddress = "adminOfficer@example.com";
-
+    @Mock
+    private AsylumCase asylumCase;
+    @Mock
+    private AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
     private AdminOfficerEditPaymentMethodPersonalisation adminOfficerEditPaymentMethodPersonalisation;
 
     @BeforeEach
@@ -76,15 +76,14 @@ class AdminOfficerEditPaymentMethodPersonalisationTest {
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        NullPointerException exception = 
-assertThrows(NullPointerException.class, 
-            () -> adminOfficerEditPaymentMethodPersonalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> adminOfficerEditPaymentMethodPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));

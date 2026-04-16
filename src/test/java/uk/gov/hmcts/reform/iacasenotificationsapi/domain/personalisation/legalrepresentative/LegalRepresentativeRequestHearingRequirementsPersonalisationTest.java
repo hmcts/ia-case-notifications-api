@@ -34,6 +34,13 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class LegalRepresentativeRequestHearingRequirementsPersonalisationTest {
 
+    private final String templateId = "someTemplateId";
+    private final String legalRepEmailAddress = "legalrep@example.com";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String legalRepRefNumber = "somelegalRepRefNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String iaExUiFrontendUrl = "http://localhost";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -42,15 +49,6 @@ public class LegalRepresentativeRequestHearingRequirementsPersonalisationTest {
     Direction direction;
     @Mock
     CustomerServicesProvider customerServicesProvider;
-
-    private final String templateId = "someTemplateId";
-    private final String legalRepEmailAddress = "legalrep@example.com";
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String legalRepRefNumber = "somelegalRepRefNumber";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-    private final String iaExUiFrontendUrl = "http://localhost";
-
     private LegalRepresentativeRequestHearingRequirementsPersonalisation
         legalRepresentativeRequestHearingRequirementsPersonalisation;
 

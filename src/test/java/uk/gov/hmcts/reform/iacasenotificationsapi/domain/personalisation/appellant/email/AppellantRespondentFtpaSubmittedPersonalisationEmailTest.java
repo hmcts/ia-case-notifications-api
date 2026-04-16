@@ -35,15 +35,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @ExtendWith(MockitoExtension.class)
 public class AppellantRespondentFtpaSubmittedPersonalisationEmailTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    RecipientsFinder recipientsFinder;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-
     private final String emailTemplateId = "someEmailTemplateId";
-
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "someHOReferenceNumber";
     private final String appellantGivenNames = "someAppellantGivenNames";
@@ -51,8 +43,12 @@ public class AppellantRespondentFtpaSubmittedPersonalisationEmailTest {
     private final String ariaListingReference = "someAriaListingReference";
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "cust.services@example.com";
-
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    RecipientsFinder recipientsFinder;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
     private AppellantRespondentFtpaSubmittedPersonalisationEmail appellantRespondentFtpaSubmittedPersonalisationEmail;
 
     @BeforeEach
@@ -65,8 +61,8 @@ public class AppellantRespondentFtpaSubmittedPersonalisationEmailTest {
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(ariaListingReference));
         when(customerServicesProvider.getCustomerServicesPersonalisation()).thenReturn(
             Map.of(
-            "customerServicesTelephone", customerServicesTelephone,
-            "customerServicesEmail", customerServicesEmail
+                "customerServicesTelephone", customerServicesTelephone,
+                "customerServicesEmail", customerServicesEmail
             ));
 
         appellantRespondentFtpaSubmittedPersonalisationEmail = new AppellantRespondentFtpaSubmittedPersonalisationEmail(
@@ -114,9 +110,8 @@ public class AppellantRespondentFtpaSubmittedPersonalisationEmailTest {
         when(recipientsFinder.findAll(null, NotificationType.EMAIL)).thenCallRealMethod();
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> appellantRespondentFtpaSubmittedPersonalisationEmail.getRecipientsList(null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> appellantRespondentFtpaSubmittedPersonalisationEmail.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
 

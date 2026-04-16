@@ -43,6 +43,16 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 public class AppellantEditListingPersonalisationEmailTest {
 
     private static final String HEARING_CENTRE_ADDRESS = "hearingCentreAddress";
+    private final String templateId = "someTemplateId";
+    private final String listAssistHearingTemplateId = "listAssistHearingTemplateId";
+    private final String lrAppellantTemplateId = "lrAppellantTemplateId";
+    private final String lrAppellantListAssistHearingTemplateId = "lrAppellantListAssistHearingTemplateId";
+    private final String iaExUiFrontendUrl = "http://localhost";
+    private final String mockedAppellantEmailAddress = "legalRep@example.com";
+    private final String hearingCentreNameBefore = HearingCentre.MANCHESTER.toString();
+    private final String hearingCentreName = HearingCentre.TAYLOR_HOUSE.toString();
+    private final String iaAipFrontendUrl = "http://localhost";
+    private final HearingCentre tribunalCentre = HearingCentre.HATTON_CROSS;
     @Mock
     Callback<AsylumCase> callback;
     @Mock
@@ -55,22 +65,8 @@ public class AppellantEditListingPersonalisationEmailTest {
     CustomerServicesProvider customerServicesProvider;
     @Mock
     RecipientsFinder recipientsFinder;
-
     @Mock
     HearingDetailsFinder hearingDetailsFinder;
-
-    private final String templateId = "someTemplateId";
-    private final String listAssistHearingTemplateId = "listAssistHearingTemplateId";
-    private final String lrAppellantTemplateId = "lrAppellantTemplateId";
-    private final String lrAppellantListAssistHearingTemplateId = "lrAppellantListAssistHearingTemplateId";
-    private final String iaExUiFrontendUrl = "http://localhost";
-    private final String mockedAppellantEmailAddress = "legalRep@example.com";
-
-    private final String hearingCentreNameBefore = HearingCentre.MANCHESTER.toString();
-    private final String hearingCentreName = HearingCentre.TAYLOR_HOUSE.toString();
-
-    private final String iaAipFrontendUrl = "http://localhost";
-    private final HearingCentre tribunalCentre = HearingCentre.HATTON_CROSS;
     private AppellantEditListingPersonalisationEmail appellantEditListingPersonalisationEmail;
 
     @BeforeEach
@@ -139,10 +135,9 @@ public class AppellantEditListingPersonalisationEmailTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> appellantEditListingPersonalisationEmail.getPersonalisation((Callback<AsylumCase>) null))
-            ;
-assertEquals("callback must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> appellantEditListingPersonalisationEmail.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     @Test
@@ -151,10 +146,9 @@ assertEquals("callback must not be null", exception.getMessage());
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
         when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.empty());
         IllegalArgumentException exception =
-assertThrows(IllegalArgumentException.class,
-            () -> appellantEditListingPersonalisationEmail.getPersonalisation(callback))
-            ;
-assertEquals("No hearing centre present", exception.getMessage());
+            assertThrows(IllegalArgumentException.class,
+                () -> appellantEditListingPersonalisationEmail.getPersonalisation(callback));
+        assertEquals("No hearing centre present", exception.getMessage());
     }
 
     @ParameterizedTest

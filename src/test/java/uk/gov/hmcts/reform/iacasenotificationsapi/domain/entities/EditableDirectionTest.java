@@ -28,13 +28,13 @@ public class EditableDirectionTest {
     @Test
     public void should_not_allow_null_arguments() {
 
-        assertThrows(NullPointerException.class, 
-() -> new EditableDirection(null, parties, dateDue));
+        assertThrows(NullPointerException.class,
+            () -> new EditableDirection(null, parties, dateDue));
 
-        assertThrows(NullPointerException.class, 
-() -> new EditableDirection(explanation, null, dateDue));
+        assertThrows(NullPointerException.class,
+            () -> new EditableDirection(explanation, null, dateDue));
 
-        assertThrows(NullPointerException.class, 
-() -> new EditableDirection(explanation, parties, null));
+        assertThrows(NullPointerException.class,
+            () -> new EditableDirection(explanation, parties, null));
     }
 }

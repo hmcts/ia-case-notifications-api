@@ -41,29 +41,25 @@ import uk.gov.service.notify.NotificationClientException;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class DetentionEngagementTeamIrcPrisonFtpaDisposedRules31or32PersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    DetentionEmailService detentionEmailService;
-    @Mock
-    DocumentDownloadClient documentDownloadClient;
-
+    final DocumentWithMetadata appealCanProceedLetter = getDocumentWithMetadata(
+        "1",
+        "internal-detained-irc-prison-ftpa-disposed-rules-31-or-32-letter",
+        "Internal detained IRC prison FTPA disposed rules 31 or 32 letter",
+        DocumentTag.INTERNAL_DETAINED_IRC_PRISON_FTPA_DISPOSED_RULES_31_OR_32_LETTER);
+    final IdValue<DocumentWithMetadata> appealCanProceedLetterId = new IdValue<>("1", appealCanProceedLetter);
     private final String templateId = "someTemplateId";
     private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-
-    final DocumentWithMetadata appealCanProceedLetter = getDocumentWithMetadata(
-            "1",
-            "internal-detained-irc-prison-ftpa-disposed-rules-31-or-32-letter",
-            "Internal detained IRC prison FTPA disposed rules 31 or 32 letter",
-            DocumentTag.INTERNAL_DETAINED_IRC_PRISON_FTPA_DISPOSED_RULES_31_OR_32_LETTER);
-
-    final IdValue<DocumentWithMetadata> appealCanProceedLetterId = new IdValue<>("1", appealCanProceedLetter);
     private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    DetentionEmailService detentionEmailService;
+    @Mock
+    DocumentDownloadClient documentDownloadClient;
     private DetentionEngagementTeamIrcPrisonFtpaDisposedRules31or32Personalisation detentionEngagementTeamIrcPrisonFtpaDisposedRules31or32Personalisation;
 
     DetentionEngagementTeamIrcPrisonFtpaDisposedRules31or32PersonalisationTest() {
@@ -72,10 +68,10 @@ class DetentionEngagementTeamIrcPrisonFtpaDisposedRules31or32PersonalisationTest
     @BeforeEach
     void setup() throws NotificationClientException, IOException {
         detentionEngagementTeamIrcPrisonFtpaDisposedRules31or32Personalisation = new DetentionEngagementTeamIrcPrisonFtpaDisposedRules31or32Personalisation(
-                templateId,
-                nonAdaPrefix,
-                detentionEmailService,
-                documentDownloadClient
+            templateId,
+            nonAdaPrefix,
+            detentionEmailService,
+            documentDownloadClient
         );
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
@@ -163,35 +159,31 @@ class DetentionEngagementTeamIrcPrisonFtpaDisposedRules31or32PersonalisationTest
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> detentionEngagementTeamIrcPrisonFtpaDisposedRules31or32Personalisation.getPersonalisationForLink((AsylumCase) null))
-                ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> detentionEngagementTeamIrcPrisonFtpaDisposedRules31or32Personalisation.getPersonalisationForLink((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_appeal_can_proceed_document_is_empty() {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> detentionEngagementTeamIrcPrisonFtpaDisposedRules31or32Personalisation.getPersonalisationForLink(asylumCase))
-                ;
-assertEquals("internalDetainedIrcPrisonFtpaDisposedRules31Or32Letter document not available", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamIrcPrisonFtpaDisposedRules31or32Personalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("internalDetainedIrcPrisonFtpaDisposedRules31Or32Letter document not available", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_notification_client_throws_Exception() throws NotificationClientException, IOException {
         when(documentDownloadClient.getJsonObjectFromDocument(appealCanProceedLetter)).thenThrow(new NotificationClientException("File size is more than 2MB"));
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> detentionEngagementTeamIrcPrisonFtpaDisposedRules31or32Personalisation.getPersonalisationForLink(asylumCase))
-                ;
-assertEquals("Failed to get Internal 'Appeal can proceed' Letter in compatible format", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamIrcPrisonFtpaDisposedRules31or32Personalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("Failed to get Internal 'Appeal can proceed' Letter in compatible format", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_io_exception_occurs() throws NotificationClientException, IOException {
         when(documentDownloadClient.getJsonObjectFromDocument(appealCanProceedLetter)).thenThrow(new IOException("IO Exception occurred"));
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> detentionEngagementTeamIrcPrisonFtpaDisposedRules31or32Personalisation.getPersonalisationForLink(asylumCase))
-                ;
-assertEquals("Failed to get Internal 'Appeal can proceed' Letter in compatible format", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamIrcPrisonFtpaDisposedRules31or32Personalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("Failed to get Internal 'Appeal can proceed' Letter in compatible format", exception.getMessage());
     }
 }

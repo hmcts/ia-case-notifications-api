@@ -32,6 +32,9 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class LegalRepresentativeFtpaSubmittedPersonalisationTest {
 
+    private final String templateId = "ftpaSumbittedTemplateId";
+    private final String iaExUiFrontendUrl = "http://localhost";
+    private final String legalRepEmailAddress = "legalrep@example.com";
     @Mock
     PersonalisationProvider personalisationProvider;
     @Mock
@@ -42,11 +45,6 @@ public class LegalRepresentativeFtpaSubmittedPersonalisationTest {
     AsylumCase asylumCase;
     @Mock
     CustomerServicesProvider customerServicesProvider;
-
-    private final String templateId = "ftpaSumbittedTemplateId";
-    private final String iaExUiFrontendUrl = "http://localhost";
-    private final String legalRepEmailAddress = "legalrep@example.com";
-
     private LegalRepresentativeFtpaSubmittedPersonalisation legalRepresentativeFtpaSubmittedPersonalisation;
 
     @BeforeEach

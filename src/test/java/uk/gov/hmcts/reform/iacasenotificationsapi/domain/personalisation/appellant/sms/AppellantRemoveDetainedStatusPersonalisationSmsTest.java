@@ -20,17 +20,15 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantRemoveDetainedStatusPersonalisationSmsTest {
 
+    private final String smsTemplateId = "someSmsTemplateId";
     @Mock
     AsylumCase asylumCase;
-
-    private final String smsTemplateId = "someSmsTemplateId";
-
     private AppellantRemoveDetainedStatusPersonalisationSms appellantRemoveDetainedStatusPersonalisationSms;
 
     @BeforeEach
     public void setup() {
         appellantRemoveDetainedStatusPersonalisationSms = new AppellantRemoveDetainedStatusPersonalisationSms(
-                smsTemplateId
+            smsTemplateId
         );
     }
 
@@ -38,14 +36,14 @@ public class AppellantRemoveDetainedStatusPersonalisationSmsTest {
     @Test
     public void should_return_template_id() {
         assertEquals(smsTemplateId,
-                appellantRemoveDetainedStatusPersonalisationSms.getTemplateId());
+            appellantRemoveDetainedStatusPersonalisationSms.getTemplateId());
     }
 
     @Test
     public void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_REMOVE_DETENTION_STATUS_APPELLANT_SMS",
-                appellantRemoveDetainedStatusPersonalisationSms.getReferenceId(caseId));
+            appellantRemoveDetainedStatusPersonalisationSms.getReferenceId(caseId));
     }
 
     @Test
@@ -53,14 +51,14 @@ public class AppellantRemoveDetainedStatusPersonalisationSmsTest {
         List<String> mockedContactPreferences = new ArrayList<>(List.of("wantsSms"));
 
         when(asylumCase.read(CONTACT_PREFERENCE_UN_REP))
-                .thenReturn(Optional.of(mockedContactPreferences));
+            .thenReturn(Optional.of(mockedContactPreferences));
 
         String mockedAppellantMobilePhone = "07123456789";
         when(asylumCase.read(MOBILE_NUMBER, String.class))
-                .thenReturn(Optional.of(mockedAppellantMobilePhone));
+            .thenReturn(Optional.of(mockedAppellantMobilePhone));
 
         assertTrue(appellantRemoveDetainedStatusPersonalisationSms.getRecipientsList(asylumCase)
-                .contains(mockedAppellantMobilePhone));
+            .contains(mockedAppellantMobilePhone));
     }
 
     @Test
@@ -68,10 +66,10 @@ public class AppellantRemoveDetainedStatusPersonalisationSmsTest {
         List<String> mockedContactPreferences = new ArrayList<>(List.of());
 
         when(asylumCase.read(CONTACT_PREFERENCE_UN_REP))
-                .thenReturn(Optional.ofNullable(mockedContactPreferences));
+            .thenReturn(Optional.ofNullable(mockedContactPreferences));
 
         assertTrue(appellantRemoveDetainedStatusPersonalisationSms.getRecipientsList(asylumCase)
-                .isEmpty());
+            .isEmpty());
         verify(asylumCase, times(0)).read(EMAIL);
 
     }
@@ -80,18 +78,18 @@ public class AppellantRemoveDetainedStatusPersonalisationSmsTest {
     public void should_return_personalisation_when_all_information_given() {
         String mockedAppealReferenceNumber = "someReferenceNumber";
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class))
-                .thenReturn(Optional.of(mockedAppealReferenceNumber));
+            .thenReturn(Optional.of(mockedAppealReferenceNumber));
         Map<String, String> personalisation =
-                appellantRemoveDetainedStatusPersonalisationSms.getPersonalisation(asylumCase);
+            appellantRemoveDetainedStatusPersonalisationSms.getPersonalisation(asylumCase);
 
-            assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
     }
 
     @Test
     public void should_return_personalisation_when_appeal_ref_missing() {
         Map<String, String> personalisation =
-                appellantRemoveDetainedStatusPersonalisationSms.getPersonalisation(asylumCase);
+            appellantRemoveDetainedStatusPersonalisationSms.getPersonalisation(asylumCase);
 
-            assertEquals("", personalisation.get("appealReferenceNumber"));
+        assertEquals("", personalisation.get("appealReferenceNumber"));
     }
 }

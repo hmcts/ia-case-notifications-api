@@ -37,6 +37,15 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AipAppellantNocRequestDecisionPersonalisationEmailTest {
 
+    private final String emailTemplateId = "someEmailTemplateId";
+    private final long mockedAppealReferenceNumber = 1236;
+    private final String mockedAppellantGivenNames = "someAppellantGivenNames";
+    private final String mockedAppellantFamilyName = "someAppellantFamilyName";
+    private final String mockedAppellantEmailAddress = "appelant@example.net";
+    private final String dateOfBirth = "2020-03-01";
+    private final String expectedDateOfBirth = "1 Mar 2020";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "customer.services@example.com";
     @Mock
     Callback<AsylumCase> callback;
     @Mock
@@ -47,19 +56,6 @@ class AipAppellantNocRequestDecisionPersonalisationEmailTest {
     private CaseDetails<AsylumCase> caseDetails;
     @Mock
     private RecipientsFinder recipientsFinder;
-
-    private final String emailTemplateId = "someEmailTemplateId";
-
-
-    private final long mockedAppealReferenceNumber = 1236;
-    private final String mockedAppellantGivenNames = "someAppellantGivenNames";
-    private final String mockedAppellantFamilyName = "someAppellantFamilyName";
-    private final String mockedAppellantEmailAddress = "appelant@example.net";
-    private final String dateOfBirth = "2020-03-01";
-    private final String expectedDateOfBirth = "1 Mar 2020";
-    private final String customerServicesTelephone = "555 555 555";
-    private final String customerServicesEmail = "customer.services@example.com";
-
     private AipAppellantNocRequestDecisionPersonalisationEmail appellantNocRequestDecisionPersonalisationEmail;
 
     @BeforeEach
@@ -111,24 +107,22 @@ class AipAppellantNocRequestDecisionPersonalisationEmailTest {
         when(recipientsFinder.findAll(null, NotificationType.EMAIL))
             .thenThrow(new NullPointerException("asylumCase must not be null"));
 
-        NullPointerException exception = 
-assertThrows(NullPointerException.class, () -> appellantNocRequestDecisionPersonalisationEmail.getRecipientsList(null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> appellantNocRequestDecisionPersonalisationEmail.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_date_of_birth_is_null() {
         when(asylumCase.read(APPELLANT_DATE_OF_BIRTH, String.class)).thenReturn(Optional.empty());
 
-        IllegalStateException exception = 
-assertThrows(IllegalStateException.class, () -> appellantNocRequestDecisionPersonalisationEmail.getPersonalisation(callback))
-            ;
-assertEquals("Appellant's birth of date is not present", exception.getMessage());
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> appellantNocRequestDecisionPersonalisationEmail.getPersonalisation(callback));
+        assertEquals("Appellant's birth of date is not present", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         when(caseDetails.getId()).thenReturn(mockedAppealReferenceNumber);
@@ -152,7 +146,6 @@ assertEquals("Appellant's birth of date is not present", exception.getMessage())
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_DATE_OF_BIRTH, String.class)).thenReturn(Optional.of(dateOfBirth));
-
 
 
         Map<String, String> personalisation = appellantNocRequestDecisionPersonalisationEmail.getPersonalisation(callback);

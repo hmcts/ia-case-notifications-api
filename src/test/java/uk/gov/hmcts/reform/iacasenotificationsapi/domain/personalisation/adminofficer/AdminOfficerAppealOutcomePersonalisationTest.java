@@ -25,25 +25,17 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AdminOfficerAppealOutcomePersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-
-    @Mock
-    private EmailAddressFinder emailAddressFinder;
-
-
-    AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
-
-    AdminOfficerAppealOutcomePersonalisation adminOfficerAppealOutcomePersonalisation;
-
-
     private final String decisionAndReasonUploadedTemplateId = "someTemplateId";
-
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String ariaListingReference = "someAriaListingReference";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-
+    @Mock
+    AsylumCase asylumCase;
+    AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
+    AdminOfficerAppealOutcomePersonalisation adminOfficerAppealOutcomePersonalisation;
+    @Mock
+    private EmailAddressFinder emailAddressFinder;
 
     @BeforeEach
     public void setup() {

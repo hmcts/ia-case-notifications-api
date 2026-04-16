@@ -24,24 +24,22 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 class AppellantRecordOutOfTimeDecisionCanProceedPersonalisationSmsTest {
 
 
+    private final String iaAipFrontendUrl = "http://localhost";
     @Mock
     AsylumCase asylumCase;
     @Mock
     RecipientsFinder recipientsFinder;
-
-    private final String iaAipFrontendUrl = "http://localhost";
-
     private AppellantRecordOutOfTimeDecisionCanProceedPersonalisationSms
-            recordOutOfTimeDecisionCanProceedPersonalisationSms;
+        recordOutOfTimeDecisionCanProceedPersonalisationSms;
 
     @BeforeEach
     void setUp() {
 
         String recordOutOfDecisionCanProceedTemplateId = "recordOutOfDecisionCanProceedTemplateId";
         recordOutOfTimeDecisionCanProceedPersonalisationSms =
-                new AppellantRecordOutOfTimeDecisionCanProceedPersonalisationSms(
-                    recordOutOfDecisionCanProceedTemplateId,
-                        iaAipFrontendUrl, recipientsFinder);
+            new AppellantRecordOutOfTimeDecisionCanProceedPersonalisationSms(
+                recordOutOfDecisionCanProceedTemplateId,
+                iaAipFrontendUrl, recipientsFinder);
 
     }
 
@@ -52,7 +50,7 @@ class AppellantRecordOutOfTimeDecisionCanProceedPersonalisationSmsTest {
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
 
         Map<String, String> personalisation =
-                recordOutOfTimeDecisionCanProceedPersonalisationSms.getPersonalisation(asylumCase);
+            recordOutOfTimeDecisionCanProceedPersonalisationSms.getPersonalisation(asylumCase);
 
         assertThat(personalisation)
             .containsEntry("Appeal Ref Number", appealReferenceNumber)
@@ -64,26 +62,25 @@ class AppellantRecordOutOfTimeDecisionCanProceedPersonalisationSmsTest {
     void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_RECORD_OUT_OF_TIME_DECISION_CAN_PROCEED_AIP_SMS",
-                recordOutOfTimeDecisionCanProceedPersonalisationSms.getReferenceId(caseId));
+            recordOutOfTimeDecisionCanProceedPersonalisationSms.getReferenceId(caseId));
     }
 
     @Test
     void should_return_given_email_address_from_asylum_case() {
         String mockedAppellantMobileNumber = "1234445556";
         when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
-                .thenReturn(Collections.singleton(mockedAppellantMobileNumber));
+            .thenReturn(Collections.singleton(mockedAppellantMobileNumber));
 
         assertTrue(recordOutOfTimeDecisionCanProceedPersonalisationSms.getRecipientsList(asylumCase)
-                .contains(mockedAppellantMobileNumber));
+            .contains(mockedAppellantMobileNumber));
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-                () -> recordOutOfTimeDecisionCanProceedPersonalisationSms.getPersonalisation((AsylumCase) null))
-                ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> recordOutOfTimeDecisionCanProceedPersonalisationSms.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 }

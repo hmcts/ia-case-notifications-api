@@ -24,16 +24,16 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvi
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppellantSendPaymentReminderPersonalisationSmsTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    SystemDateProvider systemDateProvider;
-    private AppellantSendPaymentReminderPersonalisationSms appellantSendPaymentReminderPersonalisationSms;
     private final int daysAfterNotification = 7;
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String templateId = "templateId";
     private final String appellantMobileNumber = "07781122334";
     private final String ccdReferenceNumber = "1111 2222 3333 4444";
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    SystemDateProvider systemDateProvider;
+    private AppellantSendPaymentReminderPersonalisationSms appellantSendPaymentReminderPersonalisationSms;
 
     @BeforeEach
     public void setUp() {

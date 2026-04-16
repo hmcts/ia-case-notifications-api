@@ -30,13 +30,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantFtpaSubmittedPersonalisationEmailTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    RecipientsFinder recipientsFinder;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-
     private final String aipFtpaSubmittedTemplateId = "aipFtpaSubmittedTemplateId";
     private final String iaAipFrontendUrl = "http://localhost/";
     private final String mockedAppealReferenceNumber = "someReferenceNumber";
@@ -48,7 +41,12 @@ public class AppellantFtpaSubmittedPersonalisationEmailTest {
     private final String iaServicesEmail = "services@email.com";
     private final Map<String, String> customerServices = Map.of("customerServicesTelephone", iaServicesPhone,
         "customerServicesEmail", iaServicesEmail);
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    RecipientsFinder recipientsFinder;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
     private AppellantFtpaSubmittedPersonalisationEmail appellantFtpaSubmittedPersonalisationEmail;
 
     @BeforeEach
@@ -101,9 +99,8 @@ public class AppellantFtpaSubmittedPersonalisationEmailTest {
             .thenThrow(new NullPointerException("asylumCase must not be null"));
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> appellantFtpaSubmittedPersonalisationEmail.getRecipientsList(null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> appellantFtpaSubmittedPersonalisationEmail.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test

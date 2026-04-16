@@ -33,24 +33,21 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class HomeOfficeUploadAddendumEvidencePersonalisationTest {
 
+    private final String templateId = "someTemplateId";
+    private final String iaExUiFrontendUrl = "http://localhost";
+    private final String homeOfficeEmailAddress = "homeOffice@example.com";
     @Mock
     Callback<AsylumCase> callback;
     @Mock
     CaseDetails<AsylumCase> caseDetails;
     @Mock
     AsylumCase asylumCase;
-
     @Mock
     EmailAddressFinder emailAddressFinder;
     @Mock
     PersonalisationProvider personalisationProvider;
     @Mock
     CustomerServicesProvider customerServicesProvider;
-
-    private final String templateId = "someTemplateId";
-    private final String iaExUiFrontendUrl = "http://localhost";
-    private final String homeOfficeEmailAddress = "homeOffice@example.com";
-
     private HomeOfficeUploadAddendumEvidencePersonalisation homeOfficeUploadAddendumEvidencePersonalisation;
 
     @BeforeEach

@@ -24,12 +24,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @MockitoSettings(strictness = Strictness.LENIENT)
 class LegalRepresentativeNotificationsTurnedOnPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    Callback<AsylumCase> callback;
-    @Mock
-    PersonalisationProvider personalisationProvider;
     private final String beforeListingTemplateId = "beforeListingTemplateId";
     private final String afterListingTemplateId = "afterListingTemplateId";
     private final String iaExUiFrontendUrl = "http://localhost";
@@ -41,7 +35,12 @@ class LegalRepresentativeNotificationsTurnedOnPersonalisationTest {
     private final String dateOfBirth = "1 Mar 2020";
     private final String legalRepEmailEjp = "legalRep@example.com";
     private final String ccdReferenceNumberForDisplay = "someRefNumber";
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    Callback<AsylumCase> callback;
+    @Mock
+    PersonalisationProvider personalisationProvider;
     private LegalRepresentativeNotificationsTurnedOnPersonalisation legalRepresentativeNotificationsTurnedOnPersonalisation;
 
     @BeforeEach
@@ -99,15 +98,13 @@ class LegalRepresentativeNotificationsTurnedOnPersonalisationTest {
     }
 
 
-
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> legalRepresentativeNotificationsTurnedOnPersonalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> legalRepresentativeNotificationsTurnedOnPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test

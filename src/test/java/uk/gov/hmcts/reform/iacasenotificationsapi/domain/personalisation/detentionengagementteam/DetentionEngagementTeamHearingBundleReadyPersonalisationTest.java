@@ -36,13 +36,9 @@ import uk.gov.service.notify.NotificationClientException;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class DetentionEngagementTeamHearingBundleReadyPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    private DocumentDownloadClient documentDownloadClient;
-    @Mock
-    private DetEmailService detEmailService;
-
+    final DocumentWithMetadata hearingBundleDoc = TestUtils.getDocumentWithMetadata(
+        "id", "hearing_bundle", "some other desc", DocumentTag.HEARING_BUNDLE_READY_LETTER);
+    final IdValue<DocumentWithMetadata> hearingBundle = new IdValue<>("1", hearingBundleDoc);
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
     private final String appellantGivenNames = "someAppellantGivenNames";
@@ -50,11 +46,13 @@ class DetentionEngagementTeamHearingBundleReadyPersonalisationTest {
     private final String detentionEngagementTeamEmail = "det@email.com";
     private final String adaPrefix = "ADA - SERVE IN PERSON";
     private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
-
     private final JSONObject jsonObject = new JSONObject("{\"title\": \"Hearing bundle JsonDocument\"}");
-    final DocumentWithMetadata hearingBundleDoc = TestUtils.getDocumentWithMetadata(
-            "id", "hearing_bundle", "some other desc", DocumentTag.HEARING_BUNDLE_READY_LETTER);
-    final IdValue<DocumentWithMetadata> hearingBundle = new IdValue<>("1", hearingBundleDoc);
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    private DocumentDownloadClient documentDownloadClient;
+    @Mock
+    private DetEmailService detEmailService;
     private DetentionEngagementTeamHearingBundleReadyPersonalisation detentionEngagementTeamHearingBundleReadyPersonalisation;
 
     DetentionEngagementTeamHearingBundleReadyPersonalisationTest() {
@@ -65,10 +63,10 @@ class DetentionEngagementTeamHearingBundleReadyPersonalisationTest {
         String detHearingBundleReadyTemplateId = "detHearingBundleReadyTemplateId";
         detentionEngagementTeamHearingBundleReadyPersonalisation = new DetentionEngagementTeamHearingBundleReadyPersonalisation(
             detHearingBundleReadyTemplateId,
-                adaPrefix,
-                nonAdaPrefix,
-                detEmailService,
-                documentDownloadClient
+            adaPrefix,
+            nonAdaPrefix,
+            detEmailService,
+            documentDownloadClient
         );
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
@@ -135,34 +133,31 @@ class DetentionEngagementTeamHearingBundleReadyPersonalisationTest {
 
         Map<String, Object> personalisation = detentionEngagementTeamHearingBundleReadyPersonalisation.getPersonalisationForLink(asylumCase);
 
-            assertEquals(nonAdaPrefix, personalisation.get("subjectPrefix"));
+        assertEquals(nonAdaPrefix, personalisation.get("subjectPrefix"));
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> detentionEngagementTeamHearingBundleReadyPersonalisation.getPersonalisationForLink((AsylumCase) null))
-                ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> detentionEngagementTeamHearingBundleReadyPersonalisation.getPersonalisationForLink((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_hearing_bundle_is_empty() {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
         RequiredFieldMissingException exception =
-assertThrows(RequiredFieldMissingException.class, () -> detentionEngagementTeamHearingBundleReadyPersonalisation.getPersonalisationForLink(asylumCase))
-                ;
-assertEquals("Hearing Bundle ready letter is not available", exception.getMessage());
+            assertThrows(RequiredFieldMissingException.class, () -> detentionEngagementTeamHearingBundleReadyPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("Hearing Bundle ready letter is not available", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_notification_client_throws_Exception() throws NotificationClientException, IOException {
         when(documentDownloadClient.getJsonObjectFromDocument(hearingBundleDoc)).thenThrow(new NotificationClientException("File size is more than 2MB"));
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> detentionEngagementTeamHearingBundleReadyPersonalisation.getPersonalisationForLink(asylumCase))
-                ;
-assertEquals("Failed to get Hearing bundle ready letter in compatible format", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamHearingBundleReadyPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("Failed to get Hearing bundle ready letter in compatible format", exception.getMessage());
     }
 
 }

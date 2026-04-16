@@ -34,6 +34,11 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantRequestRespondentEvidencePersonalisationSmsTest {
 
+    private final String emailTemplateId = "someEmailTemplateId";
+    private final String iaAipFrontendUrl = "http://localhost";
+    private final String expectedDirectionDueDate = "27 Aug 2019";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
+    private final String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -42,15 +47,6 @@ public class AppellantRequestRespondentEvidencePersonalisationSmsTest {
     RecipientsFinder recipientsFinder;
     @Mock
     Direction direction;
-
-    private final String emailTemplateId = "someEmailTemplateId";
-    private final String iaAipFrontendUrl = "http://localhost";
-
-    private final String expectedDirectionDueDate = "27 Aug 2019";
-
-    private final String mockedAppealReferenceNumber = "someReferenceNumber";
-    private final String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
-
     private AppellantRequestRespondentEvidencePersonalisationSms appellantRequestRespondentEvidencePersonalisationSms;
 
     @BeforeEach
@@ -109,9 +105,8 @@ public class AppellantRequestRespondentEvidencePersonalisationSmsTest {
         when(recipientsFinder.findAll(null, NotificationType.SMS)).thenCallRealMethod();
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> appellantRequestRespondentEvidencePersonalisationSms.getRecipientsList(null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> appellantRequestRespondentEvidencePersonalisationSms.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -120,9 +115,8 @@ assertEquals("asylumCase must not be null", exception.getMessage());
         when(directionFinder.findFirst(asylumCase, DirectionTag.RESPONDENT_EVIDENCE)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> appellantRequestRespondentEvidencePersonalisationSms.getPersonalisation(asylumCase))
-            ;
-assertEquals("direction 'respondentEvidence' is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> appellantRequestRespondentEvidencePersonalisationSms.getPersonalisation(asylumCase));
+        assertEquals("direction 'respondentEvidence' is not present", exception.getMessage());
     }
 
 

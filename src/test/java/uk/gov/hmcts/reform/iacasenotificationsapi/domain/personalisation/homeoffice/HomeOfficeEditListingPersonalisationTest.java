@@ -33,6 +33,11 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @MockitoSettings(strictness = Strictness.LENIENT)
 class HomeOfficeEditListingPersonalisationTest {
 
+    private final String adaTemplateId = "adaTemplateId";
+    private final String nonAdaTemplateId = "nonAdaTemplateId";
+    private final String iaExUiFrontendUrl = "http://localhost";
+    private final String homeOfficeEmailAddress = "homeoffice@example.com";
+    private final String listCaseHomeOfficeEmailAddress = "listCaseHomeoOffice@example.com";
     @Mock
     Callback<AsylumCase> callback;
     @Mock
@@ -47,13 +52,6 @@ class HomeOfficeEditListingPersonalisationTest {
     CustomerServicesProvider customerServicesProvider;
     @Mock
     HearingDetailsFinder hearingDetailsFinder;
-
-    private final String adaTemplateId = "adaTemplateId";
-    private final String nonAdaTemplateId = "nonAdaTemplateId";
-    private final String iaExUiFrontendUrl = "http://localhost";
-    private final String homeOfficeEmailAddress = "homeoffice@example.com";
-    private final String listCaseHomeOfficeEmailAddress = "listCaseHomeoOffice@example.com";
-
     private HomeOfficeEditListingPersonalisation homeOfficeEditListingPersonalisation;
 
     @BeforeEach

@@ -24,22 +24,19 @@ public class GovNotifyNotificationSenderTest {
     private static final org.slf4j.Logger LOG = getLogger(GovNotifyNotificationSender.class);
 
     private final int deduplicateSendsWithinSeconds = 1;
-    @Mock
-    private RetryableNotificationClient notificationClient;
-
-    @Mock
-    private NotificationSenderHelper<AsylumCase> senderHelper;
-    @Mock
-    private InputStream stream;
-
-    @Mock
-    private Callback<AsylumCase> callback;
     private final String templateId = "a-b-c-d-e-f";
     private final String emailAddress = "recipient@example.com";
     private final Map<String, String> personalisation = mock(Map.class);
     private final Map<String, Object> personalisationWithLink = mock(Map.class);
     private final String reference = "our-reference";
-
+    @Mock
+    private RetryableNotificationClient notificationClient;
+    @Mock
+    private NotificationSenderHelper<AsylumCase> senderHelper;
+    @Mock
+    private InputStream stream;
+    @Mock
+    private Callback<AsylumCase> callback;
     private GovNotifyNotificationSender govNotifyNotificationSender;
 
     @BeforeEach

@@ -32,33 +32,29 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvi
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppellantSubmitAppealPersonalisationSmsTest {
 
+    private final Long caseId = 12345L;
+    private final String smsTemplateId = "someSmsTemplateId";
+    private final String nonAipSmsTemplateId = "nonAipSmsTemplateId";
+    private final String iaAipFrontendUrl = "http://localhost";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
+    private final String mockedAppellantMobilePhone = "07123456789";
+    private final String dateOfBirth = "2020-03-01";
+    private final String expectedDateOfBirth = "1 Mar 2020";
+    private final String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
+    private final String mockedAppellantGivenNames = "someAppellantGivenNames";
+    private final String mockedAppellantFamilyName = "someAppellantFamilyName";
     @Mock
     Callback<AsylumCase> callback;
     @Mock
     AsylumCase asylumCase;
-    @Mock
-    private CaseDetails<AsylumCase> caseDetails;
     @Mock
     RecipientsFinder recipientsFinder;
     @Mock
     SystemDateProvider systemDateProvider;
     @Mock
     AppealService appealService;
-
-    private final Long caseId = 12345L;
-    private final String smsTemplateId = "someSmsTemplateId";
-    private final String nonAipSmsTemplateId = "nonAipSmsTemplateId";
-    private final String iaAipFrontendUrl = "http://localhost";
-
-    private final String mockedAppealReferenceNumber = "someReferenceNumber";
-    private final String mockedAppellantMobilePhone = "07123456789";
-    private final String dateOfBirth = "2020-03-01";
-    private final String expectedDateOfBirth = "1 Mar 2020";
-
-    private final String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
-    private final String mockedAppellantGivenNames = "someAppellantGivenNames";
-    private final String mockedAppellantFamilyName = "someAppellantFamilyName";
-
+    @Mock
+    private CaseDetails<AsylumCase> caseDetails;
     private AppellantSubmitAppealPersonalisationSms appellantSubmitAppealPersonalisationSms;
 
     @BeforeEach
@@ -116,22 +112,20 @@ class AppellantSubmitAppealPersonalisationSmsTest {
             .thenThrow(new NullPointerException("asylumCase must not be null"));
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> appellantSubmitAppealPersonalisationSms.getRecipientsList(null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> appellantSubmitAppealPersonalisationSms.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_on_recipients_when_mobile_is_empty() {
 
-        when(asylumCase.read(MOBILE_NUMBER,String.class))
+        when(asylumCase.read(MOBILE_NUMBER, String.class))
             .thenReturn(Optional.empty());
         when(appealService.isAppellantInPersonJourney(asylumCase)).thenReturn(false);
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> appellantSubmitAppealPersonalisationSms.getRecipientsList(asylumCase))
-            ;
-assertEquals("appellantMobileNumber is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> appellantSubmitAppealPersonalisationSms.getRecipientsList(asylumCase));
+        assertEquals("appellantMobileNumber is not present", exception.getMessage());
     }
 
 
@@ -160,9 +154,8 @@ assertEquals("appellantMobileNumber is not present", exception.getMessage());
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> appellantSubmitAppealPersonalisationSms.getPersonalisation((Callback<AsylumCase>) null))
-            ;
-assertEquals("callback must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> appellantSubmitAppealPersonalisationSms.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     @Test
@@ -170,9 +163,8 @@ assertEquals("callback must not be null", exception.getMessage());
         when(asylumCase.read(APPELLANT_DATE_OF_BIRTH, String.class)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> appellantSubmitAppealPersonalisationSms.getPersonalisation(callback))
-            ;
-assertEquals("Appellant's birth of date is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> appellantSubmitAppealPersonalisationSms.getPersonalisation(callback));
+        assertEquals("Appellant's birth of date is not present", exception.getMessage());
     }
 
     @Test
@@ -195,7 +187,6 @@ assertEquals("Appellant's birth of date is not present", exception.getMessage())
             .containsEntry("Given names", mockedAppellantGivenNames)
             .containsEntry("Family name", mockedAppellantFamilyName)
             .containsEntry("Date Of Birth", expectedDateOfBirth);
-
 
 
     }

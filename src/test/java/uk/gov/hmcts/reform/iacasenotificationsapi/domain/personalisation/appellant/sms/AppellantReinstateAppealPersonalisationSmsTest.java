@@ -22,30 +22,26 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationTy
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 
 
-
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantReinstateAppealPersonalisationSmsTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    RecipientsFinder recipientsFinder;
-
     private final String smsTemplateId = "someSmsTemplateId";
-
     private final String mockedAppealReferenceNumber = "someReferenceNumber";
     private final String reinstateAppealReason = "someReason";
     private final String reinstatedDecisionMaker = "someDecisionMaker";
     private final String iaAipFrontendUrl = "http://localhost";
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    RecipientsFinder recipientsFinder;
     private AppellantReinstateAppealPersonalisationSms appellantReinstateAppealPersonalisationSms;
 
     @BeforeEach
     public void setup() {
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class))
-                .thenReturn(Optional.of(mockedAppealReferenceNumber));
+            .thenReturn(Optional.of(mockedAppealReferenceNumber));
         String reinstateAppealDate = "2020-10-08";
         when(asylumCase.read(REINSTATE_APPEAL_DATE, String.class)).thenReturn(Optional.of(reinstateAppealDate));
         when(asylumCase.read(REINSTATE_APPEAL_REASON, String.class)).thenReturn(Optional.of(reinstateAppealReason));
@@ -53,9 +49,9 @@ public class AppellantReinstateAppealPersonalisationSmsTest {
 
 
         appellantReinstateAppealPersonalisationSms = new AppellantReinstateAppealPersonalisationSms(
-                smsTemplateId,
-                iaAipFrontendUrl,
-                recipientsFinder
+            smsTemplateId,
+            iaAipFrontendUrl,
+            recipientsFinder
         );
     }
 
@@ -68,19 +64,18 @@ public class AppellantReinstateAppealPersonalisationSmsTest {
     public void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_REINSTATE_APPEAL_AIP_APPELLANT_SMS",
-                appellantReinstateAppealPersonalisationSms.getReferenceId(caseId));
+            appellantReinstateAppealPersonalisationSms.getReferenceId(caseId));
     }
 
     @Test
     public void should_throw_exception_on_recipients_when_case_is_null() {
 
         when(recipientsFinder.findAll(null, NotificationType.SMS))
-                .thenThrow(new NullPointerException("asylumCase must not be null"));
+            .thenThrow(new NullPointerException("asylumCase must not be null"));
 
-        NullPointerException exception = 
-assertThrows(NullPointerException.class, () -> appellantReinstateAppealPersonalisationSms.getRecipientsList(null))
-                ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> appellantReinstateAppealPersonalisationSms.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -88,27 +83,26 @@ assertEquals("asylumCase must not be null", exception.getMessage());
 
         String mockedAppellantMobilePhone = "07123456789";
         when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
-                .thenReturn(Collections.singleton(mockedAppellantMobilePhone));
+            .thenReturn(Collections.singleton(mockedAppellantMobilePhone));
 
         assertTrue(appellantReinstateAppealPersonalisationSms.getRecipientsList(asylumCase)
-                .contains(mockedAppellantMobilePhone));
+            .contains(mockedAppellantMobilePhone));
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        NullPointerException exception = 
-assertThrows(NullPointerException.class, 
-                () -> appellantReinstateAppealPersonalisationSms.getPersonalisation((AsylumCase) null))
-                ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> appellantReinstateAppealPersonalisationSms.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_return_personalisation_when_all_information_given() {
 
         Map<String, String> personalisation =
-                appellantReinstateAppealPersonalisationSms.getPersonalisation(asylumCase);
+            appellantReinstateAppealPersonalisationSms.getPersonalisation(asylumCase);
 
         assertThat(personalisation)
             .containsEntry("Appeal Ref Number", mockedAppealReferenceNumber)
@@ -127,7 +121,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
         when(asylumCase.read(REINSTATED_DECISION_MAKER, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
-                appellantReinstateAppealPersonalisationSms.getPersonalisation(asylumCase);
+            appellantReinstateAppealPersonalisationSms.getPersonalisation(asylumCase);
 
         assertThat(personalisation)
             .containsEntry("Appeal Ref Number", "")

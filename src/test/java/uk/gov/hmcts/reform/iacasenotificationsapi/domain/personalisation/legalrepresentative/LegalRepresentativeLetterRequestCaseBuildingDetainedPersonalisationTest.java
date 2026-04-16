@@ -32,21 +32,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class LegalRepresentativeLetterRequestCaseBuildingDetainedPersonalisationTest {
-    @Mock
-    Callback<AsylumCase> callback;
-    @Mock
-    CaseDetails<AsylumCase> caseDetails;
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-    @Mock
-    AddressUk address;
-    @Mock
-    DirectionFinder directionFinder;
-    @Mock
-    Direction direction;
-
     private final Long ccdCaseId = 12345L;
     private final String letterTemplateId = "someLetterTemplateId";
     private final String appealReferenceNumber = "someAppealRefNumber";
@@ -63,7 +48,20 @@ class LegalRepresentativeLetterRequestCaseBuildingDetainedPersonalisationTest {
     private final String customerServicesEmail = "example@example.com";
     private final SystemDateProvider systemDateProvider = new SystemDateProvider();
     private final int fourteenDaysDeadline = 14;
-
+    @Mock
+    Callback<AsylumCase> callback;
+    @Mock
+    CaseDetails<AsylumCase> caseDetails;
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    AddressUk address;
+    @Mock
+    DirectionFinder directionFinder;
+    @Mock
+    Direction direction;
     private LegalRepresentativeLetterRequestCaseBuildingDetainedPersonalisation legalRepresentativeLetterRequestCaseBuildingDetainedPersonalisation;
 
     @BeforeEach

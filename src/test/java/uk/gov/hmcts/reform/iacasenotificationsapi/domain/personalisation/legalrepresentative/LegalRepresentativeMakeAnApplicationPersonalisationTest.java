@@ -42,6 +42,18 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.MakeAnApplicati
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class LegalRepresentativeMakeAnApplicationPersonalisationTest {
 
+    private final String makeAnApplicationLegalRepBeforeListingTemplateId = "beforeListTemplateId";
+    private final String makeAnApplicationLegalRepAfterListingTemplateId = "afterListTemplateId";
+    private final String makeAnApplicationLegalRepOtherPartyBeforeListingTemplateId = "otherPartyBeforeListTemplateId";
+    private final String makeAnApplicationLegalRepOtherPartyAfterListingTemplateId = "otherPartyAfterListTemplateId";
+    private final String iaExUiFrontendUrl = "http://localhost";
+    private final String legalRepEmailAddress = "legalRep@example.com";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String ariaListingReference = "someReferenceNumber";
+    private final String legalRepRefNumber = "somelegalRepRefNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String applicationType = "someApplicationType";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -56,22 +68,6 @@ public class LegalRepresentativeMakeAnApplicationPersonalisationTest {
     UserDetails userDetails;
     @Mock
     MakeAnApplication makeAnApplication;
-
-
-    private final String makeAnApplicationLegalRepBeforeListingTemplateId = "beforeListTemplateId";
-    private final String makeAnApplicationLegalRepAfterListingTemplateId = "afterListTemplateId";
-    private final String makeAnApplicationLegalRepOtherPartyBeforeListingTemplateId = "otherPartyBeforeListTemplateId";
-    private final String makeAnApplicationLegalRepOtherPartyAfterListingTemplateId = "otherPartyAfterListTemplateId";
-
-    private final String iaExUiFrontendUrl = "http://localhost";
-    private final String legalRepEmailAddress = "legalRep@example.com";
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String ariaListingReference = "someReferenceNumber";
-    private final String legalRepRefNumber = "somelegalRepRefNumber";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-    private final String applicationType = "someApplicationType";
-
     private LegalRepresentativeMakeAnApplicationPersonalisation legalRepresentativeMakeAnApplicationPersonalisation;
 
     @BeforeEach

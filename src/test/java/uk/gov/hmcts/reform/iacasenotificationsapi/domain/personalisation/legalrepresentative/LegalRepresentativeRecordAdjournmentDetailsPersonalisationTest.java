@@ -23,18 +23,14 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class LegalRepresentativeRecordAdjournmentDetailsPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-
     private final String templateId = "someTemplateId";
-
     private final String legalRepEmailAddress = "legalrep@example.com";
-
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String legalRepRefNumber = "somelegalRepRefNumber";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-
+    @Mock
+    AsylumCase asylumCase;
     private LegalRepresentativeRecordAdjournmentDetailsPersonalisation
         legalRepresentativeRecordAdjournmentDetailsPersonalisation;
 
@@ -74,20 +70,18 @@ public class LegalRepresentativeRecordAdjournmentDetailsPersonalisationTest {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class,
-            () -> legalRepresentativeRecordAdjournmentDetailsPersonalisation.getRecipientsList(asylumCase))
-            ;
-assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class,
+                () -> legalRepresentativeRecordAdjournmentDetailsPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> legalRepresentativeRecordAdjournmentDetailsPersonalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> legalRepresentativeRecordAdjournmentDetailsPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test

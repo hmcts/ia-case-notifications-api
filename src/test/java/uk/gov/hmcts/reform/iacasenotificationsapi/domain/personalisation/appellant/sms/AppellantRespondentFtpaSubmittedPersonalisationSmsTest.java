@@ -29,13 +29,11 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantRespondentFtpaSubmittedPersonalisationSmsTest {
 
+    private final String emailTemplateId = "someEmailTemplateId";
     @Mock
     AsylumCase asylumCase;
     @Mock
     RecipientsFinder recipientsFinder;
-
-    private final String emailTemplateId = "someEmailTemplateId";
-
     private AppellantRespondentFtpaSubmittedPersonalisationSms appellantRespondentFtpaSubmittedPersonalisationSms;
 
     @BeforeEach
@@ -82,10 +80,9 @@ public class AppellantRespondentFtpaSubmittedPersonalisationSmsTest {
 
         when(recipientsFinder.findAll(null, NotificationType.SMS)).thenCallRealMethod();
 
-        NullPointerException exception = 
-assertThrows(NullPointerException.class, () -> appellantRespondentFtpaSubmittedPersonalisationSms.getRecipientsList(null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> appellantRespondentFtpaSubmittedPersonalisationSms.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
 
@@ -97,6 +94,6 @@ assertEquals("asylumCase must not be null", exception.getMessage());
         Map<String, String> personalisation =
             appellantRespondentFtpaSubmittedPersonalisationSms.getPersonalisation(asylumCase);
 
-            assertEquals(referenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(referenceNumber, personalisation.get("appealReferenceNumber"));
     }
 }

@@ -20,9 +20,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantRemoveDetainedStatusPersonalisationEmailTest {
 
-    @Mock
-    AsylumCase asylumCase;
-
     private final String beforeListingEmailTemplateId = "someEmailTemplateIdBeforeListing";
     private final String afterListingEmailTemplateId = "someEmailTemplateIdAfterListing";
     private final String mockedAppealReferenceNumber = "someReferenceNumber";
@@ -30,46 +27,48 @@ public class AppellantRemoveDetainedStatusPersonalisationEmailTest {
     private final String mockedListingReferenceNumber = "someListingReferenceNumber";
     private final String mockedAppellantGivenNames = "Talha";
     private final String mockedAppellantFamilyName = "Awan";
+    @Mock
+    AsylumCase asylumCase;
     private AppellantRemoveDetainedStatusPersonalisationEmail appellantRemoveDetainedStatusPersonalisationEmail;
 
     @BeforeEach
     public void setup() {
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class))
-                .thenReturn(Optional.of(mockedAppealReferenceNumber));
+            .thenReturn(Optional.of(mockedAppealReferenceNumber));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class))
-                .thenReturn(Optional.of(mockedAppealHomeOfficeReferenceNumber));
+            .thenReturn(Optional.of(mockedAppealHomeOfficeReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class))
-                .thenReturn(Optional.of(mockedAppellantGivenNames));
+            .thenReturn(Optional.of(mockedAppellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class))
-                .thenReturn(Optional.of(mockedAppellantFamilyName));
+            .thenReturn(Optional.of(mockedAppellantFamilyName));
 
 
         appellantRemoveDetainedStatusPersonalisationEmail = new AppellantRemoveDetainedStatusPersonalisationEmail(
-                beforeListingEmailTemplateId,
-                afterListingEmailTemplateId
+            beforeListingEmailTemplateId,
+            afterListingEmailTemplateId
         );
     }
 
     @Test
     public void should_return_before_listing_template_id() {
         assertEquals(beforeListingEmailTemplateId,
-                appellantRemoveDetainedStatusPersonalisationEmail.getTemplateId(asylumCase));
+            appellantRemoveDetainedStatusPersonalisationEmail.getTemplateId(asylumCase));
     }
 
     @Test
     public void should_return_after_listing_template_id() {
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class))
-                .thenReturn(Optional.of(mockedListingReferenceNumber));
+            .thenReturn(Optional.of(mockedListingReferenceNumber));
         assertEquals(afterListingEmailTemplateId,
-                appellantRemoveDetainedStatusPersonalisationEmail.getTemplateId(asylumCase));
+            appellantRemoveDetainedStatusPersonalisationEmail.getTemplateId(asylumCase));
     }
 
     @Test
     public void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_REMOVE_DETENTION_STATUS_APPELLANT_EMAIL",
-                appellantRemoveDetainedStatusPersonalisationEmail.getReferenceId(caseId));
+            appellantRemoveDetainedStatusPersonalisationEmail.getReferenceId(caseId));
     }
 
     @Test
@@ -77,14 +76,14 @@ public class AppellantRemoveDetainedStatusPersonalisationEmailTest {
         List<String> mockedContactPreferences = new ArrayList<>(List.of("wantsEmail"));
 
         when(asylumCase.read(CONTACT_PREFERENCE_UN_REP))
-                .thenReturn(Optional.of(mockedContactPreferences));
+            .thenReturn(Optional.of(mockedContactPreferences));
 
         String mockedAppellantEmailAddress = "appellant@example.net";
         when(asylumCase.read(EMAIL, String.class))
-                .thenReturn(Optional.of(mockedAppellantEmailAddress));
+            .thenReturn(Optional.of(mockedAppellantEmailAddress));
 
         assertTrue(appellantRemoveDetainedStatusPersonalisationEmail.getRecipientsList(asylumCase)
-                .contains(mockedAppellantEmailAddress));
+            .contains(mockedAppellantEmailAddress));
     }
 
     @Test
@@ -92,10 +91,10 @@ public class AppellantRemoveDetainedStatusPersonalisationEmailTest {
         List<String> mockedContactPreferences = new ArrayList<>(List.of());
 
         when(asylumCase.read(CONTACT_PREFERENCE_UN_REP))
-                .thenReturn(Optional.ofNullable(mockedContactPreferences));
+            .thenReturn(Optional.ofNullable(mockedContactPreferences));
 
         assertTrue(appellantRemoveDetainedStatusPersonalisationEmail.getRecipientsList(asylumCase)
-                .isEmpty());
+            .isEmpty());
         verify(asylumCase, times(0)).read(EMAIL);
 
     }
@@ -103,7 +102,7 @@ public class AppellantRemoveDetainedStatusPersonalisationEmailTest {
     @Test
     public void should_return_personalisation_when_all_information_given_before_listing_case() {
         Map<String, String> personalisation =
-                appellantRemoveDetainedStatusPersonalisationEmail.getPersonalisation(asylumCase);
+            appellantRemoveDetainedStatusPersonalisationEmail.getPersonalisation(asylumCase);
 
         assertThat(personalisation)
             .containsEntry("appealReferenceNumber", mockedAppealReferenceNumber)
@@ -117,10 +116,10 @@ public class AppellantRemoveDetainedStatusPersonalisationEmailTest {
     @Test
     public void should_return_personalisation_when_all_information_given_after_listing_case() {
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class))
-                .thenReturn(Optional.of(mockedListingReferenceNumber));
+            .thenReturn(Optional.of(mockedListingReferenceNumber));
 
         Map<String, String> personalisation =
-                appellantRemoveDetainedStatusPersonalisationEmail.getPersonalisation(asylumCase);
+            appellantRemoveDetainedStatusPersonalisationEmail.getPersonalisation(asylumCase);
 
         assertThat(personalisation)
             .containsEntry("appealReferenceNumber", mockedAppealReferenceNumber)

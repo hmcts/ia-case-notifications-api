@@ -38,6 +38,12 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.MakeAnApplicati
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantMakeAnApplicationPersonalisationSmsTest {
 
+    private final String smsTemplateId = "someSmsTemplateId";
+    private final String otherSmsTemplateId = "someOtherSmsTemplateId";
+    private final String iaAipFrontendUrl = "http://localhost";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
+    private final String homeOfficeUser = "caseworker-ia-homeofficelart";
+    private final String citizenUser = "citizen";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -50,15 +56,6 @@ public class AppellantMakeAnApplicationPersonalisationSmsTest {
     UserDetailsProvider userDetailsProvider;
     @Mock
     UserDetails userDetails;
-
-    private final String smsTemplateId = "someSmsTemplateId";
-    private final String otherSmsTemplateId = "someOtherSmsTemplateId";
-    private final String iaAipFrontendUrl = "http://localhost";
-
-    private final String mockedAppealReferenceNumber = "someReferenceNumber";
-    private final String homeOfficeUser = "caseworker-ia-homeofficelart";
-    private final String citizenUser = "citizen";
-
     private AppellantMakeAnApplicationPersonalisationSms appellantMakeAnApplicationPersonalisationSms;
 
     @BeforeEach
@@ -68,12 +65,12 @@ public class AppellantMakeAnApplicationPersonalisationSmsTest {
             .thenReturn(Optional.of(mockedAppealReferenceNumber));
 
         appellantMakeAnApplicationPersonalisationSms = new AppellantMakeAnApplicationPersonalisationSms(
-                smsTemplateId,
+            smsTemplateId,
             otherSmsTemplateId,
             iaAipFrontendUrl,
             recipientsFinder,
-                makeAnApplicationService,
-                userDetailsProvider);
+            makeAnApplicationService,
+            userDetailsProvider);
         when(makeAnApplicationService.getMakeAnApplication(asylumCase, false)).thenReturn(Optional.of(makeAnApplication));
         when(userDetailsProvider.getUserDetails()).thenReturn(userDetails);
     }
@@ -120,13 +117,12 @@ public class AppellantMakeAnApplicationPersonalisationSmsTest {
         when(recipientsFinder.findAll(null, NotificationType.SMS)).thenCallRealMethod();
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> appellantMakeAnApplicationPersonalisationSms.getRecipientsList(null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> appellantMakeAnApplicationPersonalisationSms.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { citizenUser, homeOfficeUser })
+    @ValueSource(strings = {citizenUser, homeOfficeUser})
     public void should_return_personalisation_when_all_information_given(String user) {
         when(userDetails.getRoles()).thenReturn(List.of(user));
         when(makeAnApplicationService.getMakeAnApplication(asylumCase, false))

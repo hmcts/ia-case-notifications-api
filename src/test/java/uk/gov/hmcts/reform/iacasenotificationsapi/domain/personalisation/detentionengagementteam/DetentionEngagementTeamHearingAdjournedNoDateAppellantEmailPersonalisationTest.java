@@ -52,11 +52,11 @@ class DetentionEngagementTeamHearingAdjournedNoDateAppellantEmailPersonalisation
     @BeforeEach
     void setUp() {
         personalisation = new DetentionEngagementTeamHearingAdjournedNoDateAppellantEmailPersonalisation(
-                TEMPLATE_ID,
-                NON_ADA_PREFIX,
-                detentionEmailService,
-                CTSC_EMAIL,
-                documentDownloadClient
+            TEMPLATE_ID,
+            NON_ADA_PREFIX,
+            detentionEmailService,
+            CTSC_EMAIL,
+            documentDownloadClient
         );
     }
 
@@ -107,7 +107,7 @@ class DetentionEngagementTeamHearingAdjournedNoDateAppellantEmailPersonalisation
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of("Doe"));
 
         DocumentWithMetadata internalFtpaDecidedByRjLetter = getDocumentWithMetadata(
-                "1", "Letter", "desc", DocumentTag.DETAINED_APPEAL_ADJOURN_HEARING_WITHOUT_DATE_IRC_PRISON_LETTER);
+            "1", "Letter", "desc", DocumentTag.DETAINED_APPEAL_ADJOURN_HEARING_WITHOUT_DATE_IRC_PRISON_LETTER);
         IdValue<DocumentWithMetadata> doc = new IdValue<>("1", internalFtpaDecidedByRjLetter);
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.of(newArrayList(doc)));
         JSONObject dummyJson = new JSONObject().put("link", "http://doc");
@@ -116,12 +116,12 @@ class DetentionEngagementTeamHearingAdjournedNoDateAppellantEmailPersonalisation
         Map<String, Object> map = personalisation.getPersonalisationForLink(asylumCase);
 
         assertThat(map)
-                .containsEntry("subjectPrefix", NON_ADA_PREFIX)
-                .containsEntry("appealReferenceNumber", "A123")
-                .containsEntry("homeOfficeReferenceNumber", "HO123")
-                .containsEntry("appellantGivenNames", "John")
-                .containsEntry("appellantFamilyName", "Doe")
-                .containsEntry("documentLink", dummyJson);
+            .containsEntry("subjectPrefix", NON_ADA_PREFIX)
+            .containsEntry("appealReferenceNumber", "A123")
+            .containsEntry("homeOfficeReferenceNumber", "HO123")
+            .containsEntry("appellantGivenNames", "John")
+            .containsEntry("appellantFamilyName", "Doe")
+            .containsEntry("documentLink", dummyJson);
     }
 
     @Test
@@ -132,15 +132,14 @@ class DetentionEngagementTeamHearingAdjournedNoDateAppellantEmailPersonalisation
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of("Doe"));
 
         DocumentWithMetadata internalFtpaDecidedByRjLetter = getDocumentWithMetadata(
-                "1", "Letter", "desc", DocumentTag.DETAINED_APPEAL_ADJOURN_HEARING_WITHOUT_DATE_IRC_PRISON_LETTER);
+            "1", "Letter", "desc", DocumentTag.DETAINED_APPEAL_ADJOURN_HEARING_WITHOUT_DATE_IRC_PRISON_LETTER);
         IdValue<DocumentWithMetadata> doc = new IdValue<>("1", internalFtpaDecidedByRjLetter);
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.of(newArrayList(doc)));
 
         when(documentDownloadClient.getJsonObjectFromDocument(any())).thenThrow(new IOException("fail"));
 
-        IllegalStateException exception = 
-assertThrows(IllegalStateException.class, () -> personalisation.getPersonalisationForLink(asylumCase))
-                ;
-assertTrue(exception.getMessage().contains("Failed to get Internal 'Home Office to upload bundle' Letter"));
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> personalisation.getPersonalisationForLink(asylumCase));
+        assertTrue(exception.getMessage().contains("Failed to get Internal 'Home Office to upload bundle' Letter"));
     }
 }

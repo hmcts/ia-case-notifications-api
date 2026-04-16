@@ -22,15 +22,12 @@ import static org.mockito.Mockito.when;
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AdminOfficerRecordAdjournmentDetailsPersonalisationTest {
 
+    private final String templateId = "someTemplateId";
+    private final String adminOfficerEmailAddress = "adminOfficer@example.com";
     @Mock
     AsylumCase asylumCase;
     @Mock
     AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
-
-    private final String templateId = "someTemplateId";
-
-    private final String adminOfficerEmailAddress = "adminOfficer@example.com";
-
     private AdminOfficerRecordAdjournmentDetailsPersonalisation adminOfficerRecordAdjournmentDetailsPersonalisation;
 
     @BeforeEach

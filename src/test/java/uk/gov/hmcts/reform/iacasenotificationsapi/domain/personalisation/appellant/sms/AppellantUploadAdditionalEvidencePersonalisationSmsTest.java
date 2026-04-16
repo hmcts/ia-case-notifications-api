@@ -54,18 +54,18 @@ class AppellantUploadAdditionalEvidencePersonalisationSmsTest {
     @Test
     void should_return_given_template_id() {
         assertEquals(beforeListingTemplateId,
-                appellantUploadAdditionalEvidencePersonalisationSms.getTemplateId(asylumCase));
+            appellantUploadAdditionalEvidencePersonalisationSms.getTemplateId(asylumCase));
 
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
 
         assertEquals(afterListingTemplateId,
-                appellantUploadAdditionalEvidencePersonalisationSms.getTemplateId(asylumCase));
+            appellantUploadAdditionalEvidencePersonalisationSms.getTemplateId(asylumCase));
     }
 
     @Test
     void should_return_given_reference_id() {
         assertEquals(12345L + "_UPLOADED_ADDITIONAL_EVIDENCE_AIP_APPELLANT_SMS",
-                appellantUploadAdditionalEvidencePersonalisationSms.getReferenceId(12345L));
+            appellantUploadAdditionalEvidencePersonalisationSms.getReferenceId(12345L));
     }
 
     @Test
@@ -74,10 +74,9 @@ class AppellantUploadAdditionalEvidencePersonalisationSmsTest {
         when(recipientsFinder.findAll(null, NotificationType.SMS))
             .thenThrow(new NullPointerException("asylumCase must not be null"));
 
-        NullPointerException exception = 
-assertThrows(NullPointerException.class, () -> appellantUploadAdditionalEvidencePersonalisationSms.getRecipientsList(null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> appellantUploadAdditionalEvidencePersonalisationSms.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -94,17 +93,16 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        NullPointerException exception = 
-assertThrows(NullPointerException.class, 
-            () -> appellantUploadAdditionalEvidencePersonalisationSms.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> appellantUploadAdditionalEvidencePersonalisationSms.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     void should_return_personalisation_when_all_information_given() {
         Map<String, String> personalisation =
-                appellantUploadAdditionalEvidencePersonalisationSms.getPersonalisation(asylumCase);
+            appellantUploadAdditionalEvidencePersonalisationSms.getPersonalisation(asylumCase);
         assertThat(personalisation)
             .containsEntry("Appeal Ref Number", mockedAppealReferenceNumber)
             .containsEntry("hyperlink to service", iaAipFrontendUrl);

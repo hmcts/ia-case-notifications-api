@@ -32,6 +32,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class LegalRepresentativeRespondentFtpaSubmittedPersonalisationTest {
 
+    private final String templateId = "ftpaSumbittedTemplateId";
+    private final String legalRepEmailAddress = "legalrep@example.com";
     @Mock
     PersonalisationProvider personalisationProvider;
     @Mock
@@ -42,10 +44,6 @@ public class LegalRepresentativeRespondentFtpaSubmittedPersonalisationTest {
     AsylumCase asylumCase;
     @Mock
     CustomerServicesProvider customerServicesProvider;
-
-    private final String templateId = "ftpaSumbittedTemplateId";
-    private final String legalRepEmailAddress = "legalrep@example.com";
-
     private LegalRepresentativeRespondentFtpaSubmittedPersonalisation
         legalRepresentativeRespondentFtpaSubmittedPersonalisation;
 

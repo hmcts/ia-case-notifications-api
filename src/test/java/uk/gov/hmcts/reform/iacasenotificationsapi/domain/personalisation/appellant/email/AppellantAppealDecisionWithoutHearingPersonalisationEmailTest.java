@@ -28,18 +28,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppellantAppealDecisionWithoutHearingPersonalisationEmailTest {
 
-    @Mock
-    Callback<AsylumCase> callback;
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    private CaseDetails<AsylumCase> caseDetails;
-    @Mock
-    RecipientsFinder recipientsFinder;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-
-
     private final Long caseId = 12345L;
     private final String emailTemplateId = "someEmailTemplateId";
     private final String iaAipFrontendUrl = "http://localhost";
@@ -49,7 +37,16 @@ class AppellantAppealDecisionWithoutHearingPersonalisationEmailTest {
     private final String mockedAppellantFamilyName = "someAppellantFamilyName";
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "cust.services@example.com";
-
+    @Mock
+    Callback<AsylumCase> callback;
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    RecipientsFinder recipientsFinder;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    private CaseDetails<AsylumCase> caseDetails;
     private AppellantAppealDecisionWithoutHearingPersonalisationEmail appellantAppealDecisionWithoutHearingPersonalisationEmail;
 
     @BeforeEach
@@ -102,9 +99,8 @@ class AppellantAppealDecisionWithoutHearingPersonalisationEmailTest {
             .thenThrow(new NullPointerException("asylumCase must not be null"));
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> appellantAppealDecisionWithoutHearingPersonalisationEmail.getRecipientsList(null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> appellantAppealDecisionWithoutHearingPersonalisationEmail.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test

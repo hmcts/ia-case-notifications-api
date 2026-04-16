@@ -35,18 +35,22 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class HomeOfficeEditListingNoChangePersonalisationTest {
 
-    @Mock Callback<AsylumCase> callback;
-    @Mock CaseDetails<AsylumCase> caseDetails;
-    @Mock AsylumCase asylumCase;
-    @Mock EmailAddressFinder emailAddressFinder;
-    @Mock PersonalisationProvider personalisationProvider;
-    @Mock CustomerServicesProvider customerServicesProvider;
-
     private final String templateId = "someTemplateId";
     private final String iaExUiFrontendUrl = "http://localhost";
     private final String homeOfficeListCaseEmailAddress = "homeofficelistcase@example.com";
     private final String homeOfficeEmailAddress = "homeoffice@example.com";
-
+    @Mock
+    Callback<AsylumCase> callback;
+    @Mock
+    CaseDetails<AsylumCase> caseDetails;
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    EmailAddressFinder emailAddressFinder;
+    @Mock
+    PersonalisationProvider personalisationProvider;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
     private HomeOfficeEditListingNoChangePersonalisation homeOfficeEditListingNoChangePersonalisation;
 
     @BeforeEach
@@ -90,13 +94,12 @@ public class HomeOfficeEditListingNoChangePersonalisationTest {
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> homeOfficeEditListingNoChangePersonalisation.getPersonalisation((Callback<AsylumCase>) null))
-            ;
-assertEquals("callback must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> homeOfficeEditListingNoChangePersonalisation.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
         initializePrefixes(homeOfficeEditListingNoChangePersonalisation);
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));

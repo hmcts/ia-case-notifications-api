@@ -32,8 +32,8 @@ class RespondentForceCaseToCaseUnderReviewPersonalisationTest {
     final String customerServiceProvideTelephone = "0800 12345678";
     final String customerServiceProvideEmail = "customer@service.com";
     final Map<String, String> customerServiceMap = ImmutableMap.of(
-            "customerServicesTelephone", customerServiceProvideTelephone,
-            "customerServicesEmail", customerServiceProvideEmail);
+        "customerServicesTelephone", customerServiceProvideTelephone,
+        "customerServicesEmail", customerServiceProvideEmail);
     @Mock
     CustomerServicesProvider customerServicesProvider;
     @Mock

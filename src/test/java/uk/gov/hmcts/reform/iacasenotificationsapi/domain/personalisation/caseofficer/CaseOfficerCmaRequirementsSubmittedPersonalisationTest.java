@@ -32,21 +32,18 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class CaseOfficerCmaRequirementsSubmittedPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    EmailAddressFinder emailAddressFinder;
-    @Mock
-    private FeatureToggler featureToggler;
-
     private final String templateId = "someTemplateId";
     private final String hearingCentreEmailAddress = "hearingCentre@example.com";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String appellantGivenName = "Pablo";
     private final String appellantFamilyName = "Jimenez";
     private final String iaExUiFrontendUrl = "http://localhost";
-
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    EmailAddressFinder emailAddressFinder;
+    @Mock
+    private FeatureToggler featureToggler;
     private CaseOfficerCmaRequirementsSubmittedPersonalisation caseOfficerCmaRequirementsSubmittedPersonalisation;
 
     @BeforeEach
@@ -63,7 +60,7 @@ public class CaseOfficerCmaRequirementsSubmittedPersonalisationTest {
                 templateId,
                 iaExUiFrontendUrl,
                 emailAddressFinder,
-                    featureToggler);
+                featureToggler);
 
     }
 
@@ -82,14 +79,14 @@ public class CaseOfficerCmaRequirementsSubmittedPersonalisationTest {
     @Test
     public void should_return_given_email_address_from_asylum_case_when_feature_flag_is_Off() {
         assertTrue(caseOfficerCmaRequirementsSubmittedPersonalisation.getRecipientsList(asylumCase)
-                .isEmpty());
+            .isEmpty());
     }
 
     @Test
     public void should_return_given_email_address_from_asylum_case_when_feature_flag_is_On() {
         when(featureToggler.getValue("tcw-notifications-feature", false)).thenReturn(true);
         assertTrue(caseOfficerCmaRequirementsSubmittedPersonalisation.getRecipientsList(asylumCase)
-                .contains(hearingCentreEmailAddress), hearingCentreEmailAddress);
+            .contains(hearingCentreEmailAddress), hearingCentreEmailAddress);
     }
 
 
@@ -97,14 +94,13 @@ public class CaseOfficerCmaRequirementsSubmittedPersonalisationTest {
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> caseOfficerCmaRequirementsSubmittedPersonalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase cannot be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> caseOfficerCmaRequirementsSubmittedPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase cannot be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         initializePrefixes(caseOfficerCmaRequirementsSubmittedPersonalisation);
@@ -129,7 +125,7 @@ assertEquals("asylumCase cannot be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
 
         initializePrefixes(caseOfficerCmaRequirementsSubmittedPersonalisation);

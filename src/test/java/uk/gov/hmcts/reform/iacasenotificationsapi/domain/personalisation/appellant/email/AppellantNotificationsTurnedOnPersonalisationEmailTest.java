@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appell
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -15,6 +16,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.EMAIL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_EJP;
+
 import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,12 +34,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppellantNotificationsTurnedOnPersonalisationEmailTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-    @Mock
-    PinInPostDetails pinInPostDetails;
     private final String representedTemplateId = "representedTemplateId";
     private final String unrepresentedTemplateId = "unrepresentedTemplateId";
     private final String iaExUiFrontendUrl = "http://localhost";
@@ -51,7 +47,12 @@ class AppellantNotificationsTurnedOnPersonalisationEmailTest {
     private final String customerServicesTelephone = "customerServicesTelephone";
     private final String customerServicesEmail = "customerServicesEmail";
     private final String securityCode = "securityCode";
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    PinInPostDetails pinInPostDetails;
     private AppellantNotificationsTurnedOnPersonalisationEmail appellantNotificationsTurnedOnPersonalisationEmail;
 
     @BeforeEach
@@ -117,15 +118,13 @@ class AppellantNotificationsTurnedOnPersonalisationEmailTest {
     }
 
 
-
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> appellantNotificationsTurnedOnPersonalisationEmail.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> appellantNotificationsTurnedOnPersonalisationEmail.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test

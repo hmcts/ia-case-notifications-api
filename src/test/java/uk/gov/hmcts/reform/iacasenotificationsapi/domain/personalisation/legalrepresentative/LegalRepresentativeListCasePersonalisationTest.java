@@ -34,6 +34,36 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsF
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class LegalRepresentativeListCasePersonalisationTest {
 
+    private final String nonAdaTemplateId = "nonAdaTemplateId";
+    private final String adaTemplateId = "adaTemplateId";
+    private final String outOfCountryTemplateId = "someOocTemplateId";
+    private final String iaExUiFrontendUrl = "http://somefrontendurl";
+    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    private final String legalRepEmailAddress = "legalRepEmailAddress@example.com";
+    private final String hearingCentreAddress = "some hearing centre address";
+    //Remote hearing
+    private final HearingCentre remoteHearingCentre = HearingCentre.REMOTE_HEARING;
+    private final String hearingDate = "2019-08-27";
+    private final String hearingTime = "14:25";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String ariaListingReference = "someAriaListingReference";
+    private final String legalRepRefNumber = "someLegalRepRefNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String requirementsVulnerabilities = "someRequirementsVulnerabilities";
+    private final String requirementsMultimedia = "someRequirementsMultimedia";
+    private final String requirementsSingleSexCourt = "someRequirementsSingleSexCourt";
+    private final String requirementsInCamera = "someRequirementsInCamera";
+    private final String requirementsOther = "someRequirementsOther";
+    private final String caseOfficerReviewedVulnerabilities = "someCaseOfficerReviewedVulnerabilities";
+    private final String caseOfficerReviewedMultimedia = "someCaseOfficerReviewedMultimedia";
+    private final String caseOfficerReviewedSingleSexCourt = "someCaseOfficerReviewedSingleSexCourt";
+    private final String caseOfficerReviewedInCamera = "someCaseOfficerReviewedInCamera";
+    private final String caseOfficerReviewedOther = "someCaseOfficerReviewedOther";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
+    private final int appellantProvidingAppealArgumentDeadline = 13;
+    private final int respondentResponseToAppealArgumentDeadline = 15;
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -44,45 +74,6 @@ public class LegalRepresentativeListCasePersonalisationTest {
     CustomerServicesProvider customerServicesProvider;
     @Mock
     HearingDetailsFinder hearingDetailsFinder;
-
-    private final String nonAdaTemplateId = "nonAdaTemplateId";
-    private final String adaTemplateId = "adaTemplateId";
-    private final String outOfCountryTemplateId = "someOocTemplateId";
-    private final String iaExUiFrontendUrl = "http://somefrontendurl";
-    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
-    private final String legalRepEmailAddress = "legalRepEmailAddress@example.com";
-    private final String hearingCentreAddress = "some hearing centre address";
-
-    //Remote hearing
-    private final HearingCentre remoteHearingCentre = HearingCentre.REMOTE_HEARING;
-
-    private final String hearingDate = "2019-08-27";
-    private final String hearingTime = "14:25";
-
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String ariaListingReference = "someAriaListingReference";
-    private final String legalRepRefNumber = "someLegalRepRefNumber";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-
-    private final String requirementsVulnerabilities = "someRequirementsVulnerabilities";
-    private final String requirementsMultimedia = "someRequirementsMultimedia";
-    private final String requirementsSingleSexCourt = "someRequirementsSingleSexCourt";
-    private final String requirementsInCamera = "someRequirementsInCamera";
-    private final String requirementsOther = "someRequirementsOther";
-
-    private final String caseOfficerReviewedVulnerabilities = "someCaseOfficerReviewedVulnerabilities";
-    private final String caseOfficerReviewedMultimedia = "someCaseOfficerReviewedMultimedia";
-    private final String caseOfficerReviewedSingleSexCourt = "someCaseOfficerReviewedSingleSexCourt";
-    private final String caseOfficerReviewedInCamera = "someCaseOfficerReviewedInCamera";
-    private final String caseOfficerReviewedOther = "someCaseOfficerReviewedOther";
-
-    private final String customerServicesTelephone = "555 555 555";
-    private final String customerServicesEmail = "cust.services@example.com";
-
-    private final int appellantProvidingAppealArgumentDeadline = 13;
-    private final int respondentResponseToAppealArgumentDeadline = 15;
-
     private LegalRepresentativeListCasePersonalisation legalRepresentativeListCasePersonalisation;
 
     @BeforeEach
@@ -180,22 +171,20 @@ public class LegalRepresentativeListCasePersonalisationTest {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> legalRepresentativeListCasePersonalisation.getRecipientsList(asylumCase))
-            ;
-assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> legalRepresentativeListCasePersonalisation.getRecipientsList(asylumCase));
+        assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> legalRepresentativeListCasePersonalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> legalRepresentativeListCasePersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
@@ -225,7 +214,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_information_given_in_remote_hearing_case(YesOrNo isAda) {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         initializePrefixes(legalRepresentativeListCasePersonalisation);
@@ -240,11 +229,11 @@ assertEquals("asylumCase must not be null", exception.getMessage());
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-            assertEquals(hearingCentreAddress, personalisation.get("hearingCentreAddress"));
+        assertEquals(hearingCentreAddress, personalisation.get("hearingCentreAddress"));
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_co_records_hearing_response(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
@@ -276,11 +265,11 @@ assertEquals("asylumCase must not be null", exception.getMessage());
         if (isAda.equals(YesOrNo.YES)) {
             String appealArgumentDeadlineDate = LocalDate.now().plusDays(appellantProvidingAppealArgumentDeadline)
                 .format(DateTimeFormatter.ofPattern("dd MMMM yyyy"));
-                assertEquals(appealArgumentDeadlineDate, personalisation.get("appellantProvidingAppealArgumentDeadline"));
+            assertEquals(appealArgumentDeadlineDate, personalisation.get("appellantProvidingAppealArgumentDeadline"));
 
             String respondentResponseDeadlineDate = LocalDate.now().plusDays(respondentResponseToAppealArgumentDeadline)
                 .format(DateTimeFormatter.ofPattern("dd MMMM yyyy"));
-                assertEquals(respondentResponseDeadlineDate, personalisation.get("respondentResponseToAppealArgumentDeadline"));
+            assertEquals(respondentResponseDeadlineDate, personalisation.get("respondentResponseToAppealArgumentDeadline"));
         } else {
             assertFalse(personalisation.containsKey("appellantProvidingAppealArgumentDeadline"));
             assertFalse(personalisation.containsKey("respondentResponseToAppealArgumentDeadline"));
@@ -312,7 +301,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));

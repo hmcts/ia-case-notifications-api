@@ -33,18 +33,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.fie
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantInternalCaseDecisionWithoutHearingPersonalisationTest {
 
-    @Mock
-    Callback<AsylumCase> callback;
-    @Mock
-    CaseDetails<AsylumCase> caseDetails;
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-    @Mock
-    AddressUk address;
-
-    private AppellantInternalCaseDecisionWithoutHearingPersonalisation appellantInternalCaseDecisionWithoutHearingPersonalisation;
     private final Long caseId = 12345L;
     private final String appellantInternalCaseDecisionWithoutHearingLetterTemplateId = "appellantInternalCaseDecisionWithoutHearingLetterTemplateId";
     private final String appealReferenceNumber = "someAppealRefNumber";
@@ -59,6 +47,17 @@ public class AppellantInternalCaseDecisionWithoutHearingPersonalisationTest {
     private final String iaServicesPhone = "0300 123 1711";
     private final String iaServicesEmail = "contactia@justice.gov.uk";
     private final SystemDateProvider systemDateProvider = new SystemDateProvider();
+    @Mock
+    Callback<AsylumCase> callback;
+    @Mock
+    CaseDetails<AsylumCase> caseDetails;
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    AddressUk address;
+    private AppellantInternalCaseDecisionWithoutHearingPersonalisation appellantInternalCaseDecisionWithoutHearingPersonalisation;
 
     @BeforeEach
     public void setup() {
@@ -68,7 +67,7 @@ public class AppellantInternalCaseDecisionWithoutHearingPersonalisationTest {
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
         String mockedAppealReferenceNumber = "someAppealRefNumber";
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class))
-                .thenReturn(Optional.of(mockedAppealReferenceNumber));
+            .thenReturn(Optional.of(mockedAppealReferenceNumber));
         String mockedAppellantGivenNames = "someAppellantGivenNames";
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(mockedAppellantGivenNames));
         String mockedAppellantFamilyName = "someAppellantFamilyName";
@@ -84,22 +83,22 @@ public class AppellantInternalCaseDecisionWithoutHearingPersonalisationTest {
         when(address.getPostTown()).thenReturn(Optional.of(postTown));
 
         appellantInternalCaseDecisionWithoutHearingPersonalisation = new AppellantInternalCaseDecisionWithoutHearingPersonalisation(
-                appellantInternalCaseDecisionWithoutHearingLetterTemplateId,
-                customerServicesProvider,
-                systemDateProvider
+            appellantInternalCaseDecisionWithoutHearingLetterTemplateId,
+            customerServicesProvider,
+            systemDateProvider
         );
     }
 
     @Test
     public void should_return_given_template_id() {
         assertEquals(appellantInternalCaseDecisionWithoutHearingLetterTemplateId,
-                appellantInternalCaseDecisionWithoutHearingPersonalisation.getTemplateId());
+            appellantInternalCaseDecisionWithoutHearingPersonalisation.getTemplateId());
     }
 
     @Test
     public void should_return_given_reference_id() {
         assertEquals(caseId + "_INTERNAL_DECISION_WITHOUT_HEARING_APPELLANT_LETTER",
-                appellantInternalCaseDecisionWithoutHearingPersonalisation.getReferenceId(caseId));
+            appellantInternalCaseDecisionWithoutHearingPersonalisation.getReferenceId(caseId));
     }
 
     @Test
@@ -110,9 +109,8 @@ public class AppellantInternalCaseDecisionWithoutHearingPersonalisationTest {
 
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> appellantInternalCaseDecisionWithoutHearingPersonalisation.getRecipientsList(asylumCase))
-            ;
-assertEquals("appellantAddress is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> appellantInternalCaseDecisionWithoutHearingPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("appellantAddress is not present", exception.getMessage());
     }
 
     @Test
@@ -123,19 +121,17 @@ assertEquals("appellantAddress is not present", exception.getMessage());
 
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> appellantInternalCaseDecisionWithoutHearingPersonalisation.getRecipientsList(asylumCase))
-            ;
-assertEquals("legalRepAddressUK is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> appellantInternalCaseDecisionWithoutHearingPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("legalRepAddressUK is not present", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-                () -> appellantInternalCaseDecisionWithoutHearingPersonalisation.getPersonalisation((Callback<AsylumCase>) null))
-                ;
-assertEquals("callback must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> appellantInternalCaseDecisionWithoutHearingPersonalisation.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     @Test

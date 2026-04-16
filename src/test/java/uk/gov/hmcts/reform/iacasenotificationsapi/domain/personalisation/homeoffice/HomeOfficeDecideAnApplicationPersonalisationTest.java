@@ -59,16 +59,6 @@ public class HomeOfficeDecideAnApplicationPersonalisationTest {
     private final String homeOfficeDecideAnApplicationRefusedAfterListingTemplateId = "SomeTemplateRefusedAfterListing";
     private final String homeOfficeDecideAnApplicationRefusedOtherPartyAfterListingTemplateId =
         "SomeTemplateOtherRefusedAfterListing";
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-    @Mock
-    MakeAnApplicationService makeAnApplicationService;
-    @Mock
-    EmailAddressFinder emailAddressFinder;
-    @Mock
-    MakeAnApplication makeAnApplication;
     private final String iaExUiFrontendUrl = "http://somefrontendurl";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String ariaListingReference = "someAriaListingReference";
@@ -81,8 +71,16 @@ public class HomeOfficeDecideAnApplicationPersonalisationTest {
     private final String lartHomeOfficeEmailAddress = "homeoffice-respondent@example.com";
     private final String homeOfficeHearingCentreEmail = "hc-taylorhouse@example.com";
     private final String homeOfficeEmail = "ho-taylorhouse@example.com";
-
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    MakeAnApplicationService makeAnApplicationService;
+    @Mock
+    EmailAddressFinder emailAddressFinder;
+    @Mock
+    MakeAnApplication makeAnApplication;
     private HomeOfficeDecideAnApplicationPersonalisation homeOfficeDecideAnApplicationPersonalisation;
 
     @BeforeEach
@@ -205,7 +203,7 @@ public class HomeOfficeDecideAnApplicationPersonalisationTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { LEGAL_REP_USER, ADMIN_OFFICER })
+    @ValueSource(strings = {LEGAL_REP_USER, ADMIN_OFFICER})
     public void test_email_address_for_home_office_when_legal_rep_or_admin_applied(String role) {
 
         when(makeAnApplication.getApplicantRole()).thenReturn(role);
@@ -417,22 +415,20 @@ public class HomeOfficeDecideAnApplicationPersonalisationTest {
         when(makeAnApplication.getState()).thenReturn("appealTakenOffline");
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> homeOfficeDecideAnApplicationPersonalisation.getRecipientsList(asylumCase))
-            ;
-assertEquals("homeOffice email Address cannot be found", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> homeOfficeDecideAnApplicationPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("homeOffice email Address cannot be found", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> homeOfficeDecideAnApplicationPersonalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> homeOfficeDecideAnApplicationPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         initializePrefixes(homeOfficeDecideAnApplicationPersonalisation);
@@ -456,7 +452,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
 
         initializePrefixes(homeOfficeDecideAnApplicationPersonalisation);

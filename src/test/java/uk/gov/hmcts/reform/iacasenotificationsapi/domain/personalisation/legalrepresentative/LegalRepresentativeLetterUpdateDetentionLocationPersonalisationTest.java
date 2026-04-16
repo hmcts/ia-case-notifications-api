@@ -33,19 +33,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class LegalRepresentativeLetterUpdateDetentionLocationPersonalisationTest {
-    @Mock
-    Callback<AsylumCase> callback;
-    @Mock
-    CaseDetails<AsylumCase> caseDetails;
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-    @Mock
-    AddressUk address;
-    @Mock
-    DetentionFacilityNameFinder detentionFacilityNameFinder;
-
     private final Long ccdCaseId = 12345L;
     private final String letterTemplateId = "someLetterTemplateId";
     private final String appealReferenceNumber = "someAppealRefNumber";
@@ -63,7 +50,18 @@ class LegalRepresentativeLetterUpdateDetentionLocationPersonalisationTest {
     private final String ircName = "Colnbrook";
     private final String previousDetentionLocationFull = "HM Prison Addiewell";
     private final SystemDateProvider systemDateProvider = new SystemDateProvider();
-
+    @Mock
+    Callback<AsylumCase> callback;
+    @Mock
+    CaseDetails<AsylumCase> caseDetails;
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    AddressUk address;
+    @Mock
+    DetentionFacilityNameFinder detentionFacilityNameFinder;
     private LegalRepresentativeLetterUpdateDetentionLocationPersonalisation legalRepresentativeLetterUpdateDetentionLocationPersonalisation;
 
     @BeforeEach

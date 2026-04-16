@@ -35,19 +35,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvi
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppellantInternalRemissionGrantedOutOfTimeLetterPersonalisationTest {
 
-    @Mock
-    Callback<AsylumCase> callback;
-    @Mock
-    CaseDetails<AsylumCase> caseDetails;
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-    @Mock
-    AddressUk address;
-    @Mock
-    SystemDateProvider systemDateProvider;
-
     private final Long ccdCaseId = 12345L;
     private final String letterTemplateId = "someLetterTemplateId";
     private final String appealReferenceNumber = "someAppealRefNumber";
@@ -67,7 +54,18 @@ class AppellantInternalRemissionGrantedOutOfTimeLetterPersonalisationTest {
     private final String oocAddressLine3 = "28003";
     private final NationalityFieldValue oocAddressCountry = mock(NationalityFieldValue.class);
     private final int daysAfterRemissionDecision = 10;
-
+    @Mock
+    Callback<AsylumCase> callback;
+    @Mock
+    CaseDetails<AsylumCase> caseDetails;
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    AddressUk address;
+    @Mock
+    SystemDateProvider systemDateProvider;
     private AppellantInternalRemissionGrantedOutOfTimeLetterPersonalisation appellantInternalRemissionGrantedOutOfTImeLetterPersonalisation;
 
     @BeforeEach
@@ -141,10 +139,9 @@ class AppellantInternalRemissionGrantedOutOfTimeLetterPersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.empty());
 
-        IllegalStateException exception = 
-assertThrows(IllegalStateException.class, () -> appellantInternalRemissionGrantedOutOfTImeLetterPersonalisation.getRecipientsList(asylumCase))
-            ;
-assertEquals("appellantAddress is not present", exception.getMessage());
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> appellantInternalRemissionGrantedOutOfTImeLetterPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("appellantAddress is not present", exception.getMessage());
     }
 
     @Test
@@ -152,20 +149,18 @@ assertEquals("appellantAddress is not present", exception.getMessage());
         legalRepInCountryDataSetup();
         when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_ADDRESS_U_K, AddressUk.class)).thenReturn(Optional.empty());
 
-        IllegalStateException exception = 
-assertThrows(IllegalStateException.class, () -> appellantInternalRemissionGrantedOutOfTImeLetterPersonalisation.getRecipientsList(asylumCase))
-            ;
-assertEquals("legalRepAddressUK is not present", exception.getMessage());
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> appellantInternalRemissionGrantedOutOfTImeLetterPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("legalRepAddressUK is not present", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        NullPointerException exception = 
-assertThrows(NullPointerException.class, 
-            () -> appellantInternalRemissionGrantedOutOfTImeLetterPersonalisation.getPersonalisation((Callback<AsylumCase>) null))
-            ;
-assertEquals("callback must not be null", exception.getMessage());
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> appellantInternalRemissionGrantedOutOfTImeLetterPersonalisation.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     @Test
@@ -188,7 +183,7 @@ assertEquals("callback must not be null", exception.getMessage());
             .containsEntry("address_line_5", postCode);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-            assertEquals(systemDateProvider.dueDate(daysAfterRemissionDecision), personalisation.get("tenDaysAfterRemissionDecision"));
+        assertEquals(systemDateProvider.dueDate(daysAfterRemissionDecision), personalisation.get("tenDaysAfterRemissionDecision"));
 
     }
 
@@ -211,7 +206,7 @@ assertEquals("callback must not be null", exception.getMessage());
             .containsEntry("address_line_4", Nationality.ES.toString());
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-            assertEquals(systemDateProvider.dueDate(daysAfterRemissionDecision), personalisation.get("tenDaysAfterRemissionDecision"));
+        assertEquals(systemDateProvider.dueDate(daysAfterRemissionDecision), personalisation.get("tenDaysAfterRemissionDecision"));
 
     }
 
@@ -233,7 +228,7 @@ assertEquals("callback must not be null", exception.getMessage());
             .containsEntry("address_line_5", postCode);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-            assertEquals(systemDateProvider.dueDate(daysAfterRemissionDecision), personalisation.get("tenDaysAfterRemissionDecision"));
+        assertEquals(systemDateProvider.dueDate(daysAfterRemissionDecision), personalisation.get("tenDaysAfterRemissionDecision"));
     }
 
     @Test
@@ -254,7 +249,7 @@ assertEquals("callback must not be null", exception.getMessage());
             .containsEntry("address_line_5", Nationality.ES.toString());
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-            assertEquals(systemDateProvider.dueDate(daysAfterRemissionDecision), personalisation.get("tenDaysAfterRemissionDecision"));
+        assertEquals(systemDateProvider.dueDate(daysAfterRemissionDecision), personalisation.get("tenDaysAfterRemissionDecision"));
     }
 
     private void legalRepOutOfCountryDataSetup() {

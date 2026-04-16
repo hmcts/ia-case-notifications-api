@@ -26,17 +26,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class RespondentUpdateTribunalDecisionRule32PersonalisationEmailTest {
-    @Mock
-    Callback<AsylumCase> callback;
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    private CaseDetails<AsylumCase> caseDetails;
-    @Mock
-    EmailAddressFinder emailAddressFinder;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-
     private final Long caseId = 12345L;
     private final String respondentUpdateTribunalDecisionRule32EmailTemplateId = "respondentUpdateTribunalDecisionRule32EmailTemplateId";
     private final String exUiFrontendUrl = "http://localhost";
@@ -45,6 +34,16 @@ class RespondentUpdateTribunalDecisionRule32PersonalisationEmailTest {
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "cust.services@example.com";
+    @Mock
+    Callback<AsylumCase> callback;
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    EmailAddressFinder emailAddressFinder;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    private CaseDetails<AsylumCase> caseDetails;
     private RespondentUpdateTribunalDecisionRule32PersonalisationEmail respondentUpdateTribunalDecisionRule32PersonalisationEmail;
 
     @BeforeEach
@@ -77,7 +76,7 @@ class RespondentUpdateTribunalDecisionRule32PersonalisationEmailTest {
     @Test
     void should_return_given_reference_id() {
         assertEquals(caseId + "_RESPONDENT_UPDATE_TRIBUNAL_DECISION_RULE_32_EMAIL",
-                respondentUpdateTribunalDecisionRule32PersonalisationEmail.getReferenceId(caseId));
+            respondentUpdateTribunalDecisionRule32PersonalisationEmail.getReferenceId(caseId));
     }
 
     @Test
@@ -94,9 +93,8 @@ class RespondentUpdateTribunalDecisionRule32PersonalisationEmailTest {
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> respondentUpdateTribunalDecisionRule32PersonalisationEmail.getPersonalisation((Callback<AsylumCase>) null))
-            ;
-assertEquals("callback must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> respondentUpdateTribunalDecisionRule32PersonalisationEmail.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     @Test

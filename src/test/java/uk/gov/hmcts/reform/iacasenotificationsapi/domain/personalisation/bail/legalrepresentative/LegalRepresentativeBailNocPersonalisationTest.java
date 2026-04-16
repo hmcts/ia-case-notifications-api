@@ -23,9 +23,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.le
 @MockitoSettings(strictness = Strictness.LENIENT)
 class LegalRepresentativeBailNocPersonalisationTest {
 
-    @Mock
-    BailCase bailCase;
-
     private final String templateId = "someTemplateId";
     private final String legalRepEmailAddress = "legalRep@example.com";
     private final String bailReferenceNumber = "someReferenceNumber";
@@ -33,7 +30,8 @@ class LegalRepresentativeBailNocPersonalisationTest {
     private final String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
     private final String applicantGivenNames = "someApplicantGivenNames";
     private final String applicantFamilyName = "someApplicantFamilyName";
-
+    @Mock
+    BailCase bailCase;
     private LegalRepresentativeBailNocChangedLrPersonalisation legalRepresentativeBailNocPersonalisation;
 
     @BeforeEach
@@ -45,10 +43,10 @@ class LegalRepresentativeBailNocPersonalisationTest {
         when(bailCase.read(BailCaseFieldDefinition.LEGAL_REP_REFERENCE, String.class)).thenReturn(Optional.of(legalRepReference));
         when(bailCase.read(BailCaseFieldDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
         when(bailCase.read(BailCaseFieldDefinition.LEGAL_REP_EMAIL, String.class))
-                .thenReturn(Optional.of(legalRepEmailAddress));
+            .thenReturn(Optional.of(legalRepEmailAddress));
 
         legalRepresentativeBailNocPersonalisation = new LegalRepresentativeBailNocChangedLrPersonalisation(
-                templateId
+            templateId
         );
     }
 
@@ -67,7 +65,7 @@ class LegalRepresentativeBailNocPersonalisationTest {
     @Test
     public void should_return_given_email_address_from_bail_case() {
         assertTrue(legalRepresentativeBailNocPersonalisation.getRecipientsList(bailCase)
-                .contains(legalRepEmailAddress));
+            .contains(legalRepEmailAddress));
     }
 
     @Test
@@ -75,18 +73,16 @@ class LegalRepresentativeBailNocPersonalisationTest {
         when(bailCase.read(BailCaseFieldDefinition.LEGAL_REP_EMAIL, String.class)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> legalRepresentativeBailNocPersonalisation.getRecipientsList(bailCase))
-                ;
-assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> legalRepresentativeBailNocPersonalisation.getRecipientsList(bailCase));
+        assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-                () -> legalRepresentativeBailNocPersonalisation.getPersonalisation((BailCase) null))
-                ;
-assertEquals("bailCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> legalRepresentativeBailNocPersonalisation.getPersonalisation((BailCase) null));
+        assertEquals("bailCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -97,10 +93,10 @@ assertEquals("bailCase must not be null", exception.getMessage());
 
         assertThat(personalisation)
             .containsEntry("bailReferenceNumber", bailReferenceNumber)
-    .containsEntry("legalRepReference", legalRepReference)
-    .containsEntry("applicantGivenNames", applicantGivenNames)
-    .containsEntry("applicantFamilyName", applicantFamilyName)
-    .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber);
+            .containsEntry("legalRepReference", legalRepReference)
+            .containsEntry("applicantGivenNames", applicantGivenNames)
+            .containsEntry("applicantFamilyName", applicantFamilyName)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber);
 
     }
 

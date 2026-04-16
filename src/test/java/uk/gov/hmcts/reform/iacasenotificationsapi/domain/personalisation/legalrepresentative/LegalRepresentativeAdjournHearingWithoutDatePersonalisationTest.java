@@ -33,19 +33,15 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesO
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class LegalRepresentativeAdjournHearingWithoutDatePersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-
     private final String templateId = "someTemplateId";
     private final String someReason = "someExplanation";
-
     private final String legalRepEmailAddress = "legalrep@example.com";
-
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String legalRepRefNumber = "somelegalRepRefNumber";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-
+    @Mock
+    AsylumCase asylumCase;
     private LegalRepresentativeAdjournHearingWithoutDatePersonalisation
         legalRepresentativeAdjournHearingWithoutDatePersonalisation;
 

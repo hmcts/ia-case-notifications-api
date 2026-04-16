@@ -99,10 +99,9 @@ class LegalRepresentativeDocumentsEditedPersonalisationTest {
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> legalRepresentativeBailDocumentsEditedPersonalisation.getPersonalisation((Callback<BailCase>) null))
-            ;
-assertEquals("bailCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> legalRepresentativeBailDocumentsEditedPersonalisation.getPersonalisation((Callback<BailCase>) null));
+        assertEquals("bailCase must not be null", exception.getMessage());
     }
 
     @Test

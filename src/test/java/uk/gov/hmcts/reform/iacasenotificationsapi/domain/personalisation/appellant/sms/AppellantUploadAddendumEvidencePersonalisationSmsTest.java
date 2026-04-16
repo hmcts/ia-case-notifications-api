@@ -53,7 +53,7 @@ class AppellantUploadAddendumEvidencePersonalisationSmsTest {
     @Test
     void should_return_given_reference_id() {
         assertEquals(12345L + "_UPLOADED_ADDENDUM_EVIDENCE_AIP_APPELLANT_SMS",
-                appellantUploadAddendumEvidencePersonalisationSms.getReferenceId(12345L));
+            appellantUploadAddendumEvidencePersonalisationSms.getReferenceId(12345L));
     }
 
     @Test
@@ -63,9 +63,8 @@ class AppellantUploadAddendumEvidencePersonalisationSmsTest {
             .thenThrow(new NullPointerException("asylumCase must not be null"));
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> appellantUploadAddendumEvidencePersonalisationSms.getRecipientsList(null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> appellantUploadAddendumEvidencePersonalisationSms.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -83,16 +82,15 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> appellantUploadAddendumEvidencePersonalisationSms.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> appellantUploadAddendumEvidencePersonalisationSms.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     void should_return_personalisation_when_all_information_given() {
         Map<String, String> personalisation =
-                appellantUploadAddendumEvidencePersonalisationSms.getPersonalisation(asylumCase);
+            appellantUploadAddendumEvidencePersonalisationSms.getPersonalisation(asylumCase);
         assertThat(personalisation)
             .containsEntry("Appeal Ref Number", mockedAppealReferenceNumber)
             .containsEntry("hyperlink to service", iaAipFrontendUrl);

@@ -41,34 +41,34 @@ public class MakeAnApplicationServiceTest {
     public void setup() {
         List<IdValue<MakeAnApplication>> makeAnApplications = new ArrayList<>();
         MakeAnApplication makeAnApplication1 = new MakeAnApplication(
-                "",
-                "Expedite",
-                "",
-                new ArrayList<>(),
-                "",
-                "",
-                "",
-                "");
+            "",
+            "Expedite",
+            "",
+            new ArrayList<>(),
+            "",
+            "",
+            "",
+            "");
         makeAnApplications.add(new IdValue<>("1", makeAnApplication1));
         MakeAnApplication makeAnApplication2 = new MakeAnApplication(
-                "",
-                "Other",
-                "",
-                new ArrayList<>(),
-                "",
-                "",
-                "",
-                "");
+            "",
+            "Other",
+            "",
+            new ArrayList<>(),
+            "",
+            "",
+            "",
+            "");
         makeAnApplications.add(new IdValue<>("2", makeAnApplication2));
         MakeAnApplication makeAnApplication3 = new MakeAnApplication(
-                "",
-                "Withdraw",
-                "",
-                new ArrayList<>(),
-                "",
-                "",
-                "",
-                "");
+            "",
+            "Withdraw",
+            "",
+            new ArrayList<>(),
+            "",
+            "",
+            "",
+            "");
         makeAnApplications.add(new IdValue<>("3", makeAnApplication3));
         when(asylumCase.read(MAKE_AN_APPLICATIONS)).thenReturn(Optional.of(makeAnApplications));
         makeAnApplicationService = new MakeAnApplicationService();

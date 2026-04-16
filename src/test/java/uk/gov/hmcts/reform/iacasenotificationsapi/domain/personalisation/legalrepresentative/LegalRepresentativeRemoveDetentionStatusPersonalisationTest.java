@@ -24,13 +24,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class LegalRepresentativeRemoveDetentionStatusPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    EmailAddressFinder emailAddressFinder;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-
     private final String removeDetentionStatusTemplateId = "removeDetentionStatusTemplateId";
     private final String iaExUiFrontendUrl = "http://localhost";
     private final String appealReferenceNumber = "someReferenceNumber";
@@ -38,11 +31,15 @@ public class LegalRepresentativeRemoveDetentionStatusPersonalisationTest {
     private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-
     private final String customerServicesTelephone = "555 555 555";
     private final String emailAddress = "legal@example.com";
     private final String customerServicesEmail = "cust.services@example.com";
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    EmailAddressFinder emailAddressFinder;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
     private LegalRepresentativeRemoveDetentionStatusPersonalisation legalRepresentativeRemoveDetentionStatusPersonalisation;
 
     @BeforeEach
@@ -58,9 +55,9 @@ public class LegalRepresentativeRemoveDetentionStatusPersonalisationTest {
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         legalRepresentativeRemoveDetentionStatusPersonalisation = new LegalRepresentativeRemoveDetentionStatusPersonalisation(
-                removeDetentionStatusTemplateId,
-                iaExUiFrontendUrl,
-                customerServicesProvider
+            removeDetentionStatusTemplateId,
+            iaExUiFrontendUrl,
+            customerServicesProvider
         );
     }
 
@@ -73,31 +70,30 @@ public class LegalRepresentativeRemoveDetentionStatusPersonalisationTest {
     public void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_REMOVE_DETENTION_STATUS_LEGAL_REP",
-                legalRepresentativeRemoveDetentionStatusPersonalisation.getReferenceId(caseId));
+            legalRepresentativeRemoveDetentionStatusPersonalisation.getReferenceId(caseId));
     }
 
     @Test
     public void should_return_given_email_address() {
         assertTrue(
-                legalRepresentativeRemoveDetentionStatusPersonalisation
-                        .getRecipientsList(asylumCase).contains(emailAddress));
+            legalRepresentativeRemoveDetentionStatusPersonalisation
+                .getRecipientsList(asylumCase).contains(emailAddress));
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> legalRepresentativeRemoveDetentionStatusPersonalisation
-                .getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> legalRepresentativeRemoveDetentionStatusPersonalisation
+                .getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_return_personalisation_when_all_information_given() {
 
         Map<String, String> personalisation =
-                legalRepresentativeRemoveDetentionStatusPersonalisation.getPersonalisation(asylumCase);
+            legalRepresentativeRemoveDetentionStatusPersonalisation.getPersonalisation(asylumCase);
 
         assertThat(personalisation)
             .containsEntry("appealReferenceNumber", appealReferenceNumber)
@@ -121,7 +117,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
-                legalRepresentativeRemoveDetentionStatusPersonalisation.getPersonalisation(asylumCase);
+            legalRepresentativeRemoveDetentionStatusPersonalisation.getPersonalisation(asylumCase);
 
         assertThat(personalisation)
             .containsEntry("appealReferenceNumber", "")

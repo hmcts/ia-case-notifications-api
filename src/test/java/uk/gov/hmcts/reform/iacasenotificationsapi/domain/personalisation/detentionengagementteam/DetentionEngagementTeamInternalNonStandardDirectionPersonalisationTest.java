@@ -41,6 +41,11 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class DetentionEngagementTeamInternalNonStandardDirectionPersonalisationTest {
 
+    final DocumentWithMetadata sendDirectionLetter = TestUtils.getDocumentWithMetadata(
+        "id", "internal_appeal_submission", "some other desc", DocumentTag.INTERNAL_NON_STANDARD_DIRECTION_TO_APPELLANT_LETTER);
+    final IdValue<DocumentWithMetadata> document = new IdValue<>("1", sendDirectionLetter);
+    private final String templateId = "templateId";
+    private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
     @Mock
     PersonalisationProvider personalisationProvider;
     @Mock
@@ -50,20 +55,11 @@ public class DetentionEngagementTeamInternalNonStandardDirectionPersonalisationT
     @Mock
     AsylumCase asylumCase;
     @Mock
-    private DetentionEmailService detEmailService;
-    @Mock
     HomeOfficeEmailFinder homeOfficeEmailFinder;
-
-    private final String templateId = "templateId";
-    private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
-    final DocumentWithMetadata sendDirectionLetter = TestUtils.getDocumentWithMetadata(
-        "id", "internal_appeal_submission", "some other desc", DocumentTag.INTERNAL_NON_STANDARD_DIRECTION_TO_APPELLANT_LETTER);
-    final IdValue<DocumentWithMetadata> document = new IdValue<>("1", sendDirectionLetter);
-
     @Mock
     DocumentDownloadClient documentDownloadClient;
-
-
+    @Mock
+    private DetentionEmailService detEmailService;
     private DetentionEngagementTeamNonStandardDirectionPersonalisation detentionEngagementTeamNonStandardDirectionPersonalisation;
 
     @BeforeEach

@@ -20,23 +20,19 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationTy
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 
 
-
 @ExtendWith(MockitoExtension.class)
 class AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationSmsTest {
-
-
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    RecipientsFinder recipientsFinder;
 
 
     private final String iaAipFrontendUrl = "http://localhost/";
     private final String directLinkToJudgesReviewPage = "http://localhost/ask-judge-review";
     private final String appealReferenceNumber = "someReferenceNumber";
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    RecipientsFinder recipientsFinder;
     private AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationSms
-            recordOutOfTimeDecisionCannotProceedPersonalisationSms;
+        recordOutOfTimeDecisionCannotProceedPersonalisationSms;
 
     @BeforeEach
     void setUp() {
@@ -44,9 +40,9 @@ class AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationSmsTest {
         String iaAipFrontendPathToJudgeReview = "ask-judge-review";
         String recordOutOfDecisionCannotProceedTemplateId = "recordOutOfDecisionCannotProceedTemplateId";
         recordOutOfTimeDecisionCannotProceedPersonalisationSms =
-                new AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationSms(
-                    recordOutOfDecisionCannotProceedTemplateId,
-                        iaAipFrontendUrl, iaAipFrontendPathToJudgeReview, recipientsFinder);
+            new AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationSms(
+                recordOutOfDecisionCannotProceedTemplateId,
+                iaAipFrontendUrl, iaAipFrontendPathToJudgeReview, recipientsFinder);
 
     }
 
@@ -56,7 +52,7 @@ class AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationSmsTest {
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
 
         Map<String, String> personalisation =
-                recordOutOfTimeDecisionCannotProceedPersonalisationSms.getPersonalisation(asylumCase);
+            recordOutOfTimeDecisionCannotProceedPersonalisationSms.getPersonalisation(asylumCase);
 
         assertThat(personalisation)
             .containsEntry("Appeal Ref Number", appealReferenceNumber)
@@ -67,11 +63,10 @@ class AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationSmsTest {
     @Test
     void should_return_personalisation_when_all_information_given_after_listing() {
 
-        String designatedHearingCentre = "belfast@hearingcentre.gov";
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
 
         Map<String, String> personalisation =
-                recordOutOfTimeDecisionCannotProceedPersonalisationSms.getPersonalisation(asylumCase);
+            recordOutOfTimeDecisionCannotProceedPersonalisationSms.getPersonalisation(asylumCase);
 
         assertThat(personalisation)
             .containsEntry("Appeal Ref Number", appealReferenceNumber)
@@ -84,26 +79,25 @@ class AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationSmsTest {
     void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_RECORD_OUT_OF_TIME_DECISION_CANNOT_PROCEED_AIP_SMS",
-                recordOutOfTimeDecisionCannotProceedPersonalisationSms.getReferenceId(caseId));
+            recordOutOfTimeDecisionCannotProceedPersonalisationSms.getReferenceId(caseId));
     }
 
     @Test
     void should_return_given_email_address_from_asylum_case() {
         String mockedAppellantMobileNumber = "1234445556";
         when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
-                .thenReturn(Collections.singleton(mockedAppellantMobileNumber));
+            .thenReturn(Collections.singleton(mockedAppellantMobileNumber));
 
         assertTrue(recordOutOfTimeDecisionCannotProceedPersonalisationSms.getRecipientsList(asylumCase)
-                .contains(mockedAppellantMobileNumber));
+            .contains(mockedAppellantMobileNumber));
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        NullPointerException exception = 
-assertThrows(NullPointerException.class, 
-                () -> recordOutOfTimeDecisionCannotProceedPersonalisationSms.getPersonalisation((AsylumCase) null))
-                ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> recordOutOfTimeDecisionCannotProceedPersonalisationSms.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 }

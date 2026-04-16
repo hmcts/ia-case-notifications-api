@@ -36,6 +36,18 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AddEvidenceForCostsSubmittedSubmitterPersonalisationTest {
+    private static final String homeOffice = "Home office";
+    private static final String newestApplicationCreatedNumber = "1";
+    private static final String unreasonableCostsType = "Unreasonable costs";
+    private final String templateId = "templateId";
+    private final String homeOfficeEmailAddress = "homeOfficeEmailAddress@gmail.com";
+    private final String legalRepEmailAddress = "legalRepEmailAddress@gmail.com";
+    private final String iaExUiFrontendUrl = "http://localhost";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -44,21 +56,18 @@ class AddEvidenceForCostsSubmittedSubmitterPersonalisationTest {
     CustomerServicesProvider customerServicesProvider;
     @Mock
     PersonalisationProvider personalisationProvider;
-
-    private final String templateId = "templateId";
-    private final String homeOfficeEmailAddress = "homeOfficeEmailAddress@gmail.com";
-    private final String legalRepEmailAddress = "legalRepEmailAddress@gmail.com";
-    private final String iaExUiFrontendUrl = "http://localhost";
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-    private static final String homeOffice = "Home office";
-    private final String customerServicesTelephone = "555 555 555";
-    private final String customerServicesEmail = "cust.services@example.com";
-    private static final String newestApplicationCreatedNumber = "1";
-    private static final String unreasonableCostsType = "Unreasonable costs";
-
     private AddEvidenceForCostsSubmittedSubmitterPersonalisation addEvidenceForCostsSubmittedSubmitterPersonalisation;
+
+    static Stream<Arguments> appliesForCostsProviderWithJudge() {
+        return Stream.of(
+            Arguments.of(List.of(new IdValue<>("1", new ApplyForCosts("Legal representative", "Legal representative", homeOffice, "Unreasonable costs", "24 Nov 2023"))),
+                new DynamicList(new Value("1", "Costs 1, Unreasonable costs, 24 Nov 2023"), List.of(new Value("1", "Costs 1, Unreasonable costs, 24 Nov 2023")))),
+            Arguments.of(List.of(new IdValue<>("2", new ApplyForCosts(homeOffice, homeOffice, "Legal representative", "Wasted costs", "24 Nov 2023"))),
+                new DynamicList(new Value("2", "Costs 2, Wasted costs, 24 Nov 2023"), List.of(new Value("2", "Costs 2, Wasted costs, 24 Nov 2023")))),
+            Arguments.of(List.of(new IdValue<>("3", new ApplyForCosts(homeOffice, "Tribunal", homeOffice, "Wasted costs", "24 Nov 2023"))),
+                new DynamicList(new Value("3", "Costs 3, Wasted costs, 24 Nov 2023"), List.of(new Value("3", "Costs 3, Wasted costs, 24 Nov 2023"))))
+        );
+    }
 
     @BeforeEach
     void setup() {
@@ -97,7 +106,7 @@ class AddEvidenceForCostsSubmittedSubmitterPersonalisationTest {
     void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_ADD_EVIDENCE_FOR_COSTS_SUBMITTER_EMAIL",
-                addEvidenceForCostsSubmittedSubmitterPersonalisation.getReferenceId(caseId));
+            addEvidenceForCostsSubmittedSubmitterPersonalisation.getReferenceId(caseId));
     }
 
     @ParameterizedTest
@@ -119,9 +128,8 @@ class AddEvidenceForCostsSubmittedSubmitterPersonalisationTest {
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> addEvidenceForCostsSubmittedSubmitterPersonalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> addEvidenceForCostsSubmittedSubmitterPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -158,16 +166,5 @@ assertEquals("asylumCase must not be null", exception.getMessage());
                 .containsEntry("legalRepReferenceNumber", expectedLegalRepRefNumber)
                 .containsEntry("ariaListingReference", expectedAriaReferenceNumber);
         }
-    }
-
-    static Stream<Arguments> appliesForCostsProviderWithJudge() {
-        return Stream.of(
-                Arguments.of(List.of(new IdValue<>("1", new ApplyForCosts("Legal representative", "Legal representative", homeOffice, "Unreasonable costs", "24 Nov 2023"))),
-                        new DynamicList(new Value("1", "Costs 1, Unreasonable costs, 24 Nov 2023"), List.of(new Value("1", "Costs 1, Unreasonable costs, 24 Nov 2023")))),
-                Arguments.of(List.of(new IdValue<>("2", new ApplyForCosts(homeOffice, homeOffice, "Legal representative", "Wasted costs", "24 Nov 2023"))),
-                        new DynamicList(new Value("2", "Costs 2, Wasted costs, 24 Nov 2023"), List.of(new Value("2", "Costs 2, Wasted costs, 24 Nov 2023")))),
-                Arguments.of(List.of(new IdValue<>("3", new ApplyForCosts(homeOffice, "Tribunal", homeOffice, "Wasted costs", "24 Nov 2023"))),
-                        new DynamicList(new Value("3", "Costs 3, Wasted costs, 24 Nov 2023"), List.of(new Value("3", "Costs 3, Wasted costs, 24 Nov 2023"))))
-        );
     }
 }

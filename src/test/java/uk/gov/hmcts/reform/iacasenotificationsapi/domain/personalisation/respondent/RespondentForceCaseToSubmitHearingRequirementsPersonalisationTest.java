@@ -26,20 +26,17 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesO
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class RespondentForceCaseToSubmitHearingRequirementsPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-
     private final String templateId = "someTemplateId";
     private final String detentionTemplateId = "detentionTemplateId";
     private final String homeOfficeLartEmailAddress = "homeOfficeLART@example.com";
-
     private final String hmctsReference = "hmctsReference";
     private final String homeOfficeReference = "homeOfficeReference";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-
+    @Mock
+    AsylumCase asylumCase;
     private RespondentForceCaseToSubmitHearingRequirementsPersonalisation
-         respondentForceCaseToSubmitHearingRequirementsPersonalisation;
+        respondentForceCaseToSubmitHearingRequirementsPersonalisation;
 
     @BeforeEach
     public void setUp() {
@@ -90,7 +87,7 @@ public class RespondentForceCaseToSubmitHearingRequirementsPersonalisationTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
@@ -111,9 +108,8 @@ public class RespondentForceCaseToSubmitHearingRequirementsPersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> respondentForceCaseToSubmitHearingRequirementsPersonalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> respondentForceCaseToSubmitHearingRequirementsPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 }

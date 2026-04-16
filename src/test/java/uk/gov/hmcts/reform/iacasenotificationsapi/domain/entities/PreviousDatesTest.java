@@ -26,10 +26,10 @@ public class PreviousDatesTest {
     @Test
     public void should_not_allow_null_arguments() {
 
-        assertThrows(NullPointerException.class, 
-() -> new PreviousDates(null, dateSent));
+        assertThrows(NullPointerException.class,
+            () -> new PreviousDates(null, dateSent));
 
-        assertThrows(NullPointerException.class, 
-() -> new PreviousDates(dateDue, null));
+        assertThrows(NullPointerException.class,
+            () -> new PreviousDates(dateDue, null));
     }
 }

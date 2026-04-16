@@ -35,22 +35,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.fie
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantInternalCaseNonStandardDirectionPersonalisationTest {
 
-    @Mock
-    Callback<AsylumCase> callback;
-    @Mock
-    CaseDetails<AsylumCase> caseDetails;
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-    @Mock
-    DirectionFinder directionFinder;
-    @Mock
-    Direction direction;
-    @Mock
-    AddressUk address;
-
-    private AppellantInternalCaseNonStandardDirectionPersonalisation appellantInternalCaseNonStandardDirectionPersonalisation;
     private final Long caseId = 12345L;
     private final String appellantInternalCaseNonStandardDirectionLetterTemplateId = "appellantInternalCaseNonStandardDirectionLetterTemplateId";
     private final String appealReferenceNumber = "someAppealRefNumber";
@@ -68,6 +52,21 @@ public class AppellantInternalCaseNonStandardDirectionPersonalisationTest {
     private final String oocAddressLine2 = "Madrid";
     private final String oocAddressLine3 = "28003";
     private final NationalityFieldValue oocAddressCountry = mock(NationalityFieldValue.class);
+    @Mock
+    Callback<AsylumCase> callback;
+    @Mock
+    CaseDetails<AsylumCase> caseDetails;
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    DirectionFinder directionFinder;
+    @Mock
+    Direction direction;
+    @Mock
+    AddressUk address;
+    private AppellantInternalCaseNonStandardDirectionPersonalisation appellantInternalCaseNonStandardDirectionPersonalisation;
 
     @BeforeEach
     public void setup() {
@@ -83,7 +82,7 @@ public class AppellantInternalCaseNonStandardDirectionPersonalisationTest {
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
         String mockedAppealReferenceNumber = "someAppealRefNumber";
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class))
-                .thenReturn(Optional.of(mockedAppealReferenceNumber));
+            .thenReturn(Optional.of(mockedAppealReferenceNumber));
         String mockedAppellantGivenNames = "someAppellantGivenNames";
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(mockedAppellantGivenNames));
         String mockedAppellantFamilyName = "someAppellantFamilyName";
@@ -106,22 +105,22 @@ public class AppellantInternalCaseNonStandardDirectionPersonalisationTest {
         when(oocAddressCountry.getCode()).thenReturn(Nationality.ES.name());
 
         appellantInternalCaseNonStandardDirectionPersonalisation = new AppellantInternalCaseNonStandardDirectionPersonalisation(
-                appellantInternalCaseNonStandardDirectionLetterTemplateId,
-                customerServicesProvider,
-                directionFinder
+            appellantInternalCaseNonStandardDirectionLetterTemplateId,
+            customerServicesProvider,
+            directionFinder
         );
     }
 
     @Test
     public void should_return_given_template_id() {
         assertEquals(appellantInternalCaseNonStandardDirectionLetterTemplateId,
-                appellantInternalCaseNonStandardDirectionPersonalisation.getTemplateId());
+            appellantInternalCaseNonStandardDirectionPersonalisation.getTemplateId());
     }
 
     @Test
     public void should_return_given_reference_id() {
         assertEquals(caseId + "_INTERNAL_NON_STANDARD_DIRECTION_APPELLANT_LETTER",
-                appellantInternalCaseNonStandardDirectionPersonalisation.getReferenceId(caseId));
+            appellantInternalCaseNonStandardDirectionPersonalisation.getReferenceId(caseId));
     }
 
     @Test
@@ -131,9 +130,8 @@ public class AppellantInternalCaseNonStandardDirectionPersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> appellantInternalCaseNonStandardDirectionPersonalisation.getRecipientsList(asylumCase))
-            ;
-assertEquals("appellantAddress is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> appellantInternalCaseNonStandardDirectionPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("appellantAddress is not present", exception.getMessage());
     }
 
     @Test
@@ -142,19 +140,17 @@ assertEquals("appellantAddress is not present", exception.getMessage());
         when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_ADDRESS_U_K, AddressUk.class)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> appellantInternalCaseNonStandardDirectionPersonalisation.getRecipientsList(asylumCase))
-            ;
-assertEquals("legalRepAddressUK is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> appellantInternalCaseNonStandardDirectionPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("legalRepAddressUK is not present", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-                () -> appellantInternalCaseNonStandardDirectionPersonalisation.getPersonalisation((Callback<AsylumCase>) null))
-                ;
-assertEquals("callback must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> appellantInternalCaseNonStandardDirectionPersonalisation.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     @Test
@@ -163,7 +159,7 @@ assertEquals("callback must not be null", exception.getMessage());
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
 
         Map<String, String> personalisation =
-                appellantInternalCaseNonStandardDirectionPersonalisation.getPersonalisation(callback);
+            appellantInternalCaseNonStandardDirectionPersonalisation.getPersonalisation(callback);
 
         assertThat(personalisation)
             .containsEntry("appellantGivenNames", appellantGivenNames)
@@ -176,7 +172,7 @@ assertEquals("callback must not be null", exception.getMessage());
             .containsEntry("address_line_5", postCode);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-            assertEquals(expectedDirectionDueDate, personalisation.get("directionDueDate"));
+        assertEquals(expectedDirectionDueDate, personalisation.get("directionDueDate"));
     }
 
     @Test
@@ -185,7 +181,7 @@ assertEquals("callback must not be null", exception.getMessage());
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
 
         Map<String, String> personalisation =
-                appellantInternalCaseNonStandardDirectionPersonalisation.getPersonalisation(callback);
+            appellantInternalCaseNonStandardDirectionPersonalisation.getPersonalisation(callback);
 
         assertThat(personalisation)
             .containsEntry("appellantGivenNames", appellantGivenNames)
@@ -197,7 +193,7 @@ assertEquals("callback must not be null", exception.getMessage());
             .containsEntry("address_line_4", Nationality.ES.toString());
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-            assertEquals(expectedDirectionDueDate, personalisation.get("directionDueDate"));
+        assertEquals(expectedDirectionDueDate, personalisation.get("directionDueDate"));
     }
 
     @Test
@@ -218,7 +214,7 @@ assertEquals("callback must not be null", exception.getMessage());
             .containsEntry("address_line_5", postCode);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-            assertEquals(expectedDirectionDueDate, personalisation.get("directionDueDate"));
+        assertEquals(expectedDirectionDueDate, personalisation.get("directionDueDate"));
     }
 
     @Test
@@ -240,7 +236,7 @@ assertEquals("callback must not be null", exception.getMessage());
             .containsEntry("address_line_5", Nationality.ES.toString());
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-            assertEquals(expectedDirectionDueDate, personalisation.get("directionDueDate"));
+        assertEquals(expectedDirectionDueDate, personalisation.get("directionDueDate"));
     }
 
     private void legalRepOutOfCountryDataSetup() {

@@ -26,17 +26,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class RespondentReheardUnderRule35PersonalisationEmailTest {
-    @Mock
-    Callback<AsylumCase> callback;
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    private CaseDetails<AsylumCase> caseDetails;
-    @Mock
-    EmailAddressFinder emailAddressFinder;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-
     private final Long caseId = 12345L;
     private final String respondentReheardUnder35RuleEmailTemplateId = "aipAppellantReheardUnder35RuleEmailTemplateId";
     private final String exUiFrontendUrl = "http://localhost";
@@ -45,6 +34,16 @@ class RespondentReheardUnderRule35PersonalisationEmailTest {
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "cust.services@example.com";
+    @Mock
+    Callback<AsylumCase> callback;
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    EmailAddressFinder emailAddressFinder;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    private CaseDetails<AsylumCase> caseDetails;
     private RespondentReheardUnderRule35PersonalisationEmail respondentReheardUnderRule35PersonalisationEmail;
 
     @BeforeEach
@@ -77,7 +76,7 @@ class RespondentReheardUnderRule35PersonalisationEmailTest {
     @Test
     void should_return_given_reference_id() {
         assertEquals(caseId + "_RESPONDENT_REHEARD_UNDER_RULE_35_EMAIL",
-                respondentReheardUnderRule35PersonalisationEmail.getReferenceId(caseId));
+            respondentReheardUnderRule35PersonalisationEmail.getReferenceId(caseId));
     }
 
     @Test
@@ -94,9 +93,8 @@ class RespondentReheardUnderRule35PersonalisationEmailTest {
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class, () -> respondentReheardUnderRule35PersonalisationEmail.getPersonalisation((Callback<AsylumCase>) null))
-            ;
-assertEquals("callback must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class, () -> respondentReheardUnderRule35PersonalisationEmail.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     @Test

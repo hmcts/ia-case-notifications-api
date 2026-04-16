@@ -37,14 +37,9 @@ import uk.gov.service.notify.NotificationClientException;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class DetentionEngagementTeamReinstateAppealPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    DetEmailService detEmailService;
-    @Mock
-    JSONObject jsonDocument;
-    @Mock
-    DocumentDownloadClient documentDownloadClient;
+    final DocumentWithMetadata reinstateAppealDoc = getDocumentWithMetadata(
+        "1", "internal-detained-reinstate-appeal-letter", "some other desc", DocumentTag.INTERNAL_REINSTATE_APPEAL_LETTER);
+    final IdValue<DocumentWithMetadata> reinstateAppealDocId = new IdValue<>("1", reinstateAppealDoc);
     private final String adaTemplateId = "adaTemplateId";
     private final String nonAdaTemplateId = "nonAdaTemplateId";
     private final String appealReferenceNumber = "someReferenceNumber";
@@ -53,10 +48,15 @@ class DetentionEngagementTeamReinstateAppealPersonalisationTest {
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
     private final Long caseId = 12345L;
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    DetEmailService detEmailService;
+    @Mock
+    JSONObject jsonDocument;
+    @Mock
+    DocumentDownloadClient documentDownloadClient;
     private DetentionEngagementTeamReinstateAppealPersonalisation detentionEngagementTeamReinstateAppealPersonalisation;
-    final DocumentWithMetadata reinstateAppealDoc = getDocumentWithMetadata(
-        "1", "internal-detained-reinstate-appeal-letter", "some other desc", DocumentTag.INTERNAL_REINSTATE_APPEAL_LETTER);
-    final IdValue<DocumentWithMetadata> reinstateAppealDocId = new IdValue<>("1", reinstateAppealDoc);
 
     DetentionEngagementTeamReinstateAppealPersonalisationTest() {
     }
@@ -137,10 +137,9 @@ class DetentionEngagementTeamReinstateAppealPersonalisationTest {
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> detentionEngagementTeamReinstateAppealPersonalisation.getPersonalisationForLink((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> detentionEngagementTeamReinstateAppealPersonalisation.getPersonalisationForLink((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -148,10 +147,9 @@ assertEquals("asylumCase must not be null", exception.getMessage());
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class,
-            () -> detentionEngagementTeamReinstateAppealPersonalisation.getPersonalisationForLink(asylumCase))
-            ;
-assertEquals("internalReinstateAppealLetter document not available", exception.getMessage());
+            assertThrows(IllegalStateException.class,
+                () -> detentionEngagementTeamReinstateAppealPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("internalReinstateAppealLetter document not available", exception.getMessage());
     }
 
     @Test
@@ -178,9 +176,8 @@ assertEquals("internalReinstateAppealLetter document not available", exception.g
     public void should_throw_exception_when_notification_client_throws_Exception() throws NotificationClientException, IOException {
         when(documentDownloadClient.getJsonObjectFromDocument(reinstateAppealDoc)).thenThrow(new NotificationClientException("File size is more than 2MB"));
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> detentionEngagementTeamReinstateAppealPersonalisation.getPersonalisationForLink(asylumCase))
-            ;
-assertEquals("Failed to get Internal Reinstate appeal letter in compatible format", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamReinstateAppealPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("Failed to get Internal Reinstate appeal letter in compatible format", exception.getMessage());
     }
 
 }

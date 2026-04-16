@@ -32,20 +32,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsF
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppellantInternalCaseAdjournedWithoutDatePersonalisationTest {
-    @Mock
-    Callback<AsylumCase> callback;
-    @Mock
-    private CaseDetails<AsylumCase> caseDetails;
-    @Mock
-    private AsylumCase asylumCase;
-    @Mock
-    private CustomerServicesProvider customerServicesProvider;
-    @Mock
-    private DateTimeExtractor dateTimeExtractor;
-    @Mock
-    AddressUk address;
-    @Mock
-    private HearingDetailsFinder hearingDetailsFinder;
     private final String customerServicesTelephone = "0300 123 1711";
     private final String customerServicesEmail = "example@example.com";
     private final String appellantGivenNames = "John";
@@ -59,14 +45,28 @@ class AppellantInternalCaseAdjournedWithoutDatePersonalisationTest {
     private final String postCode = "XX1 2YY";
     private final String postTown = "Town name";
     private final String formattedManchesterHearingCentreAddress = "birmingham";
-    private AppellantInternalCaseAdjournedWithoutDatePersonalisation internalCaseAdjournedWithoutDatePersonalisation;
-    private Map<String, String> fieldValuesMap;
     private final String oocAddressLine1 = "Calle Toledo 32";
     private final String oocAddressLine2 = "Madrid";
     private final String oocAddressLine3 = "28003";
     private final NationalityFieldValue oocAddressCountry = mock(NationalityFieldValue.class);
     private final String hearingDate = "2019-08-27";
     private final String listCaseHearingCentre = HearingCentre.BIRMINGHAM.toString();
+    @Mock
+    Callback<AsylumCase> callback;
+    @Mock
+    AddressUk address;
+    @Mock
+    private CaseDetails<AsylumCase> caseDetails;
+    @Mock
+    private AsylumCase asylumCase;
+    @Mock
+    private CustomerServicesProvider customerServicesProvider;
+    @Mock
+    private DateTimeExtractor dateTimeExtractor;
+    @Mock
+    private HearingDetailsFinder hearingDetailsFinder;
+    private AppellantInternalCaseAdjournedWithoutDatePersonalisation internalCaseAdjournedWithoutDatePersonalisation;
+    private Map<String, String> fieldValuesMap;
 
     @BeforeEach
     public void setUp() {

@@ -29,11 +29,13 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
 
-
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantChangeDirectionDueDateOfHomeOfficePersonalisationSmsTest {
 
+    private final String smsTemplateId = "afterListingEmailTemplateId";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
+    private final String directionExplanation = "Some HO change direction due date content";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -44,13 +46,7 @@ public class AppellantChangeDirectionDueDateOfHomeOfficePersonalisationSmsTest {
     RecipientsFinder recipientsFinder;
     @Mock
     PersonalisationProvider personalisationProvider;
-
-    private final String smsTemplateId = "afterListingEmailTemplateId";
-
-    private final String mockedAppealReferenceNumber = "someReferenceNumber";
-
     private AppellantChangeDirectionDueDateOfHomeOfficePersonalisationSms appellantChangeDirectionDueDateOfHomeOfficePersonalisationSms;
-    private final String directionExplanation = "Some HO change direction due date content";
 
     @BeforeEach
     public void setup() {
@@ -58,14 +54,14 @@ public class AppellantChangeDirectionDueDateOfHomeOfficePersonalisationSmsTest {
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class))
-                .thenReturn(Optional.of(mockedAppealReferenceNumber));
+            .thenReturn(Optional.of(mockedAppealReferenceNumber));
 
         appellantChangeDirectionDueDateOfHomeOfficePersonalisationSms =
-                new AppellantChangeDirectionDueDateOfHomeOfficePersonalisationSms(
-                        smsTemplateId,
-                        personalisationProvider,
-                        recipientsFinder
-                );
+            new AppellantChangeDirectionDueDateOfHomeOfficePersonalisationSms(
+                smsTemplateId,
+                personalisationProvider,
+                recipientsFinder
+            );
     }
 
     @Test
@@ -78,7 +74,7 @@ public class AppellantChangeDirectionDueDateOfHomeOfficePersonalisationSmsTest {
     public void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_APPELLANT_CHANGE_DIRECTION_DUE_DATE_OF_HOME_OFFICE_SMS",
-                appellantChangeDirectionDueDateOfHomeOfficePersonalisationSms.getReferenceId(caseId));
+            appellantChangeDirectionDueDateOfHomeOfficePersonalisationSms.getReferenceId(caseId));
     }
 
     @Test
@@ -86,22 +82,21 @@ public class AppellantChangeDirectionDueDateOfHomeOfficePersonalisationSmsTest {
 
         String mockedAppellantMobilePhone = "07123456789";
         when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
-                .thenReturn(Collections.singleton(mockedAppellantMobilePhone));
+            .thenReturn(Collections.singleton(mockedAppellantMobilePhone));
 
         assertTrue(appellantChangeDirectionDueDateOfHomeOfficePersonalisationSms.getRecipientsList(asylumCase)
-                .contains(mockedAppellantMobilePhone));
+            .contains(mockedAppellantMobilePhone));
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         when(recipientsFinder.findAll(null, NotificationType.SMS))
-                .thenThrow(new NullPointerException("asylumCase must not be null"));
+            .thenThrow(new NullPointerException("asylumCase must not be null"));
 
-        NullPointerException exception = 
-assertThrows(NullPointerException.class, () -> appellantChangeDirectionDueDateOfHomeOfficePersonalisationSms.getRecipientsList(null))
-                ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> appellantChangeDirectionDueDateOfHomeOfficePersonalisationSms.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -111,7 +106,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisationForAppellant());
 
         Map<String, String> personalisation =
-                appellantChangeDirectionDueDateOfHomeOfficePersonalisationSms.getPersonalisation(callback);
+            appellantChangeDirectionDueDateOfHomeOfficePersonalisationSms.getPersonalisation(callback);
 
         assertThat(personalisation)
             .containsEntry("Appeal Ref Number", mockedAppealReferenceNumber)
@@ -126,7 +121,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisationForAppellant());
 
         Map<String, String> personalisation =
-                appellantChangeDirectionDueDateOfHomeOfficePersonalisationSms.getPersonalisation(callback);
+            appellantChangeDirectionDueDateOfHomeOfficePersonalisationSms.getPersonalisation(callback);
 
         assertThat(personalisation)
             .containsEntry("Appeal Ref Number", "")
@@ -137,13 +132,13 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     private Map<String, String> getPersonalisationForAppellant() {
         String dueDate = "2020-10-08";
         return ImmutableMap
-                .<String, String>builder()
-                .put("explanation", directionExplanation)
-                .put("dueDate", LocalDate
-                        .parse(dueDate)
-                        .format(DateTimeFormatter.ofPattern("d MMM yyyy"))
-)
-                .build();
+            .<String, String>builder()
+            .put("explanation", directionExplanation)
+            .put("dueDate", LocalDate
+                .parse(dueDate)
+                .format(DateTimeFormatter.ofPattern("d MMM yyyy"))
+            )
+            .build();
     }
 
 }

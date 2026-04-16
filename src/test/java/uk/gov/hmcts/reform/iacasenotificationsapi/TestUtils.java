@@ -23,7 +23,7 @@ public class TestUtils {
     }
 
     public static DocumentWithMetadata getDocumentWithMetadata(String docId, String filename,
-                                                                                  String description, DocumentTag tag) {
+                                                               String description, DocumentTag tag) {
         String documentUrl = "http://dm-store/" + docId;
         Document document = new Document(documentUrl, documentUrl + "/binary", filename);
 
@@ -31,7 +31,7 @@ public class TestUtils {
     }
 
     public static DocumentWithDescription getDocumentWithDescription(String docId, String filename,
-                                                               String description) {
+                                                                     String description) {
         String documentUrl = "http://dm-store/" + docId;
         Document document = new Document(documentUrl, documentUrl + "/binary", filename);
 

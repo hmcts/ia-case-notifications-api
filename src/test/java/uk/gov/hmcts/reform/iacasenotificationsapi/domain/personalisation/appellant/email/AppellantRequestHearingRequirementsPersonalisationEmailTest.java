@@ -112,14 +112,13 @@ public class AppellantRequestHearingRequirementsPersonalisationEmailTest {
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-assertThrows(NullPointerException.class,
-            () -> appellantRequestHearingRequirementsPersonalisation.getPersonalisation((AsylumCase) null))
-            ;
-assertEquals("asylumCase must not be null", exception.getMessage());
+            assertThrows(NullPointerException.class,
+                () -> appellantRequestHearingRequirementsPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         initializePrefixes(appellantRequestHearingRequirementsPersonalisation);
@@ -140,7 +139,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
 
         initializePrefixes(appellantRequestHearingRequirementsPersonalisation);
@@ -175,8 +174,7 @@ assertEquals("asylumCase must not be null", exception.getMessage());
             .thenReturn(Optional.empty());
 
         IllegalStateException exception =
-assertThrows(IllegalStateException.class, () -> appellantRequestHearingRequirementsPersonalisation.getPersonalisation(asylumCase))
-            ;
-assertEquals("Appellant request hearing requirements direction is not present", exception.getMessage());
+            assertThrows(IllegalStateException.class, () -> appellantRequestHearingRequirementsPersonalisation.getPersonalisation(asylumCase));
+        assertEquals("Appellant request hearing requirements direction is not present", exception.getMessage());
     }
 }
