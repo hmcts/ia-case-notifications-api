@@ -1,11 +1,9 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.uppertribunal;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.HOME_OFFICE_REFERENCE_NUMBER;
 
 import java.util.Map;
 import java.util.Optional;
@@ -38,7 +36,7 @@ class UpperTribunalDecisionRefusedImaPersonalisationTest {
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "cust.services@example.com";
-    private String decisionGranted = " Granted";
+    private final String decisionGranted = " Granted";
 
     private UpperTribunalDecisionRefusedImaPersonalisation upperTribunalDecisionRefusedImaPersonalisation;
 
@@ -60,7 +58,7 @@ class UpperTribunalDecisionRefusedImaPersonalisationTest {
     }
 
     @Test
-    public void should_return_given_template_id()  {
+    public void should_return_given_template_id() {
         assertEquals(templateId, upperTribunalDecisionRefusedImaPersonalisation.getTemplateId());
     }
 
@@ -81,10 +79,10 @@ class UpperTribunalDecisionRefusedImaPersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
-            () -> upperTribunalDecisionRefusedImaPersonalisation.getPersonalisation((BailCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("bailCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> upperTribunalDecisionRefusedImaPersonalisation.getPersonalisation((BailCase) null));
+        assertEquals("bailCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -125,12 +123,13 @@ class UpperTribunalDecisionRefusedImaPersonalisationTest {
         Map<String, String> personalisation =
             upperTribunalDecisionRefusedImaPersonalisation.getPersonalisation(bailCase);
 
-        assertEquals(bailReferenceNumber, personalisation.get("bailReferenceNumber"));
-        assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(legalRepReference, personalisation.get("legalRepReference"));
-        assertEquals(appellantGivenNames, personalisation.get("applicantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("applicantFamilyName"));
-        assertEquals(decisionGranted, personalisation.get("decision"));
+        assertThat(personalisation)
+            .containsEntry("bailReferenceNumber", bailReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
+            .containsEntry("legalRepReference", legalRepReference)
+            .containsEntry("applicantGivenNames", appellantGivenNames)
+            .containsEntry("applicantFamilyName", appellantFamilyName)
+            .containsEntry("decision", decisionGranted);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
@@ -149,6 +148,12 @@ class UpperTribunalDecisionRefusedImaPersonalisationTest {
         Map<String, String> personalisation =
             upperTribunalDecisionRefusedImaPersonalisation.getPersonalisation(bailCase);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(bailCase);
+        assertThat(personalisation)
+            .containsEntry("bailReferenceNumber", "")
+            .containsEntry("homeOfficeReferenceNumber", "")
+            .containsEntry("legalRepReference", "")
+            .containsEntry("applicantGivenNames", "")
+            .containsEntry("applicantFamilyName", "")
+            .containsEntry("decision", decisionGranted);
     }
 }

@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
@@ -46,29 +46,26 @@ class AppellantInternalCaseAdjournedWithoutDatePersonalisationTest {
     AddressUk address;
     @Mock
     private HearingDetailsFinder hearingDetailsFinder;
-    private Long ccdCaseId = 12345L;
     private final String customerServicesTelephone = "0300 123 1711";
-    private String customerServicesEmail = "example@example.com";
-    private String appellantGivenNames = "John";
-    private String appellantFamilyName = "Smith";
-    private String homeOfficeReferenceNumber = "123654";
-    private String appealReferenceNumber = "HU/11111/2022";
+    private final String customerServicesEmail = "example@example.com";
+    private final String appellantGivenNames = "John";
+    private final String appellantFamilyName = "Smith";
+    private final String homeOfficeReferenceNumber = "123654";
+    private final String appealReferenceNumber = "HU/11111/2022";
     private final String templateName = "templateName";
-    private String addressLine1 = "50";
-    private String addressLine2 = "Building name";
-    private String addressLine3 = "Street name";
-    private String postCode = "XX1 2YY";
-    private String postTown = "Town name";
-    private String formattedManchesterHearingCentreAddress = "birmingham";
-    private final String listCaseHearingDate = "2023-08-14T14:30:00.000";
+    private final String addressLine1 = "50";
+    private final String addressLine2 = "Building name";
+    private final String addressLine3 = "Street name";
+    private final String postCode = "XX1 2YY";
+    private final String postTown = "Town name";
+    private final String formattedManchesterHearingCentreAddress = "birmingham";
     private AppellantInternalCaseAdjournedWithoutDatePersonalisation internalCaseAdjournedWithoutDatePersonalisation;
     private Map<String, String> fieldValuesMap;
-    private String oocAddressLine1 = "Calle Toledo 32";
-    private String oocAddressLine2 = "Madrid";
-    private String oocAddressLine3 = "28003";
-    private NationalityFieldValue oocAddressCountry = mock(NationalityFieldValue.class);
-    private String hearingDateTime = "2019-08-27T14:25:15.000";
-    private String hearingDate = "2019-08-27";
+    private final String oocAddressLine1 = "Calle Toledo 32";
+    private final String oocAddressLine2 = "Madrid";
+    private final String oocAddressLine3 = "28003";
+    private final NationalityFieldValue oocAddressCountry = mock(NationalityFieldValue.class);
+    private final String hearingDate = "2019-08-27";
     private final String listCaseHearingCentre = HearingCentre.BIRMINGHAM.toString();
 
     @BeforeEach
@@ -84,10 +81,12 @@ class AppellantInternalCaseAdjournedWithoutDatePersonalisationTest {
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
+        String listCaseHearingDate = "2023-08-14T14:30:00.000";
         when(asylumCase.read(LIST_CASE_HEARING_DATE, String.class)).thenReturn(Optional.of(listCaseHearingDate));
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(HearingCentre.MANCHESTER));
         when(asylumCase.read(ADJOURN_HEARING_WITHOUT_DATE_REASONS, String.class)).thenReturn(Optional.of("Reasons"));
         when(hearingDetailsFinder.getHearingCentreName(asylumCase)).thenReturn(listCaseHearingCentre);
+        String hearingDateTime = "2019-08-27T14:25:15.000";
         when(hearingDetailsFinder.getHearingDateTime(asylumCase)).thenReturn(hearingDateTime);
         when(dateTimeExtractor.extractHearingDate(hearingDateTime)).thenReturn(hearingDate);
 
@@ -102,6 +101,7 @@ class AppellantInternalCaseAdjournedWithoutDatePersonalisationTest {
 
     @Test
     void should_return_given_reference_id() {
+        Long ccdCaseId = 12345L;
         Assertions.assertEquals(ccdCaseId + "_INTERNAL_CASE_ADJOURN_WITHOUT_DATE_APPELLANT_LETTER",
             internalCaseAdjournedWithoutDatePersonalisation.getReferenceId(ccdCaseId));
     }
@@ -232,9 +232,9 @@ class AppellantInternalCaseAdjournedWithoutDatePersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> internalCaseAdjournedWithoutDatePersonalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("appellantAddress is not present");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> internalCaseAdjournedWithoutDatePersonalisation.getRecipientsList(asylumCase));
+        assertEquals("appellantAddress is not present", exception.getMessage());
     }
 
     @Test
@@ -243,17 +243,17 @@ class AppellantInternalCaseAdjournedWithoutDatePersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_HAS_ADDRESS, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(LEGAL_REP_ADDRESS_U_K, AddressUk.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> internalCaseAdjournedWithoutDatePersonalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("legalRepAddressUK is not present");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> internalCaseAdjournedWithoutDatePersonalisation.getRecipientsList(asylumCase));
+        assertEquals("legalRepAddressUK is not present", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
-            () -> internalCaseAdjournedWithoutDatePersonalisation.getPersonalisation((Callback<AsylumCase>) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("callback must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> internalCaseAdjournedWithoutDatePersonalisation.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 }

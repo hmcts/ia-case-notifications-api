@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -41,26 +42,10 @@ public class HomeOfficeEditListingNoChangePersonalisationTest {
     @Mock PersonalisationProvider personalisationProvider;
     @Mock CustomerServicesProvider customerServicesProvider;
 
-    private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
-    private String iaExUiFrontendUrl = "http://localhost";
-    private String homeOfficeListCaseEmailAddress = "homeofficelistcase@example.com";
-    private String homeOfficeEmailAddress = "homeoffice@example.com";
-
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String ariaListingReference = "someAriaListingReference";
-    private String appellantGivenNames = "appellantGivenNames";
-    private String appellantFamilyName = "appellantFamilyName";
-    private String homeOfficeRefNumber = "homeOfficeRefNumber";
-
-    private String requirementsVulnerabilities = "someRequirementsVulnerabilities";
-    private String requirementsMultimedia = "someRequirementsMultimedia";
-    private String requirementsSingleSexCourt = "someRequirementsSingleSexCourt";
-    private String requirementsInCamera = "someRequirementsInCamera";
-    private String requirementsOther = "someRequirementsOther";
-
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
+    private final String templateId = "someTemplateId";
+    private final String iaExUiFrontendUrl = "http://localhost";
+    private final String homeOfficeListCaseEmailAddress = "homeofficelistcase@example.com";
+    private final String homeOfficeEmailAddress = "homeoffice@example.com";
 
     private HomeOfficeEditListingNoChangePersonalisation homeOfficeEditListingNoChangePersonalisation;
 
@@ -85,6 +70,7 @@ public class HomeOfficeEditListingNoChangePersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_CASE_RE_LISTED_NO_CHANGE_HOME_OFFICE", homeOfficeEditListingNoChangePersonalisation.getReferenceId(caseId));
     }
 
@@ -103,9 +89,10 @@ public class HomeOfficeEditListingNoChangePersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> homeOfficeEditListingNoChangePersonalisation.getPersonalisation((Callback<AsylumCase>) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("callback must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> homeOfficeEditListingNoChangePersonalisation.getPersonalisation((Callback<AsylumCase>) null))
+            ;
+assertEquals("callback must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -119,11 +106,27 @@ public class HomeOfficeEditListingNoChangePersonalisationTest {
 
         Map<String, String> personalisation = homeOfficeEditListingNoChangePersonalisation.getPersonalisation(callback);
 
-        assertThat(personalisation).isNotEmpty();
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertFalse(personalisation.isEmpty());
+        assertThat(personalisation)
+            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation())
+            .containsAllEntriesOf(personalisationProvider.getPersonalisation(callback))
+            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal"
+                : "Immigration and Asylum appeal");
     }
 
     private Map<String, String> getPersonalisationMapWithGivenValues() {
+        String customerServicesEmail = "cust.services@example.com";
+        String customerServicesTelephone = "555 555 555";
+        String requirementsOther = "someRequirementsOther";
+        String requirementsInCamera = "someRequirementsInCamera";
+        String requirementsSingleSexCourt = "someRequirementsSingleSexCourt";
+        String requirementsMultimedia = "someRequirementsMultimedia";
+        String requirementsVulnerabilities = "someRequirementsVulnerabilities";
+        String homeOfficeRefNumber = "homeOfficeRefNumber";
+        String appellantFamilyName = "appellantFamilyName";
+        String appellantGivenNames = "appellantGivenNames";
+        String ariaListingReference = "someAriaListingReference";
+        String appealReferenceNumber = "someReferenceNumber";
         return ImmutableMap
             .<String, String>builder()
             .put("appealReferenceNumber", appealReferenceNumber)

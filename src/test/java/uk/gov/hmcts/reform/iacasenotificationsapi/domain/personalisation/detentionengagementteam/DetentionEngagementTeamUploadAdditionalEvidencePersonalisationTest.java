@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -44,26 +44,24 @@ class DetentionEngagementTeamUploadAdditionalEvidencePersonalisationTest {
     JSONObject jsonDocument;
     @Mock
     DocumentDownloadClient documentDownloadClient;
-    private String templateId = "templateId";
-    private final String uploadAdditionalEvidencePersonalisationReferenceId = "_INTERNAL_DET_UPLOAD_ADDITIONAL_EVIDENCE_EMAIL";
+    private final String templateId = "templateId";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-    private final String detEmailAddress = "some@example.com";
-    private final String adaPrefix = "ADA - SERVE BY POST";
     private final String nonAdaPrefix = "IAFT - SERVE BY POST";
     private final Long caseId = 12345L;
     private DetentionEngagementTeamUploadAdditionalEvidencePersonalisation detentionEngagementTeamUploadAdditionalEvidencePersonalisation;
-    DocumentWithMetadata uploadAdditionalEvidenceDoc = getDocumentWithMetadata(
+    final DocumentWithMetadata uploadAdditionalEvidenceDoc = getDocumentWithMetadata(
         "1", "additional-evidence-uploaded-letter", "some other desc", DocumentTag.INTERNAL_UPLOAD_ADDITIONAL_EVIDENCE_LETTER);
-    IdValue<DocumentWithMetadata> uploadAdditionalEvidenceDocId = new IdValue<>("1", uploadAdditionalEvidenceDoc);
+    final IdValue<DocumentWithMetadata> uploadAdditionalEvidenceDocId = new IdValue<>("1", uploadAdditionalEvidenceDoc);
 
     DetentionEngagementTeamUploadAdditionalEvidencePersonalisationTest() {
     }
 
     @BeforeEach
     void setup() throws NotificationClientException, IOException {
+        String adaPrefix = "ADA - SERVE BY POST";
         detentionEngagementTeamUploadAdditionalEvidencePersonalisation = new DetentionEngagementTeamUploadAdditionalEvidencePersonalisation(
             templateId,
             detEmailService,
@@ -93,6 +91,7 @@ class DetentionEngagementTeamUploadAdditionalEvidencePersonalisationTest {
     @Test
     public void should_return_given_reference_id() {
         Long caseId = 12345L;
+        String uploadAdditionalEvidencePersonalisationReferenceId = "_INTERNAL_DET_UPLOAD_ADDITIONAL_EVIDENCE_EMAIL";
         assertEquals(caseId + uploadAdditionalEvidencePersonalisationReferenceId,
             detentionEngagementTeamUploadAdditionalEvidencePersonalisation.getReferenceId(caseId));
     }
@@ -100,6 +99,7 @@ class DetentionEngagementTeamUploadAdditionalEvidencePersonalisationTest {
     @Test
     public void should_return_given_email_address_from_asylum_case() {
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
+        String detEmailAddress = "some@example.com";
         when(detEmailService.getRecipientsList(asylumCase)).thenReturn(Collections.singleton(detEmailAddress));
 
         assertTrue(
@@ -121,20 +121,22 @@ class DetentionEngagementTeamUploadAdditionalEvidencePersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
+        NullPointerException exception =
+assertThrows(NullPointerException.class,
             () -> detentionEngagementTeamUploadAdditionalEvidencePersonalisation.getPersonalisationForLink((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_upload_additional_evidence_document_is_missing() {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class,
             () -> detentionEngagementTeamUploadAdditionalEvidencePersonalisation.getPersonalisationForLink(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("internalUploadAdditionalEvidenceLetter document not available");
+            ;
+assertEquals("internalUploadAdditionalEvidenceLetter document not available", exception.getMessage());
     }
 
     @Test
@@ -160,9 +162,10 @@ class DetentionEngagementTeamUploadAdditionalEvidencePersonalisationTest {
     @Test
     public void should_throw_exception_when_notification_client_throws_Exception() throws NotificationClientException, IOException {
         when(documentDownloadClient.getJsonObjectFromDocument(uploadAdditionalEvidenceDoc)).thenThrow(new NotificationClientException("File size is more than 2MB"));
-        assertThatThrownBy(() -> detentionEngagementTeamUploadAdditionalEvidencePersonalisation.getPersonalisationForLink(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("Failed to get Internal Upload additional evidence letter in compatible format");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> detentionEngagementTeamUploadAdditionalEvidencePersonalisation.getPersonalisationForLink(asylumCase))
+            ;
+assertEquals("Failed to get Internal Upload additional evidence letter in compatible format", exception.getMessage());
     }
 
 }

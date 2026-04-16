@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -38,11 +39,9 @@ public class LegalRepresentativeUploadRespondentEvidencePersonalisationTest {
     @Mock
     CustomerServicesProvider customerServicesProvider;
 
-    private final Long caseId = 12345L;
     private final String templateId = "someTemplateId";
     private final String detentionTemplateId = "detentionTemplateId";
     private final String iaExUiFrontendUrl = "http://somefrontendurl";
-    private final String directionDueDate = "2019-08-27";
     private final String expectedDirectionDueDate = "27 Aug 2019";
     private final String directionExplanation = "someExplanation";
 
@@ -61,6 +60,7 @@ public class LegalRepresentativeUploadRespondentEvidencePersonalisationTest {
     @BeforeEach
     public void setup() {
 
+        String directionDueDate = "2019-08-27";
         when((direction.getDateDue())).thenReturn(directionDueDate);
         when((direction.getExplanation())).thenReturn(directionExplanation);
         when(directionFinder.findFirst(asylumCase, DirectionTag.BUILD_CASE)).thenReturn(Optional.of(direction));
@@ -108,6 +108,7 @@ public class LegalRepresentativeUploadRespondentEvidencePersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_BUILD_CASE_DIRECTION",
             legalRepresentativeUploadRespondentEvidencePersonalisation.getReferenceId(caseId));
     }
@@ -122,19 +123,21 @@ public class LegalRepresentativeUploadRespondentEvidencePersonalisationTest {
     public void should_throw_exception_when_cannot_find_email_address_for_legal_rep() {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class,
             () -> legalRepresentativeUploadRespondentEvidencePersonalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("legalRepresentativeEmailAddress is not present");
+            ;
+assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
+        NullPointerException exception =
+assertThrows(NullPointerException.class,
             () -> legalRepresentativeUploadRespondentEvidencePersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -147,13 +150,14 @@ public class LegalRepresentativeUploadRespondentEvidencePersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeUploadRespondentEvidencePersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(legalRepRefNumber, personalisation.get("legalRepReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
-        assertEquals(directionExplanation, personalisation.get("explanation"));
-        assertEquals(expectedDirectionDueDate, personalisation.get("dueDate"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("legalRepReferenceNumber", legalRepRefNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("explanation", directionExplanation)
+            .containsEntry("dueDate", expectedDirectionDueDate);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YesOrNo.YES)
@@ -175,13 +179,14 @@ public class LegalRepresentativeUploadRespondentEvidencePersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeUploadRespondentEvidencePersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("legalRepReferenceNumber"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
-        assertEquals(directionExplanation, personalisation.get("explanation"));
-        assertEquals(expectedDirectionDueDate, personalisation.get("dueDate"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("legalRepReferenceNumber", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "")
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("explanation", directionExplanation)
+            .containsEntry("dueDate", expectedDirectionDueDate);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
@@ -191,9 +196,10 @@ public class LegalRepresentativeUploadRespondentEvidencePersonalisationTest {
 
         when(directionFinder.findFirst(asylumCase, DirectionTag.BUILD_CASE)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class,
             () -> legalRepresentativeUploadRespondentEvidencePersonalisation.getPersonalisation(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("build case direction is not present");
+            ;
+assertEquals("build case direction is not present", exception.getMessage());
     }
 }

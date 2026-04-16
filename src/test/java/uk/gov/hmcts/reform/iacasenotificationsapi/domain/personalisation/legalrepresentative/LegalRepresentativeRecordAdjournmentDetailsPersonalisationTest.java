@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -26,15 +26,14 @@ public class LegalRepresentativeRecordAdjournmentDetailsPersonalisationTest {
     @Mock
     AsylumCase asylumCase;
 
-    private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
+    private final String templateId = "someTemplateId";
 
-    private String legalRepEmailAddress = "legalrep@example.com";
+    private final String legalRepEmailAddress = "legalrep@example.com";
 
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String legalRepRefNumber = "somelegalRepRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String legalRepRefNumber = "somelegalRepRefNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
 
     private LegalRepresentativeRecordAdjournmentDetailsPersonalisation
         legalRepresentativeRecordAdjournmentDetailsPersonalisation;
@@ -59,6 +58,7 @@ public class LegalRepresentativeRecordAdjournmentDetailsPersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_LEGAL_REPRESENTATIVE_RECORD_ADJOURNMENT_DETAILS",
             legalRepresentativeRecordAdjournmentDetailsPersonalisation.getReferenceId(caseId));
     }
@@ -73,19 +73,21 @@ public class LegalRepresentativeRecordAdjournmentDetailsPersonalisationTest {
     public void should_throw_exception_when_cannot_find_email_address_for_legal_rep() {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class,
             () -> legalRepresentativeRecordAdjournmentDetailsPersonalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("legalRepresentativeEmailAddress is not present");
+            ;
+assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
+        NullPointerException exception =
+assertThrows(NullPointerException.class,
             () -> legalRepresentativeRecordAdjournmentDetailsPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -94,6 +96,10 @@ public class LegalRepresentativeRecordAdjournmentDetailsPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeRecordAdjournmentDetailsPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertThat(personalisation)
+            .containsEntry("legalRepReferenceNumber", legalRepRefNumber)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName);
     }
 }

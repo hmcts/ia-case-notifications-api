@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -27,7 +27,6 @@ class AppellantTcwUploadAddendumEvidencePersonalisationSmsTest {
     private final String smsTemplateId = "someSmsTemplateId";
     private final String iaAipFrontendUrl = "iaAipFrontendUrl";
     private final String mockedAppealReferenceNumber = "someReferenceNumber";
-    private final String mockedAppellantMobilePhone = "07123456789";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -65,23 +64,26 @@ class AppellantTcwUploadAddendumEvidencePersonalisationSmsTest {
         when(recipientsFinder.findAll(null, NotificationType.SMS))
                 .thenThrow(new NullPointerException("asylumCase must not be null"));
 
-        assertThatThrownBy(() -> appellantTcwUploadAddendumEvidencePersonalisationSms.getRecipientsList(null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> appellantTcwUploadAddendumEvidencePersonalisationSms.getRecipientsList(null))
+                ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
+        NullPointerException exception =
+assertThrows(NullPointerException.class,
                 () -> appellantTcwUploadAddendumEvidencePersonalisationSms.getPersonalisation((AsylumCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+                ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     void should_return_appellant_phone_number_from_asylum_case() {
         when(featureToggler.getValue("aip-upload-addendum-evidence-feature", false)).thenReturn(true);
+        String mockedAppellantMobilePhone = "07123456789";
         when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
                 .thenReturn(Collections.singleton(mockedAppellantMobilePhone));
 
@@ -93,9 +95,9 @@ class AppellantTcwUploadAddendumEvidencePersonalisationSmsTest {
     void should_return_personalisation_when_all_information_given() {
         Map<String, String> personalisation =
                 appellantTcwUploadAddendumEvidencePersonalisationSms.getPersonalisation(asylumCase);
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
+            assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
         String directLinkToNewEvidencePage = iaAipFrontendUrl + "new-evidence";
-        assertEquals(directLinkToNewEvidencePage, personalisation.get("Direct link to new evidence page"));
+            assertEquals(directLinkToNewEvidencePage, personalisation.get("Direct link to new evidence page"));
 
     }
 }

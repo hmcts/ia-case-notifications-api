@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -61,9 +62,10 @@ class AppellantUploadAddendumEvidencePersonalisationSmsTest {
         when(recipientsFinder.findAll(null, NotificationType.SMS))
             .thenThrow(new NullPointerException("asylumCase must not be null"));
 
-        assertThatThrownBy(() -> appellantUploadAddendumEvidencePersonalisationSms.getRecipientsList(null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> appellantUploadAddendumEvidencePersonalisationSms.getRecipientsList(null))
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -80,18 +82,20 @@ class AppellantUploadAddendumEvidencePersonalisationSmsTest {
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
+        NullPointerException exception =
+assertThrows(NullPointerException.class,
             () -> appellantUploadAddendumEvidencePersonalisationSms.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     void should_return_personalisation_when_all_information_given() {
         Map<String, String> personalisation =
                 appellantUploadAddendumEvidencePersonalisationSms.getPersonalisation(asylumCase);
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("hyperlink to service"));
+        assertThat(personalisation)
+            .containsEntry("Appeal Ref Number", mockedAppealReferenceNumber)
+            .containsEntry("hyperlink to service", iaAipFrontendUrl);
 
     }
 }

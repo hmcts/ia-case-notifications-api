@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -47,19 +47,18 @@ class DetentionEngagementTeamEditCaseListingPersonalisationTest {
     private PersonalisationProvider personalisationProvider;
     @Mock
     JSONObject jsonDocument;
-    private String templateId = "templateId";
+    private final String templateId = "templateId";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String adaPrefix = "ADA - SERVE IN PERSON";
     private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
-    private final Long caseId = 12345L;
     private DetentionEngagementTeamEditCaseListingPersonalisation detentionEngagementTeamEditCaseListingPersonalisation;
 
-    DocumentWithMetadata caseListedDoc = TestUtils.getDocumentWithMetadata(
+    final DocumentWithMetadata caseListedDoc = TestUtils.getDocumentWithMetadata(
             "id", "detained-appellant-edit-case-listing-letter", "some other desc", DocumentTag.INTERNAL_EDIT_CASE_LISTING_LETTER_BUNDLE);
-    IdValue<DocumentWithMetadata> caseListedBundle = new IdValue<>("1", caseListedDoc);
+    final IdValue<DocumentWithMetadata> caseListedBundle = new IdValue<>("1", caseListedDoc);
 
     DetentionEngagementTeamEditCaseListingPersonalisationTest() {
     }
@@ -96,6 +95,7 @@ class DetentionEngagementTeamEditCaseListingPersonalisationTest {
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_INTERNAL_DETAINED_EDIT_CASE_LISTING_DET",
                 detentionEngagementTeamEditCaseListingPersonalisation.getReferenceId(caseId));
     }
@@ -154,30 +154,33 @@ class DetentionEngagementTeamEditCaseListingPersonalisationTest {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YES));
         Map<String, Object> personalisation = detentionEngagementTeamEditCaseListingPersonalisation.getPersonalisationForLink(asylumCase);
 
-        assertEquals(adaPrefix, personalisation.get("subjectPrefix"));
+            assertEquals(adaPrefix, personalisation.get("subjectPrefix"));
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> detentionEngagementTeamEditCaseListingPersonalisation.getPersonalisationForLink((AsylumCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> detentionEngagementTeamEditCaseListingPersonalisation.getPersonalisationForLink((AsylumCase) null))
+                ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_appeal_submission_is_empty() {
         when(asylumCase.read(LETTER_BUNDLE_DOCUMENTS)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> detentionEngagementTeamEditCaseListingPersonalisation.getPersonalisationForLink(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("internalEditCaseListingLetterBundle document not available");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> detentionEngagementTeamEditCaseListingPersonalisation.getPersonalisationForLink(asylumCase))
+                ;
+assertEquals("internalEditCaseListingLetterBundle document not available", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_notification_client_throws_Exception() throws NotificationClientException, IOException {
         when(documentDownloadClient.getJsonObjectFromDocument(caseListedDoc)).thenThrow(new NotificationClientException("File size is more than 2MB"));
-        assertThatThrownBy(() -> detentionEngagementTeamEditCaseListingPersonalisation.getPersonalisationForLink(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("Failed to get Internal detained edit case listing letter in compatible format");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> detentionEngagementTeamEditCaseListingPersonalisation.getPersonalisationForLink(asylumCase))
+                ;
+assertEquals("Failed to get Internal detained edit case listing letter in compatible format", exception.getMessage());
     }
 }

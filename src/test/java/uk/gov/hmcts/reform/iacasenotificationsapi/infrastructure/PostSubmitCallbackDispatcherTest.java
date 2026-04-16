@@ -1,8 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure;
 
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
@@ -50,16 +50,6 @@ class PostSubmitCallbackDispatcherTest {
     private CaseData caseData;
 
 
-    private String header1 = "Some header 1";
-    private String body1 = "Some body 1";
-
-    private String header2 = "Some header 2";
-    private String body2 = "Some body 2";
-
-    private String header3 = "Some header 3";
-    private String body3 = "Some body 3";
-
-
     @Mock
     private PostSubmitCallbackResponse response1;
     @Mock
@@ -90,13 +80,19 @@ class PostSubmitCallbackDispatcherTest {
             when(callback.getCaseDetails()).thenReturn(caseDetails);
             when(caseDetails.getCaseData()).thenReturn(caseData);
 
+            String header1 = "Some header 1";
             when(response1.getConfirmationHeader()).thenReturn(Optional.of(header1));
+            String body1 = "Some body 1";
             when(response1.getConfirmationBody()).thenReturn(Optional.of(body1));
 
+            String header2 = "Some header 2";
             when(response2.getConfirmationHeader()).thenReturn(Optional.of(header2));
+            String body2 = "Some body 2";
             when(response2.getConfirmationBody()).thenReturn(Optional.of(body2));
 
+            String header3 = "Some header 3";
             when(response3.getConfirmationHeader()).thenReturn(Optional.of(header3));
+            String body3 = "Some body 3";
             when(response3.getConfirmationBody()).thenReturn(Optional.of(body3));
 
             when(handler1.canHandle(eq(callbackStage), any(Callback.class))).thenReturn(false);
@@ -142,8 +138,8 @@ class PostSubmitCallbackDispatcherTest {
                 .when(ccdEventAuthorizor)
                 .throwIfNotAuthorized(Event.BUILD_CASE);
 
-            assertThatThrownBy(() -> postSubmitCallbackDispatcher.handle(callbackStage, callback))
-                .isExactlyInstanceOf(AccessDeniedException.class);
+            assertThrows(AccessDeniedException.class,
+                () -> postSubmitCallbackDispatcher.handle(callbackStage, callback));
 
             verify(ccdEventAuthorizor, times(1)).throwIfNotAuthorized(Event.BUILD_CASE);
 
@@ -191,28 +187,28 @@ class PostSubmitCallbackDispatcherTest {
     @Test
     void should_not_allow_null_ccd_event_authorizor() {
         List<PostSubmitCallbackHandler<CaseData>> postSubmitCallbackHandlers = Collections.emptyList();
-        assertThatThrownBy(() -> new PostSubmitCallbackDispatcher<>(null, postSubmitCallbackHandlers))
-            .hasMessage("ccdEventAuthorizor must not be null")
-            .isExactlyInstanceOf(NullPointerException.class);
+        NullPointerException exception = assertThrows(NullPointerException.class,
+            () -> new PostSubmitCallbackDispatcher<>(null, postSubmitCallbackHandlers));
+        assertEquals("ccdEventAuthorizor must not be null", exception.getMessage());
     }
 
     @Test
     void should_not_allow_null_handlers() {
 
-        assertThatThrownBy(() -> new PostSubmitCallbackDispatcher<>(ccdEventAuthorizor, null))
-            .hasMessage("callbackHandlers must not be null")
-            .isExactlyInstanceOf(NullPointerException.class);
+        NullPointerException exception = assertThrows(NullPointerException.class,
+            () -> new PostSubmitCallbackDispatcher<>(ccdEventAuthorizor, null));
+        assertEquals("callbackHandlers must not be null", exception.getMessage());
     }
 
     @Test
     void should_not_allow_null_arguments() {
 
-        assertThatThrownBy(() -> postSubmitCallbackDispatcher.handle(null, callback))
-            .hasMessage("callbackStage must not be null")
-            .isExactlyInstanceOf(NullPointerException.class);
+        NullPointerException exception = assertThrows(NullPointerException.class,
+            () -> postSubmitCallbackDispatcher.handle(null, callback));
+        assertEquals("callbackStage must not be null", exception.getMessage());
 
-        assertThatThrownBy(() -> postSubmitCallbackDispatcher.handle(PostSubmitCallbackStage.CCD_SUBMITTED, null))
-            .hasMessage("callback must not be null")
-            .isExactlyInstanceOf(NullPointerException.class);
+        NullPointerException exceptionTwo = assertThrows(NullPointerException.class,
+            () -> postSubmitCallbackDispatcher.handle(PostSubmitCallbackStage.CCD_SUBMITTED, null));
+        assertEquals("callback must not be null", exceptionTwo.getMessage());
     }
 }

@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -52,17 +52,14 @@ class DetentionEngagementTeamFtpaSubmittedPersonalisationTest {
     DocumentDownloadClient documentDownloadClient;
 
     private final String templateId = "someTemplateId";
-    private final String detEmailAddress = "legalrep@example.com";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-    private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
-    private final String adaPrefix = "ADA - SERVE IN PERSON";
     private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
-    DocumentWithMetadata internalFtpaSubmittedLetter = TestUtils.getDocumentWithMetadata(
+    final DocumentWithMetadata internalFtpaSubmittedLetter = TestUtils.getDocumentWithMetadata(
             "id", "internal_ftpa_submission", "some other desc", DocumentTag.INTERNAL_FTPA_SUBMITTED_APPELLANT_LETTER);
-    IdValue<DocumentWithMetadata> document = new IdValue<>("1", internalFtpaSubmittedLetter);
+    final IdValue<DocumentWithMetadata> document = new IdValue<>("1", internalFtpaSubmittedLetter);
     private DetentionEngagementTeamFtpaSubmittedPersonalisation detentionEngagementTeamFtpaSubmittedPersonalisation;
 
     DetentionEngagementTeamFtpaSubmittedPersonalisationTest() {
@@ -75,6 +72,7 @@ class DetentionEngagementTeamFtpaSubmittedPersonalisationTest {
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
+        String detEmailAddress = "legalrep@example.com";
         when(detEmailService.getDetentionEmailAddress(asylumCase)).thenReturn(detEmailAddress);
         when(documentDownloadClient.getJsonObjectFromDocument(any(DocumentWithMetadata.class))).thenReturn(jsonObject);
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
@@ -133,10 +131,11 @@ class DetentionEngagementTeamFtpaSubmittedPersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
+        NullPointerException exception =
+assertThrows(NullPointerException.class,
             () -> detentionEngagementTeamFtpaSubmittedPersonalisation.getPersonalisationForLink((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -152,6 +151,8 @@ class DetentionEngagementTeamFtpaSubmittedPersonalisationTest {
         assertEquals(actualPersonalisation.get("homeOfficeReferenceNumber"), homeOfficeReferenceNumber);
         assertEquals(actualPersonalisation.get("appellantGivenNames"), appellantGivenNames);
         assertEquals(actualPersonalisation.get("appellantFamilyName"), appellantFamilyName);
+        String adaPrefix = "ADA - SERVE IN PERSON";
+        String nonAdaPrefix = "IAFT - SERVE IN PERSON";
         assertEquals(actualPersonalisation.get("subjectPrefix"), isAcceleratedDetained.equals(YesOrNo.YES) ? adaPrefix : nonAdaPrefix);
         assertEquals(actualPersonalisation.get("documentLink"), jsonObject);
     }

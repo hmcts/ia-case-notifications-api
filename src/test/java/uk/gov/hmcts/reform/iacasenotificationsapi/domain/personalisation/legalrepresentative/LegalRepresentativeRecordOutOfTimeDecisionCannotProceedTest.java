@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -29,7 +30,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesO
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 @ExtendWith(MockitoExtension.class)
-@SuppressWarnings("unchecked")
 @MockitoSettings(strictness = Strictness.LENIENT)
 class LegalRepresentativeRecordOutOfTimeDecisionCannotProceedTest {
 
@@ -38,18 +38,14 @@ class LegalRepresentativeRecordOutOfTimeDecisionCannotProceedTest {
     @Mock
     CustomerServicesProvider customerServicesProvider;
 
-    private String recordOutOfDecisionCannotProceedTemplateId = "recordOutOfDecisionCannotProceedTemplateId";
-
-    private Long caseId = 12345L;
-    private String iaExUiFrontendUrl = "http://somefrontendurl";
-    private String legalRepEmailAddress = "legalrep@example.com";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String ariaListingReference = "someAriaListingReference";
-    private String legalRepRefNumber = "somelegalRepRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
+    private final String iaExUiFrontendUrl = "http://somefrontendurl";
+    private final String legalRepEmailAddress = "legalrep@example.com";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String legalRepRefNumber = "somelegalRepRefNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
 
     private LegalRepresentativeRecordOutOfTimeDecisionCannotProceed
         legalRepresentativeRecordOutOfTimeDecisionCannotProceed;
@@ -57,12 +53,14 @@ class LegalRepresentativeRecordOutOfTimeDecisionCannotProceedTest {
     @BeforeEach
     void setUp() {
 
+        String recordOutOfDecisionCannotProceedTemplateId = "recordOutOfDecisionCannotProceedTemplateId";
         legalRepresentativeRecordOutOfTimeDecisionCannotProceed =
             new LegalRepresentativeRecordOutOfTimeDecisionCannotProceed(
                 recordOutOfDecisionCannotProceedTemplateId,
                 iaExUiFrontendUrl, customerServicesProvider);
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
+        String ariaListingReference = "someAriaListingReference";
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(ariaListingReference));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
@@ -86,11 +84,12 @@ class LegalRepresentativeRecordOutOfTimeDecisionCannotProceedTest {
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(legalRepRefNumber, personalisation.get("legalRepReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("legalRepReferenceNumber", legalRepRefNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
@@ -98,6 +97,7 @@ class LegalRepresentativeRecordOutOfTimeDecisionCannotProceedTest {
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_RECORD_OUT_OF_TIME_DECISION_CANNOT_PROCEED_LEGAL_REP",
             legalRepresentativeRecordOutOfTimeDecisionCannotProceed.getReferenceId(caseId));
     }
@@ -112,17 +112,19 @@ class LegalRepresentativeRecordOutOfTimeDecisionCannotProceedTest {
     public void should_throw_exception_when_cannot_find_email_address_for_legal_rep() {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> legalRepresentativeRecordOutOfTimeDecisionCannotProceed.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("legalRepresentativeEmailAddress is not present");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> legalRepresentativeRecordOutOfTimeDecisionCannotProceed.getRecipientsList(asylumCase))
+            ;
+assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
+        NullPointerException exception =
+assertThrows(NullPointerException.class,
             () -> legalRepresentativeRecordOutOfTimeDecisionCannotProceed.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 }

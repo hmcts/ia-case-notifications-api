@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -47,31 +48,11 @@ class HomeOfficeEditListingPersonalisationTest {
     @Mock
     HearingDetailsFinder hearingDetailsFinder;
 
-    private Long caseId = 12345L;
-
-    private String adaTemplateId = "adaTemplateId";
-    private String nonAdaTemplateId = "nonAdaTemplateId";
-    private String listAssistHearingTemplateId = "listAssistHearingTemplateId";
-    private String iaExUiFrontendUrl = "http://localhost";
-    private String homeOfficeEmailAddress = "homeoffice@example.com";
-    private String listCaseHomeOfficeEmailAddress = "listCaseHomeoOffice@example.com";
-    private String hearingCentreName = "The Hearing Centre";
-
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String ariaListingReference = "someAriaListingReference";
-    private String appellantGivenNames = "appellantGivenNames";
-    private String appellantFamilyName = "appellantFamilyName";
-    private String homeOfficeRefNumber = "homeOfficeRefNumber";
-
-    private String requirementsVulnerabilities = "someRequirementsVulnerabilities";
-    private String requirementsMultimedia = "someRequirementsMultimedia";
-    private String requirementsSingleSexCourt = "someRequirementsSingleSexCourt";
-    private String requirementsInCamera = "someRequirementsInCamera";
-    private String requirementsOther = "someRequirementsOther";
-
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
-    private String hearingCentreAddress = "hearingCentreAddress";
+    private final String adaTemplateId = "adaTemplateId";
+    private final String nonAdaTemplateId = "nonAdaTemplateId";
+    private final String iaExUiFrontendUrl = "http://localhost";
+    private final String homeOfficeEmailAddress = "homeoffice@example.com";
+    private final String listCaseHomeOfficeEmailAddress = "listCaseHomeoOffice@example.com";
 
     private HomeOfficeEditListingPersonalisation homeOfficeEditListingPersonalisation;
 
@@ -82,6 +63,7 @@ class HomeOfficeEditListingPersonalisationTest {
         when(emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase)).thenReturn(listCaseHomeOfficeEmailAddress);
         when(emailAddressFinder.getHomeOfficeEmailAddress(asylumCase)).thenReturn(homeOfficeEmailAddress);
 
+        String listAssistHearingTemplateId = "listAssistHearingTemplateId";
         homeOfficeEditListingPersonalisation = new HomeOfficeEditListingPersonalisation(
             nonAdaTemplateId,
             adaTemplateId,
@@ -103,6 +85,7 @@ class HomeOfficeEditListingPersonalisationTest {
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_CASE_RE_LISTED_HOME_OFFICE",
             homeOfficeEditListingPersonalisation.getReferenceId(caseId));
     }
@@ -120,24 +103,41 @@ class HomeOfficeEditListingPersonalisationTest {
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
-        assertThatThrownBy(() -> homeOfficeEditListingPersonalisation.getPersonalisation((Callback<AsylumCase>) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("callback must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> homeOfficeEditListingPersonalisation.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     @Test
     void should_return_personalisation_when_all_information_given() {
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisationMapWithGivenValues());
+        String hearingCentreAddress = "hearingCentreAddress";
         when(hearingDetailsFinder.getHearingCentreLocation(callback.getCaseDetails().getCaseData()))
-                .thenReturn(hearingCentreAddress);
+            .thenReturn(hearingCentreAddress);
 
         Map<String, String> personalisation = homeOfficeEditListingPersonalisation.getPersonalisation(callback);
 
-        assertThat(personalisation).isNotEmpty();
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertFalse(personalisation.isEmpty());
+        assertThat(personalisation)
+            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation())
+            .containsAllEntriesOf(personalisationProvider.getPersonalisation(callback))
+            .containsEntry("hearingCentreAddress", hearingCentreAddress);
     }
 
     private Map<String, String> getPersonalisationMapWithGivenValues() {
+        String customerServicesEmail = "cust.services@example.com";
+        String customerServicesTelephone = "555 555 555";
+        String requirementsOther = "someRequirementsOther";
+        String requirementsInCamera = "someRequirementsInCamera";
+        String requirementsSingleSexCourt = "someRequirementsSingleSexCourt";
+        String requirementsMultimedia = "someRequirementsMultimedia";
+        String requirementsVulnerabilities = "someRequirementsVulnerabilities";
+        String homeOfficeRefNumber = "homeOfficeRefNumber";
+        String appellantFamilyName = "appellantFamilyName";
+        String appellantGivenNames = "appellantGivenNames";
+        String ariaListingReference = "someAriaListingReference";
+        String appealReferenceNumber = "someReferenceNumber";
+        String hearingCentreName = "The Hearing Centre";
         return ImmutableMap
             .<String, String>builder()
             .put("appealReferenceNumber", appealReferenceNumber)

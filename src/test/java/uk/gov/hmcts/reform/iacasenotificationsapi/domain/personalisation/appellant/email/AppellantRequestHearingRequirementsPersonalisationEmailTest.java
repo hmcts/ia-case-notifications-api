@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -15,7 +16,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,14 +38,11 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantRequestHearingRequirementsPersonalisationEmailTest {
 
-    private final Long caseId = 12345L;
     private final String templateId = "someTemplateId";
-    private final String directionDueDate = "2021-09-22";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeRefeNumber = "homeOfficeRefeNumber";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-    private final String appellantEmailAddress = "appelant@example.net";
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "customer.services@example.com";
     private final String iaAipFrontendUrl = "http://localhost";
@@ -65,6 +62,7 @@ public class AppellantRequestHearingRequirementsPersonalisationEmailTest {
     @BeforeEach
     void setup() {
 
+        String directionDueDate = "2021-09-22";
         when((direction.getDateDue())).thenReturn(directionDueDate);
         when(directionFinder.findFirst(asylumCase, DirectionTag.LEGAL_REPRESENTATIVE_HEARING_REQUIREMENTS))
             .thenReturn(Optional.of(direction));
@@ -94,12 +92,14 @@ public class AppellantRequestHearingRequirementsPersonalisationEmailTest {
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_REQUEST_HEARING_REQUIREMENTS_DIRECTION_AIP_EMAIL",
             appellantRequestHearingRequirementsPersonalisation.getReferenceId(caseId));
     }
 
     @Test
     void should_return_appellant_email_address_from_asylum_case() {
+        String appellantEmailAddress = "appelant@example.net";
         when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL))
             .thenReturn(Collections.singleton(appellantEmailAddress));
 
@@ -111,10 +111,11 @@ public class AppellantRequestHearingRequirementsPersonalisationEmailTest {
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
+        NullPointerException exception =
+assertThrows(NullPointerException.class,
             () -> appellantRequestHearingRequirementsPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -126,12 +127,13 @@ public class AppellantRequestHearingRequirementsPersonalisationEmailTest {
 
         Map<String, String> personalisation =
             appellantRequestHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeRefeNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals("22 Sep 2021", personalisation.get("dueDate"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefeNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("dueDate", "22 Sep 2021")
+            .containsEntry("Hyperlink to service", iaAipFrontendUrl);
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
@@ -152,9 +154,15 @@ public class AppellantRequestHearingRequirementsPersonalisationEmailTest {
         Map<String, String> personalisation =
             appellantRequestHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
 
-        Assertions.assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("homeOfficeReferenceNumber", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "")
+            .containsEntry("dueDate", "22 Sep 2021")
+            .containsEntry("Hyperlink to service", iaAipFrontendUrl);
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
@@ -166,8 +174,9 @@ public class AppellantRequestHearingRequirementsPersonalisationEmailTest {
         when(directionFinder.findFirst(asylumCase, DirectionTag.LEGAL_REPRESENTATIVE_HEARING_REQUIREMENTS))
             .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> appellantRequestHearingRequirementsPersonalisation.getPersonalisation(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("Appellant request hearing requirements direction is not present");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> appellantRequestHearingRequirementsPersonalisation.getPersonalisation(asylumCase))
+            ;
+assertEquals("Appellant request hearing requirements direction is not present", exception.getMessage());
     }
 }

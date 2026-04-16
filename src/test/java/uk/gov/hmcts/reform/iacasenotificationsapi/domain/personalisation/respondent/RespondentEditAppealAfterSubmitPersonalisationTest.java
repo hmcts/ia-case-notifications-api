@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -121,9 +122,10 @@ public class RespondentEditAppealAfterSubmitPersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class))
             .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> personalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("currentCaseStateVisibleToHomeOfficeAll flag is not present");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> personalisation.getRecipientsList(asylumCase))
+            ;
+assertEquals("currentCaseStateVisibleToHomeOfficeAll flag is not present", exception.getMessage());
     }
 
     @Test
@@ -141,14 +143,15 @@ public class RespondentEditAppealAfterSubmitPersonalisationTest {
 
         Map<String, String> personalisation = this.personalisation.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeReference, personalisation.get("homeOfficeReference"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReference", homeOfficeReference)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("ariaListingReference", ariaListingReference);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+            assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
@@ -166,9 +169,10 @@ public class RespondentEditAppealAfterSubmitPersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> personalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> personalisation.getPersonalisation((AsylumCase) null))
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
 }

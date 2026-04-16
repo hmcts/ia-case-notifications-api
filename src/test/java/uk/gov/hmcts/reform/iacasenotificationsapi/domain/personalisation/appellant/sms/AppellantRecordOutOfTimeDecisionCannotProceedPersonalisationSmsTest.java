@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -21,7 +22,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 
 
 @ExtendWith(MockitoExtension.class)
-@SuppressWarnings("unchecked")
 class AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationSmsTest {
 
 
@@ -31,14 +31,9 @@ class AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationSmsTest {
     RecipientsFinder recipientsFinder;
 
 
-    private String recordOutOfDecisionCannotProceedTemplateId = "recordOutOfDecisionCannotProceedTemplateId";
-
-    private Long caseId = 12345L;
-    private String iaAipFrontendUrl = "http://localhost/";
-    private String iaAipFrontendPathToJudgeReview = "ask-judge-review";
-    private String directLinkToJudgesReviewPage = "http://localhost/ask-judge-review";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String mockedAppellantMobileNumber = "1234445556";
+    private final String iaAipFrontendUrl = "http://localhost/";
+    private final String directLinkToJudgesReviewPage = "http://localhost/ask-judge-review";
+    private final String appealReferenceNumber = "someReferenceNumber";
 
     private AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationSms
             recordOutOfTimeDecisionCannotProceedPersonalisationSms;
@@ -46,9 +41,11 @@ class AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationSmsTest {
     @BeforeEach
     void setUp() {
 
+        String iaAipFrontendPathToJudgeReview = "ask-judge-review";
+        String recordOutOfDecisionCannotProceedTemplateId = "recordOutOfDecisionCannotProceedTemplateId";
         recordOutOfTimeDecisionCannotProceedPersonalisationSms =
                 new AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationSms(
-                        recordOutOfDecisionCannotProceedTemplateId,
+                    recordOutOfDecisionCannotProceedTemplateId,
                         iaAipFrontendUrl, iaAipFrontendPathToJudgeReview, recipientsFinder);
 
     }
@@ -61,9 +58,10 @@ class AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationSmsTest {
         Map<String, String> personalisation =
                 recordOutOfTimeDecisionCannotProceedPersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("Appeal Ref Number"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
-        assertEquals(directLinkToJudgesReviewPage, personalisation.get("direct link to judges’ review page"));
+        assertThat(personalisation)
+            .containsEntry("Appeal Ref Number", appealReferenceNumber)
+            .containsEntry("Hyperlink to service", iaAipFrontendUrl)
+            .containsEntry("direct link to judges’ review page", directLinkToJudgesReviewPage);
     }
 
     @Test
@@ -75,20 +73,23 @@ class AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationSmsTest {
         Map<String, String> personalisation =
                 recordOutOfTimeDecisionCannotProceedPersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("Appeal Ref Number"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
-        assertEquals(directLinkToJudgesReviewPage, personalisation.get("direct link to judges’ review page"));
+        assertThat(personalisation)
+            .containsEntry("Appeal Ref Number", appealReferenceNumber)
+            .containsEntry("Hyperlink to service", iaAipFrontendUrl)
+            .containsEntry("direct link to judges’ review page", directLinkToJudgesReviewPage);
     }
 
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_RECORD_OUT_OF_TIME_DECISION_CANNOT_PROCEED_AIP_SMS",
                 recordOutOfTimeDecisionCannotProceedPersonalisationSms.getReferenceId(caseId));
     }
 
     @Test
     void should_return_given_email_address_from_asylum_case() {
+        String mockedAppellantMobileNumber = "1234445556";
         when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
                 .thenReturn(Collections.singleton(mockedAppellantMobileNumber));
 
@@ -99,9 +100,10 @@ class AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationSmsTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
+        NullPointerException exception = 
+assertThrows(NullPointerException.class, 
                 () -> recordOutOfTimeDecisionCannotProceedPersonalisationSms.getPersonalisation((AsylumCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+                ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 }

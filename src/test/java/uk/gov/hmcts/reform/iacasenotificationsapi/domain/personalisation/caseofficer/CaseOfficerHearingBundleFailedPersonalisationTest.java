@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -46,16 +47,14 @@ public class CaseOfficerHearingBundleFailedPersonalisationTest {
     @Mock
     CustomerServicesProvider customerServicesProvider;
 
-    private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
-    private String iaExUiFrontendUrl = "http://somefrontendurl";
-    private HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
-    private String hearingCentreEmailAddress = "hearingCentre@example.com";
+    private final String templateId = "someTemplateId";
+    private final String iaExUiFrontendUrl = "http://somefrontendurl";
+    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    private final String hearingCentreEmailAddress = "hearingCentre@example.com";
 
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
-    private String ariaListingRef = "someAriaListingRef";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
 
     private CaseOfficerHearingBundleFailedPersonalisation caseOfficerHearingBundleFailedPersonalisation;
 
@@ -66,6 +65,7 @@ public class CaseOfficerHearingBundleFailedPersonalisationTest {
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
+        String ariaListingRef = "someAriaListingRef";
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(ariaListingRef));
 
         when(emailAddressFinder.getListCaseHearingCentreEmailAddress(asylumCase)).thenReturn(hearingCentreEmailAddress);
@@ -90,6 +90,7 @@ public class CaseOfficerHearingBundleFailedPersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_HEARING_BUNDLE_FAILED_CASE_OFFICER",
             caseOfficerHearingBundleFailedPersonalisation.getReferenceId(caseId));
     }
@@ -104,9 +105,10 @@ public class CaseOfficerHearingBundleFailedPersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> caseOfficerHearingBundleFailedPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> caseOfficerHearingBundleFailedPersonalisation.getPersonalisation((AsylumCase) null))
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -122,10 +124,11 @@ public class CaseOfficerHearingBundleFailedPersonalisationTest {
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
     }
 
     @ParameterizedTest
@@ -145,11 +148,12 @@ public class CaseOfficerHearingBundleFailedPersonalisationTest {
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-        assertEquals("A", personalisation.get("appealReferenceNumber"));
-        assertEquals("B", personalisation.get("appellantGivenNames"));
-        assertEquals("C", personalisation.get("appellantFamilyName"));
-        assertEquals("D", personalisation.get("ariaListingReference"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "A")
+            .containsEntry("appellantGivenNames", "B")
+            .containsEntry("appellantFamilyName", "C")
+            .containsEntry("ariaListingReference", "D")
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
     }
 
     @ParameterizedTest
@@ -169,7 +173,7 @@ public class CaseOfficerHearingBundleFailedPersonalisationTest {
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-        assertEquals("hello", personalisation.get("appealReferenceNumber"));
+            assertEquals("hello", personalisation.get("appealReferenceNumber"));
     }
 
 }

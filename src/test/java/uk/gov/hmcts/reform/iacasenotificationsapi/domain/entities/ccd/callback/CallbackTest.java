@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Constructor;
@@ -55,23 +56,23 @@ public class CallbackTest {
         constructorOpt.get().setAccessible(true);
         Callback refCallback = (Callback) constructorOpt.get().newInstance();
 
-        assertThatThrownBy(refCallback::getCaseDetails)
-            .isExactlyInstanceOf(RequiredFieldMissingException.class)
-            .hasMessageContaining("caseDetails");
+        RequiredFieldMissingException exception =
+            assertThrows(RequiredFieldMissingException.class, refCallback::getCaseDetails);
+        assertTrue(exception.getMessage().contains("caseDetails"));
 
-        assertEquals(null, refCallback.getEvent());
+        assertNull(refCallback.getEvent());
         assertEquals(Optional.empty(), refCallback.getCaseDetailsBefore());
     }
 
     @Test
     public void should_not_allow_null_values_in_constructor() {
 
-        assertThatThrownBy(() -> new Callback<>(null, caseDetailsBefore, event))
-            .isExactlyInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> new Callback<>(caseDetails, null, event))
-            .isExactlyInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> new Callback<>(caseDetails, caseDetailsBefore, null))
-            .isExactlyInstanceOf(NullPointerException.class);
+        assertThrows(NullPointerException.class,
+            () -> new Callback<>(null, caseDetailsBefore, event));
+        assertThrows(NullPointerException.class,
+            () -> new Callback<>(caseDetails, null, event));
+        assertThrows(NullPointerException.class,
+            () -> new Callback<>(caseDetails, caseDetailsBefore, null));
 
     }
 }

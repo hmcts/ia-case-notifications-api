@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -141,8 +142,9 @@ class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmailTest {
     }
 
     private void assertPersonalisationContainsMandatoryFields(Map<String, String> personalisation) {
-        assertEquals("", personalisation.get(APPELLANT_GIVEN_NAMES_KEY));
-        assertEquals("", personalisation.get(APPELLANT_FAMILY_NAME_KEY));
-        assertEquals(IA_EX_UI_FRONTEND_URL, personalisation.get(LINK_TO_SERVICE_KEY));
+        assertThat(personalisation)
+            .containsEntry(APPELLANT_GIVEN_NAMES_KEY, "")
+            .containsEntry(APPELLANT_FAMILY_NAME_KEY, "")
+            .containsEntry(LINK_TO_SERVICE_KEY, IA_EX_UI_FRONTEND_URL);
     }
 }

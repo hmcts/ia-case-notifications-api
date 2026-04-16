@@ -23,13 +23,13 @@ public class ServiceHealthIndicatorTest {
     @Mock
     ResponseEntity responseEntity;
 
-    private String uri = "https://status.notifications.service.gov.uk";
-    private String matcher = "\"status\":\"UP\"";
+    private final String uri = "https://status.notifications.service.gov.uk";
 
     private ServiceHealthIndicator serviceHealthIndicator;
 
     @BeforeEach
     public void setUp() {
+        String matcher = "\"status\":\"UP\"";
         serviceHealthIndicator = new ServiceHealthIndicator(uri, matcher, restTemplate);
     }
 

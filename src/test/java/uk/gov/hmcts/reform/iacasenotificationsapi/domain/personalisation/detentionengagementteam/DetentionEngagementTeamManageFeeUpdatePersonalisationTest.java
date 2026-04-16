@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -48,18 +48,16 @@ class DetentionEngagementTeamManageFeeUpdatePersonalisationTest {
     private PersonalisationProvider personalisationProvider;
     @Mock
     JSONObject jsonDocument;
-    private String templateId = "templateId";
+    private final String templateId = "templateId";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-    private final String subect = "IAFT - SERVE IN PERSON";
-    private final Long caseId = 12345L;
     private DetentionEngagementTeamManageFeeUpdatePersonalisation detentionEngagementTeamManageFeeUpdatePersonalisation;
 
-    DocumentWithMetadata caseListedDoc = TestUtils.getDocumentWithMetadata(
+    final DocumentWithMetadata caseListedDoc = TestUtils.getDocumentWithMetadata(
             "id", "detained-appellant-manage-fee-update-letter", "some other desc", DocumentTag.INTERNAL_DETAINED_MANAGE_FEE_UPDATE_LETTER);
-    IdValue<DocumentWithMetadata> caseListedBundle = new IdValue<>("1", caseListedDoc);
+    final IdValue<DocumentWithMetadata> caseListedBundle = new IdValue<>("1", caseListedDoc);
 
     DetentionEngagementTeamManageFeeUpdatePersonalisationTest() {
     }
@@ -94,6 +92,7 @@ class DetentionEngagementTeamManageFeeUpdatePersonalisationTest {
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_INTERNAL_DETAINED_MANAGE_FEE_UPDATE_DET",
                 detentionEngagementTeamManageFeeUpdatePersonalisation.getReferenceId(caseId));
     }
@@ -132,6 +131,7 @@ class DetentionEngagementTeamManageFeeUpdatePersonalisationTest {
     public void should_return_personalisation_when_all_information_given() {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.of(newArrayList(caseListedBundle)));
 
+        String subect = "IAFT - SERVE IN PERSON";
         final Map<String, Object> expectedPersonalisation =
                 ImmutableMap
                         .<String, Object>builder()
@@ -152,24 +152,27 @@ class DetentionEngagementTeamManageFeeUpdatePersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> detentionEngagementTeamManageFeeUpdatePersonalisation.getPersonalisationForLink((AsylumCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> detentionEngagementTeamManageFeeUpdatePersonalisation.getPersonalisationForLink((AsylumCase) null))
+                ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_appeal_submission_is_empty() {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> detentionEngagementTeamManageFeeUpdatePersonalisation.getPersonalisationForLink(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("internalDetainedManageFeeUpdateLetter document not available");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> detentionEngagementTeamManageFeeUpdatePersonalisation.getPersonalisationForLink(asylumCase))
+                ;
+assertEquals("internalDetainedManageFeeUpdateLetter document not available", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_notification_client_throws_Exception() throws NotificationClientException, IOException {
         when(documentDownloadClient.getJsonObjectFromDocument(caseListedDoc)).thenThrow(new NotificationClientException("File size is more than 2MB"));
-        assertThatThrownBy(() -> detentionEngagementTeamManageFeeUpdatePersonalisation.getPersonalisationForLink(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("Failed to get Internal detained manage fee update letter in compatible format");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> detentionEngagementTeamManageFeeUpdatePersonalisation.getPersonalisationForLink(asylumCase))
+                ;
+assertEquals("Failed to get Internal detained manage fee update letter in compatible format", exception.getMessage());
     }
 }

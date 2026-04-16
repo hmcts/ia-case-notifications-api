@@ -14,7 +14,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 import java.util.Map;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -93,9 +93,10 @@ class LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisationTest {
 
     @Test
     void shouldThrowExceptionOnPersonalisationWhenCaseIsNull() {
-        assertThatThrownBy(() -> personalisation.getPersonalisation((AsylumCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> personalisation.getPersonalisation((AsylumCase) null))
+                ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -125,9 +126,10 @@ class LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisationTest {
     @Test
     void should_throw_exception_when_no_complete_case_review_date() {
         when(asylumCase.read(COMPLETE_CASE_REVIEW_DATE, String.class)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> personalisation.getPersonalisation(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("Complete CaseReview Date is not present");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> personalisation.getPersonalisation(asylumCase))
+                ;
+assertEquals("Complete CaseReview Date is not present", exception.getMessage());
     }
 
     private void setupAsylumCaseMocks() {

@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -29,14 +29,13 @@ public class LegalRepresentativeBailChangeTribunalCentrePersonalisationTest {
     @Mock
     BailCase bailCase;
 
-    private final Long caseId = 12345L;
     private final String templateId = "someTemplateId";
     private final String bailReferenceNumber = "someReferenceNumber";
     private final String legalRepReference = "someLegalRepReference";
     private final String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
     private final String applicantGivenNames = "someApplicantGivenNames";
     private final String applicantFamilyName = "someApplicantFamilyName";
-    private String legalRepEmailAddress = "legalRep@example.com";
+    private final String legalRepEmailAddress = "legalRep@example.com";
 
     private LegalRepresentativeBailChangeTribunalCentrePersonalisation legalRepresentativeBailChangeTribunalCentrePersonalisation;
 
@@ -63,6 +62,7 @@ public class LegalRepresentativeBailChangeTribunalCentrePersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_CHANGE_TRIBUNAL_CENTRE_LEGAL_REP",
             legalRepresentativeBailChangeTribunalCentrePersonalisation.getReferenceId(caseId));
     }
@@ -77,17 +77,19 @@ public class LegalRepresentativeBailChangeTribunalCentrePersonalisationTest {
     public void should_throw_exception_when_cannot_find_email_address_for_legal_rep() {
         when(bailCase.read(BailCaseFieldDefinition.LEGAL_REP_EMAIL, String.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> legalRepresentativeBailChangeTribunalCentrePersonalisation.getRecipientsList(bailCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("legalRepresentativeEmailAddress is not present");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> legalRepresentativeBailChangeTribunalCentrePersonalisation.getRecipientsList(bailCase))
+            ;
+assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
-        assertThatThrownBy(
+        NullPointerException exception =
+assertThrows(NullPointerException.class,
                 () -> legalRepresentativeBailChangeTribunalCentrePersonalisation.getPersonalisation((BailCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("bailCase must not be null");
+                ;
+assertEquals("bailCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -95,7 +97,12 @@ public class LegalRepresentativeBailChangeTribunalCentrePersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeBailChangeTribunalCentrePersonalisation.getPersonalisation(bailCase);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(bailCase);
+        assertThat(personalisation)
+            .containsEntry("bailReferenceNumber", bailReferenceNumber)
+            .containsEntry("legalRepReference", legalRepReference)
+            .containsEntry("applicantGivenNames", applicantGivenNames)
+            .containsEntry("applicantFamilyName", applicantFamilyName)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber);
     }
 
     @Test
@@ -110,6 +117,6 @@ public class LegalRepresentativeBailChangeTribunalCentrePersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeBailChangeTribunalCentrePersonalisation.getPersonalisation(bailCase);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(bailCase);
+        assertThat(personalisation).allSatisfy((key, value) -> assertThat(value).isEmpty());
     }
 }

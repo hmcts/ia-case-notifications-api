@@ -36,7 +36,6 @@ public class MakeAnApplicationServiceTest {
     private MakeAnApplication makeAnApplication;
 
     private MakeAnApplicationService makeAnApplicationService;
-    private String decideAnApplicationId = "2";
 
     @BeforeEach
     public void setup() {
@@ -83,6 +82,7 @@ public class MakeAnApplicationServiceTest {
 
     @Test
     public void should_return_application_when_decided() {
+        String decideAnApplicationId = "2";
         when(asylumCase.read(DECIDE_AN_APPLICATION_ID)).thenReturn(Optional.of(decideAnApplicationId));
         Optional<MakeAnApplication> makeAnApplicationOptional = makeAnApplicationService.getMakeAnApplication(asylumCase, true);
         assertEquals("Other", makeAnApplicationOptional.get().getType());
@@ -106,37 +106,37 @@ public class MakeAnApplicationServiceTest {
 
         switch (makeAnApplicationTypes) {
             case ADJOURN:
-                assertEquals(expectedPhrase, "change the hearing date");
+                assertEquals("change the hearing date", expectedPhrase);
                 break;
             case EXPEDITE:
-                assertEquals(expectedPhrase, "have the hearing sooner");
+                assertEquals("have the hearing sooner", expectedPhrase);
                 break;
             case JUDGE_REVIEW:
-                assertEquals(expectedPhrase, "ask a judge to review the decision");
+                assertEquals("ask a judge to review the decision", expectedPhrase);
                 break;
             case LINK_OR_UNLINK:
-                assertEquals(expectedPhrase, "link or unlink the appeal");
+                assertEquals("link or unlink the appeal", expectedPhrase);
                 break;
             case TIME_EXTENSION:
-                assertEquals(expectedPhrase, "ask for more time");
+                assertEquals("ask for more time", expectedPhrase);
                 break;
             case TRANSFER:
-                assertEquals(expectedPhrase, "move the hearing to a different location");
+                assertEquals("move the hearing to a different location", expectedPhrase);
                 break;
             case WITHDRAW:
-                assertEquals(expectedPhrase, "withdraw from the appeal");
+                assertEquals("withdraw from the appeal", expectedPhrase);
                 break;
             case UPDATE_HEARING_REQUIREMENTS:
-                assertEquals(expectedPhrase, "change some of the hearing requirements");
+                assertEquals("change some of the hearing requirements", expectedPhrase);
                 break;
             case UPDATE_APPEAL_DETAILS:
-                assertEquals(expectedPhrase, "change some of the appeal details");
+                assertEquals("change some of the appeal details", expectedPhrase);
                 break;
             case REINSTATE:
-                assertEquals(expectedPhrase, "reinstate the appeal");
+                assertEquals("reinstate the appeal", expectedPhrase);
                 break;
             case OTHER:
-                assertEquals(expectedPhrase, "change something about the appeal");
+                assertEquals("change something about the appeal", expectedPhrase);
                 break;
             default:
                 break;

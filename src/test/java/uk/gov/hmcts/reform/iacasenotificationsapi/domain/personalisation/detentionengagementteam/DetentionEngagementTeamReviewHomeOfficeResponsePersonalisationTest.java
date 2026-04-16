@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -52,27 +52,23 @@ public class DetentionEngagementTeamReviewHomeOfficeResponsePersonalisationTest 
     private PersonalisationProvider personalisationProvider;
 
     private final String templateId = "someTemplateId";
-    private final String detentionEngagementTeamReviewHomeOfficeResponseersonalisationReferenceId = "_INTERNAL_DETAINED_REVIEW_HOME_OFFICE_RESPONSE_DET";
-    private final String detEmailAddress = "some@example.com";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "someReferenceNumber";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String subjectPrefix = "IAFT - SERVE BY POST";
-    private final String homeOfficeAppealReviewMaintainedDocumentName = "Home Office Response";
-    private final String homeOfficeAppealReviewWithdrawnDocumentName = "Withdrawal Letter";
-    DocumentWithMetadata internalDetainedReviewHomeOfficeResponseDecisionMaintainedLetter = getDocumentWithMetadata(
+    final DocumentWithMetadata internalDetainedReviewHomeOfficeResponseDecisionMaintainedLetter = getDocumentWithMetadata(
             "1", "Detained appellant letter_HO response when decision maintained", "some other desc", DocumentTag.INTERNAL_DETAINED_REQUEST_HO_RESPONSE_REVIEW);
-    IdValue<DocumentWithMetadata> internalDetainedReviewHomeOfficeResponseDecisionMaintainedLetterId = new IdValue<>("1", internalDetainedReviewHomeOfficeResponseDecisionMaintainedLetter);
+    final IdValue<DocumentWithMetadata> internalDetainedReviewHomeOfficeResponseDecisionMaintainedLetterId = new IdValue<>("1", internalDetainedReviewHomeOfficeResponseDecisionMaintainedLetter);
 
-    DocumentWithMetadata internalDetainedReviewHomeOfficeResponseDecisionWithdrawnLetter = getDocumentWithMetadata(
+    final DocumentWithMetadata internalDetainedReviewHomeOfficeResponseDecisionWithdrawnLetter = getDocumentWithMetadata(
             "1", "Detained appellant letter_HO response when decision withdrawn", "some other desc", DocumentTag.INTERNAL_DETAINED_REQUEST_HO_RESPONSE_REVIEW);
-    IdValue<DocumentWithMetadata> internalDetainedReviewHomeOfficeResponseDecisionWithdrawnLetterId = new IdValue<>("1", internalDetainedReviewHomeOfficeResponseDecisionWithdrawnLetter);
+    final IdValue<DocumentWithMetadata> internalDetainedReviewHomeOfficeResponseDecisionWithdrawnLetterId = new IdValue<>("1", internalDetainedReviewHomeOfficeResponseDecisionWithdrawnLetter);
     private DetentionEngagementTeamReviewHomeOfficeResponsePersonalisation detentionEngagementTeamReviewHomeOfficeResponsePersonalisation;
 
 
     @BeforeEach
-    public void setUp() throws NotificationClientException, IOException {
+    public void setUp() {
         Map<String, String> appelantInfo = new HashMap<>();
         appelantInfo.put("appellantGivenNames", appellantGivenNames);
         appelantInfo.put("appellantFamilyName", appellantFamilyName);
@@ -100,6 +96,7 @@ public class DetentionEngagementTeamReviewHomeOfficeResponsePersonalisationTest 
     @Test
     public void should_return_given_reference_id() {
         Long caseId = 12345L;
+        String detentionEngagementTeamReviewHomeOfficeResponseersonalisationReferenceId = "_INTERNAL_DETAINED_REVIEW_HOME_OFFICE_RESPONSE_DET";
         assertEquals(caseId + detentionEngagementTeamReviewHomeOfficeResponseersonalisationReferenceId,
                 detentionEngagementTeamReviewHomeOfficeResponsePersonalisation.getReferenceId(caseId));
     }
@@ -107,6 +104,7 @@ public class DetentionEngagementTeamReviewHomeOfficeResponsePersonalisationTest 
     @Test
     public void should_return_given_email_address_from_asylum_case() {
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
+        String detEmailAddress = "some@example.com";
         when(detEmailService.getDetEmailAddress(asylumCase)).thenReturn(detEmailAddress);
 
         assertTrue(
@@ -128,20 +126,22 @@ public class DetentionEngagementTeamReviewHomeOfficeResponsePersonalisationTest 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
+        NullPointerException exception =
+assertThrows(NullPointerException.class,
                 () -> detentionEngagementTeamReviewHomeOfficeResponsePersonalisation.getPersonalisationForLink((AsylumCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+                ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_internal_detained_request_home_office_response_review_document_is_missing() {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class,
                 () -> detentionEngagementTeamReviewHomeOfficeResponsePersonalisation.getPersonalisationForLink(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("internalDetainedRequestHomeOfficeResponseReview document not available");
+                ;
+assertEquals("internalDetainedRequestHomeOfficeResponseReview document not available", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -162,6 +162,8 @@ public class DetentionEngagementTeamReviewHomeOfficeResponsePersonalisationTest 
         when(documentDownloadClient.getJsonObjectFromDocument(documentToUpload)).thenReturn(jsonDocument);
         when(asylumCase.read(APPEAL_REVIEW_OUTCOME, AppealReviewOutcome.class)).thenReturn(Optional.of(appealReviewOutcome));
 
+        String homeOfficeAppealReviewWithdrawnDocumentName = "Withdrawal Letter";
+        String homeOfficeAppealReviewMaintainedDocumentName = "Home Office Response";
         String expectedDocumentName = appealReviewOutcome.equals(AppealReviewOutcome.DECISION_MAINTAINED)
                 ? homeOfficeAppealReviewMaintainedDocumentName
                 : homeOfficeAppealReviewWithdrawnDocumentName;

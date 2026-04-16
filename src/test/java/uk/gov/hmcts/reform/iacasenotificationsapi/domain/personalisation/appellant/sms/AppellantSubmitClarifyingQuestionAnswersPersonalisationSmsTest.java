@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -11,7 +12,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
-import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,12 +36,10 @@ public class AppellantSubmitClarifyingQuestionAnswersPersonalisationSmsTest {
     @Mock
     SystemDateProvider systemDateProvider;
 
-    private Long caseId = 12345L;
-    private String smsTemplateId = "someSmsTemplateId";
-    private String iaAipFrontendUrl = "http://localhost";
+    private final String smsTemplateId = "someSmsTemplateId";
+    private final String iaAipFrontendUrl = "http://localhost";
 
-    private String mockedAppealReferenceNumber = "someReferenceNumber";
-    private String mockedAppellantMobilePhone = "07123456789";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
 
     private AppellantSubmitClarifyingQuestionAnswersPersonalisationSms
         appellantClarifyingQuestionsAnswersSubmittedPersonalisationSms;
@@ -66,14 +64,13 @@ public class AppellantSubmitClarifyingQuestionAnswersPersonalisationSmsTest {
 
     @Test
     public void should_return_given_template_id() {
-        Assert.assertEquals(smsTemplateId,
-            appellantClarifyingQuestionsAnswersSubmittedPersonalisationSms.getTemplateId());
+        assertEquals(smsTemplateId, appellantClarifyingQuestionsAnswersSubmittedPersonalisationSms.getTemplateId());
     }
 
     @Test
     public void should_return_given_reference_id() {
-        Assert.assertEquals(caseId + "_SUBMIT_CLARIFYING_QUESTION_ANSWERS_APPELLANT_AIP_SMS",
-            appellantClarifyingQuestionsAnswersSubmittedPersonalisationSms.getReferenceId(caseId));
+        Long caseId = 12345L;
+        assertEquals(caseId + "_SUBMIT_CLARIFYING_QUESTION_ANSWERS_APPELLANT_AIP_SMS", appellantClarifyingQuestionsAnswersSubmittedPersonalisationSms.getReferenceId(caseId));
     }
 
     @Test
@@ -82,14 +79,16 @@ public class AppellantSubmitClarifyingQuestionAnswersPersonalisationSmsTest {
         when(recipientsFinder.findAll(null, NotificationType.SMS))
             .thenThrow(new NullPointerException("asylumCase must not be null"));
 
-        assertThatThrownBy(() -> appellantClarifyingQuestionsAnswersSubmittedPersonalisationSms.getRecipientsList(null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> appellantClarifyingQuestionsAnswersSubmittedPersonalisationSms.getRecipientsList(null))
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_return_given_mobile_mobile_list_from_subscribers_in_asylum_case() {
 
+        String mockedAppellantMobilePhone = "07123456789";
         when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
             .thenReturn(Collections.singleton(mockedAppellantMobilePhone));
 
@@ -100,10 +99,11 @@ public class AppellantSubmitClarifyingQuestionAnswersPersonalisationSmsTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
+        NullPointerException exception =
+assertThrows(NullPointerException.class,
             () -> appellantClarifyingQuestionsAnswersSubmittedPersonalisationSms.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -115,9 +115,10 @@ public class AppellantSubmitClarifyingQuestionAnswersPersonalisationSmsTest {
 
         Map<String, String> personalisation =
             appellantClarifyingQuestionsAnswersSubmittedPersonalisationSms.getPersonalisation(asylumCase);
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
-        assertEquals(dueDate, personalisation.get("due date"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
+        assertThat(personalisation)
+            .containsEntry("Appeal Ref Number", mockedAppealReferenceNumber)
+            .containsEntry("due date", dueDate)
+            .containsEntry("Hyperlink to service", iaAipFrontendUrl);
 
     }
 
@@ -132,9 +133,10 @@ public class AppellantSubmitClarifyingQuestionAnswersPersonalisationSmsTest {
         Map<String, String> personalisation =
             appellantClarifyingQuestionsAnswersSubmittedPersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals("", personalisation.get("Appeal Ref Number"));
-        assertEquals(dueDate, personalisation.get("due date"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
+        assertThat(personalisation)
+            .containsEntry("Appeal Ref Number", "")
+            .containsEntry("due date", dueDate)
+            .containsEntry("Hyperlink to service", iaAipFrontendUrl);
 
     }
 }

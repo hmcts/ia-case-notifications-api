@@ -1,9 +1,11 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.util;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.text.MatchesPattern.matchesPattern;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 import java.util.Map;
@@ -80,11 +82,8 @@ public final class MapFieldAssertor {
                 String expectedValueString = (String) expectedValue;
 
                 if (isPathContainsNotificationsSentReference(path)) {
-                    assertThat(
-                            "Expected field matches (" + path + ")",
-                            removeTimestampFromNotificationReference((String) actualValue),
-                            equalTo(expectedValue)
-                    );
+                    assertEquals(expectedValue, removeTimestampFromNotificationReference((String) actualValue),
+                        "Expected field matches (" + path + ")");
                     return;
                 }
 
@@ -96,10 +95,10 @@ public final class MapFieldAssertor {
 
                     String actualValueString = (String) actualValue;
 
-                    assertThat(
-                        "Expected field matches regular expression (" + path + ")",
+                    assertEquals(
+                        expectedValueString,
                         actualValueString,
-                        matchesPattern(expectedValueString)
+                        "Expected field matches regular expression (" + path + ")"
                     );
 
                     return;
@@ -111,20 +110,20 @@ public final class MapFieldAssertor {
                         .of(expectedValueString.substring(10, expectedValueString.length() - 2)
                             .split(","))
                         .forEach(expectedValueItem -> {
-                            assertThat(
-                                "Expected field contains (" + path + ")",
+                            assertEquals(
+                                expectedValueItem,
                                 String.valueOf(actualValue),
-                                containsString(expectedValueItem)
+                                "Expected field contains (" + path + ")"
                             );
                         });
                     return;
                 }
             }
 
-            assertThat(
-                "Expected field matches (" + path + ")",
+            assertEquals(
+                expectedValue,
                 actualValue,
-                equalTo(expectedValue)
+                "Expected field matches (" + path + ")"
             );
         }
     }

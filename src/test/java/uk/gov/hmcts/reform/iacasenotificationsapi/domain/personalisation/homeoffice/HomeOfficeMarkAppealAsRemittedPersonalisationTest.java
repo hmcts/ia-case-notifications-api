@@ -3,7 +3,8 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeof
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
@@ -31,18 +32,17 @@ class HomeOfficeMarkAppealAsRemittedPersonalisationTest {
     CustomerServicesProvider customerServicesProvider;
 
     private HomeOfficeMarkAppealAsRemittedPersonalisation homeOfficeMarkAppealAsRemittedPersonalisation;
-    private Long caseId = 12345L;
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
 
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
-    private String upperTribunalNoticesEmailAddress = "upperTribunalNoticesEmailAddress";
-    private String homeOfficeMarkAppealAsRemittedTemplateId = "templateId";
-    private String iaServicesPhone = "0100000000";
-    private String iaServicesEmail = "services@email.com";
-    private SourceOfRemittal sourceOfRemittal = SourceOfRemittal.UPPER_TRIBUNAL;
-    private Map<String, String> customerServices = Map.of("customerServicesTelephone", iaServicesPhone,
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String upperTribunalNoticesEmailAddress = "upperTribunalNoticesEmailAddress";
+    private final String homeOfficeMarkAppealAsRemittedTemplateId = "templateId";
+    private final String iaServicesPhone = "0100000000";
+    private final String iaServicesEmail = "services@email.com";
+    private final SourceOfRemittal sourceOfRemittal = SourceOfRemittal.UPPER_TRIBUNAL;
+    private final Map<String, String> customerServices = Map.of("customerServicesTelephone", iaServicesPhone,
         "customerServicesEmail", iaServicesEmail);
 
     @BeforeEach
@@ -75,6 +75,7 @@ class HomeOfficeMarkAppealAsRemittedPersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_HOME_OFFICE_MARK_APPEAL_AS_REMITTED",
             homeOfficeMarkAppealAsRemittedPersonalisation.getReferenceId(caseId));
     }
@@ -84,31 +85,34 @@ class HomeOfficeMarkAppealAsRemittedPersonalisationTest {
         Map<String, String> personalisation =
             homeOfficeMarkAppealAsRemittedPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals(iaServicesPhone, personalisation.get("customerServicesTelephone"));
-        assertEquals(iaServicesEmail, personalisation.get("customerServicesEmail"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(sourceOfRemittal.getValue(), personalisation.get("remittalSource"));
+        assertThat(personalisation)
+            .containsEntry("customerServicesTelephone", iaServicesPhone)
+            .containsEntry("customerServicesEmail", iaServicesEmail)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("remittalSource", sourceOfRemittal.getValue());
 
     }
 
     @Test
     public void should_throw_exception_when_callback_is_null() {
 
-        assertThatThrownBy(
+        NullPointerException exception =
+assertThrows(NullPointerException.class,
             () -> homeOfficeMarkAppealAsRemittedPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_throw_error_if_remittal_source_missing() {
         when(asylumCase.read(SOURCE_OF_REMITTAL, SourceOfRemittal.class)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> homeOfficeMarkAppealAsRemittedPersonalisation.getPersonalisation(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("sourceOfRemittal is not present");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> homeOfficeMarkAppealAsRemittedPersonalisation.getPersonalisation(asylumCase))
+                ;
+assertEquals("sourceOfRemittal is not present", exception.getMessage());
     }
 
 }

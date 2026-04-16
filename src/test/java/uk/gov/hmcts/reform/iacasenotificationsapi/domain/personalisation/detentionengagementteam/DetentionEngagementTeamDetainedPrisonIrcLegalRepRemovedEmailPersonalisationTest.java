@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -41,9 +41,9 @@ class DetentionEngagementTeamDetainedPrisonIrcLegalRepRemovedEmailPersonalisatio
     private static final String NON_ADA_PREFIX = "[NON-ADA]";
     private static final long CASE_ID = 1234L;
     private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
-    DocumentWithMetadata detainedLegalRepRemovedDoc = getDocumentWithMetadata(
+    final DocumentWithMetadata detainedLegalRepRemovedDoc = getDocumentWithMetadata(
             "id", "detained_legal_rep_removed", "some other desc", DocumentTag.DETAINED_LEGAL_REP_REMOVED_IRC_PRISON_LETTER);
-    IdValue<DocumentWithMetadata> legalRepRemovedBundle = new IdValue<>("1", detainedLegalRepRemovedDoc);
+    final IdValue<DocumentWithMetadata> legalRepRemovedBundle = new IdValue<>("1", detainedLegalRepRemovedDoc);
 
     @Mock
     private DetentionEmailService detentionEmailService;
@@ -70,7 +70,7 @@ class DetentionEngagementTeamDetainedPrisonIrcLegalRepRemovedEmailPersonalisatio
     @Test
     void should_return_correct_reference_id() {
         String referenceId = personalisation.getReferenceId(CASE_ID);
-        assertThat(referenceId).isEqualTo("1234_INTERNAL_DETAINED_LEGAL_REP_REMOVED");
+        assertEquals("1234_INTERNAL_DETAINED_LEGAL_REP_REMOVED", referenceId);
     }
 
     @Test
@@ -78,8 +78,7 @@ class DetentionEngagementTeamDetainedPrisonIrcLegalRepRemovedEmailPersonalisatio
         String detentionEmailAddress = "detention-email@example.com";
         when(detentionEmailService.getDetentionEmailAddress(asylumCase)).thenReturn(detentionEmailAddress);
 
-        assertThat(personalisation.getRecipientsList(asylumCase))
-                .isEqualTo(Collections.singleton(detentionEmailAddress));
+        assertEquals(Collections.singleton(detentionEmailAddress), personalisation.getRecipientsList(asylumCase));
     }
 
     @Test
@@ -99,12 +98,13 @@ class DetentionEngagementTeamDetainedPrisonIrcLegalRepRemovedEmailPersonalisatio
 
         Map<String, Object> personalisation = this.personalisation.getPersonalisationForLink(asylumCase);
 
-        assertEquals("someReferenceNumber", personalisation.get("appealReferenceNumber"));
-        assertEquals("someHomeOfficeReferenceNumber", personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("someAppellantGivenNames", personalisation.get("appellantGivenNames"));
-        assertEquals("someAppellantFamilyName", personalisation.get("appellantFamilyName"));
-        assertEquals(NON_ADA_PREFIX, personalisation.get("subjectPrefix"));
-        assertEquals(jsonObject, personalisation.get("documentLink"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "someReferenceNumber")
+            .containsEntry("homeOfficeReferenceNumber", "someHomeOfficeReferenceNumber")
+            .containsEntry("appellantGivenNames", "someAppellantGivenNames")
+            .containsEntry("appellantFamilyName", "someAppellantFamilyName")
+            .containsEntry("subjectPrefix", NON_ADA_PREFIX)
+            .containsEntry("documentLink", jsonObject);
     }
 
     @Test
@@ -119,29 +119,32 @@ class DetentionEngagementTeamDetainedPrisonIrcLegalRepRemovedEmailPersonalisatio
 
         Map<String, Object> personalisation = this.personalisation.getPersonalisationForLink(asylumCase);
 
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals(NON_ADA_PREFIX, personalisation.get("subjectPrefix"));
-        assertEquals(jsonObject, personalisation.get("documentLink"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("homeOfficeReferenceNumber", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "")
+            .containsEntry("subjectPrefix", NON_ADA_PREFIX)
+            .containsEntry("documentLink", jsonObject);
     }
 
     @Test
     void should_throw_exception_when_asylum_case_is_null() {
         AsylumCase nullAsylumCase = null;
-        assertThatThrownBy(() -> personalisation.getPersonalisationForLink(nullAsylumCase))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> personalisation.getPersonalisationForLink(nullAsylumCase))
+                ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_when_detained_legal_rep_removed_document_is_not_available() {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> personalisation.getPersonalisationForLink(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("detainedLegalRepRemovedIrcPrisonLetter document not available");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> personalisation.getPersonalisationForLink(asylumCase))
+                ;
+assertEquals("detainedLegalRepRemovedIrcPrisonLetter document not available", exception.getMessage());
     }
 
     @Test
@@ -150,9 +153,10 @@ class DetentionEngagementTeamDetainedPrisonIrcLegalRepRemovedEmailPersonalisatio
         when(documentDownloadClient.getJsonObjectFromDocument(any(DocumentWithMetadata.class)))
                 .thenThrow(new IOException("Download failed"));
 
-        assertThatThrownBy(() -> personalisation.getPersonalisationForLink(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("Failed to get detainedLegalRepRemovedIrcPrisonLetter in compatible format");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> personalisation.getPersonalisationForLink(asylumCase))
+                ;
+assertEquals("Failed to get detainedLegalRepRemovedIrcPrisonLetter in compatible format", exception.getMessage());
     }
 
     @Test
@@ -161,8 +165,9 @@ class DetentionEngagementTeamDetainedPrisonIrcLegalRepRemovedEmailPersonalisatio
         when(documentDownloadClient.getJsonObjectFromDocument(any(DocumentWithMetadata.class)))
                 .thenThrow(new NotificationClientException("Notification client error"));
 
-        assertThatThrownBy(() -> personalisation.getPersonalisationForLink(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("Failed to get detainedLegalRepRemovedIrcPrisonLetter in compatible format");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> personalisation.getPersonalisationForLink(asylumCase))
+                ;
+assertEquals("Failed to get detainedLegalRepRemovedIrcPrisonLetter in compatible format", exception.getMessage());
     }
 }

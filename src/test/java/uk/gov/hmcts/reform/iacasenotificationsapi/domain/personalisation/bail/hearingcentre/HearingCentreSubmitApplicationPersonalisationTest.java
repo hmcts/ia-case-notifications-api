@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.hearingcentre;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -79,10 +80,11 @@ public class HearingCentreSubmitApplicationPersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
+        NullPointerException exception =
+assertThrows(NullPointerException.class,
             () -> hearingCentreSubmitApplicationPersonalisation.getPersonalisation((BailCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("bailCase must not be null");
+            ;
+assertEquals("bailCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -91,11 +93,12 @@ public class HearingCentreSubmitApplicationPersonalisationTest {
         Map<String, String> personalisation =
             hearingCentreSubmitApplicationPersonalisation.getPersonalisation(bailCase);
 
-        assertEquals(bailReferenceNumber, personalisation.get("bailReferenceNumber"));
-        assertEquals(legalRepReferenceNumber, personalisation.get("legalRepReference"));
-        assertEquals(applicantGivenNames, personalisation.get("applicantGivenNames"));
-        assertEquals(applicantFamilyName, personalisation.get("applicantFamilyName"));
-        assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
+        assertThat(personalisation)
+            .containsEntry("bailReferenceNumber", bailReferenceNumber)
+            .containsEntry("legalRepReference", legalRepReferenceNumber)
+            .containsEntry("applicantGivenNames", applicantGivenNames)
+            .containsEntry("applicantFamilyName", applicantFamilyName)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber);
     }
 
     @Test
@@ -106,11 +109,12 @@ public class HearingCentreSubmitApplicationPersonalisationTest {
             hearingCentreSubmitApplicationPersonalisation.getPersonalisation(bailCase);
 
         assertEquals(templateIdWithoutLR, hearingCentreSubmitApplicationPersonalisation.getTemplateId(bailCase));
-        assertEquals(bailReferenceNumber, personalisation.get("bailReferenceNumber"));
+            assertEquals(bailReferenceNumber, personalisation.get("bailReferenceNumber"));
         assertNull(personalisation.get("legalRepReference"));
-        assertEquals(applicantGivenNames, personalisation.get("applicantGivenNames"));
-        assertEquals(applicantFamilyName, personalisation.get("applicantFamilyName"));
-        assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
+        assertThat(personalisation)
+            .containsEntry("applicantGivenNames", applicantGivenNames)
+            .containsEntry("applicantFamilyName", applicantFamilyName)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber);
     }
 
     @Test
@@ -125,10 +129,11 @@ public class HearingCentreSubmitApplicationPersonalisationTest {
         Map<String, String> personalisation =
             hearingCentreSubmitApplicationPersonalisation.getPersonalisation(bailCase);
 
-        assertEquals("", personalisation.get("bailReferenceNumber"));
-        assertEquals("", personalisation.get("legalRepReference"));
-        assertEquals("", personalisation.get("applicantGivenNames"));
-        assertEquals("", personalisation.get("applicantFamilyName"));
-        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
+        assertThat(personalisation)
+            .containsEntry("bailReferenceNumber", "")
+            .containsEntry("legalRepReference", "")
+            .containsEntry("applicantGivenNames", "")
+            .containsEntry("applicantFamilyName", "")
+            .containsEntry("homeOfficeReferenceNumber", "");
     }
 }

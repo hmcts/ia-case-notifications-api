@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
@@ -46,34 +47,23 @@ public class AppellantEditListingPersonalisationSmsTest {
     @Mock
     RecipientsFinder recipientsFinder;
 
-    private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
-    private String legallyReppedTemplateId = "legallyReppedTemplateId";
-    private String iaAipFrontendUrl = "http://localhost";
-    private HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
-    private HearingCentre tribunalCentre = HearingCentre.HATTON_CROSS;
-    private String hearingCentreAddress = "some hearing centre address";
+    private final String templateId = "someTemplateId";
+    private final String legallyReppedTemplateId = "legallyReppedTemplateId";
+    private final String iaAipFrontendUrl = "http://localhost";
+    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    private final HearingCentre tribunalCentre = HearingCentre.HATTON_CROSS;
+    private final String hearingCentreAddress = "some hearing centre address";
 
-    private String hearingDateTime = "2019-08-27T14:25:15.000";
-    private String hearingDate = "2019-08-27";
-    private String hearingTime = "14:25";
+    private final String hearingDateTime = "2019-08-27T14:25:15.000";
 
-    private String appellantGivenNames = "appellantGivenNames";
-    private String appellantFamilyName = "appellantFamilyName";
-    private String homeOfficeRefNumber = "homeOfficeRefNumber";
+    private final String homeOfficeRefNumber = "homeOfficeRefNumber";
 
-    private String mockedAppealReferenceNumber = "someReferenceNumber";
-    private String mockedAppellantMobilePhone = "07123456789";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
+    private final String mockedAppellantMobilePhone = "07123456789";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
 
-    private String hearingCentreName = HearingCentre.TAYLOR_HOUSE.toString();
-    private String remoteVideoCallTribunalResponse = "some tribunal response";
-    private String requirementsVulnerabilities = "someRequirementsVulnerabilities";
-    private String requirementsMultimedia = "someRequirementsMultimedia";
-    private String requirementsInCamera = "someRequirementsInCamera";
-    private String requirementsSingleSexCourt = "someRequirementsSingleSexCourt";
-    private String requirementsOther = "someRequirementsOther";
+    private final String hearingCentreName = HearingCentre.TAYLOR_HOUSE.toString();
 
     private AppellantEditListingPersonalisationSms appellantEditListingPersonalisationSms;
 
@@ -104,6 +94,7 @@ public class AppellantEditListingPersonalisationSmsTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_CASE_RE_LISTED_APPELLANT_SMS",
             appellantEditListingPersonalisationSms.getReferenceId(caseId));
     }
@@ -114,9 +105,9 @@ public class AppellantEditListingPersonalisationSmsTest {
         when(recipientsFinder.findAll(null, NotificationType.SMS))
             .thenThrow(new NullPointerException("asylumCase must not be null"));
 
-        assertThatThrownBy(() -> appellantEditListingPersonalisationSms.getRecipientsList(null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> appellantEditListingPersonalisationSms.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -149,8 +140,11 @@ public class AppellantEditListingPersonalisationSmsTest {
         Map<String, String> personalisation =
             appellantEditListingPersonalisationSms.getPersonalisation(callback);
 
-        assertThat(personalisation).isNotEmpty();
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertFalse(personalisation.isEmpty());
+        assertThat(personalisation)
+            .containsAllEntriesOf(getPersonalisationMapWithGivenValues())
+            .containsEntry("tribunalCentre", tribunalCentre.getValue())
+            .containsEntry("hyperlink to service", iaAipFrontendUrl);
     }
 
     @Test
@@ -161,11 +155,24 @@ public class AppellantEditListingPersonalisationSmsTest {
         Map<String, String> personalisation =
             appellantEditListingPersonalisationSms.getPersonalisation(callback);
 
-        assertThat(personalisation).isNotEmpty();
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertFalse(personalisation.isEmpty());
+        assertThat(personalisation)
+            .containsAllEntriesOf(getPersonalisationMapWithBlankValues())
+            .containsEntry("tribunalCentre", tribunalCentre.getValue())
+            .containsEntry("hyperlink to service", iaAipFrontendUrl);
     }
 
     private Map<String, String> getPersonalisationMapWithGivenValues() {
+        String requirementsOther = "someRequirementsOther";
+        String requirementsSingleSexCourt = "someRequirementsSingleSexCourt";
+        String requirementsInCamera = "someRequirementsInCamera";
+        String requirementsMultimedia = "someRequirementsMultimedia";
+        String requirementsVulnerabilities = "someRequirementsVulnerabilities";
+        String remoteVideoCallTribunalResponse = "some tribunal response";
+        String appellantFamilyName = "appellantFamilyName";
+        String appellantGivenNames = "appellantGivenNames";
+        String hearingTime = "14:25";
+        String hearingDate = "2019-08-27";
         return ImmutableMap
             .<String, String>builder()
             .put("appealReferenceNumber", mockedAppealReferenceNumber)

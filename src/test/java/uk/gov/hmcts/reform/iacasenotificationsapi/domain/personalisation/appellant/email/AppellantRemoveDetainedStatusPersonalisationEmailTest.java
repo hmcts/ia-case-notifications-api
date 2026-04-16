@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
@@ -22,15 +23,13 @@ public class AppellantRemoveDetainedStatusPersonalisationEmailTest {
     @Mock
     AsylumCase asylumCase;
 
-    private Long caseId = 12345L;
-    private String beforeListingEmailTemplateId = "someEmailTemplateIdBeforeListing";
-    private String afterListingEmailTemplateId = "someEmailTemplateIdAfterListing";
-    private String mockedAppealReferenceNumber = "someReferenceNumber";
-    private String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
-    private String mockedListingReferenceNumber = "someListingReferenceNumber";
-    private String mockedAppellantEmailAddress = "appellant@example.net";
-    private String mockedAppellantGivenNames = "Talha";
-    private String mockedAppellantFamilyName = "Awan";
+    private final String beforeListingEmailTemplateId = "someEmailTemplateIdBeforeListing";
+    private final String afterListingEmailTemplateId = "someEmailTemplateIdAfterListing";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
+    private final String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
+    private final String mockedListingReferenceNumber = "someListingReferenceNumber";
+    private final String mockedAppellantGivenNames = "Talha";
+    private final String mockedAppellantFamilyName = "Awan";
     private AppellantRemoveDetainedStatusPersonalisationEmail appellantRemoveDetainedStatusPersonalisationEmail;
 
     @BeforeEach
@@ -68,17 +67,19 @@ public class AppellantRemoveDetainedStatusPersonalisationEmailTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_REMOVE_DETENTION_STATUS_APPELLANT_EMAIL",
                 appellantRemoveDetainedStatusPersonalisationEmail.getReferenceId(caseId));
     }
 
     @Test
     public void should_return_correct_recipient_email_address() {
-        List<String> mockedContactPreferences = new ArrayList<>(Arrays.asList("wantsEmail"));
+        List<String> mockedContactPreferences = new ArrayList<>(List.of("wantsEmail"));
 
         when(asylumCase.read(CONTACT_PREFERENCE_UN_REP))
                 .thenReturn(Optional.of(mockedContactPreferences));
 
+        String mockedAppellantEmailAddress = "appellant@example.net";
         when(asylumCase.read(EMAIL, String.class))
                 .thenReturn(Optional.of(mockedAppellantEmailAddress));
 
@@ -88,7 +89,7 @@ public class AppellantRemoveDetainedStatusPersonalisationEmailTest {
 
     @Test
     public void should_return_empty_recipient_set_when_email_contact_preference_not_chosen() {
-        List<String> mockedContactPreferences = new ArrayList<>(Arrays.asList());
+        List<String> mockedContactPreferences = new ArrayList<>(List.of());
 
         when(asylumCase.read(CONTACT_PREFERENCE_UN_REP))
                 .thenReturn(Optional.ofNullable(mockedContactPreferences));
@@ -104,11 +105,12 @@ public class AppellantRemoveDetainedStatusPersonalisationEmailTest {
         Map<String, String> personalisation =
                 appellantRemoveDetainedStatusPersonalisationEmail.getPersonalisation(asylumCase);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(mockedAppealHomeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(mockedAppellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(mockedAppellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals("", personalisation.get("ariaListingReference"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", mockedAppealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", mockedAppealHomeOfficeReferenceNumber)
+            .containsEntry("appellantGivenNames", mockedAppellantGivenNames)
+            .containsEntry("appellantFamilyName", mockedAppellantFamilyName)
+            .containsEntry("ariaListingReference", "");
 
     }
 
@@ -120,10 +122,11 @@ public class AppellantRemoveDetainedStatusPersonalisationEmailTest {
         Map<String, String> personalisation =
                 appellantRemoveDetainedStatusPersonalisationEmail.getPersonalisation(asylumCase);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(mockedAppealHomeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(mockedListingReferenceNumber, personalisation.get("ariaListingReference"));
-        assertEquals(mockedAppellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(mockedAppellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", mockedAppealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", mockedAppealHomeOfficeReferenceNumber)
+            .containsEntry("ariaListingReference", mockedListingReferenceNumber)
+            .containsEntry("appellantGivenNames", mockedAppellantGivenNames)
+            .containsEntry("appellantFamilyName", mockedAppellantFamilyName);
     }
 }

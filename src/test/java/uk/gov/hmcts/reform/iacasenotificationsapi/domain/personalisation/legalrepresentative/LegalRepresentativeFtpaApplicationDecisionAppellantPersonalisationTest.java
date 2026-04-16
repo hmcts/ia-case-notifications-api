@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
@@ -42,40 +43,38 @@ public class LegalRepresentativeFtpaApplicationDecisionAppellantPersonalisationT
     @Mock
     PersonalisationProvider personalisationProvider;
 
-    private Long caseId = 12345L;
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String ariaListingReference = "ariaListingReference";
-    private String legalRepReferenceNumber = "someLegalRepRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String ariaListingReference = "ariaListingReference";
+    private final String legalRepReferenceNumber = "someLegalRepRefNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
 
-    private String applicantGrantedTemplateId = "applicantGrantedTemplateId";
-    private String applicantPartiallyGrantedTemplateId = "applicantPartiallyGrantedTemplateId";
-    private String applicantNotAdmittedTemplateId = "applicantNotAdmittedTemplateId";
-    private String applicantRefusedTemplateId = "applicantRefusedTemplateId";
-    private String applicantReheardTemplateId = "otherPartyReheardTemplateId";
-    private String allowedTemplateId = "allowedTemplateId";
-    private String dismissedTemplateId = "dismissedTemplateId";
-
-    private int calendarDaysToWaitInCountry = 14;
-    private int calendarDaysToWaitOutOfCountry = 28;
-    private int workingDaysaysToWaitAda = 5;
+    private final String applicantGrantedTemplateId = "applicantGrantedTemplateId";
+    private final String applicantPartiallyGrantedTemplateId = "applicantPartiallyGrantedTemplateId";
+    private final String applicantNotAdmittedTemplateId = "applicantNotAdmittedTemplateId";
+    private final String applicantRefusedTemplateId = "applicantRefusedTemplateId";
+    private final String applicantReheardTemplateId = "otherPartyReheardTemplateId";
+    private final String allowedTemplateId = "allowedTemplateId";
+    private final String dismissedTemplateId = "dismissedTemplateId";
 
 
-    private FtpaDecisionOutcomeType granted = FtpaDecisionOutcomeType.FTPA_GRANTED;
-    private FtpaDecisionOutcomeType partiallyGranted = FtpaDecisionOutcomeType.FTPA_PARTIALLY_GRANTED;
-    private FtpaDecisionOutcomeType notAdmitted = FtpaDecisionOutcomeType.FTPA_NOT_ADMITTED;
-    private FtpaDecisionOutcomeType refused = FtpaDecisionOutcomeType.FTPA_REFUSED;
-    private FtpaDecisionOutcomeType reheard = FtpaDecisionOutcomeType.FTPA_REHEARD35;
-    private FtpaDecisionOutcomeType allowed = FtpaDecisionOutcomeType.FTPA_ALLOWED;
-    private FtpaDecisionOutcomeType remade = FtpaDecisionOutcomeType.FTPA_REMADE32;
-    private FtpaDecisionOutcomeType dismissed = FtpaDecisionOutcomeType.FTPA_DISMISSED;
+    private final FtpaDecisionOutcomeType granted = FtpaDecisionOutcomeType.FTPA_GRANTED;
+    private final FtpaDecisionOutcomeType partiallyGranted = FtpaDecisionOutcomeType.FTPA_PARTIALLY_GRANTED;
+    private final FtpaDecisionOutcomeType notAdmitted = FtpaDecisionOutcomeType.FTPA_NOT_ADMITTED;
+    private final FtpaDecisionOutcomeType refused = FtpaDecisionOutcomeType.FTPA_REFUSED;
+    private final FtpaDecisionOutcomeType reheard = FtpaDecisionOutcomeType.FTPA_REHEARD35;
+    private final FtpaDecisionOutcomeType allowed = FtpaDecisionOutcomeType.FTPA_ALLOWED;
+    private final FtpaDecisionOutcomeType remade = FtpaDecisionOutcomeType.FTPA_REMADE32;
+    private final FtpaDecisionOutcomeType dismissed = FtpaDecisionOutcomeType.FTPA_DISMISSED;
 
     private LegalRepresentativeFtpaApplicationDecisionAppellantPersonalisation
         legalRepresentativeFtpaApplicationDecisionAppellantPersonalisation;
 
     @BeforeEach
     public void setup() {
+        int workingDaysaysToWaitAda = 5;
+        int calendarDaysToWaitOutOfCountry = 28;
+        int calendarDaysToWaitInCountry = 14;
         legalRepresentativeFtpaApplicationDecisionAppellantPersonalisation =
             new LegalRepresentativeFtpaApplicationDecisionAppellantPersonalisation(
                 applicantGrantedTemplateId,
@@ -97,10 +96,11 @@ public class LegalRepresentativeFtpaApplicationDecisionAppellantPersonalisationT
     public void should_return_given_template_id_when_outcome_is_empty() {
         when(asylumCase.read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class))
             .thenReturn(Optional.empty());
-        assertThatThrownBy(
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class,
             () -> legalRepresentativeFtpaApplicationDecisionAppellantPersonalisation.getTemplateId(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("ftpaAppellantDecisionOutcomeType is not present");
+            ;
+assertEquals("ftpaAppellantDecisionOutcomeType is not present", exception.getMessage());
     }
 
     @Test
@@ -147,6 +147,7 @@ public class LegalRepresentativeFtpaApplicationDecisionAppellantPersonalisationT
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_APPELLANT",
             legalRepresentativeFtpaApplicationDecisionAppellantPersonalisation.getReferenceId(caseId));
     }
@@ -162,12 +163,13 @@ public class LegalRepresentativeFtpaApplicationDecisionAppellantPersonalisationT
         Map<String, String> personalisation =
             legalRepresentativeFtpaApplicationDecisionAppellantPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals("Accelerated detained appeal", personalisation.get("subjectPrefix"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
-        assertEquals(legalRepReferenceNumber, personalisation.get("legalRepReferenceNumber"));
+        assertThat(personalisation)
+            .containsEntry("subjectPrefix", "Accelerated detained appeal")
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("ariaListingReference", ariaListingReference)
+            .containsEntry("legalRepReferenceNumber", legalRepReferenceNumber);
 
         verify(dueDateService, times(1)).calculateWorkingDaysDueDate(any(ZonedDateTime.class), any(Integer.class));
     }
@@ -183,12 +185,13 @@ public class LegalRepresentativeFtpaApplicationDecisionAppellantPersonalisationT
         Map<String, String> personalisation =
             legalRepresentativeFtpaApplicationDecisionAppellantPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals("Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
-        assertEquals(legalRepReferenceNumber, personalisation.get("legalRepReferenceNumber"));
+        assertThat(personalisation)
+            .containsEntry("subjectPrefix", "Immigration and Asylum appeal")
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("ariaListingReference", ariaListingReference)
+            .containsEntry("legalRepReferenceNumber", legalRepReferenceNumber);
 
         verify(dueDateService, times(1)).calculateCalendarDaysDueDate(any(ZonedDateTime.class), any(Integer.class));
     }
@@ -205,12 +208,13 @@ public class LegalRepresentativeFtpaApplicationDecisionAppellantPersonalisationT
         Map<String, String> personalisation =
             legalRepresentativeFtpaApplicationDecisionAppellantPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals("Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
-        assertEquals(legalRepReferenceNumber, personalisation.get("legalRepReferenceNumber"));
+        assertThat(personalisation)
+            .containsEntry("subjectPrefix", "Immigration and Asylum appeal")
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("ariaListingReference", ariaListingReference)
+            .containsEntry("legalRepReferenceNumber", legalRepReferenceNumber);
 
         verify(dueDateService, times(1)).calculateCalendarDaysDueDate(any(ZonedDateTime.class), any(Integer.class));
     }
@@ -229,11 +233,12 @@ public class LegalRepresentativeFtpaApplicationDecisionAppellantPersonalisationT
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
-        assertEquals(legalRepReferenceNumber, personalisation.get("legalRepReferenceNumber"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("ariaListingReference", ariaListingReference)
+            .containsEntry("legalRepReferenceNumber", legalRepReferenceNumber);
 
         verify(dueDateService, times(0)).calculateWorkingDaysDueDate(any(ZonedDateTime.class), any(Integer.class));
         verify(dueDateService, times(0)).calculateCalendarDaysDueDate(any(ZonedDateTime.class), any(Integer.class));

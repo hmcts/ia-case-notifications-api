@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -42,18 +43,17 @@ class AppellantNocRequestDecisionPersonalisationEmailTest {
     @Mock
     private CaseDetails<AsylumCase> caseDetails;
 
-    private Long caseId = 12345L;
-    private String emailTemplateId = "someEmailTemplateId";
+    private final String emailTemplateId = "someEmailTemplateId";
 
 
-    private long mockedAppealReferenceNumber = 1236;
-    private String mockedAppellantGivenNames = "someAppellantGivenNames";
-    private String mockedAppellantFamilyName = "someAppellantFamilyName";
-    private String mockedAppellantEmailAddress = "appelant@example.net";
-    private String dateOfBirth = "2020-03-01";
-    private String expectedDateOfBirth = "1 Mar 2020";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "customer.services@example.com";
+    private final long mockedAppealReferenceNumber = 1236;
+    private final String mockedAppellantGivenNames = "someAppellantGivenNames";
+    private final String mockedAppellantFamilyName = "someAppellantFamilyName";
+    private final String mockedAppellantEmailAddress = "appelant@example.net";
+    private final String dateOfBirth = "2020-03-01";
+    private final String expectedDateOfBirth = "1 Mar 2020";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "customer.services@example.com";
 
     private AppellantNocRequestDecisionPersonalisationEmail appellantNocRequestDecisionPersonalisationEmail;
 
@@ -83,6 +83,7 @@ class AppellantNocRequestDecisionPersonalisationEmailTest {
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_NOC_REQUEST_DECISION_APPELLANT_EMAIL",
             appellantNocRequestDecisionPersonalisationEmail.getReferenceId(caseId));
     }
@@ -99,18 +100,20 @@ class AppellantNocRequestDecisionPersonalisationEmailTest {
 
         when(asylumCase.read(EMAIL, String.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> appellantNocRequestDecisionPersonalisationEmail.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("appellantEmailAddress is not present");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> appellantNocRequestDecisionPersonalisationEmail.getRecipientsList(asylumCase))
+            ;
+assertEquals("appellantEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_date_of_birth_is_null() {
         when(asylumCase.read(APPELLANT_DATE_OF_BIRTH, String.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> appellantNocRequestDecisionPersonalisationEmail.getPersonalisation(callback))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("Appellant's birth of date is not present");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> appellantNocRequestDecisionPersonalisationEmail.getPersonalisation(callback))
+            ;
+assertEquals("Appellant's birth of date is not present", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -123,10 +126,11 @@ class AppellantNocRequestDecisionPersonalisationEmailTest {
         when(caseDetails.getId()).thenReturn(mockedAppealReferenceNumber);
         Map<String, String> personalisation = appellantNocRequestDecisionPersonalisationEmail.getPersonalisation(callback);
 
-        assertEquals(String.valueOf(mockedAppealReferenceNumber), personalisation.get("Ref Number"));
-        assertEquals(mockedAppellantGivenNames, personalisation.get("Given names"));
-        assertEquals(mockedAppellantFamilyName, personalisation.get("Family name"));
-        assertEquals(expectedDateOfBirth, personalisation.get("Date Of Birth"));
+        assertThat(personalisation)
+            .containsEntry("Ref Number", String.valueOf(mockedAppealReferenceNumber))
+            .containsEntry("Given names", mockedAppellantGivenNames)
+            .containsEntry("Family name", mockedAppellantFamilyName)
+            .containsEntry("Date Of Birth", expectedDateOfBirth);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YesOrNo.YES)
@@ -146,10 +150,11 @@ class AppellantNocRequestDecisionPersonalisationEmailTest {
 
         Map<String, String> personalisation = appellantNocRequestDecisionPersonalisationEmail.getPersonalisation(callback);
 
-        assertEquals(String.valueOf(mockedAppealReferenceNumber), personalisation.get("Ref Number"));
-        assertEquals("", personalisation.get("Given names"));
-        assertEquals("", personalisation.get("Family name"));
-        assertEquals(expectedDateOfBirth, personalisation.get("Date Of Birth"));
+        assertThat(personalisation)
+            .containsEntry("Ref Number", String.valueOf(mockedAppealReferenceNumber))
+            .containsEntry("Given names", "")
+            .containsEntry("Family name", "")
+            .containsEntry("Date Of Birth", expectedDateOfBirth);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YesOrNo.YES)

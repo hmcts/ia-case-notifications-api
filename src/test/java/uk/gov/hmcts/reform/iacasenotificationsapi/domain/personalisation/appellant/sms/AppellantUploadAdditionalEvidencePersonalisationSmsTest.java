@@ -16,7 +16,8 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -28,7 +29,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 class AppellantUploadAdditionalEvidencePersonalisationSmsTest {
     private final String beforeListingTemplateId = "beforeListingTemplateId";
     private final String afterListingTemplateId = "afterListingTemplateId";
-    private HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
     private final String iaAipFrontendUrl = "iaAipFrontendUrl";
     private final String mockedAppealReferenceNumber = "someReferenceNumber";
     @Mock
@@ -73,9 +74,10 @@ class AppellantUploadAdditionalEvidencePersonalisationSmsTest {
         when(recipientsFinder.findAll(null, NotificationType.SMS))
             .thenThrow(new NullPointerException("asylumCase must not be null"));
 
-        assertThatThrownBy(() -> appellantUploadAdditionalEvidencePersonalisationSms.getRecipientsList(null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception = 
+assertThrows(NullPointerException.class, () -> appellantUploadAdditionalEvidencePersonalisationSms.getRecipientsList(null))
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -92,18 +94,20 @@ class AppellantUploadAdditionalEvidencePersonalisationSmsTest {
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
+        NullPointerException exception = 
+assertThrows(NullPointerException.class, 
             () -> appellantUploadAdditionalEvidencePersonalisationSms.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     void should_return_personalisation_when_all_information_given() {
         Map<String, String> personalisation =
                 appellantUploadAdditionalEvidencePersonalisationSms.getPersonalisation(asylumCase);
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("hyperlink to service"));
+        assertThat(personalisation)
+            .containsEntry("Appeal Ref Number", mockedAppealReferenceNumber)
+            .containsEntry("hyperlink to service", iaAipFrontendUrl);
 
     }
 }

@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -51,24 +52,18 @@ public class AppellantReinstateAppealPersonalisationEmailTest {
     @Mock
     AppealService appealService;
 
-    private Long caseId = 12345L;
-    private String beforeListingEmailTemplateId = "beforeListingEmailTemplateId";
-    private String afterListingEmailTemplateId = "afterListingEmailTemplateId";
-    private String iaAipFrontendUrl = "http://localhost";
+    private final String beforeListingEmailTemplateId = "beforeListingEmailTemplateId";
+    private final String afterListingEmailTemplateId = "afterListingEmailTemplateId";
+    private final String iaAipFrontendUrl = "http://localhost";
 
-    private String reinstateAppealDate = "2020-10-08";
-    private String reinstateAppealReason = "someReason";
-    private String reinstatedDecisionMaker = "someDecisionMaker";
+    private final String reinstateAppealReason = "someReason";
+    private final String reinstatedDecisionMaker = "someDecisionMaker";
 
-    private String mockedAppealReferenceNumber = "someReferenceNumber";
-    private String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
-    private String mockedAppellantGivenNames = "someAppellantGivenNames";
-    private String mockedAppellantFamilyName = "someAppellantFamilyName";
-    private String mockedAppellantEmailAddress = "appelant@example.net";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
-    private String ariaListingRef = "someAriaListingRef";
-    private String removeAppealFromOnlineReason = "someRemoveAppeal reason";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
+    private final String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
+    private final String mockedAppellantGivenNames = "someAppellantGivenNames";
+    private final String mockedAppellantFamilyName = "someAppellantFamilyName";
+    private final String removeAppealFromOnlineReason = "someRemoveAppeal reason";
 
     private AppellantReinstateAppealPersonalisationEmail appellantAppealExitedOnlinePersonalisationEmail;
 
@@ -81,8 +76,11 @@ public class AppellantReinstateAppealPersonalisationEmailTest {
                 .thenReturn(Optional.of(mockedAppealHomeOfficeReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(mockedAppellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(mockedAppellantFamilyName));
+        String customerServicesTelephone = "555 555 555";
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
+        String customerServicesEmail = "cust.services@example.com";
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
+        String reinstateAppealDate = "2020-10-08";
         when(asylumCase.read(REINSTATE_APPEAL_DATE, String.class)).thenReturn(Optional.of(reinstateAppealDate));
         when(asylumCase.read(REINSTATE_APPEAL_REASON, String.class)).thenReturn(Optional.of(reinstateAppealReason));
         when(asylumCase.read(REINSTATED_DECISION_MAKER, String.class)).thenReturn(Optional.of(reinstatedDecisionMaker));
@@ -114,6 +112,7 @@ public class AppellantReinstateAppealPersonalisationEmailTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_REINSTATE_APPEAL_AIP_APPELLANT_EMAIL",
                 appellantAppealExitedOnlinePersonalisationEmail.getReferenceId(caseId));
     }
@@ -121,6 +120,7 @@ public class AppellantReinstateAppealPersonalisationEmailTest {
     @Test
     public void should_return_given_email_address_list_from_subscribers_in_asylum_case() {
 
+        String mockedAppellantEmailAddress = "appelant@example.net";
         when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL))
                 .thenReturn(Collections.singleton(mockedAppellantEmailAddress));
 
@@ -134,9 +134,10 @@ public class AppellantReinstateAppealPersonalisationEmailTest {
         when(recipientsFinder.findAll(null, NotificationType.EMAIL))
                 .thenThrow(new NullPointerException("asylumCase must not be null"));
 
-        assertThatThrownBy(() -> appellantAppealExitedOnlinePersonalisationEmail.getRecipientsList(null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> appellantAppealExitedOnlinePersonalisationEmail.getRecipientsList(null))
+                ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -151,14 +152,15 @@ public class AppellantReinstateAppealPersonalisationEmailTest {
         Map<String, String> personalisation =
                 appellantAppealExitedOnlinePersonalisationEmail.getPersonalisation(asylumCase);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(mockedAppealHomeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(mockedAppellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(mockedAppellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals("8 Oct 2020", personalisation.get("reinstateAppealDate"));
-        assertEquals(reinstateAppealReason, personalisation.get("reinstateAppealReason"));
-        assertEquals(reinstatedDecisionMaker, personalisation.get("reinstatedDecisionMaker"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", mockedAppealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", mockedAppealHomeOfficeReferenceNumber)
+            .containsEntry("appellantGivenNames", mockedAppellantGivenNames)
+            .containsEntry("appellantFamilyName", mockedAppellantFamilyName)
+            .containsEntry("reinstateAppealDate", "8 Oct 2020")
+            .containsEntry("reinstateAppealReason", reinstateAppealReason)
+            .containsEntry("reinstatedDecisionMaker", reinstatedDecisionMaker)
+            .containsEntry("Hyperlink to service", iaAipFrontendUrl);
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
@@ -172,20 +174,22 @@ public class AppellantReinstateAppealPersonalisationEmailTest {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
 
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(HearingCentre.BELFAST));
+        String ariaListingRef = "someAriaListingRef";
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(ariaListingRef));
 
         Map<String, String> personalisation =
                 appellantAppealExitedOnlinePersonalisationEmail.getPersonalisation(asylumCase);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(mockedAppealHomeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(mockedAppellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(mockedAppellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals("8 Oct 2020", personalisation.get("reinstateAppealDate"));
-        assertEquals(reinstateAppealReason, personalisation.get("reinstateAppealReason"));
-        assertEquals(reinstatedDecisionMaker, personalisation.get("reinstatedDecisionMaker"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
-        assertEquals(ariaListingRef, personalisation.get("ariaListingReference"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", mockedAppealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", mockedAppealHomeOfficeReferenceNumber)
+            .containsEntry("appellantGivenNames", mockedAppellantGivenNames)
+            .containsEntry("appellantFamilyName", mockedAppellantFamilyName)
+            .containsEntry("reinstateAppealDate", "8 Oct 2020")
+            .containsEntry("reinstateAppealReason", reinstateAppealReason)
+            .containsEntry("reinstatedDecisionMaker", reinstatedDecisionMaker)
+            .containsEntry("Hyperlink to service", iaAipFrontendUrl)
+            .containsEntry("ariaListingReference", ariaListingRef);
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
@@ -208,14 +212,15 @@ public class AppellantReinstateAppealPersonalisationEmailTest {
         Map<String, String> personalisation =
                 appellantAppealExitedOnlinePersonalisationEmail.getPersonalisation(asylumCase);
 
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals("", personalisation.get("reinstateAppealDate"));
-        assertEquals("No reason given", personalisation.get("reinstateAppealReason"));
-        assertEquals("", personalisation.get("reinstatedDecisionMaker"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("homeOfficeReferenceNumber", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "")
+            .containsEntry("reinstateAppealDate", "")
+            .containsEntry("reinstateAppealReason", "No reason given")
+            .containsEntry("reinstatedDecisionMaker", "")
+            .containsEntry("Hyperlink to service", iaAipFrontendUrl);
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));

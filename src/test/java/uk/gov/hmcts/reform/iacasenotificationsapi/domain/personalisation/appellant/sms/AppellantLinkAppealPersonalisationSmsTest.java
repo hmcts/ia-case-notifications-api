@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -32,11 +33,9 @@ public class AppellantLinkAppealPersonalisationSmsTest {
     @Mock
     RecipientsFinder recipientsFinder;
 
-    private Long caseId = 12345L;
-    private String smsTemplateId = "someSmsTemplateId";
+    private final String smsTemplateId = "someSmsTemplateId";
 
-    private String mockedAppealReferenceNumber = "someReferenceNumber";
-    private String mockedAppellantMobilePhone = "07123456789";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
 
     private AppellantLinkAppealPersonalisationSms appellantLinkAppealPersonalisationSms;
 
@@ -61,6 +60,7 @@ public class AppellantLinkAppealPersonalisationSmsTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_LINK_APPEAL_AIP_APPELLANT_SMS",
                 appellantLinkAppealPersonalisationSms.getReferenceId(caseId));
     }
@@ -71,14 +71,16 @@ public class AppellantLinkAppealPersonalisationSmsTest {
         when(recipientsFinder.findAll(null, NotificationType.SMS))
                 .thenThrow(new NullPointerException("asylumCase must not be null"));
 
-        assertThatThrownBy(() -> appellantLinkAppealPersonalisationSms.getRecipientsList(null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+        NullPointerException exception = 
+assertThrows(NullPointerException.class, () -> appellantLinkAppealPersonalisationSms.getRecipientsList(null))
+                ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_return_given_mobile_mobile_list_from_subscribers_in_asylum_case() {
 
+        String mockedAppellantMobilePhone = "07123456789";
         when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
                 .thenReturn(Collections.singleton(mockedAppellantMobilePhone));
 
@@ -89,10 +91,11 @@ public class AppellantLinkAppealPersonalisationSmsTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
+        NullPointerException exception = 
+assertThrows(NullPointerException.class, 
                 () -> appellantLinkAppealPersonalisationSms.getPersonalisation((AsylumCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+                ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -101,8 +104,9 @@ public class AppellantLinkAppealPersonalisationSmsTest {
         Map<String, String> personalisation =
                 appellantLinkAppealPersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
-        assertEquals(ReasonForLinkAppealOptions.FAMILIAL.getId(), personalisation.get("reason"));
+        assertThat(personalisation)
+            .containsEntry("Appeal Ref Number", mockedAppealReferenceNumber)
+            .containsEntry("reason", ReasonForLinkAppealOptions.FAMILIAL.getId());
     }
 
     @Test
@@ -115,7 +119,8 @@ public class AppellantLinkAppealPersonalisationSmsTest {
         Map<String, String> personalisation =
                 appellantLinkAppealPersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals("", personalisation.get("Appeal Ref Number"));
-        assertEquals("", personalisation.get("reason"));
+        assertThat(personalisation)
+            .containsEntry("Appeal Ref Number", "")
+            .containsEntry("reason", "");
     }
 }

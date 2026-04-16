@@ -1,6 +1,13 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.restassured.RestAssured;
 import java.util.Arrays;
@@ -48,8 +55,7 @@ public class EndpointSecurityTest {
                 .and()
                 .extract().body().asString();
 
-        assertThat(response)
-            .contains("Welcome");
+        assertTrue(response.contains("Welcome"));
     }
 
     @Test
@@ -64,8 +70,7 @@ public class EndpointSecurityTest {
             .log().all(true)
             .extract().body().asString();
 
-        assertThat(response)
-            .contains("UP");
+        assertTrue(response.contains("UP"));
     }
 
     @Test

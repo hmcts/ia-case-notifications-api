@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -55,32 +56,25 @@ public class LegalRepresentativeListCaseAdaSendStandardDirectionPersonalisationT
     @Mock
     DirectionFinder directionFinder;
 
-    private Long caseId = 12345L;
-    private String adaListCaseSendDirectionTemplateId = "adaListCaseSendDirectionTemplateId";
-    private String iaExUiFrontendUrl = "http://somefrontendurl";
-    private String legalRepEmailAddress = "legalRepEmailAddress@example.com";
-    private String hearingCentreAddress = "some hearing centre address";
+    private final String adaListCaseSendDirectionTemplateId = "adaListCaseSendDirectionTemplateId";
+    private final String iaExUiFrontendUrl = "http://somefrontendurl";
+    private final String legalRepEmailAddress = "legalRepEmailAddress@example.com";
+    private final String hearingCentreAddress = "some hearing centre address";
 
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String ariaListingReference = "someAriaListingReference";
-    private String legalRepRefNumber = "someLegalRepRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String ariaListingReference = "someAriaListingReference";
+    private final String legalRepRefNumber = "someLegalRepRefNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
 
-    private String requirementsVulnerabilities = "someRequirementsVulnerabilities";
-    private String requirementsMultimedia = "someRequirementsMultimedia";
-    private String requirementsSingleSexCourt = "someRequirementsSingleSexCourt";
-    private String requirementsInCamera = "someRequirementsInCamera";
-    private String requirementsOther = "someRequirementsOther";
+    private final String requirementsVulnerabilities = "someRequirementsVulnerabilities";
+    private final String requirementsMultimedia = "someRequirementsMultimedia";
+    private final String requirementsSingleSexCourt = "someRequirementsSingleSexCourt";
+    private final String requirementsInCamera = "someRequirementsInCamera";
+    private final String requirementsOther = "someRequirementsOther";
 
-    private String caseOfficerReviewedVulnerabilities = "someCaseOfficerReviewedVulnerabilities";
-    private String caseOfficerReviewedMultimedia = "someCaseOfficerReviewedMultimedia";
-    private String caseOfficerReviewedSingleSexCourt = "someCaseOfficerReviewedSingleSexCourt";
-    private String caseOfficerReviewedInCamera = "someCaseOfficerReviewedInCamera";
-    private String caseOfficerReviewedOther = "someCaseOfficerReviewedOther";
-
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
 
     private LegalRepresentativeListCaseAdaSendStandardDirectionPersonalisation legalRepresentativeListCaseAdaSendStandardDirectionPersonalisation;
 
@@ -106,14 +100,19 @@ public class LegalRepresentativeListCaseAdaSendStandardDirectionPersonalisationT
             .thenReturn(Optional.of(requirementsInCamera));
         when(asylumCase.read(LIST_CASE_REQUIREMENTS_OTHER, String.class)).thenReturn(Optional.of(requirementsOther));
 
+        String caseOfficerReviewedVulnerabilities = "someCaseOfficerReviewedVulnerabilities";
         when(asylumCase.read(VULNERABILITIES_TRIBUNAL_RESPONSE, String.class))
             .thenReturn(Optional.of(caseOfficerReviewedVulnerabilities));
+        String caseOfficerReviewedMultimedia = "someCaseOfficerReviewedMultimedia";
         when(asylumCase.read(MULTIMEDIA_TRIBUNAL_RESPONSE, String.class))
             .thenReturn(Optional.of(caseOfficerReviewedMultimedia));
+        String caseOfficerReviewedSingleSexCourt = "someCaseOfficerReviewedSingleSexCourt";
         when(asylumCase.read(SINGLE_SEX_COURT_TRIBUNAL_RESPONSE, String.class))
             .thenReturn(Optional.of(caseOfficerReviewedSingleSexCourt));
+        String caseOfficerReviewedInCamera = "someCaseOfficerReviewedInCamera";
         when(asylumCase.read(IN_CAMERA_COURT_TRIBUNAL_RESPONSE, String.class))
             .thenReturn(Optional.of(caseOfficerReviewedInCamera));
+        String caseOfficerReviewedOther = "someCaseOfficerReviewedOther";
         when(asylumCase.read(ADDITIONAL_TRIBUNAL_RESPONSE, String.class))
             .thenReturn(Optional.of(caseOfficerReviewedOther));
         when(asylumCase.read(SUBMIT_HEARING_REQUIREMENTS_AVAILABLE)).thenReturn(Optional.of(YesOrNo.NO));
@@ -140,6 +139,7 @@ public class LegalRepresentativeListCaseAdaSendStandardDirectionPersonalisationT
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_CASE_LISTED_SEND_DIRECTION_LEGAL_REPRESENTATIVE",
             legalRepresentativeListCaseAdaSendStandardDirectionPersonalisation.getReferenceId(caseId));
     }
@@ -154,17 +154,17 @@ public class LegalRepresentativeListCaseAdaSendStandardDirectionPersonalisationT
     void should_throw_exception_when_cannot_find_email_address_for_legal_rep() {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> legalRepresentativeListCaseAdaSendStandardDirectionPersonalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("legalRepresentativeEmailAddress is not present");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> legalRepresentativeListCaseAdaSendStandardDirectionPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> legalRepresentativeListCaseAdaSendStandardDirectionPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> legalRepresentativeListCaseAdaSendStandardDirectionPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -183,19 +183,20 @@ public class LegalRepresentativeListCaseAdaSendStandardDirectionPersonalisationT
 
         Map<String, String> personalisation = legalRepresentativeListCaseAdaSendStandardDirectionPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
-        assertEquals(legalRepRefNumber, personalisation.get("legalRepReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
-        assertEquals(requirementsVulnerabilities, personalisation.get("hearingRequirementVulnerabilities"));
-        assertEquals(requirementsMultimedia, personalisation.get("hearingRequirementMultimedia"));
-        assertEquals(requirementsSingleSexCourt, personalisation.get("hearingRequirementSingleSexCourt"));
-        assertEquals(requirementsInCamera, personalisation.get("hearingRequirementInCameraCourt"));
-        assertEquals(requirementsOther, personalisation.get("hearingRequirementOther"));
-        assertEquals(hearingCentreAddress, personalisation.get("hearingCentreAddress"));
-        assertEquals(hearingCentreAddress, personalisation.get("hearingCentreAddress"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("ariaListingReference", ariaListingReference)
+            .containsEntry("legalRepReferenceNumber", legalRepRefNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("hearingRequirementVulnerabilities", requirementsVulnerabilities)
+            .containsEntry("hearingRequirementMultimedia", requirementsMultimedia)
+            .containsEntry("hearingRequirementSingleSexCourt", requirementsSingleSexCourt)
+            .containsEntry("hearingRequirementInCameraCourt", requirementsInCamera)
+            .containsEntry("hearingRequirementOther", requirementsOther)
+            .containsEntry("hearingCentreAddress", hearingCentreAddress)
+            .containsEntry("hearingCentreAddress", hearingCentreAddress);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         String expectedNotificationBody = "direction body\n\nYou must complete this direction by: 30 December 2022";
@@ -205,14 +206,14 @@ public class LegalRepresentativeListCaseAdaSendStandardDirectionPersonalisationT
     @Test
     void should_return_personalisation_when_all_mandatory_information_given() {
         Direction direction = new Direction("direction body",
-                Parties.LEGAL_REPRESENTATIVE,
-                "2022-12-30",
-                "2022-12-07",
-                DirectionTag.ADA_LIST_CASE,
-                new ArrayList<>(),
-                new ArrayList<>(),
-                "uniqueId",
-                Event.LIST_CASE.toString());
+            Parties.LEGAL_REPRESENTATIVE,
+            "2022-12-30",
+            "2022-12-07",
+            DirectionTag.ADA_LIST_CASE,
+            new ArrayList<>(),
+            new ArrayList<>(),
+            "uniqueId",
+            Event.LIST_CASE.toString());
 
         when(directionFinder.findFirst(asylumCase, DirectionTag.ADA_LIST_CASE)).thenReturn(Optional.of(direction));
 
@@ -230,20 +231,23 @@ public class LegalRepresentativeListCaseAdaSendStandardDirectionPersonalisationT
 
         Map<String, String> personalisation = legalRepresentativeListCaseAdaSendStandardDirectionPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("ariaListingReference"));
-        assertEquals("", personalisation.get("legalRepReferenceNumber"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("ariaListingReference", "")
+            .containsEntry("legalRepReferenceNumber", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "")
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals("No special adjustments are being made to accommodate vulnerabilities",
             personalisation.get("hearingRequirementVulnerabilities"));
-        assertEquals("No multimedia equipment is being provided", personalisation.get("hearingRequirementMultimedia"));
-        assertEquals("The court will not be single sex", personalisation.get("hearingRequirementSingleSexCourt"));
+        assertThat(personalisation)
+            .containsEntry("hearingRequirementMultimedia", "No multimedia equipment is being provided")
+            .containsEntry("hearingRequirementSingleSexCourt", "The court will not be single sex");
         assertEquals("The hearing will be held in public court",
             personalisation.get("hearingRequirementInCameraCourt"));
-        assertEquals("No other adjustments are being made", personalisation.get("hearingRequirementOther"));
-        assertEquals(hearingCentreAddress, personalisation.get("hearingCentreAddress"));
+        assertThat(personalisation)
+            .containsEntry("hearingRequirementOther", "No other adjustments are being made")
+            .containsEntry("hearingCentreAddress", hearingCentreAddress);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }

@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -53,28 +54,24 @@ class HomeOfficeNocRequestDecisionPersonalisationTest {
     @Mock
     EmailAddressFinder emailAddressFinder;
 
-    private Long caseId = 12345L;
+    private final String iaExUiFrontendUrl = "http://somefrontendurl";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String ariaListingReference = "someAriaListingReference";
+    private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
 
-    private String iaExUiFrontendUrl = "http://somefrontendurl";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String ariaListingReference = "someAriaListingReference";
-    private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private final String applicationType = "withdraw";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
 
-    private String applicationType = "withdraw";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
-
-    private String homeOfficeApplyNocDecisionBeforeListingTemplateId = "SomeTemplate";
-    private String homeOfficeApplyNocDecisionAfterListingTemplateId = "SomeTemplate";
+    private final String homeOfficeApplyNocDecisionBeforeListingTemplateId = "SomeTemplate";
+    private final String homeOfficeApplyNocDecisionAfterListingTemplateId = "SomeTemplate";
 
 
-    private String apcPrivateBetaInboxHomeOfficeEmailAddress = "homeoffice-apc@example.com";
-    private String respondentReviewDirectionEmail = "homeoffice-respondent@example.com";
-    private String homeOfficeHearingCentreEmail = "hc-taylorhouse@example.com";
-    private String homeOfficeEmail = "ho-taylorhouse@example.com";
-
+    private final String apcPrivateBetaInboxHomeOfficeEmailAddress = "homeoffice-apc@example.com";
+    private final String respondentReviewDirectionEmail = "homeoffice-respondent@example.com";
+    private final String homeOfficeHearingCentreEmail = "hc-taylorhouse@example.com";
 
 
     private HomeOfficeNocRequestDecisionPersonalisation homeOfficeNocRequestDecisionPersonalisation;
@@ -94,6 +91,7 @@ class HomeOfficeNocRequestDecisionPersonalisationTest {
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
         when((emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase)))
             .thenReturn(homeOfficeHearingCentreEmail);
+        String homeOfficeEmail = "ho-taylorhouse@example.com";
         when((emailAddressFinder.getHomeOfficeEmailAddress(asylumCase))).thenReturn(homeOfficeEmail);
 
         homeOfficeNocRequestDecisionPersonalisation = new HomeOfficeNocRequestDecisionPersonalisation(
@@ -137,6 +135,7 @@ class HomeOfficeNocRequestDecisionPersonalisationTest {
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_NOC_REQUEST_DECISION_HOME_OFFICE",
             homeOfficeNocRequestDecisionPersonalisation.getReferenceId(caseId));
     }
@@ -269,9 +268,10 @@ class HomeOfficeNocRequestDecisionPersonalisationTest {
         when(asylumCase.read(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class))
             .thenReturn(Optional.of(State.UNKNOWN));
 
-        assertThatThrownBy(() -> homeOfficeNocRequestDecisionPersonalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("homeOffice email Address cannot be found");
+        IllegalStateException exception = 
+assertThrows(IllegalStateException.class, () -> homeOfficeNocRequestDecisionPersonalisation.getRecipientsList(asylumCase))
+            ;
+assertEquals("homeOffice email Address cannot be found", exception.getMessage());
     }
 
     @Test
@@ -283,9 +283,10 @@ class HomeOfficeNocRequestDecisionPersonalisationTest {
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> homeOfficeNocRequestDecisionPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception = 
+assertThrows(NullPointerException.class, () -> homeOfficeNocRequestDecisionPersonalisation.getPersonalisation((AsylumCase) null))
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -300,12 +301,13 @@ class HomeOfficeNocRequestDecisionPersonalisationTest {
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
-        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("ariaListingReference", ariaListingReference)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
@@ -327,12 +329,13 @@ class HomeOfficeNocRequestDecisionPersonalisationTest {
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("ariaListingReference"));
-        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("ariaListingReference", "")
+            .containsEntry("homeOfficeReferenceNumber", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "")
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }

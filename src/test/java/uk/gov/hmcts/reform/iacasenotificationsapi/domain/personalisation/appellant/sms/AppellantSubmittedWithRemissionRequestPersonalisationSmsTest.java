@@ -19,7 +19,8 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -37,13 +38,11 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationSmsTest {
     @Mock
     SystemDateProvider systemDateProvider;
 
-    private Long caseId = 12345L;
-    private String smsTemplateId = "someSmsTemplateId";
-    private String paPayLaterSmsTemplateId = "somePaPayLaterSmsTemplateId";
-    private String iaAipFrontendUrl = "http://localhost";
+    private final String smsTemplateId = "someSmsTemplateId";
+    private final String paPayLaterSmsTemplateId = "somePaPayLaterSmsTemplateId";
+    private final String iaAipFrontendUrl = "http://localhost";
 
-    private String mockedAppealReferenceNumber = "someReferenceNumber";
-    private String mockedAppellantMobilePhone = "07123456789";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
 
     private AppellantSubmittedWithRemissionRequestPersonalisationSms appellantSubmittedWithRemissionRequestPersonalisationSms;
 
@@ -96,6 +95,7 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationSmsTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_SUBMITTED_WITH_REMISSION_REQUEST_AIP_SMS",
             appellantSubmittedWithRemissionRequestPersonalisationSms.getReferenceId(caseId));
     }
@@ -103,6 +103,7 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationSmsTest {
     @Test
     public void should_return_given_sms_list_from_subscribers_in_asylum_case() {
 
+        String mockedAppellantMobilePhone = "07123456789";
         Subscriber subscriber = new Subscriber(
             SubscriberType.APPELLANT, //subscriberType
             "", //email
@@ -124,16 +125,18 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationSmsTest {
 
         when(recipientsFinder.findAll(null, NotificationType.SMS)).thenCallRealMethod();
 
-        assertThatThrownBy(() -> appellantSubmittedWithRemissionRequestPersonalisationSms.getRecipientsList(null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception = 
+assertThrows(NullPointerException.class, () -> appellantSubmittedWithRemissionRequestPersonalisationSms.getRecipientsList(null))
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_asylum_case_is_null_for_personalisation() {
-        assertThatThrownBy(() -> appellantSubmittedWithRemissionRequestPersonalisationSms.getPersonalisation((AsylumCase) null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+        NullPointerException exception = 
+assertThrows(NullPointerException.class, () -> appellantSubmittedWithRemissionRequestPersonalisationSms.getPersonalisation((AsylumCase) null))
+                ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -146,9 +149,10 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationSmsTest {
         Map<String, String> personalisation =
             appellantSubmittedWithRemissionRequestPersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
-        assertEquals(dueDate, personalisation.get("appealSubmittedDaysAfter"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
+        assertThat(personalisation)
+            .containsEntry("Appeal Ref Number", mockedAppealReferenceNumber)
+            .containsEntry("appealSubmittedDaysAfter", dueDate)
+            .containsEntry("Hyperlink to service", iaAipFrontendUrl);
 
     }
 
@@ -163,8 +167,9 @@ public class AppellantSubmittedWithRemissionRequestPersonalisationSmsTest {
         Map<String, String> personalisation =
             appellantSubmittedWithRemissionRequestPersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals("", personalisation.get("Appeal Ref Number"));
-        assertEquals(dueDate, personalisation.get("appealSubmittedDaysAfter"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
+        assertThat(personalisation)
+            .containsEntry("Appeal Ref Number", "")
+            .containsEntry("appealSubmittedDaysAfter", dueDate)
+            .containsEntry("Hyperlink to service", iaAipFrontendUrl);
     }
 }

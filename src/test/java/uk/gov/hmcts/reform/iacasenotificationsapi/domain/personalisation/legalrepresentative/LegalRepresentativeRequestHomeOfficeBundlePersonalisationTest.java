@@ -1,8 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
@@ -33,18 +32,15 @@ public class LegalRepresentativeRequestHomeOfficeBundlePersonalisationTest {
     @Mock
     Direction direction;
 
-    private Long caseId = 12345L;
-    private String adaTemplateId = "adaTemplateId";
-    private String nonAdaTemplateId = "nonAdaTemplateId";
-    private String directionDueDate = "2019-09-10";
-    private String expectedDirectionDueDate = "10 Oct 2019";
+    private final String adaTemplateId = "adaTemplateId";
+    private final String nonAdaTemplateId = "nonAdaTemplateId";
 
-    private String legalRepEmailAddress = "legalrep@example.com";
+    private final String legalRepEmailAddress = "legalrep@example.com";
 
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String legalRepRefNumber = "somelegalRepRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String legalRepRefNumber = "somelegalRepRefNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
 
     private LegalRepresentativeRequestHomeOfficeBundlePersonalisation
         legalRepresentativeRequestHomeOfficeBundlePersonalisation;
@@ -52,6 +48,7 @@ public class LegalRepresentativeRequestHomeOfficeBundlePersonalisationTest {
     @BeforeEach
     public void setUp() {
 
+        String directionDueDate = "2019-09-10";
         when((direction.getDateDue())).thenReturn(directionDueDate);
         when(directionFinder.findFirst(asylumCase, DirectionTag.RESPONDENT_EVIDENCE))
             .thenReturn(Optional.of(direction));
@@ -82,6 +79,7 @@ public class LegalRepresentativeRequestHomeOfficeBundlePersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_EVIDENCE_DIRECTION_LEGAL_REPRESENTATIVE",
             legalRepresentativeRequestHomeOfficeBundlePersonalisation.getReferenceId(caseId));
     }
@@ -96,38 +94,41 @@ public class LegalRepresentativeRequestHomeOfficeBundlePersonalisationTest {
     public void should_throw_exception_when_cannot_find_email_address_for_legal_rep() {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class,
             () -> legalRepresentativeRequestHomeOfficeBundlePersonalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("legalRepresentativeEmailAddress is not present");
+            ;
+assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
+        NullPointerException exception =
+assertThrows(NullPointerException.class,
             () -> legalRepresentativeRequestHomeOfficeBundlePersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_return_personalisation_when_all_information_given() {
 
+        String expectedDirectionDueDate = "10 Sep 2019";
         final Map<String, String> expectedPersonalisation =
             ImmutableMap
                 .<String, String>builder()
                 .put("appealReferenceNumber", appealReferenceNumber)
                 .put("legalRepReferenceNumber", legalRepRefNumber)
                 .put("appellantGivenNames", appellantGivenNames)
-                .put("appellantFamilyName", appellantGivenNames)
+                .put("appellantFamilyName", appellantFamilyName)
                 .put("insertDate", expectedDirectionDueDate)
                 .build();
 
         Map<String, String> actualPersonalisation =
             legalRepresentativeRequestHomeOfficeBundlePersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(actualPersonalisation).isEqualToComparingOnlyGivenFields(expectedPersonalisation);
+        assertThat(actualPersonalisation).containsAllEntriesOf(expectedPersonalisation);
     }
 
     @Test
@@ -135,9 +136,10 @@ public class LegalRepresentativeRequestHomeOfficeBundlePersonalisationTest {
 
         when(directionFinder.findFirst(asylumCase, DirectionTag.RESPONDENT_EVIDENCE)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class,
             () -> legalRepresentativeRequestHomeOfficeBundlePersonalisation.getPersonalisation(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("direction 'respondentEvidence' is not present");
+            ;
+assertEquals("direction 'respondentEvidence' is not present", exception.getMessage());
     }
 }

@@ -1,10 +1,10 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients;
 
-import static java.util.Arrays.asList;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,9 +34,9 @@ public class DocumentDownloadSystemUserClientTest {
     @Mock private Resource downloadedResource;
 
     private DocumentDownloadSystemUserClient documentDownloadSystemUserClient;
-    private String someWellFormattedDocumentBinaryDownloadUrl = "http://host:8080/a/b/c";
-    private String someUserRolesString = "some-role,some-other-role";
-    private String someUserId = "some-user-id";
+    private final String someWellFormattedDocumentBinaryDownloadUrl = "http://host:8080/a/b/c";
+    private final String someUserRolesString = "some-role,some-other-role";
+    private final String someUserId = "some-user-id";
 
     @BeforeEach
     public void setUp() {
@@ -70,7 +70,7 @@ public class DocumentDownloadSystemUserClientTest {
                 .thenReturn(userDetails);
 
         when(userDetails.getRoles())
-                .thenReturn(asList(someUserRolesString));
+                .thenReturn(List.of(someUserRolesString));
 
         when(userDetails.getId())
                 .thenReturn(someUserId);
@@ -92,9 +92,10 @@ public class DocumentDownloadSystemUserClientTest {
     @Test
     public void throws_if_document_binary_url_bad() {
 
-        assertThatThrownBy(() -> documentDownloadSystemUserClient.download("bad-url"))
-            .isExactlyInstanceOf(IllegalArgumentException.class)
-            .hasMessage("Invalid url for DocumentDownloadClientApi");
+        IllegalArgumentException exception =
+assertThrows(IllegalArgumentException.class, () -> documentDownloadSystemUserClient.download("bad-url"))
+            ;
+assertEquals("Invalid url for DocumentDownloadClientApi", exception.getMessage());
 
         verifyNoInteractions(documentDownloadClientApi);
         verifyNoInteractions(serviceAuthTokenGenerator);
@@ -124,7 +125,7 @@ public class DocumentDownloadSystemUserClientTest {
                 .thenReturn(userDetails);
 
         when(userDetails.getRoles())
-                .thenReturn(asList(someUserRolesString));
+                .thenReturn(List.of(someUserRolesString));
 
         when(userDetails.getId())
                 .thenReturn(someUserId);
@@ -132,9 +133,10 @@ public class DocumentDownloadSystemUserClientTest {
         when(responseEntity.getBody())
             .thenReturn(null);
 
-        assertThatThrownBy(() -> documentDownloadSystemUserClient.download(someWellFormattedDocumentBinaryDownloadUrl))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("Document could not be downloaded");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> documentDownloadSystemUserClient.download(someWellFormattedDocumentBinaryDownloadUrl))
+            ;
+assertEquals("Document could not be downloaded", exception.getMessage());
     }
 
 }

@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -34,7 +34,6 @@ import uk.gov.service.notify.NotificationClientException;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-@SuppressWarnings("unchecked")
 class DetentionEngagementTeamMarkAppealAsAdaPersonalisationTest {
     @Mock
     PersonalisationProvider personalisationProvider;
@@ -46,15 +45,10 @@ class DetentionEngagementTeamMarkAppealAsAdaPersonalisationTest {
     AsylumCase asylumCase;
     private final String templateId = "someTemplateId";
     private final String adaPrefix = "Accelerated detained appeal";
-    private final String detEmailAddress = "legalrep@example.com";
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
 
-    DocumentWithMetadata markAsAdaLetter = getDocumentWithMetadata(
+    final DocumentWithMetadata markAsAdaLetter = getDocumentWithMetadata(
             "1", "mark-as-ada", "some other desc", DocumentTag.INTERNAL_DET_MARK_AS_ADA_LETTER);
-    IdValue<DocumentWithMetadata> markAsAdaLetterId = new IdValue<>("1", markAsAdaLetter);
+    final IdValue<DocumentWithMetadata> markAsAdaLetterId = new IdValue<>("1", markAsAdaLetter);
     private JSONObject markAsAdaLetterJsonDocument;
 
     private DetentionEngagementTeamMarkAppealAsAdaPersonalisation detentionEngagementTeamMarkAppealAsAdaPersonalisation;
@@ -62,12 +56,17 @@ class DetentionEngagementTeamMarkAppealAsAdaPersonalisationTest {
     @BeforeEach
     public void setUp() throws NotificationClientException, IOException {
         Map<String, String> appelantInfo = new HashMap<>();
+        String appellantGivenNames = "someAppellantGivenNames";
         appelantInfo.put("appellantGivenNames", appellantGivenNames);
+        String appellantFamilyName = "someAppellantFamilyName";
         appelantInfo.put("appellantFamilyName", appellantFamilyName);
+        String homeOfficeReferenceNumber = "1234-1234-1234-1234";
         appelantInfo.put("homeOfficeReferenceNumber", homeOfficeReferenceNumber);
+        String appealReferenceNumber = "someReferenceNumber";
         appelantInfo.put("appealReferenceNumber", appealReferenceNumber);
 
         when(personalisationProvider.getAppellantPersonalisation(asylumCase)).thenReturn(appelantInfo);
+        String detEmailAddress = "legalrep@example.com";
         when(detEmailService.getDetEmailAddress(asylumCase)).thenReturn(detEmailAddress);
         when(documentDownloadClient.getJsonObjectFromDocument(any(DocumentWithMetadata.class))).thenReturn(markAsAdaLetterJsonDocument);
 
@@ -116,18 +115,20 @@ class DetentionEngagementTeamMarkAppealAsAdaPersonalisationTest {
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
-        assertThatThrownBy(
+        NullPointerException exception =
+assertThrows(NullPointerException.class,
                 () -> detentionEngagementTeamMarkAppealAsAdaPersonalisation.getPersonalisationForLink((AsylumCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+                ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_letter_for_notification_is_not_found() {
-        assertThatThrownBy(
+        NullPointerException exception =
+assertThrows(NullPointerException.class,
                 () -> detentionEngagementTeamMarkAppealAsAdaPersonalisation.getPersonalisationForLink((AsylumCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+                ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test

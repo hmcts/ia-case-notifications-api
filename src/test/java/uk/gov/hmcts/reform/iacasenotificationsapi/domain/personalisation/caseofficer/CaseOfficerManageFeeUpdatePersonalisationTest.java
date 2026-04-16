@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -40,20 +41,19 @@ class CaseOfficerManageFeeUpdatePersonalisationTest {
     AsylumCase asylumCase;
     @Mock
     private FeatureToggler featureToggler;
-    private Long caseId = 12345L;
-    private String ctscManageFeeUpdateBeforeListingTemplateId = "ctscBeforeListTemplateId";
-    private String ctscManageFeeUpdateAfterListingTemplateId = "ctscAfterListTemplateId";
-    private String nbcManageFeeUpdateBeforeListingTemplateId = "nbcBeforeListTemplateId";
-    private String nbcManageFeeUpdateAfterListingTemplateId = "nbcAfterListTemplateId";
+    private final String ctscManageFeeUpdateBeforeListingTemplateId = "ctscBeforeListTemplateId";
+    private final String ctscManageFeeUpdateAfterListingTemplateId = "ctscAfterListTemplateId";
+    private final String nbcManageFeeUpdateBeforeListingTemplateId = "nbcBeforeListTemplateId";
+    private final String nbcManageFeeUpdateAfterListingTemplateId = "nbcAfterListTemplateId";
 
-    private String iaExUiFrontendUrl = "http://somefrontendurl";
-    private String nbcEmailAddress = "nbc-review@example.com";
-    private String ctscEmailAddress = "ctsc-review@example.com";
+    private final String iaExUiFrontendUrl = "http://somefrontendurl";
+    private final String nbcEmailAddress = "nbc-review@example.com";
+    private final String ctscEmailAddress = "ctsc-review@example.com";
 
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String ariaListingReference = "someAriaListingReference";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String ariaListingReference = "someAriaListingReference";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
 
     private CaseOfficerManageFeeUpdatePersonalisation caseOfficerManageFeeUpdatePersonalisation;
 
@@ -304,6 +304,7 @@ class CaseOfficerManageFeeUpdatePersonalisationTest {
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_MANAGE_FEE_UPDATE_CASE_OFFICER",
             caseOfficerManageFeeUpdatePersonalisation.getReferenceId(caseId));
     }
@@ -311,9 +312,10 @@ class CaseOfficerManageFeeUpdatePersonalisationTest {
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> caseOfficerManageFeeUpdatePersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> caseOfficerManageFeeUpdatePersonalisation.getPersonalisation((AsylumCase) null))
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -322,9 +324,10 @@ class CaseOfficerManageFeeUpdatePersonalisationTest {
         when(asylumCase.read(PA_APPEAL_TYPE_PAYMENT_OPTION,String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(EA_HU_APPEAL_TYPE_PAYMENT_OPTION,String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPEAL_TYPE, AppealType.class)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> caseOfficerManageFeeUpdatePersonalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("Email Address cannot be found");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> caseOfficerManageFeeUpdatePersonalisation.getRecipientsList(asylumCase))
+            ;
+assertEquals("Email Address cannot be found", exception.getMessage());
     }
 
     @Test
@@ -332,9 +335,10 @@ class CaseOfficerManageFeeUpdatePersonalisationTest {
         when(asylumCase.read(PA_APPEAL_TYPE_PAYMENT_OPTION,String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(EA_HU_APPEAL_TYPE_PAYMENT_OPTION,String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPEAL_TYPE, AppealType.class)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> caseOfficerManageFeeUpdatePersonalisation.getTemplateId(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("Template cannot be found");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> caseOfficerManageFeeUpdatePersonalisation.getTemplateId(asylumCase))
+            ;
+assertEquals("Template cannot be found", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -347,11 +351,12 @@ class CaseOfficerManageFeeUpdatePersonalisationTest {
         Map<String, String> personalisation =
             caseOfficerManageFeeUpdatePersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("ariaListingReference", ariaListingReference)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
@@ -371,11 +376,12 @@ class CaseOfficerManageFeeUpdatePersonalisationTest {
         Map<String, String> personalisation =
             caseOfficerManageFeeUpdatePersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("ariaListingReference"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("ariaListingReference", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "")
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));

@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -49,19 +49,18 @@ class DetentionEngagementApplyForFtpaRespondentPersonalisationTest {
     private PersonalisationProvider personalisationProvider;
     @Mock
     JSONObject jsonDocument;
-    private String templateId = "templateId";
+    private final String templateId = "templateId";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String adaPrefix = "ADA - SERVE IN PERSON";
     private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
-    private final Long caseId = 12345L;
     private DetentionEngagementApplyForFtpaRespondentPersonalisation detentionEngagementApplyForFtpaRespondentPersonalisation;
 
-    DocumentWithMetadata caseListedDoc = TestUtils.getDocumentWithMetadata(
+    final DocumentWithMetadata caseListedDoc = TestUtils.getDocumentWithMetadata(
             "id", "internal-detained-apply-for-ftpa-respondent-letter", "some other desc", DocumentTag.INTERNAL_APPLY_FOR_FTPA_RESPONDENT);
-    IdValue<DocumentWithMetadata> caseListedBundle = new IdValue<>("1", caseListedDoc);
+    final IdValue<DocumentWithMetadata> caseListedBundle = new IdValue<>("1", caseListedDoc);
 
     DetentionEngagementApplyForFtpaRespondentPersonalisationTest() {
     }
@@ -98,6 +97,7 @@ class DetentionEngagementApplyForFtpaRespondentPersonalisationTest {
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_INTERNAL_DETAINED_APPLY_FOR_FTPA_RESPONDENT",
                 detentionEngagementApplyForFtpaRespondentPersonalisation.getReferenceId(caseId));
     }
@@ -153,35 +153,38 @@ class DetentionEngagementApplyForFtpaRespondentPersonalisationTest {
     }
 
     @Test
-    void should_return_personalisation_if_decision_dismissed_for_nonAda() throws NotificationClientException, IOException {
+    void should_return_personalisation_if_decision_dismissed_for_nonAda() {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YES));
         Map<String, Object> personalisation = detentionEngagementApplyForFtpaRespondentPersonalisation.getPersonalisationForLink(asylumCase);
 
-        assertEquals(adaPrefix, personalisation.get("subjectPrefix"));
+            assertEquals(adaPrefix, personalisation.get("subjectPrefix"));
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> detentionEngagementApplyForFtpaRespondentPersonalisation.getPersonalisationForLink((AsylumCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> detentionEngagementApplyForFtpaRespondentPersonalisation.getPersonalisationForLink((AsylumCase) null))
+                ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_when_appeal_submission_is_empty() {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> detentionEngagementApplyForFtpaRespondentPersonalisation.getPersonalisationForLink(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("internalApplyForFtpaRespondent document not available");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> detentionEngagementApplyForFtpaRespondentPersonalisation.getPersonalisationForLink(asylumCase))
+                ;
+assertEquals("internalApplyForFtpaRespondent document not available", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_when_notification_client_throws_Exception() throws NotificationClientException, IOException {
         when(documentDownloadClient.getJsonObjectFromDocument(caseListedDoc)).thenThrow(new NotificationClientException("File size is more than 2MB"));
-        assertThatThrownBy(() -> detentionEngagementApplyForFtpaRespondentPersonalisation.getPersonalisationForLink(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("Failed to get Internal detained apply for FTPA respondent letter in compatible format");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> detentionEngagementApplyForFtpaRespondentPersonalisation.getPersonalisationForLink(asylumCase))
+                ;
+assertEquals("Failed to get Internal detained apply for FTPA respondent letter in compatible format", exception.getMessage());
     }
 
 }

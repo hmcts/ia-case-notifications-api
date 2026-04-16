@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
@@ -50,10 +50,10 @@ public class NotificationIdAppenderTest {
         assertEquals(existingNotification1, actualNotificationsSent.get(0));
         assertEquals(existingNotification2, actualNotificationsSent.get(1));
 
-        assertThat(actualNotificationsSent.get(2).getId()).startsWith("something_");
-        assertThat(actualNotificationsSent.get(2).getId()
-                .substring("something_".length()))
-                .matches(timestampRegex);
+        assertTrue(actualNotificationsSent.get(2).getId().startsWith("something_"));
+        assertTrue(actualNotificationsSent.get(2).getId()
+            .substring("something_" .length())
+            .matches(timestampRegex));
         assertEquals("555-666", actualNotificationsSent.get(2).getValue());
     }
 
@@ -83,16 +83,16 @@ public class NotificationIdAppenderTest {
         final IdValue<String> actualNotificationsSent3 = actualNotificationsSent2.get(2);
         final IdValue<String> actualNotificationsSent4 = actualNotificationsSent2.get(3);
 
-        assertThat(actualNotificationsSent3.getId()).startsWith("foo_");
-        assertThat(actualNotificationsSent3.getId()
-            .substring("foo_".length()))
-            .matches(uuidRegex);
+        assertTrue(actualNotificationsSent3.getId().startsWith("foo_"));
+        assertTrue(actualNotificationsSent3.getId()
+            .substring("foo_" .length())
+            .matches(uuidRegex));
         assertEquals("555-666", actualNotificationsSent3.getValue());
 
-        assertThat(actualNotificationsSent4.getId()).startsWith("foo_");
-        assertThat(actualNotificationsSent4.getId()
-            .substring("foo_".length()))
-            .matches(uuidRegex);
+        assertTrue(actualNotificationsSent4.getId().startsWith("foo_"));
+        assertTrue(actualNotificationsSent4.getId()
+            .substring("foo_" .length())
+            .matches(uuidRegex));
         assertEquals("777-888", actualNotificationsSent4.getValue());
     }
 

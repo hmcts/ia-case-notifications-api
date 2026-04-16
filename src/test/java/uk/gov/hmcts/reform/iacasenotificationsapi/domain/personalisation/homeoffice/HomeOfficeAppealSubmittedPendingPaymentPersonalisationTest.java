@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice;
 
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -37,14 +38,13 @@ public class HomeOfficeAppealSubmittedPendingPaymentPersonalisationTest {
     CustomerServicesProvider customerServicesProvider;
 
 
-    private Long caseId = 12345L;
-    private String emailTemplateId = "emailTemplateId";
-    private String iaExUiFrontendUrl = "http://somefrontendurl";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
-    private String homeOfficeEmail = "apchomeoffice@example.com";
+    private final String emailTemplateId = "emailTemplateId";
+    private final String iaExUiFrontendUrl = "http://somefrontendurl";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String homeOfficeEmail = "apchomeoffice@example.com";
 
     private HomeOfficeAppealSubmittedPendingPaymentPersonalisation
         homeOfficeAppealSubmittedPendingPaymentPersonalisation;
@@ -78,12 +78,13 @@ public class HomeOfficeAppealSubmittedPendingPaymentPersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_APPEAL_SUBMITTED_PENDING_PAYMENT_HOME_OFFICE",
             homeOfficeAppealSubmittedPendingPaymentPersonalisation.getReferenceId(caseId));
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         initializePrefixes(homeOfficeAppealSubmittedPendingPaymentPersonalisation);
@@ -92,8 +93,15 @@ public class HomeOfficeAppealSubmittedPendingPaymentPersonalisationTest {
         Map<String, String> personalisation =
             homeOfficeAppealSubmittedPendingPaymentPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isNotEmpty();
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertFalse(personalisation.isEmpty());
+        assertThat(personalisation)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal"
+                : "Immigration and Asylum appeal")
+            .containsEntry("appellantFamilyName", appellantFamilyName);
     }
 
 }

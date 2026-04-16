@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi;
 
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -86,10 +86,7 @@ public class CcdScenarioRunnerTest {
             fixture.prepare();
         }
 
-        assertFalse(
-                "Verifiers are configured",
-                verifiers.isEmpty()
-        );
+        assertFalse(verifiers.isEmpty(), "Verifiers are configured");
 
         String scenarioPattern = System.getProperty("scenario");
         if (scenarioPattern == null) {

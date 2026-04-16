@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -46,17 +47,15 @@ public class AppellantDecideAnApplicationPersonalisationSmsTest {
     @Mock
     UserDetails userDetails;
 
-    private Long caseId = 12345L;
-    private String refusedSmsTemplateId = "someRefusedSmsTemplateId";
-    private String grantedSmslTemplateId = "someGrantedSmsTemplateId";
-    private String otherPartySmsTemplateId = "otherPartySmsTempateId";
-    private String iaAipFrontendUrl = "http://localhost";
+    private final String refusedSmsTemplateId = "someRefusedSmsTemplateId";
+    private final String grantedSmslTemplateId = "someGrantedSmsTemplateId";
+    private final String otherPartySmsTemplateId = "otherPartySmsTempateId";
+    private final String iaAipFrontendUrl = "http://localhost";
 
-    private String mockedAppealReferenceNumber = "someReferenceNumber";
-    private String mockedAppellantMobilePhone = "07123456789";
-    private String applicationType = "someApplicationType";
-    private String applicationTypePhrase = "some application type";
-    private String decisionMaker = "someDecisionMaker";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
+    private final String applicationType = "someApplicationType";
+    private final String applicationTypePhrase = "some application type";
+    private final String decisionMaker = "someDecisionMaker";
     private final String citizenUser = "citizen";
     private final String homeOfficeUser = "caseworker-ia-homeofficelart";
 
@@ -115,6 +114,7 @@ public class AppellantDecideAnApplicationPersonalisationSmsTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_DECIDE_AN_APPLICATION_APPELLANT_AIP_SMS",
             appellantDecideAnApplicationPersonalisationSms.getReferenceId(caseId));
     }
@@ -122,6 +122,7 @@ public class AppellantDecideAnApplicationPersonalisationSmsTest {
     @Test
     public void should_return_given_email_address_list_from_subscribers_in_asylum_case() {
 
+        String mockedAppellantMobilePhone = "07123456789";
         Subscriber subscriber = new Subscriber(
             SubscriberType.APPELLANT, //subscriberType
             "", //email
@@ -143,9 +144,10 @@ public class AppellantDecideAnApplicationPersonalisationSmsTest {
 
         when(recipientsFinder.findAll(null, NotificationType.SMS)).thenCallRealMethod();
 
-        assertThatThrownBy(() -> appellantDecideAnApplicationPersonalisationSms.getRecipientsList(null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception = 
+assertThrows(NullPointerException.class, () -> appellantDecideAnApplicationPersonalisationSms.getRecipientsList(null))
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -158,12 +160,14 @@ public class AppellantDecideAnApplicationPersonalisationSmsTest {
         Map<String, String> personalisation =
             appellantDecideAnApplicationPersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
+        assertThat(personalisation)
+            .containsEntry("Appeal Ref Number", mockedAppealReferenceNumber)
+            .containsEntry("Hyperlink to service", iaAipFrontendUrl);
         assertEquals(user.equals(citizenUser) ? applicationType : applicationTypePhrase,
             personalisation.get("applicationType"));
-        assertEquals(decision, personalisation.get("decision"));
-        assertEquals(decisionMaker, personalisation.get("decision maker role"));
+        assertThat(personalisation)
+            .containsEntry("decision", decision)
+            .containsEntry("decision maker role", decisionMaker);
 
         verify(makeAnApplicationService).getMakeAnApplication(asylumCase, true);
 
@@ -178,8 +182,9 @@ public class AppellantDecideAnApplicationPersonalisationSmsTest {
         Map<String, String> personalisation =
             appellantDecideAnApplicationPersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
+        assertThat(personalisation)
+            .containsEntry("Appeal Ref Number", mockedAppealReferenceNumber)
+            .containsEntry("Hyperlink to service", iaAipFrontendUrl);
         assertEquals(user.equals(citizenUser) ? applicationType : applicationTypePhrase,
             personalisation.get("applicationType"));
 
@@ -199,10 +204,11 @@ public class AppellantDecideAnApplicationPersonalisationSmsTest {
         Map<String, String> personalisation =
             appellantDecideAnApplicationPersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals("", personalisation.get("Appeal Ref Number"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
-        assertEquals("", personalisation.get("applicationType"));
-        assertEquals("", personalisation.get("decision maker role"));
+        assertThat(personalisation)
+            .containsEntry("Appeal Ref Number", "")
+            .containsEntry("Hyperlink to service", iaAipFrontendUrl)
+            .containsEntry("applicationType", "")
+            .containsEntry("decision maker role", "");
 
         verify(makeAnApplicationService).getMakeAnApplication(asylumCase, true);
     }

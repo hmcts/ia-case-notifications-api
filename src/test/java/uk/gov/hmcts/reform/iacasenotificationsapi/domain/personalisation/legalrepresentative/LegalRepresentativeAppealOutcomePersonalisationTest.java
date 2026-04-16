@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -39,20 +40,18 @@ public class LegalRepresentativeAppealOutcomePersonalisationTest {
     @Mock
     CustomerServicesProvider customerServicesProvider;
 
-    private Long caseId = 12345L;
-    private String templateAllowedId = "someTemplateAllowedId";
-    private String templateDismissedId = "someTemplateDismissedId";
-    private String iaExUiFrontendUrl = "http://somefrontendurl";
-    private String legalRepEmailAddress = "legalrep@example.com";
+    private final String templateAllowedId = "someTemplateAllowedId";
+    private final String iaExUiFrontendUrl = "http://somefrontendurl";
+    private final String legalRepEmailAddress = "legalrep@example.com";
 
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String ariaListingReference = "someAriaListingReference";
-    private String legalRepRefNumber = "somelegalRepRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String ariaListingReference = "someAriaListingReference";
+    private final String legalRepRefNumber = "somelegalRepRefNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
 
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
 
     private LegalRepresentativeAppealOutcomePersonalisation legalRepresentativeAppealOutcomePersonalisation;
 
@@ -71,6 +70,7 @@ public class LegalRepresentativeAppealOutcomePersonalisationTest {
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
+        String templateDismissedId = "someTemplateDismissedId";
         legalRepresentativeAppealOutcomePersonalisation = new LegalRepresentativeAppealOutcomePersonalisation(
             templateAllowedId,
             templateDismissedId,
@@ -86,6 +86,7 @@ public class LegalRepresentativeAppealOutcomePersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_APPEAL_OUTCOME_LEGAL_REPRESENTATIVE",
             legalRepresentativeAppealOutcomePersonalisation.getReferenceId(caseId));
     }
@@ -100,26 +101,29 @@ public class LegalRepresentativeAppealOutcomePersonalisationTest {
     public void should_throw_exception_when_cannot_find_email_address_for_legal_rep() {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> legalRepresentativeAppealOutcomePersonalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("legalRepresentativeEmailAddress is not present");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> legalRepresentativeAppealOutcomePersonalisation.getRecipientsList(asylumCase))
+            ;
+assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> legalRepresentativeAppealOutcomePersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> legalRepresentativeAppealOutcomePersonalisation.getPersonalisation((AsylumCase) null))
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_appeal_outcome_decision_is_missing() {
         when(asylumCase.read(IS_DECISION_ALLOWED, AppealDecision.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> legalRepresentativeAppealOutcomePersonalisation.getTemplateId(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("appealOutcomeDecision is not present");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> legalRepresentativeAppealOutcomePersonalisation.getTemplateId(asylumCase))
+            ;
+assertEquals("appealOutcomeDecision is not present", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -131,12 +135,13 @@ public class LegalRepresentativeAppealOutcomePersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeAppealOutcomePersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
-        assertEquals(legalRepRefNumber, personalisation.get("legalRepReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("ariaListingReference", ariaListingReference)
+            .containsEntry("legalRepReferenceNumber", legalRepRefNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YesOrNo.YES)
@@ -159,12 +164,13 @@ public class LegalRepresentativeAppealOutcomePersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeAppealOutcomePersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("ariaListingReference"));
-        assertEquals("", personalisation.get("legalRepReferenceNumber"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("ariaListingReference", "")
+            .containsEntry("legalRepReferenceNumber", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "")
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YesOrNo.YES)

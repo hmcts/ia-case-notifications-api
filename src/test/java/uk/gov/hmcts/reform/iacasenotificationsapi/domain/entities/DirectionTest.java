@@ -14,13 +14,13 @@ class DirectionTest {
     private final Parties parties = Parties.RESPONDENT;
     private final String dateDue = "2018-12-31T12:34:56";
     private final String dateSent = "2018-12-25";
-    private DirectionTag tag = DirectionTag.LEGAL_REPRESENTATIVE_REVIEW;
-    private List<IdValue<PreviousDates>> previousDates = Collections.emptyList();
-    private List<IdValue<ClarifyingQuestion>> clarifyingQuestions = Collections.emptyList();
+    private final DirectionTag tag = DirectionTag.LEGAL_REPRESENTATIVE_REVIEW;
+    private final List<IdValue<PreviousDates>> previousDates = Collections.emptyList();
+    private final List<IdValue<ClarifyingQuestion>> clarifyingQuestions = Collections.emptyList();
     private final String uniqueId = UUID.randomUUID().toString();
     private final String directionType = "someEventDirectionType";
 
-    private Direction direction = new Direction(
+    private final Direction direction = new Direction(
             explanation,
             parties,
             dateDue,
@@ -32,7 +32,7 @@ class DirectionTest {
             "someDirectionType"
     );
 
-    private Direction directionWithQuestions = new Direction(
+    private final Direction directionWithQuestions = new Direction(
             explanation,
             parties,
             dateDue,

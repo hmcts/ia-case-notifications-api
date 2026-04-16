@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ACCELERATED_DETAINED_APPEAL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
@@ -29,7 +30,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-@SuppressWarnings("unchecked")
 public class LegalRepresentativeRespondentFtpaSubmittedPersonalisationTest {
 
     @Mock
@@ -43,13 +43,8 @@ public class LegalRepresentativeRespondentFtpaSubmittedPersonalisationTest {
     @Mock
     CustomerServicesProvider customerServicesProvider;
 
-    private Long caseId = 12345L;
-    private String templateId = "ftpaSumbittedTemplateId";
-    private String iaExUiFrontendUrl = "http://localhost";
-    private String legalRepEmailAddress = "legalrep@example.com";
-    private String ariaListingReference = "someAriaListingReference";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
+    private final String templateId = "ftpaSumbittedTemplateId";
+    private final String legalRepEmailAddress = "legalrep@example.com";
 
     private LegalRepresentativeRespondentFtpaSubmittedPersonalisation
         legalRepresentativeRespondentFtpaSubmittedPersonalisation;
@@ -60,6 +55,7 @@ public class LegalRepresentativeRespondentFtpaSubmittedPersonalisationTest {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class))
             .thenReturn(Optional.of(legalRepEmailAddress));
 
+        String iaExUiFrontendUrl = "http://localhost";
         legalRepresentativeRespondentFtpaSubmittedPersonalisation =
             new LegalRepresentativeRespondentFtpaSubmittedPersonalisation(
                 templateId,
@@ -72,35 +68,33 @@ public class LegalRepresentativeRespondentFtpaSubmittedPersonalisationTest {
     @Test
     public void should_return_given_email_address() {
 
-        assertThat(legalRepresentativeRespondentFtpaSubmittedPersonalisation.getRecipientsList(asylumCase))
-            .isEqualTo(Collections.singleton(legalRepEmailAddress));
+        assertEquals(Collections.singleton(legalRepEmailAddress), legalRepresentativeRespondentFtpaSubmittedPersonalisation.getRecipientsList(asylumCase));
     }
 
     @Test
     public void should_throw_exception_when_email_address_is_null() {
 
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
-        assertThatThrownBy(
-            () -> legalRepresentativeRespondentFtpaSubmittedPersonalisation.getRecipientsList(asylumCase))
-            .hasMessage("legalRepresentativeEmailAddress is not present")
-            .isExactlyInstanceOf(IllegalStateException.class);
+        IllegalStateException exception = assertThrows(IllegalStateException.class,
+            () -> legalRepresentativeRespondentFtpaSubmittedPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     public void should_return_given_template_id() {
 
-        assertThat(legalRepresentativeRespondentFtpaSubmittedPersonalisation.getTemplateId()).isEqualTo(templateId);
+        assertEquals(templateId, legalRepresentativeRespondentFtpaSubmittedPersonalisation.getTemplateId());
     }
 
     @Test
     public void should_return_given_reference_id() {
 
-        assertThat(legalRepresentativeRespondentFtpaSubmittedPersonalisation.getReferenceId(caseId))
-            .isEqualTo(caseId + "_LEGAL_REP_RESPONDENT_FTPA_SUBMITTED");
+        Long caseId = 12345L;
+        assertEquals(caseId + "_LEGAL_REP_RESPONDENT_FTPA_SUBMITTED", legalRepresentativeRespondentFtpaSubmittedPersonalisation.getReferenceId(caseId));
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_given_personalisation(YesOrNo isAda) {
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
@@ -110,20 +104,23 @@ public class LegalRepresentativeRespondentFtpaSubmittedPersonalisationTest {
         Map<String, String> expectedPersonalisation =
             legalRepresentativeRespondentFtpaSubmittedPersonalisation.getPersonalisation(callback);
 
-        assertThat(expectedPersonalisation).isEqualToComparingOnlyGivenFields(getPersonalisation());
+        assertThat(expectedPersonalisation).containsAllEntriesOf(getPersonalisation());
     }
 
     @Test
     public void should_throw_exception_when_callback_is_null() {
 
-        assertThatThrownBy(() -> legalRepresentativeRespondentFtpaSubmittedPersonalisation
-            .getPersonalisation((Callback<AsylumCase>) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("callback must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> legalRepresentativeRespondentFtpaSubmittedPersonalisation
+                .getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     private Map<String, String> getPersonalisation() {
 
+        String customerServicesEmail = "cust.services@example.com";
+        String customerServicesTelephone = "555 555 555";
+        String ariaListingReference = "someAriaListingReference";
         return ImmutableMap
             .<String, String>builder()
             .put("appealReferenceNumber", "PA/12345/001")

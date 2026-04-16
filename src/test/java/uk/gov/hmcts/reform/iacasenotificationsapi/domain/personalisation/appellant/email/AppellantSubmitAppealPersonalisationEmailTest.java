@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -59,23 +60,23 @@ class AppellantSubmitAppealPersonalisationEmailTest {
     CustomerServicesProvider customerServicesProvider;
 
 
-    private Long caseId = 12345L;
-    private String emailTemplateId = "someEmailTemplateId";
-    private String emailWithoutHoReferenceTemplateId = "anotherEmailTemplateId";
-    private String nonAipEmailTemplateId = "someEmailTemplateId1";
-    private String iaAipFrontendUrl = "http://localhost";
+    private final Long caseId = 12345L;
+    private final String emailTemplateId = "someEmailTemplateId";
+    private final String emailWithoutHoReferenceTemplateId = "anotherEmailTemplateId";
+    private final String nonAipEmailTemplateId = "someEmailTemplateId1";
+    private final String iaAipFrontendUrl = "http://localhost";
 
 
-    private String mockedLegalRepAppealReferenceNumber = "someReferenceNumber";
-    private String mockedAppealReferenceNumber = "someReferenceNumber";
-    private String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
-    private String mockedAppellantGivenNames = "someAppellantGivenNames";
-    private String mockedAppellantFamilyName = "someAppellantFamilyName";
-    private String mockedAppellantEmailAddress = "appelant@example.net";
-    private String dateOfBirth = "2020-03-01";
-    private String expectedDateOfBirth = "1 Mar 2020";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
+    private final String mockedLegalRepAppealReferenceNumber = "someReferenceNumber";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
+    private final String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
+    private final String mockedAppellantGivenNames = "someAppellantGivenNames";
+    private final String mockedAppellantFamilyName = "someAppellantFamilyName";
+    private final String mockedAppellantEmailAddress = "appelant@example.net";
+    private final String dateOfBirth = "2020-03-01";
+    private final String expectedDateOfBirth = "1 Mar 2020";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
 
     private AppellantSubmitAppealPersonalisationEmail appellantSubmitAppealPersonalisationEmail;
 
@@ -160,9 +161,10 @@ class AppellantSubmitAppealPersonalisationEmailTest {
         when(asylumCase.read(EMAIL,String.class))
             .thenReturn(Optional.empty());
         when(appealService.isAppellantInPersonJourney(asylumCase)).thenReturn(false);
-        assertThatThrownBy(() -> appellantSubmitAppealPersonalisationEmail.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("appellantEmailAddress is not present");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> appellantSubmitAppealPersonalisationEmail.getRecipientsList(asylumCase))
+            ;
+assertEquals("appellantEmailAddress is not present", exception.getMessage());
 
     }
 
@@ -172,18 +174,20 @@ class AppellantSubmitAppealPersonalisationEmailTest {
         when(recipientsFinder.findAll(null, NotificationType.EMAIL))
             .thenThrow(new NullPointerException("asylumCase must not be null"));
 
-        assertThatThrownBy(() -> appellantSubmitAppealPersonalisationEmail.getRecipientsList(null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> appellantSubmitAppealPersonalisationEmail.getRecipientsList(null))
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_date_of_birth_is_null() {
         when(asylumCase.read(APPELLANT_DATE_OF_BIRTH, String.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> appellantSubmitAppealPersonalisationEmail.getPersonalisation(callback))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("Appellant's birth of date is not present");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> appellantSubmitAppealPersonalisationEmail.getPersonalisation(callback))
+            ;
+assertEquals("Appellant's birth of date is not present", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -200,16 +204,18 @@ class AppellantSubmitAppealPersonalisationEmailTest {
 
         Map<String, String> personalisation = appellantSubmitAppealPersonalisationEmail.getPersonalisation(callback);
 
-        assertEquals("" + caseId, personalisation.get("Ref Number"));
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
-        assertEquals(mockedAppealHomeOfficeReferenceNumber, personalisation.get("HO Ref Number"));
-        assertEquals(mockedLegalRepAppealReferenceNumber, personalisation.get("Legal Rep Ref"));
-        assertEquals(mockedAppellantGivenNames, personalisation.get("Given names"));
-        assertEquals(mockedAppellantFamilyName, personalisation.get("Family name"));
+        assertThat(personalisation)
+            .containsEntry("Ref Number", "" + caseId)
+            .containsEntry("Appeal Ref Number", mockedAppealReferenceNumber)
+            .containsEntry("HO Ref Number", mockedAppealHomeOfficeReferenceNumber)
+            .containsEntry("Legal Rep Ref", mockedLegalRepAppealReferenceNumber)
+            .containsEntry("Given names", mockedAppellantGivenNames)
+            .containsEntry("Family name", mockedAppellantFamilyName);
 
-        assertEquals(expectedDateOfBirth, personalisation.get("Date Of Birth"));
-        assertEquals(dueDate, personalisation.get("due date"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
+        assertThat(personalisation)
+            .containsEntry("Date Of Birth", expectedDateOfBirth)
+            .containsEntry("due date", dueDate)
+            .containsEntry("Hyperlink to service", iaAipFrontendUrl);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YesOrNo.YES)
@@ -240,15 +246,16 @@ class AppellantSubmitAppealPersonalisationEmailTest {
 
         Map<String, String> personalisation = appellantSubmitAppealPersonalisationEmail.getPersonalisation(callback);
 
-        assertEquals("" + caseId, personalisation.get("Ref Number"));
-        assertEquals("", personalisation.get("Appeal Ref Number"));
-        assertEquals("", personalisation.get("HO Ref Number"));
-        assertEquals("", personalisation.get("Legal Rep Ref"));
-        assertEquals("", personalisation.get("Given names"));
-        assertEquals("", personalisation.get("Family name"));
-        assertEquals(expectedDateOfBirth, personalisation.get("Date Of Birth"));
-        assertEquals(dueDate, personalisation.get("due date"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
+        assertThat(personalisation)
+            .containsEntry("Ref Number", "" + caseId)
+            .containsEntry("Appeal Ref Number", "")
+            .containsEntry("HO Ref Number", "")
+            .containsEntry("Legal Rep Ref", "")
+            .containsEntry("Given names", "")
+            .containsEntry("Family name", "")
+            .containsEntry("Date Of Birth", expectedDateOfBirth)
+            .containsEntry("due date", dueDate)
+            .containsEntry("Hyperlink to service", iaAipFrontendUrl);
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));

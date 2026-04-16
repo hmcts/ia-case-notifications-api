@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
 
-import org.assertj.core.api.Assertions;
+import java.util.Objects;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +16,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 import java.util.Map;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
@@ -27,7 +28,7 @@ class AppellantUploadAdditionalEvidencePersonalisationEmailTest {
 
     private final String beforeListingTemplateId = "beforeListingTemplateId";
     private final String afterListingTemplateId = "afterListingTemplateId";
-    private HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "homeOfficeReferenceNumber";
     private final String ariaListingReference = "ariaListingReference";
@@ -91,10 +92,11 @@ class AppellantUploadAdditionalEvidencePersonalisationEmailTest {
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
+        NullPointerException exception =
+assertThrows(NullPointerException.class,
             () -> appellantUploadAdditionalEvidencePersonalisationEmail.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -102,12 +104,13 @@ class AppellantUploadAdditionalEvidencePersonalisationEmailTest {
 
         Map<String, String> personalisation =
                 appellantUploadAdditionalEvidencePersonalisationEmail.getPersonalisation(asylumCase);
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("hyperlink to service"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
+            .containsEntry("ariaListingReference", ariaListingReference)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("hyperlink to service", iaAipFrontendUrl);
     }
 
     @Test
@@ -122,7 +125,11 @@ class AppellantUploadAdditionalEvidencePersonalisationEmailTest {
         Map<String, String> personalisation =
                 appellantUploadAdditionalEvidencePersonalisationEmail.getPersonalisation(asylumCase);
 
-        Assertions.assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(personalisation).allSatisfy((key, value) -> {
+            if (!Objects.equals("hyperlink to service", key)) {
+                assertThat(value).isEmpty();
+            }
+        });
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }

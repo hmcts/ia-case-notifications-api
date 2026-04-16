@@ -1,17 +1,20 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,16 +35,12 @@ public class LegalRepresentativeFtpaApplicationDecidedRule31Rule32Personalisatio
     @Mock
     CustomerServicesProvider customerServicesProvider;
 
-    private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
-    private String iaExUiFrontendUrl = "http://localhost";
-    private String legalRepEmailAddress = "legalRep@example.com";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String legalRepRefNumber = "somelegalRepRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
+    private final String templateId = "someTemplateId";
+    private final String iaExUiFrontendUrl = "http://localhost";
+    private final String legalRepEmailAddress = "legalRep@example.com";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
 
     private LegalRepresentativeFtpaApplicationDecidedRule31Rule32Personalisation legalRepPersonalisation;
 
@@ -51,10 +50,13 @@ public class LegalRepresentativeFtpaApplicationDecidedRule31Rule32Personalisatio
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
+        String legalRepRefNumber = "somelegalRepRefNumber";
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepRefNumber));
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class))
             .thenReturn(Optional.of(legalRepEmailAddress));
+        String customerServicesTelephone = "555 555 555";
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
+        String customerServicesEmail = "cust.services@example.com";
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         legalRepPersonalisation = new LegalRepresentativeFtpaApplicationDecidedRule31Rule32Personalisation(
@@ -72,6 +74,7 @@ public class LegalRepresentativeFtpaApplicationDecidedRule31Rule32Personalisatio
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_FTPA_APPLICATION_DECISION_RULE31_RULE32_LEGAL_REPRESENTATIVE",
             legalRepPersonalisation.getReferenceId(caseId));
     }
@@ -86,30 +89,35 @@ public class LegalRepresentativeFtpaApplicationDecidedRule31Rule32Personalisatio
     public void should_throw_exception_when_cannot_find_email_address_for_legal_rep() {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> legalRepPersonalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("legalRepresentativeEmailAddress is not present");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> legalRepPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
-            () -> legalRepPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> legalRepPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_return_personalisation_when_all_information_given() {
+        when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of("someHomeOfficeReferenceNumber"));
 
         Map<String, String> personalisation =
             this.legalRepPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isNotEmpty();
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
+        assertFalse(personalisation.isEmpty());
+        assertThat(personalisation)
+            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation())
+            .containsEntry("homeOfficeReferenceNumber", "someHomeOfficeReferenceNumber")
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
     }
 
     @Test
@@ -123,9 +131,14 @@ public class LegalRepresentativeFtpaApplicationDecidedRule31Rule32Personalisatio
         Map<String, String> personalisation =
             this.legalRepPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isNotEmpty();
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
+        assertFalse(personalisation.isEmpty());
+        assertThat(personalisation).allSatisfy((key, value) -> {
+            if (!Objects.equals("linkToOnlineService", key)) {
+                assertThat(value).isEmpty();
+            }
+        });
+        assertThat(personalisation)
+            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation())
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
     }
 }

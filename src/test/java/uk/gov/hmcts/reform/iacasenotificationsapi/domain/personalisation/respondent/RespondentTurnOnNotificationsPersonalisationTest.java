@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -45,18 +44,13 @@ public class RespondentTurnOnNotificationsPersonalisationTest {
     HomeOfficeEmailFinder hoEmailAddressFinder;
     private final String beforeListingTemplateId = "beforeListingTemplateId";
     private final String afterListingTemplateId = "afterListingTemplateId";
-    private final Long caseId = 12345L;
-    private String iaExUiFrontendUrl = "http://localhost";
+    private final String iaExUiFrontendUrl = "http://localhost";
     private final String appealReferenceNumber = "appealReferenceNumber";
     private final String respondentReferenceNumber = "respondentReferenceNumber";
     private final String upperTribunalReferenceNumber = "upperTribunalReferenceNumber";
     private final String ariaListingReference = "someAriaListingReference";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "customer.services@example.com";
-    private String homeOfficeEmailAddress = "homeOffice@example.com";
-    private String cuurentStateHO = "appealSubmitted";
     private RespondentTurnOnNotificationsPersonalisation respondentTurnOnNotificationsPersonalisation;
 
     @BeforeEach
@@ -71,8 +65,11 @@ public class RespondentTurnOnNotificationsPersonalisationTest {
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(UPPER_TRIBUNAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(upperTribunalReferenceNumber));
+        String cuurentStateHO = "appealSubmitted";
         when(asylumCase.read(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, String.class)).thenReturn(Optional.of(cuurentStateHO));
+        String customerServicesTelephone = "555 555 555";
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
+        String customerServicesEmail = "customer.services@example.com";
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         respondentTurnOnNotificationsPersonalisation = new RespondentTurnOnNotificationsPersonalisation(
@@ -101,12 +98,13 @@ public class RespondentTurnOnNotificationsPersonalisationTest {
     @Test
     public void should_return_given_reference_id() {
 
-        assertThat(respondentTurnOnNotificationsPersonalisation.getReferenceId(caseId))
-                .isEqualTo(caseId + "_TURN_ON_NOTIFICATIONS_RESPONDENT");
+        Long caseId = 12345L;
+        assertEquals(caseId + "_TURN_ON_NOTIFICATIONS_RESPONDENT", respondentTurnOnNotificationsPersonalisation.getReferenceId(caseId));
     }
 
     @Test
     public void should_return_given_email_address() {
+        String homeOfficeEmailAddress = "homeOffice@example.com";
         when(respondentTurnOnNotificationsPersonalisation.getRecipientsList(asylumCase)).thenReturn(Collections.singleton(homeOfficeEmailAddress));
         assertTrue(
                 respondentTurnOnNotificationsPersonalisation.getRecipientsList(asylumCase).contains(homeOfficeEmailAddress));
@@ -116,10 +114,11 @@ public class RespondentTurnOnNotificationsPersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
+        NullPointerException exception =
+assertThrows(NullPointerException.class,
                 () -> respondentTurnOnNotificationsPersonalisation.getPersonalisation((Callback<AsylumCase>) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("callback must not be null");
+                ;
+assertEquals("callback must not be null", exception.getMessage());
     }
 
     @Test
@@ -130,7 +129,11 @@ public class RespondentTurnOnNotificationsPersonalisationTest {
         Map<String, String> personalisation =
                 respondentTurnOnNotificationsPersonalisation.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(personalisation)
+            .containsEntry("subjectPrefix", "Immigration and Asylum appeal")
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("upperTribunalReferenceNumber", upperTribunalReferenceNumber)
+            .containsAllEntriesOf(getPersonalisationMapWithGivenValues());
     }
 
     private Map<String, String> getPersonalisationMapWithGivenValues() {

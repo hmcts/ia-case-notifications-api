@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -39,17 +40,13 @@ public class LegalRepresentativeEndAppealAutomaticallyPersonalisationTest {
     @Mock
     CustomerServicesProvider customerServicesProvider;
 
-    private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
-    private String iaExUiFrontendUrl = "http://localhost";
-    private String legalRepEmailAddress = "legalRep@example.com";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String legalRepRefNumber = "somelegalRepRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
-    private String appealEndedDate = "2022-07-28";
-    private String expectedAppealEndedDate = "28 Jul 2022";
-    private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
+    private final String templateId = "someTemplateId";
+    private final String iaExUiFrontendUrl = "http://localhost";
+    private final String legalRepEmailAddress = "legalRep@example.com";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
 
     private LegalRepresentativeEndAppealAutomaticallyPersonalisation legalRepresentativeEndAppealAutomaticallyPersonalisation;
 
@@ -59,9 +56,11 @@ public class LegalRepresentativeEndAppealAutomaticallyPersonalisationTest {
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
+        String legalRepRefNumber = "somelegalRepRefNumber";
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepRefNumber));
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class))
             .thenReturn(Optional.of(legalRepEmailAddress));
+        String appealEndedDate = "2022-07-28";
         when(asylumCase.read(END_APPEAL_DATE, String.class)).thenReturn(Optional.of(appealEndedDate));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeRefNumber));
 
@@ -81,6 +80,7 @@ public class LegalRepresentativeEndAppealAutomaticallyPersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_APPEAL_ENDED_AUTOMATICALLY_LEGAL_REPRESENTATIVE",
             legalRepresentativeEndAppealAutomaticallyPersonalisation.getReferenceId(caseId));
     }
@@ -95,18 +95,20 @@ public class LegalRepresentativeEndAppealAutomaticallyPersonalisationTest {
     public void should_throw_exception_when_cannot_find_email_address_for_legal_rep() {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> legalRepresentativeEndAppealAutomaticallyPersonalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("legalRepresentativeEmailAddress is not present");
+        IllegalStateException exception = 
+assertThrows(IllegalStateException.class, () -> legalRepresentativeEndAppealAutomaticallyPersonalisation.getRecipientsList(asylumCase))
+            ;
+assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
+        NullPointerException exception = 
+assertThrows(NullPointerException.class, 
             () -> legalRepresentativeEndAppealAutomaticallyPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -122,13 +124,14 @@ public class LegalRepresentativeEndAppealAutomaticallyPersonalisationTest {
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
-        assertEquals(expectedAppealEndedDate, personalisation.get("endAppealDate"));
+        String expectedAppealEndedDate = "28 Jul 2022";
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("endAppealDate", expectedAppealEndedDate);
     }
 
     @ParameterizedTest
@@ -147,15 +150,15 @@ public class LegalRepresentativeEndAppealAutomaticallyPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeEndAppealAutomaticallyPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isNotEmpty();
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertFalse(personalisation.isEmpty());
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals("", personalisation.get("endAppealDate"));
-        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "")
+            .containsEntry("endAppealDate", "")
+            .containsEntry("homeOfficeReferenceNumber", "");
     }
 }

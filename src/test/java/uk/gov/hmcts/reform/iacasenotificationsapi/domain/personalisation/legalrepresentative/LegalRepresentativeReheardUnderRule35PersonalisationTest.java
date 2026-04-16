@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -22,7 +23,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-@SuppressWarnings("unchecked")
 class LegalRepresentativeReheardUnderRule35PersonalisationTest {
     @Mock
     Callback<AsylumCase> callback;
@@ -33,16 +33,15 @@ class LegalRepresentativeReheardUnderRule35PersonalisationTest {
     @Mock
     CustomerServicesProvider customerServicesProvider;
 
-    private Long caseId = 12345L;
-    private String legalRepReheardUnder35RuleEmailTemplateId = "legalRepReheardUnder35RuleEmailTemplateId";
-    private String exUiFrontendUrl = "http://localhost";
-    private String legalRepEmail = "example@example.com";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String legalRepReferenceNumber = "legalRepReferenceNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
+    private final Long caseId = 12345L;
+    private final String legalRepReheardUnder35RuleEmailTemplateId = "legalRepReheardUnder35RuleEmailTemplateId";
+    private final String exUiFrontendUrl = "http://localhost";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String legalRepReferenceNumber = "legalRepReferenceNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
     private LegalRepresentativeReheardUnderRule35Personalisation legalRepresentativeReheardUnderRule35Personalisation;
 
     @BeforeEach
@@ -78,6 +77,7 @@ class LegalRepresentativeReheardUnderRule35PersonalisationTest {
 
     @Test
     public void should_return_given_email_address_from_asylum_case() {
+        String legalRepEmail = "example@example.com";
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.of(legalRepEmail));
 
         assertTrue(
@@ -88,28 +88,31 @@ class LegalRepresentativeReheardUnderRule35PersonalisationTest {
     public void should_throw_exception_when_cannot_find_email_address_for_legal_rep() {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> legalRepresentativeReheardUnderRule35Personalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("legalRepresentativeEmailAddress is not present");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> legalRepresentativeReheardUnderRule35Personalisation.getRecipientsList(asylumCase))
+            ;
+assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> legalRepresentativeReheardUnderRule35Personalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> legalRepresentativeReheardUnderRule35Personalisation.getPersonalisation((AsylumCase) null))
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     void should_return_personalisation_when_all_information_given() {
         Map<String, String> personalisation = legalRepresentativeReheardUnderRule35Personalisation.getPersonalisation(callback);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(legalRepReferenceNumber, personalisation.get("legalRepReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(exUiFrontendUrl, personalisation.get("linkToService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("legalRepReferenceNumber", legalRepReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToService", exUiFrontendUrl);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }

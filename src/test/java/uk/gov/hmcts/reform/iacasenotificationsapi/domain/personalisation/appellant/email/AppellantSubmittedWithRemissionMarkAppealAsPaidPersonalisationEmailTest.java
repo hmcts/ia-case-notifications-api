@@ -18,7 +18,8 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -39,15 +40,13 @@ public class AppellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationEmail
     @Mock
     SystemDateProvider systemDateProvider;
 
-    private Long caseId = 12345L;
-    private String emailTemplateId = "someEmailTemplateId";
-    private String iaAipFrontendUrl = "http://localhost";
+    private final String emailTemplateId = "someEmailTemplateId";
+    private final String iaAipFrontendUrl = "http://localhost";
 
-    private String mockedAppealReferenceNumber = "someReferenceNumber";
-    private String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
-    private String mockedAppellantGivenNames = "someAppellantGivenNames";
-    private String mockedAppellantFamilyName = "someAppellantFamilyName";
-    private String mockedAppellantEmailAddress = "appelant@example.net";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
+    private final String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
+    private final String mockedAppellantGivenNames = "someAppellantGivenNames";
+    private final String mockedAppellantFamilyName = "someAppellantFamilyName";
 
     private AppellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationEmail appellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationEmail;
 
@@ -76,6 +75,7 @@ public class AppellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationEmail
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_SUBMITTED_WITH_REMISSION_MARK_APPEAL_AS_PAID_AIP_EMAIL",
             appellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationEmail.getReferenceId(caseId));
     }
@@ -83,6 +83,7 @@ public class AppellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationEmail
     @Test
     public void should_return_given_email_address_list_from_subscribers_in_asylum_case() {
 
+        String mockedAppellantEmailAddress = "appelant@example.net";
         when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL))
             .thenReturn(Collections.singleton(mockedAppellantEmailAddress));
 
@@ -96,9 +97,10 @@ public class AppellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationEmail
         when(recipientsFinder.findAll(null, NotificationType.EMAIL))
             .thenThrow(new NullPointerException("asylumCase must not be null"));
 
-        assertThatThrownBy(() -> appellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationEmail.getRecipientsList(null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> appellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationEmail.getRecipientsList(null))
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -111,11 +113,12 @@ public class AppellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationEmail
         Map<String, String> personalisation =
             appellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationEmail.getPersonalisation(asylumCase);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
-        assertEquals(mockedAppealHomeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(mockedAppellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(mockedAppellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
+        assertThat(personalisation)
+            .containsEntry("Appeal Ref Number", mockedAppealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", mockedAppealHomeOfficeReferenceNumber)
+            .containsEntry("appellantGivenNames", mockedAppellantGivenNames)
+            .containsEntry("appellantFamilyName", mockedAppellantFamilyName)
+            .containsEntry("Hyperlink to service", iaAipFrontendUrl);
 
     }
 
@@ -134,9 +137,10 @@ public class AppellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationEmail
         Map<String, String> personalisation =
             appellantSubmittedWithRemissionMarkAppealAsPaidPersonalisationEmail.getPersonalisation(asylumCase);
 
-        assertEquals("", personalisation.get("Appeal Ref Number"));
-        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
+        assertThat(personalisation)
+            .containsEntry("Appeal Ref Number", "")
+            .containsEntry("homeOfficeReferenceNumber", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "");
     }
 }

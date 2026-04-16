@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
@@ -11,7 +11,7 @@ public class PreviousDatesTest {
     private final String dateSent = "2018-12-01T12:34:56";
 
 
-    private PreviousDates previousDates = new PreviousDates(
+    private final PreviousDates previousDates = new PreviousDates(
         dateDue,
         dateSent
     );
@@ -26,10 +26,10 @@ public class PreviousDatesTest {
     @Test
     public void should_not_allow_null_arguments() {
 
-        assertThatThrownBy(() -> new PreviousDates(null, dateSent))
-            .isExactlyInstanceOf(NullPointerException.class);
+        assertThrows(NullPointerException.class, 
+() -> new PreviousDates(null, dateSent));
 
-        assertThatThrownBy(() -> new PreviousDates(dateDue, null))
-            .isExactlyInstanceOf(NullPointerException.class);
+        assertThrows(NullPointerException.class, 
+() -> new PreviousDates(dateDue, null));
     }
 }

@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.serialization;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
@@ -51,8 +51,8 @@ public class StdSerializerTest {
             .when(mapper)
             .writeValueAsString(source);
 
-        assertThatThrownBy(() -> stdSerializer.serialize(source))
-            .hasMessage("Could not serialize data")
-            .isExactlyInstanceOf(IllegalArgumentException.class);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+() -> stdSerializer.serialize(source));
+        assertEquals("Could not serialize data", exception.getMessage());
     }
 }

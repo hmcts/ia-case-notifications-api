@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.applyforcosts;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -44,22 +45,15 @@ class AdditionalEvidenceSubmittedOtherPartyNotificationPersonalisationTest {
     @Mock
     PersonalisationProvider personalisationProvider;
 
-    private Long caseId = 12345L;
     private final String additionalEvidenceForCostsHoId = "additionalEvidenceForCostsHoId";
-    private String homeOfficeEmailAddress = "homeOfficeEmailAddress@gmail.com";
-    private String legalRepEmailAddress = "legalRepEmailAddress@gmail.com";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String legalRepRefNumber = "someLegalRepRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
-    private static String homeOffice = "Home office";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
-    private String homeOfficeReferenceNumber = "A1234567/001";
-    private String expectedLegalRepRefNumber = "\nYour reference: someLegalRepRefNumber";
-    private String expectedHomeOfficeReferenceNumber = "\nHome Office reference: A1234567/001";
-    private String ariaReferenceNumber = "ariaReferenceNumber";
-    private String expectedAriaReferenceNumber = "\nListing reference: ariaReferenceNumber";
+    private final String homeOfficeEmailAddress = "homeOfficeEmailAddress@gmail.com";
+    private final String legalRepEmailAddress = "legalRepEmailAddress@gmail.com";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private static final String homeOffice = "Home office";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
     private AdditionalEvidenceSubmittedOtherPartyNotificationPersonalisation additionalEvidenceSubmittedOtherPartyNotificationPersonalisation;
 
     @BeforeEach
@@ -82,8 +76,11 @@ class AdditionalEvidenceSubmittedOtherPartyNotificationPersonalisationTest {
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
         when(personalisationProvider.getApplyForCostsPersonalisation(asylumCase)).thenReturn(additionalEvidenceSubmittedHoPersonalisationTemplate);
         when(emailAddressFinder.getLegalRepEmailAddress(asylumCase)).thenReturn(legalRepEmailAddress);
+        String homeOfficeReferenceNumber = "A1234567/001";
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
+        String legalRepRefNumber = "someLegalRepRefNumber";
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepRefNumber));
+        String ariaReferenceNumber = "ariaReferenceNumber";
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(ariaReferenceNumber));
     }
 
@@ -95,6 +92,7 @@ class AdditionalEvidenceSubmittedOtherPartyNotificationPersonalisationTest {
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_ADDITIONAL_EVIDENCE_OTHER_PARTY_EMAIL",
             additionalEvidenceSubmittedOtherPartyNotificationPersonalisation.getReferenceId(caseId));
     }
@@ -117,9 +115,10 @@ class AdditionalEvidenceSubmittedOtherPartyNotificationPersonalisationTest {
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> additionalEvidenceSubmittedOtherPartyNotificationPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> additionalEvidenceSubmittedOtherPartyNotificationPersonalisation.getPersonalisation((AsylumCase) null))
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -132,23 +131,29 @@ class AdditionalEvidenceSubmittedOtherPartyNotificationPersonalisationTest {
 
         Map<String, String> personalisation = additionalEvidenceSubmittedOtherPartyNotificationPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(applyForCostsList.get(0).getId(), personalisation.get("applicationId"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("applicationId", applyForCostsList.get(0).getId());
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
         if (applyForCostsList.get(0).getValue().getLoggedUserRole().equals("Home office")) {
-            assertEquals("Wasted", personalisation.get("appliedCostsType"));
-            assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
-            assertEquals(expectedLegalRepRefNumber, personalisation.get("legalRepReferenceNumber"));
-            assertEquals(expectedAriaReferenceNumber, personalisation.get("ariaListingReference"));
+            String expectedAriaReferenceNumber = "\nListing reference: ariaReferenceNumber";
+            String expectedLegalRepRefNumber = "\nYour reference: someLegalRepRefNumber";
+            assertThat(personalisation)
+                .containsEntry("appliedCostsType", "Wasted")
+                .containsEntry("homeOfficeReferenceNumber", "")
+                .containsEntry("legalRepReferenceNumber", expectedLegalRepRefNumber)
+                .containsEntry("ariaListingReference", expectedAriaReferenceNumber);
         } else {
-            assertEquals("Unreasonable", personalisation.get("appliedCostsType"));
-            assertEquals(expectedHomeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-            assertEquals("", personalisation.get("legalRepReferenceNumber"));
-            assertEquals("", personalisation.get("ariaListingReference"));
+            String expectedHomeOfficeReferenceNumber = "\nHome Office reference: A1234567/001";
+            assertThat(personalisation)
+                .containsEntry("appliedCostsType", "Unreasonable")
+                .containsEntry("homeOfficeReferenceNumber", expectedHomeOfficeReferenceNumber)
+                .containsEntry("legalRepReferenceNumber", "")
+                .containsEntry("ariaListingReference", "");
         }
     }
 

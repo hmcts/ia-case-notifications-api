@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
@@ -24,15 +25,9 @@ class LegalRepresentativeRemissionDecisionRejectedPersonalisationTest {
     CustomerServicesProvider customerServicesProvider;
     @Mock
     private AsylumCase asylumCase;
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String legalRepRefNumber = "someLegalRepRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
-    private String iaExUiFrontendUrl = "http://somefrontendurl";
-    private String templateId = "someTemplateId";
-    private String legalRepEmailAddress = "legalRepEmailAddress@example.com";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
+    private final String iaExUiFrontendUrl = "http://somefrontendurl";
+    private final String templateId = "someTemplateId";
+    private final String legalRepEmailAddress = "legalRepEmailAddress@example.com";
 
     private LegalRepresentativeRemissionDecisionRejectedPersonalisation
         legalRepresentativeRemissionDecisionRejectedPersonalisation;
@@ -54,22 +49,29 @@ class LegalRepresentativeRemissionDecisionRejectedPersonalisationTest {
     @Test
     void should_return_personalisation_when_all_information_given() {
 
+        String appealReferenceNumber = "someReferenceNumber";
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
 
+        String legalRepRefNumber = "someLegalRepRefNumber";
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepRefNumber));
+        String appellantGivenNames = "someAppellantGivenNames";
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
+        String appellantFamilyName = "someAppellantFamilyName";
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
+        String customerServicesTelephone = "555 555 555";
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
+        String customerServicesEmail = "cust.services@example.com";
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         Map<String, String> personalisation =
             legalRepresentativeRemissionDecisionRejectedPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(legalRepRefNumber, personalisation.get("legalRepReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("legalRepReferenceNumber", legalRepRefNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }

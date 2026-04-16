@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -40,13 +39,12 @@ public class CaseOfficerClarifyingQuestionsAnswersSubmittedPersonalisationTest {
     @Mock
     private FeatureToggler featureToggler;
 
-    private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
-    private String hearingCentreEmailAddress = "hearingCentre@example.com";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String appellantGivenName = "Pablo";
-    private String appellantFamilyName = "Jimenez";
-    private String iaExUiFrontendUrl = "http://localhost";
+    private final String templateId = "someTemplateId";
+    private final String hearingCentreEmailAddress = "hearingCentre@example.com";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String appellantGivenName = "Pablo";
+    private final String appellantFamilyName = "Jimenez";
+    private final String iaExUiFrontendUrl = "http://localhost";
 
 
     private CaseOfficerClarifyingQuestionsAnswersSubmittedPersonalisation
@@ -77,6 +75,7 @@ public class CaseOfficerClarifyingQuestionsAnswersSubmittedPersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_CLARIFYING_QUESTION_ANSWERS_SUBMITTED_CASE_OFFICER_EMAIL",
             caseOfficerClarifyingQuestionsAnswersSubmittedPersonalisation.getReferenceId(caseId));
     }
@@ -99,10 +98,11 @@ public class CaseOfficerClarifyingQuestionsAnswersSubmittedPersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
+        NullPointerException exception =
+assertThrows(NullPointerException.class,
             () -> caseOfficerClarifyingQuestionsAnswersSubmittedPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase cannot be null");
+            ;
+assertEquals("asylumCase cannot be null", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -127,7 +127,7 @@ public class CaseOfficerClarifyingQuestionsAnswersSubmittedPersonalisationTest {
         Map<String, String> actualPersonalisation =
             caseOfficerClarifyingQuestionsAnswersSubmittedPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(actualPersonalisation).isEqualTo(expectedPersonalisation);
+        assertEquals(expectedPersonalisation, actualPersonalisation);
     }
 
     @ParameterizedTest
@@ -156,6 +156,6 @@ public class CaseOfficerClarifyingQuestionsAnswersSubmittedPersonalisationTest {
         Map<String, String> actualPersonalisation =
             caseOfficerClarifyingQuestionsAnswersSubmittedPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(actualPersonalisation).isEqualTo(expectedPersonalisation);
+        assertEquals(expectedPersonalisation, actualPersonalisation);
     }
 }

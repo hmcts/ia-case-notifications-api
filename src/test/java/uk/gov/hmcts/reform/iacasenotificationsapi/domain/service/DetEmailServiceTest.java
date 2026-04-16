@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
@@ -39,7 +38,6 @@ public class DetEmailServiceTest {
                     .build();
     private DetEmailService detEmailService;
     private final String ircValue = "immigrationRemovalCentre";
-    private final String prisonValue = "prison";
 
     @BeforeEach
     void setUp() {
@@ -61,8 +59,7 @@ public class DetEmailServiceTest {
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of(ircValue));
         when(asylumCase.read(AsylumCaseDefinition.IRC_NAME, String.class)).thenReturn(Optional.of("Tinsley House"));
 
-        assertThat(mockIrcToExpectedEmailMap.get("TinsleyHouse"))
-                .isEqualTo(detEmailService.getDetEmailAddress(asylumCase));
+        assertEquals(detEmailService.getDetEmailAddress(asylumCase), mockIrcToExpectedEmailMap.get("TinsleyHouse"));
     }
 
     @Test
@@ -70,8 +67,7 @@ public class DetEmailServiceTest {
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of(ircValue));
         when(asylumCase.read(AsylumCaseDefinition.IRC_NAME, String.class)).thenReturn(Optional.of("Campsfield House"));
 
-        assertThat(mockIrcToExpectedEmailMap.get("CampsfieldHouse"))
-                .isEqualTo(detEmailService.getDetEmailAddress(asylumCase));
+        assertEquals(detEmailService.getDetEmailAddress(asylumCase), mockIrcToExpectedEmailMap.get("CampsfieldHouse"));
     }
 
     @Test
@@ -79,9 +75,10 @@ public class DetEmailServiceTest {
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of(ircValue));
         when(asylumCase.read(IRC_NAME, String.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> detEmailService.getDetEmailAddress(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("IRC name is not present");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> detEmailService.getDetEmailAddress(asylumCase))
+                ;
+assertEquals("IRC name is not present", exception.getMessage());
     }
 
     @Test
@@ -89,15 +86,17 @@ public class DetEmailServiceTest {
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of(ircValue));
         when(asylumCase.read(IRC_NAME, String.class)).thenReturn(Optional.of("Larne House"));
 
-        assertThatThrownBy(() -> detEmailService.getDetEmailAddress(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("DET email address not found for: Larne House");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> detEmailService.getDetEmailAddress(asylumCase))
+                ;
+assertEquals("DET email address not found for: Larne House", exception.getMessage());
     }
 
     @Test
     public void should_return_empty_string_if_prison_is_selected() {
+        String prisonValue = "prison";
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of(prisonValue));
 
-        assertThat("").isEqualTo(detEmailService.getDetEmailAddress(asylumCase));
+        assertEquals("", detEmailService.getDetEmailAddress(asylumCase));
     }
 }

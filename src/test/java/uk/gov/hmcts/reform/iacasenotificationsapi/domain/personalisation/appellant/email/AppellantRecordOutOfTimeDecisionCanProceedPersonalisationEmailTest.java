@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -29,7 +30,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 
 
 @ExtendWith(MockitoExtension.class)
-@SuppressWarnings("unchecked")
 class AppellantRecordOutOfTimeDecisionCanProceedPersonalisationEmailTest {
 
     @Mock
@@ -39,17 +39,7 @@ class AppellantRecordOutOfTimeDecisionCanProceedPersonalisationEmailTest {
     @Mock
     RecipientsFinder recipientsFinder;
 
-    private String recordOutOfDecisionCanProceedTemplateId = "recordOutOfDecisionCanProceedTemplateId";
-
-    private Long caseId = 12345L;
-    private String iaAipFrontendUrl = "http://localhost";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
-    private String mockedAppellantEmailAddress = "appelant@example.net";
-    private String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
+    private final String iaAipFrontendUrl = "http://localhost";
 
     private AppellantRecordOutOfTimeDecisionCanProceedPersonalisationEmail
             appellantRecordOutOfTimeDecisionCanProceedPersonalisationEmail;
@@ -57,9 +47,10 @@ class AppellantRecordOutOfTimeDecisionCanProceedPersonalisationEmailTest {
     @BeforeEach
     void setUp() {
 
+        String recordOutOfDecisionCanProceedTemplateId = "recordOutOfDecisionCanProceedTemplateId";
         appellantRecordOutOfTimeDecisionCanProceedPersonalisationEmail =
                 new AppellantRecordOutOfTimeDecisionCanProceedPersonalisationEmail(
-                        recordOutOfDecisionCanProceedTemplateId,
+                    recordOutOfDecisionCanProceedTemplateId,
                         iaAipFrontendUrl, recipientsFinder, customerServicesProvider);
 
     }
@@ -70,13 +61,19 @@ class AppellantRecordOutOfTimeDecisionCanProceedPersonalisationEmailTest {
 
         initializePrefixes(appellantRecordOutOfTimeDecisionCanProceedPersonalisationEmail);
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
+        String appealReferenceNumber = "someReferenceNumber";
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
+        String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class))
                 .thenReturn(Optional.of(mockedAppealHomeOfficeReferenceNumber));
 
+        String appellantGivenNames = "someAppellantGivenNames";
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
+        String appellantFamilyName = "someAppellantFamilyName";
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
+        String customerServicesTelephone = "555 555 555";
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
+        String customerServicesEmail = "cust.services@example.com";
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         Map<String, String> personalisation =
@@ -85,23 +82,26 @@ class AppellantRecordOutOfTimeDecisionCanProceedPersonalisationEmailTest {
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(mockedAppealHomeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", mockedAppealHomeOfficeReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("Hyperlink to service", iaAipFrontendUrl);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_RECORD_OUT_OF_TIME_DECISION_CAN_PROCEED_AIP_EMAIL",
                 appellantRecordOutOfTimeDecisionCanProceedPersonalisationEmail.getReferenceId(caseId));
     }
 
     @Test
     void should_return_given_email_address_from_asylum_case() {
+        String mockedAppellantEmailAddress = "appelant@example.net";
         when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL))
                 .thenReturn(Collections.singleton(mockedAppellantEmailAddress));
 
@@ -112,9 +112,10 @@ class AppellantRecordOutOfTimeDecisionCanProceedPersonalisationEmailTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
+        NullPointerException exception =
+assertThrows(NullPointerException.class,
                 () -> appellantRecordOutOfTimeDecisionCanProceedPersonalisationEmail.getPersonalisation((AsylumCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+                ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 }

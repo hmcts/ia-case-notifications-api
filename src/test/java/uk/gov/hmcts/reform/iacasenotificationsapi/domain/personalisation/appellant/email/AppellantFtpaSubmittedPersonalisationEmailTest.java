@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -36,18 +37,16 @@ public class AppellantFtpaSubmittedPersonalisationEmailTest {
     @Mock
     CustomerServicesProvider customerServicesProvider;
 
-    private Long caseId = 12345L;
-    private String aipFtpaSubmittedTemplateId = "aipFtpaSubmittedTemplateId";
-    private String iaAipFrontendUrl = "http://localhost/";
-    private String mockedAppealReferenceNumber = "someReferenceNumber";
-    private String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
-    private String mockedAriaListingReference = "someAriaListingReference";
-    private String mockedAppellantGivenNames = "someAppellantGivenNames";
-    private String mockedAppellantFamilyName = "someAppellantFamilyName";
-    private String mockedAppellantEmailAddress = "appelant@example.net";
-    private String iaServicesPhone = "0100000000";
-    private String iaServicesEmail = "services@email.com";
-    private Map<String, String> customerServices = Map.of("customerServicesTelephone", iaServicesPhone,
+    private final String aipFtpaSubmittedTemplateId = "aipFtpaSubmittedTemplateId";
+    private final String iaAipFrontendUrl = "http://localhost/";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
+    private final String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
+    private final String mockedAriaListingReference = "someAriaListingReference";
+    private final String mockedAppellantGivenNames = "someAppellantGivenNames";
+    private final String mockedAppellantFamilyName = "someAppellantFamilyName";
+    private final String iaServicesPhone = "0100000000";
+    private final String iaServicesEmail = "services@email.com";
+    private final Map<String, String> customerServices = Map.of("customerServicesTelephone", iaServicesPhone,
         "customerServicesEmail", iaServicesEmail);
 
     private AppellantFtpaSubmittedPersonalisationEmail appellantFtpaSubmittedPersonalisationEmail;
@@ -79,6 +78,7 @@ public class AppellantFtpaSubmittedPersonalisationEmailTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_APPELLANT_IN_PERSON_FTPA_SUBMITTED_EMAIL",
             appellantFtpaSubmittedPersonalisationEmail.getReferenceId(caseId));
     }
@@ -86,6 +86,7 @@ public class AppellantFtpaSubmittedPersonalisationEmailTest {
     @Test
     public void should_return_given_email_address_list_from_subscribers_in_asylum_case() {
 
+        String mockedAppellantEmailAddress = "appelant@example.net";
         when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL))
             .thenReturn(Collections.singleton(mockedAppellantEmailAddress));
 
@@ -99,9 +100,10 @@ public class AppellantFtpaSubmittedPersonalisationEmailTest {
         when(recipientsFinder.findAll(null, NotificationType.EMAIL))
             .thenThrow(new NullPointerException("asylumCase must not be null"));
 
-        assertThatThrownBy(() -> appellantFtpaSubmittedPersonalisationEmail.getRecipientsList(null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> appellantFtpaSubmittedPersonalisationEmail.getRecipientsList(null))
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -111,13 +113,14 @@ public class AppellantFtpaSubmittedPersonalisationEmailTest {
         Map<String, String> personalisation =
             appellantFtpaSubmittedPersonalisationEmail.getPersonalisation(asylumCase);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(mockedAppealHomeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("\nListing reference: " + mockedAriaListingReference, personalisation.get("listingReferenceLine"));
-        assertEquals(mockedAppellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(mockedAppellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("linkToTimelinePage"));
-        assertEquals(iaServicesPhone, personalisation.get("customerServicesTelephone"));
-        assertEquals(iaServicesEmail, personalisation.get("customerServicesEmail"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", mockedAppealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", mockedAppealHomeOfficeReferenceNumber)
+            .containsEntry("listingReferenceLine", "\nListing reference: " + mockedAriaListingReference)
+            .containsEntry("appellantGivenNames", mockedAppellantGivenNames)
+            .containsEntry("appellantFamilyName", mockedAppellantFamilyName)
+            .containsEntry("linkToTimelinePage", iaAipFrontendUrl)
+            .containsEntry("customerServicesTelephone", iaServicesPhone)
+            .containsEntry("customerServicesEmail", iaServicesEmail);
     }
 }

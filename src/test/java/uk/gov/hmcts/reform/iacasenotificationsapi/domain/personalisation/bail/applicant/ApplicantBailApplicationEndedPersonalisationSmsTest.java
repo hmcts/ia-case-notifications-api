@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.applicant;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -23,7 +24,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.ap
 public class ApplicantBailApplicationEndedPersonalisationSmsTest {
 
     private final String smsTemplateId = "someTemplateId";
-    private String mobileNumber = "111 111 111";
+    private final String mobileNumber = "111 111 111";
     private final String bailReferenceNumber = "someReferenceNumber";
     private final String outcomeOfApplication = "someOutcome";
     private final String endApplicationDate = "2022-05-13";
@@ -70,10 +71,11 @@ public class ApplicantBailApplicationEndedPersonalisationSmsTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
+        NullPointerException exception =
+assertThrows(NullPointerException.class,
             () -> applicantBailApplicationEndedPersonalisationSms.getPersonalisation((BailCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("bailCase must not be null");
+            ;
+assertEquals("bailCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -82,9 +84,10 @@ public class ApplicantBailApplicationEndedPersonalisationSmsTest {
         Map<String, String> personalisation =
             applicantBailApplicationEndedPersonalisationSms.getPersonalisation(bailCase);
 
-        assertEquals(bailReferenceNumber, personalisation.get("bailReferenceNumber"));
-        assertEquals(outcomeOfApplication, personalisation.get("endApplicationOutcome"));
-        assertEquals(endApplicationDate, personalisation.get("endApplicationDate"));
+        assertThat(personalisation)
+            .containsEntry("bailReferenceNumber", bailReferenceNumber)
+            .containsEntry("endApplicationOutcome", outcomeOfApplication)
+            .containsEntry("endApplicationDate", endApplicationDate);
     }
 
     @Test
@@ -98,8 +101,6 @@ public class ApplicantBailApplicationEndedPersonalisationSmsTest {
         Map<String, String> personalisation =
             applicantBailApplicationEndedPersonalisationSms.getPersonalisation(bailCase);
 
-        assertEquals("", personalisation.get("bailReferenceNumber"));
-        assertEquals("", personalisation.get("endApplicationOutcome"));
-        assertEquals("", personalisation.get("endApplicationDate"));
+        assertThat(personalisation).allSatisfy((key, value) -> assertThat(value).isEmpty());
     }
 }

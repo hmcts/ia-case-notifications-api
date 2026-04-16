@@ -1,29 +1,38 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.REQUEST_RESPONDENT_REVIEW;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 
-import com.google.common.collect.ImmutableMap;
+import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
+import uk.gov.service.notify.NotificationClientException;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -36,11 +45,6 @@ class DetentionEngagementTeamRespondentReviewPersonalisationTest {
     @Mock
     DocumentDownloadClient documentDownloadClient;
 
-    private final Long caseId = 12345L;
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
     private final String detentionEngagementTeamRespondentReviewTemplateId = "detentionEngagementTeamRespondentReviewTemplateId";
 
     private DetentionEngagementTeamRespondentReviewPersonalisation detentionEngagementTeamRespondentReviewPersonalisation;
@@ -48,9 +52,9 @@ class DetentionEngagementTeamRespondentReviewPersonalisationTest {
     @BeforeEach
     void setup() {
         detentionEngagementTeamRespondentReviewPersonalisation = new DetentionEngagementTeamRespondentReviewPersonalisation(
-                detentionEngagementTeamRespondentReviewTemplateId,
-                detEmailService,
-                documentDownloadClient
+            detentionEngagementTeamRespondentReviewTemplateId,
+            detEmailService,
+            documentDownloadClient
         );
     }
 
@@ -61,8 +65,9 @@ class DetentionEngagementTeamRespondentReviewPersonalisationTest {
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_DETENTION_ENGAGEMENT_TEAM_REQUEST_RESPONDENT_REVIEW",
-                detentionEngagementTeamRespondentReviewPersonalisation.getReferenceId(caseId));
+            detentionEngagementTeamRespondentReviewPersonalisation.getReferenceId(caseId));
     }
 
     @Test
@@ -98,31 +103,42 @@ class DetentionEngagementTeamRespondentReviewPersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
-                () -> detentionEngagementTeamRespondentReviewPersonalisation.getPersonalisationForLink((AsylumCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> detentionEngagementTeamRespondentReviewPersonalisation.getPersonalisationForLink((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
-    @Test
-    public void should_return_personalisation_when_all_information_given() {
+    @ParameterizedTest
+    @EnumSource(YesOrNo.class)
+    public void should_return_personalisation_when_all_information_given(YesOrNo isAda) throws NotificationClientException, IOException {
 
-        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YES));
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YES));
+        String homeOfficeReferenceNumber = "1234-1234-1234-1234";
+        when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
+        String appealReferenceNumber = "someReferenceNumber";
+        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
+        String appellantGivenNames = "someAppellantGivenNames";
+        when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
+        String appellantFamilyName = "someAppellantFamilyName";
+        when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
+        JSONObject documentLink = new JSONObject();
+        DocumentWithMetadata document = mock(DocumentWithMetadata.class);
+        when(document.getTag()).thenReturn(REQUEST_RESPONDENT_REVIEW);
+        when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS))
+            .thenReturn(Optional.of(List.of(new IdValue<>("1", document))));
+        when(documentDownloadClient.getJsonObjectFromDocument(any(DocumentWithMetadata.class))).thenReturn(documentLink);
+        Map<String, Object> actualPersonalisation =
+            detentionEngagementTeamRespondentReviewPersonalisation.getPersonalisationForLink(asylumCase);
 
-        final Map<String, String> expectedPersonalisation =
-                ImmutableMap
-                        .<String, String>builder()
-                        .put("appealReferenceNumber", appealReferenceNumber)
-                        .put("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
-                        .put("appellantGivenNames", appellantGivenNames)
-                        .put("appellantFamilyName", appellantFamilyName)
-                        .build();
-
-        Map<String, String> actualPersonalisation =
-                detentionEngagementTeamRespondentReviewPersonalisation.getPersonalisation(asylumCase);
-
-        assertThat(actualPersonalisation).isEqualToComparingOnlyGivenFields(expectedPersonalisation);
+        assertThat(actualPersonalisation)
+            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "ADA" : "IAFT")
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("documentLink", documentLink);
     }
 }
 

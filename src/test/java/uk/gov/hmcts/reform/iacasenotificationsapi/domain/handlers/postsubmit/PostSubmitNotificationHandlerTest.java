@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.postsubmit;
 
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -42,9 +43,9 @@ class PostSubmitNotificationHandlerTest {
     @Mock
     ErrorHandler<AsylumCase> errorHandler;
 
-    private PostSubmitCallbackStage callbackStage = PostSubmitCallbackStage.CCD_SUBMITTED;
+    private final PostSubmitCallbackStage callbackStage = PostSubmitCallbackStage.CCD_SUBMITTED;
     private PostSubmitNotificationHandler notificationHandler;
-    private Message expectedMessage = new Message("success", "success");
+    private final Message expectedMessage = new Message("success", "success");
 
     @BeforeEach
     void setUp() {
@@ -85,9 +86,10 @@ class PostSubmitNotificationHandlerTest {
         when(callback.getEvent()).thenReturn(Event.BUILD_CASE);
         when(canHandle.test(callbackStage, callback)).thenReturn(false);
 
-        assertThatThrownBy(() -> notificationHandler.handle(callbackStage, callback))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("Cannot handle callback");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> notificationHandler.handle(callbackStage, callback))
+            ;
+assertEquals("Cannot handle callback", exception.getMessage());
 
         verifyNoInteractions(notificationGenerator);
     }
@@ -97,27 +99,29 @@ class PostSubmitNotificationHandlerTest {
         when(callback.getEvent()).thenReturn(Event.BUILD_CASE);
         when(canHandle.test(callbackStage, callback)).thenReturn(false);
 
-        assertEquals(false, notificationHandler.canHandle(callbackStage, callback));
+        assertFalse(notificationHandler.canHandle(callbackStage, callback));
     }
 
     @Test
     void should_return_false_when_skip_event() {
         when(callback.getEvent()).thenReturn(Event.NOC_REQUEST_BAIL);
-        assertEquals(false, notificationHandler.canHandle(callbackStage, callback));
+        assertFalse(notificationHandler.canHandle(callbackStage, callback));
     }
 
     @Test
     void should_throw_exception_when_callback_stage_is_null() {
-        assertThatThrownBy(() -> notificationHandler.canHandle(null, callback))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("callbackStage must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> notificationHandler.canHandle(null, callback))
+            ;
+assertEquals("callbackStage must not be null", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_when_callback_is_null() {
-        assertThatThrownBy(() -> notificationHandler.canHandle(callbackStage, null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("callback must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> notificationHandler.canHandle(callbackStage, null))
+            ;
+assertEquals("callback must not be null", exception.getMessage());
     }
 
     @Test
@@ -143,8 +147,9 @@ class PostSubmitNotificationHandlerTest {
         doThrow(new RuntimeException(message)).when(notificationGenerator).generate(callback);
         notificationHandler = new PostSubmitNotificationHandler(canHandle, Collections.singletonList(notificationGenerator));
 
-        assertThatThrownBy(() -> notificationHandler.handle(callbackStage, callback))
-            .isExactlyInstanceOf(RuntimeException.class)
-            .hasMessage(message);
+        RuntimeException exception =
+assertThrows(RuntimeException.class, () -> notificationHandler.handle(callbackStage, callback))
+            ;
+assertEquals(message, exception.getMessage());
     }
 }

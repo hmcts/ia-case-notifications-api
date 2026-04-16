@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -14,6 +15,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,7 +49,6 @@ class LegalRepresentativeRemoveRepresentationPersonalisationTest {
     @Mock
     CustomerServicesProvider customerServicesProvider;
 
-    private final Long caseId = 12345L;
     private final String templateIdBeforeListing = "beforeTemplateId";
     private final String templateIdAfterListing = "afterTemplateId";
     private final String iaExUiFrontendUrl = "http://localhost";
@@ -57,8 +58,6 @@ class LegalRepresentativeRemoveRepresentationPersonalisationTest {
     private final String legalRepRefNumber = "somelegalRepRefNumber";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-    private final String customerServicesTelephone = "555 555 555";
-    private final String customerServicesEmail = "cust.services@example.com";
 
     private LegalRepresentativeRemoveRepresentationPersonalisation legalRepresentativeRemoveRepresentationPersonalisation;
 
@@ -74,7 +73,9 @@ class LegalRepresentativeRemoveRepresentationPersonalisationTest {
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepRefNumber));
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class))
             .thenReturn(Optional.of(legalRepEmailAddress));
+        String customerServicesTelephone = "555 555 555";
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
+        String customerServicesEmail = "cust.services@example.com";
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         legalRepresentativeRemoveRepresentationPersonalisation = new LegalRepresentativeRemoveRepresentationPersonalisation(
@@ -99,6 +100,7 @@ class LegalRepresentativeRemoveRepresentationPersonalisationTest {
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_REMOVE_REPRESENTATION_LEGAL_REP",
             legalRepresentativeRemoveRepresentationPersonalisation.getReferenceId(caseId));
     }
@@ -113,18 +115,20 @@ class LegalRepresentativeRemoveRepresentationPersonalisationTest {
     void should_throw_exception_when_cannot_find_email_address_for_legal_rep() {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> legalRepresentativeRemoveRepresentationPersonalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("legalRepresentativeEmailAddress is not present");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> legalRepresentativeRemoveRepresentationPersonalisation.getRecipientsList(asylumCase))
+            ;
+assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
+        NullPointerException exception =
+assertThrows(NullPointerException.class,
             () -> legalRepresentativeRemoveRepresentationPersonalisation.getPersonalisation((Callback<AsylumCase>) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("callback must not be null");
+            ;
+assertEquals("callback must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -136,13 +140,17 @@ class LegalRepresentativeRemoveRepresentationPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeRemoveRepresentationPersonalisation.getPersonalisation(callback);
 
-        assertThat(personalisation).isNotEmpty();
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-        assertEquals(isAda.equals(YesOrNo.YES)
-            ? "Accelerated detained appeal"
-            : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
+        assertFalse(personalisation.isEmpty());
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("legalRepReferenceNumber", legalRepRefNumber)
+            .containsEntry("ariaListingReference", ariaListingReference)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("ccdCaseId", "0")
+            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal"
+                : "Immigration and Asylum appeal");
     }
 
     @ParameterizedTest
@@ -155,16 +163,26 @@ class LegalRepresentativeRemoveRepresentationPersonalisationTest {
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
             legalRepresentativeRemoveRepresentationPersonalisation.getPersonalisation(callback);
 
-        assertThat(personalisation).isNotEmpty();
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-        assertEquals(isAda.equals(YesOrNo.YES)
-            ? "Accelerated detained appeal"
-            : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
+        assertFalse(personalisation.isEmpty());
+        assertThat(personalisation)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("ccdCaseId", "0")
+            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal"
+                : "Immigration and Asylum appeal");
+
+        assertThat(personalisation).allSatisfy((key, value) -> {
+            if (!List.of(
+                "linkToOnlineService",
+                "ccdCaseId",
+                "subjectPrefix"
+            ).contains(key)) {
+                assertThat(value).isEmpty();
+            }
+        });
     }
 }

@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities;
 
-import static java.util.Arrays.asList;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre.MANCHESTER;
 
@@ -27,7 +26,7 @@ public class AsylumCaseTest {
 
         Optional<String> maybeAppealReferenceNumber = asylumCase.read(APPEAL_REFERENCE_NUMBER);
 
-        assertThat(maybeAppealReferenceNumber.get()).isEqualTo("PA/50222/2019");
+        assertEquals("PA/50222/2019", maybeAppealReferenceNumber.get());
     }
 
     @Test
@@ -38,34 +37,35 @@ public class AsylumCaseTest {
 
         Optional<HearingCentre> maybeHearingCentre = asylumCase.read(HEARING_CENTRE);
 
-        assertThat(maybeHearingCentre.get()).isEqualTo(MANCHESTER);
+        assertEquals(MANCHESTER, maybeHearingCentre.get());
     }
 
     @Test
     public void reads_id_value_list() throws IOException {
 
-        String caseData = "{\"directions\": [\n" +
-                          "    {\n" +
-                          "      \"id\": \"2\",\n" +
-                          "      \"value\": {\n" +
-                          "        \"tag\": \"buildCase\",\n" +
-                          "        \"dateDue\": \"2019-06-13\",\n" +
-                          "        \"parties\": \"legalRepresentative\",\n" +
-                          "        \"dateSent\": \"2019-05-16\",\n" +
-                          "        \"explanation\": \"some-explanation\"\n" +
-                          "      }\n" +
-                          "    },\n" +
-                          "    {\n" +
-                          "      \"id\": \"1\",\n" +
-                          "      \"value\": {\n" +
-                          "        \"tag\": \"respondentEvidence\",\n" +
-                          "        \"dateDue\": \"2019-05-30\",\n" +
-                          "        \"parties\": \"respondent\",\n" +
-                          "        \"dateSent\": \"2019-05-16\",\n" +
-                          "        \"explanation\": \"some-other-explanation\"\n" +
-                          "      }\n" +
-                          "    }\n" +
-                          "  ]}";
+        String caseData = """
+            {"directions": [
+                {
+                  "id": "2",
+                  "value": {
+                    "tag": "buildCase",
+                    "dateDue": "2019-06-13",
+                    "parties": "legalRepresentative",
+                    "dateSent": "2019-05-16",
+                    "explanation": "some-explanation"
+                  }
+                },
+                {
+                  "id": "1",
+                  "value": {
+                    "tag": "respondentEvidence",
+                    "dateDue": "2019-05-30",
+                    "parties": "respondent",
+                    "dateSent": "2019-05-16",
+                    "explanation": "some-other-explanation"
+                  }
+                }
+              ]}""";
 
         AsylumCase asylumCase = objectMapper.readValue(caseData, AsylumCase.class);
 
@@ -76,19 +76,19 @@ public class AsylumCaseTest {
         Direction direction1 = idValues.get(0).getValue();
         Direction direction2 = idValues.get(1).getValue();
 
-        assertThat(idValues.get(0).getId()).isEqualTo("2");
-        assertThat(direction1.getTag()).isEqualTo(DirectionTag.BUILD_CASE);
-        assertThat(direction1.getDateDue()).isEqualTo("2019-06-13");
-        assertThat(direction1.getParties()).isEqualTo(Parties.LEGAL_REPRESENTATIVE);
-        assertThat(direction1.getDateSent()).isEqualTo("2019-05-16");
-        assertThat(direction1.getExplanation()).isEqualTo("some-explanation");
+        assertEquals("2", idValues.get(0).getId());
+        assertEquals(DirectionTag.BUILD_CASE, direction1.getTag());
+        assertEquals("2019-06-13", direction1.getDateDue());
+        assertEquals(Parties.LEGAL_REPRESENTATIVE, direction1.getParties());
+        assertEquals("2019-05-16", direction1.getDateSent());
+        assertEquals("some-explanation", direction1.getExplanation());
 
-        assertThat(idValues.get(1).getId()).isEqualTo("1");
-        assertThat(direction2.getTag()).isEqualTo(DirectionTag.RESPONDENT_EVIDENCE);
-        assertThat(direction2.getDateDue()).isEqualTo("2019-05-30");
-        assertThat(direction2.getParties()).isEqualTo(Parties.RESPONDENT);
-        assertThat(direction2.getDateSent()).isEqualTo("2019-05-16");
-        assertThat(direction2.getExplanation()).isEqualTo("some-other-explanation");
+        assertEquals("1", idValues.get(1).getId());
+        assertEquals(DirectionTag.RESPONDENT_EVIDENCE, direction2.getTag());
+        assertEquals("2019-05-30", direction2.getDateDue());
+        assertEquals(Parties.RESPONDENT, direction2.getParties());
+        assertEquals("2019-05-16", direction2.getDateSent());
+        assertEquals("some-other-explanation", direction2.getExplanation());
     }
 
     @Test
@@ -97,8 +97,7 @@ public class AsylumCaseTest {
         String caseData = "{\"appealReferenceNumber\": \"PA/50222/2019\"}";
         AsylumCase asylumCase = objectMapper.readValue(caseData, AsylumCase.class);
 
-        assertThat(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).get())
-            .isEqualTo("PA/50222/2019");
+        assertEquals("PA/50222/2019", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).get());
     }
 
     @Test
@@ -108,8 +107,7 @@ public class AsylumCaseTest {
 
         asylumCase.write(APPEAL_REFERENCE_NUMBER, "some-appeal-reference-number");
 
-        assertThat(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).get())
-            .isEqualTo("some-appeal-reference-number");
+        assertEquals("some-appeal-reference-number", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).get());
     }
 
     @Test
@@ -132,7 +130,7 @@ public class AsylumCaseTest {
             ));
 
 
-        asylumCase.write(DIRECTIONS, asList(idValue));
+        asylumCase.write(DIRECTIONS, List.of(idValue));
 
 
         Optional<List<IdValue<Direction>>> maybeDocuments = asylumCase.read(DIRECTIONS);
@@ -140,16 +138,16 @@ public class AsylumCaseTest {
         IdValue<Direction> documents = maybeDocuments.get().get(0);
 
 
-        assertThat(maybeDocuments.get().size()).isEqualTo(1);
+        assertEquals(1, maybeDocuments.get().size());
 
-        assertThat(documents.getId()).isEqualTo("some-id");
+        assertEquals("some-id", documents.getId());
 
-        assertThat(documents.getValue().getTag()).isEqualTo(DirectionTag.CASE_EDIT);
+        assertEquals(DirectionTag.CASE_EDIT, documents.getValue().getTag());
 
-        assertThat(documents.getValue().getDateDue()).isEqualTo("some-date");
+        assertEquals("some-date", documents.getValue().getDateDue());
 
-        assertThat(documents.getValue().getDateSent()).isEqualTo("some-other-date");
+        assertEquals("some-other-date", documents.getValue().getDateSent());
 
-        assertThat(documents.getValue().getExplanation()).isEqualTo("some-explanation");
+        assertEquals("some-explanation", documents.getValue().getExplanation());
     }
 }

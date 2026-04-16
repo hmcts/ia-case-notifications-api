@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ACCELERATED_DETAINED_APPEAL;
@@ -30,7 +30,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-@SuppressWarnings("unchecked")
 public class RespondentFtpaSubmittedPersonalisationTest {
 
     @Mock PersonalisationProvider personalisationProvider;
@@ -40,13 +39,8 @@ public class RespondentFtpaSubmittedPersonalisationTest {
     @Mock CustomerServicesProvider customerServicesProvider;
     @Mock EmailAddressFinder emailAddressFinder;
 
-    private Long caseId = 12345L;
-    private String templateId = "templateId";
-    private String iaExUiFrontendUrl = "http://localhost";
-    private String respondentEmailAddress = "respondent@example.com";
-    private String ariaListingReference = "someAriaListingReference";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
+    private final String templateId = "templateId";
+    private final String iaExUiFrontendUrl = "http://localhost";
 
     private RespondentFtpaSubmittedPersonalisation respondentFtpaSubmittedPersonalisation;
 
@@ -65,6 +59,7 @@ public class RespondentFtpaSubmittedPersonalisationTest {
     @Test
     public void should_return_give_reference_id() {
 
+        Long caseId = 12345L;
         assertEquals(caseId + "_FTPA_SUBMITTED_RESPONDENT",
             respondentFtpaSubmittedPersonalisation.getReferenceId(caseId));
     }
@@ -76,6 +71,7 @@ public class RespondentFtpaSubmittedPersonalisationTest {
 
     @Test
     public void should_return_given_recipient_email_id() {
+        String respondentEmailAddress = "respondent@example.com";
         when(emailAddressFinder.getListCaseFtpaHomeOfficeEmailAddress(asylumCase)).thenReturn(respondentEmailAddress);
         assertEquals(Collections.singleton(respondentEmailAddress), respondentFtpaSubmittedPersonalisation.getRecipientsList(asylumCase));
     }
@@ -89,23 +85,30 @@ public class RespondentFtpaSubmittedPersonalisationTest {
         initializePrefixes(respondentFtpaSubmittedPersonalisation);
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisation());
 
-        Map<String, String> expectedPersonalisation =
+        Map<String, String> personalisation =
             respondentFtpaSubmittedPersonalisation.getPersonalisation(callback);
 
-        assertThat(expectedPersonalisation).isEqualToComparingOnlyGivenFields(getPersonalisation());
+        assertThat(personalisation)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal"
+                : "Immigration and Asylum appeal")
+            .containsAllEntriesOf(getPersonalisation());
     }
 
     @Test
     public void should_throw_exception_when_personalisation_when_callback_is_null() {
 
-        assertThatThrownBy(() -> respondentFtpaSubmittedPersonalisation.getPersonalisation((Callback<AsylumCase>) null))
-            .hasMessage("callback must not be null")
-            .isExactlyInstanceOf(NullPointerException.class);
+        NullPointerException exception = assertThrows(NullPointerException.class,
+() -> respondentFtpaSubmittedPersonalisation.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
 
     }
 
     private Map<String, String> getPersonalisation() {
 
+        String customerServicesEmail = "cust.services@example.com";
+        String customerServicesTelephone = "555 555 555";
+        String ariaListingReference = "someAriaListingReference";
         return ImmutableMap
             .<String, String>builder()
             .put("appealReferenceNumber", "PA/12345/001")

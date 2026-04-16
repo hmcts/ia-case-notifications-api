@@ -2,7 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.service;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
@@ -29,8 +29,8 @@ public class TimeExtensionFinderTest {
     private final String requestDate = "2020-03-01";
     private final State state = State.AWAITING_REASONS_FOR_APPEAL;
     private final TimeExtensionStatus status = TimeExtensionStatus.SUBMITTED;
-    String decisionReason = "this is the decision reason";
-    String decisionOutcomeDate = "2020-03-02";
+    final String decisionReason = "this is the decision reason";
+    final String decisionOutcomeDate = "2020-03-02";
     @Mock
     private AsylumCase asylumCase;
 
@@ -154,15 +154,15 @@ public class TimeExtensionFinderTest {
 
         State currentState = State.AWAITING_REASONS_FOR_APPEAL;
 
-        assertThatThrownBy(
-            () -> timeExtensionFinder.findCurrentTimeExtension(currentState, TimeExtensionStatus.GRANTED, asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("No time extension found with state: 'awaitingReasonsForAppeal' and status: 'granted'");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class,
+                () -> timeExtensionFinder.findCurrentTimeExtension(currentState, TimeExtensionStatus.GRANTED, asylumCase));
+        assertEquals("No time extension found with state: 'awaitingReasonsForAppeal' and status: 'granted'", exception.getMessage());
 
-        assertThatThrownBy(
-            () -> timeExtensionFinder.findCurrentTimeExtension(currentState, TimeExtensionStatus.REFUSED, asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("No time extension found with state: 'awaitingReasonsForAppeal' and status: 'refused'");
+        IllegalStateException exception2 =
+            assertThrows(IllegalStateException.class,
+                () -> timeExtensionFinder.findCurrentTimeExtension(currentState, TimeExtensionStatus.REFUSED, asylumCase));
+        assertEquals("No time extension found with state: 'awaitingReasonsForAppeal' and status: 'refused'", exception2.getMessage());
     }
 
     @Test
@@ -172,17 +172,17 @@ public class TimeExtensionFinderTest {
 
         currentState = State.AWAITING_REASONS_FOR_APPEAL;
         result = timeExtensionFinder.findNextActionText(currentState);
-        assertEquals(result, "tell us why you think the Home Office decision is wrong");
+        assertEquals("tell us why you think the Home Office decision is wrong", result);
 
 
         currentState = State.AWAITING_CMA_REQUIREMENTS;
         result = timeExtensionFinder.findNextActionText(currentState);
-        assertEquals(result, "tell us if you will need anything at your appointment");
+        assertEquals("tell us if you will need anything at your appointment", result);
 
 
         currentState = State.AWAITING_CLARIFYING_QUESTIONS_ANSWERS;
         result = timeExtensionFinder.findNextActionText(currentState);
-        assertEquals(result, "answer the Tribunal's questions");
+        assertEquals("answer the Tribunal's questions", result);
 
     }
 
@@ -191,9 +191,9 @@ public class TimeExtensionFinderTest {
 
         State currentState = State.APPEAL_STARTED;
 
-        assertThatThrownBy(() -> timeExtensionFinder.findNextActionText(currentState))
-            .isExactlyInstanceOf(IllegalArgumentException.class)
-            .hasMessage("No next step text description value found for state: appealStarted");
+        IllegalArgumentException exception =
+            assertThrows(IllegalArgumentException.class, () -> timeExtensionFinder.findNextActionText(currentState));
+        assertEquals("No next step text description value found for state: appealStarted", exception.getMessage());
 
     }
 }

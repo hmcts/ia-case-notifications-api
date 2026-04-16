@@ -26,6 +26,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -59,29 +60,27 @@ public class HomeOfficeReinstateAppealPersonalisationTest {
     EmailAddressFinder emailAddressFinder;
 
 
-    private Long caseId = 12345L;
-    private String iaExUiFrontendUrl = "http://somefrontendurl";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
+    private final String iaExUiFrontendUrl = "http://somefrontendurl";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
 
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
-    private String ariaListingReference = "someAriaListingReference";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String ariaListingReference = "someAriaListingReference";
 
-    private String reinstateAppealDate = "2020-10-08";
-    private String reinstateAppealReason = "someReason";
-    private String reinstatedDecisionMaker = "someDecisionMaker";
+    private final String reinstateAppealReason = "someReason";
+    private final String reinstatedDecisionMaker = "someDecisionMaker";
 
-    private String homeOfficeReinstateAppealBeforeListingTemplateId = "SomeTemplate";
-    private String homeOfficeReinstateAppealAfterListingTemplateId = "SomeTemplate";
+    private final String homeOfficeReinstateAppealBeforeListingTemplateId = "SomeTemplate";
+    private final String homeOfficeReinstateAppealAfterListingTemplateId = "SomeTemplate";
 
-    private String apcPrivateBetaInboxHomeOfficeEmailAddress = "homeoffice-apc@example.com";
-    private String lartHomeOfficeEmailAddress = "homeoffice-respondent@example.com";
-    private String endAppealHomeOfficeEmailAddress = "ho-end-appeal@example.com";
-    private String homeOfficeHearingCentreEmail = "ho-taylorhouse@example.com";
+    private final String apcPrivateBetaInboxHomeOfficeEmailAddress = "homeoffice-apc@example.com";
+    private final String lartHomeOfficeEmailAddress = "homeoffice-respondent@example.com";
+    private final String endAppealHomeOfficeEmailAddress = "ho-end-appeal@example.com";
+    private final String homeOfficeHearingCentreEmail = "ho-taylorhouse@example.com";
 
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
 
     private HomeOfficeReinstateAppealPersonalisation homeOfficeReinstateAppealPersonalisation;
 
@@ -93,6 +92,7 @@ public class HomeOfficeReinstateAppealPersonalisationTest {
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(ariaListingReference));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
+        String reinstateAppealDate = "2020-10-08";
         when(asylumCase.read(REINSTATE_APPEAL_DATE, String.class)).thenReturn(Optional.of(reinstateAppealDate));
         when(asylumCase.read(REINSTATE_APPEAL_REASON, String.class)).thenReturn(Optional.of(reinstateAppealReason));
         when(asylumCase.read(REINSTATED_DECISION_MAKER, String.class)).thenReturn(Optional.of(reinstatedDecisionMaker));
@@ -193,6 +193,7 @@ public class HomeOfficeReinstateAppealPersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_REINSTATE_APPEAL_HOME_OFFICE",
             homeOfficeReinstateAppealPersonalisation.getReferenceId(caseId));
     }
@@ -213,15 +214,16 @@ public class HomeOfficeReinstateAppealPersonalisationTest {
 
         Map<String, String> personalisation = homeOfficeReinstateAppealPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
-        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals("8 Oct 2020", personalisation.get("reinstateAppealDate"));
-        assertEquals(reinstateAppealReason, personalisation.get("reinstateAppealReason"));
-        assertEquals(reinstatedDecisionMaker, personalisation.get("reinstatedDecisionMaker"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("ariaListingReference", ariaListingReference)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("reinstateAppealDate", "8 Oct 2020")
+            .containsEntry("reinstateAppealReason", reinstateAppealReason)
+            .containsEntry("reinstatedDecisionMaker", reinstatedDecisionMaker)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YesOrNo.YES)
@@ -247,15 +249,16 @@ public class HomeOfficeReinstateAppealPersonalisationTest {
         Map<String, String> personalisation = homeOfficeReinstateAppealPersonalisation.getPersonalisation(asylumCase);
 
 
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("ariaListingReference"));
-        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals("", personalisation.get("reinstateAppealDate"));
-        assertEquals("No reason given", personalisation.get("reinstateAppealReason"));
-        assertEquals("", personalisation.get("reinstatedDecisionMaker"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("ariaListingReference", "")
+            .containsEntry("homeOfficeReferenceNumber", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "")
+            .containsEntry("reinstateAppealDate", "")
+            .containsEntry("reinstateAppealReason", "No reason given")
+            .containsEntry("reinstatedDecisionMaker", "")
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YesOrNo.YES)

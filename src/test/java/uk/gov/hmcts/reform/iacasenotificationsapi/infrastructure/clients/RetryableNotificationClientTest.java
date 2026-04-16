@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients;
 
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.io.InputStream;

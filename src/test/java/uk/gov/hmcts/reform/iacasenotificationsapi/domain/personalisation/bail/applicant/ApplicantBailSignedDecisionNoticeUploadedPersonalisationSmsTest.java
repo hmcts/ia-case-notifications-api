@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.applicant;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.*;
@@ -27,7 +28,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.ap
 public class ApplicantBailSignedDecisionNoticeUploadedPersonalisationSmsTest {
 
     private final String smsTemplateId = "someTemplateId";
-    private String mobileNumber = "111 111 111";
+    private final String mobileNumber = "111 111 111";
     private final String bailReferenceNumber = "someReferenceNumber";
     private final String yes = "yes";
     private final String no = "no";
@@ -72,10 +73,10 @@ public class ApplicantBailSignedDecisionNoticeUploadedPersonalisationSmsTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
-            () -> applicantBailSignedDecisionNoticeUploadedPersonalisationSms.getPersonalisation((BailCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("bailCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> applicantBailSignedDecisionNoticeUploadedPersonalisationSms.getPersonalisation((BailCase) null));
+        assertEquals("bailCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -85,9 +86,10 @@ public class ApplicantBailSignedDecisionNoticeUploadedPersonalisationSmsTest {
         Map<String, String> personalisation =
             applicantBailSignedDecisionNoticeUploadedPersonalisationSms.getPersonalisation(bailCase);
 
-        assertEquals(bailReferenceNumber, personalisation.get("bailReferenceNumber"));
-        assertEquals(yes, personalisation.get("granted"));
-        assertEquals(no, personalisation.get("refused"));
+        assertThat(personalisation)
+            .containsEntry("bailReferenceNumber", bailReferenceNumber)
+            .containsEntry("granted", yes)
+            .containsEntry("refused", no);
     }
 
     @Test
@@ -97,9 +99,10 @@ public class ApplicantBailSignedDecisionNoticeUploadedPersonalisationSmsTest {
         Map<String, String> personalisation =
             applicantBailSignedDecisionNoticeUploadedPersonalisationSms.getPersonalisation(bailCase);
 
-        assertEquals(bailReferenceNumber, personalisation.get("bailReferenceNumber"));
-        assertEquals(yes, personalisation.get("granted"));
-        assertEquals(no, personalisation.get("refused"));
+        assertThat(personalisation)
+            .containsEntry("bailReferenceNumber", bailReferenceNumber)
+            .containsEntry("granted", yes)
+            .containsEntry("refused", no);
     }
 
     @Test
@@ -109,9 +112,10 @@ public class ApplicantBailSignedDecisionNoticeUploadedPersonalisationSmsTest {
         Map<String, String> personalisation =
             applicantBailSignedDecisionNoticeUploadedPersonalisationSms.getPersonalisation(bailCase);
 
-        assertEquals(bailReferenceNumber, personalisation.get("bailReferenceNumber"));
-        assertEquals(no, personalisation.get("granted"));
-        assertEquals(yes, personalisation.get("refused"));
+        assertThat(personalisation)
+            .containsEntry("bailReferenceNumber", bailReferenceNumber)
+            .containsEntry("granted", no)
+            .containsEntry("refused", yes);
     }
 
     @Test
@@ -122,8 +126,9 @@ public class ApplicantBailSignedDecisionNoticeUploadedPersonalisationSmsTest {
         Map<String, String> personalisation =
             applicantBailSignedDecisionNoticeUploadedPersonalisationSms.getPersonalisation(bailCase);
 
-        assertEquals("", personalisation.get("bailReferenceNumber"));
-        assertEquals("", personalisation.get("granted"));
-        assertEquals("", personalisation.get("refused"));
+        assertThat(personalisation)
+            .containsEntry("bailReferenceNumber", "")
+            .containsEntry("granted", "")
+            .containsEntry("refused", "");
     }
 }

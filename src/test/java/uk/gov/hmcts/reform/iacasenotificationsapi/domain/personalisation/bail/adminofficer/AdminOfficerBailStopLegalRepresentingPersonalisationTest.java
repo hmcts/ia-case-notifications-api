@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.adminofficer;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -27,13 +27,12 @@ public class AdminOfficerBailStopLegalRepresentingPersonalisationTest {
     @Mock
     BailCase bailCase;
 
-    private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
-    private String bailReferenceNumber = "someReferenceNumber";
-    private String legalRepReference = "someLegalRepReference";
-    private String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
-    private String applicantGivenNames = "someApplicantGivenNames";
-    private String applicantFamilyName = "someApplicantFamilyName";
+    private final String templateId = "someTemplateId";
+    private final String bailReferenceNumber = "someReferenceNumber";
+    private final String legalRepReference = "someLegalRepReference";
+    private final String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
+    private final String applicantGivenNames = "someApplicantGivenNames";
+    private final String applicantFamilyName = "someApplicantFamilyName";
 
     @Mock
     private EmailAddressFinder emailAddressFinder;
@@ -61,6 +60,7 @@ public class AdminOfficerBailStopLegalRepresentingPersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_BAIL_STOP_LEGAL_REPRESENTING_ADMIN_OFFICER",
                 adminOfficerStopLegalRepresentingPersonalisation.getReferenceId(caseId));
     }
@@ -75,10 +75,11 @@ public class AdminOfficerBailStopLegalRepresentingPersonalisationTest {
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
-        assertThatThrownBy(
+        NullPointerException exception =
+assertThrows(NullPointerException.class,
                 () -> adminOfficerStopLegalRepresentingPersonalisation.getPersonalisation((BailCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("bailCase must not be null");
+                ;
+assertEquals("bailCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -87,7 +88,12 @@ public class AdminOfficerBailStopLegalRepresentingPersonalisationTest {
         Map<String, String> personalisation =
                 adminOfficerStopLegalRepresentingPersonalisation.getPersonalisation(bailCase);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(bailCase);
+        assertThat(personalisation)
+            .containsEntry("bailReferenceNumber", bailReferenceNumber)
+            .containsEntry("legalRepReference", legalRepReference)
+            .containsEntry("applicantGivenNames", applicantGivenNames)
+            .containsEntry("applicantFamilyName", applicantFamilyName)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber);
     }
 
     @Test
@@ -102,7 +108,6 @@ public class AdminOfficerBailStopLegalRepresentingPersonalisationTest {
         Map<String, String> personalisation =
                 adminOfficerStopLegalRepresentingPersonalisation.getPersonalisation(bailCase);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(bailCase);
+        assertThat(personalisation).allSatisfy((key, value) -> assertThat(value).isEmpty());
     }
-
 }

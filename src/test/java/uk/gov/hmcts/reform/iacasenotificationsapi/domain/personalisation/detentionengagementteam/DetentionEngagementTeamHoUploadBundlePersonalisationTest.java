@@ -24,6 +24,7 @@ import java.util.Set;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.TestUtils.getDocumentWithMetadata;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.NOTIFICATION_ATTACHMENT_DOCUMENTS;
@@ -63,7 +64,7 @@ class DetentionEngagementTeamHoUploadBundlePersonalisationTest {
     void shouldReturnReferenceId() {
         String refId = personalisation.getReferenceId(123L);
 
-        assertThat(refId).isEqualTo("123_INTERNAL_DETAINED_APPEAL_HO_UPLOAD_BUNDLE_APPELLANT_LETTER");
+        assertEquals("123_INTERNAL_DETAINED_APPEAL_HO_UPLOAD_BUNDLE_APPELLANT_LETTER", refId);
     }
 
     @Test
@@ -78,7 +79,7 @@ class DetentionEngagementTeamHoUploadBundlePersonalisationTest {
 
         Set<String> recipients = personalisation.getRecipientsList(asylumCase);
 
-        assertThat(recipients).containsExactly(DETENTION_EMAIL);
+        assertTrue(recipients.contains(DETENTION_EMAIL));
     }
 
     @Test
@@ -90,12 +91,12 @@ class DetentionEngagementTeamHoUploadBundlePersonalisationTest {
 
         Set<String> recipients = personalisation.getRecipientsList(asylumCase);
 
-        assertThat(recipients).containsExactly(CTSC_EMAIL);
+        assertTrue(recipients.contains(CTSC_EMAIL));
     }
 
     @Test
     void shouldReturnTemplateId() {
-        assertThat(personalisation.getTemplateId()).isEqualTo(TEMPLATE_ID);
+        assertEquals(TEMPLATE_ID, personalisation.getTemplateId());
     }
 
     @Test
@@ -137,8 +138,9 @@ class DetentionEngagementTeamHoUploadBundlePersonalisationTest {
 
         when(documentDownloadClient.getJsonObjectFromDocument(any())).thenThrow(new IOException("fail"));
 
-        assertThatThrownBy(() -> personalisation.getPersonalisationForLink(asylumCase))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining("Failed to get Internal 'Home Office to upload bundle' Letter");
+        IllegalStateException exception = 
+assertThrows(IllegalStateException.class, () -> personalisation.getPersonalisationForLink(asylumCase))
+                ;
+assertTrue(exception.getMessage().contains("Failed to get Internal 'Home Office to upload bundle' Letter"));
     }
 }

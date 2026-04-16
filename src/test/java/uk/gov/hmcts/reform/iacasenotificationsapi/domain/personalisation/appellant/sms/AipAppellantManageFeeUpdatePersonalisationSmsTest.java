@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -33,16 +34,12 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvi
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AipAppellantManageFeeUpdatePersonalisationSmsTest {
-    private String aipAppellantManageFeeUpdateSmsTemplateId = "aipAppellantManageFeeUpdateSmsTemplateId";
-    private String iaAipFrontendUrl = "http://localhost";
-    private String mockedAppellantMobilePhone = "07123456789";
-    private String appealReferenceNumber = "appealReferenceNumber";
-    private String onlineCaseReferenceNumber = "1111222233334444";
-    private String homeOfficeReferenceNumber = "homeOfficeReferenceNumber";
-    private int daysAfterRemissionDecision = 14;
-    private String feeAmount = "4000";
-    private String newFeeAmount = "2000";
-    private String manageFeeRequestedAmount = "2000";
+    private final String aipAppellantManageFeeUpdateSmsTemplateId = "aipAppellantManageFeeUpdateSmsTemplateId";
+    private final String iaAipFrontendUrl = "http://localhost";
+    private final String mockedAppellantMobilePhone = "07123456789";
+    private final String appealReferenceNumber = "appealReferenceNumber";
+    private final String onlineCaseReferenceNumber = "1111222233334444";
+    private final int daysAfterRemissionDecision = 14;
 
     @Mock
     AsylumCase asylumCase;
@@ -58,10 +55,14 @@ class AipAppellantManageFeeUpdatePersonalisationSmsTest {
     @BeforeEach
     public void setup() {
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
+        String homeOfficeReferenceNumber = "homeOfficeReferenceNumber";
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
         when(asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class)).thenReturn(Optional.of(onlineCaseReferenceNumber));
+        String feeAmount = "4000";
         when(asylumCase.read(PREVIOUS_FEE_AMOUNT_GBP, String.class)).thenReturn(Optional.of(feeAmount));
+        String newFeeAmount = "2000";
         when(asylumCase.read(FEE_AMOUNT_GBP, String.class)).thenReturn(Optional.of(newFeeAmount));
+        String manageFeeRequestedAmount = "2000";
         when(asylumCase.read(MANAGE_FEE_REQUESTED_AMOUNT, String.class)).thenReturn(Optional.of(manageFeeRequestedAmount));
 
         aipAppellantManageFeeUpdatePersonalisationSms = new AipAppellantManageFeeUpdatePersonalisationSms(
@@ -106,10 +107,11 @@ class AipAppellantManageFeeUpdatePersonalisationSmsTest {
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
-        assertThatThrownBy(
+        NullPointerException exception = 
+assertThrows(NullPointerException.class, 
             () -> aipAppellantManageFeeUpdatePersonalisationSms.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -122,12 +124,13 @@ class AipAppellantManageFeeUpdatePersonalisationSmsTest {
         Map<String, String> personalisation =
             aipAppellantManageFeeUpdatePersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(onlineCaseReferenceNumber, personalisation.get("onlineCaseReferenceNumber"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("linkToService"));
-        assertEquals(systemDateProvider.dueDate(daysAfterRemissionDecision), personalisation.get("dueDate"));
-        assertEquals("40.00", personalisation.get("originalTotalFee"));
-        assertEquals("20.00", personalisation.get("newTotalFee"));
-        assertEquals("20.00", personalisation.get("paymentAmount"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("onlineCaseReferenceNumber", onlineCaseReferenceNumber)
+            .containsEntry("linkToService", iaAipFrontendUrl)
+            .containsEntry("dueDate", systemDateProvider.dueDate(daysAfterRemissionDecision))
+            .containsEntry("originalTotalFee", "40.00")
+            .containsEntry("newTotalFee", "20.00")
+            .containsEntry("paymentAmount", "20.00");
     }
 }

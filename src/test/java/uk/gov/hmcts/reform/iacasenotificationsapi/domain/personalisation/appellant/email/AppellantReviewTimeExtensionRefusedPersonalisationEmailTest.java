@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -15,7 +16,6 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
-import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -48,22 +48,17 @@ public class AppellantReviewTimeExtensionRefusedPersonalisationEmailTest {
     @Mock
     TimeExtensionFinder timeExtensionFinder;
 
-    private Long caseId = 12345L;
-    private String smsTemplateId = "someEmailTemplateId";
-    private String iaAipFrontendUrl = "http://localhost";
+    private final String smsTemplateId = "someEmailTemplateId";
+    private final String iaAipFrontendUrl = "http://localhost";
 
-    private String mockedAppealReferenceNumber = "someReferenceNumber";
-    private String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
-    private String mockedAppellantGivenNames = "someAppellantGivenNames";
-    private String mockedAppellantFamilyName = "someAppellantFamilyName";
-    private String mockedAppellantEmailAddress = "appelant@example.net";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
+    private final String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
+    private final String mockedAppellantGivenNames = "someAppellantGivenNames";
+    private final String mockedAppellantFamilyName = "someAppellantFamilyName";
 
-    private String timeExtensionRequestDate = "2020-03-01";
-    private String timeExtensionNewDate = "2020-04-01";
-    private String expectedTimeExtensionNewDate = "1 Apr 2020";
-    private String timeExtensionReason = "the reason";
+    private final String expectedTimeExtensionNewDate = "1 Apr 2020";
 
-    private String timeExtensionDecisionReason = "the reason";
+    private final String timeExtensionDecisionReason = "the reason";
 
     private IdValue<TimeExtension> mockedTimeExtension;
 
@@ -73,6 +68,9 @@ public class AppellantReviewTimeExtensionRefusedPersonalisationEmailTest {
     @BeforeEach
     public void setup() {
 
+        String timeExtensionReason = "the reason";
+        String timeExtensionNewDate = "2020-04-01";
+        String timeExtensionRequestDate = "2020-03-01";
         mockedTimeExtension = new IdValue<>("someId", new TimeExtension(
             timeExtensionRequestDate,
             timeExtensionReason,
@@ -102,13 +100,13 @@ public class AppellantReviewTimeExtensionRefusedPersonalisationEmailTest {
 
     @Test
     public void should_return_given_template_id() {
-        Assert.assertEquals(smsTemplateId, appellantReviewTimeExtensionRefusedPersonalisationEmail.getTemplateId());
+        assertEquals(smsTemplateId, appellantReviewTimeExtensionRefusedPersonalisationEmail.getTemplateId());
     }
 
     @Test
     public void should_return_given_reference_id() {
-        Assert.assertEquals(caseId + "_REVIEW_TIME_EXTENSION_REFUSED_APPELLANT_AIP_EMAIL",
-            appellantReviewTimeExtensionRefusedPersonalisationEmail.getReferenceId(caseId));
+        Long caseId = 12345L;
+        assertEquals(caseId + "_REVIEW_TIME_EXTENSION_REFUSED_APPELLANT_AIP_EMAIL", appellantReviewTimeExtensionRefusedPersonalisationEmail.getReferenceId(caseId));
     }
 
     @Test
@@ -117,14 +115,16 @@ public class AppellantReviewTimeExtensionRefusedPersonalisationEmailTest {
         when(recipientsFinder.findAll(null, NotificationType.EMAIL))
             .thenThrow(new NullPointerException("asylumCase must not be null"));
 
-        assertThatThrownBy(() -> appellantReviewTimeExtensionRefusedPersonalisationEmail.getRecipientsList(null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> appellantReviewTimeExtensionRefusedPersonalisationEmail.getRecipientsList(null))
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_return_given_mobile_mobile_list_from_subscribers_in_asylum_case() {
 
+        String mockedAppellantEmailAddress = "appelant@example.net";
         when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL))
             .thenReturn(Collections.singleton(mockedAppellantEmailAddress));
 
@@ -135,10 +135,11 @@ public class AppellantReviewTimeExtensionRefusedPersonalisationEmailTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> appellantReviewTimeExtensionRefusedPersonalisationEmail
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> appellantReviewTimeExtensionRefusedPersonalisationEmail
             .getPersonalisation((Callback<AsylumCase>) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("callback must not be null");
+            ;
+assertEquals("callback must not be null", exception.getMessage());
     }
 
     @Test
@@ -156,14 +157,15 @@ public class AppellantReviewTimeExtensionRefusedPersonalisationEmailTest {
 
         Map<String, String> personalisation =
             appellantReviewTimeExtensionRefusedPersonalisationEmail.getPersonalisation(callback);
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
-        assertEquals(mockedAppealHomeOfficeReferenceNumber, personalisation.get("HO Ref Number"));
-        assertEquals(mockedAppellantGivenNames, personalisation.get("Given names"));
-        assertEquals(mockedAppellantFamilyName, personalisation.get("Family name"));
-        assertEquals(timeExtensionDecisionReason, personalisation.get("decision reason"));
-        assertEquals(awaitingReasonsForAppealNextActionText, personalisation.get("Next action text"));
-        assertEquals(expectedTimeExtensionNewDate, personalisation.get("due date"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
+        assertThat(personalisation)
+            .containsEntry("Appeal Ref Number", mockedAppealReferenceNumber)
+            .containsEntry("HO Ref Number", mockedAppealHomeOfficeReferenceNumber)
+            .containsEntry("Given names", mockedAppellantGivenNames)
+            .containsEntry("Family name", mockedAppellantFamilyName)
+            .containsEntry("decision reason", timeExtensionDecisionReason)
+            .containsEntry("Next action text", awaitingReasonsForAppealNextActionText)
+            .containsEntry("due date", expectedTimeExtensionNewDate)
+            .containsEntry("Hyperlink to service", iaAipFrontendUrl);
 
     }
 
@@ -186,13 +188,14 @@ public class AppellantReviewTimeExtensionRefusedPersonalisationEmailTest {
 
         Map<String, String> personalisation =
             appellantReviewTimeExtensionRefusedPersonalisationEmail.getPersonalisation(callback);
-        assertEquals("", personalisation.get("Appeal Ref Number"));
-        assertEquals("", personalisation.get("HO Ref Number"));
-        assertEquals("", personalisation.get("Given names"));
-        assertEquals("", personalisation.get("Family name"));
-        assertEquals(timeExtensionDecisionReason, personalisation.get("decision reason"));
-        assertEquals(awaitingReasonsForAppealNextActionText, personalisation.get("Next action text"));
-        assertEquals(expectedTimeExtensionNewDate, personalisation.get("due date"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
+        assertThat(personalisation)
+            .containsEntry("Appeal Ref Number", "")
+            .containsEntry("HO Ref Number", "")
+            .containsEntry("Given names", "")
+            .containsEntry("Family name", "")
+            .containsEntry("decision reason", timeExtensionDecisionReason)
+            .containsEntry("Next action text", awaitingReasonsForAppealNextActionText)
+            .containsEntry("due date", expectedTimeExtensionNewDate)
+            .containsEntry("Hyperlink to service", iaAipFrontendUrl);
     }
 }

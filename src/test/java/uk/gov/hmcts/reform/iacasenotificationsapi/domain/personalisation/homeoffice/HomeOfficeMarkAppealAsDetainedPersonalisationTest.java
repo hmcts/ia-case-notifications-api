@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
@@ -33,19 +34,18 @@ public class HomeOfficeMarkAppealAsDetainedPersonalisationTest {
     @Mock
     CustomerServicesProvider customerServicesProvider;
 
-    private Long caseId = 12345L;
-    private String markAppealAsDetainedTemplateId = "removeDetentionStatusTemplateId";
-    private String iaExUiFrontendUrl = "http://localhost";
-    private HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
-    private String hearingEmailAddress = "hearinge@example.com";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String ariaListingReference = "someAriaListingReference";
-    private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private final String markAppealAsDetainedTemplateId = "removeDetentionStatusTemplateId";
+    private final String iaExUiFrontendUrl = "http://localhost";
+    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    private final String hearingEmailAddress = "hearinge@example.com";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String ariaListingReference = "someAriaListingReference";
+    private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
 
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
     private final String homeOfficeApcEmailAddress = "homeOfficeAPC@example.com";
     private final String homeOfficeLartEmailAddress = "homeOfficeLART@example.com";
     private HomeOfficeMarkAppealAsDetainedPersonalisation homeOfficeMarkAppealAsDetainedPersonalisation;
@@ -79,6 +79,7 @@ public class HomeOfficeMarkAppealAsDetainedPersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_MARK_APPEAL_AS_DETAINED_HOME_OFFICE",
                 homeOfficeMarkAppealAsDetainedPersonalisation.getReferenceId(caseId));
     }
@@ -145,9 +146,10 @@ public class HomeOfficeMarkAppealAsDetainedPersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> homeOfficeMarkAppealAsDetainedPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> homeOfficeMarkAppealAsDetainedPersonalisation.getPersonalisation((AsylumCase) null))
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -156,12 +158,13 @@ public class HomeOfficeMarkAppealAsDetainedPersonalisationTest {
         Map<String, String> personalisation =
                 homeOfficeMarkAppealAsDetainedPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals("Listing reference: " + ariaListingReference, personalisation.get("ariaListingReferenceIfPresent"));
-        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("ariaListingReferenceIfPresent", "Listing reference: " + ariaListingReference)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
@@ -179,12 +182,13 @@ public class HomeOfficeMarkAppealAsDetainedPersonalisationTest {
         Map<String, String> personalisation =
                 homeOfficeMarkAppealAsDetainedPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("ariaListingReferenceIfPresent"));
-        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("ariaListingReferenceIfPresent", "")
+            .containsEntry("homeOfficeReferenceNumber", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "")
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }

@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -35,15 +36,13 @@ class AipAppellantNocRequestDecisionPersonalisationSmsTest {
     @Mock
     RecipientsFinder recipientsFinder;
 
-    private Long caseId = 12345L;
-    private String smsTemplateId = "someSmsTemplateId";
+    private final String smsTemplateId = "someSmsTemplateId";
 
-    private long mockedAppealReferenceNumber = 1236;
-    private String mockedAppellantMobilePhone = "07123456789";
-    private String mockedAppellantGivenNames = "someAppellantGivenNames";
-    private String mockedAppellantFamilyName = "someAppellantFamilyName";
-    private String dateOfBirth = "2020-03-01";
-    private String expectedDateOfBirth = "1 Mar 2020";
+    private final long mockedAppealReferenceNumber = 1236;
+    private final String mockedAppellantGivenNames = "someAppellantGivenNames";
+    private final String mockedAppellantFamilyName = "someAppellantFamilyName";
+    private final String dateOfBirth = "2020-03-01";
+    private final String expectedDateOfBirth = "1 Mar 2020";
 
     private AipAppellantNocRequestDecisionPersonalisationSms appellantNocRequestDecisionPersonalisationSms;
 
@@ -68,6 +67,7 @@ class AipAppellantNocRequestDecisionPersonalisationSmsTest {
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_NOC_REQUEST_DECISION_APPELLANT_SMS",
             appellantNocRequestDecisionPersonalisationSms.getReferenceId(caseId));
     }
@@ -77,13 +77,15 @@ class AipAppellantNocRequestDecisionPersonalisationSmsTest {
         when(recipientsFinder.findAll(null, NotificationType.SMS))
             .thenThrow(new NullPointerException("asylumCase must not be null"));
 
-        assertThatThrownBy(() -> appellantNocRequestDecisionPersonalisationSms.getRecipientsList(null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> appellantNocRequestDecisionPersonalisationSms.getRecipientsList(null))
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     void should_return_given_mobile_mobile_list_from_subscribers_in_asylum_case() {
+        String mockedAppellantMobilePhone = "07123456789";
         when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
             .thenReturn(Collections.singleton(mockedAppellantMobilePhone));
 
@@ -94,9 +96,10 @@ class AipAppellantNocRequestDecisionPersonalisationSmsTest {
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> appellantNocRequestDecisionPersonalisationSms.getPersonalisation((Callback<AsylumCase>) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("callback must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> appellantNocRequestDecisionPersonalisationSms.getPersonalisation((Callback<AsylumCase>) null))
+            ;
+assertEquals("callback must not be null", exception.getMessage());
     }
 
     @Test
@@ -104,10 +107,11 @@ class AipAppellantNocRequestDecisionPersonalisationSmsTest {
         when(caseDetails.getId()).thenReturn(mockedAppealReferenceNumber);
 
         Map<String, String> personalisation = appellantNocRequestDecisionPersonalisationSms.getPersonalisation(callback);
-        assertEquals(String.valueOf(mockedAppealReferenceNumber), personalisation.get("Ref Number"));
-        assertEquals(mockedAppellantGivenNames, personalisation.get("Given names"));
-        assertEquals(mockedAppellantFamilyName, personalisation.get("Family name"));
-        assertEquals(expectedDateOfBirth, personalisation.get("Date Of Birth"));
+        assertThat(personalisation)
+            .containsEntry("Ref Number", String.valueOf(mockedAppealReferenceNumber))
+            .containsEntry("Given names", mockedAppellantGivenNames)
+            .containsEntry("Family name", mockedAppellantFamilyName)
+            .containsEntry("Date Of Birth", expectedDateOfBirth);
 
 
     }
@@ -116,9 +120,10 @@ class AipAppellantNocRequestDecisionPersonalisationSmsTest {
     void should_throw_exception_on_personalisation_when_date_of_birth_is_null() {
         when(asylumCase.read(APPELLANT_DATE_OF_BIRTH, String.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> appellantNocRequestDecisionPersonalisationSms.getPersonalisation(callback))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("Appellant's birth of date is not present");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> appellantNocRequestDecisionPersonalisationSms.getPersonalisation(callback))
+            ;
+assertEquals("Appellant's birth of date is not present", exception.getMessage());
     }
 
     @Test
@@ -131,10 +136,11 @@ class AipAppellantNocRequestDecisionPersonalisationSmsTest {
 
 
         Map<String, String> personalisation = appellantNocRequestDecisionPersonalisationSms.getPersonalisation(callback);
-        assertEquals(String.valueOf(mockedAppealReferenceNumber), personalisation.get("Ref Number"));
-        assertEquals("", personalisation.get("Given names"));
-        assertEquals("", personalisation.get("Family name"));
-        assertEquals(expectedDateOfBirth, personalisation.get("Date Of Birth"));
+        assertThat(personalisation)
+            .containsEntry("Ref Number", String.valueOf(mockedAppealReferenceNumber))
+            .containsEntry("Given names", "")
+            .containsEntry("Family name", "")
+            .containsEntry("Date Of Birth", expectedDateOfBirth);
 
     }
 }

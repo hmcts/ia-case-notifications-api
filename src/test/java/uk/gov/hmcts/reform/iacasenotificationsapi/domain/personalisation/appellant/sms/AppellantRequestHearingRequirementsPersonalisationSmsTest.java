@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -26,12 +27,9 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantRequestHearingRequirementsPersonalisationSmsTest {
-    private final Long caseId = 12345L;
     private final String smsTemplateId = "someSmsTemplateId";
     private final String iaAipFrontendUrl = "http://localhost";
     private final String mockedAppealReferenceNumber = "someReferenceNumber";
-    private final String mockedAppellantMobilePhone = "07123456789";
-    private final String directionDueDate = "2019-08-27";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -45,6 +43,7 @@ public class AppellantRequestHearingRequirementsPersonalisationSmsTest {
     @BeforeEach
     public void setup() {
 
+        String directionDueDate = "2019-08-27";
         when((direction.getDateDue())).thenReturn(directionDueDate);
         when(directionFinder.findFirst(asylumCase, DirectionTag.LEGAL_REPRESENTATIVE_HEARING_REQUIREMENTS))
             .thenReturn(Optional.of(direction));
@@ -66,6 +65,7 @@ public class AppellantRequestHearingRequirementsPersonalisationSmsTest {
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_REQUEST_HEARING_REQUIREMENTS_DIRECTION_AIP_SMS",
             appellantRequestHearingRequirementsPersonalisationSms.getReferenceId(caseId));
     }
@@ -76,9 +76,10 @@ public class AppellantRequestHearingRequirementsPersonalisationSmsTest {
         when(recipientsFinder.findAll(null, NotificationType.SMS))
             .thenThrow(new NullPointerException("asylumCase must not be null"));
 
-        assertThatThrownBy(() -> appellantRequestHearingRequirementsPersonalisationSms.getRecipientsList(null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> appellantRequestHearingRequirementsPersonalisationSms.getRecipientsList(null))
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -86,15 +87,17 @@ public class AppellantRequestHearingRequirementsPersonalisationSmsTest {
 
         when(directionFinder.findFirst(asylumCase, DirectionTag.LEGAL_REPRESENTATIVE_HEARING_REQUIREMENTS)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> appellantRequestHearingRequirementsPersonalisationSms.getPersonalisation(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("Appellant request hearing requirements direction is not present");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> appellantRequestHearingRequirementsPersonalisationSms.getPersonalisation(asylumCase))
+            ;
+assertEquals("Appellant request hearing requirements direction is not present", exception.getMessage());
     }
 
 
     @Test
     void should_return_given_mobile_mobile_list_from_subscribers_in_asylum_case() {
 
+        String mockedAppellantMobilePhone = "07123456789";
         when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
             .thenReturn(Collections.singleton(mockedAppellantMobilePhone));
 
@@ -105,19 +108,21 @@ public class AppellantRequestHearingRequirementsPersonalisationSmsTest {
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
+        NullPointerException exception =
+assertThrows(NullPointerException.class,
             () -> appellantRequestHearingRequirementsPersonalisationSms.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     void should_return_personalisation_when_all_information_given() {
         Map<String, String> personalisation =
             appellantRequestHearingRequirementsPersonalisationSms.getPersonalisation(asylumCase);
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
-        assertEquals("27 Aug 2019", personalisation.get("dueDate"));
+        assertThat(personalisation)
+            .containsEntry("Appeal Ref Number", mockedAppealReferenceNumber)
+            .containsEntry("Hyperlink to service", iaAipFrontendUrl)
+            .containsEntry("dueDate", "27 Aug 2019");
 
     }
 
@@ -129,8 +134,9 @@ public class AppellantRequestHearingRequirementsPersonalisationSmsTest {
         Map<String, String> personalisation =
             appellantRequestHearingRequirementsPersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals("", personalisation.get("Appeal Ref Number"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
-        assertEquals("27 Aug 2019", personalisation.get("dueDate"));
+        assertThat(personalisation)
+            .containsEntry("Appeal Ref Number", "")
+            .containsEntry("Hyperlink to service", iaAipFrontendUrl)
+            .containsEntry("dueDate", "27 Aug 2019");
     }
 }

@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.TestUtils.compareStringsAndJsonObjects;
@@ -51,16 +50,14 @@ class DetentionEngagementTeamEditAppealPersonalisationTest {
     private PersonalisationProvider personalisationProvider;
 
     private final String templateId = "someTemplateId";
-    private final String personalisationReferenceId = "_INTERNAL_DET_EDIT_APPEAL_EMAIL";
-    private final String detEmailAddress = "some@example.com";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "someReferenceNumber";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String nonAdaPrefix = "IAFT - SERVE BY POST";
-    DocumentWithMetadata internalEditAppealLetter = getDocumentWithMetadata(
+    final DocumentWithMetadata internalEditAppealLetter = getDocumentWithMetadata(
             "1", "Edit appeal letter", "some other desc", DocumentTag.INTERNAL_EDIT_APPEAL_LETTER);
-    IdValue<DocumentWithMetadata> internalMaintainCaseLinksLetterId = new IdValue<>("1", internalEditAppealLetter);
+    final IdValue<DocumentWithMetadata> internalMaintainCaseLinksLetterId = new IdValue<>("1", internalEditAppealLetter);
     private DetentionEngagementTeamEditAppealPersonalisation detentionEngagementTeamEditAppealPersonalisation;
 
     @BeforeEach
@@ -94,6 +91,7 @@ class DetentionEngagementTeamEditAppealPersonalisationTest {
     @Test
     void should_return_given_reference_id() {
         Long caseId = 12345L;
+        String personalisationReferenceId = "_INTERNAL_DET_EDIT_APPEAL_EMAIL";
         assertEquals(caseId + personalisationReferenceId,
                 detentionEngagementTeamEditAppealPersonalisation.getReferenceId(caseId));
     }
@@ -102,6 +100,7 @@ class DetentionEngagementTeamEditAppealPersonalisationTest {
     void should_return_given_email_address_from_asylum_case() {
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
+        String detEmailAddress = "some@example.com";
         when(detEmailService.getDetentionEmailAddress(asylumCase)).thenReturn(detEmailAddress);
 
         assertTrue(
@@ -129,20 +128,22 @@ class DetentionEngagementTeamEditAppealPersonalisationTest {
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
-        assertThatThrownBy(
+        NullPointerException exception = 
+assertThrows(NullPointerException.class, 
                 () -> detentionEngagementTeamEditAppealPersonalisation.getPersonalisationForLink((AsylumCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+                ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_edit_appeal_document_is_missing() {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(
+        IllegalStateException exception = 
+assertThrows(IllegalStateException.class, 
                 () -> detentionEngagementTeamEditAppealPersonalisation.getPersonalisationForLink(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("internalEditAppealLetter document not available");
+                ;
+assertEquals("internalEditAppealLetter document not available", exception.getMessage());
     }
 
     @ParameterizedTest

@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -49,26 +50,21 @@ public class CaseOfficerListCasePersonalisationTest {
     @Mock
     HearingDetailsFinder hearingDetailsFinder;
 
-    private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
-    private String listAssistHearingTemplateId = "listAssistHearingTemplateId";
-    private String iaExUiFrontendUrl = "http://somefrontendurl";
-    private HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
-    private String hearingCentreEmailAddress = "hearingCentre@example.com";
-    private String hearingCentreAddress = "some hearing centre address";
+    private final String templateId = "someTemplateId";
+    private final String iaExUiFrontendUrl = "http://somefrontendurl";
+    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    private final String hearingCentreEmailAddress = "hearingCentre@example.com";
     //Remote hearing
-    private HearingCentre remoteHearingCentre = HearingCentre.REMOTE_HEARING;
-    private String taylorHouseEmailAddress = "taylorHouseHearingCentre@example.com";
-    private String remoteHearingCentreAddress = "Remote hearing";
+    private final HearingCentre remoteHearingCentre = HearingCentre.REMOTE_HEARING;
+    private final String remoteHearingCentreAddress = "Remote hearing";
 
-    private String hearingDateTime = "2019-08-27T14:25:15.000";
-    private String hearingDate = "2019-08-27";
-    private String hearingTime = "14:25";
+    private final String hearingDate = "2019-08-27";
+    private final String hearingTime = "14:25";
 
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String ariaListingReference = "someAriaListingReference";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String ariaListingReference = "someAriaListingReference";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
 
     private CaseOfficerListCasePersonalisation caseOfficerListCasePersonalisation;
 
@@ -76,6 +72,7 @@ public class CaseOfficerListCasePersonalisationTest {
     public void setup() {
 
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
+        String hearingDateTime = "2019-08-27T14:25:15.000";
         when(asylumCase.read(LIST_CASE_HEARING_DATE, String.class)).thenReturn(Optional.of(hearingDateTime));
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(ariaListingReference));
@@ -85,6 +82,7 @@ public class CaseOfficerListCasePersonalisationTest {
         when(emailAddressFinder.getListCaseCaseOfficerHearingCentreEmailAddress(asylumCase)).thenReturn(hearingCentreEmailAddress);
         when(hearingDetailsFinder.getHearingDateTime(asylumCase)).thenReturn(hearingDateTime);
         when(hearingDetailsFinder.getHearingCentreName(asylumCase)).thenReturn(hearingCentre.toString());
+        String hearingCentreAddress = "some hearing centre address";
         when(hearingDetailsFinder.getHearingCentreAddress(asylumCase)).thenReturn(hearingCentreAddress);
         when(stringProvider.get("hearingCentreAddress", hearingCentre.toString()))
             .thenReturn(Optional.of(hearingCentreAddress));
@@ -94,6 +92,7 @@ public class CaseOfficerListCasePersonalisationTest {
 
         when(dateTimeExtractor.extractHearingTime(hearingDateTime)).thenReturn(hearingTime);
 
+        String listAssistHearingTemplateId = "listAssistHearingTemplateId";
         caseOfficerListCasePersonalisation = new CaseOfficerListCasePersonalisation(
             templateId,
             listAssistHearingTemplateId,
@@ -110,6 +109,7 @@ public class CaseOfficerListCasePersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_CASE_LISTED_CASE_OFFICER", caseOfficerListCasePersonalisation.getReferenceId(caseId));
     }
 
@@ -122,9 +122,10 @@ public class CaseOfficerListCasePersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> caseOfficerListCasePersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> caseOfficerListCasePersonalisation.getPersonalisation((AsylumCase) null))
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -138,14 +139,15 @@ public class CaseOfficerListCasePersonalisationTest {
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
-        assertEquals(hearingDate, personalisation.get("hearingDate"));
-        assertEquals(hearingTime, personalisation.get("hearingTime"));
-        assertEquals(remoteHearingCentreAddress, personalisation.get("hearingCentreAddress"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("ariaListingReference", ariaListingReference)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("hearingDate", hearingDate)
+            .containsEntry("hearingTime", hearingTime)
+            .containsEntry("hearingCentreAddress", remoteHearingCentreAddress);
     }
 
     @ParameterizedTest
@@ -164,14 +166,15 @@ public class CaseOfficerListCasePersonalisationTest {
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("ariaListingReference"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
-        assertEquals(hearingDate, personalisation.get("hearingDate"));
-        assertEquals(hearingTime, personalisation.get("hearingTime"));
-        assertEquals(remoteHearingCentreAddress, personalisation.get("hearingCentreAddress"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("ariaListingReference", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "")
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("hearingDate", hearingDate)
+            .containsEntry("hearingTime", hearingTime)
+            .containsEntry("hearingCentreAddress", remoteHearingCentreAddress);
     }
 
     @ParameterizedTest
@@ -182,6 +185,7 @@ public class CaseOfficerListCasePersonalisationTest {
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(remoteHearingCentre));
         when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(remoteHearingCentre));
 
+        String taylorHouseEmailAddress = "taylorHouseHearingCentre@example.com";
         when(emailAddressFinder.getListCaseCaseOfficerHearingCentreEmailAddress(asylumCase)).thenReturn(taylorHouseEmailAddress);
         when(hearingDetailsFinder.getHearingCentreAddress(asylumCase))
             .thenReturn(remoteHearingCentreAddress);
@@ -191,7 +195,7 @@ public class CaseOfficerListCasePersonalisationTest {
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-        assertEquals(remoteHearingCentreAddress, personalisation.get("hearingCentreAddress"));
+            assertEquals(remoteHearingCentreAddress, personalisation.get("hearingCentreAddress"));
     }
 
 }

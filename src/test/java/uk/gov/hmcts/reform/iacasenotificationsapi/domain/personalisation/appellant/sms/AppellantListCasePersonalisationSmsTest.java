@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
@@ -46,20 +47,18 @@ public class AppellantListCasePersonalisationSmsTest {
     @Mock
     RecipientsFinder recipientsFinder;
 
-    private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
-    private String legallyReppedTemplateId = "legallyReppedTemplateId";
-    private String iaAipFrontendUrl = "http://somefrontendurl";
-    private HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
-    private String hearingCentreAddress = "some hearing centre address";
-    private String hearingDateTime = "2019-08-27T14:25:15.000";
-    private String hearingDate = "2019-08-27";
-    private String hearingTime = "14:25";
+    private final String templateId = "someTemplateId";
+    private final String legallyReppedTemplateId = "legallyReppedTemplateId";
+    private final String iaAipFrontendUrl = "http://somefrontendurl";
+    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    private final String hearingCentreAddress = "some hearing centre address";
+    private final String hearingDate = "2019-08-27";
+    private final String hearingTime = "14:25";
 
-    private String mockedAppealReferenceNumber = "someReferenceNumber";
-    private String mockedAppellantMobilePhone = "07123456789";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
+    private final String mockedAppellantMobilePhone = "07123456789";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
 
     private AppellantListCasePersonalisationSms appellantListCasePersonalisationSms;
 
@@ -67,6 +66,7 @@ public class AppellantListCasePersonalisationSmsTest {
     void setup() {
 
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
+        String hearingDateTime = "2019-08-27T14:25:15.000";
         when(asylumCase.read(LIST_CASE_HEARING_DATE, String.class)).thenReturn(Optional.of(hearingDateTime));
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(mockedAppealReferenceNumber));
         when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
@@ -95,6 +95,7 @@ public class AppellantListCasePersonalisationSmsTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_CASE_LISTED_AIP_APPELLANT_SMS",
             appellantListCasePersonalisationSms.getReferenceId(caseId));
     }
@@ -111,9 +112,10 @@ public class AppellantListCasePersonalisationSmsTest {
 
     @Test
     public void should_throw_exception_on_recipients_when_case_is_null() {
-        assertThatThrownBy(() -> appellantListCasePersonalisationSms.getRecipientsList(null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> appellantListCasePersonalisationSms.getRecipientsList(null))
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -149,12 +151,13 @@ public class AppellantListCasePersonalisationSmsTest {
 
         Map<String, String> personalisation = appellantListCasePersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
-        assertEquals(hearingDate, personalisation.get("hearingDate"));
-        assertEquals(hearingTime, personalisation.get("hearingTime"));
-        assertEquals(hearingCentreAddress, personalisation.get("hearingCentreAddress"));
-        assertEquals(hearingCentre.getValue(), personalisation.get("tribunalCentre"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", mockedAppealReferenceNumber)
+            .containsEntry("Hyperlink to service", iaAipFrontendUrl)
+            .containsEntry("hearingDate", hearingDate)
+            .containsEntry("hearingTime", hearingTime)
+            .containsEntry("hearingCentreAddress", hearingCentreAddress)
+            .containsEntry("tribunalCentre", hearingCentre.getValue());
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
@@ -165,12 +168,13 @@ public class AppellantListCasePersonalisationSmsTest {
         when(asylumCase.read(SUBMIT_HEARING_REQUIREMENTS_AVAILABLE)).thenReturn(Optional.of(YesOrNo.YES));
         Map<String, String> personalisation = appellantListCasePersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
-        assertEquals(hearingDate, personalisation.get("hearingDate"));
-        assertEquals(hearingTime, personalisation.get("hearingTime"));
-        assertEquals(hearingCentreAddress, personalisation.get("hearingCentreAddress"));
-        assertEquals(hearingCentre.getValue(), personalisation.get("tribunalCentre"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", mockedAppealReferenceNumber)
+            .containsEntry("Hyperlink to service", iaAipFrontendUrl)
+            .containsEntry("hearingDate", hearingDate)
+            .containsEntry("hearingTime", hearingTime)
+            .containsEntry("hearingCentreAddress", hearingCentreAddress)
+            .containsEntry("tribunalCentre", hearingCentre.getValue());
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
@@ -182,12 +186,13 @@ public class AppellantListCasePersonalisationSmsTest {
 
         Map<String, String> personalisation = appellantListCasePersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
-        assertEquals(hearingDate, personalisation.get("hearingDate"));
-        assertEquals(hearingTime, personalisation.get("hearingTime"));
-        assertEquals(hearingCentreAddress, personalisation.get("hearingCentreAddress"));
-        assertEquals(hearingCentre.getValue(), personalisation.get("tribunalCentre"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("Hyperlink to service", iaAipFrontendUrl)
+            .containsEntry("hearingDate", hearingDate)
+            .containsEntry("hearingTime", hearingTime)
+            .containsEntry("hearingCentreAddress", hearingCentreAddress)
+            .containsEntry("tribunalCentre", hearingCentre.getValue());
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
@@ -196,9 +201,10 @@ public class AppellantListCasePersonalisationSmsTest {
     @Test
     void should_throw_personalisation_when_no_hearing_centre() {
         when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.empty());
-        assertThatThrownBy(
+        IllegalArgumentException exception =
+assertThrows(IllegalArgumentException.class,
             () -> appellantListCasePersonalisationSms.getPersonalisation(asylumCase))
-            .isExactlyInstanceOf(IllegalArgumentException.class)
-            .hasMessage("No hearing centre present");
+            ;
+assertEquals("No hearing centre present", exception.getMessage());
     }
 }

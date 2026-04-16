@@ -33,10 +33,10 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doThrow;
@@ -84,21 +84,21 @@ public class NotificationSenderHelperTest {
     @Mock
     private StoredNotification storedNotificationMock2;
 
-    private NotificationSenderHelper<AsylumCase> senderHelper = new NotificationSenderHelper<AsylumCase>();
-    private NotificationSenderHelper<BailCase> bailSenderHelper = new NotificationSenderHelper<BailCase>();
-    private NotificationSenderHelper<UnknownCase> unknownSenderHelper = new NotificationSenderHelper<UnknownCase>();
+    private final NotificationSenderHelper<AsylumCase> senderHelper = new NotificationSenderHelper<>();
+    private final NotificationSenderHelper<BailCase> bailSenderHelper = new NotificationSenderHelper<>();
+    private final NotificationSenderHelper<UnknownCase> unknownSenderHelper = new NotificationSenderHelper<>();
 
     @Mock
     private InputStream stream;
 
-    private int deduplicateSendsWithinSeconds = 1;
-    private String templateId = "a-b-c-d-e-f";
-    private String emailAddress = "recipient@example.com";
-    private String phoneNumber = "07123456789";
-    private String address = "20_realstreet_London";
-    private Map<String, String> personalisation = mock(Map.class);
-    private Map<String, Object> personalisationWithLink = mock(Map.class);
-    private String reference = "our-reference";
+    private final int deduplicateSendsWithinSeconds = 1;
+    private final String templateId = "a-b-c-d-e-f";
+    private final String emailAddress = "recipient@example.com";
+    private final String phoneNumber = "07123456789";
+    private final String address = "20_realstreet_London";
+    private final Map<String, String> personalisation = mock(Map.class);
+    private final Map<String, Object> personalisationWithLink = mock(Map.class);
+    private final String reference = "our-reference";
 
     @Test
     public void should_not_send_duplicate_emails_in_short_space_of_time() throws NotificationClientException {
@@ -725,8 +725,8 @@ public class NotificationSenderHelperTest {
                 personalisationWithLink,
                 reference);
 
-        assertThatThrownBy(() ->
-            senderHelper.sendEmailWithLink(
+        NotificationServiceResponseException exception = assertThrows(NotificationServiceResponseException.class,
+            () -> senderHelper.sendEmailWithLink(
                 templateId,
                 emailAddress,
                 personalisationWithLink,
@@ -735,9 +735,9 @@ public class NotificationSenderHelperTest {
                 deduplicateSendsWithinSeconds,
                 LOG
             )
-        ).isExactlyInstanceOf(NotificationServiceResponseException.class)
-            .hasMessage("Failed to send email using GovNotify")
-            .hasCause(underlyingException);
+        );
+        assertEquals("Failed to send email using GovNotify", exception.getMessage());
+        assertEquals(underlyingException, exception.getCause());
 
     }
 

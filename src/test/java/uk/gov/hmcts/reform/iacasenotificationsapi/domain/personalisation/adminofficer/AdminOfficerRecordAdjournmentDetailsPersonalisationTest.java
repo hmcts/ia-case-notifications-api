@@ -13,7 +13,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -27,9 +27,9 @@ public class AdminOfficerRecordAdjournmentDetailsPersonalisationTest {
     @Mock
     AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
 
-    private String templateId = "someTemplateId";
+    private final String templateId = "someTemplateId";
 
-    private String adminOfficerEmailAddress = "adminOfficer@example.com";
+    private final String adminOfficerEmailAddress = "adminOfficer@example.com";
 
     private AdminOfficerRecordAdjournmentDetailsPersonalisation adminOfficerRecordAdjournmentDetailsPersonalisation;
 
@@ -72,10 +72,10 @@ public class AdminOfficerRecordAdjournmentDetailsPersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
-            () -> adminOfficerRecordAdjournmentDetailsPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> adminOfficerRecordAdjournmentDetailsPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -84,6 +84,7 @@ public class AdminOfficerRecordAdjournmentDetailsPersonalisationTest {
         Map<String, String> personalisation =
             adminOfficerRecordAdjournmentDetailsPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertThat(personalisation).containsExactlyEntriesOf(adminOfficerPersonalisationProvider
+            .getChangeToHearingRequirementsPersonalisation(asylumCase));
     }
 }

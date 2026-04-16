@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -32,7 +33,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.Documen
 import uk.gov.service.notify.NotificationClientException;
 
 @ExtendWith(MockitoExtension.class)
-@SuppressWarnings("unchecked")
 @MockitoSettings(strictness = Strictness.LENIENT)
 class DetentionEngagementTeamEndAppealAutomaticallyPersonalisationTest {
     @Mock
@@ -43,27 +43,26 @@ class DetentionEngagementTeamEndAppealAutomaticallyPersonalisationTest {
     private DetentionEmailService detEmailService;
     @Mock
     private PersonalisationProvider personalisationProvider;
-    private String templateId = "templateId";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
-    private final Long caseId = 12345L;
     private DetentionEngagementTeamEndAppealAutomaticallyPersonalisation detentionEngagementTeamEndAppealAutomaticallyPersonalisation;
 
     private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
-    DocumentWithMetadata endAppealAutomaticallyDoc = TestUtils.getDocumentWithMetadata(
+    final DocumentWithMetadata endAppealAutomaticallyDoc = TestUtils.getDocumentWithMetadata(
             "id", "internal_appeal_submission", "some other desc", DocumentTag.INTERNAL_END_APPEAL_AUTOMATICALLY);
-    IdValue<DocumentWithMetadata> endAppealAutomaticallyBundle = new IdValue<>("1", endAppealAutomaticallyDoc);
+    final IdValue<DocumentWithMetadata> endAppealAutomaticallyBundle = new IdValue<>("1", endAppealAutomaticallyDoc);
 
     DetentionEngagementTeamEndAppealAutomaticallyPersonalisationTest() {
     }
 
     @BeforeEach
     public void setup() throws NotificationClientException, IOException {
+        String templateId = "templateId";
         detentionEngagementTeamEndAppealAutomaticallyPersonalisation = new DetentionEngagementTeamEndAppealAutomaticallyPersonalisation(
-                templateId,
+            templateId,
                 nonAdaPrefix,
                 detEmailService,
                 documentDownloadClient,
@@ -79,6 +78,7 @@ class DetentionEngagementTeamEndAppealAutomaticallyPersonalisationTest {
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_INTERNAL_NON_ADA_END_APPEAL_AUTOMATICALLY",
                 detentionEngagementTeamEndAppealAutomaticallyPersonalisation.getReferenceId(caseId));
     }
@@ -116,35 +116,39 @@ class DetentionEngagementTeamEndAppealAutomaticallyPersonalisationTest {
         when(personalisationProvider.getAppellantPersonalisation(asylumCase)).thenReturn(appelantInfo);
         Map<String, Object> personalisation = detentionEngagementTeamEndAppealAutomaticallyPersonalisation.getPersonalisationForLink(asylumCase);
 
-        assertEquals(nonAdaPrefix, personalisation.get("subjectPrefix"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(jsonObject, personalisation.get("documentLink"));
+        assertThat(personalisation)
+            .containsEntry("subjectPrefix", nonAdaPrefix)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("documentLink", jsonObject);
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> detentionEngagementTeamEndAppealAutomaticallyPersonalisation.getPersonalisationForLink((AsylumCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+        NullPointerException exception = 
+assertThrows(NullPointerException.class, () -> detentionEngagementTeamEndAppealAutomaticallyPersonalisation.getPersonalisationForLink((AsylumCase) null))
+                ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_when_appeal_submission_is_empty() {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> detentionEngagementTeamEndAppealAutomaticallyPersonalisation.getPersonalisationForLink(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("internalEndAppealAutomatically document not available");
+        IllegalStateException exception = 
+assertThrows(IllegalStateException.class, () -> detentionEngagementTeamEndAppealAutomaticallyPersonalisation.getPersonalisationForLink(asylumCase))
+                ;
+assertEquals("internalEndAppealAutomatically document not available", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_when_notification_client_throws_Exception() throws NotificationClientException, IOException {
         when(documentDownloadClient.getJsonObjectFromDocument(endAppealAutomaticallyDoc)).thenThrow(new NotificationClientException("File size is more than 2MB"));
-        assertThatThrownBy(() -> detentionEngagementTeamEndAppealAutomaticallyPersonalisation.getPersonalisationForLink(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("Failed to get Internal automatically end appeal Letter in compatible format");
+        IllegalStateException exception = 
+assertThrows(IllegalStateException.class, () -> detentionEngagementTeamEndAppealAutomaticallyPersonalisation.getPersonalisationForLink(asylumCase))
+                ;
+assertEquals("Failed to get Internal automatically end appeal Letter in compatible format", exception.getMessage());
     }
 }

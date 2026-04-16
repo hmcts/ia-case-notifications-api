@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.legalrepresentative;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -27,17 +27,15 @@ class LegalRepresentativeBailChangeDirectionDueDatePersonalisationTest {
     @Mock
     BailCase bailCase;
 
-    private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
-    private String legalRepEmailAddress = "legalRep@example.com";
-    private String bailReferenceNumber = "someReferenceNumber";
-    private String legalRepReference = "someLegalRepReference";
-    private String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
-    private String applicantGivenNames = "someApplicantGivenNames";
-    private String applicantFamilyName = "someApplicantFamilyName";
-    private String sendDirectionList = "someSendDirectionList";
-    private String dateOfCompliance = "2022-05-24";
-    private String sendDirectionDescription = "someSendDirectionDescription";
+    private final String templateId = "someTemplateId";
+    private final String legalRepEmailAddress = "legalRep@example.com";
+    private final String bailReferenceNumber = "someReferenceNumber";
+    private final String legalRepReference = "someLegalRepReference";
+    private final String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
+    private final String applicantGivenNames = "someApplicantGivenNames";
+    private final String applicantFamilyName = "someApplicantFamilyName";
+    private final String sendDirectionDescription = "someSendDirectionDescription";
+    private final String party = "someParty";
 
     private LegalRepresentativeBailChangeDirectionDueDatePersonalisation legalRepresentativeChangeDirectionDueDatePersonalisation;
 
@@ -51,9 +49,12 @@ class LegalRepresentativeBailChangeDirectionDueDatePersonalisationTest {
         when(bailCase.read(BailCaseFieldDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
         when(bailCase.read(BailCaseFieldDefinition.LEGAL_REP_EMAIL, String.class))
             .thenReturn(Optional.of(legalRepEmailAddress));
+        String sendDirectionList = "someSendDirectionList";
         when(bailCase.read(BAIL_DIRECTION_EDIT_DATE_SENT, String.class)).thenReturn(Optional.of(sendDirectionList));
+        String dateOfCompliance = "2022-05-24";
         when(bailCase.read(BAIL_DIRECTION_EDIT_DATE_DUE, String.class)).thenReturn(Optional.of(dateOfCompliance));
         when(bailCase.read(BAIL_DIRECTION_EDIT_EXPLANATION, String.class)).thenReturn(Optional.of(sendDirectionDescription));
+        when(bailCase.read(BAIL_DIRECTION_EDIT_PARTIES, String.class)).thenReturn(Optional.of(party));
 
         legalRepresentativeChangeDirectionDueDatePersonalisation = new LegalRepresentativeBailChangeDirectionDueDatePersonalisation(
             templateId
@@ -68,6 +69,7 @@ class LegalRepresentativeBailChangeDirectionDueDatePersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_CHANGE_BAIL_DIRECTION_DUE_DATE_LEGAL_REPRESENTATIVE",
             legalRepresentativeChangeDirectionDueDatePersonalisation.getReferenceId(caseId));
     }
@@ -82,18 +84,18 @@ class LegalRepresentativeBailChangeDirectionDueDatePersonalisationTest {
     public void should_throw_exception_when_cannot_find_email_address_for_legal_rep() {
         when(bailCase.read(BailCaseFieldDefinition.LEGAL_REP_EMAIL, String.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> legalRepresentativeChangeDirectionDueDatePersonalisation.getRecipientsList(bailCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("legalRepresentativeEmailAddress is not present");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> legalRepresentativeChangeDirectionDueDatePersonalisation.getRecipientsList(bailCase));
+        assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
-            () -> legalRepresentativeChangeDirectionDueDatePersonalisation.getPersonalisation((BailCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("bailCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> legalRepresentativeChangeDirectionDueDatePersonalisation.getPersonalisation((BailCase) null));
+        assertEquals("bailCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -101,8 +103,15 @@ class LegalRepresentativeBailChangeDirectionDueDatePersonalisationTest {
 
         Map<String, String> personalisation =
             legalRepresentativeChangeDirectionDueDatePersonalisation.getPersonalisation(bailCase);
-
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(bailCase);
+        assertThat(personalisation)
+            .containsEntry("bailReferenceNumber", bailReferenceNumber)
+            .containsEntry("legalRepReference", legalRepReference)
+            .containsEntry("applicantGivenNames", applicantGivenNames)
+            .containsEntry("applicantFamilyName", applicantFamilyName)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
+            .containsEntry("party", party)
+            .containsEntry("directionDueDate", "24 May 2022")
+            .containsEntry("explanation", sendDirectionDescription);
     }
 
     @Test
@@ -116,11 +125,12 @@ class LegalRepresentativeBailChangeDirectionDueDatePersonalisationTest {
         when(bailCase.read(SEND_DIRECTION_LIST, String.class)).thenReturn(Optional.empty());
         when(bailCase.read(BAIL_DIRECTION_EDIT_DATE_DUE, String.class)).thenReturn(Optional.empty());
         when(bailCase.read(BAIL_DIRECTION_EDIT_EXPLANATION, String.class)).thenReturn(Optional.empty());
+        when(bailCase.read(BAIL_DIRECTION_EDIT_PARTIES, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
             legalRepresentativeChangeDirectionDueDatePersonalisation.getPersonalisation(bailCase);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(bailCase);
+        assertThat(personalisation).allSatisfy((key, value) -> assertThat(value).isEmpty());
     }
 
 }

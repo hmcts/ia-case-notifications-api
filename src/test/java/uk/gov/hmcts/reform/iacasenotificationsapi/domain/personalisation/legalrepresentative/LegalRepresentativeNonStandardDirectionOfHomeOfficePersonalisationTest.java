@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -45,21 +45,11 @@ public class LegalRepresentativeNonStandardDirectionOfHomeOfficePersonalisationT
     @Mock
     CustomerServicesProvider customerServicesProvider;
 
-    private Long caseId = 12345L;
-    private String beforeListingTemplateId = "beforeListingTemplateId";
-    private String afterListingTemplateId = "afterListingTemplateId";
-    private HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
-    private String legalRepEmailAddress = "legalrep@example.com";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String ariaListingReference = "someAriaListingReference";
-    private String legalRepReferenceNumber = "someLegalRepReferenceNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyNames = "someAppellantFamilyNames";
-    private String iaExUiFrontendUrl = "http://localhost";
-    private String directionExplanation = "someExplanation";
-    private String directionDueDate = "2019-10-29";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "customer.services@example.com";
+    private final String beforeListingTemplateId = "beforeListingTemplateId";
+    private final String afterListingTemplateId = "afterListingTemplateId";
+    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    private final String legalRepEmailAddress = "legalrep@example.com";
+    private final String iaExUiFrontendUrl = "http://localhost";
 
     private LegalRepresentativeNonStandardDirectionOfHomeOfficePersonalisation
         legalRepresentativeNonStandardDirectionOfHomeOfficePersonalisation;
@@ -67,7 +57,9 @@ public class LegalRepresentativeNonStandardDirectionOfHomeOfficePersonalisationT
     @BeforeEach
     public void setUp() {
 
+        String customerServicesTelephone = "555 555 555";
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
+        String customerServicesEmail = "customer.services@example.com";
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         legalRepresentativeNonStandardDirectionOfHomeOfficePersonalisation =
@@ -92,6 +84,7 @@ public class LegalRepresentativeNonStandardDirectionOfHomeOfficePersonalisationT
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_LEGAL_REP_NON_STANDARD_DIRECTION_OF_HOME_OFFICE",
             legalRepresentativeNonStandardDirectionOfHomeOfficePersonalisation.getReferenceId(caseId));
     }
@@ -99,10 +92,11 @@ public class LegalRepresentativeNonStandardDirectionOfHomeOfficePersonalisationT
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> legalRepresentativeNonStandardDirectionOfHomeOfficePersonalisation
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> legalRepresentativeNonStandardDirectionOfHomeOfficePersonalisation
             .getPersonalisation((Callback<AsylumCase>) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("callback must not be null");
+            ;
+assertEquals("callback must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -117,16 +111,22 @@ public class LegalRepresentativeNonStandardDirectionOfHomeOfficePersonalisationT
         Map<String, String> personalisation =
             legalRepresentativeNonStandardDirectionOfHomeOfficePersonalisation.getPersonalisation(callback);
 
-        assertThat(personalisation).isNotEmpty();
-        assertEquals(isAda.equals(YesOrNo.YES)
-            ? "Accelerated detained appeal"
-            : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
+        assertFalse(personalisation.isEmpty());
+        assertThat(personalisation)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal"
+                : "Immigration and Asylum appeal")
+            .containsAllEntriesOf(getPersonalisationMapWithGivenValues());
     }
 
     private Map<String, String> getPersonalisationMapWithGivenValues() {
+        String directionDueDate = "2019-10-29";
+        String directionExplanation = "someExplanation";
+        String appellantFamilyNames = "someAppellantFamilyNames";
+        String appellantGivenNames = "someAppellantGivenNames";
+        String legalRepReferenceNumber = "someLegalRepReferenceNumber";
+        String ariaListingReference = "someAriaListingReference";
+        String appealReferenceNumber = "someReferenceNumber";
         return ImmutableMap
             .<String, String>builder()
             .put("appealReferenceNumber", appealReferenceNumber)
@@ -134,7 +134,6 @@ public class LegalRepresentativeNonStandardDirectionOfHomeOfficePersonalisationT
             .put("legalRepReferenceNumber", legalRepReferenceNumber)
             .put("appellantGivenNames", appellantGivenNames)
             .put("appellantFamilyName", appellantFamilyNames)
-            .put("iaExUiFrontendUrl", iaExUiFrontendUrl)
             .put("explanation", directionExplanation)
             .put("dueDate", directionDueDate)
             .build();

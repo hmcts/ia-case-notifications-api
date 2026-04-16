@@ -16,7 +16,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 import java.util.Map;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
@@ -24,7 +25,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Hearing
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-@SuppressWarnings("unchecked")
 class LegalRepresentativeUpdateTribunalDecisionRule32PersonalisationEmailTest {
     @Mock
     Callback<AsylumCase> callback;
@@ -35,16 +35,14 @@ class LegalRepresentativeUpdateTribunalDecisionRule32PersonalisationEmailTest {
     @Mock
     CustomerServicesProvider customerServicesProvider;
 
-    private Long caseId = 12345L;
+    private final Long caseId = 12345L;
     private final String legalRepresentativeUpdateTribunalDecisionRule32EmailTemplateId = "legalRepresentativeUpdateTribunalDecisionRule32EmailTemplateId";
-    private String exUiFrontendUrl = "http://localhost";
-    private String mockedAppealReferenceNumber = "someReferenceNumber";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String legalRepReferenceNumber = "someLRReferenceNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
+    private final String exUiFrontendUrl = "http://localhost";
+    private final String legalRepReferenceNumber = "someLRReferenceNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
     private LegalRepresentativeUpdateTribunalDecisionRule32PersonalisationEmail legalRepresentativeUpdateTribunalDecisionRule32PersonalisationEmail;
 
     @BeforeEach
@@ -53,6 +51,7 @@ class LegalRepresentativeUpdateTribunalDecisionRule32PersonalisationEmailTest {
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
         when(callback.getCaseDetails().getId()).thenReturn(caseId);
 
+        String appealReferenceNumber = "someReferenceNumber";
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
@@ -83,9 +82,10 @@ class LegalRepresentativeUpdateTribunalDecisionRule32PersonalisationEmailTest {
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> legalRepresentativeUpdateTribunalDecisionRule32PersonalisationEmail.getPersonalisation((Callback<AsylumCase>) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("callback must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> legalRepresentativeUpdateTribunalDecisionRule32PersonalisationEmail.getPersonalisation((Callback<AsylumCase>) null))
+            ;
+assertEquals("callback must not be null", exception.getMessage());
     }
 
     @Test
@@ -93,11 +93,13 @@ class LegalRepresentativeUpdateTribunalDecisionRule32PersonalisationEmailTest {
 
         Map<String, String> personalisation = legalRepresentativeUpdateTribunalDecisionRule32PersonalisationEmail.getPersonalisation(callback);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(legalRepReferenceNumber, personalisation.get("legalRepReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(exUiFrontendUrl, personalisation.get("linkToService"));
+        String mockedAppealReferenceNumber = "someReferenceNumber";
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", mockedAppealReferenceNumber)
+            .containsEntry("legalRepReferenceNumber", legalRepReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToService", exUiFrontendUrl);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 

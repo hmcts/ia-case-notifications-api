@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -10,7 +11,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
-import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,7 +31,6 @@ class AppellantHearingBundleReadyPersonalisationSmsTest {
     private final String smsTemplateId = "someSmsTemplateId";
     private final String iaAipFrontendUrl = "http://localhost";
     private final String mockedAppealReferenceNumber = "someReferenceNumber";
-    private final String ccdReferenceNumber = "1234 5678 4321 8765";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -47,6 +46,7 @@ class AppellantHearingBundleReadyPersonalisationSmsTest {
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class))
             .thenReturn(Optional.of(mockedAppealReferenceNumber));
+        String ccdReferenceNumber = "1234 5678 4321 8765";
         when(asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class))
                 .thenReturn(Optional.of(ccdReferenceNumber));
 
@@ -61,15 +61,13 @@ class AppellantHearingBundleReadyPersonalisationSmsTest {
 
     @Test
     void should_return_given_template_id() {
-        Assert.assertEquals(smsTemplateId,
-            appellantHearingBundleReadyPersonalisationSms.getTemplateId());
+        assertEquals(smsTemplateId, appellantHearingBundleReadyPersonalisationSms.getTemplateId());
     }
 
     @Test
     void should_return_given_reference_id() {
         Long caseId = 12345L;
-        Assert.assertEquals(caseId + "_HEARING_BUNDLE_IS_READY_APPELLANT_SMS",
-            appellantHearingBundleReadyPersonalisationSms.getReferenceId(caseId));
+        assertEquals(caseId + "_HEARING_BUNDLE_IS_READY_APPELLANT_SMS", appellantHearingBundleReadyPersonalisationSms.getReferenceId(caseId));
     }
 
     @Test
@@ -79,9 +77,10 @@ class AppellantHearingBundleReadyPersonalisationSmsTest {
             .thenThrow(new NullPointerException("asylumCase must not be null"));
         when(featureToggler.getValue("aip-hearing-bundle-feature", false)).thenReturn(true);
 
-        assertThatThrownBy(() -> appellantHearingBundleReadyPersonalisationSms.getRecipientsList(null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception = 
+assertThrows(NullPointerException.class, () -> appellantHearingBundleReadyPersonalisationSms.getRecipientsList(null))
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -107,10 +106,11 @@ class AppellantHearingBundleReadyPersonalisationSmsTest {
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
+        NullPointerException exception = 
+assertThrows(NullPointerException.class, 
             () -> appellantHearingBundleReadyPersonalisationSms.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -118,8 +118,9 @@ class AppellantHearingBundleReadyPersonalisationSmsTest {
 
         Map<String, String> personalisation =
             appellantHearingBundleReadyPersonalisationSms.getPersonalisation(asylumCase);
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
+        assertThat(personalisation)
+            .containsEntry("Appeal Ref Number", mockedAppealReferenceNumber)
+            .containsEntry("Hyperlink to service", iaAipFrontendUrl);
 
     }
 
@@ -132,8 +133,9 @@ class AppellantHearingBundleReadyPersonalisationSmsTest {
         Map<String, String> personalisation =
             appellantHearingBundleReadyPersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals("", personalisation.get("Appeal Ref Number"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
+        assertThat(personalisation)
+            .containsEntry("Appeal Ref Number", "")
+            .containsEntry("Hyperlink to service", iaAipFrontendUrl);
 
     }
 }

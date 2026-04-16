@@ -1,8 +1,9 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
@@ -52,11 +53,6 @@ class PersonalisationProviderTest {
     private final String iaExUiFrontendUrl = "http://localhost";
 
     private final String hearingCentreName = HearingCentre.TAYLOR_HOUSE.toString();
-    private final String hearingCentreAddress = "some hearing centre address";
-
-    private final String hearingDateTime = "2019-08-27T14:25:15.000";
-    private final String hearingDate = "2019-08-27";
-    private final String hearingTime = "14:25";
 
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String legalRepReferenceNumber = "legalRepReferenceNumber";
@@ -65,12 +61,7 @@ class PersonalisationProviderTest {
     private final String appellantFamilyName = "appellantFamilyName";
     private final String homeOfficeRefNumber = "homeOfficeRefNumber";
 
-    private final String directionEditExplanation = "This is edit direction explanation";
-    private final String directionEditDateDue = "2020-02-14";
-
     private final String oldHearingCentreName = HearingCentre.MANCHESTER.toString();
-    private final String oldHearingDateTime = "2019-08-20T14:25:15.000";
-    private final String oldHearingDate = "2019-08-20";
 
     private final String remoteVideoCallTribunalResponse = "someRemoteVideoCallTribunalResponse";
 
@@ -86,33 +77,27 @@ class PersonalisationProviderTest {
     private final String caseOfficerReviewedInCamera = "someCaseOfficerReviewedInCamera";
     private final String caseOfficerReviewedOther = "someCaseOfficerReviewedOther";
 
-    private final String caseOfficerReviewedVulnerabilitiesDisplay = "someCaseOfficerReviewedVulnerabilitiesDisplay";
-    private final String caseOfficerReviewedMultimediaDisplay = "someCaseOfficerReviewedMultimediaDisplay";
-    private final String caseOfficerReviewedSingleSexCourtDisplay = "someCaseOfficerReviewedSingleSexCourtDisplay";
-    private final String caseOfficerReviewedInCameraDisplay = "someCaseOfficerReviewedInCameraDisplay";
-    private final String caseOfficerReviewedOtherDisplay = "someCaseOfficerReviewedOtherDisplay";
     private final String caseOfficerReviewedRemoteHearingDisplay = "caseOfficerReviewedRemoteHearingDisplay";
 
 
-    private final String directionExplanation = "someExplanation";
-    private final String directionDueDate = "2019-10-29";
     private final String recipientReferenceNumber = "recipientReferenceNumber";
     private final String recipient = "recipient";
     private final String applyForCostsCreationDate = "2023-11-24";
 
-    private final String applyForCostsDecision = "Order made";
-
-    private static String homeOffice = "Home office";
+    private static final String homeOffice = "Home office";
 
     private PersonalisationProvider personalisationProvider;
 
     @BeforeEach
     public void setUp() {
         when(hearingDetailsFinder.getHearingCentreName(asylumCase)).thenReturn(hearingCentreName);
+        String hearingCentreAddress = "some hearing centre address";
         when(hearingDetailsFinder.getHearingCentreAddress(asylumCase)).thenReturn(hearingCentreAddress);
         when(hearingDetailsFinder.getHearingCentreLocation(asylumCase)).thenReturn(hearingCentreAddress);
+        String hearingDateTime = "2019-08-27T14:25:15.000";
         when(hearingDetailsFinder.getHearingDateTime(asylumCase)).thenReturn(hearingDateTime);
         when(hearingDetailsFinder.getOldHearingCentreName(asylumCaseBefore)).thenReturn(oldHearingCentreName);
+        String oldHearingDateTime = "2019-08-20T14:25:15.000";
         when(asylumCaseBefore.read(AsylumCaseDefinition.LIST_CASE_HEARING_DATE, String.class))
             .thenReturn(Optional.of(oldHearingDateTime));
 
@@ -129,8 +114,11 @@ class PersonalisationProviderTest {
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeRefNumber));
 
+        String hearingDate = "2019-08-27";
         when(dateTimeExtractor.extractHearingDate(hearingDateTime)).thenReturn(hearingDate);
+        String oldHearingDate = "2019-08-20";
         when(dateTimeExtractor.extractHearingDate(oldHearingDateTime)).thenReturn(oldHearingDate);
+        String hearingTime = "14:25";
         when(dateTimeExtractor.extractHearingTime(hearingDateTime)).thenReturn(hearingTime);
 
         when(asylumCase.read(REMOTE_VIDEO_CALL_TRIBUNAL_RESPONSE, String.class))
@@ -159,7 +147,9 @@ class PersonalisationProviderTest {
         when(asylumCase.read(SUBMIT_HEARING_REQUIREMENTS_AVAILABLE)).thenReturn(Optional.of(YesOrNo.NO));
 
         when(directionFinder.findFirst(asylumCase, DirectionTag.NONE)).thenReturn(Optional.of(direction));
+        String directionDueDate = "2019-10-29";
         when(direction.getDateDue()).thenReturn(directionDueDate);
+        String directionExplanation = "someExplanation";
         when(direction.getExplanation()).thenReturn(directionExplanation);
 
         personalisationProvider = new PersonalisationProvider(
@@ -176,13 +166,12 @@ class PersonalisationProviderTest {
 
         Map<String, String> personalisation = personalisationProvider.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
-        assertThat(personalisation.get("remoteVideoCallTribunalResponse")).contains(remoteVideoCallTribunalResponse);
-        assertThat(personalisation.get("hearingRequirementVulnerabilities")).contains(requirementsVulnerabilities);
-        assertThat(personalisation.get("hearingRequirementMultimedia")).contains(requirementsMultimedia);
-        assertThat(personalisation.get("hearingRequirementSingleSexCourt")).contains(requirementsSingleSexCourt);
-        assertThat(personalisation.get("hearingRequirementInCameraCourt")).contains(requirementsInCamera);
-        assertThat(personalisation.get("hearingRequirementOther")).contains(requirementsOther);
+        assertTrue(personalisation.get("remoteVideoCallTribunalResponse").contains(remoteVideoCallTribunalResponse));
+        assertTrue(personalisation.get("hearingRequirementVulnerabilities").contains(requirementsVulnerabilities));
+        assertTrue(personalisation.get("hearingRequirementMultimedia").contains(requirementsMultimedia));
+        assertTrue(personalisation.get("hearingRequirementSingleSexCourt").contains(requirementsSingleSexCourt));
+        assertTrue(personalisation.get("hearingRequirementInCameraCourt").contains(requirementsInCamera));
+        assertTrue(personalisation.get("hearingRequirementOther").contains(requirementsOther));
     }
 
     @ParameterizedTest
@@ -209,14 +198,19 @@ class PersonalisationProviderTest {
         when(asylumCase.read(REMOTE_VIDEO_CALL_TRIBUNAL_RESPONSE, String.class))
             .thenReturn(responseFieldsPresent ? Optional.of(remoteVideoCallTribunalResponse) : Optional.empty());
 
+        String caseOfficerReviewedVulnerabilitiesDisplay = "someCaseOfficerReviewedVulnerabilitiesDisplay";
         when(asylumCase.read(VULNERABILITIES_DECISION_FOR_DISPLAY, String.class))
             .thenReturn(displayFieldsPresent ? Optional.of(caseOfficerReviewedVulnerabilitiesDisplay) : Optional.empty());
+        String caseOfficerReviewedMultimediaDisplay = "someCaseOfficerReviewedMultimediaDisplay";
         when(asylumCase.read(MULTIMEDIA_DECISION_FOR_DISPLAY, String.class))
             .thenReturn(displayFieldsPresent ? Optional.of(caseOfficerReviewedMultimediaDisplay) : Optional.empty());
+        String caseOfficerReviewedSingleSexCourtDisplay = "someCaseOfficerReviewedSingleSexCourtDisplay";
         when(asylumCase.read(SINGLE_SEX_COURT_DECISION_FOR_DISPLAY, String.class))
             .thenReturn(displayFieldsPresent ? Optional.of(caseOfficerReviewedSingleSexCourtDisplay) : Optional.empty());
+        String caseOfficerReviewedInCameraDisplay = "someCaseOfficerReviewedInCameraDisplay";
         when(asylumCase.read(IN_CAMERA_COURT_DECISION_FOR_DISPLAY, String.class))
             .thenReturn(displayFieldsPresent ? Optional.of(caseOfficerReviewedInCameraDisplay) : Optional.empty());
+        String caseOfficerReviewedOtherDisplay = "someCaseOfficerReviewedOtherDisplay";
         when(asylumCase.read(OTHER_DECISION_FOR_DISPLAY, String.class))
             .thenReturn(displayFieldsPresent ? Optional.of(caseOfficerReviewedOtherDisplay) : Optional.empty());
 
@@ -229,30 +223,28 @@ class PersonalisationProviderTest {
         String otherAdjustmentsDefaultText = "No other adjustments are being made";
         String remoteHearingDefaultText = "";
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
-
-        assertThat(personalisation.get("hearingRequirementVulnerabilities")).contains(
+        assertTrue(personalisation.get("hearingRequirementVulnerabilities").contains(
             displayFieldsPresent ? caseOfficerReviewedVulnerabilitiesDisplay
-                : responseFieldsPresent ? caseOfficerReviewedVulnerabilities : vulnerabilitiesDefaultText);
+                : responseFieldsPresent ? caseOfficerReviewedVulnerabilities : vulnerabilitiesDefaultText));
 
-        assertThat(personalisation.get("hearingRequirementMultimedia")).contains(
+        assertTrue(personalisation.get("hearingRequirementMultimedia").contains(
             displayFieldsPresent ? caseOfficerReviewedMultimediaDisplay
-                : responseFieldsPresent ? caseOfficerReviewedMultimedia : multimediaDefaultText);
+                : responseFieldsPresent ? caseOfficerReviewedMultimedia : multimediaDefaultText));
 
-        assertThat(personalisation.get("hearingRequirementSingleSexCourt")).contains(
+        assertTrue(personalisation.get("hearingRequirementSingleSexCourt").contains(
             displayFieldsPresent ? caseOfficerReviewedSingleSexCourtDisplay
-                : responseFieldsPresent ? caseOfficerReviewedSingleSexCourt : singleSexCourtDefaultText);
+                : responseFieldsPresent ? caseOfficerReviewedSingleSexCourt : singleSexCourtDefaultText));
 
-        assertThat(personalisation.get("hearingRequirementInCameraCourt")).contains(
+        assertTrue(personalisation.get("hearingRequirementInCameraCourt").contains(
             displayFieldsPresent ? caseOfficerReviewedInCameraDisplay
-                : responseFieldsPresent ? caseOfficerReviewedInCamera : inCameraCourtDefaultText);
+                : responseFieldsPresent ? caseOfficerReviewedInCamera : inCameraCourtDefaultText));
 
-        assertThat(personalisation.get("hearingRequirementOther")).contains(
+        assertTrue(personalisation.get("hearingRequirementOther").contains(
             displayFieldsPresent ? caseOfficerReviewedOtherDisplay
-                : responseFieldsPresent ? caseOfficerReviewedOther : otherAdjustmentsDefaultText);
+                : responseFieldsPresent ? caseOfficerReviewedOther : otherAdjustmentsDefaultText));
 
-        assertThat(personalisation.get("remoteVideoCallTribunalResponse")).contains(
-            responseFieldsPresent ? remoteVideoCallTribunalResponse : remoteHearingDefaultText);
+        assertTrue(personalisation.get("remoteVideoCallTribunalResponse")
+            .contains(responseFieldsPresent ? remoteVideoCallTribunalResponse : remoteHearingDefaultText));
     }
 
     @Test
@@ -261,7 +253,13 @@ class PersonalisationProviderTest {
 
         Map<String, String> personalisation = personalisationProvider.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(personalisation)
+            .containsEntry("legalRepReferenceNumber", legalRepReferenceNumber)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("ariaListingReference", ariaListingReference)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber);
     }
 
     @Test
@@ -270,7 +268,13 @@ class PersonalisationProviderTest {
 
         Map<String, String> personalisation = personalisationProvider.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(personalisation)
+            .containsEntry("legalRepReferenceNumber", legalRepReferenceNumber)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("ariaListingReference", ariaListingReference)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber);
     }
 
     @Test
@@ -279,20 +283,31 @@ class PersonalisationProviderTest {
         Map<String, String> personalisation =
             personalisationProvider.getReviewedHearingRequirementsPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName);
     }
 
     @Test
     void should_return_change_direction_due_date_personalisation() {
         when(callback.getEvent()).thenReturn(Event.CHANGE_DIRECTION_DUE_DATE);
         when(callback.getCaseDetails().getCaseData()).thenReturn(asylumCase);
+        String directionEditExplanation = "This is edit direction explanation";
         when(asylumCase.read(DIRECTION_EDIT_EXPLANATION, String.class))
             .thenReturn(Optional.of(directionEditExplanation));
+        String directionEditDateDue = "2020-02-14";
         when(asylumCase.read(DIRECTION_EDIT_DATE_DUE, String.class)).thenReturn(Optional.of(directionEditDateDue));
 
         Map<String, String> personalisation = personalisationProvider.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(personalisation)
+            .containsEntry("legalRepReferenceNumber", legalRepReferenceNumber)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("ariaListingReference", ariaListingReference)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber);
     }
 
     @Test
@@ -300,11 +315,12 @@ class PersonalisationProviderTest {
 
         Map<String, String> personalisation = personalisationProvider.getLegalRepHeaderPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
-        assertEquals(legalRepReferenceNumber, personalisation.get("legalRepReferenceNumber"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("ariaListingReference", ariaListingReference)
+            .containsEntry("legalRepReferenceNumber", legalRepReferenceNumber);
     }
 
     @Test
@@ -312,11 +328,12 @@ class PersonalisationProviderTest {
 
         Map<String, String> personalisation = personalisationProvider.getHomeOfficeHeaderPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
+            .containsEntry("ariaListingReference", ariaListingReference);
     }
 
     @Test
@@ -324,10 +341,11 @@ class PersonalisationProviderTest {
 
         Map<String, String> personalisation = personalisationProvider.getTribunalHeaderPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("ariaListingReference", ariaListingReference);
     }
 
     @Test
@@ -335,10 +353,11 @@ class PersonalisationProviderTest {
 
         Map<String, String> personalisation = personalisationProvider.getAppellantPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber);
     }
 
     @Test
@@ -352,10 +371,11 @@ class PersonalisationProviderTest {
 
         Map<String, String> personalisation = personalisationProvider.getApplyForCostsPersonalisation(asylumCase);
 
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
     }
 
     @Test
@@ -364,8 +384,9 @@ class PersonalisationProviderTest {
 
         Map<String, String> personalisation = personalisationProvider.getHomeOfficeRecipientHeader(asylumCase);
 
-        assertEquals("Home Office", personalisation.get(recipient));
-        assertEquals(homeOfficeRefNumber, personalisation.get(recipientReferenceNumber));
+        assertThat(personalisation)
+            .containsEntry(recipient, "Home Office")
+            .containsEntry(recipientReferenceNumber, homeOfficeRefNumber);
     }
 
     @Test
@@ -374,8 +395,9 @@ class PersonalisationProviderTest {
 
         Map<String, String> personalisation = personalisationProvider.getLegalRepRecipientHeader(asylumCase);
 
-        assertEquals("Your", personalisation.get(recipient));
-        assertEquals(legalRepReferenceNumber, personalisation.get(recipientReferenceNumber));
+        assertThat(personalisation)
+            .containsEntry(recipient, "Your")
+            .containsEntry(recipientReferenceNumber, legalRepReferenceNumber);
     }
 
     @Test
@@ -386,7 +408,7 @@ class PersonalisationProviderTest {
 
         Map<String, String> personalisation = personalisationProvider.retrieveSelectedApplicationId(asylumCase, RESPOND_TO_COSTS_LIST);
 
-        assertEquals("8", personalisation.get("applicationId"));
+            assertEquals("8", personalisation.get("applicationId"));
     }
 
     @Test
@@ -397,25 +419,27 @@ class PersonalisationProviderTest {
 
         Map<String, String> personalisation = personalisationProvider.retrieveSelectedApplicationId(asylumCase, ADD_EVIDENCE_FOR_COSTS_LIST);
 
-        assertEquals("8", personalisation.get("applicationId"));
+            assertEquals("8", personalisation.get("applicationId"));
     }
 
     @Test
     void should_throw_an_exception_if_respond_to_costs_list_is_not_presented() {
         when(asylumCase.read(RESPOND_TO_COSTS_LIST, DynamicList.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> personalisationProvider.retrieveSelectedApplicationId(asylumCase, RESPOND_TO_COSTS_LIST))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("RESPOND_TO_COSTS_LIST is not present");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> personalisationProvider.retrieveSelectedApplicationId(asylumCase, RESPOND_TO_COSTS_LIST))
+            ;
+assertEquals("RESPOND_TO_COSTS_LIST is not present", exception.getMessage());
     }
 
     @Test
     void should_throw_an_exception_if_additional_evidence_applicaiton_number_not_presented() {
         when(asylumCase.read(ADD_EVIDENCE_FOR_COSTS_LIST, DynamicList.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> personalisationProvider.retrieveSelectedApplicationId(asylumCase, ADD_EVIDENCE_FOR_COSTS_LIST))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("ADD_EVIDENCE_FOR_COSTS_LIST is not present");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> personalisationProvider.retrieveSelectedApplicationId(asylumCase, ADD_EVIDENCE_FOR_COSTS_LIST))
+            ;
+assertEquals("ADD_EVIDENCE_FOR_COSTS_LIST is not present", exception.getMessage());
     }
 
     @Test
@@ -425,7 +449,7 @@ class PersonalisationProviderTest {
 
         Map<String, String> personalisation = personalisationProvider.getApplyToCostsCreationDate(asylumCase);
 
-        assertEquals("24 Nov 2023", personalisation.get("creationDate"));
+            assertEquals("24 Nov 2023", personalisation.get("creationDate"));
     }
 
     @Test
@@ -435,7 +459,7 @@ class PersonalisationProviderTest {
 
         Map<String, String> personalisation = personalisationProvider.getTypeForLatestCreatedApplyForCosts(asylumCase);
 
-        assertEquals("Wasted", personalisation.get("appliedCostsType"));
+            assertEquals("Wasted", personalisation.get("appliedCostsType"));
     }
 
 
@@ -457,11 +481,12 @@ class PersonalisationProviderTest {
 
         Map<String, String> personalisation = personalisationProvider.getTypeForSelectedApplyForCosts(asylumCase, ADD_EVIDENCE_FOR_COSTS_LIST);
 
-        assertEquals("Unreasonable", personalisation.get("appliedCostsType"));
+            assertEquals("Unreasonable", personalisation.get("appliedCostsType"));
     }
 
     @Test
     void should_return_costs_decision_when_decideCostsApplicationList_is_present() {
+        String applyForCostsDecision = "Order made";
         List<IdValue<ApplyForCosts>> applyForCostsList = List.of(
             new IdValue<>("1", new ApplyForCosts("Wasted costs", "Home office", "Respondent", "costsType", applyForCostsCreationDate, applyForCostsDecision))
         );
@@ -472,6 +497,6 @@ class PersonalisationProviderTest {
 
         Map<String, String> personalisation = personalisationProvider.getDecideCostsPersonalisation(asylumCase);
 
-        assertEquals(applyForCostsDecision, personalisation.get("costsDecisionType"));
+            assertEquals(applyForCostsDecision, personalisation.get("costsDecisionType"));
     }
 }

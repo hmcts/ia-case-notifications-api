@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -45,24 +46,23 @@ class AppellantInternalCaseDisposeUnderRule31Or32PersonalisationTest {
     @Mock
     AddressUk address;
 
-    private Long ccdCaseId = 12345L;
-    private String letterTemplateId = "someLetterTemplateId";
-    private String appealReferenceNumber = "someAppealRefNumber";
-    private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
-    private String addressLine1 = "50";
-    private String addressLine2 = "Building name";
-    private String addressLine3 = "Street name";
-    private String postCode = "XX1 2YY";
-    private String postTown = "Town name";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "example@example.com";
-    private String oocAddressLine1 = "Calle Toledo 32";
-    private String oocAddressLine2 = "Madrid";
-    private String oocAddressLine3 = "28003";
-    private NationalityFieldValue oocAddressCountry = mock(NationalityFieldValue.class);
-    private String onlineCaseReferenceNumber = "1234 5678 9101 1121";
+    private final Long ccdCaseId = 12345L;
+    private final String letterTemplateId = "someLetterTemplateId";
+    private final String appealReferenceNumber = "someAppealRefNumber";
+    private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String addressLine1 = "50";
+    private final String addressLine2 = "Building name";
+    private final String addressLine3 = "Street name";
+    private final String postCode = "XX1 2YY";
+    private final String postTown = "Town name";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "example@example.com";
+    private final String oocAddressLine1 = "Calle Toledo 32";
+    private final String oocAddressLine2 = "Madrid";
+    private final String oocAddressLine3 = "28003";
+    private final NationalityFieldValue oocAddressCountry = mock(NationalityFieldValue.class);
 
     private AppellantInternalCaseDisposeUnderRule31Or32Personalisation appellantInternalCaseDisposeUnderRule31Or32Personalisation;
 
@@ -77,6 +77,7 @@ class AppellantInternalCaseDisposeUnderRule31Or32PersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.of(address));
         when(asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeRefNumber));
+        String onlineCaseReferenceNumber = "1234 5678 9101 1121";
         when(asylumCase.read(AsylumCaseDefinition.CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class)).thenReturn(Optional.of(onlineCaseReferenceNumber));
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
@@ -115,9 +116,10 @@ class AppellantInternalCaseDisposeUnderRule31Or32PersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> appellantInternalCaseDisposeUnderRule31Or32Personalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("appellantAddress is not present");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> appellantInternalCaseDisposeUnderRule31Or32Personalisation.getRecipientsList(asylumCase))
+            ;
+assertEquals("appellantAddress is not present", exception.getMessage());
     }
 
     @Test
@@ -126,45 +128,50 @@ class AppellantInternalCaseDisposeUnderRule31Or32PersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_ADDRESS_U_K, AddressUk.class)).thenReturn(Optional.empty());
         when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_HAS_ADDRESS, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
 
-        assertThatThrownBy(() -> appellantInternalCaseDisposeUnderRule31Or32Personalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("legalRepAddressUK is not present");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> appellantInternalCaseDisposeUnderRule31Or32Personalisation.getRecipientsList(asylumCase))
+            ;
+assertEquals("legalRepAddressUK is not present", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
-        assertThatThrownBy(
+        NullPointerException exception =
+assertThrows(NullPointerException.class,
             () -> appellantInternalCaseDisposeUnderRule31Or32Personalisation.getPersonalisation((Callback<AsylumCase>) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("callback must not be null");
+            ;
+assertEquals("callback must not be null", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_applicant_type_is_not_present() {
-        assertThatThrownBy(
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class,
             () -> appellantInternalCaseDisposeUnderRule31Or32Personalisation.getPersonalisation((callback)))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("ftpaApplicantType is not present");
+            ;
+assertEquals("ftpaApplicantType is not present", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_appellant_decision_text_is_not_present() {
         when(asylumCase.read(AsylumCaseDefinition.FTPA_APPLICANT_TYPE, ApplicantType.class)).thenReturn(Optional.of(APPELLANT));
 
-        assertThatThrownBy(
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class,
             () -> appellantInternalCaseDisposeUnderRule31Or32Personalisation.getPersonalisation((callback)))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("ftpaAppellantDecisionRemadeRule32Text is not present");
+            ;
+assertEquals("ftpaAppellantDecisionRemadeRule32Text is not present", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_respondent_decision_text_is_not_present() {
         when(asylumCase.read(AsylumCaseDefinition.FTPA_APPLICANT_TYPE, ApplicantType.class)).thenReturn(Optional.of(RESPONDENT));
 
-        assertThatThrownBy(
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class,
             () -> appellantInternalCaseDisposeUnderRule31Or32Personalisation.getPersonalisation((callback)))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("ftpaRespondentDecisionRemadeRule32Text is not present");
+            ;
+assertEquals("ftpaRespondentDecisionRemadeRule32Text is not present", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -180,31 +187,36 @@ class AppellantInternalCaseDisposeUnderRule31Or32PersonalisationTest {
             appellantInternalCaseDisposeUnderRule31Or32Personalisation.getPersonalisation(callback);
 
         if (appellantInUk == YesOrNo.YES) {
-            assertEquals(addressLine1, personalisation.get("address_line_1"));
-            assertEquals(addressLine2, personalisation.get("address_line_2"));
-            assertEquals(addressLine3, personalisation.get("address_line_3"));
-            assertEquals(postTown, personalisation.get("address_line_4"));
-            assertEquals(postCode, personalisation.get("address_line_5"));
+            assertThat(personalisation)
+                .containsEntry("address_line_1", addressLine1)
+                .containsEntry("address_line_2", addressLine2)
+                .containsEntry("address_line_3", addressLine3)
+                .containsEntry("address_line_4", postTown)
+                .containsEntry("address_line_5", postCode);
         } else {
-            assertEquals(oocAddressLine1, personalisation.get("address_line_1"));
-            assertEquals(oocAddressLine2, personalisation.get("address_line_2"));
-            assertEquals(oocAddressLine3, personalisation.get("address_line_3"));
-            assertEquals(Nationality.ES.toString(), personalisation.get("address_line_4"));
+            assertThat(personalisation)
+                .containsEntry("address_line_1", oocAddressLine1)
+                .containsEntry("address_line_2", oocAddressLine2)
+                .containsEntry("address_line_3", oocAddressLine3)
+                .containsEntry("address_line_4", Nationality.ES.toString());
         }
 
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
+        assertThat(personalisation)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
         if (appellantType == APPELLANT) {
-            assertEquals("your", personalisation.get("applicant"));
-            assertEquals("test1", personalisation.get("ftpaDisposedReason"));
+            assertThat(personalisation)
+                .containsEntry("applicant", "your")
+                .containsEntry("ftpaDisposedReason", "test1");
         } else {
-            assertEquals("the Home Office's", personalisation.get("applicant"));
-            assertEquals("test2", personalisation.get("ftpaDisposedReason"));
+            assertThat(personalisation)
+                .containsEntry("applicant", "the Home Office's")
+                .containsEntry("ftpaDisposedReason", "test2");
         }
     }
 
@@ -235,31 +247,36 @@ class AppellantInternalCaseDisposeUnderRule31Or32PersonalisationTest {
             appellantInternalCaseDisposeUnderRule31Or32Personalisation.getPersonalisation(callback);
 
         if (legalRepInUk == YesOrNo.YES) {
-            assertEquals(addressLine1, personalisation.get("address_line_1"));
-            assertEquals(addressLine2, personalisation.get("address_line_2"));
-            assertEquals(addressLine3, personalisation.get("address_line_3"));
-            assertEquals(postTown, personalisation.get("address_line_4"));
-            assertEquals(postCode, personalisation.get("address_line_5"));
+            assertThat(personalisation)
+                .containsEntry("address_line_1", addressLine1)
+                .containsEntry("address_line_2", addressLine2)
+                .containsEntry("address_line_3", addressLine3)
+                .containsEntry("address_line_4", postTown)
+                .containsEntry("address_line_5", postCode);
         } else {
-            assertEquals(oocAddressLine1, personalisation.get("address_line_1"));
-            assertEquals(oocAddressLine2, personalisation.get("address_line_2"));
-            assertEquals(oocAddressLine3, personalisation.get("address_line_3"));
-            assertEquals(Nationality.ES.toString(), personalisation.get("address_line_4"));
+            assertThat(personalisation)
+                .containsEntry("address_line_1", oocAddressLine1)
+                .containsEntry("address_line_2", oocAddressLine2)
+                .containsEntry("address_line_3", oocAddressLine3)
+                .containsEntry("address_line_4", Nationality.ES.toString());
         }
 
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
+        assertThat(personalisation)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
         if (appellantType == APPELLANT) {
-            assertEquals("your", personalisation.get("applicant"));
-            assertEquals("test1", personalisation.get("ftpaDisposedReason"));
+            assertThat(personalisation)
+                .containsEntry("applicant", "your")
+                .containsEntry("ftpaDisposedReason", "test1");
         } else {
-            assertEquals("the Home Office's", personalisation.get("applicant"));
-            assertEquals("test2", personalisation.get("ftpaDisposedReason"));
+            assertThat(personalisation)
+                .containsEntry("applicant", "the Home Office's")
+                .containsEntry("ftpaDisposedReason", "test2");
         }
     }
 

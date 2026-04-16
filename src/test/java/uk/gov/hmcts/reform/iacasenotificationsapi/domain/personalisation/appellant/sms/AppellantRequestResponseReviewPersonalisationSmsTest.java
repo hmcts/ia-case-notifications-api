@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
@@ -21,7 +22,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 
 
 @ExtendWith(MockitoExtension.class)
-@SuppressWarnings("unchecked")
 class AppellantRequestResponseReviewPersonalisationSmsTest {
 
 
@@ -36,16 +36,13 @@ class AppellantRequestResponseReviewPersonalisationSmsTest {
     @Mock
     Direction direction;
 
-    private String requestResponseReviewWithdrawnTemplateId = "requestResponseReviewWithdrawnTemplateId";
-    private String maintainedResponseReviewDirectionTemplateId = "maintainedResponseReviewDirectionTemplateId";
+    private final String requestResponseReviewWithdrawnTemplateId = "requestResponseReviewWithdrawnTemplateId";
+    private final String maintainedResponseReviewDirectionTemplateId = "maintainedResponseReviewDirectionTemplateId";
 
-    private Long caseId = 12345L;
-    private String iaAipFrontendUrl = "http://localhost";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String mockedAppellantMobileNumber = "1234445556";
-    private String designatedHearingCentre = "belfast@hearingcentre.gov";
-    private String directionDueDate = "2019-08-27";
-    private String expectedDirectionDueDate = "27 Aug 2019";
+    private final String iaAipFrontendUrl = "http://localhost";
+    private final String designatedHearingCentre = "belfast@hearingcentre.gov";
+    private final String directionDueDate = "2019-08-27";
+    private final String expectedDirectionDueDate = "27 Aug 2019";
 
     private AppellantRequestResponseReviewPersonalisationSms
             appellantRequestResponseReviewPersonalisationSms;
@@ -67,16 +64,18 @@ class AppellantRequestResponseReviewPersonalisationSmsTest {
         when(directionFinder.findFirst(asylumCase, DirectionTag.REQUEST_RESPONSE_REVIEW))
                 .thenReturn(Optional.of(direction));
 
+        String appealReferenceNumber = "someReferenceNumber";
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(emailAddressFinder.getHearingCentreEmailAddress(asylumCase)).thenReturn(designatedHearingCentre);
 
         Map<String, String> personalisation =
                 appellantRequestResponseReviewPersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("Appeal Ref Number"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
-        assertEquals(designatedHearingCentre, personalisation.get("designated hearing centre"));
-        assertEquals(expectedDirectionDueDate, personalisation.get("dueDate"));
+        assertThat(personalisation)
+            .containsEntry("Appeal Ref Number", appealReferenceNumber)
+            .containsEntry("Hyperlink to service", iaAipFrontendUrl)
+            .containsEntry("designated hearing centre", designatedHearingCentre)
+            .containsEntry("dueDate", expectedDirectionDueDate);
         verify(emailAddressFinder).getHearingCentreEmailAddress(asylumCase);
     }
 
@@ -93,10 +92,11 @@ class AppellantRequestResponseReviewPersonalisationSmsTest {
         Map<String, String> personalisation =
                 appellantRequestResponseReviewPersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals("", personalisation.get("Appeal Ref Number"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
-        assertEquals(designatedHearingCentre, personalisation.get("designated hearing centre"));
-        assertEquals(expectedDirectionDueDate, personalisation.get("dueDate"));
+        assertThat(personalisation)
+            .containsEntry("Appeal Ref Number", "")
+            .containsEntry("Hyperlink to service", iaAipFrontendUrl)
+            .containsEntry("designated hearing centre", designatedHearingCentre)
+            .containsEntry("dueDate", expectedDirectionDueDate);
         verify(emailAddressFinder).getHearingCentreEmailAddress(asylumCase);
     }
 
@@ -121,20 +121,23 @@ class AppellantRequestResponseReviewPersonalisationSmsTest {
     @Test
     public void should_throw_exception_on_missing_appeal_review_outcome() {
 
-        assertThatThrownBy(
+        IllegalArgumentException exception =
+assertThrows(IllegalArgumentException.class,
                 () -> appellantRequestResponseReviewPersonalisationSms.getTemplateId(asylumCase))
-                .isExactlyInstanceOf(IllegalArgumentException.class)
-                .hasMessage("AppealReviewOutcome not present");
+                ;
+assertEquals("AppealReviewOutcome not present", exception.getMessage());
     }
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_REQUEST_RESPONSE_REVIEW_AIP_SMS",
                 appellantRequestResponseReviewPersonalisationSms.getReferenceId(caseId));
     }
 
     @Test
     void should_return_given_email_address_from_asylum_case() {
+        String mockedAppellantMobileNumber = "1234445556";
         when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
                 .thenReturn(Collections.singleton(mockedAppellantMobileNumber));
 
@@ -145,9 +148,10 @@ class AppellantRequestResponseReviewPersonalisationSmsTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
+        NullPointerException exception =
+assertThrows(NullPointerException.class,
                 () -> appellantRequestResponseReviewPersonalisationSms.getPersonalisation((AsylumCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+                ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 }

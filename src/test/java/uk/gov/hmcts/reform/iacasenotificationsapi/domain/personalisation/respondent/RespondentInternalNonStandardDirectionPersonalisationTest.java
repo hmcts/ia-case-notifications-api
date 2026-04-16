@@ -2,7 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respon
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -44,26 +44,27 @@ import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-@SuppressWarnings("unchecked")
 public class RespondentInternalNonStandardDirectionPersonalisationTest {
 
-    @Mock PersonalisationProvider personalisationProvider;
-    @Mock Callback<AsylumCase> callback;
-    @Mock CaseDetails<AsylumCase> caseDetails;
-    @Mock AsylumCase asylumCase;
+    @Mock
+    PersonalisationProvider personalisationProvider;
+    @Mock
+    Callback<AsylumCase> callback;
+    @Mock
+    CaseDetails<AsylumCase> caseDetails;
+    @Mock
+    AsylumCase asylumCase;
     private final String nonAdaPrefix = "IAFT - SERVE BY POST";
     private final String adaPrefix = "ADA - SERVE BY POST";
     @Mock
     DetEmailService detEmailService;
 
-    private Long caseId = 12345L;
-    private String templateId = "templateId";
-    private String iaExUiFrontendUrl = "http://localhost";
-    private String detEmailAddress = "det@example.com";
+    private final String templateId = "templateId";
+    private final String iaExUiFrontendUrl = "http://localhost";
     private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
-    DocumentWithMetadata sendDirectionLetter = TestUtils.getDocumentWithMetadata(
-            "id", "internal_appeal_submission", "some other desc", DocumentTag.INTERNAL_NON_STANDARD_DIRECTION_RESPONDENT_LETTER);
-    IdValue<DocumentWithMetadata> document = new IdValue<>("1", sendDirectionLetter);
+    final DocumentWithMetadata sendDirectionLetter = TestUtils.getDocumentWithMetadata(
+        "id", "internal_appeal_submission", "some other desc", DocumentTag.INTERNAL_NON_STANDARD_DIRECTION_RESPONDENT_LETTER);
+    final IdValue<DocumentWithMetadata> document = new IdValue<>("1", sendDirectionLetter);
 
     @Mock
     DocumentDownloadClient documentDownloadClient;
@@ -87,6 +88,7 @@ public class RespondentInternalNonStandardDirectionPersonalisationTest {
 
     @Test
     public void should_return_give_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_INTERNAL_NON_STANDARD_DIRECTION_TO_RESPONDENT_DET",
             detentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation.getReferenceId(caseId));
     }
@@ -100,6 +102,7 @@ public class RespondentInternalNonStandardDirectionPersonalisationTest {
     public void should_return_given_recipient_email_id() {
         when(caseDetails.getState()).thenReturn(State.SUBMIT_HEARING_REQUIREMENTS);
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
+        String detEmailAddress = "det@example.com";
         when(detEmailService.getRecipientsList(asylumCase)).thenReturn(Collections.singleton(detEmailAddress));
         assertEquals(Collections.singleton(detEmailAddress), detentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation.getRecipientsList(asylumCase));
     }
@@ -113,7 +116,7 @@ public class RespondentInternalNonStandardDirectionPersonalisationTest {
 
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_given_personalisation(YesOrNo isAda) {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         initializePrefixesForInternalAppealByPost(detentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation);
@@ -122,17 +125,18 @@ public class RespondentInternalNonStandardDirectionPersonalisationTest {
         Map<String, Object> personalisation =
             detentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation.getPersonalisationForLink(callback);
         //assert the personalisation map values
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(getPersonalisation());
-        assertEquals(jsonObject, personalisation.get("documentLink"));
-        assertEquals(isAda == YesOrNo.YES ? adaPrefix : nonAdaPrefix, personalisation.get("subjectPrefix"));
+        assertThat(personalisation)
+            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "ADA - SERVE BY POST"
+                : "IAFT - SERVE BY POST")
+            .containsAllEntriesOf(getPersonalisation());
     }
 
     @Test
     public void should_throw_exception_when_personalisation_when_callback_is_null() {
 
-        assertThatThrownBy(() -> detentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation.getPersonalisationForLink((AsylumCase) null))
-            .hasMessage("asylumCase must not be null")
-            .isExactlyInstanceOf(NullPointerException.class);
+        NullPointerException exception = assertThrows(NullPointerException.class,
+            () -> detentionEngagementTeamInternalNonStandardDirectionToRespondentPersonalisation.getPersonalisationForLink((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
 
     }
 

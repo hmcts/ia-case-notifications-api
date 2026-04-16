@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -46,28 +47,12 @@ public class LegalRepresentativeEditListingNoChangePersonalisationTest {
     @Mock
     CustomerServicesProvider customerServicesProvider;
 
-    private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
-    private String templateIdRemoteHearing = "remoteTemplateId";
-    private String iaExUiFrontendUrl = "http://localhost";
-    private String legalRepEmailAddress = "legalRep@example.com";
-    private String hearingCentreAddress = "some hearing centre address";
+    private final String templateId = "someTemplateId";
+    private final String templateIdRemoteHearing = "remoteTemplateId";
+    private final String iaExUiFrontendUrl = "http://localhost";
+    private final String legalRepEmailAddress = "legalRep@example.com";
 
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String ariaListingReference = "someAriaListingReference";
-    private String appellantGivenNames = "appellantGivenNames";
-    private String appellantFamilyName = "appellantFamilyName";
-    private String homeOfficeRefNumber = "homeOfficeRefNumber";
-
-    private String hearingCentreNameBefore = HearingCentre.MANCHESTER.toString();
-    private String requirementsVulnerabilities = "someRequirementsVulnerabilities";
-    private String requirementsMultimedia = "someRequirementsMultimedia";
-    private String requirementsInCamera = "someRequirementsInCamera";
-    private String requirementsSingleSexCourt = "someRequirementsSingleSexCourt";
-    private String requirementsOther = "someRequirementsOther";
-
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
+    private final String hearingCentreNameBefore = HearingCentre.MANCHESTER.toString();
 
     private LegalRepresentativeEditListingNoChangePersonalisation legalRepresentativeEditListingPersonalisation;
 
@@ -99,6 +84,7 @@ public class LegalRepresentativeEditListingNoChangePersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_CASE_RE_LISTED_NO_CHANGE_LEGAL_REPRESENTATIVE",
             legalRepresentativeEditListingPersonalisation.getReferenceId(caseId));
     }
@@ -113,18 +99,20 @@ public class LegalRepresentativeEditListingNoChangePersonalisationTest {
     public void should_throw_exception_when_cannot_find_email_address_for_legal_rep() {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> legalRepresentativeEditListingPersonalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("legalRepresentativeEmailAddress is not present");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> legalRepresentativeEditListingPersonalisation.getRecipientsList(asylumCase))
+            ;
+assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
+        NullPointerException exception =
+assertThrows(NullPointerException.class,
             () -> legalRepresentativeEditListingPersonalisation.getPersonalisation((Callback<AsylumCase>) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("callback must not be null");
+            ;
+assertEquals("callback must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -139,8 +127,12 @@ public class LegalRepresentativeEditListingNoChangePersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeEditListingPersonalisation.getPersonalisation(callback);
 
-        assertThat(personalisation).isNotEmpty();
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertFalse(personalisation.isEmpty());
+        assertThat(personalisation)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal"
+                : "Immigration and Asylum appeal")
+            .containsAllEntriesOf(getPersonalisationMapWithGivenValues());
     }
 
     @ParameterizedTest
@@ -155,11 +147,28 @@ public class LegalRepresentativeEditListingNoChangePersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeEditListingPersonalisation.getPersonalisation(callback);
 
-        assertThat(personalisation).isNotEmpty();
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertFalse(personalisation.isEmpty());
+        assertThat(personalisation)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal"
+                : "Immigration and Asylum appeal")
+            .containsAllEntriesOf(getPersonalisationMapWithBlankValues());
     }
 
     private Map<String, String> getPersonalisationMapWithGivenValues() {
+        String customerServicesEmail = "cust.services@example.com";
+        String customerServicesTelephone = "555 555 555";
+        String requirementsOther = "someRequirementsOther";
+        String requirementsSingleSexCourt = "someRequirementsSingleSexCourt";
+        String requirementsInCamera = "someRequirementsInCamera";
+        String requirementsMultimedia = "someRequirementsMultimedia";
+        String requirementsVulnerabilities = "someRequirementsVulnerabilities";
+        String homeOfficeRefNumber = "homeOfficeRefNumber";
+        String appellantFamilyName = "appellantFamilyName";
+        String appellantGivenNames = "appellantGivenNames";
+        String ariaListingReference = "someAriaListingReference";
+        String appealReferenceNumber = "someReferenceNumber";
+        String hearingCentreAddress = "some hearing centre address";
         return ImmutableMap
             .<String, String>builder()
             //.put("Hyperlink to user’s case list", iaExUiFrontendUrl)

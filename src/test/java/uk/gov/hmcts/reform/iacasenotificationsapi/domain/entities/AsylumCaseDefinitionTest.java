@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 
 public class AsylumCaseDefinitionTest {
-    List<AsylumCaseDefinition> fieldsNamesWithDifferentNaming =
+    final List<AsylumCaseDefinition> fieldsNamesWithDifferentNaming =
             new ArrayList<>(Arrays.asList(TTL, PRISON_NOMS));
 
     @Test

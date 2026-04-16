@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -50,19 +50,18 @@ class DetentionEngagementTeamChangeHoDirectionDueDatePersonalisationTest {
     private PersonalisationProvider personalisationProvider;
     @Mock
     JSONObject jsonDocument;
-    private String templateId = "templateId";
+    private final String templateId = "templateId";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String adaPrefix = "ADA - SERVE BY POST";
     private final String nonAdaPrefix = "IAFT - SERVE BY POST";
-    private final Long caseId = 12345L;
     private DetentionEngagementTeamChangeHoDirectionDueDatePersonalisation detentionEngagementTeamChangeHoDirectionDueDatePersonalisation;
 
-    DocumentWithMetadata changeHoDirectionDueDateLetter = TestUtils.getDocumentWithMetadata(
+    final DocumentWithMetadata changeHoDirectionDueDateLetter = TestUtils.getDocumentWithMetadata(
             "id", "detained-appellant-change-ho-direction-due-date-letter", "some other desc", DocumentTag.INTERNAL_HO_CHANGE_DIRECTION_DUE_DATE_LETTER);
-    IdValue<DocumentWithMetadata> notificationDocs = new IdValue<>("1", changeHoDirectionDueDateLetter);
+    final IdValue<DocumentWithMetadata> notificationDocs = new IdValue<>("1", changeHoDirectionDueDateLetter);
 
     DetentionEngagementTeamChangeHoDirectionDueDatePersonalisationTest() {
     }
@@ -97,6 +96,7 @@ class DetentionEngagementTeamChangeHoDirectionDueDatePersonalisationTest {
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_INTERNAL_DET_CHANGE_HO_DIRECTION_DUE_DATE_EMAIL",
                 detentionEngagementTeamChangeHoDirectionDueDatePersonalisation.getReferenceId(caseId));
     }
@@ -150,30 +150,33 @@ class DetentionEngagementTeamChangeHoDirectionDueDatePersonalisationTest {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YES));
         Map<String, Object> personalisation = detentionEngagementTeamChangeHoDirectionDueDatePersonalisation.getPersonalisationForLink(asylumCase);
 
-        assertEquals(adaPrefix, personalisation.get("subjectPrefix"));
+            assertEquals(adaPrefix, personalisation.get("subjectPrefix"));
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> detentionEngagementTeamChangeHoDirectionDueDatePersonalisation.getPersonalisationForLink((AsylumCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+        NullPointerException exception = 
+assertThrows(NullPointerException.class, () -> detentionEngagementTeamChangeHoDirectionDueDatePersonalisation.getPersonalisationForLink((AsylumCase) null))
+                ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_appeal_submission_is_empty() {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> detentionEngagementTeamChangeHoDirectionDueDatePersonalisation.getPersonalisationForLink(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("internalHoChangeDirectionDueDateLetter document not available");
+        IllegalStateException exception = 
+assertThrows(IllegalStateException.class, () -> detentionEngagementTeamChangeHoDirectionDueDatePersonalisation.getPersonalisationForLink(asylumCase))
+                ;
+assertEquals("internalHoChangeDirectionDueDateLetter document not available", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_notification_client_throws_Exception() throws NotificationClientException, IOException {
         when(documentDownloadClient.getJsonObjectFromDocument(changeHoDirectionDueDateLetter)).thenThrow(new NotificationClientException("File size is more than 2MB"));
-        assertThatThrownBy(() -> detentionEngagementTeamChangeHoDirectionDueDatePersonalisation.getPersonalisationForLink(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("Failed to get Internal Change HO Direction Due Date Letter in compatible format");
+        IllegalStateException exception = 
+assertThrows(IllegalStateException.class, () -> detentionEngagementTeamChangeHoDirectionDueDatePersonalisation.getPersonalisationForLink(asylumCase))
+                ;
+assertEquals("Failed to get Internal Change HO Direction Due Date Letter in compatible format", exception.getMessage());
     }
 }

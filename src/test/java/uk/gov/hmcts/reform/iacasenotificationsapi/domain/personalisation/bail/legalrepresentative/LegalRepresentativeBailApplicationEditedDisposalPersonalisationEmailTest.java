@@ -17,7 +17,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.le
 import java.util.Map;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -84,10 +85,11 @@ class LegalRepresentativeBailApplicationEditedDisposalPersonalisationEmailTest {
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
-        assertThatThrownBy(
+        NullPointerException exception = 
+assertThrows(NullPointerException.class, 
             () -> legalRepresentativeBailApplicationEditedDisposalPersonalisationEmail.getPersonalisation((BailCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("bailCase must not be null");
+            ;
+assertEquals("bailCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -98,10 +100,11 @@ class LegalRepresentativeBailApplicationEditedDisposalPersonalisationEmailTest {
                 legalRepresentativeBailApplicationEditedDisposalPersonalisationEmail.getPersonalisation(bailCase);
 
         // then
-        assertEquals(legalRepReference, personalisation.get("legalRepReference"));
-        assertEquals(legalRepName, personalisation.get("legalRepName"));
-        assertEquals(legalRepFamilyName, personalisation.get("legalRepFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("legalRepReference", legalRepReference)
+            .containsEntry("legalRepName", legalRepName)
+            .containsEntry("legalRepFamilyName", legalRepFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertNotNull(personalisation.get("editingDate"));
         verify(bailCase, times(1))
             .write(BailCaseFieldDefinition.LAST_EDIT_APPLICATION_NOTIFICATION_DATE, LocalDate.now().toString());
@@ -119,9 +122,10 @@ class LegalRepresentativeBailApplicationEditedDisposalPersonalisationEmailTest {
                 legalRepresentativeBailApplicationEditedDisposalPersonalisationEmail.getPersonalisation(bailCase);
 
         // then
-        assertEquals("", personalisation.get("legalRepReference"));
-        assertEquals("", personalisation.get("legalRepName"));
-        assertEquals("", personalisation.get("legalRepFamilyName"));
+        assertThat(personalisation)
+            .containsEntry("legalRepReference", "")
+            .containsEntry("legalRepName", "")
+            .containsEntry("legalRepFamilyName", "");
         verify(bailCase, times(1))
             .write(BailCaseFieldDefinition.LAST_EDIT_APPLICATION_NOTIFICATION_DATE, LocalDate.now().toString());
     }

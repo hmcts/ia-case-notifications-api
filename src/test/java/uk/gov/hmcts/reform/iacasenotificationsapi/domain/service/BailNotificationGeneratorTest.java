@@ -59,32 +59,31 @@ public class BailNotificationGeneratorTest {
 
     private BailNotificationGenerator notificationGenerator;
 
-    private Long caseId = 12345L;
+    private final String templateId1 = "templateId1";
+    private final String templateId2 = "templateId1";
 
-    private String templateId1 = "templateId1";
-    private String templateId2 = "templateId1";
+    private final String refId1 = "refId1";
+    private final String refId2 = "refId2";
 
-    private String refId1 = "refId1";
-    private String refId2 = "refId2";
+    private final String emailAddress1 = "email1@example.com";
+    private final String emailAddress2 = "email2@example.com";
 
-    private String emailAddress1 = "email1@example.com";
-    private String emailAddress2 = "email2@example.com";
+    private final String phoneNumber1 = "07123456789";
+    private final String phoneNumber2 = "07123456780";
 
-    private String phoneNumber1 = "07123456789";
-    private String phoneNumber2 = "07123456780";
+    private final Map<String, String> personalizationMap1 = emptyMap();
+    private final Map<String, String> personalizationMap2 = emptyMap();
 
-    private Map<String, String> personalizationMap1 = emptyMap();
-    private Map<String, String> personalizationMap2 = emptyMap();
+    private final List<IdValue<String>> notificationsSent = newArrayList();
 
-    private List<IdValue<String>> notificationsSent = newArrayList();
-
-    private String notificationId1 = "notificationId1";
-    private String notificationId2 = "notificationId2";
+    private final String notificationId1 = "notificationId1";
+    private final String notificationId2 = "notificationId2";
 
     @BeforeEach
     public void setup() {
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(bailCase);
+        Long caseId = 12345L;
         when(caseDetails.getId()).thenReturn(caseId);
 
         when(bailCase.read(NOTIFICATIONS_SENT)).thenReturn(Optional.of(notificationsSent));

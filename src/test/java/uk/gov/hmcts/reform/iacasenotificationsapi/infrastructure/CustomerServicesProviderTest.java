@@ -1,10 +1,9 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ACCELERATED_DETAINED_APPEAL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ADMIN;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
@@ -27,10 +26,10 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesO
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class CustomerServicesProviderTest {
 
-    private String customerServicesTelephone = "555 555";
-    private String standardCustomerServicesEmail = "some.email@example.com";
-    private String internalCaseCustomerServicesEmail = "some.internal.email@example.com";
-    private String appealIaCustomerServicesEmail = "some.appeal.email@example.com";
+    private final String customerServicesTelephone = "555 555";
+    private final String standardCustomerServicesEmail = "some.email@example.com";
+    private final String internalCaseCustomerServicesEmail = "some.internal.email@example.com";
+    private final String appealIaCustomerServicesEmail = "some.appeal.email@example.com";
 
     private CustomerServicesProvider customerServicesProvider;
 
@@ -51,43 +50,41 @@ public class CustomerServicesProviderTest {
         Map<String, String> customerServicesPersonalisation =
             customerServicesProvider.getCustomerServicesPersonalisation();
 
-        assertThat(customerServicesPersonalisation.get("customerServicesTelephone"))
-            .isEqualTo(customerServicesTelephone);
-        assertThat(customerServicesPersonalisation.get("customerServicesEmail")).isEqualTo(standardCustomerServicesEmail);
-        assertThat(customerServicesPersonalisation.get("AppealIAEmail"))
-                .isEqualTo(appealIaCustomerServicesEmail);
+        assertEquals(customerServicesTelephone, customerServicesPersonalisation.get("customerServicesTelephone"));
+        assertEquals(standardCustomerServicesEmail, customerServicesPersonalisation.get("customerServicesEmail"));
+        assertEquals(appealIaCustomerServicesEmail, customerServicesPersonalisation.get("AppealIAEmail"));
     }
 
     @Test
     public void should_not_allow_null_arguments() {
 
-        assertThatThrownBy(() -> new CustomerServicesProvider(
+        assertThrows(NullPointerException.class, 
+() -> new CustomerServicesProvider(
             null,
             standardCustomerServicesEmail,
             internalCaseCustomerServicesEmail,
-            appealIaCustomerServicesEmail))
-            .isExactlyInstanceOf(NullPointerException.class);
+            appealIaCustomerServicesEmail));
 
-        assertThatThrownBy(() -> new CustomerServicesProvider(
+        assertThrows(NullPointerException.class, 
+() -> new CustomerServicesProvider(
             customerServicesTelephone,
             null,
             internalCaseCustomerServicesEmail,
-            appealIaCustomerServicesEmail))
-            .isExactlyInstanceOf(NullPointerException.class);
+            appealIaCustomerServicesEmail));
 
-        assertThatThrownBy(() -> new CustomerServicesProvider(
+        assertThrows(NullPointerException.class, 
+() -> new CustomerServicesProvider(
             customerServicesTelephone,
             standardCustomerServicesEmail,
             null,
-            appealIaCustomerServicesEmail))
-            .isExactlyInstanceOf(NullPointerException.class);
+            appealIaCustomerServicesEmail));
 
-        assertThatThrownBy(() -> new CustomerServicesProvider(
+        assertThrows(NullPointerException.class, 
+() -> new CustomerServicesProvider(
                 customerServicesTelephone,
                 standardCustomerServicesEmail,
                 internalCaseCustomerServicesEmail,
-                null))
-                .isExactlyInstanceOf(NullPointerException.class);
+                null));
     }
 
     @Test

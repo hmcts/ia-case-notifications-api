@@ -23,7 +23,8 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -33,20 +34,17 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppellantRecordRefundDecisionPersonalisationEmailTest {
 
-    private Long caseId = 12345L;
-    private String appellantRefundApprovedTemplateId = "appellantRefundApprovedTemplateId";
-    private String appellantRefundPartiallyApprovedTemplateId = "appellantRefundPartiallyApprovedTemplateId";
-    private String appellantRefundRejectedTemplateId = "appellantRefundRejectedTemplateId";
-    private String iaAipFrontendUrl = "http://localhost";
-    private String appellantEmail = "example@example.com";
-    private String appealReferenceNumber = "appealReferenceNumber";
-    private String homeOfficeReferenceNumber = "homeOfficeReferenceNumber";
-    private String appellantGivenNames = "GivenNames";
-    private String appellantFamilyName = "FamilyName";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "customer@example.com";
-    private int daysAfterRefundDecision = 14;
-    private String amountRemitted = "4000";
+    private final String appellantRefundApprovedTemplateId = "appellantRefundApprovedTemplateId";
+    private final String appellantRefundPartiallyApprovedTemplateId = "appellantRefundPartiallyApprovedTemplateId";
+    private final String appellantRefundRejectedTemplateId = "appellantRefundRejectedTemplateId";
+    private final String iaAipFrontendUrl = "http://localhost";
+    private final String appealReferenceNumber = "appealReferenceNumber";
+    private final String homeOfficeReferenceNumber = "homeOfficeReferenceNumber";
+    private final String appellantGivenNames = "GivenNames";
+    private final String appellantFamilyName = "FamilyName";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "customer@example.com";
+    private final int daysAfterRefundDecision = 14;
 
     @Mock
     AsylumCase asylumCase;
@@ -66,6 +64,7 @@ class AppellantRecordRefundDecisionPersonalisationEmailTest {
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
+        String amountRemitted = "4000";
         when(asylumCase.read(AMOUNT_REMITTED, String.class)).thenReturn(Optional.of(amountRemitted));
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
@@ -103,12 +102,14 @@ class AppellantRecordRefundDecisionPersonalisationEmailTest {
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_REFUND_DECISION_DECIDED_AIP_APPELLANT_EMAIL",
                 appellantRecordRefundDecisionPersonalisationEmail.getReferenceId(caseId));
     }
 
     @Test
     void should_return_appellant_email_address_from_asylum_case() {
+        String appellantEmail = "example@example.com";
         when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL))
             .thenReturn(Collections.singleton(appellantEmail));
 
@@ -118,10 +119,11 @@ class AppellantRecordRefundDecisionPersonalisationEmailTest {
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
-        assertThatThrownBy(
+        NullPointerException exception =
+assertThrows(NullPointerException.class,
             () -> appellantRecordRefundDecisionPersonalisationEmail.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -137,13 +139,14 @@ class AppellantRecordRefundDecisionPersonalisationEmailTest {
         Map<String, String> personalisation =
                 appellantRecordRefundDecisionPersonalisationEmail.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("linkToService"));
-        assertEquals(systemDateProvider.dueDate(daysAfterRefundDecision), personalisation.get("14DaysAfterRefundDecision"));
-        assertEquals("40.00", personalisation.get("refundAmount"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToService", iaAipFrontendUrl)
+            .containsEntry("14DaysAfterRefundDecision", systemDateProvider.dueDate(daysAfterRefundDecision))
+            .containsEntry("refundAmount", "40.00");
 
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());

@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -32,12 +33,10 @@ public class AppellantAppealExitedOnlinePersonalisationSmsTest {
     @Mock
     RecipientsFinder recipientsFinder;
 
-    private Long caseId = 12345L;
-    private String smsTemplateId = "someSmsTemplateId";
+    private final String smsTemplateId = "someSmsTemplateId";
 
-    private String mockedAppealReferenceNumber = "someReferenceNumber";
-    private String mockedAppellantMobilePhone = "07123456789";
-    private String removeAppealReason = "some remove appeal reason";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
+    private final String removeAppealReason = "some remove appeal reason";
 
     private AppellantAppealExitedOnlinePersonalisationSms appellantAppealExitedOnlinePersonalisationSms;
 
@@ -62,6 +61,7 @@ public class AppellantAppealExitedOnlinePersonalisationSmsTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_APPEAL_EXITED_ONLINE_AIP_APPELLANT_SMS",
                 appellantAppealExitedOnlinePersonalisationSms.getReferenceId(caseId));
     }
@@ -72,14 +72,16 @@ public class AppellantAppealExitedOnlinePersonalisationSmsTest {
         when(recipientsFinder.findAll(null, NotificationType.SMS))
                 .thenThrow(new NullPointerException("asylumCase must not be null"));
 
-        assertThatThrownBy(() -> appellantAppealExitedOnlinePersonalisationSms.getRecipientsList(null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+        NullPointerException exception = 
+assertThrows(NullPointerException.class, () -> appellantAppealExitedOnlinePersonalisationSms.getRecipientsList(null))
+                ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_return_given_mobile_mobile_list_from_subscribers_in_asylum_case() {
 
+        String mockedAppellantMobilePhone = "07123456789";
         when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
                 .thenReturn(Collections.singleton(mockedAppellantMobilePhone));
 
@@ -90,10 +92,11 @@ public class AppellantAppealExitedOnlinePersonalisationSmsTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
+        NullPointerException exception = 
+assertThrows(NullPointerException.class, 
                 () -> appellantAppealExitedOnlinePersonalisationSms.getPersonalisation((AsylumCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+                ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -102,8 +105,9 @@ public class AppellantAppealExitedOnlinePersonalisationSmsTest {
         Map<String, String> personalisation =
                 appellantAppealExitedOnlinePersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
-        assertEquals(removeAppealReason, personalisation.get("reason"));
+        assertThat(personalisation)
+            .containsEntry("Appeal Ref Number", mockedAppealReferenceNumber)
+            .containsEntry("reason", removeAppealReason);
     }
 
     @Test
@@ -116,7 +120,8 @@ public class AppellantAppealExitedOnlinePersonalisationSmsTest {
         Map<String, String> personalisation =
                 appellantAppealExitedOnlinePersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals("", personalisation.get("Appeal Ref Number"));
-        assertEquals("", personalisation.get("reason"));
+        assertThat(personalisation)
+            .containsEntry("Appeal Ref Number", "")
+            .containsEntry("reason", "");
     }
 }

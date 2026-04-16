@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -48,20 +49,18 @@ public class HomeOfficeListCmaPersonalisationTest {
     @Mock
     Map<HearingCentre, String> homeOfficeEmailAddressMap;
 
-    private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
-    private String iaExUiFrontendUrl = "http://somefrontendurl";
-    private HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
-    private String homeOfficeEmailAddress = "homeoffice@example.com";
-    private String hearingCentreAddress = "some hearing centre address";
+    private final String templateId = "someTemplateId";
+    private final String iaExUiFrontendUrl = "http://somefrontendurl";
+    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    private final String homeOfficeEmailAddress = "homeoffice@example.com";
+    private final String hearingCentreAddress = "some hearing centre address";
 
-    private String hearingDateTime = "2019-08-27T14:25:15.000";
-    private String hearingDate = "2019-08-27";
-    private String hearingTime = "14:25";
+    private final String hearingDate = "2019-08-27";
+    private final String hearingTime = "14:25";
 
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
 
     private HomeOfficeListCmaPersonalisation homeOfficeListCmaPersonalisation;
 
@@ -69,6 +68,7 @@ public class HomeOfficeListCmaPersonalisationTest {
     public void setup() {
 
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
+        String hearingDateTime = "2019-08-27T14:25:15.000";
         when(asylumCase.read(LIST_CASE_HEARING_DATE, String.class)).thenReturn(Optional.of(hearingDateTime));
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
@@ -99,6 +99,7 @@ public class HomeOfficeListCmaPersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_LIST_CMA_HOME_OFFICE_EMAIL", homeOfficeListCmaPersonalisation.getReferenceId(caseId));
     }
 
@@ -110,9 +111,10 @@ public class HomeOfficeListCmaPersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> homeOfficeListCmaPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase cannot be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> homeOfficeListCmaPersonalisation.getPersonalisation((AsylumCase) null))
+            ;
+assertEquals("asylumCase cannot be null", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -126,13 +128,14 @@ public class HomeOfficeListCmaPersonalisationTest {
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-        assertEquals(appealReferenceNumber, personalisation.get("Appeal Ref Number"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("Hyperlink to service"));
-        assertEquals(hearingDate, personalisation.get("hearingDate"));
-        assertEquals(hearingTime, personalisation.get("hearingTime"));
-        assertEquals(hearingCentreAddress, personalisation.get("hearingCentreAddress"));
+        assertThat(personalisation)
+            .containsEntry("Appeal Ref Number", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("Hyperlink to service", iaExUiFrontendUrl)
+            .containsEntry("hearingDate", hearingDate)
+            .containsEntry("hearingTime", hearingTime)
+            .containsEntry("hearingCentreAddress", hearingCentreAddress);
     }
 
 }

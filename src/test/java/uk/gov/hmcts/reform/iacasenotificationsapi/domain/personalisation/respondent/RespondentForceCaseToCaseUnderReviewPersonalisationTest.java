@@ -1,10 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
@@ -23,17 +21,17 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 class RespondentForceCaseToCaseUnderReviewPersonalisationTest {
 
-    String templateId = "a_template_id";
-    Long caseReferenceId = 123456789098766L;
-    String respondentEmail = "respondent@email.com";
-    String appealReferenceNumber = "PA/12345/2022";
-    String frontendUrl = "https://ia-aip-frontend.com";
-    String appellantFamilyName = "Hunt";
-    String appellantGivenNames = "Tomas";
-    String homeOfficeReferenceNumber = "1234-56789";
-    String customerServiceProvideTelephone = "0800 12345678";
-    String customerServiceProvideEmail = "customer@service.com";
-    Map<String, String> customerServiceMap = ImmutableMap.of(
+    final String templateId = "a_template_id";
+    final Long caseReferenceId = 123456789098766L;
+    final String respondentEmail = "respondent@email.com";
+    final String appealReferenceNumber = "PA/12345/2022";
+    final String frontendUrl = "https://ia-aip-frontend.com";
+    final String appellantFamilyName = "Hunt";
+    final String appellantGivenNames = "Tomas";
+    final String homeOfficeReferenceNumber = "1234-56789";
+    final String customerServiceProvideTelephone = "0800 12345678";
+    final String customerServiceProvideEmail = "customer@service.com";
+    final Map<String, String> customerServiceMap = ImmutableMap.of(
             "customerServicesTelephone", customerServiceProvideTelephone,
             "customerServicesEmail", customerServiceProvideEmail);
     @Mock
@@ -61,7 +59,7 @@ class RespondentForceCaseToCaseUnderReviewPersonalisationTest {
 
     @Test
     void should_return_personalisation_email() {
-        assertThat(sut.getRecipientsList(asylumCase)).contains(respondentEmail);
+        assertTrue(sut.getRecipientsList(asylumCase).contains(respondentEmail));
     }
 
     @Test

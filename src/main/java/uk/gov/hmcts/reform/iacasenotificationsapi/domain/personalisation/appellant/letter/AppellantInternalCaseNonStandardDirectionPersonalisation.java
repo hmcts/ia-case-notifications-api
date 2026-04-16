@@ -79,7 +79,7 @@ public class AppellantInternalCaseNonStandardDirectionPersonalisation implements
                 .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                 .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
-                .put("directionExplanation", direction.getExplanation())
+                .put("explanation", direction.getExplanation())
                 .put("directionDueDate", dueDate);
 
         for (int i = 0; i < address.size(); i++) {

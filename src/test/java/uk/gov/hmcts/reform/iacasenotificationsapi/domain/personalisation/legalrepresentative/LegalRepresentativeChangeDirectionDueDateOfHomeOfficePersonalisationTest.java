@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CURRENT_CASE_STATE_VISIBLE_TO_LEGAL_REPRESENTATIVE;
@@ -31,7 +32,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-@SuppressWarnings("unchecked")
 public class LegalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisationTest {
 
     @Mock
@@ -47,24 +47,16 @@ public class LegalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisatio
     @Mock
     CustomerServicesProvider customerServicesProvider;
 
-    private Long caseId = 12345L;
-    private String afterListingTemplateId = "afterListingTemplateId";
-    private String beforeListingTemplateId = "beforeListingTemplateId";
-    private String iaExUiFrontendUrl = "http://localhost";
-    private String legalRepEmailAddress = "legalRep@example.com";
-    private String hmctsReference = "hmctsReference";
-    private String ariaListingReference = "someAriaListingReference";
-    private String legalRepReference = "legalRepresentativeReference";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
+    private final String afterListingTemplateId = "afterListingTemplateId";
+    private final String beforeListingTemplateId = "beforeListingTemplateId";
+    private final String iaExUiFrontendUrl = "http://localhost";
 
     private LegalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisation
         legalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisation;
 
     @BeforeEach
     public void setUp() {
+        String legalRepEmailAddress = "legalRep@example.com";
         when(emailAddressFinder.getLegalRepEmailAddress(asylumCase)).thenReturn(legalRepEmailAddress);
 
         legalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisation =
@@ -96,20 +88,21 @@ public class LegalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisatio
     @Test
     public void should_throw_exception_if_current_visible_state_to_legal_rep_is_not_present() {
 
-        assertThatThrownBy(
-            () -> legalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisation.getTemplateId(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("currentCaseStateVisibleToLegalRepresentative flag is not present");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class,
+                () -> legalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisation.getTemplateId(asylumCase));
+        assertEquals("currentCaseStateVisibleToLegalRepresentative flag is not present", exception.getMessage());
     }
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_LEGAL_REP_CHANGE_DIRECTION_DUE_DATE_OF_HOME_OFFICE",
             legalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisation.getReferenceId(caseId));
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_given_personalisation_when_all_information_given(YesOrNo isAda) {
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
@@ -120,19 +113,31 @@ public class LegalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisatio
         Map<String, String> personalisation =
             legalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisation.getPersonalisation(callback);
 
-        assertThat(personalisation).isNotEmpty();
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertFalse(personalisation.isEmpty());
+        assertThat(personalisation)
+            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation())
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal"
+                : "Immigration and Asylum appeal")
+            .containsAllEntriesOf(getPersonalisationForLegalRep());
     }
 
     @Test
     public void should_throw_exception_on_personalistaion_when_case_is_null() {
-        assertThatThrownBy(() -> legalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisation
-            .getPersonalisation((Callback<AsylumCase>) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("callback must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> legalRepresentativeChangeDirectionDueDateOfHomeOfficePersonalisation
+                .getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     private Map<String, String> getPersonalisationForLegalRep() {
+        String customerServicesEmail = "cust.services@example.com";
+        String customerServicesTelephone = "555 555 555";
+        String appellantFamilyName = "someAppellantFamilyName";
+        String appellantGivenNames = "someAppellantGivenNames";
+        String legalRepReference = "legalRepresentativeReference";
+        String ariaListingReference = "someAriaListingReference";
+        String hmctsReference = "hmctsReference";
         return ImmutableMap
             .<String, String>builder()
             .put("appealReferenceNumber", hmctsReference)

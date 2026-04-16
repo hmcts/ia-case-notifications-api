@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice;
 
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -33,15 +34,14 @@ public class HomeOfficeAppealSubmittedPayOfflinePersonalisationTest {
     CustomerServicesProvider customerServicesProvider;
 
 
-    private Long caseId = 12345L;
-    private String emailTemplateId = "emailTemplateId";
-    private String iaExUiFrontendUrl = "http://somefrontendurl";
-    private String adaPrefix = "Accelerated detained appeal";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
-    private String homeOfficeEmail = "apchomeoffice@example.com";
+    private final String emailTemplateId = "emailTemplateId";
+    private final String iaExUiFrontendUrl = "http://somefrontendurl";
+    private final String adaPrefix = "Accelerated detained appeal";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String homeOfficeEmail = "apchomeoffice@example.com";
 
     private HomeOfficeAppealSubmittedPayOfflinePersonalisation
             homeOfficeAppealSubmittedPayOfflinePersonalisation;
@@ -76,6 +76,7 @@ public class HomeOfficeAppealSubmittedPayOfflinePersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_APPEAL_SUBMITTED_PAY_OFFLINE_HOME_OFFICE",
                 homeOfficeAppealSubmittedPayOfflinePersonalisation.getReferenceId(caseId));
     }
@@ -88,11 +89,15 @@ public class HomeOfficeAppealSubmittedPayOfflinePersonalisationTest {
         Map<String, String> personalisation =
             homeOfficeAppealSubmittedPayOfflinePersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isNotEmpty();
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
-        assertEquals(isAda.equals(YesOrNo.YES)
-            ? "Accelerated detained appeal"
-            : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
+        assertFalse(personalisation.isEmpty());
+        assertThat(personalisation)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal"
+                : "Immigration and Asylum appeal")
+            .containsEntry("appellantFamilyName", appellantFamilyName);
     }
 
 }

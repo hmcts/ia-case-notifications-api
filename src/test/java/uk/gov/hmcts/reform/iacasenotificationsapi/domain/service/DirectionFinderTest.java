@@ -21,7 +21,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 
 @ExtendWith(MockitoExtension.class)
-@SuppressWarnings("unchecked")
 class DirectionFinderTest {
 
     private final DirectionFinder directionFinder = new DirectionFinder();
@@ -32,9 +31,9 @@ class DirectionFinderTest {
     @Mock
     private IdValue<Direction> existingDirectionById2;
     @Mock
-    private Direction existingDirection1 = mock(Direction.class);
+    private final Direction existingDirection1 = mock(Direction.class);
     @Mock
-    private Direction existingDirection2 = mock(Direction.class);
+    private final Direction existingDirection2 = mock(Direction.class);
 
     @Test
     void should_find_first_tagged_direction() {
@@ -65,7 +64,7 @@ class DirectionFinderTest {
     void should_return_empty_optional_if_not_found() {
 
         List<IdValue<Direction>> directions =
-            Arrays.asList(
+            List.of(
                 existingDirectionById1
             );
 

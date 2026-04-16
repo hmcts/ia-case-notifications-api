@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.legalrepresentative.email;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
@@ -24,14 +23,13 @@ class LegalRepresentativeCreateBailCaseLinkPersonalisationTest {
     @Mock
     BailCase bailCase;
 
-    private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
-    private String legalRepEmailAddress = "legalRep@example.com";
-    private String bailReferenceNumber = "someReferenceNumber";
-    private String legalRepReference = "someLegalRepReference";
-    private String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
-    private String applicantGivenNames = "someApplicantGivenNames";
-    private String applicantFamilyName = "someApplicantFamilyName";
+    private final String templateId = "someTemplateId";
+    private final String legalRepEmailAddress = "legalRep@example.com";
+    private final String bailReferenceNumber = "someReferenceNumber";
+    private final String legalRepReference = "someLegalRepReference";
+    private final String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
+    private final String applicantGivenNames = "someApplicantGivenNames";
+    private final String applicantFamilyName = "someApplicantFamilyName";
 
     private LegalRepresentativeCreateBailCaseLinkPersonalisation legalRepresentativeCreateBailCaseLinkPersonalisation;
 
@@ -58,6 +56,7 @@ class LegalRepresentativeCreateBailCaseLinkPersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_CREATE_BAIL_CASE_LINK_LEGAL_REP",
             legalRepresentativeCreateBailCaseLinkPersonalisation.getReferenceId(caseId));
     }
@@ -72,17 +71,19 @@ class LegalRepresentativeCreateBailCaseLinkPersonalisationTest {
     public void should_throw_exception_when_cannot_find_email_address_for_legal_rep() {
         when(bailCase.read(BailCaseFieldDefinition.LEGAL_REP_EMAIL, String.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> legalRepresentativeCreateBailCaseLinkPersonalisation.getRecipientsList(bailCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("legalRepresentativeEmailAddress is not present");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> legalRepresentativeCreateBailCaseLinkPersonalisation.getRecipientsList(bailCase))
+            ;
+assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
-        assertThatThrownBy(
+        NullPointerException exception =
+assertThrows(NullPointerException.class,
             () -> legalRepresentativeCreateBailCaseLinkPersonalisation.getPersonalisation((BailCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("bailCase must not be null");
+            ;
+assertEquals("bailCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -91,7 +92,12 @@ class LegalRepresentativeCreateBailCaseLinkPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeCreateBailCaseLinkPersonalisation.getPersonalisation(bailCase);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(bailCase);
+        assertThat(personalisation)
+            .containsEntry("bailReferenceNumber", bailReferenceNumber)
+            .containsEntry("legalRepReference", legalRepReference)
+            .containsEntry("applicantGivenNames", applicantGivenNames)
+            .containsEntry("applicantFamilyName", applicantFamilyName)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber);
     }
 
     @Test
@@ -106,7 +112,7 @@ class LegalRepresentativeCreateBailCaseLinkPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeCreateBailCaseLinkPersonalisation.getPersonalisation(bailCase);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(bailCase);
+        assertThat(personalisation).allSatisfy((key, value) -> assertThat(value).isEmpty());
     }
 
 }

@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.editdocument;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HEARING_RECORDING_DOCUMENTS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_DOCUMENTS;
 
@@ -134,7 +134,7 @@ public class EditDocumentServiceTest {
         FormattedDocumentList actualFormattedDocumentList =
             editDocumentService.getFormattedDocumentsGivenCaseAndDocNames(asylumCase, docNamesFromCaseNote);
 
-        assertThat(actualFormattedDocumentList.toString()).isEqualTo(expectedFormattedDocumentList.toString());
+        assertEquals(expectedFormattedDocumentList.toString(), actualFormattedDocumentList.toString());
     }
 
 }

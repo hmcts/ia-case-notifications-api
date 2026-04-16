@@ -42,12 +42,12 @@ class RoleAssignmentServiceTest {
     @Mock
     private CaseDetails<CaseData> caseDetails;
     private final String userId = "userId";
-    private final String accessToken = "accessToken";
     private final String serviceToken = "serviceToken";
 
     @BeforeEach
     void setUp() {
         when(authTokenGenerator.generate()).thenReturn(serviceToken);
+        String accessToken = "accessToken";
         when(userDetails.getAccessToken()).thenReturn(accessToken);
         when(userDetails.getId()).thenReturn(userId);
 

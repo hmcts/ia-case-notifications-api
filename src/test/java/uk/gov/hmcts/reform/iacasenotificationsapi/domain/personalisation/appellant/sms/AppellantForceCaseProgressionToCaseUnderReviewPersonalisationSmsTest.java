@@ -1,9 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
 import java.util.Collections;
@@ -30,12 +29,11 @@ class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationSmsTest {
     @Mock
     RecipientsFinder recipientsFinder;
 
-    private Long caseId = 12345L;
-    private String smsTemplateId = "someSmsTemplateId";
-    private String iaAipFrontendUrl = "http://localhost";
+    private final String smsTemplateId = "someSmsTemplateId";
+    private final String iaAipFrontendUrl = "http://localhost";
 
-    private String mockedAppealReferenceNumber = "someReferenceNumber";
-    private String mockedAppellantMobilePhone = "07123456789";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
+    private final String mockedAppellantMobilePhone = "07123456789";
 
     private AppellantForceCaseProgressionToCaseUnderReviewPersonalisationSms sut;
 
@@ -61,6 +59,7 @@ class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationSmsTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_FORCE_CASE_TO_CASE_UNDER_REVIEW_AIP_SMS",
                 sut.getReferenceId(caseId));
     }
@@ -71,9 +70,10 @@ class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationSmsTest {
         when(recipientsFinder.findAll(null, NotificationType.SMS))
                 .thenThrow(new NullPointerException("asylumCase must not be null"));
 
-        assertThatThrownBy(() -> sut.getRecipientsList(null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+        NullPointerException exception = 
+assertThrows(NullPointerException.class, () -> sut.getRecipientsList(null))
+                ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -88,20 +88,22 @@ class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationSmsTest {
         Map<String, String> personalisation =
                 sut.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", mockedAppealReferenceNumber)
+            .containsEntry("link to timeline", iaAipFrontendUrl);
     }
 
     @Test
     public void should_return_personalisation_when_all_mandatory_information_given() {
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
-        when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
-        when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
                 sut.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("link to timeline", iaAipFrontendUrl);
     }
 }
 

@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -33,7 +33,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-@SuppressWarnings("unchecked")
 public class HomeOfficeUploadAdditionalEvidencePersonalisationTest {
 
     @Mock
@@ -47,19 +46,11 @@ public class HomeOfficeUploadAdditionalEvidencePersonalisationTest {
     @Mock
     CustomerServicesProvider customerServicesProvider;
 
-    private Long caseId = 12345L;
-    private String beforeListingTemplateId = "beforeListingTemplateId";
-    private String afterListingTemplateId = "afterListingTemplateId";
-    private String iaExUiFrontendUrl = "http://localhost";
-    private HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
-    private String homeOfficeEmailAddress = "homeOffice@example.com";
-    private String appealReferenceNumber = "hmctsReference";
-    private String ariaListingReference = "someAriaListingReference";
-    private String homeOfficeReference = "homeOfficeReference";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
+    private final String beforeListingTemplateId = "beforeListingTemplateId";
+    private final String afterListingTemplateId = "afterListingTemplateId";
+    private final String iaExUiFrontendUrl = "http://localhost";
+    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    private final String homeOfficeEmailAddress = "homeOffice@example.com";
 
     private HomeOfficeUploadAdditionalEvidencePersonalisation homeOfficeUploadAdditionalEvidencePersonalisation;
 
@@ -95,6 +86,7 @@ public class HomeOfficeUploadAdditionalEvidencePersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_UPLOADED_ADDITIONAL_EVIDENCE_HOME_OFFICE",
             homeOfficeUploadAdditionalEvidencePersonalisation.getReferenceId(caseId));
     }
@@ -111,20 +103,33 @@ public class HomeOfficeUploadAdditionalEvidencePersonalisationTest {
         Map<String, String> personalisation =
             homeOfficeUploadAdditionalEvidencePersonalisation.getPersonalisation(callback);
 
-        assertThat(personalisation).isNotEmpty();
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertFalse(personalisation.isEmpty());
+        assertThat(personalisation)
+            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation())
+            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal"
+                : "Immigration and Asylum appeal")
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsAllEntriesOf(personalisationProvider.getPersonalisation(callback));
     }
 
     @Test
     public void should_throw_exception_when_callback_is_null() {
 
-        assertThatThrownBy(
+        NullPointerException exception = 
+assertThrows(NullPointerException.class, 
             () -> homeOfficeUploadAdditionalEvidencePersonalisation.getPersonalisation((Callback<AsylumCase>) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("callback must not be null");
+            ;
+assertEquals("callback must not be null", exception.getMessage());
     }
 
     private Map<String, String> getPersonalisationForHomeOffice() {
+        String customerServicesEmail = "cust.services@example.com";
+        String customerServicesTelephone = "555 555 555";
+        String appellantFamilyName = "someAppellantFamilyName";
+        String appellantGivenNames = "someAppellantGivenNames";
+        String homeOfficeReference = "homeOfficeReference";
+        String ariaListingReference = "someAriaListingReference";
+        String appealReferenceNumber = "hmctsReference";
         return ImmutableMap
             .<String, String>builder()
             .put("appealReferenceNumber", appealReferenceNumber)

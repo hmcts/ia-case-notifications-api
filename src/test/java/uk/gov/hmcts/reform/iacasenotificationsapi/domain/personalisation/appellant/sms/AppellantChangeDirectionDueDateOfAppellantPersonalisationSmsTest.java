@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -41,16 +42,12 @@ public class AppellantChangeDirectionDueDateOfAppellantPersonalisationSmsTest {
     @Mock
     PersonalisationProvider personalisationProvider;
 
-    private Long caseId = 12345L;
-    private String smsTemplateId = "afterListingEmailTemplateId";
+    private final String smsTemplateId = "afterListingEmailTemplateId";
 
-    private String mockedAppealReferenceNumber = "someReferenceNumber";
-    private String mockedAppellantMobilePhone = "07123456789";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
 
     private AppellantChangeDirectionDueDateOfAppellantPersonalisationSms appellantChangeDirectionDueDateOfAppellantPersonalisationSms;
-    private String directionExplanation = "Some HO change direction due date content";
-    private String dueDate = "2020-10-08";
-    private String iaAipFrontendUrl = "iaAipFrontendUrl";
+    private final String iaAipFrontendUrl = "iaAipFrontendUrl";
 
     @BeforeEach
     public void setup() {
@@ -76,6 +73,7 @@ public class AppellantChangeDirectionDueDateOfAppellantPersonalisationSmsTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_APPELLANT_CHANGE_DIRECTION_DUE_DATE_OF_APPELLANT_SMS",
             appellantChangeDirectionDueDateOfAppellantPersonalisationSms.getReferenceId(caseId));
     }
@@ -83,6 +81,7 @@ public class AppellantChangeDirectionDueDateOfAppellantPersonalisationSmsTest {
     @Test
     public void should_return_given_email_address_list_from_subscribers_in_asylum_case() {
 
+        String mockedAppellantMobilePhone = "07123456789";
         when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
             .thenReturn(Collections.singleton(mockedAppellantMobilePhone));
 
@@ -96,9 +95,10 @@ public class AppellantChangeDirectionDueDateOfAppellantPersonalisationSmsTest {
         when(recipientsFinder.findAll(null, NotificationType.SMS))
             .thenThrow(new NullPointerException("asylumCase must not be null"));
 
-        assertThatThrownBy(() -> appellantChangeDirectionDueDateOfAppellantPersonalisationSms.getRecipientsList(null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> appellantChangeDirectionDueDateOfAppellantPersonalisationSms.getRecipientsList(null))
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -109,12 +109,15 @@ public class AppellantChangeDirectionDueDateOfAppellantPersonalisationSmsTest {
         Map<String, String> personalisation =
             appellantChangeDirectionDueDateOfAppellantPersonalisationSms.getPersonalisation(callback);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("linkToService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", mockedAppealReferenceNumber)
+            .containsEntry("linkToService", iaAipFrontendUrl);
 
     }
 
     private Map<String, String> getPersonalisationForAppellant() {
+        String dueDate = "2020-10-08";
+        String directionExplanation = "Some HO change direction due date content";
         return ImmutableMap
             .<String, String>builder()
             .put("linkToService", iaAipFrontendUrl)

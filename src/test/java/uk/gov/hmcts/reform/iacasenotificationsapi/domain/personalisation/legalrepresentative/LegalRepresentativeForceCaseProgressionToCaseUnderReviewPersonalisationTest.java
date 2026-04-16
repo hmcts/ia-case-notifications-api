@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -13,6 +14,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,14 +36,13 @@ public class LegalRepresentativeForceCaseProgressionToCaseUnderReviewPersonalisa
     @Mock
     AsylumCase asylumCase;
 
-    private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
-    private String legalRepEmailAddress = "legalrep@example.com";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String legalRepRefNumber = "somelegalRepRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
-    private String linkToOnlineService = "https://immigration-appeal.demo.platform.hmcts.net/start-appeal";
+    private final String templateId = "someTemplateId";
+    private final String legalRepEmailAddress = "legalrep@example.com";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String legalRepRefNumber = "somelegalRepRefNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String linkToOnlineService = "https://immigration-appeal.demo.platform.hmcts.net/start-appeal";
 
     private LegalRepresentativeForceCaseProgressionToCaseUnderReviewPersonalisation
         forceCaseProgressionToCaseUnderReviewPersonalisation;
@@ -67,6 +68,7 @@ public class LegalRepresentativeForceCaseProgressionToCaseUnderReviewPersonalisa
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_FORCE_CASE_TO_CASE_UNDER_REVIEW_LEGAL_REPRESENTATIVE",
             forceCaseProgressionToCaseUnderReviewPersonalisation.getReferenceId(caseId));
     }
@@ -81,18 +83,20 @@ public class LegalRepresentativeForceCaseProgressionToCaseUnderReviewPersonalisa
     public void should_throw_exception_when_cannot_find_email_address_for_legal_rep() {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> forceCaseProgressionToCaseUnderReviewPersonalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("legalRepresentativeEmailAddress is not present");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> forceCaseProgressionToCaseUnderReviewPersonalisation.getRecipientsList(asylumCase))
+            ;
+assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
+        NullPointerException exception =
+assertThrows(NullPointerException.class,
             () -> forceCaseProgressionToCaseUnderReviewPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -104,8 +108,15 @@ public class LegalRepresentativeForceCaseProgressionToCaseUnderReviewPersonalisa
         Map<String, String> personalisation =
             forceCaseProgressionToCaseUnderReviewPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isNotEmpty();
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertFalse(personalisation.isEmpty());
+        assertThat(personalisation)
+            .containsEntry("legalRepReferenceNumber", legalRepRefNumber)
+            .containsEntry("linkToOnlineService", linkToOnlineService)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal"
+                : "Immigration and Asylum appeal")
+            .containsEntry("appellantFamilyName", appellantFamilyName);
     }
 
     @ParameterizedTest
@@ -122,7 +133,21 @@ public class LegalRepresentativeForceCaseProgressionToCaseUnderReviewPersonalisa
         Map<String, String> personalisation =
             forceCaseProgressionToCaseUnderReviewPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isNotEmpty();
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertFalse(personalisation.isEmpty());
+
+        assertThat(personalisation)
+            .containsEntry("linkToOnlineService", linkToOnlineService)
+            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal"
+                : "Immigration and Asylum appeal");
+
+        assertThat(personalisation).allSatisfy((key, value) -> {
+            if (!List.of(
+                "linkToOnlineService",
+                "subjectPrefix"
+            ).contains(key)) {
+                assertThat(value).isEmpty();
+            }
+        });
+
     }
 }

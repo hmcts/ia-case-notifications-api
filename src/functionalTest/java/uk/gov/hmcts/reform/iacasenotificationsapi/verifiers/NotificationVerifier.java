@@ -2,8 +2,11 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.verifiers;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.google.common.base.Strings;
 
@@ -88,42 +91,34 @@ public class NotificationVerifier implements Verifier {
                     final String actualSubject = notification.getSubject().orElse("");
                     final String actualBody = notification.getBody();
 
-                    assertThat(
-                        description
-                            + ": Notification "
-                            + expectedReference
-                            + " was delivered with wrong reference",
+                    assertEquals(
+                        expectedReference,
                         actualReference,
-                        equalTo(expectedReference)
+                        description + ": Notification "
+                            + expectedReference + " was delivered with wrong reference"
                     );
 
-                    assertThat(
-                        description
-                            + ": Notification "
-                            + expectedReference
-                            + " was delivered to wrong recipient",
+                    assertEquals(
+                        expectedRecipient,
                         actualRecipient,
-                        equalTo(expectedRecipient)
+                        description + ": Notification "
+                            + expectedReference + " was delivered to wrong recipient"
                     );
 
-                    assertThat(
-                        description
-                            + ": Notification "
-                            + expectedReference
-                            + " was delivered with wrong subject content",
+                    assertEquals(
+                        expectedSubject,
                         actualSubject,
-                        equalTo(expectedSubject)
+                        description + ": Notification "
+                            + expectedReference + " was delivered with wrong subject content"
                     );
 
                     if (expectedBodyUnknownType instanceof String) {
 
-                        assertThat(
-                            description
-                                + ": Notification "
-                                + expectedReference
-                                + " was delivered with wrong body content",
+                        assertEquals(
+                            expectedBodyUnknownType,
                             actualBody,
-                            equalTo((String) expectedBodyUnknownType)
+                            description + ": Notification "
+                                + expectedReference + " was delivered with wrong body content"
                         );
 
                     } else {
@@ -132,13 +127,10 @@ public class NotificationVerifier implements Verifier {
 
                         expectedBodyMatches.forEach(expectedBodyMatch -> {
 
-                            assertThat(
-                                description
-                                    + ": Notification "
-                                    + expectedReference
-                                    + " was delivered with wrong body content match",
-                                actualBody,
-                                containsString(expectedBodyMatch)
+                            assertTrue(
+                                actualBody.contains(expectedBodyMatch),
+                                description + ": Notification "
+                                    + expectedReference + " was delivered with wrong body content match"
                             );
                         });
                     }

@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -38,14 +39,13 @@ public class CaseOfficerHomeOfficeResponseUploadedPersonalisationTest {
     @Mock
     private FeatureToggler featureToggler;
 
-    private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
-    private String iaExUiFrontendUrl = "http://somefrontendurl";
-    private HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
-    private String hearingCentreEmailAddress = "hearingCentre@example.com";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private final String templateId = "someTemplateId";
+    private final String iaExUiFrontendUrl = "http://somefrontendurl";
+    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    private final String hearingCentreEmailAddress = "hearingCentre@example.com";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
 
     private CaseOfficerHomeOfficeResponseUploadedPersonalisation caseOfficerHomeOfficeResponseUploadedPersonalisation;
 
@@ -72,6 +72,7 @@ public class CaseOfficerHomeOfficeResponseUploadedPersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_UPLOADED_HO_RESPONSE_CASE_OFFICER",
             caseOfficerHomeOfficeResponseUploadedPersonalisation.getReferenceId(caseId));
     }
@@ -93,27 +94,30 @@ public class CaseOfficerHomeOfficeResponseUploadedPersonalisationTest {
     public void should_throw_exception_on_email_address_when_hearing_centre_is_empty() {
         when(featureToggler.getValue("tcw-notifications-feature", true)).thenReturn(true);
         when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> caseOfficerHomeOfficeResponseUploadedPersonalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("hearingCentre is not present");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> caseOfficerHomeOfficeResponseUploadedPersonalisation.getRecipientsList(asylumCase))
+            ;
+assertEquals("hearingCentre is not present", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_cannot_find_email_address_for_hearing_centre() {
         when(featureToggler.getValue("tcw-notifications-feature", true)).thenReturn(true);
         when(hearingCentreEmailAddressMap.get(hearingCentre)).thenReturn(null);
-        assertThatThrownBy(() -> caseOfficerHomeOfficeResponseUploadedPersonalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("Hearing centre email address not found: " + hearingCentre.toString());
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> caseOfficerHomeOfficeResponseUploadedPersonalisation.getRecipientsList(asylumCase))
+            ;
+assertEquals("Hearing centre email address not found: " + hearingCentre.toString(), exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
+        NullPointerException exception =
+assertThrows(NullPointerException.class,
             () -> caseOfficerHomeOfficeResponseUploadedPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -125,10 +129,11 @@ public class CaseOfficerHomeOfficeResponseUploadedPersonalisationTest {
         Map<String, String> personalisation =
             caseOfficerHomeOfficeResponseUploadedPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
@@ -147,10 +152,11 @@ public class CaseOfficerHomeOfficeResponseUploadedPersonalisationTest {
         Map<String, String> personalisation =
             caseOfficerHomeOfficeResponseUploadedPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "")
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));

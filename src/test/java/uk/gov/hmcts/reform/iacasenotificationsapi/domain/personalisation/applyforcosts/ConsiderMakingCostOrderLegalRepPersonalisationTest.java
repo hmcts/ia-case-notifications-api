@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.applyforcosts;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -33,16 +34,15 @@ class ConsiderMakingCostOrderLegalRepPersonalisationTest {
     @Mock
     PersonalisationProvider personalisationProvider;
     private static final String applyForCostsCreationDate = "2023-11-24";
-    private Long caseId = 12345L;
-    private String templateId = "testTemplateId";
-    private String legalRepEmailAddress = "legalRepEmailAddress@gmail.com";
-    private String iaExUiFrontendUrl = "http://localhost";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String legalRepRefNumber = "someLegalRepRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
+    private final String templateId = "testTemplateId";
+    private final String legalRepEmailAddress = "legalRepEmailAddress@gmail.com";
+    private final String iaExUiFrontendUrl = "http://localhost";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String legalRepRefNumber = "someLegalRepRefNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
     private ConsiderMakingCostOrderLegalRepPersonalisation considerMakingCostOrderLegalRepPersonalisation;
 
     @BeforeEach
@@ -75,6 +75,7 @@ class ConsiderMakingCostOrderLegalRepPersonalisationTest {
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_CONSIDER_MAKING_A_COST_ORDER_LEGAL_REP_EMAIL",
             considerMakingCostOrderLegalRepPersonalisation.getReferenceId(caseId));
     }
@@ -87,9 +88,10 @@ class ConsiderMakingCostOrderLegalRepPersonalisationTest {
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> considerMakingCostOrderLegalRepPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> considerMakingCostOrderLegalRepPersonalisation.getPersonalisation((AsylumCase) null))
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -97,13 +99,14 @@ class ConsiderMakingCostOrderLegalRepPersonalisationTest {
 
         Map<String, String> personalisation = considerMakingCostOrderLegalRepPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-        assertEquals(legalRepRefNumber, personalisation.get("legalRepReferenceNumber"));
+            assertEquals(legalRepRefNumber, personalisation.get("legalRepReferenceNumber"));
     }
 
 }

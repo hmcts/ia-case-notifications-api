@@ -77,24 +77,22 @@ public class EditListingEmailNotificationGeneratorTest {
 
     private NotificationGenerator notificationGenerator;
 
-    private Long caseId = 12345L;
+    private final String templateId1 = "templateId1";
+    private final String templateId2 = "templateId1";
 
-    private String templateId1 = "templateId1";
-    private String templateId2 = "templateId1";
+    private final String refId1 = "refId1";
+    private final String refId2 = "refId2";
 
-    private String refId1 = "refId1";
-    private String refId2 = "refId2";
+    private final String emailAddress1 = "email1@example.com";
+    private final String emailAddress2 = "email2@example.com";
 
-    private String emailAddress1 = "email1@example.com";
-    private String emailAddress2 = "email2@example.com";
+    private final Map<String, String> personalizationMap1 = emptyMap();
+    private final Map<String, String> personalizationMap2 = emptyMap();
 
-    private Map<String, String> personalizationMap1 = emptyMap();
-    private Map<String, String> personalizationMap2 = emptyMap();
+    private final List<IdValue<String>> notificationsSent = newArrayList();
 
-    private List<IdValue<String>> notificationsSent = newArrayList();
-
-    private String notificationId1 = "notificationId1";
-    private String notificationId2 = "notificationId2";
+    private final String notificationId1 = "notificationId1";
+    private final String notificationId2 = "notificationId2";
 
     @BeforeEach
     public void setup() {
@@ -107,6 +105,7 @@ public class EditListingEmailNotificationGeneratorTest {
 
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
         when(caseDetailsBefore.getCaseData()).thenReturn(asylumCaseBefore);
+        Long caseId = 12345L;
         when(caseDetails.getId()).thenReturn(caseId);
 
         when(asylumCase.read(AsylumCaseDefinition.NOTIFICATIONS_SENT)).thenReturn(Optional.of(notificationsSent));

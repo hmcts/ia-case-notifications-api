@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -38,14 +39,13 @@ public class CaseOfficerAdjournHearingWithoutDatePersonalisationTest {
     @Mock
     FeatureToggler featureToggler;
 
-    private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
+    private final String templateId = "someTemplateId";
 
-    private String caseOfficerEmailAddress = "caseOfficer@example.com";
+    private final String caseOfficerEmailAddress = "caseOfficer@example.com";
 
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
 
     private CaseOfficerAdjournHearingWithoutDatePersonalisation caseOfficerAdjournHearingWithoutDatePersonalisation;
 
@@ -67,6 +67,7 @@ public class CaseOfficerAdjournHearingWithoutDatePersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_CASE_OFFICER_ADJOURN_HEARING_WITHOUT_DATE",
             caseOfficerAdjournHearingWithoutDatePersonalisation.getReferenceId(caseId));
     }
@@ -81,20 +82,20 @@ public class CaseOfficerAdjournHearingWithoutDatePersonalisationTest {
     @Test
     public void should_return_given_email_address_from_asylum_case_when_feature_flag_is_Off() {
         assertTrue(caseOfficerAdjournHearingWithoutDatePersonalisation.getRecipientsList(asylumCase)
-                .isEmpty());
+            .isEmpty());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
-            () -> caseOfficerAdjournHearingWithoutDatePersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> caseOfficerAdjournHearingWithoutDatePersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         initializePrefixes(caseOfficerAdjournHearingWithoutDatePersonalisation);
@@ -103,7 +104,13 @@ public class CaseOfficerAdjournHearingWithoutDatePersonalisationTest {
         Map<String, String> personalisation =
             caseOfficerAdjournHearingWithoutDatePersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isNotEmpty();
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertFalse(personalisation.isEmpty());
+        assertThat(personalisation)
+            .containsEntry("ariaListingReference", "")
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal"
+                : "Immigration and Asylum appeal")
+            .containsEntry("appellantFamilyName", appellantFamilyName);
     }
 }

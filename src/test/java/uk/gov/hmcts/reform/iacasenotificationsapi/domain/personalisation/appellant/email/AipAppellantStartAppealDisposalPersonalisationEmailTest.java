@@ -17,6 +17,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 import java.util.Map;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -110,9 +111,10 @@ class AipAppellantStartAppealDisposalPersonalisationEmailTest {
                 aipAppellantStartAppealDisposalPersonalisationEmail.getPersonalisation(callback);
 
         // then
-        assertEquals("someAppellantGivenNames someAppellantFamilyName", personalisation.get("appellantFullName"));
-        assertEquals("someHomeOfficeReferenceNumber", personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("http://localhost", personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appellantFullName", "someAppellantGivenNames someAppellantFamilyName")
+            .containsEntry("homeOfficeReferenceNumber", "someHomeOfficeReferenceNumber")
+            .containsEntry("linkToOnlineService", "http://localhost");
         assertNotNull(personalisation.get("creationDate"));
     }
 
@@ -129,8 +131,9 @@ class AipAppellantStartAppealDisposalPersonalisationEmailTest {
                 aipAppellantStartAppealDisposalPersonalisationEmail.getPersonalisation(callback);
 
         // then
-        assertThat(personalisation).isNotEmpty();
-        assertEquals("Appellant", personalisation.get("appellantFullName"));
-        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
+        assertFalse(personalisation.isEmpty());
+        assertThat(personalisation)
+            .containsEntry("appellantFullName", "Appellant")
+            .containsEntry("homeOfficeReferenceNumber", "");
     }
 }

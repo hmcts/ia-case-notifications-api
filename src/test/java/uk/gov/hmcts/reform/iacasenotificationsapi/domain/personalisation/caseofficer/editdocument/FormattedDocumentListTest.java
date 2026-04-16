@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.editdocument;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,6 +22,6 @@ public class FormattedDocumentListTest {
             .append("Document: \nsome other name\nDescription: \nsome other desc")
             .toString();
 
-        assertThat(actual).isEqualTo(expected);
+        assertEquals(expected, actual);
     }
 }

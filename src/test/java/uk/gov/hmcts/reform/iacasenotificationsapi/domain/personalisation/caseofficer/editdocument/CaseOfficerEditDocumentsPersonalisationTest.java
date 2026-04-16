@@ -1,13 +1,12 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.editdocument;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
@@ -187,17 +186,18 @@ public class CaseOfficerEditDocumentsPersonalisationTest {
         assertEquals("http://localhost", actualPersonalisation.get("linkToOnlineService"));
         assertEquals(expectedReason, actualPersonalisation.get("reasonForEditingOrDeletingDocuments"));
 
-        then(editDocumentService).should(times(1))
+        verify(editDocumentService, times(1))
             .getFormattedDocumentsGivenCaseAndDocNames(any(AsylumCase.class), argCaptor.capture());
 
         List<String> actualDocNames = argCaptor.getValue();
-        assertThat(actualDocNames).containsOnly("some doc name", "some other doc name");
+        assertEquals(List.of("some doc name", "some other doc name"), actualDocNames);
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
-        assertThatThrownBy(() -> personalisation.getPersonalisation((Callback<AsylumCase>) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("callback must not be null");
+        NullPointerException exception = 
+assertThrows(NullPointerException.class, () -> personalisation.getPersonalisation((Callback<AsylumCase>) null))
+            ;
+assertEquals("callback must not be null", exception.getMessage());
     }
 }

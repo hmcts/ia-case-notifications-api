@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -52,24 +53,20 @@ class CaseOfficerRemoveRepresentationPersonalisationTest {
     @Mock
     PinInPostDetails pinInPostDetails;
 
-    private Long ccdCaseId = 12345L;
+    private final Long ccdCaseId = 12345L;
     private final String beforeListingTemplateId = "beforeListingTemplateId";
     private final String afterListingTemplateId = "afterListingTemplateId";
     private final String iaExUiFrontendUrl = "http://somefrontendurl";
     private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
     private final String hearingCentreEmailAddress = "hearingCentre@example.com";
-    private final String hearingDateTime = "2019-08-27T14:25:15.000";
 
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String ariaListingReference = "someAriaListingReference";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-    private String securityCode = "securityCode";
-    private String validDate = "2022-12-31";
-    private String validDateFormatted = "31 Dec 2022";
-    private String iaAipFrontendUrl = "iaAipFrontendUrl/";
-    private String iaAipPathToSelfRepresentation = "iaAipPathToSelfRepresentation";
-    private String linkToPiPStartPage = "iaAipFrontendUrl/iaAipPathToSelfRepresentation";
+    private final String securityCode = "securityCode";
+    private final String validDateFormatted = "31 Dec 2022";
+    private final String linkToPiPStartPage = "iaAipFrontendUrl/iaAipPathToSelfRepresentation";
 
     private CaseOfficerRemoveRepresentationPersonalisation caseOfficerRemoveRepresentationPersonalisation;
 
@@ -80,6 +77,7 @@ class CaseOfficerRemoveRepresentationPersonalisationTest {
         when(caseDetails.getId()).thenReturn(ccdCaseId);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
+        String hearingDateTime = "2019-08-27T14:25:15.000";
         when(asylumCase.read(LIST_CASE_HEARING_DATE, String.class)).thenReturn(Optional.of(hearingDateTime));
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(ariaListingReference));
@@ -88,10 +86,13 @@ class CaseOfficerRemoveRepresentationPersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_PIN_IN_POST, PinInPostDetails.class)).thenReturn(Optional.of(pinInPostDetails));
 
         when(pinInPostDetails.getAccessCode()).thenReturn(securityCode);
+        String validDate = "2022-12-31";
         when(pinInPostDetails.getExpiryDate()).thenReturn(validDate);
         when(emailAddressFinder.getHearingCentreEmailAddress(asylumCase)).thenReturn(hearingCentreEmailAddress);
         when(appealService.isAppealListed(asylumCase)).thenReturn(false);
 
+        String iaAipPathToSelfRepresentation = "iaAipPathToSelfRepresentation";
+        String iaAipFrontendUrl = "iaAipFrontendUrl/";
         caseOfficerRemoveRepresentationPersonalisation = new CaseOfficerRemoveRepresentationPersonalisation(
             iaAipFrontendUrl,
             iaAipPathToSelfRepresentation,
@@ -124,9 +125,10 @@ class CaseOfficerRemoveRepresentationPersonalisationTest {
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> caseOfficerRemoveRepresentationPersonalisation.getPersonalisation((Callback<AsylumCase>) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("callback must not be null");
+        NullPointerException exception = 
+assertThrows(NullPointerException.class, () -> caseOfficerRemoveRepresentationPersonalisation.getPersonalisation((Callback<AsylumCase>) null))
+            ;
+assertEquals("callback must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -141,15 +143,16 @@ class CaseOfficerRemoveRepresentationPersonalisationTest {
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
-        assertEquals(String.valueOf(ccdCaseId), personalisation.get("ccdCaseId"));
-        assertEquals(linkToPiPStartPage, personalisation.get("linkToPiPStartPage"));
-        assertEquals(securityCode, personalisation.get("securityCode"));
-        assertEquals(validDateFormatted, personalisation.get("validDate"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("ariaListingReference", ariaListingReference)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("ccdCaseId", String.valueOf(ccdCaseId))
+            .containsEntry("linkToPiPStartPage", linkToPiPStartPage)
+            .containsEntry("securityCode", securityCode)
+            .containsEntry("validDate", validDateFormatted);
     }
 
     @ParameterizedTest
@@ -163,14 +166,15 @@ class CaseOfficerRemoveRepresentationPersonalisationTest {
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
-        assertEquals(String.valueOf(ccdCaseId), personalisation.get("ccdCaseId"));
-        assertEquals(linkToPiPStartPage, personalisation.get("linkToPiPStartPage"));
-        assertEquals(securityCode, personalisation.get("securityCode"));
-        assertEquals(validDateFormatted, personalisation.get("validDate"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("ccdCaseId", String.valueOf(ccdCaseId))
+            .containsEntry("linkToPiPStartPage", linkToPiPStartPage)
+            .containsEntry("securityCode", securityCode)
+            .containsEntry("validDate", validDateFormatted);
     }
 
     @ParameterizedTest
@@ -187,14 +191,15 @@ class CaseOfficerRemoveRepresentationPersonalisationTest {
 
         Map<String, String> personalisation = caseOfficerRemoveRepresentationPersonalisation.getPersonalisation(callback);
 
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals("", personalisation.get("securityCode"));
-        assertEquals("", personalisation.get("validDate"));
-        assertEquals(String.valueOf(ccdCaseId), personalisation.get("ccdCaseId"));
-        assertEquals(linkToPiPStartPage, personalisation.get("linkToPiPStartPage"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "")
+            .containsEntry("securityCode", "")
+            .containsEntry("validDate", "")
+            .containsEntry("ccdCaseId", String.valueOf(ccdCaseId))
+            .containsEntry("linkToPiPStartPage", linkToPiPStartPage)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));

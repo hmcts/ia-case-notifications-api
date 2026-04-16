@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -42,22 +43,20 @@ public class AppellantRequestRespondentEvidencePersonalisationSmsTest {
     @Mock
     Direction direction;
 
-    private Long caseId = 12345L;
-    private String emailTemplateId = "someEmailTemplateId";
-    private String iaAipFrontendUrl = "http://localhost";
+    private final String emailTemplateId = "someEmailTemplateId";
+    private final String iaAipFrontendUrl = "http://localhost";
 
-    private String directionDueDate = "2019-08-27";
-    private String expectedDirectionDueDate = "27 Aug 2019";
+    private final String expectedDirectionDueDate = "27 Aug 2019";
 
-    private String mockedAppealReferenceNumber = "someReferenceNumber";
-    private String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
-    private String mockedAppellantMobilePhone = "07123456789";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
+    private final String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
 
     private AppellantRequestRespondentEvidencePersonalisationSms appellantRequestRespondentEvidencePersonalisationSms;
 
     @BeforeEach
     public void setup() {
 
+        String directionDueDate = "2019-08-27";
         when((direction.getDateDue())).thenReturn(directionDueDate);
         when(directionFinder.findFirst(asylumCase, DirectionTag.RESPONDENT_EVIDENCE))
             .thenReturn(Optional.of(direction));
@@ -79,6 +78,7 @@ public class AppellantRequestRespondentEvidencePersonalisationSmsTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_REQUEST_RESPONDENT_EVIDENCE_DIRECTION_APPELLANT_AIP_SMS",
             appellantRequestRespondentEvidencePersonalisationSms.getReferenceId(caseId));
     }
@@ -86,6 +86,7 @@ public class AppellantRequestRespondentEvidencePersonalisationSmsTest {
     @Test
     public void should_return_given_email_address_list_from_subscribers_in_asylum_case() {
 
+        String mockedAppellantMobilePhone = "07123456789";
         Subscriber subscriber = new Subscriber(
             SubscriberType.APPELLANT, //subscriberType
             "", //email
@@ -107,9 +108,10 @@ public class AppellantRequestRespondentEvidencePersonalisationSmsTest {
 
         when(recipientsFinder.findAll(null, NotificationType.SMS)).thenCallRealMethod();
 
-        assertThatThrownBy(() -> appellantRequestRespondentEvidencePersonalisationSms.getRecipientsList(null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> appellantRequestRespondentEvidencePersonalisationSms.getRecipientsList(null))
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -117,9 +119,10 @@ public class AppellantRequestRespondentEvidencePersonalisationSmsTest {
 
         when(directionFinder.findFirst(asylumCase, DirectionTag.RESPONDENT_EVIDENCE)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> appellantRequestRespondentEvidencePersonalisationSms.getPersonalisation(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("direction 'respondentEvidence' is not present");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> appellantRequestRespondentEvidencePersonalisationSms.getPersonalisation(asylumCase))
+            ;
+assertEquals("direction 'respondentEvidence' is not present", exception.getMessage());
     }
 
 
@@ -129,9 +132,10 @@ public class AppellantRequestRespondentEvidencePersonalisationSmsTest {
         Map<String, String> personalisation =
             appellantRequestRespondentEvidencePersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
-        assertEquals(expectedDirectionDueDate, personalisation.get("direction due date"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
+        assertThat(personalisation)
+            .containsEntry("Appeal Ref Number", mockedAppealReferenceNumber)
+            .containsEntry("direction due date", expectedDirectionDueDate)
+            .containsEntry("Hyperlink to service", iaAipFrontendUrl);
 
     }
 
@@ -143,8 +147,9 @@ public class AppellantRequestRespondentEvidencePersonalisationSmsTest {
         Map<String, String> personalisation =
             appellantRequestRespondentEvidencePersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals("", personalisation.get("Appeal Ref Number"));
-        assertEquals(expectedDirectionDueDate, personalisation.get("direction due date"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
+        assertThat(personalisation)
+            .containsEntry("Appeal Ref Number", "")
+            .containsEntry("direction due date", expectedDirectionDueDate)
+            .containsEntry("Hyperlink to service", iaAipFrontendUrl);
     }
 }

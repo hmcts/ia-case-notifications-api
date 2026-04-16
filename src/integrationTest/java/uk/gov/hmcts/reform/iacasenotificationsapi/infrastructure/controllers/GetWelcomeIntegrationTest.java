@@ -1,6 +1,13 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.controllers;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -18,7 +25,7 @@ class GetWelcomeIntegrationTest extends SpringBootIntegrationTest {
             .andExpect(status().isOk())
             .andReturn();
 
-        assertThat(response.getResponse().getContentAsString()).contains(
-            "Welcome to Immigration & Asylum case notifications API");
+        assertTrue(response.getResponse().getContentAsString()
+            .contains("Welcome to Immigration & Asylum case notifications API"));
     }
 }

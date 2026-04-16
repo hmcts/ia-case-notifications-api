@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.applyforcosts;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -43,19 +44,18 @@ class RespondToCostsApplicantPersonalisationTest {
     @Mock
     PersonalisationProvider personalisationProvider;
 
-    private Long caseId = 12345L;
-    private String templateId = "templateId";
-    private String homeOfficeEmailAddress = "homeOfficeEmailAddress@gmail.com";
-    private String legalRepEmailAddress = "legalRepEmailAddress@gmail.com";
-    private String iaExUiFrontendUrl = "http://localhost";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String legalRepRefNumber = "someLegalRepRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
-    private static String homeOffice = "Home office";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
-    private String homeOfficeReferenceNumber = "A1234567/001";
+    private final String templateId = "templateId";
+    private final String homeOfficeEmailAddress = "homeOfficeEmailAddress@gmail.com";
+    private final String legalRepEmailAddress = "legalRepEmailAddress@gmail.com";
+    private final String iaExUiFrontendUrl = "http://localhost";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String legalRepRefNumber = "someLegalRepRefNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private static final String homeOffice = "Home office";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
+    private final String homeOfficeReferenceNumber = "A1234567/001";
     private RespondToCostsApplicantPersonalisation respondToCostsApplicantPersonalisation;
 
     @BeforeEach
@@ -101,6 +101,7 @@ class RespondToCostsApplicantPersonalisationTest {
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_RESPOND_TO_COSTS_APPLICANT_EMAIL",
             respondToCostsApplicantPersonalisation.getReferenceId(caseId));
     }
@@ -123,9 +124,10 @@ class RespondToCostsApplicantPersonalisationTest {
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> respondToCostsApplicantPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> respondToCostsApplicantPersonalisation.getPersonalisation((AsylumCase) null))
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -138,21 +140,24 @@ class RespondToCostsApplicantPersonalisationTest {
 
         Map<String, String> personalisation = respondToCostsApplicantPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
         if (applyForCostsList.get(0).getValue().getApplyForCostsApplicantType().equals("Home office")) {
-            assertEquals("Home office", personalisation.get("recipient"));
-            assertEquals(homeOfficeReferenceNumber, personalisation.get("recipientReferenceNumber"));
-            assertEquals("Unreasonable", personalisation.get("appliedCostsType"));
+            assertThat(personalisation)
+                .containsEntry("recipient", "Home office")
+                .containsEntry("recipientReferenceNumber", homeOfficeReferenceNumber)
+                .containsEntry("appliedCostsType", "Unreasonable");
         } else {
-            assertEquals("Your", personalisation.get("recipient"));
-            assertEquals(legalRepRefNumber, personalisation.get("recipientReferenceNumber"));
-            assertEquals("Wasted", personalisation.get("appliedCostsType"));
+            assertThat(personalisation)
+                .containsEntry("recipient", "Your")
+                .containsEntry("recipientReferenceNumber", legalRepRefNumber)
+                .containsEntry("appliedCostsType", "Wasted");
         }
     }
 

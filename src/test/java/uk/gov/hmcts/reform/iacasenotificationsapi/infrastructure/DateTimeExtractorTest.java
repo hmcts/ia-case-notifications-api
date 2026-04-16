@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.format.DateTimeParseException;
@@ -25,15 +25,15 @@ public class DateTimeExtractorTest {
     @Test
     public void should_throw_when_invalid_iso_8610_date() {
 
-        assertThatThrownBy(() -> dateTimeExtractor.extractHearingDate(invalidIso8601HearingDate))
-            .isExactlyInstanceOf(DateTimeParseException.class);
+        assertThrows(DateTimeParseException.class, 
+() -> dateTimeExtractor.extractHearingDate(invalidIso8601HearingDate));
     }
 
     @Test
     public void should_throw_when_invalid_iso_8610_time() {
 
-        assertThatThrownBy(() -> dateTimeExtractor.extractHearingTime(invalidIso8601HearingDate))
-            .isExactlyInstanceOf(DateTimeParseException.class);
+        assertThrows(DateTimeParseException.class, 
+() -> dateTimeExtractor.extractHearingTime(invalidIso8601HearingDate));
     }
 
     @Test

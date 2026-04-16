@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.applicant;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -24,7 +24,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.ap
 public class ApplicantBailApplicationSubmittedPersonalisationSmsTest {
 
     private final String smsTemplateId = "someTemplateId";
-    private String mobileNumber = "111 111 111";
+    private final String mobileNumber = "111 111 111";
     private final String bailReferenceNumber = "someReferenceNumber";
 
     @Mock
@@ -67,10 +67,11 @@ public class ApplicantBailApplicationSubmittedPersonalisationSmsTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
+        NullPointerException exception =
+assertThrows(NullPointerException.class,
             () -> applicantBailApplicationSubmittedPersonalisationSms.getPersonalisation((BailCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("bailCase must not be null");
+            ;
+assertEquals("bailCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -79,7 +80,7 @@ public class ApplicantBailApplicationSubmittedPersonalisationSmsTest {
         Map<String, String> personalisation =
                 applicantBailApplicationSubmittedPersonalisationSms.getPersonalisation(bailCase);
 
-        assertEquals(bailReferenceNumber, personalisation.get("bailReferenceNumber"));
+            assertEquals(bailReferenceNumber, personalisation.get("bailReferenceNumber"));
     }
 
     @Test
@@ -90,6 +91,6 @@ public class ApplicantBailApplicationSubmittedPersonalisationSmsTest {
         Map<String, String> personalisation =
                 applicantBailApplicationSubmittedPersonalisationSms.getPersonalisation(bailCase);
 
-        assertEquals("", personalisation.get("bailReferenceNumber"));
+            assertEquals("", personalisation.get("bailReferenceNumber"));
     }
 }

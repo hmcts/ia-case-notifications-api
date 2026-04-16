@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -34,15 +35,13 @@ class CaseOfficerAsyncStitchingHomeOfficeNotificationFailedPersonalisationTest {
     @Mock
     EmailAddressFinder emailAddressFinder;
 
-    private String caseOfficerEmailAddress = "caseOfficer@example.com";
-    private Long caseId = 12345L;
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String ariaListingReference = "ariaListingReference";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String ariaListingReference = "ariaListingReference";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
 
-    private String iaExUiFrontendUrl = "frontend url";
-    private String asyncStitchingHomeOfficeNotificationFailedTemplateId = "asyncStitchingHomeOfficeNotificationFailedTemplateId";
+    private final String iaExUiFrontendUrl = "frontend url";
+    private final String asyncStitchingHomeOfficeNotificationFailedTemplateId = "asyncStitchingHomeOfficeNotificationFailedTemplateId";
 
     private CaseOfficerAsyncStitchingHomeOfficeNotificationFailedPersonalisation homeOfficeNotificationFailedPersonalisation;
 
@@ -62,12 +61,14 @@ class CaseOfficerAsyncStitchingHomeOfficeNotificationFailedPersonalisationTest {
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_STITCHING_BUNDLE_HO_NOTIFICATION_FAILED_CASE_OFFICER",
             homeOfficeNotificationFailedPersonalisation.getReferenceId(caseId));
     }
 
     @Test
     void should_return_given_email_address_from_lookup_map() {
+        String caseOfficerEmailAddress = "caseOfficer@example.com";
         when(emailAddressFinder.getListCaseHearingCentreEmailAddress(asylumCase)).thenReturn(caseOfficerEmailAddress);
         assertTrue(
                 homeOfficeNotificationFailedPersonalisation.getRecipientsList(asylumCase).contains(caseOfficerEmailAddress));
@@ -86,11 +87,12 @@ class CaseOfficerAsyncStitchingHomeOfficeNotificationFailedPersonalisationTest {
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("ariaListingReference", ariaListingReference)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
     }
 
     private Map<String, String> getPersonalisationMapWithGivenValues() {

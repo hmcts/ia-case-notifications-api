@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
@@ -33,7 +33,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-@SuppressWarnings("unchecked")
 public class AppellantFtpaApplicationDecisionPersonalisationEmailTest {
     @Mock
     AsylumCase asylumCase;
@@ -42,45 +41,41 @@ public class AppellantFtpaApplicationDecisionPersonalisationEmailTest {
     @Mock
     CustomerServicesProvider customerServicesProvider;
 
-    private Long caseId = 12345L;
-    private String respondentGrantedPartiallyGrantedEmailTemplateId = "respondentGrantedPartiallyGrantedEmailTemplateId";
-    private String respondentNotAdmittedEmailTemplateId = "respondentNotAdmittedEmailTemplateId";
-    private String respondentRefusedEmailTemplateId = "respondentRefusedEmailTemplateId";
-    private String appellantGrantedEmailTemplateId = "appellantGrantedEmailTemplateId";
-    private String appellantPartiallyGrantedEmailTemplateId = "appellantPartiallyGrantedEmailTemplateId";
-    private String appellantNotAdmittedEmailTemplateId = "appellantNotAdmittedEmailTemplateId";
-    private String appellantRefusedEmailTemplateId = "appellantRefusedEmailTemplateId";
+    private final String respondentGrantedPartiallyGrantedEmailTemplateId = "respondentGrantedPartiallyGrantedEmailTemplateId";
+    private final String respondentNotAdmittedEmailTemplateId = "respondentNotAdmittedEmailTemplateId";
+    private final String respondentRefusedEmailTemplateId = "respondentRefusedEmailTemplateId";
+    private final String appellantGrantedEmailTemplateId = "appellantGrantedEmailTemplateId";
+    private final String appellantPartiallyGrantedEmailTemplateId = "appellantPartiallyGrantedEmailTemplateId";
+    private final String appellantNotAdmittedEmailTemplateId = "appellantNotAdmittedEmailTemplateId";
+    private final String appellantRefusedEmailTemplateId = "appellantRefusedEmailTemplateId";
 
 
-    private String iaAipFrontendUrl = "http://localhost";
+    private final String iaAipFrontendUrl = "http://localhost";
 
-    private String mockedAppealReferenceNumber = "someReferenceNumber";
-    private String mockedAppellantMobilePhone = "07123456789";
-    private String mockedAppellantEmail = "fake@faketest.com";
-    private String mockedAriaListingReferenceNumber = "ariaListingReferenceNumber";
+    private final String mockedAriaListingReferenceNumber = "ariaListingReferenceNumber";
 
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String homeOfficeReferenceNumber = "someHOReferenceNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
-    private long oocDays = 28;
-    private long inCountryDays = 14;
-    private LocalDate today = LocalDate.now();
-    private String expectedDueDateOoc = today.plusDays(oocDays).format(DateTimeFormatter.ofPattern("d MMM yyyy"));
-    private String expectedDueDateInCountry = today.plusDays(inCountryDays).format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+    private final String homeOfficeReferenceNumber = "someHOReferenceNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final long oocDays = 28;
+    private final long inCountryDays = 14;
+    private final LocalDate today = LocalDate.now();
+    private final String expectedDueDateOoc = today.plusDays(oocDays).format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+    private final String expectedDueDateInCountry = today.plusDays(inCountryDays).format(DateTimeFormatter.ofPattern("d MMM yyyy"));
 
     private AppellantFtpaApplicationDecisionPersonalisationEmail appellantFtpaApplicationDecisionPersonalisationEmail;
 
     @BeforeEach
     public void setup() {
 
+        String appealReferenceNumber = "someReferenceNumber";
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(mockedAriaListingReferenceNumber));
+        String customerServicesEmail = "cust.services@example.com";
+        String customerServicesTelephone = "555 555 555";
         when((customerServicesProvider.getCustomerServicesPersonalisation())).thenReturn(
             Map.of(
                 "customerServicesTelephone", customerServicesTelephone,
@@ -178,9 +173,9 @@ public class AppellantFtpaApplicationDecisionPersonalisationEmailTest {
 
     @Test
     public void should_throw_error_if_ftpa_applicant_type_missing() {
-        assertThatThrownBy(() -> appellantFtpaApplicationDecisionPersonalisationEmail.getTemplateId(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("ftpaApplicantType is not present");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> appellantFtpaApplicationDecisionPersonalisationEmail.getTemplateId(asylumCase));
+        assertEquals("ftpaApplicantType is not present", exception.getMessage());
     }
 
     @Test
@@ -188,9 +183,9 @@ public class AppellantFtpaApplicationDecisionPersonalisationEmailTest {
         when(asylumCase.read(FTPA_APPLICANT_TYPE, ApplicantType.class)).thenReturn(Optional.of(ApplicantType.APPELLANT));
         when(asylumCase.read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.empty());
         when(asylumCase.read(FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> appellantFtpaApplicationDecisionPersonalisationEmail.getTemplateId(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("ftpaAppellantDecisionOutcomeType is not present");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> appellantFtpaApplicationDecisionPersonalisationEmail.getTemplateId(asylumCase));
+        assertEquals("ftpaAppellantDecisionOutcomeType is not present", exception.getMessage());
     }
 
     @Test
@@ -198,20 +193,21 @@ public class AppellantFtpaApplicationDecisionPersonalisationEmailTest {
         when(asylumCase.read(FTPA_APPLICANT_TYPE, ApplicantType.class)).thenReturn(Optional.of(ApplicantType.RESPONDENT));
         when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.empty());
         when(asylumCase.read(FTPA_RESPONDENT_RJ_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> appellantFtpaApplicationDecisionPersonalisationEmail.getTemplateId(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("ftpaRespondentDecisionOutcomeType is not present");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> appellantFtpaApplicationDecisionPersonalisationEmail.getTemplateId(asylumCase));
+        assertEquals("ftpaRespondentDecisionOutcomeType is not present", exception.getMessage());
     }
 
     @Test
     public void should_throw_error_if_applicant_type_is_neither_respondent_nor_appellant() {
-        assertThatThrownBy(() -> appellantFtpaApplicationDecisionPersonalisationEmail.getTemplateId(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("ftpaApplicantType is not present");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> appellantFtpaApplicationDecisionPersonalisationEmail.getTemplateId(asylumCase));
+        assertEquals("ftpaApplicantType is not present", exception.getMessage());
     }
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_FTPA_APPLICATION_DECISION_TO_APPELLANT_EMAIL",
             appellantFtpaApplicationDecisionPersonalisationEmail.getReferenceId(caseId));
     }
@@ -219,6 +215,8 @@ public class AppellantFtpaApplicationDecisionPersonalisationEmailTest {
     @Test
     public void should_return_given_email_address_list_from_subscribers_in_asylum_case() {
 
+        String mockedAppellantEmail = "fake@faketest.com";
+        String mockedAppellantMobilePhone = "07123456789";
         Subscriber subscriber = new Subscriber(
             SubscriberType.APPELLANT, //subscriberType
             mockedAppellantEmail, //email
@@ -240,14 +238,14 @@ public class AppellantFtpaApplicationDecisionPersonalisationEmailTest {
 
         when(recipientsFinder.findAll(null, NotificationType.EMAIL)).thenCallRealMethod();
 
-        assertThatThrownBy(() -> appellantFtpaApplicationDecisionPersonalisationEmail.getRecipientsList(null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> appellantFtpaApplicationDecisionPersonalisationEmail.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo appellantInUk) {
         when(asylumCase.read(FTPA_APPLICANT_TYPE, ApplicantType.class)).thenReturn(Optional.of(ApplicantType.RESPONDENT));
         when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class))
@@ -257,17 +255,19 @@ public class AppellantFtpaApplicationDecisionPersonalisationEmailTest {
         Map<String, String> personalisation =
             appellantFtpaApplicationDecisionPersonalisationEmail.getPersonalisation(asylumCase);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("linkToService"));
+        String mockedAppealReferenceNumber = "someReferenceNumber";
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", mockedAppealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToService", iaAipFrontendUrl);
         assertEquals("\nListing reference: " + mockedAriaListingReferenceNumber,
             personalisation.get("listingReferenceLine"));
         assertNotNull(personalisation.get("applicationDecision"));
         assertEquals(appellantInUk.equals(YES)
-            ? expectedDueDateInCountry
-            : expectedDueDateOoc,
+                ? expectedDueDateInCountry
+                : expectedDueDateOoc,
             personalisation.get("dueDate"));
 
     }
@@ -331,12 +331,13 @@ public class AppellantFtpaApplicationDecisionPersonalisationEmailTest {
         Map<String, String> personalisation =
             appellantFtpaApplicationDecisionPersonalisationEmail.getPersonalisation(asylumCase);
 
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("linkToService"));
-        assertEquals("granted", personalisation.get("applicationDecision"));
-        assertEquals("", personalisation.get("dueDate"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("homeOfficeReferenceNumber", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "")
+            .containsEntry("linkToService", iaAipFrontendUrl)
+            .containsEntry("applicationDecision", "granted")
+            .containsEntry("dueDate", "");
     }
 }

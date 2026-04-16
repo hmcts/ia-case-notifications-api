@@ -18,8 +18,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -91,18 +92,20 @@ public class LegalRepresentativeForceCaseToSubmitHearingRequirementsDetentionPer
     public void should_throw_exception_when_cannot_find_email_address_for_legal_rep() {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> legalRepresentativeForceCaseToSubmitHearingRequirementsDetentionPersonalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("legalRepresentativeEmailAddress is not present");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> legalRepresentativeForceCaseToSubmitHearingRequirementsDetentionPersonalisation.getRecipientsList(asylumCase))
+            ;
+assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
+        NullPointerException exception =
+assertThrows(NullPointerException.class,
             () -> legalRepresentativeForceCaseToSubmitHearingRequirementsDetentionPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -118,15 +121,15 @@ public class LegalRepresentativeForceCaseToSubmitHearingRequirementsDetentionPer
         Map<String, String> personalisation =
                 legalRepresentativeForceCaseToSubmitHearingRequirementsDetentionPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isNotEmpty();
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeReferencrNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(legalRepReferenceNumber, personalisation.get("legalRepReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(linkToOnlineService, personalisation.get("linkToOnlineService"));
-        assertEquals(dueDate, personalisation.get("dueDate"));
+        assertFalse(personalisation.isEmpty());
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReferencrNumber)
+            .containsEntry("legalRepReferenceNumber", legalRepReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", linkToOnlineService)
+            .containsEntry("dueDate", dueDate);
         assertEquals(isAda.equals(YesOrNo.YES)
                 ? "Accelerated detained appeal"
                 : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
@@ -152,15 +155,15 @@ public class LegalRepresentativeForceCaseToSubmitHearingRequirementsDetentionPer
         Map<String, String> personalisation =
                 legalRepresentativeForceCaseToSubmitHearingRequirementsDetentionPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isNotEmpty();
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
-        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("", personalisation.get("legalRepReferenceNumber"));
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals(linkToOnlineService, personalisation.get("linkToOnlineService"));
-        assertEquals(dueDate, personalisation.get("dueDate"));
+        assertFalse(personalisation.isEmpty());
+        assertThat(personalisation)
+            .containsEntry("homeOfficeReferenceNumber", "")
+            .containsEntry("legalRepReferenceNumber", "")
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "")
+            .containsEntry("linkToOnlineService", linkToOnlineService)
+            .containsEntry("dueDate", dueDate);
         assertEquals(isAda.equals(YesOrNo.YES)
                 ? "Accelerated detained appeal"
                 : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));

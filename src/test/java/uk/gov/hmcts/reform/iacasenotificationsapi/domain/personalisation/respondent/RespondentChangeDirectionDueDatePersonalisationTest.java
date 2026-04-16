@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respon
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
@@ -37,7 +36,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-@SuppressWarnings("unchecked")
 public class RespondentChangeDirectionDueDatePersonalisationTest {
 
     @Mock
@@ -55,7 +53,6 @@ public class RespondentChangeDirectionDueDatePersonalisationTest {
     @Mock
     AppealService appealService;
 
-    private final Long caseId = 12345L;
     private final String afterListingTemplateId = "afterListingTemplateId";
     private final String beforeListingTemplateId = "beforeListingTemplateId";
     private final String appellantTemplateId = "appellantTemplateId";
@@ -65,13 +62,7 @@ public class RespondentChangeDirectionDueDatePersonalisationTest {
     private final String homeOfficeHearingCentreEmail = "hc-taylorhouse@example.com";
     private final String homeOfficeEmail = "ho-taylorhouse@example.com";
     private final String homeOfficeFtpaEmailAddress = "ho-ftpa-taylorhouse@example.com";
-    private final String hmctsReference = "hmctsReference";
     private final String ariaListingReference = "someAriaListingReference";
-    private final String homeOfficeReference = "homeOfficeReference";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-    private final String customerServicesTelephone = "555 555 555";
-    private final String customerServicesEmail = "cust.services@example.com";
 
 
     private RespondentChangeDirectionDueDatePersonalisation respondentChangeDirectionDueDatePersonalisation;
@@ -235,13 +226,15 @@ public class RespondentChangeDirectionDueDatePersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class))
                 .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> respondentChangeDirectionDueDatePersonalisation.getRecipientsList(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("currentCaseStateVisibleToHomeOfficeAll flag is not present");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> respondentChangeDirectionDueDatePersonalisation.getRecipientsList(asylumCase))
+                ;
+assertEquals("currentCaseStateVisibleToHomeOfficeAll flag is not present", exception.getMessage());
     }
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_RESPONDENT_CHANGE_DIRECTION_DUE_DATE",
                 respondentChangeDirectionDueDatePersonalisation.getReferenceId(caseId));
     }
@@ -258,19 +251,30 @@ public class RespondentChangeDirectionDueDatePersonalisationTest {
         Map<String, String> personalisation =
                 respondentChangeDirectionDueDatePersonalisation.getPersonalisation(callback);
 
-        assertThat(personalisation).isNotEmpty();
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertFalse(personalisation.isEmpty());
+        assertThat(personalisation)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal"
+                : "Immigration and Asylum appeal")
+            .containsAllEntriesOf(getPersonalisation());
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
-        assertThatThrownBy(
+        NullPointerException exception =
+assertThrows(NullPointerException.class,
                 () -> respondentChangeDirectionDueDatePersonalisation.getPersonalisation((Callback<AsylumCase>) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("callback must not be null");
+                ;
+assertEquals("callback must not be null", exception.getMessage());
     }
 
     private Map<String, String> getPersonalisation() {
+        String customerServicesEmail = "cust.services@example.com";
+        String customerServicesTelephone = "555 555 555";
+        String appellantFamilyName = "someAppellantFamilyName";
+        String appellantGivenNames = "someAppellantGivenNames";
+        String homeOfficeReference = "homeOfficeReference";
+        String hmctsReference = "hmctsReference";
         return ImmutableMap
                 .<String, String>builder()
                 .put("hmctsReference", hmctsReference)

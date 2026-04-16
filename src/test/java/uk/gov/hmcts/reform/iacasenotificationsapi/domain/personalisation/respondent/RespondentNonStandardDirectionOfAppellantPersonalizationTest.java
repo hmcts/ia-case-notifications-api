@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -189,9 +190,10 @@ class RespondentNonStandardDirectionOfAppellantPersonalizationTest {
         when(asylumCase.read(AsylumCaseDefinition.CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class))
             .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> respondentNonStandardDirectionOfAppellantPersonalization.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL_FLAG_IS_NOT_PRESENT);
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> respondentNonStandardDirectionOfAppellantPersonalization.getRecipientsList(asylumCase))
+            ;
+assertEquals(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL_FLAG_IS_NOT_PRESENT, exception.getMessage());
     }
 
     @ParameterizedTest
@@ -215,9 +217,10 @@ class RespondentNonStandardDirectionOfAppellantPersonalizationTest {
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> respondentNonStandardDirectionOfAppellantPersonalization.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> respondentNonStandardDirectionOfAppellantPersonalization.getPersonalisation((AsylumCase) null))
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -230,14 +233,15 @@ class RespondentNonStandardDirectionOfAppellantPersonalizationTest {
             respondentNonStandardDirectionOfAppellantPersonalization.getPersonalisation(asylumCase);
         String listingReferenceLine = "\nListing reference: " + ariaListingReference;
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(listingReferenceLine, personalisation.get("listingReferenceLine"));
-        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
-        assertEquals(directionExplanation, personalisation.get("explanation"));
-        assertEquals(expectedDirectionDueDate, personalisation.get("dueDate"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("listingReferenceLine", listingReferenceLine)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("explanation", directionExplanation)
+            .containsEntry("dueDate", expectedDirectionDueDate);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         Assertions.assertEquals(isAda.equals(YesOrNo.YES)
@@ -260,14 +264,15 @@ class RespondentNonStandardDirectionOfAppellantPersonalizationTest {
         Map<String, String> personalisation =
             respondentNonStandardDirectionOfAppellantPersonalization.getPersonalisation(asylumCase);
 
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("listingReferenceLine"));
-        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
-        assertEquals(directionExplanation, personalisation.get("explanation"));
-        assertEquals(expectedDirectionDueDate, personalisation.get("dueDate"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("listingReferenceLine", "")
+            .containsEntry("homeOfficeReferenceNumber", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "")
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("explanation", directionExplanation)
+            .containsEntry("dueDate", expectedDirectionDueDate);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         Assertions.assertEquals(isAda.equals(YesOrNo.YES)
@@ -279,8 +284,9 @@ class RespondentNonStandardDirectionOfAppellantPersonalizationTest {
     void should_throw_exception_on_personalisation_when_direction_is_empty() {
         when(directionFinder.findFirst(asylumCase, DirectionTag.NONE)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> respondentNonStandardDirectionOfAppellantPersonalization.getPersonalisation(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("non-standard direction is not present");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> respondentNonStandardDirectionOfAppellantPersonalization.getPersonalisation(asylumCase))
+            ;
+assertEquals("non-standard direction is not present", exception.getMessage());
     }
 }

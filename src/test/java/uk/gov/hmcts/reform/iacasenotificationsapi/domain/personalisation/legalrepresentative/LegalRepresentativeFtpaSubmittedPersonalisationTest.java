@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ACCELERATED_DETAINED_APPEAL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
@@ -29,7 +30,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-@SuppressWarnings("unchecked")
 public class LegalRepresentativeFtpaSubmittedPersonalisationTest {
 
     @Mock
@@ -43,13 +43,9 @@ public class LegalRepresentativeFtpaSubmittedPersonalisationTest {
     @Mock
     CustomerServicesProvider customerServicesProvider;
 
-    private Long caseId = 12345L;
-    private String templateId = "ftpaSumbittedTemplateId";
-    private String iaExUiFrontendUrl = "http://localhost";
-    private String legalRepEmailAddress = "legalrep@example.com";
-    private String ariaListingReference = "someAriaListingReference";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
+    private final String templateId = "ftpaSumbittedTemplateId";
+    private final String iaExUiFrontendUrl = "http://localhost";
+    private final String legalRepEmailAddress = "legalrep@example.com";
 
     private LegalRepresentativeFtpaSubmittedPersonalisation legalRepresentativeFtpaSubmittedPersonalisation;
 
@@ -70,34 +66,33 @@ public class LegalRepresentativeFtpaSubmittedPersonalisationTest {
     @Test
     public void should_return_given_email_address() {
 
-        assertThat(legalRepresentativeFtpaSubmittedPersonalisation.getRecipientsList(asylumCase))
-            .isEqualTo(Collections.singleton(legalRepEmailAddress));
+        assertEquals(Collections.singleton(legalRepEmailAddress), legalRepresentativeFtpaSubmittedPersonalisation.getRecipientsList(asylumCase));
     }
 
     @Test
     public void should_throw_exception_when_email_address_is_null() {
 
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> legalRepresentativeFtpaSubmittedPersonalisation.getRecipientsList(asylumCase))
-            .hasMessage("legalRepresentativeEmailAddress is not present")
-            .isExactlyInstanceOf(IllegalStateException.class);
+        IllegalStateException exception = assertThrows(IllegalStateException.class,
+            () -> legalRepresentativeFtpaSubmittedPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     public void should_return_given_template_id() {
 
-        assertThat(legalRepresentativeFtpaSubmittedPersonalisation.getTemplateId()).isEqualTo(templateId);
+        assertEquals(templateId, legalRepresentativeFtpaSubmittedPersonalisation.getTemplateId());
     }
 
     @Test
     public void should_return_given_reference_id() {
 
-        assertThat(legalRepresentativeFtpaSubmittedPersonalisation.getReferenceId(caseId))
-            .isEqualTo(caseId + "_FTPA_SUBMITTED_LEGAL_REP");
+        Long caseId = 12345L;
+        assertEquals(caseId + "_FTPA_SUBMITTED_LEGAL_REP", legalRepresentativeFtpaSubmittedPersonalisation.getReferenceId(caseId));
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_given_personalisation(YesOrNo isAda) {
 
         when(callback.getCaseDetails()).thenReturn(caseDetails);
@@ -105,23 +100,30 @@ public class LegalRepresentativeFtpaSubmittedPersonalisationTest {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         initializePrefixes(legalRepresentativeFtpaSubmittedPersonalisation);
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisation());
-        Map<String, String> expectedPersonalisation =
+        Map<String, String> personalisation =
             legalRepresentativeFtpaSubmittedPersonalisation.getPersonalisation(callback);
 
-        assertThat(expectedPersonalisation).isEqualToComparingOnlyGivenFields(getPersonalisation());
+        assertThat(personalisation)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal"
+                : "Immigration and Asylum appeal")
+            .containsAllEntriesOf(getPersonalisation());
     }
 
     @Test
     public void should_throw_exception_when_callback_is_null() {
 
-        assertThatThrownBy(
-            () -> legalRepresentativeFtpaSubmittedPersonalisation.getPersonalisation((Callback<AsylumCase>) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("callback must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> legalRepresentativeFtpaSubmittedPersonalisation.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     private Map<String, String> getPersonalisation() {
 
+        String customerServicesEmail = "cust.services@example.com";
+        String customerServicesTelephone = "555 555 555";
+        String ariaListingReference = "someAriaListingReference";
         return ImmutableMap
             .<String, String>builder()
             .put("appealReferenceNumber", "PA/12345/001")

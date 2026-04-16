@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -9,7 +10,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDec
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
 
 import com.google.common.collect.ImmutableMap;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,30 +37,29 @@ public class HomeOfficeFtpaApplicationDecisionAppellantPersonalisationTest {
     @Mock
     PersonalisationProvider personalisationProvider;
 
-    private Long caseId = 12345L;
-    private String upperTribunalNoticesEmailAddress = "homeoffice-granted@example.com";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
-    private String ariaListingReference = "ariaListingReference";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private final String upperTribunalNoticesEmailAddress = "homeoffice-granted@example.com";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
+    private final String ariaListingReference = "ariaListingReference";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
 
-    private String otherPartyGrantedTemplateId = "otherPartyGrantedTemplateId";
-    private String otherPartyPartiallyGrantedTemplateId = "otherPartyPartiallyGrantedTemplateId";
-    private String otherPartyNotAdmittedTemplateId = "otherPartyNotAdmittedTemplateId";
-    private String otherPartyRefusedTemplateId = "otherPartyRefusedTemplateId";
-    private String otherPartyReheardTemplateId = "otherPartyReheardTemplateId";
-    private String allowedTemplateId = "allowedTemplateId";
-    private String dismissedTemplateId = "dismissedTemplateId";
+    private final String otherPartyGrantedTemplateId = "otherPartyGrantedTemplateId";
+    private final String otherPartyPartiallyGrantedTemplateId = "otherPartyPartiallyGrantedTemplateId";
+    private final String otherPartyNotAdmittedTemplateId = "otherPartyNotAdmittedTemplateId";
+    private final String otherPartyRefusedTemplateId = "otherPartyRefusedTemplateId";
+    private final String otherPartyReheardTemplateId = "otherPartyReheardTemplateId";
+    private final String allowedTemplateId = "allowedTemplateId";
+    private final String dismissedTemplateId = "dismissedTemplateId";
 
-    private FtpaDecisionOutcomeType granted = FTPA_GRANTED;
-    private FtpaDecisionOutcomeType partiallyGranted = FTPA_PARTIALLY_GRANTED;
-    private FtpaDecisionOutcomeType notAdmitted = FTPA_NOT_ADMITTED;
-    private FtpaDecisionOutcomeType refused = FTPA_REFUSED;
-    private FtpaDecisionOutcomeType reheard = FTPA_REHEARD35;
-    private FtpaDecisionOutcomeType remade = FTPA_REMADE32;
-    private FtpaDecisionOutcomeType allowed = FTPA_ALLOWED;
-    private FtpaDecisionOutcomeType dismissed = FTPA_DISMISSED;
+    private final FtpaDecisionOutcomeType granted = FTPA_GRANTED;
+    private final FtpaDecisionOutcomeType partiallyGranted = FTPA_PARTIALLY_GRANTED;
+    private final FtpaDecisionOutcomeType notAdmitted = FTPA_NOT_ADMITTED;
+    private final FtpaDecisionOutcomeType refused = FTPA_REFUSED;
+    private final FtpaDecisionOutcomeType reheard = FTPA_REHEARD35;
+    private final FtpaDecisionOutcomeType remade = FTPA_REMADE32;
+    private final FtpaDecisionOutcomeType allowed = FTPA_ALLOWED;
+    private final FtpaDecisionOutcomeType dismissed = FTPA_DISMISSED;
 
     private HomeOfficeFtpaApplicationDecisionAppellantPersonalisation
         homeOfficeFtpaApplicationDecisionAppellantPersonalisation;
@@ -85,9 +85,10 @@ public class HomeOfficeFtpaApplicationDecisionAppellantPersonalisationTest {
     public void should_return_given_template_id_when_outcome_is_empty() {
         when(asylumCase.read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class))
             .thenReturn(Optional.empty());
-        assertThatThrownBy(() -> homeOfficeFtpaApplicationDecisionAppellantPersonalisation.getTemplateId(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("ftpaAppellantDecisionOutcomeType is not present");
+        IllegalStateException exception = 
+assertThrows(IllegalStateException.class, () -> homeOfficeFtpaApplicationDecisionAppellantPersonalisation.getTemplateId(asylumCase))
+            ;
+assertEquals("ftpaAppellantDecisionOutcomeType is not present", exception.getMessage());
     }
 
     @Test
@@ -135,6 +136,7 @@ public class HomeOfficeFtpaApplicationDecisionAppellantPersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_FTPA_APPLICATION_DECISION_HOME_OFFICE_APPELLANT",
             homeOfficeFtpaApplicationDecisionAppellantPersonalisation.getReferenceId(caseId));
     }
@@ -154,7 +156,7 @@ public class HomeOfficeFtpaApplicationDecisionAppellantPersonalisationTest {
     void should_return_given_email_address_for_correct_states(FtpaDecisionOutcomeType decision) {
         when(asylumCase.read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class))
             .thenReturn(Optional.of(decision));
-        Arrays.asList(State.FTPA_SUBMITTED,State.FTPA_DECIDED).stream().forEach(state -> {
+        List.of(State.FTPA_SUBMITTED, State.FTPA_DECIDED).forEach(state -> {
             when(asylumCase.read(CURRENT_CASE_STATE_VISIBLE_TO_JUDGE, State.class))
                 .thenReturn(Optional.of(state));
 
@@ -168,9 +170,10 @@ public class HomeOfficeFtpaApplicationDecisionAppellantPersonalisationTest {
         when(asylumCase.read(CURRENT_CASE_STATE_VISIBLE_TO_JUDGE, State.class))
             .thenReturn(Optional.of(State.DECIDED));
 
-        assertThatThrownBy(() -> homeOfficeFtpaApplicationDecisionAppellantPersonalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("homeOffice email Address cannot be found");
+        IllegalStateException exception = 
+assertThrows(IllegalStateException.class, () -> homeOfficeFtpaApplicationDecisionAppellantPersonalisation.getRecipientsList(asylumCase))
+            ;
+assertEquals("homeOffice email Address cannot be found", exception.getMessage());
     }
 
     @Test
@@ -178,9 +181,10 @@ public class HomeOfficeFtpaApplicationDecisionAppellantPersonalisationTest {
         when(asylumCase.read(CURRENT_CASE_STATE_VISIBLE_TO_JUDGE, State.class))
             .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> homeOfficeFtpaApplicationDecisionAppellantPersonalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("homeOffice email Address cannot be found");
+        IllegalStateException exception = 
+assertThrows(IllegalStateException.class, () -> homeOfficeFtpaApplicationDecisionAppellantPersonalisation.getRecipientsList(asylumCase))
+            ;
+assertEquals("homeOffice email Address cannot be found", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -196,11 +200,12 @@ public class HomeOfficeFtpaApplicationDecisionAppellantPersonalisationTest {
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeRefNumber"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("homeOfficeRefNumber", homeOfficeRefNumber)
+            .containsEntry("ariaListingReference", ariaListingReference);
     }
 
     private Map<String, String> getPersonalisationMapWithGivenValues() {

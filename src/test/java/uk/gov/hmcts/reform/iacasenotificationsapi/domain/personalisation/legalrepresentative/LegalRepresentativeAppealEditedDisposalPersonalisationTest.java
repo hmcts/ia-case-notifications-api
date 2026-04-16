@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,8 +17,9 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 import java.util.Map;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -44,8 +46,6 @@ public class LegalRepresentativeAppealEditedDisposalPersonalisationTest {
     private final String templateId = "someTemplateId";
 
     private final String legalRepEmailAddress = "legalRep@example.com";
-    private final String customerServicesTelephone = "555 555 555";
-    private final String customerServicesEmail = "cust.services@example.com";
 
     private LegalRepresentativeAppealEditedDisposalPersonalisation legalRepresentativeAppealEditedDisposalPersonalisation;
 
@@ -57,7 +57,9 @@ public class LegalRepresentativeAppealEditedDisposalPersonalisationTest {
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of("somelegalRepRefNumber"));
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class))
             .thenReturn(Optional.of(legalRepEmailAddress));
+        String customerServicesTelephone = "555 555 555";
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
+        String customerServicesEmail = "cust.services@example.com";
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         when(userDetailsProvider.getUserDetails()).thenReturn(userDetails);
@@ -92,10 +94,11 @@ public class LegalRepresentativeAppealEditedDisposalPersonalisationTest {
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
-        assertThatThrownBy(
+        NullPointerException exception =
+assertThrows(NullPointerException.class,
             () -> legalRepresentativeAppealEditedDisposalPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -111,10 +114,16 @@ public class LegalRepresentativeAppealEditedDisposalPersonalisationTest {
             legalRepresentativeAppealEditedDisposalPersonalisation.getPersonalisation(asylumCase);
 
         // then
-        assertThat(personalisation).isNotEmpty();
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
+        assertFalse(personalisation.isEmpty());
+        assertThat(personalisation)
+            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation())
+            .containsEntry("homeOfficeReferenceNumber", "")
+            .containsEntry("legalRepReferenceNumber", "")
+            .containsEntry("legalRepName", "")
+            .containsEntry("legalRepFamilyName", "")
+            .containsEntry("linkToOnlineService", "http://localhost")
+            .containsEntry("editingDate", LocalDate.now().format(DateTimeFormatter.ofPattern("d MMM yyyy")));
+
         verify(asylumCase).write(LAST_EDIT_APPEAL_NOTIFICATION_DATE, LocalDate.now().toString());
     }
 }

@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.serialization;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
@@ -60,8 +60,8 @@ public class AsylumCaseCallbackDeserializerTest {
             .when(mapper)
             .readValue(eq(source), isA(TypeReference.class));
 
-        assertThatThrownBy(() -> asylumCaseCallbackDeserializer.deserialize(source))
-            .hasMessage("Could not deserialize callback")
-            .isExactlyInstanceOf(IllegalArgumentException.class);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+() -> asylumCaseCallbackDeserializer.deserialize(source));
+        assertEquals("Could not deserialize callback", exception.getMessage());
     }
 }

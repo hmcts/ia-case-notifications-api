@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -40,17 +41,15 @@ class DetentionEngagementTeamRecordOutOfTimeDecisionCanProceedPersonalisationTes
     DetEmailService detEmailService;
     @Mock
     DocumentDownloadClient documentDownloadClient;
-    private final Long caseId = 12345L;
-    private final String templateId = "someTemplateId";
     private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
 
-    DocumentWithMetadata responseLetter = getDocumentWithMetadata(
+    final DocumentWithMetadata responseLetter = getDocumentWithMetadata(
             "1", "non-ada-record-out-of-time-can-proceed", "some other desc", DocumentTag.RECORD_OUT_OF_TIME_DECISION_DOCUMENT);
-    IdValue<DocumentWithMetadata> responseLetterId = new IdValue<>("1", responseLetter);
+    final IdValue<DocumentWithMetadata> responseLetterId = new IdValue<>("1", responseLetter);
     private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
     private DetentionEngagementTeamRecordOutOfTimeDecisionCanProceedPersonalisation detentionEngagementTeamRecordOutOfTimeDecisionCanProceedPersonalisation;
 
@@ -59,8 +58,9 @@ class DetentionEngagementTeamRecordOutOfTimeDecisionCanProceedPersonalisationTes
 
     @BeforeEach
     void setup() throws NotificationClientException, IOException {
+        String templateId = "someTemplateId";
         detentionEngagementTeamRecordOutOfTimeDecisionCanProceedPersonalisation = new DetentionEngagementTeamRecordOutOfTimeDecisionCanProceedPersonalisation(
-                templateId,
+            templateId,
                 nonAdaPrefix,
                 detEmailService,
                 documentDownloadClient
@@ -76,6 +76,7 @@ class DetentionEngagementTeamRecordOutOfTimeDecisionCanProceedPersonalisationTes
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_INTERNAL_NON_ADA_RECORD_OUT_OF_TIME_DECISION_CAN_PROCEED",
                 detentionEngagementTeamRecordOutOfTimeDecisionCanProceedPersonalisation.getReferenceId(caseId));
     }
@@ -106,35 +107,39 @@ class DetentionEngagementTeamRecordOutOfTimeDecisionCanProceedPersonalisationTes
     void should_return_personalisation_of_all_information() throws NotificationClientException, IOException {
         Map<String, Object> personalisation = detentionEngagementTeamRecordOutOfTimeDecisionCanProceedPersonalisation.getPersonalisationForLink(asylumCase);
 
-        assertEquals(nonAdaPrefix, personalisation.get("subjectPrefix"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(jsonObject, personalisation.get("documentLink"));
+        assertThat(personalisation)
+            .containsEntry("subjectPrefix", nonAdaPrefix)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("documentLink", jsonObject);
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> detentionEngagementTeamRecordOutOfTimeDecisionCanProceedPersonalisation.getPersonalisationForLink((AsylumCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> detentionEngagementTeamRecordOutOfTimeDecisionCanProceedPersonalisation.getPersonalisationForLink((AsylumCase) null))
+                ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_hearing_bundle_is_empty() {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> detentionEngagementTeamRecordOutOfTimeDecisionCanProceedPersonalisation.getPersonalisationForLink(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("recordOutOfTimeDecisionDocument document not available");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> detentionEngagementTeamRecordOutOfTimeDecisionCanProceedPersonalisation.getPersonalisationForLink(asylumCase))
+                ;
+assertEquals("recordOutOfTimeDecisionDocument document not available", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_notification_client_throws_Exception() throws NotificationClientException, IOException {
         when(documentDownloadClient.getJsonObjectFromDocument(responseLetter)).thenThrow(new NotificationClientException("File size is more than 2MB"));
-        assertThatThrownBy(() -> detentionEngagementTeamRecordOutOfTimeDecisionCanProceedPersonalisation.getPersonalisationForLink(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("Failed to get Internal 'Appeal can proceed' Letter in compatible format");
+        IllegalStateException exception =
+assertThrows(IllegalStateException.class, () -> detentionEngagementTeamRecordOutOfTimeDecisionCanProceedPersonalisation.getPersonalisationForLink(asylumCase))
+                ;
+assertEquals("Failed to get Internal 'Appeal can proceed' Letter in compatible format", exception.getMessage());
     }
 }

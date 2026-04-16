@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.legalrepresentative;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.*;
@@ -25,18 +26,13 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.le
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class LegalRepresentativeBailDirectionSentPersonalisationTest {
 
-    private Long caseId = 12345L;
-    private String templateIdForDirectRecipient = "someTemplateIdForDirectRecipient";
-    private String templateIdForOtherParties = "someTemplateIdForOtherParties";
-    private String bailReferenceNumber = "someReferenceNumber";
-    private String legalRepReference = "someLegalRepReference";
-    private String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
-    private String applicantGivenNames = "someApplicantGivenNames";
-    private String applicantFamilyName = "someApplicantFamilyName";
-    private String sendDirectionDescription = "someDescriptionOfTheDirectionSent";
-    private String dateOfCompliance = "2022-05-24";
-    private String dateTimeOldestDirectionCreated = "2022-05-24T15:00:00.000000000";
-    private String dateTimeLatestDirectionCreated = "2022-05-24T16:00:00.000000000";
+    private final String templateIdForDirectRecipient = "someTemplateIdForDirectRecipient";
+    private final String bailReferenceNumber = "someReferenceNumber";
+    private final String legalRepReference = "someLegalRepReference";
+    private final String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
+    private final String applicantGivenNames = "someApplicantGivenNames";
+    private final String applicantFamilyName = "someApplicantFamilyName";
+    private final String sendDirectionDescription = "someDescriptionOfTheDirectionSent";
     @Mock BailCase bailCase;
     @Mock IdValue<BailDirection> oldestDirectionIdValue;
     @Mock BailDirection oldestDirection;
@@ -55,15 +51,19 @@ public class LegalRepresentativeBailDirectionSentPersonalisationTest {
         when(bailCase.read(IS_LEGALLY_REPRESENTED_FOR_FLAG, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
 
         when(oldestDirectionIdValue.getValue()).thenReturn(oldestDirection);
+        String dateTimeOldestDirectionCreated = "2022-05-24T15:00:00.000000000";
         when(oldestDirection.getDateTimeDirectionCreated()).thenReturn(dateTimeOldestDirectionCreated);
         when(newestDirectionIdValue.getValue()).thenReturn(newestDirection);
+        String dateTimeLatestDirectionCreated = "2022-05-24T16:00:00.000000000";
         when(newestDirection.getDateTimeDirectionCreated()).thenReturn(dateTimeLatestDirectionCreated);
         when(bailCase.read(DIRECTIONS)).thenReturn(Optional.of(List.of(oldestDirectionIdValue, newestDirectionIdValue)));
 
         when(newestDirection.getSendDirectionDescription()).thenReturn(sendDirectionDescription);
+        String dateOfCompliance = "2022-05-24";
         when(newestDirection.getDateOfCompliance()).thenReturn(dateOfCompliance);
         when(newestDirection.getSendDirectionList()).thenReturn("Legal Representative");
 
+        String templateIdForOtherParties = "someTemplateIdForOtherParties";
         legalRepresentativeBailDirectionSentPersonalisation =
             new LegalRepresentativeBailDirectionSentPersonalisation(templateIdForDirectRecipient, templateIdForOtherParties);
     }
@@ -75,6 +75,7 @@ public class LegalRepresentativeBailDirectionSentPersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_BAIL_SENT_DIRECTION_LEGAL_REPRESENTATIVE",
             legalRepresentativeBailDirectionSentPersonalisation.getReferenceId(caseId));
     }
@@ -82,10 +83,11 @@ public class LegalRepresentativeBailDirectionSentPersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
+        NullPointerException exception =
+assertThrows(NullPointerException.class,
             () -> legalRepresentativeBailDirectionSentPersonalisation.getPersonalisation((BailCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("bailCase must not be null");
+            ;
+assertEquals("bailCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -94,14 +96,16 @@ public class LegalRepresentativeBailDirectionSentPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeBailDirectionSentPersonalisation.getPersonalisation(bailCase);
 
-        assertEquals(bailReferenceNumber, personalisation.get("bailReferenceNumber"));
-        assertEquals(applicantGivenNames, personalisation.get("applicantGivenNames"));
-        assertEquals(applicantFamilyName, personalisation.get("applicantFamilyName"));
-        assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
+        assertThat(personalisation)
+            .containsEntry("bailReferenceNumber", bailReferenceNumber)
+            .containsEntry("applicantGivenNames", applicantGivenNames)
+            .containsEntry("applicantFamilyName", applicantFamilyName)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber);
         assertEquals("\nLegal representative reference: " + legalRepReference,
             personalisation.get("legalRepReference"));
-        assertEquals(sendDirectionDescription, personalisation.get("sendDirectionDescription"));
-        assertEquals("24 May 2022", personalisation.get("dateOfCompliance"));
+        assertThat(personalisation)
+            .containsEntry("sendDirectionDescription", sendDirectionDescription)
+            .containsEntry("dateOfCompliance", "24 May 2022");
     }
 
     @Test
@@ -111,15 +115,17 @@ public class LegalRepresentativeBailDirectionSentPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeBailDirectionSentPersonalisation.getPersonalisation(bailCase);
 
-        assertEquals(bailReferenceNumber, personalisation.get("bailReferenceNumber"));
-        assertEquals(applicantGivenNames, personalisation.get("applicantGivenNames"));
-        assertEquals(applicantFamilyName, personalisation.get("applicantFamilyName"));
-        assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
+        assertThat(personalisation)
+            .containsEntry("bailReferenceNumber", bailReferenceNumber)
+            .containsEntry("applicantGivenNames", applicantGivenNames)
+            .containsEntry("applicantFamilyName", applicantFamilyName)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber);
         assertEquals("\nLegal representative reference: " + legalRepReference,
             personalisation.get("legalRepReference"));
-        assertEquals(sendDirectionDescription, personalisation.get("sendDirectionDescription"));
-        assertEquals("24 May 2022", personalisation.get("dateOfCompliance"));
-        assertEquals("Applicant", personalisation.get("party"));
+        assertThat(personalisation)
+            .containsEntry("sendDirectionDescription", sendDirectionDescription)
+            .containsEntry("dateOfCompliance", "24 May 2022")
+            .containsEntry("party", "Applicant");
     }
 
     @Test
@@ -135,13 +141,14 @@ public class LegalRepresentativeBailDirectionSentPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeBailDirectionSentPersonalisation.getPersonalisation(bailCase);
 
-        assertEquals("", personalisation.get("bailReferenceNumber"));
-        assertEquals("", personalisation.get("applicantGivenNames"));
-        assertEquals("", personalisation.get("applicantFamilyName"));
-        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("", personalisation.get("legalRepReference"));
-        assertEquals("", personalisation.get("sendDirectionDescription"));
-        assertEquals("", personalisation.get("dateOfCompliance"));
-        assertEquals("", personalisation.get("party"));
+        assertThat(personalisation)
+            .containsEntry("bailReferenceNumber", "")
+            .containsEntry("applicantGivenNames", "")
+            .containsEntry("applicantFamilyName", "")
+            .containsEntry("homeOfficeReferenceNumber", "")
+            .containsEntry("legalRepReference", "")
+            .containsEntry("sendDirectionDescription", "")
+            .containsEntry("dateOfCompliance", "")
+            .containsEntry("party", "");
     }
 }

@@ -23,7 +23,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 import java.util.Map;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -54,12 +55,10 @@ class AppellantInternalHomeOfficeApplyForFtpaNonDetainedAndOutOfCountryPersonali
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String addressLine1 = "50";
-    private final String directionDueDate = "2024-08-27";
-    private final String directionExplanation = "someExplanation";
     private final String addressLine2 = "Building name";
     private final String addressLine3 = "Street name";
     private final String postCode = "XX1 2YY";
-    private NationalityFieldValue oocCountry = mock(NationalityFieldValue.class);
+    private final NationalityFieldValue oocCountry = mock(NationalityFieldValue.class);
     private final String postTown = "Town name";
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "example@example.com";
@@ -67,7 +66,9 @@ class AppellantInternalHomeOfficeApplyForFtpaNonDetainedAndOutOfCountryPersonali
 
     @BeforeEach
     public void setup() {
+        String directionDueDate = "2024-08-27";
         when((direction.getDateDue())).thenReturn(directionDueDate);
+        String directionExplanation = "someExplanation";
         when((direction.getExplanation())).thenReturn(directionExplanation);
         when(directionFinder.findFirst(asylumCase, DirectionTag.RESPONDENT_REVIEW)).thenReturn(Optional.of(direction));
 
@@ -128,9 +129,10 @@ class AppellantInternalHomeOfficeApplyForFtpaNonDetainedAndOutOfCountryPersonali
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.empty());
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
 
-        assertThatThrownBy(() -> appellantInternalHomeOfficeApplyForFtpaNonDetainedAndOutOfCountryPersonalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("appellantAddress is not present");
+        IllegalStateException exception = 
+assertThrows(IllegalStateException.class, () -> appellantInternalHomeOfficeApplyForFtpaNonDetainedAndOutOfCountryPersonalisation.getRecipientsList(asylumCase))
+            ;
+assertEquals("appellantAddress is not present", exception.getMessage());
     }
 
     @Test
@@ -139,19 +141,21 @@ class AppellantInternalHomeOfficeApplyForFtpaNonDetainedAndOutOfCountryPersonali
         when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_ADDRESS_U_K, AddressUk.class)).thenReturn(Optional.empty());
         when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_HAS_ADDRESS, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
 
-        assertThatThrownBy(() -> appellantInternalHomeOfficeApplyForFtpaNonDetainedAndOutOfCountryPersonalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("legalRepAddressUK is not present");
+        IllegalStateException exception = 
+assertThrows(IllegalStateException.class, () -> appellantInternalHomeOfficeApplyForFtpaNonDetainedAndOutOfCountryPersonalisation.getRecipientsList(asylumCase))
+            ;
+assertEquals("legalRepAddressUK is not present", exception.getMessage());
     }
 
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
+        NullPointerException exception = 
+assertThrows(NullPointerException.class, 
             () -> appellantInternalHomeOfficeApplyForFtpaNonDetainedAndOutOfCountryPersonalisation.getPersonalisation((Callback<AsylumCase>) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("callback must not be null");
+            ;
+assertEquals("callback must not be null", exception.getMessage());
     }
 
     @Test
@@ -160,15 +164,16 @@ class AppellantInternalHomeOfficeApplyForFtpaNonDetainedAndOutOfCountryPersonali
         Map<String, String> personalisation =
             appellantInternalHomeOfficeApplyForFtpaNonDetainedAndOutOfCountryPersonalisation.getPersonalisation(callback);
 
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(addressLine1, personalisation.get("address_line_1"));
-        assertEquals(addressLine2, personalisation.get("address_line_2"));
-        assertEquals(addressLine3, personalisation.get("address_line_3"));
-        assertEquals(postTown, personalisation.get("address_line_4"));
-        assertEquals(postCode, personalisation.get("address_line_5"));
+        assertThat(personalisation)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
+            .containsEntry("address_line_1", addressLine1)
+            .containsEntry("address_line_2", addressLine2)
+            .containsEntry("address_line_3", addressLine3)
+            .containsEntry("address_line_4", postTown)
+            .containsEntry("address_line_5", postCode);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
@@ -182,15 +187,16 @@ class AppellantInternalHomeOfficeApplyForFtpaNonDetainedAndOutOfCountryPersonali
         Map<String, String> personalisation =
             appellantInternalHomeOfficeApplyForFtpaNonDetainedAndOutOfCountryPersonalisation.getPersonalisation(callback);
 
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(addressLine1, personalisation.get("address_line_1"));
-        assertEquals(addressLine2, personalisation.get("address_line_2"));
-        assertEquals(addressLine3, personalisation.get("address_line_3"));
-        assertEquals(postTown, personalisation.get("address_line_4"));
-        assertEquals(Nationality.ES.toString(), personalisation.get("address_line_5"));
+        assertThat(personalisation)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
+            .containsEntry("address_line_1", addressLine1)
+            .containsEntry("address_line_2", addressLine2)
+            .containsEntry("address_line_3", addressLine3)
+            .containsEntry("address_line_4", postTown)
+            .containsEntry("address_line_5", Nationality.ES.toString());
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
@@ -202,15 +208,16 @@ class AppellantInternalHomeOfficeApplyForFtpaNonDetainedAndOutOfCountryPersonali
         Map<String, String> personalisation =
             appellantInternalHomeOfficeApplyForFtpaNonDetainedAndOutOfCountryPersonalisation.getPersonalisation(callback);
 
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(addressLine1, personalisation.get("address_line_1"));
-        assertEquals(addressLine2, personalisation.get("address_line_2"));
-        assertEquals(addressLine3, personalisation.get("address_line_3"));
-        assertEquals(postTown, personalisation.get("address_line_4"));
-        assertEquals(postCode, personalisation.get("address_line_5"));
+        assertThat(personalisation)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
+            .containsEntry("address_line_1", addressLine1)
+            .containsEntry("address_line_2", addressLine2)
+            .containsEntry("address_line_3", addressLine3)
+            .containsEntry("address_line_4", postTown)
+            .containsEntry("address_line_5", postCode);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
@@ -221,15 +228,16 @@ class AppellantInternalHomeOfficeApplyForFtpaNonDetainedAndOutOfCountryPersonali
         Map<String, String> personalisation =
             appellantInternalHomeOfficeApplyForFtpaNonDetainedAndOutOfCountryPersonalisation.getPersonalisation(callback);
 
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(addressLine1, personalisation.get("address_line_1"));
-        assertEquals(addressLine2, personalisation.get("address_line_2"));
-        assertEquals(addressLine3, personalisation.get("address_line_3"));
-        assertEquals(postTown, personalisation.get("address_line_4"));
-        assertEquals(Nationality.ES.toString(), personalisation.get("address_line_5"));
+        assertThat(personalisation)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
+            .containsEntry("address_line_1", addressLine1)
+            .containsEntry("address_line_2", addressLine2)
+            .containsEntry("address_line_3", addressLine3)
+            .containsEntry("address_line_4", postTown)
+            .containsEntry("address_line_5", Nationality.ES.toString());
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }

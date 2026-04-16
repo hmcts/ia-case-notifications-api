@@ -21,7 +21,8 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -31,15 +32,12 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppellantRecordRefundDecisionPersonalisationSmsTest {
 
-    private Long caseId = 12345L;
-    private String appellantRefundApprovedTemplateId = "appellantRefundApprovedTemplateId";
-    private String appellantRefundPartiallyApprovedTemplateId = "appellantRefundPartiallyApprovedTemplateId";
-    private String appellantRefundRejectedTemplateId = "appellantRefundRejectedTemplateId";
-    private String iaAipFrontendUrl = "http://localhost";
-    private String appellantMobile = "07781122334";
-    private String appealReferenceNumber = "appealReferenceNumber";
-    private int daysAfterRefundDecision = 14;
-    private String amountRemitted = "4000";
+    private final String appellantRefundApprovedTemplateId = "appellantRefundApprovedTemplateId";
+    private final String appellantRefundPartiallyApprovedTemplateId = "appellantRefundPartiallyApprovedTemplateId";
+    private final String appellantRefundRejectedTemplateId = "appellantRefundRejectedTemplateId";
+    private final String iaAipFrontendUrl = "http://localhost";
+    private final String appealReferenceNumber = "appealReferenceNumber";
+    private final int daysAfterRefundDecision = 14;
 
 
     @Mock
@@ -55,6 +53,7 @@ class AppellantRecordRefundDecisionPersonalisationSmsTest {
     public void setup() {
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
+        String amountRemitted = "4000";
         when(asylumCase.read(AMOUNT_REMITTED, String.class)).thenReturn(Optional.of(amountRemitted));
 
         appellantRecordRefundDecisionPersonalisationSms = new AppellantRecordRefundDecisionPersonalisationSms(
@@ -88,12 +87,14 @@ class AppellantRecordRefundDecisionPersonalisationSmsTest {
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_REFUND_DECISION_DECIDED_AIP_APPELLANT_SMS",
                 appellantRecordRefundDecisionPersonalisationSms.getReferenceId(caseId));
     }
 
     @Test
     void should_return_appellant_email_address_from_asylum_case() {
+        String appellantMobile = "07781122334";
         when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
             .thenReturn(Collections.singleton(appellantMobile));
 
@@ -103,10 +104,11 @@ class AppellantRecordRefundDecisionPersonalisationSmsTest {
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
-        assertThatThrownBy(
+        NullPointerException exception = 
+assertThrows(NullPointerException.class, 
             () -> appellantRecordRefundDecisionPersonalisationSms.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -122,9 +124,10 @@ class AppellantRecordRefundDecisionPersonalisationSmsTest {
         Map<String, String> personalisation =
                 appellantRecordRefundDecisionPersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("linkToService"));
-        assertEquals(systemDateProvider.dueDate(daysAfterRefundDecision), personalisation.get("14DaysAfterRefundDecision"));
-        assertEquals("40.00", personalisation.get("refundAmount"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("linkToService", iaAipFrontendUrl)
+            .containsEntry("14DaysAfterRefundDecision", systemDateProvider.dueDate(daysAfterRefundDecision))
+            .containsEntry("refundAmount", "40.00");
     }
 }

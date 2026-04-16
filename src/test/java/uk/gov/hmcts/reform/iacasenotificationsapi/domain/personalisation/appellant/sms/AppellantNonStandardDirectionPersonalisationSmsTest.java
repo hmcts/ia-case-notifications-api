@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -36,11 +37,11 @@ class AppellantNonStandardDirectionPersonalisationSmsTest {
     @Mock
     RecipientsFinder recipientsFinder;
 
-    private Long caseId = 12345L;
-    private String smsTemplateId = "someSmsTemplateId";
-    private String iaAipFrontendUrl = "http://localhost";
-    private String mockedAppealReferenceNumber = "someReferenceNumber";
-    private String mockedAppellantMobilePhone = "07123456789";
+    private final Long caseId = 12345L;
+    private final String smsTemplateId = "someSmsTemplateId";
+    private final String iaAipFrontendUrl = "http://localhost";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
+    private final String mockedAppellantMobilePhone = "07123456789";
 
     private AppellantNonStandardDirectionPersonalisationSms appellantNonStandardDirectionPersonalisationSms;
 
@@ -76,9 +77,10 @@ class AppellantNonStandardDirectionPersonalisationSmsTest {
         when(recipientsFinder.findAll(null, NotificationType.SMS))
                 .thenThrow(new NullPointerException("asylumCase must not be null"));
 
-        assertThatThrownBy(() -> appellantNonStandardDirectionPersonalisationSms.getRecipientsList(null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> appellantNonStandardDirectionPersonalisationSms.getRecipientsList(null))
+                ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -94,9 +96,10 @@ class AppellantNonStandardDirectionPersonalisationSmsTest {
     @Test
     void should_throw_exception_on_personalisation_when_callback_is_null() {
 
-        assertThatThrownBy(() -> appellantNonStandardDirectionPersonalisationSms.getPersonalisation((AsylumCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> appellantNonStandardDirectionPersonalisationSms.getPersonalisation((AsylumCase) null))
+                ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -104,7 +107,8 @@ class AppellantNonStandardDirectionPersonalisationSmsTest {
 
         Map<String, String> personalisation = appellantNonStandardDirectionPersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("linkToTimelinePage"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", mockedAppealReferenceNumber)
+            .containsEntry("linkToTimelinePage", iaAipFrontendUrl);
     }
 }

@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -32,22 +33,19 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvi
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AipAppellantRecordRemissionDecisionPersonalisationEmailTest {
 
-    private Long caseId = 12345L;
-    private String aipAppellantRemissionApprovedTemplateId = "aipAppellantRemissionApprovedTemplateId";
-    private String aipAppellantRemissionPartiallyApprovedTemplateId = "aipAppellantRemissionPartiallyApprovedTemplateId";
-    private String aipAppellantRemissionRejectedTemplateId = "aipAppellantRemissionRejectedTemplateId";
-    private String iaAipFrontendUrl = "http://localhost";
-    private String appellantEmail = "example@example.com";
-    private String appealReferenceNumber = "appealReferenceNumber";
-    private String onlineCaseReferenceNumber = "1111222233334444";
-    private String homeOfficeReferenceNumber = "homeOfficeReferenceNumber";
-    private String appellantGivenNames = "GivenNames";
-    private String appellantFamilyName = "FamilyName";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "customer@example.com";
-    private int daysAfterRemissionDecision = 14;
-    private String amountLeftToPay = "4000";
-    private String amountLeftToPayInGbp = "40.00";
+    private final Long caseId = 12345L;
+    private final String aipAppellantRemissionApprovedTemplateId = "aipAppellantRemissionApprovedTemplateId";
+    private final String aipAppellantRemissionPartiallyApprovedTemplateId = "aipAppellantRemissionPartiallyApprovedTemplateId";
+    private final String aipAppellantRemissionRejectedTemplateId = "aipAppellantRemissionRejectedTemplateId";
+    private final String iaAipFrontendUrl = "http://localhost";
+    private final String appealReferenceNumber = "appealReferenceNumber";
+    private final String onlineCaseReferenceNumber = "1111222233334444";
+    private final String homeOfficeReferenceNumber = "homeOfficeReferenceNumber";
+    private final String appellantGivenNames = "GivenNames";
+    private final String appellantFamilyName = "FamilyName";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "customer@example.com";
+    private final int daysAfterRemissionDecision = 14;
 
     @Mock
     AsylumCase asylumCase;
@@ -70,6 +68,7 @@ class AipAppellantRecordRemissionDecisionPersonalisationEmailTest {
         when(asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class)).thenReturn(Optional.of(onlineCaseReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
+        String amountLeftToPay = "4000";
         when(asylumCase.read(AMOUNT_LEFT_TO_PAY, String.class)).thenReturn(Optional.of(amountLeftToPay));
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
@@ -115,6 +114,7 @@ class AipAppellantRecordRemissionDecisionPersonalisationEmailTest {
     @Test
     void should_return_appellant_email_address_from_asylum_case() {
         when(featureToggler.getValue("dlrm-telephony-feature-flag", false)).thenReturn(true);
+        String appellantEmail = "example@example.com";
         when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL))
             .thenReturn(Collections.singleton(appellantEmail));
 
@@ -124,10 +124,11 @@ class AipAppellantRecordRemissionDecisionPersonalisationEmailTest {
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
-        assertThatThrownBy(
+        NullPointerException exception = 
+assertThrows(NullPointerException.class, 
             () -> aipAppellantRecordRemissionDecisionPersonalisationEmail.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -143,14 +144,16 @@ class AipAppellantRecordRemissionDecisionPersonalisationEmailTest {
         Map<String, String> personalisation =
             aipAppellantRecordRemissionDecisionPersonalisationEmail.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(onlineCaseReferenceNumber, personalisation.get("onlineCaseReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("linkToService"));
-        assertEquals(systemDateProvider.dueDate(daysAfterRemissionDecision), personalisation.get("payByDeadline"));
-        assertEquals(amountLeftToPayInGbp, personalisation.get("remainingFee"));
+        String amountLeftToPayInGbp = "40.00";
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
+            .containsEntry("onlineCaseReferenceNumber", onlineCaseReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToService", iaAipFrontendUrl)
+            .containsEntry("payByDeadline", systemDateProvider.dueDate(daysAfterRemissionDecision))
+            .containsEntry("remainingFee", amountLeftToPayInGbp);
 
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());

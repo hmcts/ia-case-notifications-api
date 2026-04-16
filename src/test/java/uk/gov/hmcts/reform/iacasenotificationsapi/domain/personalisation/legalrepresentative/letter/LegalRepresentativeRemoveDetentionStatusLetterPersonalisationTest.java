@@ -22,6 +22,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
@@ -57,13 +58,13 @@ class LegalRepresentativeRemoveDetentionStatusLetterPersonalisationTest {
 
     @Test
     void should_return_template_id() {
-        assertThat(personalisation.getTemplateId()).isEqualTo(TEMPLATE_ID);
+        assertEquals(TEMPLATE_ID, personalisation.getTemplateId());
     }
 
     @Test
     void should_return_reference_id() {
         String referenceId = personalisation.getReferenceId(CASE_ID);
-        assertThat(referenceId).isEqualTo(CASE_ID + "_REMOVE_DETENTION_STATUS_LEGAL_REP_LETTER");
+        assertEquals(CASE_ID + "_REMOVE_DETENTION_STATUS_LEGAL_REP_LETTER", referenceId);
     }
 
     @Test

@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -50,16 +49,15 @@ class DetentionEngagementTeamDecideAnApplicationPersonalisationTest {
     @Mock
     private DetentionEmailService detEmailService;
 
-    private final Long caseId = 12345L;
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String detentionEngagementTeamDecideAnApplicationApplicantTemplateId = "detentionEngagementTeamDecideAnApplicationApplicantTemplateId";
     private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
-    DocumentWithMetadata decideAnApplicationLetter = TestUtils.getDocumentWithMetadata(
+    final DocumentWithMetadata decideAnApplicationLetter = TestUtils.getDocumentWithMetadata(
             "id", "internal_appeal_submission", "some other desc", DocumentTag.INTERNAL_DECIDE_AN_APPELLANT_APPLICATION_LETTER);
-    IdValue<DocumentWithMetadata> document = new IdValue<>("1", decideAnApplicationLetter);
+    final IdValue<DocumentWithMetadata> document = new IdValue<>("1", decideAnApplicationLetter);
     private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
     private final String adaPrefix = "ADA - SERVE IN PERSON";
     @Mock
@@ -94,6 +92,7 @@ class DetentionEngagementTeamDecideAnApplicationPersonalisationTest {
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_DECIDE_AN_APPLICATION_DET",
             detentionEngagementTeamDecideAnApplicationPersonalisation.getReferenceId(caseId));
     }
@@ -169,8 +168,9 @@ class DetentionEngagementTeamDecideAnApplicationPersonalisationTest {
     @Test
     void should_throw_exception_when_make_an_application_list_is_empty() {
         when((makeAnApplicationService.getMakeAnApplication(asylumCase, true))).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> detentionEngagementTeamDecideAnApplicationPersonalisation.getPersonalisationForLink(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("MakeAnApplication is not present");
+        IllegalStateException exception = 
+assertThrows(IllegalStateException.class, () -> detentionEngagementTeamDecideAnApplicationPersonalisation.getPersonalisationForLink(asylumCase))
+                ;
+assertEquals("MakeAnApplication is not present", exception.getMessage());
     }
 }

@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -57,21 +58,17 @@ public class AppellantChangeHearingCentrePersonalisationEmailTest {
     @Mock
     StringProvider stringProvider;
 
-    private Long caseId = 12345L;
-    private String changeHearingCentreTemplateId = "beforeListingEmailTemplateId";
+    private final String changeHearingCentreTemplateId = "beforeListingEmailTemplateId";
 
     private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
     private final String hearingCentreName = "Taylor House";
     private final HearingCentre oldHearingCentre = HearingCentre.MANCHESTER;
     private final String oldHearingCentreName = "Manchester";
 
-    private String mockedAppealReferenceNumber = "someReferenceNumber";
-    private String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
-    private String mockedAppellantGivenNames = "someAppellantGivenNames";
-    private String mockedAppellantFamilyName = "someAppellantFamilyName";
-    private String mockedAppellantEmailAddress = "appelant@example.net";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
+    private final String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
+    private final String mockedAppellantGivenNames = "someAppellantGivenNames";
+    private final String mockedAppellantFamilyName = "someAppellantFamilyName";
 
     private AppellantChangeHearingCentrePersonalisationEmail appellantChangeHearingCentrePersonalisationEmail;
 
@@ -94,7 +91,9 @@ public class AppellantChangeHearingCentrePersonalisationEmailTest {
                 .thenReturn(Optional.of(mockedAppealHomeOfficeReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(mockedAppellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(mockedAppellantFamilyName));
+        String customerServicesTelephone = "555 555 555";
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
+        String customerServicesEmail = "cust.services@example.com";
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         appellantChangeHearingCentrePersonalisationEmail =
@@ -112,6 +111,7 @@ public class AppellantChangeHearingCentrePersonalisationEmailTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_CHANGE_HEARING_CENTRE_AIP_APPELLANT_EMAIL",
                 appellantChangeHearingCentrePersonalisationEmail.getReferenceId(caseId));
     }
@@ -119,6 +119,7 @@ public class AppellantChangeHearingCentrePersonalisationEmailTest {
     @Test
     public void should_return_given_email_address_list_from_subscribers_in_asylum_case() {
 
+        String mockedAppellantEmailAddress = "appelant@example.net";
         when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL))
                 .thenReturn(Collections.singleton(mockedAppellantEmailAddress));
 
@@ -132,9 +133,10 @@ public class AppellantChangeHearingCentrePersonalisationEmailTest {
         when(recipientsFinder.findAll(null, NotificationType.EMAIL))
                 .thenThrow(new NullPointerException("asylumCase must not be null"));
 
-        assertThatThrownBy(() -> appellantChangeHearingCentrePersonalisationEmail.getRecipientsList(null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> appellantChangeHearingCentrePersonalisationEmail.getRecipientsList(null))
+                ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -148,12 +150,13 @@ public class AppellantChangeHearingCentrePersonalisationEmailTest {
         Map<String, String> personalisation =
                 appellantChangeHearingCentrePersonalisationEmail.getPersonalisation(callback);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(mockedAppealHomeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(mockedAppellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(mockedAppellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(oldHearingCentreName, personalisation.get("oldHearingCentre"));
-        assertEquals(hearingCentreName, personalisation.get("newHearingCentre"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", mockedAppealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", mockedAppealHomeOfficeReferenceNumber)
+            .containsEntry("appellantGivenNames", mockedAppellantGivenNames)
+            .containsEntry("appellantFamilyName", mockedAppellantFamilyName)
+            .containsEntry("oldHearingCentre", oldHearingCentreName)
+            .containsEntry("newHearingCentre", hearingCentreName);
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
@@ -176,12 +179,13 @@ public class AppellantChangeHearingCentrePersonalisationEmailTest {
         Map<String, String> personalisation =
                 appellantChangeHearingCentrePersonalisationEmail.getPersonalisation(callback);
 
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals(oldHearingCentreName, personalisation.get("oldHearingCentre"));
-        assertEquals(hearingCentreName, personalisation.get("newHearingCentre"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("homeOfficeReferenceNumber", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "")
+            .containsEntry("oldHearingCentre", oldHearingCentreName)
+            .containsEntry("newHearingCentre", hearingCentreName);
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));

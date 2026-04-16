@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -38,15 +39,13 @@ public class CaseOfficerFtpaDecisionPersonalisationTest {
     @Mock
     private FeatureToggler featureToggler;
 
-    private String caseOfficerEmailAddress = "caseOfficer@example.com";
-    private Long caseId = 12345L;
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String ariaListingReference = "ariaListingReference";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String ariaListingReference = "ariaListingReference";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
 
-    private String applicantReheardTemplateId = "applicantReheardTemplateId";
-    private String applicantReheardEnabledTemplateId = "applicantReheardEnabledTemplateId";
+    private final String applicantReheardTemplateId = "applicantReheardTemplateId";
+    private final String applicantReheardEnabledTemplateId = "applicantReheardEnabledTemplateId";
 
     private CaseOfficerFtpaDecisionPersonalisation caseOfficerFtpaDecisionPersonalisation;
 
@@ -71,6 +70,7 @@ public class CaseOfficerFtpaDecisionPersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_FTPA_APPLICATION_DECISION_CASE_OFFICER",
             caseOfficerFtpaDecisionPersonalisation.getReferenceId(caseId));
     }
@@ -84,6 +84,7 @@ public class CaseOfficerFtpaDecisionPersonalisationTest {
     @Test
     public void should_return_given_email_address_from_lookup_map_when_feature_flag_is_On() {
         when(featureToggler.getValue("tcw-notifications-feature", false)).thenReturn(true);
+        String caseOfficerEmailAddress = "caseOfficer@example.com";
         when(emailAddressFinder.getListCaseHearingCentreEmailAddress(asylumCase)).thenReturn(caseOfficerEmailAddress);
         assertTrue(
                 caseOfficerFtpaDecisionPersonalisation.getRecipientsList(asylumCase).contains(caseOfficerEmailAddress));
@@ -101,10 +102,11 @@ public class CaseOfficerFtpaDecisionPersonalisationTest {
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("ariaListingReference", ariaListingReference);
     }
 
     private Map<String, String> getPersonalisationMapWithGivenValues() {

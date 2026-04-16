@@ -2,7 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalr
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -35,7 +35,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-@SuppressWarnings("unchecked")
 public class LegalRepresentativeUploadAdditionalEvidencePersonalisationTest {
 
     @Mock
@@ -49,18 +48,11 @@ public class LegalRepresentativeUploadAdditionalEvidencePersonalisationTest {
     @Mock
     CustomerServicesProvider customerServicesProvider;
 
-    private String beforeListingTemplateId = "beforeListingTemplateId";
-    private String afterListingTemplateId = "afterListingTemplateId";
-    private String iaExUiFrontendUrl = "http://localhost";
-    private HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
-    private String legalRepEmailAddress = "legalRep@example.com";
-    private String appealReferenceNumber = "hmctsReference";
-    private String ariaListingReference = "someAriaListingReference";
-    private String legalRepReference = "legalRepresentativeReference";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
+    private final String beforeListingTemplateId = "beforeListingTemplateId";
+    private final String afterListingTemplateId = "afterListingTemplateId";
+    private final String iaExUiFrontendUrl = "http://localhost";
+    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    private final String legalRepEmailAddress = "legalRep@example.com";
 
     private LegalRepresentativeUploadAdditionalEvidencePersonalisation
         legalRepresentativeUploadAdditionalEvidencePersonalisation;
@@ -93,7 +85,7 @@ public class LegalRepresentativeUploadAdditionalEvidencePersonalisationTest {
     public void should_return_empty_recipients_from_asylum_case_for_aip_journey() {
         when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(AIP));
 
-        assertThat(legalRepresentativeUploadAdditionalEvidencePersonalisation.getRecipientsList(asylumCase)).isEmpty();
+        assertTrue(legalRepresentativeUploadAdditionalEvidencePersonalisation.getRecipientsList(asylumCase).isEmpty());
     }
 
     @Test
@@ -147,19 +139,31 @@ public class LegalRepresentativeUploadAdditionalEvidencePersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeUploadAdditionalEvidencePersonalisation.getPersonalisation(callback);
 
-        assertThat(personalisation).isNotEmpty();
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertFalse(personalisation.isEmpty());
+        assertThat(personalisation)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal"
+                : "Immigration and Asylum appeal")
+            .containsAllEntriesOf(getPersonalisationForLegalRep());
     }
 
     @Test
     public void should_throw_exception_on_personalistaion_when_case_is_null() {
-        assertThatThrownBy(() -> legalRepresentativeUploadAdditionalEvidencePersonalisation
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> legalRepresentativeUploadAdditionalEvidencePersonalisation
             .getPersonalisation((Callback<AsylumCase>) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("callback must not be null");
+            ;
+assertEquals("callback must not be null", exception.getMessage());
     }
 
     private Map<String, String> getPersonalisationForLegalRep() {
+        String customerServicesEmail = "cust.services@example.com";
+        String customerServicesTelephone = "555 555 555";
+        String appellantFamilyName = "someAppellantFamilyName";
+        String appellantGivenNames = "someAppellantGivenNames";
+        String legalRepReference = "legalRepresentativeReference";
+        String ariaListingReference = "someAriaListingReference";
+        String appealReferenceNumber = "hmctsReference";
         return ImmutableMap
             .<String, String>builder()
             .put("appealReferenceNumber", appealReferenceNumber)

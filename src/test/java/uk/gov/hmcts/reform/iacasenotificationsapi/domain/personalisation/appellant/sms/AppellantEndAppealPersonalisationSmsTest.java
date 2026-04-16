@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -33,13 +34,10 @@ public class AppellantEndAppealPersonalisationSmsTest {
     @Mock
     RecipientsFinder recipientsFinder;
 
-    private Long caseId = 12345L;
-    private String smsTemplateId = "someSmsTemplateId";
-    private String iaAipFrontendUrl = "http://localhost/";
-    private String iaAipFrontendPathToJudgeReview = "ask-judge-review";
-    private String directLinkToJudgesReviewPage = "http://localhost/ask-judge-review";
-    private String mockedAppealReferenceNumber = "someReferenceNumber";
-    private String mockedAppellantMobilePhone = "07123456789";
+    private final String smsTemplateId = "someSmsTemplateId";
+    private final String iaAipFrontendUrl = "http://localhost/";
+    private final String directLinkToJudgesReviewPage = "http://localhost/ask-judge-review";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
 
     private AppellantEndAppealPersonalisationSms appellantEndAppealPersonalisationSms;
 
@@ -51,10 +49,11 @@ public class AppellantEndAppealPersonalisationSmsTest {
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class))
                 .thenReturn(Optional.of(mockedAppealReferenceNumber));
 
+        String iaAipFrontendPathToJudgeReview = "ask-judge-review";
         appellantEndAppealPersonalisationSms = new AppellantEndAppealPersonalisationSms(
                 smsTemplateId,
                 iaAipFrontendUrl,
-                iaAipFrontendPathToJudgeReview,
+            iaAipFrontendPathToJudgeReview,
                 recipientsFinder
         );
     }
@@ -66,6 +65,7 @@ public class AppellantEndAppealPersonalisationSmsTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_END_APPEAL_AIP_APPELLANT_SMS",
                 appellantEndAppealPersonalisationSms.getReferenceId(caseId));
     }
@@ -76,14 +76,16 @@ public class AppellantEndAppealPersonalisationSmsTest {
         when(recipientsFinder.findAll(null, NotificationType.SMS))
                 .thenThrow(new NullPointerException("asylumCase must not be null"));
 
-        assertThatThrownBy(() -> appellantEndAppealPersonalisationSms.getRecipientsList(null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> appellantEndAppealPersonalisationSms.getRecipientsList(null))
+                ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_return_given_mobile_mobile_list_from_subscribers_in_asylum_case() {
 
+        String mockedAppellantMobilePhone = "07123456789";
         when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
                 .thenReturn(Collections.singleton(mockedAppellantMobilePhone));
 
@@ -94,10 +96,11 @@ public class AppellantEndAppealPersonalisationSmsTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
+        NullPointerException exception =
+assertThrows(NullPointerException.class,
                 () -> appellantEndAppealPersonalisationSms.getPersonalisation((AsylumCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+                ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -113,12 +116,13 @@ public class AppellantEndAppealPersonalisationSmsTest {
         Map<String, String> personalisation =
                 appellantEndAppealPersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
-        assertEquals(directLinkToJudgesReviewPage, personalisation.get("direct link to judges’ review page"));
-        assertEquals(endAppealApprover, personalisation.get("endAppealApprover"));
-        assertEquals(LocalDate.parse(endAppealDate).format(DateTimeFormatter.ofPattern("d MMM yyyy")), personalisation.get("endAppealDate"));
-        assertEquals(outcomeOfAppeal, personalisation.get("outcomeOfAppeal"));
+        assertThat(personalisation)
+            .containsEntry("Appeal Ref Number", mockedAppealReferenceNumber)
+            .containsEntry("Hyperlink to service", iaAipFrontendUrl)
+            .containsEntry("direct link to judges’ review page", directLinkToJudgesReviewPage)
+            .containsEntry("endAppealApprover", endAppealApprover)
+            .containsEntry("endAppealDate", LocalDate.parse(endAppealDate).format(DateTimeFormatter.ofPattern("d MMM yyyy")))
+            .containsEntry("outcomeOfAppeal", outcomeOfAppeal);
     }
 
     @Test
@@ -129,8 +133,9 @@ public class AppellantEndAppealPersonalisationSmsTest {
         Map<String, String> personalisation =
                 appellantEndAppealPersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals("", personalisation.get("Appeal Ref Number"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
-        assertEquals(directLinkToJudgesReviewPage, personalisation.get("direct link to judges’ review page"));
+        assertThat(personalisation)
+            .containsEntry("Appeal Ref Number", "")
+            .containsEntry("Hyperlink to service", iaAipFrontendUrl)
+            .containsEntry("direct link to judges’ review page", directLinkToJudgesReviewPage);
     }
 }

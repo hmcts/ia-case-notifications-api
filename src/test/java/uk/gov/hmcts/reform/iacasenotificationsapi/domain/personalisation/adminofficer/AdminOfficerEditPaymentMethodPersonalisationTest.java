@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -28,13 +29,9 @@ class AdminOfficerEditPaymentMethodPersonalisationTest {
     @Mock private AsylumCase asylumCase;
     @Mock private AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
 
-    private String templateEaHuId = "eaHuTemplateId";
-    private String templatePaId = "paTemplateId";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
-    private String adminOfficerEmailAddress = "adminOfficer@example.com";
-    private String iaExUiFrontendUrl = "http://localhost";
+    private final String templateEaHuId = "eaHuTemplateId";
+    private final String templatePaId = "paTemplateId";
+    private final String adminOfficerEmailAddress = "adminOfficer@example.com";
 
     private AdminOfficerEditPaymentMethodPersonalisation adminOfficerEditPaymentMethodPersonalisation;
 
@@ -79,10 +76,11 @@ class AdminOfficerEditPaymentMethodPersonalisationTest {
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
+        NullPointerException exception = 
+assertThrows(NullPointerException.class, 
             () -> adminOfficerEditPaymentMethodPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -91,6 +89,10 @@ class AdminOfficerEditPaymentMethodPersonalisationTest {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         initializePrefixes(adminOfficerEditPaymentMethodPersonalisation);
+        String iaExUiFrontendUrl = "http://localhost";
+        String appellantFamilyName = "someAppellantFamilyName";
+        String appellantGivenNames = "someAppellantGivenNames";
+        String appealReferenceNumber = "someReferenceNumber";
         when(adminOfficerPersonalisationProvider.getDefaultPersonalisation(asylumCase))
             .thenReturn(ImmutableMap
                 .<String, String>builder()
@@ -106,9 +108,10 @@ class AdminOfficerEditPaymentMethodPersonalisationTest {
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
     }
 }

@@ -18,7 +18,8 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -26,7 +27,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-@SuppressWarnings("unchecked")
 class AppellantUpdateTribunalDecisionRule32PersonalisationEmailTest {
     @Mock
     Callback<AsylumCase> callback;
@@ -39,17 +39,14 @@ class AppellantUpdateTribunalDecisionRule32PersonalisationEmailTest {
     @Mock
     CustomerServicesProvider customerServicesProvider;
 
-    private Long caseId = 12345L;
-    private String appellanttUpdateTribunalDecisionRule32EmailTemplateId = "appellanttUpdateTribunalDecisionRule32EmailTemplateId";
-    private String iaAipFrontendUrl = "http://localhost";
-    private String mockedAppealReferenceNumber = "someReferenceNumber";
-    private String mockedAppellantEmailAddress = "fake@faketest.com";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String homeOfficeReferenceNumber = "someHOReferenceNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
+    private final Long caseId = 12345L;
+    private final String appellanttUpdateTribunalDecisionRule32EmailTemplateId = "appellanttUpdateTribunalDecisionRule32EmailTemplateId";
+    private final String iaAipFrontendUrl = "http://localhost";
+    private final String homeOfficeReferenceNumber = "someHOReferenceNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
     private AppellantUpdateTribunalDecisionRule32PersonalisationEmail appellantUpdateTribunalDecisionRule32PersonalisationEmail;
 
     @BeforeEach
@@ -58,6 +55,7 @@ class AppellantUpdateTribunalDecisionRule32PersonalisationEmailTest {
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
         when(callback.getCaseDetails().getId()).thenReturn(caseId);
 
+        String appealReferenceNumber = "someReferenceNumber";
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
@@ -86,6 +84,7 @@ class AppellantUpdateTribunalDecisionRule32PersonalisationEmailTest {
 
     @Test
     void should_return_given_email_address_list_from_subscribers_in_asylum_case() {
+        String mockedAppellantEmailAddress = "fake@faketest.com";
         when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL))
                 .thenReturn(Collections.singleton(mockedAppellantEmailAddress));
 
@@ -96,9 +95,10 @@ class AppellantUpdateTribunalDecisionRule32PersonalisationEmailTest {
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> appellantUpdateTribunalDecisionRule32PersonalisationEmail.getPersonalisation((Callback<AsylumCase>) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("callback must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> appellantUpdateTribunalDecisionRule32PersonalisationEmail.getPersonalisation((Callback<AsylumCase>) null))
+            ;
+assertEquals("callback must not be null", exception.getMessage());
     }
 
     @Test
@@ -106,11 +106,13 @@ class AppellantUpdateTribunalDecisionRule32PersonalisationEmailTest {
 
         Map<String, String> personalisation = appellantUpdateTribunalDecisionRule32PersonalisationEmail.getPersonalisation(callback);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeReferenceNumber, personalisation.get("respondentReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("linkAipTimeline"));
+        String mockedAppealReferenceNumber = "someReferenceNumber";
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", mockedAppealReferenceNumber)
+            .containsEntry("respondentReferenceNumber", homeOfficeReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkAipTimeline", iaAipFrontendUrl);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 

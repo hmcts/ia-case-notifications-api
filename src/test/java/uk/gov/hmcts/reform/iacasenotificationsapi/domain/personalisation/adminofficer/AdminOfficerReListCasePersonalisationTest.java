@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ACCELERATED_DETAINED_APPEAL;
@@ -27,9 +27,8 @@ class AdminOfficerReListCasePersonalisationTest {
     AsylumCase asylumCase;
     @Mock
     AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
-    private String templateId = "someTemplateId";
+    private final String templateId = "someTemplateId";
     private AdminOfficerReListCasePersonalisation adminOfficerReListCasePersonalisation;
-
 
     @BeforeEach
     void setup() {
@@ -59,9 +58,10 @@ class AdminOfficerReListCasePersonalisationTest {
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> adminOfficerReListCasePersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+assertThrows(NullPointerException.class, () -> adminOfficerReListCasePersonalisation.getPersonalisation((AsylumCase) null))
+            ;
+assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -75,20 +75,10 @@ class AdminOfficerReListCasePersonalisationTest {
 
         Map<String, String> personalisation = adminOfficerReListCasePersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
-
-    }
-
-    @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
-    void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
-
-        initializePrefixes(adminOfficerReListCasePersonalisation);
-        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
-        when(adminOfficerPersonalisationProvider.getChangeToHearingRequirementsPersonalisation(asylumCase))
-            .thenReturn(ImmutableMap.<String, String>builder().build());
-        Map<String, String> personalisation = adminOfficerReListCasePersonalisation.getPersonalisation(asylumCase);
-
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        String nonAdaPrefix = "Immigration and Asylum appeal";
+        String adaPrefix = "Accelerated detained appeal";
+        assertThat(personalisation)
+            .containsAllEntriesOf(adminOfficerPersonalisationProvider.getChangeToHearingRequirementsPersonalisation(asylumCase))
+            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? adaPrefix : nonAdaPrefix);
     }
 }
