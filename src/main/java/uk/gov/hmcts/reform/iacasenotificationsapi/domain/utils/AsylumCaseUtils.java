@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.RequiredFieldMissingException;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
@@ -15,6 +16,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AccessCodeGener
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Function;
 
@@ -589,4 +591,23 @@ public class AsylumCaseUtils {
         return result;
     }
 
+    public static @NonNull String getCompleteCasedReviewDate(AsylumCase asylumCase) {
+        final String reviewDate = asylumCase
+                .read(AsylumCaseDefinition.COMPLETE_CASE_REVIEW_DATE, String.class)
+                .orElseThrow(() -> new IllegalStateException("Complete CaseReview Date is not present"));
+        return LocalDate.parse(reviewDate).format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+    }
+
+    public static @NonNull Set<String> getApplicantEmail(AsylumCase asylumCase) {
+
+        Set<String> emails = asylumCase.read(EMAIL, String.class)
+                .map(Collections::singleton)
+                .orElse(Collections.emptySet());
+        if (emails.isEmpty()) {
+            emails = asylumCase.read(INTERNAL_APPELLANT_EMAIL, String.class)
+                    .map(Collections::singleton)
+                    .orElse(Collections.emptySet());
+        }
+        return emails;
+    }
 }
