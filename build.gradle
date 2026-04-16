@@ -62,9 +62,7 @@ compileJava {
 }
 
 compileTestJava {
-    // TODO swap back
-    options.compilerArgs
-//    options.compilerArgs << '-Xlint:deprecation' << "-Xlint:unchecked" << "-Werror"
+    options.compilerArgs << '-Xlint:deprecation' << "-Xlint:unchecked" << "-Werror"
 }
 
 tasks.withType(Test) {
