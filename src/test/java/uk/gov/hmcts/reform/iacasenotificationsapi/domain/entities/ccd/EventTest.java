@@ -36,7 +36,6 @@ public class EventTest {
             Arguments.of("editAppeal", Event.EDIT_APPEAL.toString()),
             Arguments.of("submitAppeal", Event.SUBMIT_APPEAL.toString()),
             Arguments.of("payAndSubmitAppeal", Event.PAY_AND_SUBMIT_APPEAL.toString()),
-            Arguments.of("payForAppeal", Event.PAY_FOR_APPEAL.toString()),
             Arguments.of("sendDirection", Event.SEND_DIRECTION.toString()),
             Arguments.of("uploadHomeOfficeBundle", Event.UPLOAD_HOME_OFFICE_BUNDLE.toString()),
             Arguments.of("removeDetainedStatus", Event.REMOVE_DETAINED_STATUS.toString()),
