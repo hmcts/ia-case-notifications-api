@@ -581,6 +581,13 @@ public class AsylumCaseUtils {
         return LocalDate.parse(reviewDate).format(DateTimeFormatter.ofPattern("d MMM yyyy"));
     }
 
+    public static boolean hasStf24WeeksStatus(AsylumCase asylumCase) {
+        final YesOrNo reviewDate = asylumCase
+                .read(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)
+                .orElseThrow(() -> new IllegalStateException("STF 24W CURRENT STATUS AUTO GENERATED is not present"));
+        return reviewDate.equals(YES);
+    }
+
     public static @NonNull Set<String> getApplicantEmail(AsylumCase asylumCase) {
 
         Set<String> emails = asylumCase.read(EMAIL, String.class)

@@ -5678,6 +5678,59 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> stf24WeeksCompleteCaseReviewAppellantNotificationHandler(
+            @Qualifier("stf24WeeksCompleteCaseReviewAppellantNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase =
+                            callback
+                                    .getCaseDetails()
+                                    .getCaseData();
+                    Set<String> appellantEmails = AsylumCaseUtils.getApplicantEmail(asylumCase);
+                    String emails = String.join(",", appellantEmails);
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == COMPLETE_CASE_REVIEW
+                            && AsylumCaseUtils.hasStf24WeeksStatus(asylumCase) && !emails.isEmpty();
+                },
+                notificationGenerators,  getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> stf24WeeksCompleteCaseReviewLegalRepresentativeNotificationHandler(
+            @Qualifier("stf24WeeksCompleteCaseReviewLegalRepresentativeNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase =
+                            callback
+                                    .getCaseDetails()
+                                    .getCaseData();
+                    Set<String> appellantEmails = AsylumCaseUtils.getApplicantEmail(asylumCase);
+                    String emails = String.join(",", appellantEmails);
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == COMPLETE_CASE_REVIEW && AsylumCaseUtils.hasStf24WeeksStatus(asylumCase) && !emails.isEmpty();
+                },
+                notificationGenerators,  getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> stf24WeeksCompleteCaseReviewHomeOfficeNotificationHandler(
+            @Qualifier("stf24WeeksCompleteCaseReviewHomeofficeNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase =
+                            callback
+                                    .getCaseDetails()
+                                    .getCaseData();
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == COMPLETE_CASE_REVIEW && AsylumCaseUtils.hasStf24WeeksStatus(asylumCase);
+                },
+                notificationGenerators,  getErrorHandler()
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> removeStatutoryTimeframe24WeeksAppellantLetterNotificationHandler(
             @Qualifier("removeStatutoryTimeframe24WeeksAppellantLetterNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
         return new NotificationHandler(

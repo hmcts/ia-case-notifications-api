@@ -1532,7 +1532,13 @@ govnotify:
       appellant:
         email: 12bf5ed3-2d4f-4de8-b7d9-6a3d29caf1a3
         letter: 69820c60-76b6-4707-ba8b-06c21dfaa272
-
+    completeCaseReviewStatutoryTimeframe24Weeks:
+      homeOffice:
+        email: 2d0c35b4-5bb5-49e2-ad87-856d5682ea0f
+      legalRep:
+        email: c2a95d8a-56b9-4c7a-9ed4-3678ae7e88f1
+      appellant:
+        email: 12bf5ed3-2d4f-4de8-b7d9-6a3d29caf1a3
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
     timeout: 5000
@@ -1797,6 +1803,7 @@ security:
       - "updateTribunalDecision"
       - "recordRemissionReminder"
       - "removeStatutoryTimeframe24Weeks"
+      - "completeCaseReview"
     challenged-access-legal-operations:
       - "sendDirection"
       - "changeDirectionDueDate"
@@ -1926,6 +1933,7 @@ security:
       - "updateTribunalDecision"
       - "recordRemissionReminder"
       - "removeStatutoryTimeframe24Weeks"
+      - "completeCaseReview"
     # These events are used by the bails service, they will need to be migrated to the admin access management roles - see DIAC-855
     caseworker-ia-admofficer:
       - "editBailApplication"
@@ -1948,6 +1956,7 @@ security:
       - "createBailCaseLink"
       - "markAppealAsRemitted"
       - "removeStatutoryTimeframe24Weeks"
+      - "completeCaseReview"
     hearing-centre-admin:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2295,6 +2304,7 @@ security:
       - "sendBailDirection"
       - "editBailDocuments"
       - "removeStatutoryTimeframe24Weeks"
+      - "completeCaseReview"
     judge:
       - "adaSuitabilityReview"
       - "sendDirection"
@@ -2533,6 +2543,7 @@ security:
       - "changeHearingCentre"
       - "hearingCancelled"
       - "removeStatutoryTimeframe24Weeks"
+      - "completeCaseReview"
     caseworker-ia-homeofficebail:
       - "startApplication"
       - "editBailApplication"
