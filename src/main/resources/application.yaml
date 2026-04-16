@@ -2592,6 +2592,8 @@ security:
       - "sendPipToNonLegalRep"
       - "joinAppealConfirmation"
       - "nlrDetailsUpdated"
+    caseworker-ia-internal:
+      - "revokeCitizenAccess"
     caseworker-ia-homeofficebail:
       - "startApplication"
       - "editBailApplication"
