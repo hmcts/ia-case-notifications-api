@@ -4888,7 +4888,7 @@ public class NotificationGeneratorConfiguration {
     }
 
     @Bean("stf24WeeksCompleteCaseReviewLegalRepresentativeNotificationGenerator")
-    public List<NotificationGenerator> stf24WeeksCompleteCaseReviewLRNotificationGenerator(
+    public List<NotificationGenerator> stf24WeeksCompleteCaseReviewLegalRepNotificationGenerator(
             LegalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation legalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
