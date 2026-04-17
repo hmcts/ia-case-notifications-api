@@ -325,13 +325,15 @@ class HearingDetailsFinderTest {
     void should_return_listing_location_address_from_ccd_if_disabled_ref_data_flag() {
 
 
-        assertEquals("Glasgow\nIAC Glasgow, " +
-                "1st Floor, " +
-                "The Glasgow Tribunals Centre, " +
-                "Atlantic Quay, " +
-                "20 York Street, " +
-                "Glasgow, " +
-                "G2 8GT",
+        assertEquals("""
+                Glasgow
+                IAC Glasgow, \
+                1st Floor, \
+                The Glasgow Tribunals Centre, \
+                Atlantic Quay, \
+                20 York Street, \
+                Glasgow, \
+                G2 8GT""",
             hearingDetailsFinder.getListingLocationAddressFromRefDataOrCcd(bailCase));
     }
 

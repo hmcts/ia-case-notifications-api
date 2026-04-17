@@ -3,8 +3,11 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalr
 import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
@@ -21,8 +24,10 @@ import java.util.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class LegalRepresentativeMarkAppealAsDetainedLetterPersonalisationTest {
 
     private static final String TEMPLATE_ID = "template-xyz";
@@ -43,7 +48,6 @@ class LegalRepresentativeMarkAppealAsDetainedLetterPersonalisationTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
         personalisation = new LegalRepresentativeMarkAppealAsDetainedLetterPersonalisation(
             TEMPLATE_ID,
             customerServicesProvider,

@@ -1,22 +1,19 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.util.Optional;
 
-import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import uk.gov.hmcts.reform.iacasenotificationsapi.Application;
+import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.SpringBootIntegrationTest;
 
 @SpringBootTest(classes = Application.class)
 @ActiveProfiles("integration")
-class TsvStringProviderTest {
+class TsvStringProviderTest extends SpringBootIntegrationTest {
 
     @Autowired
     private TsvStringProvider tsvStringProvider;

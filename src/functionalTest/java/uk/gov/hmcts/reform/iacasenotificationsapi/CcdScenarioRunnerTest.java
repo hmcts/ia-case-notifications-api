@@ -117,12 +117,12 @@ public class CcdScenarioRunnerTest {
 
                     if (scenarioEnabled == null) {
                         scenarioEnabled = true;
-                    } else if (scenarioEnabled instanceof String) {
-                        scenarioEnabled = Boolean.valueOf((String) scenarioEnabled);
+                    } else if (scenarioEnabled instanceof String string) {
+                        scenarioEnabled = Boolean.valueOf(string);
                     }
-                    if (scenarioFeature != null && scenarioFeature instanceof String) {
+                    if (scenarioFeature != null && scenarioFeature instanceof String string) {
                         if (String.valueOf(scenarioFeature).contains("feature")) {
-                            String[] keys = ((String) scenarioFeature).split(":");
+                            String[] keys = string.split(":");
                             launchDarklyFeature = launchDarklyFunctionalTestClient
                                     .getKey(keys[0], authorizationHeaders.getValue("Authorization"))
                                     && Boolean.valueOf(keys[1]);
@@ -134,8 +134,8 @@ public class CcdScenarioRunnerTest {
 
                     if (scenarioDisabled == null) {
                         scenarioDisabled = false;
-                    } else if (scenarioDisabled instanceof String) {
-                        scenarioDisabled = Boolean.valueOf((String) scenarioDisabled);
+                    } else if (scenarioDisabled instanceof String string) {
+                        scenarioDisabled = Boolean.valueOf(string);
                     }
 
                     if (!((Boolean) scenarioEnabled) || ((Boolean) scenarioDisabled)) {
@@ -174,7 +174,7 @@ public class CcdScenarioRunnerTest {
                             SerenityRest
                                     .given()
                                     .headers(authorizationHeaders)
-                                    .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                                    .contentType(MediaType.APPLICATION_JSON_VALUE)
                                     .body(requestBody)
                                     .when()
                                     .post(requestUri)

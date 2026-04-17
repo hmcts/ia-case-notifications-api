@@ -242,7 +242,7 @@ public class AsylumCaseUtils {
     }
 
     public static PinInPostDetails generateAppellantPinIfNotPresent(AsylumCase asylumCase) {
-        if (!asylumCase.read(APPELLANT_PIN_IN_POST, PinInPostDetails.class).isPresent()) {
+        if (asylumCase.read(APPELLANT_PIN_IN_POST, PinInPostDetails.class).isEmpty()) {
             asylumCase.write(APPELLANT_PIN_IN_POST, PinInPostDetails.builder()
                     .accessCode(AccessCodeGenerator.generateAccessCode())
                     .expiryDate(LocalDate.now().plusDays(30).toString())

@@ -75,7 +75,7 @@ public class LegalRepresentativeFtpaApplicationDecisionAppellantPersonalisation 
         Optional<FtpaDecisionOutcomeType> ftpaDecisionOutcomeType = asylumCase
             .read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class);
 
-        if (!ftpaDecisionOutcomeType.isPresent()) {
+        if (ftpaDecisionOutcomeType.isEmpty()) {
             ftpaDecisionOutcomeType = Optional.ofNullable(asylumCase
                 .read(FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)
                 .orElseThrow(() -> new IllegalStateException("ftpaAppellantDecisionOutcomeType is not present")));

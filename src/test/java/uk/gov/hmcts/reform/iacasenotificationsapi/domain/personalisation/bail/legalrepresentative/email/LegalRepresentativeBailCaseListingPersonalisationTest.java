@@ -35,8 +35,9 @@ class LegalRepresentativeBailCaseListingPersonalisationTest {
     private final String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
     private final String applicantGivenNames = "someApplicantGivenNames";
     private final String applicantFamilyName = "someApplicantFamilyName";
-    private final String bailHearingLocation = "Yarl’s Wood\n" +
-        "Yarl’s Wood Immigration and Asylum Hearing Centre, Twinwood Road, MK44 1FD";
+    private final String bailHearingLocation = """
+        Yarl’s Wood
+        Yarl’s Wood Immigration and Asylum Hearing Centre, Twinwood Road, MK44 1FD""";
     private final String hearingDate = "2024-01-21";
     private final String hearingTime = "10:29";
     @Mock

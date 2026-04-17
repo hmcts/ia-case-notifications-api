@@ -1,10 +1,5 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.util;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.text.MatchesPattern.matchesPattern;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
@@ -38,10 +33,7 @@ public final class MapFieldAssertor {
             Object expectedValue = expectedEntry.getValue();
             Object actualValue = actualMap.get(key);
 
-            if ((expectedValue instanceof List) && (actualValue instanceof List)) {
-
-                List expectedValueCollection = (List) expectedValue;
-                List actualValueCollection = (List) actualValue;
+            if ((expectedValue instanceof List expectedValueCollection) && (actualValue instanceof List actualValueCollection)) {
 
                 for (int i = 0; i < expectedValueCollection.size(); i++) {
 
@@ -77,12 +69,10 @@ public final class MapFieldAssertor {
 
         } else {
 
-            if ((expectedValue instanceof String) && (actualValue instanceof String)) {
-
-                String expectedValueString = (String) expectedValue;
+            if ((expectedValue instanceof String expectedValueString) && (actualValue instanceof String actualValueString)) {
 
                 if (isPathContainsNotificationsSentReference(path)) {
-                    assertEquals(expectedValue, removeTimestampFromNotificationReference((String) actualValue),
+                    assertEquals(expectedValue, removeTimestampFromNotificationReference(actualValueString),
                         "Expected field matches (" + path + ")");
                     return;
                 }
@@ -92,8 +82,6 @@ public final class MapFieldAssertor {
                     && expectedValueString.endsWith("/")) {
 
                     expectedValueString = expectedValueString.substring(2, expectedValueString.length() - 1);
-
-                    String actualValueString = (String) actualValue;
 
                     assertEquals(
                         expectedValueString,

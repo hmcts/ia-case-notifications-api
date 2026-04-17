@@ -64,7 +64,6 @@
             "{$iaExUiFrontendUrl}"
           ]
         },
-        ,
         {
           "reference": "5214_BAIL_APPLICATION_ENDED_UT_EMAIL",
           "recipient": "{${bailUpperTribunalEmailAddress}",

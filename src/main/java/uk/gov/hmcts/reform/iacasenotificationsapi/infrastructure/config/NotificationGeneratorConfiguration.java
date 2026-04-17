@@ -6244,7 +6244,7 @@ public class NotificationGeneratorConfiguration {
     }
 
     @Bean("internalSubmitAppealWithFeeAppellantLetterNotificationGenerator")
-    public List<NotificationGenerator> internalSubmitAppealOutOfTimeWithFeeAppellantLetterNotificationGenerator(
+    public List<NotificationGenerator> internalSubmitAppealWithFeeAppellantLetterNotificationGenerator(
         AppellantInternalCaseSubmittedOnTimeWithFeePersonalisation appellantInternalCaseSubmittedOnTimeWithFeePersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
@@ -6267,7 +6267,7 @@ public class NotificationGeneratorConfiguration {
     }
 
     @Bean("internalHomeOfficeDirectedToReviewAppealAipNotificationGenerator")
-    public List<NotificationGenerator> internalSubmitAppealOutOfTimeWithFeeAppellantLetterNotificationGenerator(
+    public List<NotificationGenerator> internalHomeOfficeDirectedToReviewAppealAipNotificationGenerator(
         AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisation appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
@@ -6290,7 +6290,7 @@ public class NotificationGeneratorConfiguration {
     }
 
     @Bean("internalHomeOfficeUploadBundleAipNotificationGenerator")
-    public List<NotificationGenerator> internalSubmitAppealOutOfTimeWithFeeAppellantLetterNotificationGenerator(
+    public List<NotificationGenerator> internalHomeOfficeUploadBundleAipNotificationGenerator(
         AppellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisation appellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
@@ -6313,7 +6313,7 @@ public class NotificationGeneratorConfiguration {
     }
 
     @Bean("internalSubmitAppealWithFeeOutOfTimeAppellantLetterNotificationGenerator")
-    public List<NotificationGenerator> internalSubmitAppealOutOfTimeWithFeeAppellantLetterNotificationGenerator(
+    public List<NotificationGenerator> internalSubmitAppealWithFeeOutOfTimeAppellantLetterNotificationGenerator(
             AppellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation appellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
@@ -7079,7 +7079,7 @@ public class NotificationGeneratorConfiguration {
     }
 
     @Bean("appellantInPersonRemissionPaymentReminderEmailNotificationGenerator")
-    public List<NotificationGenerator> legalRepRemissionPaymentReminderEmailNotificationGenerator(
+    public List<NotificationGenerator> appellantInPersonRemissionPaymentReminderEmailNotificationGenerator(
         AipRemissionRequestAutomaticReminderEmail aipRemissionRequestAutomaticReminderEmail,
         AipRemissionRequestAutomaticReminderSms aipRemissionRequestAutomaticReminderSms,
         GovNotifyNotificationSender notificationSender,
