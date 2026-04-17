@@ -1,6 +1,6 @@
 {
   "description": "RIA-9525 Send respondent notification of change direction due date (awaiting respondent evidence) for admin and represented cases",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",

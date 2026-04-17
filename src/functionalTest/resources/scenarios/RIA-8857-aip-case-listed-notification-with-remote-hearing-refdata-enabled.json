@@ -1,6 +1,6 @@
 {
   "description": "RIA-8857 AIP Send case listed notification with remote hearing (Refdata enabled)",
-  "enabled": "{$featureFlag.appealsLocationReferenceData}",
+  "disabled": "!{$featureFlag.appealsLocationReferenceData}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",

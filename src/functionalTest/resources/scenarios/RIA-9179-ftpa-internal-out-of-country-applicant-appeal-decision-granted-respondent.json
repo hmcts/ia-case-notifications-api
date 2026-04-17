@@ -1,6 +1,6 @@
 {
   "description": "RIA-9179 FTPA Internal Out of Country Applicant Application Decision Granted Respondent",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",

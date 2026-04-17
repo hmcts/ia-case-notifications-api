@@ -1,6 +1,6 @@
 {
   "description": "RIA-6682 send appeal submitted with remission and payOffline, for PA appeal notification",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "LegalRepresentative",

@@ -1,6 +1,5 @@
 {
   "description": "RIA-8258: Mark appeal as remitted",
-  "enabled": "true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",

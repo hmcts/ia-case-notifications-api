@@ -1,6 +1,6 @@
 {
   "description": "RIA-4626 Send respondent review direction (AIP) - Home Office notification enabled",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",

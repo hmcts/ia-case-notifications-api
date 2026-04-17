@@ -1,6 +1,6 @@
 {
   "description": "RIA-6273 New way of paying LR, HO notification appeal submitted PA pay now",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "LegalRepresentative",

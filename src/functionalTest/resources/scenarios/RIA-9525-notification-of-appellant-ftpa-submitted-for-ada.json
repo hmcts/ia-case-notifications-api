@@ -1,6 +1,6 @@
 {
   "description": "RIA-9525 Notification of appellant ftpa application submitted for admin and represented cases",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "LegalRepresentative",

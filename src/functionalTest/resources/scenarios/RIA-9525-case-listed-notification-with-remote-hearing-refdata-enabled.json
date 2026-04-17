@@ -1,6 +1,6 @@
 {
   "description": "RIA-9525 Case Listed with remote hearing (Refdata enabled) for admin and represented cases",
-  "enabled": "{$featureFlag.appealsLocationReferenceData}",
+  "disabled": "!{$featureFlag.appealsLocationReferenceData}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",

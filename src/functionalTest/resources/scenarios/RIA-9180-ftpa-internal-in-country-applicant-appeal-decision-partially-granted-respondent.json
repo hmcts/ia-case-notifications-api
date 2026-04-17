@@ -1,6 +1,6 @@
 {
   "description": "RIA-9180 FTPA Internal In Country Applicant Application Decision Partially Granted Respondent",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",

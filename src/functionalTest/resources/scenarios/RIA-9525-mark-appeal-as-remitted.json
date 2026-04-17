@@ -1,6 +1,6 @@
 {
   "description": "RIA-9525: Mark appeal as remitted for admin and represented cases",
-  "enabled": "dlrm-remitted-feature-flag:true",
+  "launchDarklyKey": "dlrm-remitted-feature-flag:true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",

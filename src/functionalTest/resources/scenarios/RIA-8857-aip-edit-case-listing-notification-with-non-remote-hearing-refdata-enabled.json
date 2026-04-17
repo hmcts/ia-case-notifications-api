@@ -1,6 +1,6 @@
 {
   "description": "RIA-8857 AIP edit case listing notification with Ref data address",
-  "enabled": "{$featureFlag.appealsLocationReferenceData}",
+  "disabled": "!{$featureFlag.appealsLocationReferenceData}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",

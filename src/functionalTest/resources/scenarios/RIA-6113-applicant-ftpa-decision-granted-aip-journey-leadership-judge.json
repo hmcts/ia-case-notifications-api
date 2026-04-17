@@ -1,6 +1,6 @@
 {
   "description": "RIA-61131 Applicant FTPA application decision granted (AIP journey) - Leadership judge",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",

@@ -1,6 +1,6 @@
 {
   "description": "RIA-61343 Appellant FTPA application decision refused (AIP journey) - Leadership judge",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",

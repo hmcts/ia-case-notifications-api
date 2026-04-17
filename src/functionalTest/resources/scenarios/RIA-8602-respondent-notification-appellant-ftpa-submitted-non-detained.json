@@ -1,6 +1,6 @@
 {
   "description": "RIA-8602 Respondent Notification of appellant's ftpa application submitted (Non-detained)",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",

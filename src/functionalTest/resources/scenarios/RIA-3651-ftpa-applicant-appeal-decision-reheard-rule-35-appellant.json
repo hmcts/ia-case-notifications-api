@@ -1,7 +1,7 @@
 {
   "description": "RIA-3651 FTPA Applicant Application Decision Reheard Rule 35 Appellant (Taylor House hearing centre)",
   "launchDarklyKey": "tcw-notifications-feature:true",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",

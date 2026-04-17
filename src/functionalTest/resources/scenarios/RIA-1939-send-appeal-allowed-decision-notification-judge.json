@@ -1,6 +1,6 @@
 {
   "description": "RIA-1939 Send appeal (allowed) decision notification to Home Office and Legal Representative - Judge + RIA-6949 Send notification also to Admin Officer",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",

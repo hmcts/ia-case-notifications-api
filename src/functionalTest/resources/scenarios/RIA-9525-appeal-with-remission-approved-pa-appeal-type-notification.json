@@ -1,6 +1,6 @@
 {
   "description": "RIA-9525 appeal with remission approved, for PA appeal notification for admin and represented cases",
-  "disabled": true,
+  "disabled": "true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",

@@ -1,6 +1,6 @@
 {
   "description": "RIA-7031 send appeal submitted with remission and payment pending, for EA appeal notification Unrepped",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",

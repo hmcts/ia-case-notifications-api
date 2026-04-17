@@ -1,6 +1,6 @@
 {
   "description": "RIA-6588 Send transfer out of ada notifications to LR and HO after listing",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",

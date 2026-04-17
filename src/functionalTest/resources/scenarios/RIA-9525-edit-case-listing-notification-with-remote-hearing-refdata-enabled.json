@@ -1,6 +1,6 @@
 {
   "description": "RIA-9525 edit case listing notification with remote hearing (Ref data enabled) for admin and represented cases",
-  "enabled": "{$featureFlag.appealsLocationReferenceData}",
+  "disabled": "!{$featureFlag.appealsLocationReferenceData}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",

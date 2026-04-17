@@ -1,6 +1,6 @@
 {
   "description": "RIA-9234 Send transfer out of ada notifications to LR and HO before listing for admin and represented cases",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",

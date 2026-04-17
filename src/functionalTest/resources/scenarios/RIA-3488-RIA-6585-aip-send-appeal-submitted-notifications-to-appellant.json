@@ -1,6 +1,6 @@
 {
     "description": "RIA-3488-RIA-6585 AIP Send appeal submitted notifications (Email and SMS) and Email to Home Office",
-    "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+    "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
     "request": {
       "uri": "/asylum/ccdAboutToSubmit",
       "credentials": "Citizen",

@@ -1,7 +1,7 @@
 {
   "description": "RIA-3690 appeal with remission approved, for HU appeal notification",
   "launchDarklyKey": "tcw-notifications-feature:true",
-  "disabled": true,
+  "disabled": "true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",

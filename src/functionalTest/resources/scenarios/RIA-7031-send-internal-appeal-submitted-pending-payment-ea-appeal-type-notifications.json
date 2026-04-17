@@ -1,7 +1,7 @@
 {
   "description": "RIA-7031 send appeal submitted and payment pending notification Unrepped",
   "launchDarklyKey": "tcw-notifications-feature:true",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",

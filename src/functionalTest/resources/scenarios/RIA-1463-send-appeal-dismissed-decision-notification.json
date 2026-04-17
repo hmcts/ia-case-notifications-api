@@ -1,6 +1,6 @@
 {
   "description": "RIA-1463 Send appeal (dismissed) decision notification to Home Office and Legal Representative - [Admin notification(RIA-6949)]",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",

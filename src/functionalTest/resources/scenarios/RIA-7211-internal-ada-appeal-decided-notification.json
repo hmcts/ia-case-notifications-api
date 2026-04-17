@@ -1,6 +1,6 @@
 {
   "description": "RIA-7211 Internal Ada Appeal decided.",
-  "disabled": true,
+  "disabled": "true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "caseOfficer",

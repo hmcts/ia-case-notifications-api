@@ -1,6 +1,6 @@
 {
   "description": "RIA-9234 Send hearing requirements agreed notification to legal rep and home office (Bradford hearing centre) with LO reviewed hearing requirements for admin and represented cases",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",

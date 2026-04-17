@@ -1,6 +1,6 @@
 {
   "description": "RIA-4827 Payment outstanding notification to HO & CTSC (AIP journey) after decision dismissed (payment pending) - Judge",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",

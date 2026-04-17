@@ -1,6 +1,6 @@
 {
   "description": "RIA-9233 Send letter notification to LR for record remission decision (partially approved) - In country (internal case creation - represented)",
-  "enabled": "{$featureFlag.dlrmTelephonyFeatureFlag}",
+  "disabled": "!{$featureFlag.dlrmTelephonyFeatureFlag}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",

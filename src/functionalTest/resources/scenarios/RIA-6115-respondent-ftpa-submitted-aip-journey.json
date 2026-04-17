@@ -1,6 +1,6 @@
 {
   "description": "RIA-6115 Notification of respondent ftpa application submitted for AIP journey",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "HomeOfficePOU",

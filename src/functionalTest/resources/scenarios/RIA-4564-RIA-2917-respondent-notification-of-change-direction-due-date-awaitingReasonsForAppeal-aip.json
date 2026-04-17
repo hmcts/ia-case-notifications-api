@@ -1,6 +1,6 @@
 {
   "description": "RIA-4564-RIA-2917 Send respondent notification (to APC mailbox) of change direction due date (awaitingReasonsForAppeal) - AIP",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",

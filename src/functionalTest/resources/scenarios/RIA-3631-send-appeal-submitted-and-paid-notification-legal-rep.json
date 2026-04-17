@@ -1,7 +1,7 @@
 {
   "description": "RIA-3631 Send appeal submitted and paid notification to legal representative (Home",
   "launchDarklyKey": "tcw-notifications-feature:true",
-  "disabled": true,
+  "disabled": "true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "LegalRepresentative",

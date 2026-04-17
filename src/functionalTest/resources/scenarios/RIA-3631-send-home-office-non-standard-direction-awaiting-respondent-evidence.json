@@ -1,6 +1,6 @@
 {
   "description": "RIA-36311 Send Home Office non-standard direction awaitingRespondentEvidence state",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",

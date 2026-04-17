@@ -1,6 +1,6 @@
 {
   "description": "RIA-4961 Edit payment method (pending payment) notifications to LR, HO, AO (HU appeal type)",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "LegalRepresentative",

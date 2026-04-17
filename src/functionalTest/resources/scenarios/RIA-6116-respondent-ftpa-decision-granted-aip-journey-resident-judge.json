@@ -1,6 +1,6 @@
 {
   "description": "RIA-61162 Respondent FTPA application decision granted (AIP journey) - Resident judge",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",

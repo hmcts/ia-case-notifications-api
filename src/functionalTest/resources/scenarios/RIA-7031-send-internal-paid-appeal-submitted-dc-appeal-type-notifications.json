@@ -1,6 +1,6 @@
 {
   "description": "RIA-7031 Send paid appeal submitted DC appeal type notification Unrepped",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",

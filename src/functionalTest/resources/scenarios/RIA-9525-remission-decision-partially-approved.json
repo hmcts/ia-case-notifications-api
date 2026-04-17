@@ -1,6 +1,6 @@
 {
   "description": "RIA-9525 Notification of remission decision partially approved for admin and represented cases",
-  "disabled": true,
+  "disabled": "true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
