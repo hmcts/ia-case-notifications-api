@@ -15,7 +15,7 @@ public class IdamUserDetailsTest {
     private final String forename = "forename";
     private final String surname = "surname";
 
-    private IdamUserDetails userDetails =
+    private final IdamUserDetails userDetails =
         new IdamUserDetails(
             accessToken,
             id,

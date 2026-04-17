@@ -31,6 +31,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.roleass
 @MockitoSettings(strictness = Strictness.LENIENT)
 class RoleAssignmentServiceTest {
 
+    private final String userId = "userId";
+    private final String serviceToken = "serviceToken";
     @Mock
     private AuthTokenGenerator authTokenGenerator;
     @Mock
@@ -41,13 +43,11 @@ class RoleAssignmentServiceTest {
     private UserDetails userDetails;
     @Mock
     private CaseDetails<CaseData> caseDetails;
-    private final String userId = "userId";
-    private final String accessToken = "accessToken";
-    private final String serviceToken = "serviceToken";
 
     @BeforeEach
     void setUp() {
         when(authTokenGenerator.generate()).thenReturn(serviceToken);
+        String accessToken = "accessToken";
         when(userDetails.getAccessToken()).thenReturn(accessToken);
         when(userDetails.getId()).thenReturn(userId);
 

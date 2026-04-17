@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -20,22 +21,19 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AdminOfficerAdjournHearingWithoutDateNonDetainedPersonalisationTest {
+    private final String templateId = "someTemplateId";
+    private final String adminOfficerEmailAddress = "adminOfficer@example.com";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
     @Mock
     AsylumCase asylumCase;
     @Mock
     AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
-
-    private String templateId = "someTemplateId";
-
-    private String adminOfficerEmailAddress = "adminOfficer@example.com";
-
     private AdminOfficerAdjournHearingWithoutDateNonDetainedPersonalisation adminOfficerAdjournHearingWithoutDateNonDetainedPersonalisation;
 
     @BeforeEach
     public void setup() {
-        String appealReferenceNumber = "someReferenceNumber";
-        String appellantGivenNames = "someAppellantGivenNames";
-        String appellantFamilyName = "someAppellantFamilyName";
         when(adminOfficerPersonalisationProvider.getDefaultPersonalisation(asylumCase))
             .thenReturn(ImmutableMap
                 .<String, String>builder()
@@ -70,10 +68,10 @@ class AdminOfficerAdjournHearingWithoutDateNonDetainedPersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
-            () -> adminOfficerAdjournHearingWithoutDateNonDetainedPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> adminOfficerAdjournHearingWithoutDateNonDetainedPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -81,7 +79,10 @@ class AdminOfficerAdjournHearingWithoutDateNonDetainedPersonalisationTest {
         Map<String, String> personalisation =
             adminOfficerAdjournHearingWithoutDateNonDetainedPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isNotEmpty();
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertFalse(personalisation.isEmpty());
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName);
     }
 }

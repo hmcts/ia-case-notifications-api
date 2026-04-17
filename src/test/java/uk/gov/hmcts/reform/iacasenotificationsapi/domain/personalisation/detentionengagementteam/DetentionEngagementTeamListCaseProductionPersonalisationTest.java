@@ -8,7 +8,6 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
 import org.json.JSONObject;
@@ -29,23 +28,13 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesO
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionFacilityEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
-import uk.gov.service.notify.NotificationClientException;
 
 @ExtendWith(MockitoExtension.class)
-@SuppressWarnings("unchecked")
 @MockitoSettings(strictness = Strictness.LENIENT)
 class DetentionEngagementTeamListCaseProductionPersonalisationTest {
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    private DateTimeExtractor dateTimeExtractor;
-    @Mock
-    private DetentionFacilityEmailService detentionFacilityEmailService;
-    @Mock
-    private HearingDetailsFinder hearingDetailsFinder;
-    @Mock
-    JSONObject jsonDocument;
-
+    final DocumentWithMetadata caseListedDoc = TestUtils.getDocumentWithMetadata(
+        "id", "detained-appellant-list-case-letter", "some other desc", DocumentTag.INTERNAL_LIST_CASE_LETTER);
+    final IdValue<DocumentWithMetadata> caseListedBundle = new IdValue<>("1", caseListedDoc);
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
@@ -55,19 +44,25 @@ class DetentionEngagementTeamListCaseProductionPersonalisationTest {
     private final String hearingTime = "12:00:00";
     private final String hearingCentreAddress = "someAddress";
     private final String templateId = "templateId";
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    JSONObject jsonDocument;
+    @Mock
+    private DateTimeExtractor dateTimeExtractor;
+    @Mock
+    private DetentionFacilityEmailService detentionFacilityEmailService;
+    @Mock
+    private HearingDetailsFinder hearingDetailsFinder;
     private DetentionEngagementTeamListCaseProductionPersonalisation personalisation;
 
-    DocumentWithMetadata caseListedDoc = TestUtils.getDocumentWithMetadata(
-            "id", "detained-appellant-list-case-letter", "some other desc", DocumentTag.INTERNAL_LIST_CASE_LETTER);
-    IdValue<DocumentWithMetadata> caseListedBundle = new IdValue<>("1", caseListedDoc);
-
     @BeforeEach
-    public void setup() throws NotificationClientException, IOException {
+    public void setup() {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.of(newArrayList(caseListedBundle)));
 
         personalisation = new DetentionEngagementTeamListCaseProductionPersonalisation(
             templateId,
-                detentionFacilityEmailService,
+            detentionFacilityEmailService,
             dateTimeExtractor,
             hearingDetailsFinder
         );

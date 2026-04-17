@@ -1,8 +1,9 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities;
 
 import static java.util.Collections.emptyList;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,9 +51,9 @@ public class TimeExtensionTest {
         assertEquals(state, timeExtensionRequest.getState());
         assertEquals(status, timeExtensionRequest.getStatus());
         assertEquals(emptyList(), timeExtensionRequest.getEvidence());
-        assertEquals(null, timeExtensionRequest.getDecision());
-        assertEquals(null, timeExtensionRequest.getDecisionReason());
-        assertEquals(null, timeExtensionRequest.getDecisionOutcomeDate());
+        assertNull(timeExtensionRequest.getDecision());
+        assertNull(timeExtensionRequest.getDecisionReason());
+        assertNull(timeExtensionRequest.getDecisionOutcomeDate());
     }
 
 
@@ -86,6 +87,6 @@ public class TimeExtensionTest {
 
         assertEquals(timeExtensionRequest, timeExtensionAnother);
         assertEquals(timeExtensionRequest.hashCode(), timeExtensionAnother.hashCode());
-        assertThat(timeExtensionAnother.toString()).containsSequence(timeExtensionRequest.toString());
+        assertTrue(timeExtensionAnother.toString().contains(timeExtensionRequest.toString()));
     }
 }

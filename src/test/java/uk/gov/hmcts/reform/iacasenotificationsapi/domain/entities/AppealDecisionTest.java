@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
@@ -21,10 +22,10 @@ public class AppealDecisionTest {
 
     @Test
     public void should_throw_exception_when_name_unrecognised() {
-        assertThatThrownBy(() -> AppealDecision.from("unknown"))
-            .isExactlyInstanceOf(IllegalArgumentException.class)
-            .hasMessage("unknown not an AppealDecision")
-            .hasNoCause();
+        IllegalArgumentException exception =
+            assertThrows(IllegalArgumentException.class, () -> AppealDecision.from("unknown"));
+        assertEquals("unknown not an AppealDecision", exception.getMessage());
+        assertNull(exception.getCause());
     }
 
     @Test

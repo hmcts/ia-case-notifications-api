@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -46,7 +47,7 @@ class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmailTest {
     private static final String CUSTOMER_SERVICE_EMAIL = "dummy@email.com";
     private static final Long CASE_ID = 12345L;
     private static final String EXPECTED_REFERENCE_ID =
-            CASE_ID + "_REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL";
+        CASE_ID + "_REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL";
     private static final String COMPLETE_CASE_REVIEW_DATE_KEY = "completeCaseReviewDate";
     @Mock
     private AsylumCase asylumCase;
@@ -63,10 +64,10 @@ class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmailTest {
         setupCustomerServicesMocks();
 
         personalisation = new AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail(
-                EMAIL_TEMPLATE_ID,
-                IA_EX_UI_FRONTEND_URL,
-                MOCK_PREFIX,
-                customerServicesProvider
+            EMAIL_TEMPLATE_ID,
+            IA_EX_UI_FRONTEND_URL,
+            MOCK_PREFIX,
+            customerServicesProvider
         );
     }
 
@@ -110,26 +111,26 @@ class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmailTest {
 
     private void setupAsylumCaseMocks() {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class))
-                .thenReturn(Optional.of(APPELLANT_FAMILY_NAME));
+            .thenReturn(Optional.of(APPELLANT_FAMILY_NAME));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class))
-                .thenReturn(Optional.of(APPELLANT_GIVEN_NAMES));
+            .thenReturn(Optional.of(APPELLANT_GIVEN_NAMES));
 
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(HOME_OFFICE_REFERENCE_NUMBER_VALUE));
         when(asylumCase.read(EMAIL, String.class))
-                .thenReturn(Optional.of(EMAIL_ADDRESS));
+            .thenReturn(Optional.of(EMAIL_ADDRESS));
         when(asylumCase.read(COMPLETE_CASE_REVIEW_DATE, String.class))
-                .thenReturn(Optional.of(REVIEW_DATE));
+            .thenReturn(Optional.of(REVIEW_DATE));
     }
 
     private void setupEmptyAsylumCaseMocks() {
         when(asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
     }
 
     private void setupCustomerServicesMocks() {
@@ -137,12 +138,13 @@ class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmailTest {
         customerServicesMap.put(CUSTOMER_SERVICES_TELEPHONE_KEY, CUSTOMER_SERVICE_PHONE);
         customerServicesMap.put(CUSTOMER_SERVICES_EMAIL_KEY, CUSTOMER_SERVICE_EMAIL);
         when(customerServicesProvider.getCustomerServicesPersonalisation())
-                .thenReturn(customerServicesMap);
+            .thenReturn(customerServicesMap);
     }
 
     private void assertPersonalisationContainsMandatoryFields(Map<String, String> personalisation) {
-        assertEquals("", personalisation.get(APPELLANT_GIVEN_NAMES_KEY));
-        assertEquals("", personalisation.get(APPELLANT_FAMILY_NAME_KEY));
-        assertEquals(IA_EX_UI_FRONTEND_URL, personalisation.get(LINK_TO_SERVICE_KEY));
+        assertThat(personalisation)
+            .containsEntry(APPELLANT_GIVEN_NAMES_KEY, "")
+            .containsEntry(APPELLANT_FAMILY_NAME_KEY, "")
+            .containsEntry(LINK_TO_SERVICE_KEY, IA_EX_UI_FRONTEND_URL);
     }
 }

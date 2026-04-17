@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -36,6 +37,16 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.MakeAnApplicati
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class CaseOfficerMakeAnApplicationPersonalisationTest {
 
+    private final String makeAnApplicationCaseOfficerBeforeListingTemplateId = "beforeListTemplateId";
+    private final String makeAnApplicationCaseOfficerAfterListingTemplateId = "afterListTemplateId";
+    private final String makeAnApplicationCaseOfficerJudgeReviewBeforeListingTemplateId = "judgeReviewBeforeListTemplateId";
+    private final String makeAnApplicationCaseOfficerJudgeReviewAfterListingTemplateId = "judgeReviewAfterListTemplateId";
+    private final String iaExUiFrontendUrl = "http://somefrontendurl";
+    private final String hearingCentreEmailAddress = "hearingCentre@example.com";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String ariaListingReference = "someAriaListingReference";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -48,20 +59,6 @@ public class CaseOfficerMakeAnApplicationPersonalisationTest {
     MakeAnApplication makeAnApplication;
     @Mock
     private FeatureToggler featureToggler;
-
-    private Long caseId = 12345L;
-    private String makeAnApplicationCaseOfficerBeforeListingTemplateId = "beforeListTemplateId";
-    private String makeAnApplicationCaseOfficerAfterListingTemplateId = "afterListTemplateId";
-    private String makeAnApplicationCaseOfficerJudgeReviewBeforeListingTemplateId = "judgeReviewBeforeListTemplateId";
-    private String makeAnApplicationCaseOfficerJudgeReviewAfterListingTemplateId = "judgeReviewAfterListTemplateId";
-
-    private String iaExUiFrontendUrl = "http://somefrontendurl";
-    private String hearingCentreEmailAddress = "hearingCentre@example.com";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String ariaListingReference = "someAriaListingReference";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
-
     private CaseOfficerMakeAnApplicationPersonalisation caseOfficerMakeAnApplicationPersonalisation;
 
     @BeforeEach
@@ -82,7 +79,7 @@ public class CaseOfficerMakeAnApplicationPersonalisationTest {
             emailAddressFinder,
             appealService,
             makeAnApplicationService,
-                featureToggler);
+            featureToggler);
     }
 
     @ParameterizedTest
@@ -113,6 +110,7 @@ public class CaseOfficerMakeAnApplicationPersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_MAKE_AN_APPLICATION_CASE_OFFICER",
             caseOfficerMakeAnApplicationPersonalisation.getReferenceId(caseId));
     }
@@ -120,26 +118,26 @@ public class CaseOfficerMakeAnApplicationPersonalisationTest {
     @Test
     public void should_return_given_email_address_from_lookup_map_when_feature_flag_is_Off() {
         assertTrue(caseOfficerMakeAnApplicationPersonalisation.getRecipientsList(asylumCase)
-                .isEmpty());
+            .isEmpty());
     }
 
     @Test
     public void should_return_given_email_address_from_lookup_map_when_feature_flag_is_On() {
         when(featureToggler.getValue("tcw-application-notifications-feature", true)).thenReturn(true);
         assertTrue(caseOfficerMakeAnApplicationPersonalisation.getRecipientsList(asylumCase)
-                .contains(hearingCentreEmailAddress));
+            .contains(hearingCentreEmailAddress));
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> caseOfficerMakeAnApplicationPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> caseOfficerMakeAnApplicationPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         initializePrefixes(caseOfficerMakeAnApplicationPersonalisation);
@@ -150,15 +148,16 @@ public class CaseOfficerMakeAnApplicationPersonalisationTest {
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("ariaListingReference", ariaListingReference)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
 
         initializePrefixes(caseOfficerMakeAnApplicationPersonalisation);
@@ -174,10 +173,11 @@ public class CaseOfficerMakeAnApplicationPersonalisationTest {
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("ariaListingReference"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("ariaListingReference", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "")
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
     }
 }
