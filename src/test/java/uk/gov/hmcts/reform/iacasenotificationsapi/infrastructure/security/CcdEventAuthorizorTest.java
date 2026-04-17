@@ -19,14 +19,12 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
 @ExtendWith(MockitoExtension.class)
 public class CcdEventAuthorizorTest {
 
-    @Mock
-    private AuthorizedRolesProvider authorizedRolesProvider;
-
-    private String role = "caseworker-ia";
-    private Map<String, List<Event>> roleEventAccess = new ImmutableMap.Builder<String, List<Event>>()
+    private final String role = "caseworker-ia";
+    private final Map<String, List<Event>> roleEventAccess = new ImmutableMap.Builder<String, List<Event>>()
         .put(role, newArrayList(Event.UNKNOWN))
         .build();
-
+    @Mock
+    private AuthorizedRolesProvider authorizedRolesProvider;
     private CcdEventAuthorizor ccdEventAuthorizor;
 
     @Test

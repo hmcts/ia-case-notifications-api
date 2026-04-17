@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respon
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
@@ -37,9 +36,18 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-@SuppressWarnings("unchecked")
 public class RespondentChangeDirectionDueDatePersonalisationTest {
 
+    private final String afterListingTemplateId = "afterListingTemplateId";
+    private final String beforeListingTemplateId = "beforeListingTemplateId";
+    private final String appellantTemplateId = "appellantTemplateId";
+    private final String iaExUiFrontendUrl = "http://localhost";
+    private final String apcHomeOfficeEmailAddress = "homeoffice-apc@example.com";
+    private final String lartHomeOfficeEmailAddress = "homeoffice-respondent@example.com";
+    private final String homeOfficeHearingCentreEmail = "hc-taylorhouse@example.com";
+    private final String homeOfficeEmail = "ho-taylorhouse@example.com";
+    private final String homeOfficeFtpaEmailAddress = "ho-ftpa-taylorhouse@example.com";
+    private final String ariaListingReference = "someAriaListingReference";
     @Mock
     Callback<AsylumCase> callback;
     @Mock
@@ -54,33 +62,13 @@ public class RespondentChangeDirectionDueDatePersonalisationTest {
     CustomerServicesProvider customerServicesProvider;
     @Mock
     AppealService appealService;
-
-    private final Long caseId = 12345L;
-    private final String afterListingTemplateId = "afterListingTemplateId";
-    private final String beforeListingTemplateId = "beforeListingTemplateId";
-    private final String appellantTemplateId = "appellantTemplateId";
-    private final String iaExUiFrontendUrl = "http://localhost";
-    private final String apcHomeOfficeEmailAddress = "homeoffice-apc@example.com";
-    private final String lartHomeOfficeEmailAddress = "homeoffice-respondent@example.com";
-    private final String homeOfficeHearingCentreEmail = "hc-taylorhouse@example.com";
-    private final String homeOfficeEmail = "ho-taylorhouse@example.com";
-    private final String homeOfficeFtpaEmailAddress = "ho-ftpa-taylorhouse@example.com";
-    private final String hmctsReference = "hmctsReference";
-    private final String ariaListingReference = "someAriaListingReference";
-    private final String homeOfficeReference = "homeOfficeReference";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-    private final String customerServicesTelephone = "555 555 555";
-    private final String customerServicesEmail = "cust.services@example.com";
-
-
     private RespondentChangeDirectionDueDatePersonalisation respondentChangeDirectionDueDatePersonalisation;
 
     @BeforeEach
     public void setUp() {
 
         when((emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase)))
-                .thenReturn(homeOfficeHearingCentreEmail);
+            .thenReturn(homeOfficeHearingCentreEmail);
 
         when(emailAddressFinder.getListCaseFtpaHomeOfficeEmailAddress(asylumCase)).thenReturn(homeOfficeFtpaEmailAddress);
 
@@ -107,10 +95,10 @@ public class RespondentChangeDirectionDueDatePersonalisationTest {
     @Test
     void should_return_the_given_before_listing_template_id() {
         when(asylumCase.read(AsylumCaseDefinition.CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class))
-                .thenReturn(Optional.of(State.CASE_BUILDING));
+            .thenReturn(Optional.of(State.CASE_BUILDING));
 
         assertEquals(beforeListingTemplateId,
-                respondentChangeDirectionDueDatePersonalisation.getTemplateId(asylumCase));
+            respondentChangeDirectionDueDatePersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
@@ -145,47 +133,47 @@ public class RespondentChangeDirectionDueDatePersonalisationTest {
     void should_return_correct_email_address_for_home_office() {
 
         List<State> apcEmail = newArrayList(
-                State.APPEAL_SUBMITTED,
-                State.PENDING_PAYMENT,
-                State.AWAITING_RESPONDENT_EVIDENCE,
-                State.AWAITING_REASONS_FOR_APPEAL,
-                State.REASONS_FOR_APPEAL_SUBMITTED,
-                State.AWAITING_CLARIFYING_QUESTIONS_ANSWERS,
-                State.CLARIFYING_QUESTIONS_ANSWERS_SUBMITTED,
-                State.AWAITING_CMA_REQUIREMENTS,
-                State.CMA_REQUIREMENTS_SUBMITTED,
-                State.CMA_ADJUSTMENTS_AGREED
+            State.APPEAL_SUBMITTED,
+            State.PENDING_PAYMENT,
+            State.AWAITING_RESPONDENT_EVIDENCE,
+            State.AWAITING_REASONS_FOR_APPEAL,
+            State.REASONS_FOR_APPEAL_SUBMITTED,
+            State.AWAITING_CLARIFYING_QUESTIONS_ANSWERS,
+            State.CLARIFYING_QUESTIONS_ANSWERS_SUBMITTED,
+            State.AWAITING_CMA_REQUIREMENTS,
+            State.CMA_REQUIREMENTS_SUBMITTED,
+            State.CMA_ADJUSTMENTS_AGREED
         );
 
 
         List<State> lartEmail = newArrayList(
-                State.CASE_BUILDING,
-                State.CASE_UNDER_REVIEW,
-                State.RESPONDENT_REVIEW
+            State.CASE_BUILDING,
+            State.CASE_UNDER_REVIEW,
+            State.RESPONDENT_REVIEW
         );
 
         List<State> ftpaEmail = newArrayList(
-                State.FTPA_SUBMITTED,
-                State.FTPA_DECIDED
+            State.FTPA_SUBMITTED,
+            State.FTPA_DECIDED
         );
 
         List<State> pouNoListedEmail = newArrayList(
-                State.LISTING,
-                State.SUBMIT_HEARING_REQUIREMENTS,
-                State.ENDED,
-                State.APPEAL_TAKEN_OFFLINE
+            State.LISTING,
+            State.SUBMIT_HEARING_REQUIREMENTS,
+            State.ENDED,
+            State.APPEAL_TAKEN_OFFLINE
         );
 
         List<State> poulistedEmail = newArrayList(
-                State.PREPARE_FOR_HEARING,
-                State.FINAL_BUNDLING,
-                State.PRE_HEARING,
-                State.DECISION,
-                State.ADJOURNED,
-                State.DECIDED,
-                State.ENDED,
-                State.APPEAL_TAKEN_OFFLINE,
-                State.CMA_LISTED
+            State.PREPARE_FOR_HEARING,
+            State.FINAL_BUNDLING,
+            State.PRE_HEARING,
+            State.DECISION,
+            State.ADJOURNED,
+            State.DECIDED,
+            State.ENDED,
+            State.APPEAL_TAKEN_OFFLINE,
+            State.CMA_LISTED
         );
 
         Map<String, List<State>> states = new HashMap<>();
@@ -203,17 +191,17 @@ public class RespondentChangeDirectionDueDatePersonalisationTest {
             List<State> statesList = states.get(emailAddress);
             for (State state : statesList) {
                 when(asylumCase.read(AsylumCaseDefinition.CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class))
-                        .thenReturn(Optional.of(state));
+                    .thenReturn(Optional.of(state));
 
                 if (emailAddress != null && emailAddress.equals(homeOfficeHearingCentreEmail)) {
                     // test the same state when the case is listed
                     when(appealService.isAppealListed(asylumCase)).thenReturn(true);
                     when(asylumCase.read(HEARING_CENTRE)).thenReturn(Optional.of(Optional.empty()));
                     when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class))
-                            .thenReturn(Optional.of(HearingCentre.TAYLOR_HOUSE));
+                        .thenReturn(Optional.of(HearingCentre.TAYLOR_HOUSE));
 
                     assertTrue(respondentChangeDirectionDueDatePersonalisation.getRecipientsList(asylumCase)
-                            .contains(homeOfficeHearingCentreEmail));
+                        .contains(homeOfficeHearingCentreEmail));
                 } else if (emailAddress != null && emailAddress.equals(homeOfficeEmail)) {
                     //case not listed yet
                     when(appealService.isAppealListed(asylumCase)).thenReturn(false);
@@ -221,10 +209,10 @@ public class RespondentChangeDirectionDueDatePersonalisationTest {
                     when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.empty());
 
                     assertTrue(respondentChangeDirectionDueDatePersonalisation.getRecipientsList(asylumCase)
-                            .contains(homeOfficeEmail));
+                        .contains(homeOfficeEmail));
                 } else {
                     assertTrue(respondentChangeDirectionDueDatePersonalisation.getRecipientsList(asylumCase)
-                            .contains(emailAddress));
+                        .contains(emailAddress));
                 }
             }
         }
@@ -233,21 +221,22 @@ public class RespondentChangeDirectionDueDatePersonalisationTest {
     @Test
     void should_throw_exception_when_home_office_is_missing_in_the_case_data() {
         when(asylumCase.read(AsylumCaseDefinition.CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> respondentChangeDirectionDueDatePersonalisation.getRecipientsList(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("currentCaseStateVisibleToHomeOfficeAll flag is not present");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> respondentChangeDirectionDueDatePersonalisation.getRecipientsList(asylumCase));
+        assertEquals("currentCaseStateVisibleToHomeOfficeAll flag is not present", exception.getMessage());
     }
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_RESPONDENT_CHANGE_DIRECTION_DUE_DATE",
-                respondentChangeDirectionDueDatePersonalisation.getReferenceId(caseId));
+            respondentChangeDirectionDueDatePersonalisation.getReferenceId(caseId));
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_given_personalisation_when_all_information_given(YesOrNo isAda) {
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
@@ -256,30 +245,40 @@ public class RespondentChangeDirectionDueDatePersonalisationTest {
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisation());
 
         Map<String, String> personalisation =
-                respondentChangeDirectionDueDatePersonalisation.getPersonalisation(callback);
+            respondentChangeDirectionDueDatePersonalisation.getPersonalisation(callback);
 
-        assertThat(personalisation).isNotEmpty();
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertFalse(personalisation.isEmpty());
+        assertThat(personalisation)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal"
+                : "Immigration and Asylum appeal")
+            .containsAllEntriesOf(getPersonalisation());
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
-        assertThatThrownBy(
-                () -> respondentChangeDirectionDueDatePersonalisation.getPersonalisation((Callback<AsylumCase>) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("callback must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> respondentChangeDirectionDueDatePersonalisation.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     private Map<String, String> getPersonalisation() {
+        String customerServicesEmail = "cust.services@example.com";
+        String customerServicesTelephone = "555 555 555";
+        String appellantFamilyName = "someAppellantFamilyName";
+        String appellantGivenNames = "someAppellantGivenNames";
+        String homeOfficeReference = "homeOfficeReference";
+        String hmctsReference = "hmctsReference";
         return ImmutableMap
-                .<String, String>builder()
-                .put("hmctsReference", hmctsReference)
-                .put("ariaListingReference", ariaListingReference)
-                .put("homeOfficeReference", homeOfficeReference)
-                .put("appellantGivenNames", appellantGivenNames)
-                .put("appellantFamilyName", appellantFamilyName)
-                .put("customerServicesTelephone", customerServicesTelephone)
-                .put("customerServicesEmail", customerServicesEmail)
-                .build();
+            .<String, String>builder()
+            .put("hmctsReference", hmctsReference)
+            .put("ariaListingReference", ariaListingReference)
+            .put("homeOfficeReference", homeOfficeReference)
+            .put("appellantGivenNames", appellantGivenNames)
+            .put("appellantFamilyName", appellantFamilyName)
+            .put("customerServicesTelephone", customerServicesTelephone)
+            .put("customerServicesEmail", customerServicesEmail)
+            .build();
     }
 }

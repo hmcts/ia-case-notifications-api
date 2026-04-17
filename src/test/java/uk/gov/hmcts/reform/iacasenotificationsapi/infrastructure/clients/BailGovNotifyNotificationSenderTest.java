@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.helper.NotificationSenderHelper;
-import uk.gov.service.notify.NotificationClientException;
 
 @ExtendWith(MockitoExtension.class)
 @SuppressWarnings("unchecked")
@@ -25,25 +24,19 @@ public class BailGovNotifyNotificationSenderTest {
 
     private static final org.slf4j.Logger LOG = getLogger(BailGovNotifyNotificationSender.class);
 
-    private int deduplicateSendsWithinSeconds = 1;
-
+    private final int deduplicateSendsWithinSeconds = 1;
+    private final String templateId = "a-b-c-d-e-f";
+    private final Map<String, String> personalisation = mock(Map.class);
+    private final String reference = "our-reference";
     @Mock
     @Qualifier("BailClient")
     private RetryableNotificationClient notificationBailClient;
-
     @Mock
     private NotificationSenderHelper<BailCase> senderHelper;
     @Mock
     private Callback<BailCase> callback;
     @Mock
     private InputStream stream;
-
-    private String templateId = "a-b-c-d-e-f";
-    private String emailAddress = "recipient@example.com";
-    private String phoneNumber = "07123456789";
-    private Map<String, String> personalisation = mock(Map.class);
-    private String reference = "our-reference";
-
     private BailGovNotifyNotificationSender bailGovNotifyNotificationSender;
 
     @BeforeEach
@@ -57,10 +50,11 @@ public class BailGovNotifyNotificationSenderTest {
     }
 
     @Test
-    public void should_send_email_using_bail_gov_notify() throws NotificationClientException {
+    public void should_send_email_using_bail_gov_notify() {
 
         final UUID expectedNotificationId = UUID.randomUUID();
 
+        String emailAddress = "recipient@example.com";
         when(senderHelper.sendEmail(
             templateId,
             emailAddress,
@@ -96,10 +90,11 @@ public class BailGovNotifyNotificationSenderTest {
     }
 
     @Test
-    public void should_send_sms_using_bail_gov_notify() throws NotificationClientException {
+    public void should_send_sms_using_bail_gov_notify() {
 
         final UUID expectedNotificationId = UUID.randomUUID();
 
+        String phoneNumber = "07123456789";
         when(senderHelper.sendSms(
             templateId,
             phoneNumber,
@@ -135,7 +130,7 @@ public class BailGovNotifyNotificationSenderTest {
     }
 
     @Test
-    public void should_send_precompiled_letter_using_bail_gov_notify() throws NotificationClientException {
+    public void should_send_precompiled_letter_using_bail_gov_notify() {
 
         final UUID expectedNotificationId = UUID.randomUUID();
 
