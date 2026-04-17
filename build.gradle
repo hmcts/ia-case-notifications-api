@@ -430,8 +430,6 @@ dependencies {
     testImplementation(group: 'org.springframework.boot', name: 'spring-boot-starter-test') {
         exclude group: "com.vaadin.external.google", module: "android-json"
     }
-    testImplementation group: 'org.testcontainers', name: 'testcontainers', version: '2.0.2'
-    testImplementation group: 'org.testcontainers', name: 'testcontainers-junit-jupiter', version: '2.0.2'
 
 
     testImplementation group: 'org.pitest', name: 'pitest', version: versions.pitest
