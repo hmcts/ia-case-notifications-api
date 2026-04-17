@@ -142,7 +142,7 @@ class MultipleNotificationsTest extends SpringBootIntegrationTest implements Wit
             assertEquals(1, allNotifications.size());
         } else {
             assertTrue(allNotifications.size() > 1);
-            assertNotEquals(allNotifications.get(1).getId(), allNotifications.get(0).getId());
+            assertNotEquals(allNotifications.get(1).getId(), allNotifications.getFirst().getId());
         }
 
 

@@ -112,8 +112,8 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
         List<IdValue<String>> notifications = notificationsSent.get();
 
         assertEquals(2, notifications.size());
-        assertTrue(notifications.get(0).getId().contains("_RESPONDENT_NON_STANDARD_DIRECTION"));
-        assertTrue(notifications.get(0).getValue().matches(UUID_PATTERN));
+        assertTrue(notifications.getFirst().getId().contains("_RESPONDENT_NON_STANDARD_DIRECTION"));
+        assertTrue(notifications.getFirst().getValue().matches(UUID_PATTERN));
     }
 
     @Test

@@ -44,7 +44,7 @@ public class LegalRepresentativeFtpaApplicationDecisionRespondentPersonalisation
         this.applicationRefusedGrantedOtherPartyLegalRepTemplateId = applicationRefusedGrantedOtherPartyLegalRepTemplateId;
         this.applicationReheardOtherPartyLegalRepTemplateId = applicationReheardOtherPartyLegalRepTemplateId;
         this.applicationAllowedLegalRepTemplateId = applicationAllowedLegalRepTemplateId;
-        this.applicationDismissedLegalRepTemplateId = applicationDismissedLegalRepTemplateId;;
+        this.applicationDismissedLegalRepTemplateId = applicationDismissedLegalRepTemplateId;
         this.personalisationProvider = personalisationProvider;
     }
 

@@ -251,26 +251,28 @@ public class NotificationSenderHelper<T extends CaseData> {
     private void storeFailedNotification(Callback<T> callback, NotificationClientException e,
                                          String reference, String method, String phoneNumber, Logger logger) {
         CaseData caseData = callback.getCaseDetails().getCaseData();
-        if (caseData instanceof AsylumCase asylumCase) {
-            List<IdValue<StoredNotification>> sortedNotifications = getSortedNotifications(
-                asylumCase.read(AsylumCaseDefinition.NOTIFICATIONS),
-                e,
-                reference,
-                method,
-                phoneNumber
-            );
-            asylumCase.write(AsylumCaseDefinition.NOTIFICATIONS, sortedNotifications);
-        } else if (caseData instanceof BailCase bailCase) {
-            List<IdValue<StoredNotification>> sortedNotifications = getSortedNotifications(
-                bailCase.read(BailCaseFieldDefinition.NOTIFICATIONS),
-                e,
-                reference,
-                method,
-                phoneNumber
-            );
-            bailCase.write(BailCaseFieldDefinition.NOTIFICATIONS, sortedNotifications);
-        } else {
-            logger.error("Unsupported case data type for storing failed notification: {}", caseData.getClass().getName());
+        switch (caseData) {
+            case AsylumCase asylumCase -> {
+                List<IdValue<StoredNotification>> sortedNotifications = getSortedNotifications(
+                    asylumCase.read(AsylumCaseDefinition.NOTIFICATIONS),
+                    e,
+                    reference,
+                    method,
+                    phoneNumber
+                );
+                asylumCase.write(AsylumCaseDefinition.NOTIFICATIONS, sortedNotifications);
+            }
+            case BailCase bailCase -> {
+                List<IdValue<StoredNotification>> sortedNotifications = getSortedNotifications(
+                    bailCase.read(BailCaseFieldDefinition.NOTIFICATIONS),
+                    e,
+                    reference,
+                    method,
+                    phoneNumber
+                );
+                bailCase.write(BailCaseFieldDefinition.NOTIFICATIONS, sortedNotifications);
+            }
+            default -> logger.error("Unsupported case data type for storing failed notification: {}", caseData.getClass().getName());
         }
     }
 

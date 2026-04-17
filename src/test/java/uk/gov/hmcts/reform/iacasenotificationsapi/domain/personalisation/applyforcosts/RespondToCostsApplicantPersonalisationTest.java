@@ -131,9 +131,9 @@ class RespondToCostsApplicantPersonalisationTest {
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
         when(asylumCase.read(RESPOND_TO_COSTS_LIST, DynamicList.class)).thenReturn(Optional.of(respondsToCostsList));
 
-        if (applyForCostsList.get(0).getValue().getApplyForCostsApplicantType().equals("Tribunal")) {
+        if (applyForCostsList.getFirst().getValue().getApplyForCostsApplicantType().equals("Tribunal")) {
             assertTrue(respondToCostsApplicantPersonalisation.getRecipientsList(asylumCase).isEmpty());
-        } else if (applyForCostsList.get(0).getValue().getApplyForCostsApplicantType().equals(homeOffice)) {
+        } else if (applyForCostsList.getFirst().getValue().getApplyForCostsApplicantType().equals(homeOffice)) {
             assertTrue(respondToCostsApplicantPersonalisation.getRecipientsList(asylumCase).contains(homeOfficeEmailAddress));
         } else {
             assertTrue(respondToCostsApplicantPersonalisation.getRecipientsList(asylumCase).contains(legalRepEmailAddress));
@@ -153,8 +153,8 @@ class RespondToCostsApplicantPersonalisationTest {
     void should_return_personalisation_when_all_information_given(List<IdValue<ApplyForCosts>> applyForCostsList, DynamicList respondsToCostsList) {
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
         when(asylumCase.read(RESPOND_TO_COSTS_LIST, DynamicList.class)).thenReturn(Optional.of(respondsToCostsList));
-        when(personalisationProvider.getTypeForSelectedApplyForCosts(any(), any())).thenReturn(Map.of("appliedCostsType", applyForCostsList.get(0).getValue().getAppliedCostsType().replaceAll("costs", "").trim()));
-        when(personalisationProvider.retrieveSelectedApplicationId(any(), any())).thenReturn(Map.of("applicationId", applyForCostsList.get(0).getId()));
+        when(personalisationProvider.getTypeForSelectedApplyForCosts(any(), any())).thenReturn(Map.of("appliedCostsType", applyForCostsList.getFirst().getValue().getAppliedCostsType().replaceAll("costs", "").trim()));
+        when(personalisationProvider.retrieveSelectedApplicationId(any(), any())).thenReturn(Map.of("applicationId", applyForCostsList.getFirst().getId()));
 
         Map<String, String> personalisation = respondToCostsApplicantPersonalisation.getPersonalisation(asylumCase);
 
@@ -166,7 +166,7 @@ class RespondToCostsApplicantPersonalisationTest {
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
-        if (applyForCostsList.get(0).getValue().getApplyForCostsApplicantType().equals("Home office")) {
+        if (applyForCostsList.getFirst().getValue().getApplyForCostsApplicantType().equals("Home office")) {
             assertThat(personalisation)
                 .containsEntry("recipient", "Home office")
                 .containsEntry("recipientReferenceNumber", homeOfficeReferenceNumber)

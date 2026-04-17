@@ -66,24 +66,20 @@ public class AppellantFtpaApplicationDecisionPersonalisationSms implements SmsNo
             .map(ApplicantType::getValue)
             .orElseThrow(() -> new IllegalStateException("ftpaApplicantType is not present"));
 
-        switch (getDecisionOutcomeType(asylumCase)) {
-            case FTPA_GRANTED:
-                return applicantType.equals(APPELLANT_APPLICANT)
+        return switch (getDecisionOutcomeType(asylumCase)) {
+            case FTPA_GRANTED -> applicantType.equals(APPELLANT_APPLICANT)
                     ? ftpaAppellantDecisionGrantedToAppellantSmsTemplateId
                     : ftpaRespondentDecisionGrantedPartiallyGrantedToAppellantSmsTemplateId;
-            case FTPA_PARTIALLY_GRANTED:
-                return applicantType.equals(APPELLANT_APPLICANT)
+            case FTPA_PARTIALLY_GRANTED -> applicantType.equals(APPELLANT_APPLICANT)
                     ? ftpaAppellantDecisionPartiallyGrantedToAppellantSmsTemplateId
                     : ftpaRespondentDecisionGrantedPartiallyGrantedToAppellantSmsTemplateId;
-            case FTPA_REFUSED:
-                return applicantType.equals(APPELLANT_APPLICANT)
+            case FTPA_REFUSED -> applicantType.equals(APPELLANT_APPLICANT)
                     ? ftpaAppellantDecisionRefusedToAppellantSmsTemplateId
                     : ftpaRespondentDecisionRefusedToAppellantSmsTemplateId;
-            default:
-                return applicantType.equals(APPELLANT_APPLICANT)
+            default -> applicantType.equals(APPELLANT_APPLICANT)
                     ? ftpaAppellantDecisionNotAdmittedToAppellantSmsTemplateId
                     : ftpaRespondentDecisionNotAdmittedToAppellantSmsTemplateId;
-        }
+        };
     }
 
     @Override

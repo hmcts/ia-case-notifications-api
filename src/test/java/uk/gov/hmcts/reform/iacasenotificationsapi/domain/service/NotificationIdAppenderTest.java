@@ -45,7 +45,7 @@ public class NotificationIdAppenderTest {
             );
 
         assertEquals(3, actualNotificationsSent.size());
-        assertEquals(existingNotification1, actualNotificationsSent.get(0));
+        assertEquals(existingNotification1, actualNotificationsSent.getFirst());
         assertEquals(existingNotification2, actualNotificationsSent.get(1));
 
         assertTrue(actualNotificationsSent.get(2).getId().startsWith("something_"));
@@ -75,7 +75,7 @@ public class NotificationIdAppenderTest {
             );
 
         assertEquals(4, actualNotificationsSent2.size());
-        assertEquals(existingNotification1, actualNotificationsSent2.get(0));
+        assertEquals(existingNotification1, actualNotificationsSent2.getFirst());
         assertEquals(existingNotification2, actualNotificationsSent2.get(1));
 
         final IdValue<String> actualNotificationsSent3 = actualNotificationsSent2.get(2);

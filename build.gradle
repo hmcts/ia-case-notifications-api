@@ -29,9 +29,9 @@ rewrite {
 //  activeRecipe('org.openrewrite.java.spring.boot3.UpgradeSpringBoot_3_2')
 //  activeRecipe('org.openrewrite.java.spring.boot3.UpgradeSpringBoot_3_3')
 //  activeRecipe('org.openrewrite.java.spring.boot3.UpgradeSpringBoot_3_4')
-  activeRecipe('org.openrewrite.java.spring.boot3.UpgradeSpringBoot_3_5')
-//  activeRecipe('org.openrewrite.java.migrate.UpgradeToJava21')
-//  setExportDatatables(true)
+//  activeRecipe('org.openrewrite.java.spring.boot3.UpgradeSpringBoot_3_5')
+  activeRecipe('org.openrewrite.java.migrate.UpgradeToJava21')
+  setExportDatatables(true)
 }
 
 ext.libraries = [
@@ -53,7 +53,7 @@ version = '0.0.1'
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 

@@ -73,9 +73,9 @@ public class AsylumCaseTest {
 
         List<IdValue<Direction>> idValues = maybeRespondentDocuments.get();
 
-        Direction direction1 = idValues.get(0).getValue();
+        Direction direction1 = idValues.getFirst().getValue();
 
-        assertEquals("2", idValues.get(0).getId());
+        assertEquals("2", idValues.getFirst().getId());
         assertEquals(DirectionTag.BUILD_CASE, direction1.getTag());
         assertEquals("2019-06-13", direction1.getDateDue());
         assertEquals(Parties.LEGAL_REPRESENTATIVE, direction1.getParties());
@@ -135,7 +135,7 @@ public class AsylumCaseTest {
 
         Optional<List<IdValue<Direction>>> maybeDocuments = asylumCase.read(DIRECTIONS);
 
-        IdValue<Direction> documents = maybeDocuments.get().get(0);
+        IdValue<Direction> documents = maybeDocuments.get().getFirst();
 
 
         assertEquals(1, maybeDocuments.get().size());

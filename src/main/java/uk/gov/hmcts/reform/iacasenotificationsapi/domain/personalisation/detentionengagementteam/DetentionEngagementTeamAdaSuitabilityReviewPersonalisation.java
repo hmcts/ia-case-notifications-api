@@ -82,7 +82,7 @@ public class DetentionEngagementTeamAdaSuitabilityReviewPersonalisation implemen
         if (documents.size() == 0) {
             throw new RequiredFieldMissingException("Internal ADA Suitability document is not present");
         }
-        DocumentWithMetadata document = documents.get(0);
+        DocumentWithMetadata document = documents.getFirst();
         try {
             return documentDownloadClient.getJsonObjectFromDocument(document);
         } catch (IOException | NotificationClientException e) {
