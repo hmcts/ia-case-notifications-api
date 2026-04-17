@@ -33,8 +33,8 @@ import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MvcResult;
 import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.SpringBootIntegrationTest;
 import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.WithNotificationEmailStub;
@@ -68,7 +68,7 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
     private static final String REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_APPELLANT_LETTER = "REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER";
     private static final String REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_LEGAL_REP_EMAIL = "REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL";
 
-    @MockBean
+    @MockitoBean
     private GovNotifyNotificationSender notificationSender;
 
     @Test

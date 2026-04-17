@@ -25,10 +25,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MvcResult;
 import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.SpringBootIntegrationTest;
 import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.WithServiceAuthStub;
@@ -47,10 +47,10 @@ class MultipleNotificationsTest extends SpringBootIntegrationTest implements Wit
 
     private static final String ABOUT_TO_SUBMIT_PATH = "/asylum/ccdAboutToSubmit";
 
-    @MockBean
+    @MockitoBean
     private CcdEventAuthorizor ccdEventAuthorizor;
 
-    @MockBean
+    @MockitoBean
     private GovNotifyNotificationSender notificationSender;
 
     private final List<Map.Entry<Event, String>> eventAndNotificationSuffixPair =
