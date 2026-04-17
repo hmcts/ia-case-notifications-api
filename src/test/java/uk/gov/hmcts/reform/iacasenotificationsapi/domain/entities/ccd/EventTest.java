@@ -22,7 +22,6 @@ public class EventTest {
         assertEquals("editAppeal", Event.EDIT_APPEAL.toString());
         assertEquals("submitAppeal", Event.SUBMIT_APPEAL.toString());
         assertEquals("payAndSubmitAppeal", Event.PAY_AND_SUBMIT_APPEAL.toString());
-        assertEquals("payForAppeal", Event.PAY_FOR_APPEAL.toString());
         assertEquals("sendDirection", Event.SEND_DIRECTION.toString());
         assertEquals("requestRespondentEvidence", Event.REQUEST_RESPONDENT_EVIDENCE.toString());
         assertEquals("uploadRespondentEvidence", Event.UPLOAD_RESPONDENT_EVIDENCE.toString());
@@ -141,8 +140,6 @@ public class EventTest {
         assertEquals("recordRemissionReminder", Event.RECORD_REMISSION_REMINDER.toString());
         assertEquals("refundConfirmation", Event.REFUND_CONFIRMATION.toString());
         assertEquals("hearingCancelled", HEARING_CANCELLED.toString());
-        assertEquals("completeCaseReview", COMPLETE_CASE_REVIEW.toString());
-        assertEquals("removeStatutoryTimeframe24Weeks", REMOVE_STATUTORY_TIMEFRAME_24_WEEKS.toString());
     }
 
     @Test
@@ -164,6 +161,6 @@ public class EventTest {
 
     @Test
     public void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(131, Event.values().length);
+        assertEquals(129, Event.values().length);
     }
 }
