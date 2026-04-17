@@ -218,7 +218,15 @@ withPipeline(type, product, component) {
         ]
     }
 
-    afterSuccess('functionalTest:preview') {
+    afterAlways('functionalTest:preview') {
+        publishHTML([
+                allowMissing         : true,
+                alwaysLinkToLastBuild: true,
+                keepAll              : true,
+                reportDir            : "build/reports/tests/functional",
+                reportFiles          : 'index.html',
+                reportName           : 'Functional Test Report'
+        ])
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
     }
 
