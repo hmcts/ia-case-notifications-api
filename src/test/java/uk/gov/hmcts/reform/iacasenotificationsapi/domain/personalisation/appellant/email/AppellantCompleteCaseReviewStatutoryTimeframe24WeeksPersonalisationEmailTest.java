@@ -46,7 +46,7 @@ class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationEmailTe
     private static final String CUSTOMER_SERVICE_EMAIL = "dummy@email.com";
     private static final Long CASE_ID = 12345L;
     private static final String EXPECTED_REFERENCE_ID =
-            CASE_ID + "_REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL";
+            CASE_ID + "_STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL";
     private static final String COMPLETE_CASE_REVIEW_DATE_KEY = "completeCaseReviewDate";
     @Mock
     private AsylumCase asylumCase;
