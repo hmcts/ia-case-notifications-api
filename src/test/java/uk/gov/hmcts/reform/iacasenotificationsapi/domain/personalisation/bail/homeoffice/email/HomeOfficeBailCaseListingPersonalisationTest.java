@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.homeoffice.email;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.*;
@@ -26,24 +26,22 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsF
 @MockitoSettings(strictness = Strictness.LENIENT)
 class HomeOfficeBailCaseListingPersonalisationTest {
 
-    private Long caseId = 12345L;
-    private String initialTemplateId = "initialTemplateId";
-    private String initialTemplateIdWithoutLegalRep = "initialTemplateIdWithoutLegalRep";
-    private String relistingTemplateId = "relistingTemplateId";
-    private String relistingTemplateIdWithoutLegalRep = "relistingTemplateIdWithoutLegalRep";
+    private final String initialTemplateId = "initialTemplateId";
+    private final String initialTemplateIdWithoutLegalRep = "initialTemplateIdWithoutLegalRep";
+    private final String relistingTemplateId = "relistingTemplateId";
+    private final String relistingTemplateIdWithoutLegalRep = "relistingTemplateIdWithoutLegalRep";
     private final String conditionalBailRelistingTemplateId = "conditionalBailRelistingTemplateId";
     private final String conditionalBailRelistingTemplateIdWithoutLegalRep = "conditionalBailRelistingTemplateIdWithoutLegalRep";
-    private String homeOfficeEmailAddress = "HO_user@example.com";
-    private String bailReferenceNumber = "someReferenceNumber";
-    private String legalRepReference = "someLegalRepReference";
-    private String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
-    private String applicantGivenNames = "someApplicantGivenNames";
-    private String applicantFamilyName = "someApplicantFamilyName";
-    private String bailHearingDateTime = "2024-01-01T10:29:00.000";
-    private String bailHearingLocationName = "Yarl’s Wood\n" +
-            "Yarl’s Wood Immigration and Asylum Hearing Centre, Twinwood Road, MK44 1FD";
-    private String hearingDate = "2024-01-21";
-    private String hearingTime = "10:29";
+    private final String homeOfficeEmailAddress = "HO_user@example.com";
+    private final String bailReferenceNumber = "someReferenceNumber";
+    private final String legalRepReference = "someLegalRepReference";
+    private final String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
+    private final String applicantGivenNames = "someApplicantGivenNames";
+    private final String applicantFamilyName = "someApplicantFamilyName";
+    private final String bailHearingLocationName = "Yarl’s Wood\n" +
+        "Yarl’s Wood Immigration and Asylum Hearing Centre, Twinwood Road, MK44 1FD";
+    private final String hearingDate = "2024-01-21";
+    private final String hearingTime = "10:29";
     @Mock
     BailCase bailCase;
     @Mock
@@ -62,6 +60,7 @@ class HomeOfficeBailCaseListingPersonalisationTest {
         when(bailCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
         when(bailCase.read(IS_LEGALLY_REPRESENTED_FOR_FLAG, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(bailCase.read(LISTING_LOCATION, BailHearingLocation.class)).thenReturn(Optional.of(BailHearingLocation.GLASGOW_TRIBUNAL_CENTRE));
+        String bailHearingDateTime = "2024-01-01T10:29:00.000";
         when(bailCase.read(LISTING_HEARING_DATE, String.class)).thenReturn(Optional.of(bailHearingDateTime));
         when(hearingDetailsFinder.getBailHearingDateTime(bailCase)).thenReturn(bailHearingDateTime);
         when(hearingDetailsFinder.getListingLocationAddressFromRefDataOrCcd(bailCase)).thenReturn(bailHearingLocationName);
@@ -78,7 +77,7 @@ class HomeOfficeBailCaseListingPersonalisationTest {
                 homeOfficeEmailAddress,
                 hearingDetailsFinder,
                 dateTimeExtractor
-                );
+            );
     }
 
     @Test
@@ -117,6 +116,7 @@ class HomeOfficeBailCaseListingPersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_BAIL_APPLICATION_CASE_LISTING_HOME_OFFICE",
             homeOfficeBailCaseListingPersonalisation.getReferenceId(caseId));
     }
@@ -124,10 +124,10 @@ class HomeOfficeBailCaseListingPersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
-            () -> homeOfficeBailCaseListingPersonalisation.getPersonalisation((BailCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("bailCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> homeOfficeBailCaseListingPersonalisation.getPersonalisation((BailCase) null));
+        assertEquals("bailCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -136,14 +136,15 @@ class HomeOfficeBailCaseListingPersonalisationTest {
         Map<String, String> personalisation =
             homeOfficeBailCaseListingPersonalisation.getPersonalisation(bailCase);
 
-        assertEquals(bailReferenceNumber, personalisation.get("bailReferenceNumber"));
-        assertEquals(legalRepReference, personalisation.get("legalRepReference"));
-        assertEquals(applicantGivenNames, personalisation.get("applicantGivenNames"));
-        assertEquals(applicantFamilyName, personalisation.get("applicantFamilyName"));
-        assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(hearingDate, personalisation.get("hearingDate"));
-        assertEquals(hearingTime, personalisation.get("hearingTime"));
-        assertEquals(bailHearingLocationName, personalisation.get("hearingCentre"));
+        assertThat(personalisation)
+            .containsEntry("bailReferenceNumber", bailReferenceNumber)
+            .containsEntry("legalRepReference", legalRepReference)
+            .containsEntry("applicantGivenNames", applicantGivenNames)
+            .containsEntry("applicantFamilyName", applicantFamilyName)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
+            .containsEntry("hearingDate", hearingDate)
+            .containsEntry("hearingTime", hearingTime)
+            .containsEntry("hearingCentre", bailHearingLocationName);
     }
 
     @Test
@@ -153,12 +154,13 @@ class HomeOfficeBailCaseListingPersonalisationTest {
         Map<String, String> personalisation =
             homeOfficeBailCaseListingPersonalisation.getPersonalisation(bailCase);
 
-        assertEquals(bailReferenceNumber, personalisation.get("bailReferenceNumber"));
-        assertEquals(applicantGivenNames, personalisation.get("applicantGivenNames"));
-        assertEquals(applicantFamilyName, personalisation.get("applicantFamilyName"));
-        assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(hearingDate, personalisation.get("hearingDate"));
-        assertEquals(hearingTime, personalisation.get("hearingTime"));
-        assertEquals(bailHearingLocationName, personalisation.get("hearingCentre"));
+        assertThat(personalisation)
+            .containsEntry("bailReferenceNumber", bailReferenceNumber)
+            .containsEntry("applicantGivenNames", applicantGivenNames)
+            .containsEntry("applicantFamilyName", applicantFamilyName)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
+            .containsEntry("hearingDate", hearingDate)
+            .containsEntry("hearingTime", hearingTime)
+            .containsEntry("hearingCentre", bailHearingLocationName);
     }
 }

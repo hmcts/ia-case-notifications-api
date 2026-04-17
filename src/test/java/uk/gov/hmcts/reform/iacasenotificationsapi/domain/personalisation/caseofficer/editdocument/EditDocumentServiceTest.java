@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.editdocument;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HEARING_RECORDING_DOCUMENTS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_DOCUMENTS;
 
@@ -44,13 +44,13 @@ public class EditDocumentServiceTest {
         FormattedDocument expectedFormattedDocumentIsDoc1 =
             new FormattedDocument("some name", "some desc");
 
-        return new Object[] {
-            new Object[] {
+        return new Object[]{
+            new Object[]{
                 asylumCase,
                 doc2IsEditedInCaseNote,
                 new FormattedDocumentList(Collections.singletonList(expectedFormattedDocumentIsDoc2))
             },
-            new Object[] {
+            new Object[]{
                 asylumCase,
                 doc1IsEditedInCaseNote,
                 new FormattedDocumentList(Collections.singletonList(expectedFormattedDocumentIsDoc1))
@@ -83,8 +83,8 @@ public class EditDocumentServiceTest {
         FormattedDocument expectedFormattedDocumentIsDoc3 =
             new FormattedDocument("some hearing doc name", "some hearing desc");
 
-        return new Object[] {
-            new Object[] {
+        return new Object[]{
+            new Object[]{
                 asylumCase,
                 doc1AndDoc2AreEditedInCaseNote,
                 new FormattedDocumentList(
@@ -93,7 +93,7 @@ public class EditDocumentServiceTest {
                         expectedFormattedDocumentIsDoc2
                     ))
             },
-            new Object[] {
+            new Object[]{
                 asylumCase,
                 doc1AndDoc2AndDoc3AreEditedInCaseNote,
                 new FormattedDocumentList(
@@ -134,7 +134,7 @@ public class EditDocumentServiceTest {
         FormattedDocumentList actualFormattedDocumentList =
             editDocumentService.getFormattedDocumentsGivenCaseAndDocNames(asylumCase, docNamesFromCaseNote);
 
-        assertThat(actualFormattedDocumentList.toString()).isEqualTo(expectedFormattedDocumentList.toString());
+        assertEquals(expectedFormattedDocumentList.toString(), actualFormattedDocumentList.toString());
     }
 
 }

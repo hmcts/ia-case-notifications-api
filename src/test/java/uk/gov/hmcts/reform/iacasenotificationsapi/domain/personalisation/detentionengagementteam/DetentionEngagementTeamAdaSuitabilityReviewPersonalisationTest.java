@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -32,6 +32,15 @@ import uk.gov.service.notify.NotificationClientException;
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class DetentionEngagementTeamAdaSuitabilityReviewPersonalisationTest {
 
+    final DocumentWithMetadata internalAdaSuitabilityLetter = getDocumentWithMetadata(
+        "1", "ADA-Appellant-letter-suitability-decision-suitable", "some other desc", DocumentTag.INTERNAL_ADA_SUITABILITY);
+    final IdValue<DocumentWithMetadata> internalAdaSuitabilityLetterId = new IdValue<>("1", internalAdaSuitabilityLetter);
+    private final String templateId = "someTemplateId";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String adaPrefix = "ADA - SERVE IN PERSON";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -40,18 +49,6 @@ public class DetentionEngagementTeamAdaSuitabilityReviewPersonalisationTest {
     JSONObject jsonDocument;
     @Mock
     DocumentDownloadClient documentDownloadClient;
-
-    private final String templateId = "someTemplateId";
-    private final String internalAdaSuitabilityReviewPersonalisationReferenceId = "_ADA_SUITABILITY_DETERMINED_INTERNAL_ADA_DET";
-    private final String detEmailAddress = "some@example.com";
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-    private final String adaPrefix = "ADA - SERVE IN PERSON";
-    DocumentWithMetadata internalAdaSuitabilityLetter = getDocumentWithMetadata(
-        "1", "ADA-Appellant-letter-suitability-decision-suitable", "some other desc", DocumentTag.INTERNAL_ADA_SUITABILITY);
-    IdValue<DocumentWithMetadata> internalAdaSuitabilityLetterId = new IdValue<>("1", internalAdaSuitabilityLetter);
     private DetentionEngagementTeamAdaSuitabilityReviewPersonalisation detentionEngagementTeamAdaSuitabilityReviewPersonalisation;
 
 
@@ -83,6 +80,7 @@ public class DetentionEngagementTeamAdaSuitabilityReviewPersonalisationTest {
     @Test
     public void should_return_given_reference_id() {
         Long caseId = 12345L;
+        String internalAdaSuitabilityReviewPersonalisationReferenceId = "_ADA_SUITABILITY_DETERMINED_INTERNAL_ADA_DET";
         assertEquals(caseId + internalAdaSuitabilityReviewPersonalisationReferenceId,
             detentionEngagementTeamAdaSuitabilityReviewPersonalisation.getReferenceId(caseId));
     }
@@ -90,6 +88,7 @@ public class DetentionEngagementTeamAdaSuitabilityReviewPersonalisationTest {
     @Test
     public void should_return_given_email_address_from_asylum_case() {
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
+        String detEmailAddress = "some@example.com";
         when(detEmailService.getRecipientsList(asylumCase)).thenReturn(Collections.singleton(detEmailAddress));
 
         assertTrue(
@@ -111,20 +110,20 @@ public class DetentionEngagementTeamAdaSuitabilityReviewPersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
-            () -> detentionEngagementTeamAdaSuitabilityReviewPersonalisation.getPersonalisationForLink((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> detentionEngagementTeamAdaSuitabilityReviewPersonalisation.getPersonalisationForLink((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_internal_ada_suitability_review_document_is_missing() {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(
-            () -> detentionEngagementTeamAdaSuitabilityReviewPersonalisation.getPersonalisationForLink(asylumCase))
-            .isExactlyInstanceOf(RequiredFieldMissingException.class)
-            .hasMessage("Internal ADA Suitability document is not present");
+        RequiredFieldMissingException exception =
+            assertThrows(RequiredFieldMissingException.class,
+                () -> detentionEngagementTeamAdaSuitabilityReviewPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("Internal ADA Suitability document is not present", exception.getMessage());
     }
 
     @Test

@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.service;
 
 
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,13 +10,18 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MockitoExtension.class)
 class PrisonEmailMappingServiceTest {
 
     private PrisonEmailMappingService prisonEmailMappingService;
-    private final String validJsonData = """
+
+    @BeforeEach
+    void setUp() {
+        String validJsonData = """
             {
               "prisonEmailMappings": {
                 "Addiewell": "addiewell@example.com",
@@ -24,15 +30,6 @@ class PrisonEmailMappingServiceTest {
               }
             }
             """;
-
-    private final String emptyJsonData = """
-            {
-              "prisonEmailMappings": {}
-            }
-            """;
-
-    @BeforeEach
-    void setUp() {
         prisonEmailMappingService = new PrisonEmailMappingService(validJsonData);
         prisonEmailMappingService.init();
     }
@@ -41,39 +38,44 @@ class PrisonEmailMappingServiceTest {
     void should_return_email_for_prison_when_mapping_exists() {
         Optional<String> result = prisonEmailMappingService.getPrisonEmail("Addiewell");
 
-        assertThat(result).isPresent();
-        assertThat(result.get()).isEqualTo("addiewell@example.com");
+        assertTrue(result.isPresent());
+        assertEquals("addiewell@example.com", result.get());
     }
 
     @Test
     void should_return_empty_when_prison_not_found() {
         Optional<String> result = prisonEmailMappingService.getPrisonEmail("NonexistentPrison");
 
-        assertThat(result).isEmpty();
+        assertTrue(result.isEmpty());
     }
 
     @Test
     void should_return_empty_when_prison_name_is_null() {
         Optional<String> result = prisonEmailMappingService.getPrisonEmail(null);
 
-        assertThat(result).isEmpty();
+        assertTrue(result.isEmpty());
     }
 
     @Test
     void should_return_empty_when_prison_name_is_empty() {
         Optional<String> result = prisonEmailMappingService.getPrisonEmail("");
 
-        assertThat(result).isEmpty();
+        assertTrue(result.isEmpty());
     }
 
     @Test
     void should_handle_empty_configuration() {
+        String emptyJsonData = """
+            {
+              "prisonEmailMappings": {}
+            }
+            """;
         PrisonEmailMappingService emptyService = new PrisonEmailMappingService(emptyJsonData);
         emptyService.init();
 
         Optional<String> result = emptyService.getPrisonEmail("Addiewell");
 
-        assertThat(result).isEmpty();
+        assertTrue(result.isEmpty());
     }
 
     @Test
@@ -83,7 +85,7 @@ class PrisonEmailMappingServiceTest {
 
         Optional<String> result = noConfigService.getPrisonEmail("Addiewell");
 
-        assertThat(result).isEmpty();
+        assertTrue(result.isEmpty());
     }
 
     @Test
@@ -93,64 +95,64 @@ class PrisonEmailMappingServiceTest {
 
         Optional<String> result = invalidJsonService.getPrisonEmail("Addiewell");
 
-        assertThat(result).isEmpty();
+        assertTrue(result.isEmpty());
     }
 
     @Test
     void should_check_if_prison_is_supported() {
-        assertThat(prisonEmailMappingService.isPrisonSupported("Addiewell")).isTrue();
-        assertThat(prisonEmailMappingService.isPrisonSupported("NonexistentPrison")).isFalse();
+        assertTrue(prisonEmailMappingService.isPrisonSupported("Addiewell"));
+        assertFalse(prisonEmailMappingService.isPrisonSupported("NonexistentPrison"));
     }
 
     @Test
     void should_return_all_prison_emails() {
         Map<String, String> allEmails = prisonEmailMappingService.getAllPrisonEmails();
 
-        assertThat(allEmails).containsEntry("Addiewell", "addiewell@example.com");
-        assertThat(allEmails).containsEntry("Belmarsh", "belmarsh@example.com");
-        assertThat(allEmails).containsEntry("Askham Grange", "askham-grange@example.com");
-        assertThat(allEmails).hasSize(3);
+        assertEquals("addiewell@example.com", allEmails.get("Addiewell"));
+        assertEquals("belmarsh@example.com", allEmails.get("Belmarsh"));
+        assertEquals("askham-grange@example.com", allEmails.get("Askham Grange"));
+        assertEquals(3, allEmails.size());
     }
 
     @Test
     void should_return_supported_prisons() {
         Set<String> supportedPrisons = prisonEmailMappingService.getSupportedPrisons();
 
-        assertThat(supportedPrisons).contains("Addiewell", "Belmarsh", "Askham Grange");
-        assertThat(supportedPrisons).hasSize(3);
+        assertTrue(supportedPrisons.containsAll(List.of("Addiewell", "Belmarsh", "Askham Grange")));
+        assertEquals(3, supportedPrisons.size());
     }
 
     @Test
     void should_handle_prison_names_with_spaces() {
         Optional<String> result = prisonEmailMappingService.getPrisonEmail("Askham Grange");
 
-        assertThat(result).isPresent();
-        assertThat(result.get()).isEqualTo("askham-grange@example.com");
+        assertTrue(result.isPresent());
+        assertEquals("askham-grange@example.com", result.get());
     }
 
     @Test
     void should_trim_whitespace_from_prison_name() {
         Optional<String> result = prisonEmailMappingService.getPrisonEmail("  Addiewell  ");
 
-        assertThat(result).isPresent();
-        assertThat(result.get()).isEqualTo("addiewell@example.com");
+        assertTrue(result.isPresent());
+        assertEquals("addiewell@example.com", result.get());
     }
 
     @Test
     void should_handle_malformed_json_structure() {
         String malformedJson = """
-                {
-                  "wrongKey": {
-                    "Addiewell": "addiewell@example.com"
-                  }
-                }
-                """;
+            {
+              "wrongKey": {
+                "Addiewell": "addiewell@example.com"
+              }
+            }
+            """;
 
         PrisonEmailMappingService malformedService = new PrisonEmailMappingService(malformedJson);
         malformedService.init();
 
         Optional<String> result = malformedService.getPrisonEmail("Addiewell");
 
-        assertThat(result).isEmpty();
+        assertTrue(result.isEmpty());
     }
 }
