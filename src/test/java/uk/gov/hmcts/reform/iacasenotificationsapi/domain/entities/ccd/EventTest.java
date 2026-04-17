@@ -22,7 +22,6 @@ public class EventTest {
         assertEquals("editAppeal", Event.EDIT_APPEAL.toString());
         assertEquals("submitAppeal", Event.SUBMIT_APPEAL.toString());
         assertEquals("payAndSubmitAppeal", Event.PAY_AND_SUBMIT_APPEAL.toString());
-        assertEquals("payForAppeal", Event.PAY_FOR_APPEAL.toString());
         assertEquals("sendDirection", Event.SEND_DIRECTION.toString());
         assertEquals("requestRespondentEvidence", Event.REQUEST_RESPONDENT_EVIDENCE.toString());
         assertEquals("uploadRespondentEvidence", Event.UPLOAD_RESPONDENT_EVIDENCE.toString());
