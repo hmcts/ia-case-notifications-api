@@ -3346,8 +3346,8 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("submitAppealPendingPaymentInternalNotificationGenerator")
-    public List<NotificationGenerator> submitAppealPendingPaymentInternalNotificationGenerator(
+    @Bean("submitAppealPendingPaymentAipAndInternalNotificationGenerator")
+    public List<NotificationGenerator> submitAppealPendingPaymentAipAndInternalNotificationGenerator(
         HomeOfficeAppealSubmittedPendingPaymentPersonalisation homeOfficeAppealSubmittedPendingPaymentPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
@@ -4548,33 +4548,6 @@ public class NotificationGeneratorConfiguration {
                 notificationSender,
                 notificationIdAppender
             )
-        );
-    }
-
-    @Bean("payForAppealEmailNotificationGenerator")
-    public List<NotificationGenerator> payForAppealAppealEmailNotificationHandler(
-        LegalRepresentativeAppealSubmittedPaidPersonalisation legalRepresentativeAppealSubmittedPaidPersonalisation,
-        HomeOfficeSubmitAppealPersonalisation homeOfficeSubmitAppealPersonalisation,
-        CaseOfficerSubmitAppealPersonalisation caseOfficerSubmitAppealPersonalisation,
-        GovNotifyNotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender
-    ) {
-
-        return singletonList(
-            new EmailNotificationGenerator(
-                newArrayList(
-                    legalRepresentativeAppealSubmittedPaidPersonalisation,
-                    homeOfficeSubmitAppealPersonalisation,
-                    caseOfficerSubmitAppealPersonalisation
-                ),
-                notificationSender,
-                notificationIdAppender
-            ) {
-                @Override
-                public Message getSuccessMessage() {
-                    return new Message("success", "body");
-                }
-            }
         );
     }
 
