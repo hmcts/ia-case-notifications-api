@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -38,21 +39,18 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvi
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AipAppellantManageFeeUpdatePersonalisationEmailTest {
-    private Long caseId = 12345L;
-    private String aipAppellantManageFeeUpdateTemplateId = "aipAppellantManageFeeUpdateTemplateId";
-    private String iaAipFrontendUrl = "http://localhost";
-    private String appellantEmail = "example@example.com";
-    private String appealReferenceNumber = "appealReferenceNumber";
-    private String onlineCaseReferenceNumber = "1111222233334444";
-    private String homeOfficeReferenceNumber = "homeOfficeReferenceNumber";
-    private String appellantGivenNames = "GivenNames";
-    private String appellantFamilyName = "FamilyName";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "customer@example.com";
-    private int daysAfterRemissionDecision = 14;
-    private String feeAmount = "4000";
-    private String newFeeAmount = "2000";
-    private String manageFeeRequestedAmount = "2000";
+    private final Long caseId = 12345L;
+    private final String aipAppellantManageFeeUpdateTemplateId = "aipAppellantManageFeeUpdateTemplateId";
+    private final String iaAipFrontendUrl = "http://localhost";
+    private final String appellantEmail = "example@example.com";
+    private final String appealReferenceNumber = "appealReferenceNumber";
+    private final String onlineCaseReferenceNumber = "1111222233334444";
+    private final String homeOfficeReferenceNumber = "homeOfficeReferenceNumber";
+    private final String appellantGivenNames = "GivenNames";
+    private final String appellantFamilyName = "FamilyName";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "customer@example.com";
+    private final int daysAfterRemissionDecision = 14;
 
     @Mock
     AsylumCase asylumCase;
@@ -75,8 +73,11 @@ class AipAppellantManageFeeUpdatePersonalisationEmailTest {
         when(asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class)).thenReturn(Optional.of(onlineCaseReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
+        String feeAmount = "4000";
         when(asylumCase.read(PREVIOUS_FEE_AMOUNT_GBP, String.class)).thenReturn(Optional.of(feeAmount));
+        String newFeeAmount = "2000";
         when(asylumCase.read(FEE_AMOUNT_GBP, String.class)).thenReturn(Optional.of(newFeeAmount));
+        String manageFeeRequestedAmount = "2000";
         when(asylumCase.read(MANAGE_FEE_REQUESTED_AMOUNT, String.class)).thenReturn(Optional.of(manageFeeRequestedAmount));
         when(asylumCase.read(FEE_UPDATE_REASON, FeeUpdateReason.class)).thenReturn(Optional.of(FeeUpdateReason.FEE_REMISSION_CHANGED));
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
@@ -126,10 +127,10 @@ class AipAppellantManageFeeUpdatePersonalisationEmailTest {
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
-        assertThatThrownBy(
-            () -> aipAppellantManageFeeUpdatePersonalisationEmail.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> aipAppellantManageFeeUpdatePersonalisationEmail.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -142,17 +143,18 @@ class AipAppellantManageFeeUpdatePersonalisationEmailTest {
         Map<String, String> personalisation =
             aipAppellantManageFeeUpdatePersonalisationEmail.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeReferenceNumber, personalisation.get("respondentReferenceNumber"));
-        assertEquals(onlineCaseReferenceNumber, personalisation.get("onlineCaseReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("linkToService"));
-        assertEquals(systemDateProvider.dueDate(daysAfterRemissionDecision), personalisation.get("dueDate"));
-        assertEquals("40.00", personalisation.get("originalTotalFee"));
-        assertEquals("20.00", personalisation.get("newTotalFee"));
-        assertEquals("20.00", personalisation.get("paymentAmount"));
-        assertEquals("Fee remission changed", personalisation.get("feeUpdateReason"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("respondentReferenceNumber", homeOfficeReferenceNumber)
+            .containsEntry("onlineCaseReferenceNumber", onlineCaseReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToService", iaAipFrontendUrl)
+            .containsEntry("dueDate", systemDateProvider.dueDate(daysAfterRemissionDecision))
+            .containsEntry("originalTotalFee", "40.00")
+            .containsEntry("newTotalFee", "20.00")
+            .containsEntry("paymentAmount", "20.00")
+            .containsEntry("feeUpdateReason", "Fee remission changed");
 
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());

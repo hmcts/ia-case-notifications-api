@@ -56,7 +56,7 @@ class DetentionEmailServiceTest {
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.empty());
 
         IllegalStateException ex = assertThrows(IllegalStateException.class,
-                () -> detentionEmailService.getDetentionEmailAddress(asylumCase));
+            () -> detentionEmailService.getDetentionEmailAddress(asylumCase));
 
         assertEquals("Detention facility is not present", ex.getMessage());
     }
@@ -66,7 +66,7 @@ class DetentionEmailServiceTest {
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("other"));
 
         IllegalStateException ex = assertThrows(IllegalStateException.class,
-                () -> detentionEmailService.getDetentionEmailAddress(asylumCase));
+            () -> detentionEmailService.getDetentionEmailAddress(asylumCase));
 
         assertEquals("Detention facility is not valid", ex.getMessage());
     }

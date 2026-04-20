@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
@@ -72,10 +72,10 @@ public class AppellantMarkAsReadyForUtTransferPersonalisationSmsTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
-            () -> appellantMarkAsReadyForUtTransferPersonalisationSms.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> appellantMarkAsReadyForUtTransferPersonalisationSms.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -84,8 +84,9 @@ public class AppellantMarkAsReadyForUtTransferPersonalisationSmsTest {
         Map<String, String> personalisation =
             appellantMarkAsReadyForUtTransferPersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(utAppealReferenceNumber, personalisation.get("utAppealReferenceNumber"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("utAppealReferenceNumber", utAppealReferenceNumber);
 
     }
 
@@ -98,8 +99,9 @@ public class AppellantMarkAsReadyForUtTransferPersonalisationSmsTest {
         Map<String, String> personalisation =
             appellantMarkAsReadyForUtTransferPersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("utAppealReferenceNumber"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("utAppealReferenceNumber", "");
     }
 
 }

@@ -1733,7 +1733,6 @@ security:
       - "applyForFTPAAppellant"
       - "payAndSubmitAppeal"
       - "paymentAppeal"
-      - "payForAppeal"
       - "makeAnApplication"
       - "removeRepresentation"
       - "requestFeeRemission"

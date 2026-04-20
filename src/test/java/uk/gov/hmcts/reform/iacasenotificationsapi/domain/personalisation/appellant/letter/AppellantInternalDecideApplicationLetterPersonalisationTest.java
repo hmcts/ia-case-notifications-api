@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -38,16 +39,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantInternalDecideApplicationLetterPersonalisationTest {
-    @Mock
-    Callback<AsylumCase> callback;
-    @Mock
-    CaseDetails<AsylumCase> caseDetails;
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-    @Mock
-    AddressUk address;
     private final Long ccdCaseId = 12345L;
     private final String letterTemplateId = "someLetterTemplateId";
     private final String appealReferenceNumber = "someAppealRefNumber";
@@ -76,6 +67,16 @@ public class AppellantInternalDecideApplicationLetterPersonalisationTest {
         decisionGranted,
         State.APPEAL_SUBMITTED.toString(),
         "ctsc");
+    @Mock
+    Callback<AsylumCase> callback;
+    @Mock
+    CaseDetails<AsylumCase> caseDetails;
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    AddressUk address;
     private AppellantInternalDecideApplicationLetterPersonalisation appellantInternalDecideApplicationLetterPersonalisation;
 
     @BeforeEach
@@ -151,9 +152,9 @@ public class AppellantInternalDecideApplicationLetterPersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> appellantInternalDecideApplicationLetterPersonalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("appellantAddress is not present");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> appellantInternalDecideApplicationLetterPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("appellantAddress is not present", exception.getMessage());
     }
 
     @Test
@@ -162,18 +163,18 @@ public class AppellantInternalDecideApplicationLetterPersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.empty());
         when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_HAS_ADDRESS, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
 
-        assertThatThrownBy(() -> appellantInternalDecideApplicationLetterPersonalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("legalRepAddressUK is not present");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> appellantInternalDecideApplicationLetterPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("legalRepAddressUK is not present", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
-            () -> appellantInternalDecideApplicationLetterPersonalisation.getPersonalisation((Callback<AsylumCase>) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("callback must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> appellantInternalDecideApplicationLetterPersonalisation.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     @Test
@@ -182,19 +183,20 @@ public class AppellantInternalDecideApplicationLetterPersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         Map<String, String> personalisation =
             appellantInternalDecideApplicationLetterPersonalisation.getPersonalisation(callback);
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(addressLine1, personalisation.get("address_line_1"));
-        assertEquals(addressLine2, personalisation.get("address_line_2"));
-        assertEquals(addressLine3, personalisation.get("address_line_3"));
-        assertEquals(postTown, personalisation.get("address_line_4"));
-        assertEquals(postCode, personalisation.get("address_line_5"));
-        assertEquals(decisionMaker, personalisation.get("decisionMaker"));
-        assertEquals("grant", personalisation.get("decision"));
-        assertEquals("Adjourn", personalisation.get("applicationType"));
-        assertEquals(decisionReason, personalisation.get("decisionReason"));
+        assertThat(personalisation)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
+            .containsEntry("address_line_1", addressLine1)
+            .containsEntry("address_line_2", addressLine2)
+            .containsEntry("address_line_3", addressLine3)
+            .containsEntry("address_line_4", postTown)
+            .containsEntry("address_line_5", postCode)
+            .containsEntry("decisionMaker", decisionMaker)
+            .containsEntry("decision", "grant")
+            .containsEntry("applicationType", "Adjourn")
+            .containsEntry("decisionReason", decisionReason);
         assertTrue(personalisation.get("nextSteps").contains("The details of your hearing will be updated. The Tribunal will contact you when this happens."));
     }
 
@@ -204,18 +206,19 @@ public class AppellantInternalDecideApplicationLetterPersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
         Map<String, String> personalisation =
             appellantInternalDecideApplicationLetterPersonalisation.getPersonalisation(callback);
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(oocAddressLine1, personalisation.get("address_line_1"));
-        assertEquals(oocAddressLine2, personalisation.get("address_line_2"));
-        assertEquals(oocAddressLine3, personalisation.get("address_line_3"));
-        assertEquals(Nationality.ES.toString(), personalisation.get("address_line_4"));
-        assertEquals(decisionMaker, personalisation.get("decisionMaker"));
-        assertEquals("grant", personalisation.get("decision"));
-        assertEquals("Adjourn", personalisation.get("applicationType"));
-        assertEquals(decisionReason, personalisation.get("decisionReason"));
+        assertThat(personalisation)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
+            .containsEntry("address_line_1", oocAddressLine1)
+            .containsEntry("address_line_2", oocAddressLine2)
+            .containsEntry("address_line_3", oocAddressLine3)
+            .containsEntry("address_line_4", Nationality.ES.toString())
+            .containsEntry("decisionMaker", decisionMaker)
+            .containsEntry("decision", "grant")
+            .containsEntry("applicationType", "Adjourn")
+            .containsEntry("decisionReason", decisionReason);
         assertTrue(personalisation.get("nextSteps").contains("The details of your hearing will be updated. The Tribunal will contact you when this happens."));
     }
 
@@ -225,19 +228,20 @@ public class AppellantInternalDecideApplicationLetterPersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         Map<String, String> personalisation =
             appellantInternalDecideApplicationLetterPersonalisation.getPersonalisation(callback);
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(addressLine1, personalisation.get("address_line_1"));
-        assertEquals(addressLine2, personalisation.get("address_line_2"));
-        assertEquals(addressLine3, personalisation.get("address_line_3"));
-        assertEquals(postTown, personalisation.get("address_line_4"));
-        assertEquals(postCode, personalisation.get("address_line_5"));
-        assertEquals(decisionMaker, personalisation.get("decisionMaker"));
-        assertEquals("grant", personalisation.get("decision"));
-        assertEquals("Adjourn", personalisation.get("applicationType"));
-        assertEquals(decisionReason, personalisation.get("decisionReason"));
+        assertThat(personalisation)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
+            .containsEntry("address_line_1", addressLine1)
+            .containsEntry("address_line_2", addressLine2)
+            .containsEntry("address_line_3", addressLine3)
+            .containsEntry("address_line_4", postTown)
+            .containsEntry("address_line_5", postCode)
+            .containsEntry("decisionMaker", decisionMaker)
+            .containsEntry("decision", "grant")
+            .containsEntry("applicationType", "Adjourn")
+            .containsEntry("decisionReason", decisionReason);
         assertTrue(personalisation.get("nextSteps").contains("The details of your hearing will be updated. The Tribunal will contact you when this happens."));
     }
 
@@ -247,19 +251,20 @@ public class AppellantInternalDecideApplicationLetterPersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
         Map<String, String> personalisation =
             appellantInternalDecideApplicationLetterPersonalisation.getPersonalisation(callback);
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(oocAddressLine1, personalisation.get("address_line_1"));
-        assertEquals(oocAddressLine2, personalisation.get("address_line_2"));
-        assertEquals(oocAddressLine3, personalisation.get("address_line_3"));
-        assertEquals(postTown, personalisation.get("address_line_4"));
-        assertEquals(Nationality.ES.toString(), personalisation.get("address_line_5"));
-        assertEquals(decisionMaker, personalisation.get("decisionMaker"));
-        assertEquals("grant", personalisation.get("decision"));
-        assertEquals("Adjourn", personalisation.get("applicationType"));
-        assertEquals(decisionReason, personalisation.get("decisionReason"));
+        assertThat(personalisation)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
+            .containsEntry("address_line_1", oocAddressLine1)
+            .containsEntry("address_line_2", oocAddressLine2)
+            .containsEntry("address_line_3", oocAddressLine3)
+            .containsEntry("address_line_4", postTown)
+            .containsEntry("address_line_5", Nationality.ES.toString())
+            .containsEntry("decisionMaker", decisionMaker)
+            .containsEntry("decision", "grant")
+            .containsEntry("applicationType", "Adjourn")
+            .containsEntry("decisionReason", decisionReason);
         assertTrue(personalisation.get("nextSteps").contains("The details of your hearing will be updated. The Tribunal will contact you when this happens."));
     }
 

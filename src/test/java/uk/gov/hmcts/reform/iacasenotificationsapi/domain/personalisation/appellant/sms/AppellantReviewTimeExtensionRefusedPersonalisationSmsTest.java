@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -12,7 +13,6 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
-import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,6 +36,11 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.TimeExtensionFi
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantReviewTimeExtensionRefusedPersonalisationSmsTest {
 
+    private final String smsTemplateId = "someSmsTemplateId";
+    private final String iaAipFrontendUrl = "http://localhost";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
+    private final String expectedTimeExtensionNewDate = "1 Apr 2020";
+    private final String timeExtensionDecisionReason = "the reason";
     @Mock
     Callback<AsylumCase> callback;
     @Mock
@@ -44,22 +49,6 @@ public class AppellantReviewTimeExtensionRefusedPersonalisationSmsTest {
     RecipientsFinder recipientsFinder;
     @Mock
     TimeExtensionFinder timeExtensionFinder;
-
-    private Long caseId = 12345L;
-    private String smsTemplateId = "someSmsTemplateId";
-    private String iaAipFrontendUrl = "http://localhost";
-
-    private String mockedAppealReferenceNumber = "someReferenceNumber";
-    private String mockedAppellantMobilePhone = "07123456789";
-
-    private String timeExtensionRequestDate = "2020-03-01";
-    private String timeExtensionNewDate = "2020-04-01";
-    private String expectedTimeExtensionNewDate = "1 Apr 2020";
-
-    private String timeExtensionReason = "the reason";
-
-    private String timeExtensionDecisionReason = "the reason";
-
     private IdValue<TimeExtension> mockedTimeExtension;
 
     private AppellantReviewTimeExtensionRefusedPersonalisationSms appellantReviewTimeExtensionRefusedPersonalisationSms;
@@ -67,6 +56,9 @@ public class AppellantReviewTimeExtensionRefusedPersonalisationSmsTest {
     @BeforeEach
     public void setup() {
 
+        String timeExtensionReason = "the reason";
+        String timeExtensionNewDate = "2020-04-01";
+        String timeExtensionRequestDate = "2020-03-01";
         mockedTimeExtension = new IdValue<>("someId", new TimeExtension(
             timeExtensionRequestDate,
             timeExtensionReason,
@@ -92,13 +84,13 @@ public class AppellantReviewTimeExtensionRefusedPersonalisationSmsTest {
 
     @Test
     public void should_return_given_template_id() {
-        Assert.assertEquals(smsTemplateId, appellantReviewTimeExtensionRefusedPersonalisationSms.getTemplateId());
+        assertEquals(smsTemplateId, appellantReviewTimeExtensionRefusedPersonalisationSms.getTemplateId());
     }
 
     @Test
     public void should_return_given_reference_id() {
-        Assert.assertEquals(caseId + "_REVIEW_TIME_EXTENSION_REFUSED_APPELLANT_AIP_SMS",
-            appellantReviewTimeExtensionRefusedPersonalisationSms.getReferenceId(caseId));
+        Long caseId = 12345L;
+        assertEquals(caseId + "_REVIEW_TIME_EXTENSION_REFUSED_APPELLANT_AIP_SMS", appellantReviewTimeExtensionRefusedPersonalisationSms.getReferenceId(caseId));
     }
 
     @Test
@@ -107,14 +99,15 @@ public class AppellantReviewTimeExtensionRefusedPersonalisationSmsTest {
         when(recipientsFinder.findAll(null, NotificationType.SMS))
             .thenThrow(new NullPointerException("asylumCase must not be null"));
 
-        assertThatThrownBy(() -> appellantReviewTimeExtensionRefusedPersonalisationSms.getRecipientsList(null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> appellantReviewTimeExtensionRefusedPersonalisationSms.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_return_given_mobile_mobile_list_from_subscribers_in_asylum_case() {
 
+        String mockedAppellantMobilePhone = "07123456789";
         when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
             .thenReturn(Collections.singleton(mockedAppellantMobilePhone));
 
@@ -125,10 +118,10 @@ public class AppellantReviewTimeExtensionRefusedPersonalisationSmsTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
-            () -> appellantReviewTimeExtensionRefusedPersonalisationSms.getPersonalisation((Callback<AsylumCase>) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("callback must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> appellantReviewTimeExtensionRefusedPersonalisationSms.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     @Test
@@ -146,11 +139,12 @@ public class AppellantReviewTimeExtensionRefusedPersonalisationSmsTest {
 
         Map<String, String> personalisation =
             appellantReviewTimeExtensionRefusedPersonalisationSms.getPersonalisation(callback);
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
-        assertEquals(timeExtensionDecisionReason, personalisation.get("decision reason"));
-        assertEquals(awaitingReasonsForAppealNextActionText, personalisation.get("Next action text"));
-        assertEquals(expectedTimeExtensionNewDate, personalisation.get("due date"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
+        assertThat(personalisation)
+            .containsEntry("Appeal Ref Number", mockedAppealReferenceNumber)
+            .containsEntry("decision reason", timeExtensionDecisionReason)
+            .containsEntry("Next action text", awaitingReasonsForAppealNextActionText)
+            .containsEntry("due date", expectedTimeExtensionNewDate)
+            .containsEntry("Hyperlink to service", iaAipFrontendUrl);
 
     }
 
@@ -170,10 +164,11 @@ public class AppellantReviewTimeExtensionRefusedPersonalisationSmsTest {
 
         Map<String, String> personalisation =
             appellantReviewTimeExtensionRefusedPersonalisationSms.getPersonalisation(callback);
-        assertEquals("", personalisation.get("Appeal Ref Number"));
-        assertEquals(timeExtensionDecisionReason, personalisation.get("decision reason"));
-        assertEquals(awaitingReasonsForAppealNextActionText, personalisation.get("Next action text"));
-        assertEquals(expectedTimeExtensionNewDate, personalisation.get("due date"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
+        assertThat(personalisation)
+            .containsEntry("Appeal Ref Number", "")
+            .containsEntry("decision reason", timeExtensionDecisionReason)
+            .containsEntry("Next action text", awaitingReasonsForAppealNextActionText)
+            .containsEntry("due date", expectedTimeExtensionNewDate)
+            .containsEntry("Hyperlink to service", iaAipFrontendUrl);
     }
 }

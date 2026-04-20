@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -32,31 +33,22 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 
 @MockitoSettings(strictness = Strictness.LENIENT)
 @ExtendWith(MockitoExtension.class)
-@SuppressWarnings("unchecked")
 public class AppellantRespondentFtpaSubmittedPersonalisationEmailTest {
 
+    private final String emailTemplateId = "someEmailTemplateId";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String homeOfficeReferenceNumber = "someHOReferenceNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String ariaListingReference = "someAriaListingReference";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
     @Mock
     AsylumCase asylumCase;
     @Mock
     RecipientsFinder recipientsFinder;
     @Mock
     CustomerServicesProvider customerServicesProvider;
-
-    private Long caseId = 12345L;
-    private String emailTemplateId = "someEmailTemplateId";
-
-    private String mockedAppellantMobilePhone = "07123456789";
-    private String mockedAppellantEmail = "fake@faketest.com";
-
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String homeOfficeReferenceNumber = "someHOReferenceNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
-    private String ariaListingReference = "someAriaListingReference";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
-
-
     private AppellantRespondentFtpaSubmittedPersonalisationEmail appellantRespondentFtpaSubmittedPersonalisationEmail;
 
     @BeforeEach
@@ -69,8 +61,8 @@ public class AppellantRespondentFtpaSubmittedPersonalisationEmailTest {
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(ariaListingReference));
         when(customerServicesProvider.getCustomerServicesPersonalisation()).thenReturn(
             Map.of(
-            "customerServicesTelephone", customerServicesTelephone,
-            "customerServicesEmail", customerServicesEmail
+                "customerServicesTelephone", customerServicesTelephone,
+                "customerServicesEmail", customerServicesEmail
             ));
 
         appellantRespondentFtpaSubmittedPersonalisationEmail = new AppellantRespondentFtpaSubmittedPersonalisationEmail(
@@ -86,6 +78,7 @@ public class AppellantRespondentFtpaSubmittedPersonalisationEmailTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_RESPONDENT_FTPA_SUBMITTED_TO_APPELLANT_EMAIL",
             appellantRespondentFtpaSubmittedPersonalisationEmail.getReferenceId(caseId));
     }
@@ -93,6 +86,8 @@ public class AppellantRespondentFtpaSubmittedPersonalisationEmailTest {
     @Test
     public void should_return_given_email_address_list_from_subscribers_in_asylum_case() {
 
+        String mockedAppellantEmail = "fake@faketest.com";
+        String mockedAppellantMobilePhone = "07123456789";
         Subscriber subscriber = new Subscriber(
             SubscriberType.APPELLANT, //subscriberType
             mockedAppellantEmail, //email
@@ -114,9 +109,9 @@ public class AppellantRespondentFtpaSubmittedPersonalisationEmailTest {
 
         when(recipientsFinder.findAll(null, NotificationType.EMAIL)).thenCallRealMethod();
 
-        assertThatThrownBy(() -> appellantRespondentFtpaSubmittedPersonalisationEmail.getRecipientsList(null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> appellantRespondentFtpaSubmittedPersonalisationEmail.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
 
@@ -126,13 +121,14 @@ public class AppellantRespondentFtpaSubmittedPersonalisationEmailTest {
         Map<String, String> personalisation =
             appellantRespondentFtpaSubmittedPersonalisationEmail.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("\nListing reference: " + ariaListingReference, personalisation.get("listingReferenceLine"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(customerServicesTelephone, personalisation.get("customerServicesTelephone"));
-        assertEquals(customerServicesEmail, personalisation.get("customerServicesEmail"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
+            .containsEntry("listingReferenceLine", "\nListing reference: " + ariaListingReference)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("customerServicesTelephone", customerServicesTelephone)
+            .containsEntry("customerServicesEmail", customerServicesEmail);
     }
 
     @Test
@@ -147,10 +143,11 @@ public class AppellantRespondentFtpaSubmittedPersonalisationEmailTest {
         Map<String, String> personalisation =
             appellantRespondentFtpaSubmittedPersonalisationEmail.getPersonalisation(asylumCase);
 
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("", personalisation.get("listingReferenceLine"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("homeOfficeReferenceNumber", "")
+            .containsEntry("listingReferenceLine", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "");
     }
 }
