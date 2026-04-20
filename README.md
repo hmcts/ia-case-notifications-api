@@ -13,6 +13,7 @@ To run the project you will need to have the following installed:
 * Java 17
 * Docker (optional)
 
+
 For information about the software versions used to build this API and a complete list of it's dependencies see build.gradle
 
 The following environment variables are required when running the api without its dependencies mocked. This includes running the functional tests locally. The examples (the values below are not real):
