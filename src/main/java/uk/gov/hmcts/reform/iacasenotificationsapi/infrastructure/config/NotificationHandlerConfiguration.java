@@ -5690,10 +5690,10 @@ public class NotificationHandlerConfiguration {
                                     .getCaseDetails()
                                     .getCaseData();
 
-                    boolean canSendHONotification = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    boolean canSendHomeOfficeNotification = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == COMPLETE_CASE_REVIEW && AsylumCaseUtils.hasStf24WeeksStatus(asylumCase);
-                    log.info("case_Review canSendHONotification1 {}", canSendHONotification);
-                    return canSendHONotification;
+                    log.info("case_Review canSendHomeOfficeNotification1 {}", canSendHomeOfficeNotification);
+                    return canSendHomeOfficeNotification;
                 },
                 notificationGenerators,  getErrorHandler()
         );

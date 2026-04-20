@@ -49,7 +49,7 @@ class HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationTest {
     private static final String CUSTOMER_SERVICES_EMAIL = "cust.services@example.com";
     private static final String MOCK_PREFIX = "mox prefix";
     private static final Long CASE_ID = 12345L;
-    private static final String EXPECTED_REFERENCE_ID = CASE_ID + "_REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL";
+    private static final String EXPECTED_REFERENCE_ID = CASE_ID + "_STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL";
     @Mock
     private AsylumCase asylumCase;
 
