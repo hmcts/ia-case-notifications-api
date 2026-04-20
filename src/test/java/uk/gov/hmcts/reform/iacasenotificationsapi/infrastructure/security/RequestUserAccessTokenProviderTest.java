@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.security;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -19,11 +19,10 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @ExtendWith(MockitoExtension.class)
 public class RequestUserAccessTokenProviderTest {
 
+    private final RequestUserAccessTokenProvider requestUserAccessTokenProvider =
+        new RequestUserAccessTokenProvider();
     @Mock
     private HttpServletRequest httpServletRequest;
-
-    private RequestUserAccessTokenProvider requestUserAccessTokenProvider =
-        new RequestUserAccessTokenProvider();
 
     @BeforeEach
     public void setUp() {
@@ -50,9 +49,9 @@ public class RequestUserAccessTokenProviderTest {
 
         when(httpServletRequest.getHeader("Authorization")).thenReturn(null);
 
-        assertThatThrownBy(() -> requestUserAccessTokenProvider.getAccessToken())
-            .hasMessage("Request access token not present")
-            .isExactlyInstanceOf(IllegalStateException.class);
+        IllegalStateException exception = assertThrows(IllegalStateException.class,
+            requestUserAccessTokenProvider::getAccessToken);
+        assertEquals("Request access token not present", exception.getMessage());
     }
 
     @Test

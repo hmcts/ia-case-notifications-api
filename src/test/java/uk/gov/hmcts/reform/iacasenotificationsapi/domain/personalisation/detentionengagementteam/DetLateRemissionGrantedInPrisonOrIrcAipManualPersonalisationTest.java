@@ -24,7 +24,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -45,12 +45,11 @@ class DetLateRemissionGrantedInPrisonOrIrcAipManualPersonalisationTest {
     private static final String TEMPLATE_ID = "template123";
     private static final String NON_ADA_PREFIX = "[NON-ADA]";
     private static final long CASE_ID = 1234L;
+    final DocumentWithMetadata internalLateRemissionGrantedDoc = getDocumentWithMetadata(
+        "id", "internal_late_remission_granted", "some other desc",
+        DocumentTag.INTERNAL_DETAINED_LATE_REMISSION_GRANTED_TEMPLATE_LETTER);
+    final IdValue<DocumentWithMetadata> lateRemissionGrantedBundle = new IdValue<>("1", internalLateRemissionGrantedDoc);
     private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
-    DocumentWithMetadata internalLateRemissionGrantedDoc = getDocumentWithMetadata(
-            "id", "internal_late_remission_granted", "some other desc", 
-            DocumentTag.INTERNAL_DETAINED_LATE_REMISSION_GRANTED_TEMPLATE_LETTER);
-    IdValue<DocumentWithMetadata> lateRemissionGrantedBundle = new IdValue<>("1", internalLateRemissionGrantedDoc);
-
     @Mock
     private DetentionEmailService detentionEmailService;
 
@@ -65,18 +64,18 @@ class DetLateRemissionGrantedInPrisonOrIrcAipManualPersonalisationTest {
     @BeforeEach
     void setUp() {
         personalisation =
-                new DetLateRemissionGrantedInPrisonOrIrcAipManualPersonalisation(
-                        TEMPLATE_ID,
-                        NON_ADA_PREFIX,
-                        detentionEmailService,
-                        documentDownloadClient
-                );
+            new DetLateRemissionGrantedInPrisonOrIrcAipManualPersonalisation(
+                TEMPLATE_ID,
+                NON_ADA_PREFIX,
+                detentionEmailService,
+                documentDownloadClient
+            );
     }
 
     @Test
     void should_return_correct_reference_id() {
         String referenceId = personalisation.getReferenceId(CASE_ID);
-        assertThat(referenceId).isEqualTo("1234_INTERNAL_DETAINED_LATE_REMISSION_GRANTED_IN_PRISON_OR_IRC");
+        assertEquals("1234_INTERNAL_DETAINED_LATE_REMISSION_GRANTED_IN_PRISON_OR_IRC", referenceId);
     }
 
     @Test
@@ -88,7 +87,7 @@ class DetLateRemissionGrantedInPrisonOrIrcAipManualPersonalisationTest {
 
         Set<String> recipients = personalisation.getRecipientsList(asylumCase);
 
-        assertThat(recipients).isEqualTo(Collections.singleton(detentionEmailAddress));
+        assertEquals(Collections.singleton(detentionEmailAddress), recipients);
     }
 
     @Test
@@ -100,7 +99,7 @@ class DetLateRemissionGrantedInPrisonOrIrcAipManualPersonalisationTest {
 
         Set<String> recipients = personalisation.getRecipientsList(asylumCase);
 
-        assertThat(recipients).isEqualTo(Collections.singleton(detentionEmailAddress));
+        assertEquals(Collections.singleton(detentionEmailAddress), recipients);
     }
 
     @Test
@@ -149,12 +148,13 @@ class DetLateRemissionGrantedInPrisonOrIrcAipManualPersonalisationTest {
 
         Map<String, Object> personalisation = this.personalisation.getPersonalisationForLink(asylumCase);
 
-        assertEquals("someReferenceNumber", personalisation.get("appealReferenceNumber"));
-        assertEquals("someHomeOfficeReferenceNumber", personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("someAppellantGivenNames", personalisation.get("appellantGivenNames"));
-        assertEquals("someAppellantFamilyName", personalisation.get("appellantFamilyName"));
-        assertEquals(NON_ADA_PREFIX, personalisation.get("subjectPrefix"));
-        assertEquals(jsonObject, personalisation.get("documentLink"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "someReferenceNumber")
+            .containsEntry("homeOfficeReferenceNumber", "someHomeOfficeReferenceNumber")
+            .containsEntry("appellantGivenNames", "someAppellantGivenNames")
+            .containsEntry("appellantFamilyName", "someAppellantFamilyName")
+            .containsEntry("subjectPrefix", NON_ADA_PREFIX)
+            .containsEntry("documentLink", jsonObject);
     }
 
     @Test
@@ -169,50 +169,51 @@ class DetLateRemissionGrantedInPrisonOrIrcAipManualPersonalisationTest {
 
         Map<String, Object> personalisation = this.personalisation.getPersonalisationForLink(asylumCase);
 
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals(NON_ADA_PREFIX, personalisation.get("subjectPrefix"));
-        assertEquals(jsonObject, personalisation.get("documentLink"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("homeOfficeReferenceNumber", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "")
+            .containsEntry("subjectPrefix", NON_ADA_PREFIX)
+            .containsEntry("documentLink", jsonObject);
     }
 
     @Test
     void should_throw_exception_when_asylum_case_is_null() {
         AsylumCase nullAsylumCase = null;
-        assertThatThrownBy(() -> personalisation.getPersonalisationForLink(nullAsylumCase))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> personalisation.getPersonalisationForLink(nullAsylumCase));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_when_late_remission_granted_document_is_not_available() {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> personalisation.getPersonalisationForLink(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("internalDetainedLateRemissionGrantedTemplateLetter document not available");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> personalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("internalDetainedLateRemissionGrantedTemplateLetter document not available", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_when_document_download_client_throws_io_exception() throws IOException, NotificationClientException {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.of(Collections.singletonList(lateRemissionGrantedBundle)));
         when(documentDownloadClient.getJsonObjectFromDocument(any(DocumentWithMetadata.class)))
-                .thenThrow(new IOException("Download failed"));
+            .thenThrow(new IOException("Download failed"));
 
-        assertThatThrownBy(() -> personalisation.getPersonalisationForLink(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("Failed to get Internal 'INTERNAL_DETAINED_LATE_REMISSION_GRANTED_TEMPLATE_LETTER' Letter in compatible format");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> personalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("Failed to get Internal 'INTERNAL_DETAINED_LATE_REMISSION_GRANTED_TEMPLATE_LETTER' Letter in compatible format", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_when_document_download_client_throws_notification_client_exception() throws IOException, NotificationClientException {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.of(Collections.singletonList(lateRemissionGrantedBundle)));
         when(documentDownloadClient.getJsonObjectFromDocument(any(DocumentWithMetadata.class)))
-                .thenThrow(new NotificationClientException("Notification client error"));
+            .thenThrow(new NotificationClientException("Notification client error"));
 
-        assertThatThrownBy(() -> personalisation.getPersonalisationForLink(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("Failed to get Internal 'INTERNAL_DETAINED_LATE_REMISSION_GRANTED_TEMPLATE_LETTER' Letter in compatible format");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> personalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("Failed to get Internal 'INTERNAL_DETAINED_LATE_REMISSION_GRANTED_TEMPLATE_LETTER' Letter in compatible format", exception.getMessage());
     }
 }

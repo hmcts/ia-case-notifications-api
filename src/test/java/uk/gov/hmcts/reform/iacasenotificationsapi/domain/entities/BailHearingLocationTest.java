@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
@@ -9,29 +8,29 @@ class BailHearingLocationTest {
 
     @Test
     void has_correct_bail_hearing_location() {
-        assertThat(BailHearingLocation.from("manchester").get()).isEqualByComparingTo(BailHearingLocation.MANCHESTER);
-        assertThat(BailHearingLocation.from("birmingham").get()).isEqualByComparingTo(BailHearingLocation.BIRMINGHAM);
-        assertThat(BailHearingLocation.from("bradford").get()).isEqualByComparingTo(BailHearingLocation.BRADFORD);
-        assertThat(BailHearingLocation.from("coventry").get()).isEqualByComparingTo(BailHearingLocation.COVENTRY);
-        assertThat(BailHearingLocation.from("glasgowTribunalsCentre").get()).isEqualByComparingTo(BailHearingLocation.GLASGOW_TRIBUNAL_CENTRE);
-        assertThat(BailHearingLocation.from("harmondsworth").get()).isEqualByComparingTo(BailHearingLocation.HARMONDSWORTH);
-        assertThat(BailHearingLocation.from("hattonCross").get()).isEqualByComparingTo(BailHearingLocation.HATTON_CROSS);
-        assertThat(BailHearingLocation.from("hendon").get()).isEqualByComparingTo(BailHearingLocation.HENDON);
-        assertThat(BailHearingLocation.from("newcastle").get()).isEqualByComparingTo(BailHearingLocation.NEWCASTLE);
-        assertThat(BailHearingLocation.from("newport").get()).isEqualByComparingTo(BailHearingLocation.NEWPORT);
-        assertThat(BailHearingLocation.from("taylorHouse").get()).isEqualByComparingTo(BailHearingLocation.TAYLOR_HOUSE);
-        assertThat(BailHearingLocation.from("yarlsWood").get()).isEqualByComparingTo(BailHearingLocation.YARLS_WOOD);
-        assertThat(BailHearingLocation.from("bradfordKeighley").get()).isEqualByComparingTo(BailHearingLocation.BRADFORD_KEIGHLEY);
-        assertThat(BailHearingLocation.from("mccMinshull").get()).isEqualByComparingTo(BailHearingLocation.MCC_MINSHULL);
-        assertThat(BailHearingLocation.from("mccCrownSquare").get()).isEqualByComparingTo(BailHearingLocation.MCC_CROWN_SQUARE);
-        assertThat(BailHearingLocation.from("nottingham").get()).isEqualByComparingTo(BailHearingLocation.NOTTINGHAM);
-        assertThat(BailHearingLocation.from("manchesterMags").get()).isEqualByComparingTo(BailHearingLocation.MANCHESTER_MAGS);
-        assertThat(BailHearingLocation.from("nthTyneMags").get()).isEqualByComparingTo(BailHearingLocation.NTH_TYNE_MAGS);
-        assertThat(BailHearingLocation.from("leedsMags").get()).isEqualByComparingTo(BailHearingLocation.LEEDS_MAGS);
-        assertThat(BailHearingLocation.from("belfast").get()).isEqualByComparingTo(BailHearingLocation.BELFAST);
-        assertThat(BailHearingLocation.from("alloaSherrif").get()).isEqualByComparingTo(BailHearingLocation.ALLOA_SHERRIF);
-        assertThat(BailHearingLocation.from("remoteHearing").get()).isEqualByComparingTo(BailHearingLocation.REMOTE_HEARING);
-        assertThat(BailHearingLocation.from("decisionWithoutHearing").get()).isEqualByComparingTo(BailHearingLocation.DECISION_WITHOUT_HEARING);
+        assertEquals(BailHearingLocation.MANCHESTER, BailHearingLocation.from("manchester").get());
+        assertEquals(BailHearingLocation.BIRMINGHAM, BailHearingLocation.from("birmingham").get());
+        assertEquals(BailHearingLocation.BRADFORD, BailHearingLocation.from("bradford").get());
+        assertEquals(BailHearingLocation.COVENTRY, BailHearingLocation.from("coventry").get());
+        assertEquals(BailHearingLocation.GLASGOW_TRIBUNAL_CENTRE, BailHearingLocation.from("glasgowTribunalsCentre").get());
+        assertEquals(BailHearingLocation.HARMONDSWORTH, BailHearingLocation.from("harmondsworth").get());
+        assertEquals(BailHearingLocation.HATTON_CROSS, BailHearingLocation.from("hattonCross").get());
+        assertEquals(BailHearingLocation.HENDON, BailHearingLocation.from("hendon").get());
+        assertEquals(BailHearingLocation.NEWCASTLE, BailHearingLocation.from("newcastle").get());
+        assertEquals(BailHearingLocation.NEWPORT, BailHearingLocation.from("newport").get());
+        assertEquals(BailHearingLocation.TAYLOR_HOUSE, BailHearingLocation.from("taylorHouse").get());
+        assertEquals(BailHearingLocation.YARLS_WOOD, BailHearingLocation.from("yarlsWood").get());
+        assertEquals(BailHearingLocation.BRADFORD_KEIGHLEY, BailHearingLocation.from("bradfordKeighley").get());
+        assertEquals(BailHearingLocation.MCC_MINSHULL, BailHearingLocation.from("mccMinshull").get());
+        assertEquals(BailHearingLocation.MCC_CROWN_SQUARE, BailHearingLocation.from("mccCrownSquare").get());
+        assertEquals(BailHearingLocation.NOTTINGHAM, BailHearingLocation.from("nottingham").get());
+        assertEquals(BailHearingLocation.MANCHESTER_MAGS, BailHearingLocation.from("manchesterMags").get());
+        assertEquals(BailHearingLocation.NTH_TYNE_MAGS, BailHearingLocation.from("nthTyneMags").get());
+        assertEquals(BailHearingLocation.LEEDS_MAGS, BailHearingLocation.from("leedsMags").get());
+        assertEquals(BailHearingLocation.BELFAST, BailHearingLocation.from("belfast").get());
+        assertEquals(BailHearingLocation.ALLOA_SHERRIF, BailHearingLocation.from("alloaSherrif").get());
+        assertEquals(BailHearingLocation.REMOTE_HEARING, BailHearingLocation.from("remoteHearing").get());
+        assertEquals(BailHearingLocation.DECISION_WITHOUT_HEARING, BailHearingLocation.from("decisionWithoutHearing").get());
     }
 
     @Test
@@ -63,7 +62,7 @@ class BailHearingLocationTest {
 
     @Test
     void returns_optional_for_unknown_bail_hearing_location() {
-        assertThat(BailHearingLocation.from("unknown")).isEmpty();
+        assertTrue(BailHearingLocation.from("unknown").isEmpty());
     }
 
     @Test

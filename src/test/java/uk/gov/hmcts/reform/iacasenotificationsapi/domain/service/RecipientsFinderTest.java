@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.service;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -28,12 +28,10 @@ public class RecipientsFinderTest {
     @Mock
     private AsylumCase asylumCase;
 
-    private String mockedAppellantEmailAddress = "appelant@example.net";
-    private String mockedAppellantMobilePhone = "07123456789";
-
     @Test
     public void should_find_all_email_recipients() {
 
+        String mockedAppellantEmailAddress = "appelant@example.net";
         Subscriber subscriber = new Subscriber(
             SubscriberType.APPELLANT, //subscriberType
             mockedAppellantEmailAddress, //email
@@ -65,6 +63,7 @@ public class RecipientsFinderTest {
     @Test
     public void should_find_all_mobile_phone_recipients() {
 
+        String mockedAppellantMobilePhone = "07123456789";
         Subscriber subscriber = new Subscriber(
             SubscriberType.APPELLANT, //subscriberType
             "", //email
@@ -96,21 +95,21 @@ public class RecipientsFinderTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> recipientsFinder.findAll(null, NotificationType.EMAIL))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> recipientsFinder.findAll(null, NotificationType.EMAIL));
+        assertEquals("asylumCase must not be null", exception.getMessage());
 
-        assertThatThrownBy(() -> recipientsFinder.findAll(null, SMS))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception2 =
+            assertThrows(NullPointerException.class, () -> recipientsFinder.findAll(null, SMS));
+        assertEquals("asylumCase must not be null", exception2.getMessage());
 
-        assertThatThrownBy(() -> recipientsFinder.findReppedAppellant(null, NotificationType.EMAIL))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception3 =
+            assertThrows(NullPointerException.class, () -> recipientsFinder.findReppedAppellant(null, NotificationType.EMAIL));
+        assertEquals("asylumCase must not be null", exception3.getMessage());
 
-        assertThatThrownBy(() -> recipientsFinder.findReppedAppellant(null, SMS))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception4 =
+            assertThrows(NullPointerException.class, () -> recipientsFinder.findReppedAppellant(null, SMS));
+        assertEquals("asylumCase must not be null", exception4.getMessage());
     }
 
     @ParameterizedTest
@@ -165,8 +164,6 @@ public class RecipientsFinderTest {
         assertEquals(1, resultSms.size());
         assertTrue(resultSms.contains("1234"));
     }
-
-
 
 
 }

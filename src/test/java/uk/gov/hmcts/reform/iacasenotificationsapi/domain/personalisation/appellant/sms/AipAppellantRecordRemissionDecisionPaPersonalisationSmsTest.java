@@ -22,7 +22,8 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -32,19 +33,16 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AipAppellantRecordRemissionDecisionPaPersonalisationSmsTest {
 
-    private Long caseId = 12345L;
-    private String aipAppellantRemissionApprovedTemplateId = "aipAppellantRemissionApprovedTemplateId";
-    private String aipAppellantRemissionPartiallyApprovedTemplateId = "aipAppellantRemissionPartiallyApprovedTemplateId";
-    private String aipAppellantRemissionRejectedTemplateId = "aipAppellantRemissionRejectedTemplateId";
-    private String iaAipFrontendUrl = "http://localhost";
-    private String appellantMobile = "07781122334";
-    private String appealReferenceNumber = "appealReferenceNumber";
-    private String onlineCaseReferenceNumber = "1111222233334444";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "customer@example.com";
-    private int daysAfterRemissionDecision = 14;
-    private String amountLeftToPay = "4000";
-    private String amountLeftToPayInGbp = "40.00";
+    private final Long caseId = 12345L;
+    private final String aipAppellantRemissionApprovedTemplateId = "aipAppellantRemissionApprovedTemplateId";
+    private final String aipAppellantRemissionPartiallyApprovedTemplateId = "aipAppellantRemissionPartiallyApprovedTemplateId";
+    private final String aipAppellantRemissionRejectedTemplateId = "aipAppellantRemissionRejectedTemplateId";
+    private final String iaAipFrontendUrl = "http://localhost";
+    private final String appealReferenceNumber = "appealReferenceNumber";
+    private final String onlineCaseReferenceNumber = "1111222233334444";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "customer@example.com";
+    private final int daysAfterRemissionDecision = 14;
 
     @Mock
     AsylumCase asylumCase;
@@ -62,6 +60,7 @@ class AipAppellantRecordRemissionDecisionPaPersonalisationSmsTest {
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class)).thenReturn(Optional.of(onlineCaseReferenceNumber));
+        String amountLeftToPay = "4000";
         when(asylumCase.read(AMOUNT_LEFT_TO_PAY, String.class)).thenReturn(Optional.of(amountLeftToPay));
 
         aipAppellantRecordRemissionDecisionPersonalisationSms = new AipAppellantRecordRemissionDecisionPaPersonalisationSms(
@@ -102,6 +101,7 @@ class AipAppellantRecordRemissionDecisionPaPersonalisationSmsTest {
 
     @Test
     void should_return_appellant_email_address_from_asylum_case() {
+        String appellantMobile = "07781122334";
         when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
             .thenReturn(Collections.singleton(appellantMobile));
         when(featureToggler.getValue("dlrm-telephony-feature-flag", false)).thenReturn(true);
@@ -111,10 +111,10 @@ class AipAppellantRecordRemissionDecisionPaPersonalisationSmsTest {
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
-        assertThatThrownBy(
-            () -> aipAppellantRecordRemissionDecisionPersonalisationSms.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> aipAppellantRecordRemissionDecisionPersonalisationSms.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -130,10 +130,12 @@ class AipAppellantRecordRemissionDecisionPaPersonalisationSmsTest {
         Map<String, String> personalisation =
             aipAppellantRecordRemissionDecisionPersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(onlineCaseReferenceNumber, personalisation.get("onlineCaseReferenceNumber"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("linkToService"));
-        assertEquals(systemDateProvider.dueDate(daysAfterRemissionDecision), personalisation.get("payByDeadline"));
-        assertEquals(amountLeftToPayInGbp, personalisation.get("remainingFee"));
+        String amountLeftToPayInGbp = "40.00";
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("onlineCaseReferenceNumber", onlineCaseReferenceNumber)
+            .containsEntry("linkToService", iaAipFrontendUrl)
+            .containsEntry("payByDeadline", systemDateProvider.dueDate(daysAfterRemissionDecision))
+            .containsEntry("remainingFee", amountLeftToPayInGbp);
     }
 }

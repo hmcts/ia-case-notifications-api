@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -30,19 +31,15 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvi
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class LegalRepRefundConfirmationPersonalisationTest {
-    private Long caseId = 12345L;
-    private String refundConfirmationTemplateId = "refundConfirmationTemplateId";
-    private String iaExUiFrontendUrl = "http://localhost";
-    private String appealReferenceNumber = "appealReferenceNumber";
-    private String legalRepReferenceNumber = "legalRepReferenceNumber";
-    private String appellantGivenNames = "GivenNames";
-    private String appellantFamilyName = "FamilyName";
-    private int daysAfterRemissionDecision = 14;
-    private String newFeeAmount = "8000";
-    private String withHearing = "decisionWithHearing";
-    private String withoutHearing = "decisionWithoutHearing";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
+    private final Long caseId = 12345L;
+    private final String refundConfirmationTemplateId = "refundConfirmationTemplateId";
+    private final String appealReferenceNumber = "appealReferenceNumber";
+    private final String legalRepReferenceNumber = "legalRepReferenceNumber";
+    private final String appellantGivenNames = "GivenNames";
+    private final String appellantFamilyName = "FamilyName";
+    private final int daysAfterRemissionDecision = 14;
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
 
     @Mock
     AsylumCase asylumCase;
@@ -60,12 +57,16 @@ class LegalRepRefundConfirmationPersonalisationTest {
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
+        String newFeeAmount = "8000";
         when(asylumCase.read(NEW_FEE_AMOUNT, String.class)).thenReturn(Optional.of(newFeeAmount));
+        String withHearing = "decisionWithHearing";
         when(asylumCase.read(PREVIOUS_DECISION_HEARING_FEE_OPTION, String.class)).thenReturn(Optional.of(withHearing));
+        String withoutHearing = "decisionWithoutHearing";
         when(asylumCase.read(DECISION_HEARING_FEE_OPTION, String.class)).thenReturn(Optional.of(withoutHearing));
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
+        String iaExUiFrontendUrl = "http://localhost";
         legalRepRefundConfirmationPersonalisation = new LegalRepRefundConfirmationPersonalisation(
             refundConfirmationTemplateId,
             iaExUiFrontendUrl,
@@ -88,10 +89,10 @@ class LegalRepRefundConfirmationPersonalisationTest {
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
-        assertThatThrownBy(
-            () -> legalRepRefundConfirmationPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> legalRepRefundConfirmationPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -104,14 +105,15 @@ class LegalRepRefundConfirmationPersonalisationTest {
         Map<String, String> personalisation =
             legalRepRefundConfirmationPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(legalRepReferenceNumber, personalisation.get("legalRepReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals("Decision with hearing", personalisation.get("previousDecisionHearingFeeOption"));
-        assertEquals("Decision without hearing", personalisation.get("updatedDecisionHearingFeeOption"));
-        assertEquals("80.00", personalisation.get("newFee"));
-        assertEquals(systemDateProvider.dueDate(daysAfterRemissionDecision), personalisation.get("dueDate"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("legalRepReferenceNumber", legalRepReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("previousDecisionHearingFeeOption", "Decision with hearing")
+            .containsEntry("updatedDecisionHearingFeeOption", "Decision without hearing")
+            .containsEntry("newFee", "80.00")
+            .containsEntry("dueDate", systemDateProvider.dueDate(daysAfterRemissionDecision));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
