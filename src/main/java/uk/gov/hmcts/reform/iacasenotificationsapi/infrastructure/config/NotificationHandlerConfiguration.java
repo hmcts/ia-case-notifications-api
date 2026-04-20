@@ -5650,9 +5650,11 @@ public class NotificationHandlerConfiguration {
                                     .getCaseData();
                     Set<String> appellantEmails = AsylumCaseUtils.getApplicantEmail(asylumCase);
                     String emails = String.join(",", appellantEmails);
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    boolean canSendAppellant = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == COMPLETE_CASE_REVIEW
                             && AsylumCaseUtils.hasStf24WeeksStatus(asylumCase) && !emails.isEmpty();
+                    log.info("case_Review  canSendAppellant {}", canSendAppellant);
+                    return canSendAppellant;
                 },
                 notificationGenerators,  getErrorHandler()
         );
@@ -5667,10 +5669,12 @@ public class NotificationHandlerConfiguration {
                             callback
                                     .getCaseDetails()
                                     .getCaseData();
-                    Set<String> appellantEmails = AsylumCaseUtils.getApplicantEmail(asylumCase);
-                    String emails = String.join(",", appellantEmails);
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    Set<String> legalRepEmails = Collections.singleton(getLegalRepEmailInternalOrLegalRepJourneyNonMandatory(asylumCase));
+                    String emails = String.join(",", legalRepEmails);
+                    boolean canSendLegalRep = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == COMPLETE_CASE_REVIEW && AsylumCaseUtils.hasStf24WeeksStatus(asylumCase) && !emails.isEmpty();
+                    log.info("case_Review canSendLegalRep {}", canSendLegalRep);
+                    return canSendLegalRep;
                 },
                 notificationGenerators,  getErrorHandler()
         );
@@ -5678,15 +5682,18 @@ public class NotificationHandlerConfiguration {
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> stf24WeeksCompleteCaseReviewHomeOfficeNotificationHandler(
-            @Qualifier("stf24WeeksCompleteCaseReviewHomeofficeNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+            @Qualifier("stf24WeeksCompleteCaseReviewHomeOfficeNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
         return new NotificationHandler(
                 (callbackStage, callback) -> {
                     AsylumCase asylumCase =
                             callback
                                     .getCaseDetails()
                                     .getCaseData();
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+
+                    boolean canSendHONotification = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == COMPLETE_CASE_REVIEW && AsylumCaseUtils.hasStf24WeeksStatus(asylumCase);
+                    log.info("case_Review canSendHONotification1 {}", canSendHONotification);
+                    return canSendHONotification;
                 },
                 notificationGenerators,  getErrorHandler()
         );
@@ -5721,8 +5728,10 @@ public class NotificationHandlerConfiguration {
                                     .getCaseData();
                     Set<String> appellantEmails = AsylumCaseUtils.getApplicantEmail(asylumCase);
                     String emails = String.join(",", appellantEmails);
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    boolean canSendRemoveAppellant = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == REMOVE_STATUTORY_TIMEFRAME_24_WEEKS && !emails.isEmpty();
+                    log.info("Remove STF canSendRemoveAppellant {}", canSendRemoveAppellant);
+                    return canSendRemoveAppellant;
                 },
                 notificationGenerators,  getErrorHandler()
         );

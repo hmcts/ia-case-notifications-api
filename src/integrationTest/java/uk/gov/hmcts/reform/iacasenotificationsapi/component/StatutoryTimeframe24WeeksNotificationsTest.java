@@ -29,6 +29,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
@@ -59,14 +60,15 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
 
     public static final String APPELLANT_MAIL = "appellant@domain.com";
     public static final String LR_EMAIL = "legalrep@domain.com";
-    public static final String STATUTORY_TIMEFRAME_24_WEEKS_CASE_REVIEW_APPELLANT_EMAIL = "STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL";
+    public static final String STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL = "STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL";
+    public static final String STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL = "STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL";
+    public static final String STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL = "STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL";
     private static final String someNotificationId = UUID.randomUUID().toString();
-    private static final String UUID_PATTERN =
-            "[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}";
-    private static final String REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_HOME_OFFICE_EMAIL = "REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL";
-    private static final String REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_APPELLANT_EMAIL = "REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL";
-    private static final String REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_APPELLANT_LETTER = "REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER";
-    private static final String REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_LEGAL_REP_EMAIL = "REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL";
+    private static final String REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL = "REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL";
+    private static final String REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL = "REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL";
+    private static final String REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER = "REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER";
+    private static final String REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL = "REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL";
+
     @MockBean
     private GovNotifyNotificationSender notificationSender;
 
@@ -110,9 +112,9 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
         assertThat(notifications.size()).isEqualTo(3);
         List<String> idList = notifications.stream().map(IdValue::getId).toList();
         String idsString = String.join(",", idList);
-        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_APPELLANT_EMAIL);
-        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_LEGAL_REP_EMAIL);
-        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_HOME_OFFICE_EMAIL);
+        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL);
+        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL);
+        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL);
     }
 
     @Test
@@ -130,9 +132,9 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
         assertThat(notifications.size()).isEqualTo(3);
         List<String> idList = notifications.stream().map(IdValue::getId).toList();
         String idsString = String.join(",", idList);
-        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_LEGAL_REP_EMAIL);
-        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_HOME_OFFICE_EMAIL);
-        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_APPELLANT_LETTER);
+        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL);
+        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL);
+        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER);
     }
 
     @Test
@@ -150,9 +152,9 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
         assertThat(notifications.size()).isEqualTo(3);
         List<String> idList = notifications.stream().map(IdValue::getId).toList();
         String idsString = String.join(",", idList);
-        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_LEGAL_REP_EMAIL);
-        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_HOME_OFFICE_EMAIL);
-        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_APPELLANT_LETTER);
+        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL);
+        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL);
+        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER);
     }
 
     @Test
@@ -170,8 +172,8 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
         assertThat(notifications.size()).isEqualTo(2);
         List<String> idList = notifications.stream().map(IdValue::getId).toList();
         String idsString = String.join(",", idList);
-        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_APPELLANT_EMAIL);
-        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_HOME_OFFICE_EMAIL);
+        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL);
+        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL);
     }
 
     @Test
@@ -188,14 +190,13 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
         assertThat(notifications.size()).isEqualTo(2);
         List<String> idList = notifications.stream().map(IdValue::getId).toList();
         String idsString = String.join(",", idList);
-        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_APPELLANT_EMAIL);
-        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_HOME_OFFICE_EMAIL);
+        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL);
+        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL);
     }
 
     @Test
     @WithMockUser(authorities = {"caseworker-ia-system"})
     void should_send_24weeks_remove_letter_to_appellant_and_email_to_ho_office() {
-        ;
         PreSubmitCallbackResponseForTest response = mockResponse(mockCaseData(null, null, null, YesOrNo.YES), REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
         Optional<List<IdValue<String>>> notificationsSent =
                 response
@@ -208,8 +209,8 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
         assertThat(notifications.size()).isEqualTo(2);
         List<String> idList = notifications.stream().map(IdValue::getId).toList();
         String idsString = String.join(",", idList);
-        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_HOME_OFFICE_EMAIL);
-        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_APPELLANT_LETTER);
+        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL);
+        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER);
     }
 
     @Test
@@ -227,12 +228,12 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
         assertThat(notifications.size()).isEqualTo(1);
         List<String> idList = notifications.stream().map(IdValue::getId).toList();
         String idsString = String.join(",", idList);
-        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_HOME_OFFICE_EMAIL);
+        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL);
     }
 
     @Test
     @WithMockUser(authorities = {"caseworker-ia-system"})
-    void should_send_24weeks_case_review_email_to_appellant() {
+    void should_send_24weeks_case_review_email_to_all_three() {
         AsylumCaseForTest caseData = mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES);
         caseData.with(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.YES);
         PreSubmitCallbackResponseForTest response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
@@ -243,10 +244,26 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
 
         assertTrue(notificationsSent.isPresent());
         List<IdValue<String>> notifications = notificationsSent.get();
-        assertThat(notifications.size()).isEqualTo(2);
+        assertThat(notifications.size()).isEqualTo(3);
         List<String> idList = notifications.stream().map(IdValue::getId).toList();
         String idsString = String.join(",", idList);
-        assertThat(idsString).contains(STATUTORY_TIMEFRAME_24_WEEKS_CASE_REVIEW_APPELLANT_EMAIL);
+        assertThat(idsString).contains(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL);
+        assertThat(idsString).contains(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL);
+        assertThat(idsString).contains(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL);
+    }
+
+    @Test
+    @WithMockUser(authorities = {"caseworker-ia-system"})
+    void should_not_send_24weeks_case_review_email_to_all_three_if_no_STF_present() {
+        AsylumCaseForTest caseData = mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES);
+        caseData.with(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.NO);
+        PreSubmitCallbackResponseForTest response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
+        Optional<List<IdValue<String>>> notificationsSent =
+                response
+                        .getData()
+                        .read(NOTIFICATIONS_SENT);
+
+        assertFalse(notificationsSent.isPresent());
     }
 
     private PreSubmitCallbackResponseForTest mockResponse(AsylumCaseForTest caseData, Event event) {
