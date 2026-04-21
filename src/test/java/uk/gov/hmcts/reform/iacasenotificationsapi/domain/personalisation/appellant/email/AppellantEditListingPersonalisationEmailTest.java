@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
@@ -42,6 +43,16 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 public class AppellantEditListingPersonalisationEmailTest {
 
     private static final String HEARING_CENTRE_ADDRESS = "hearingCentreAddress";
+    private final String templateId = "someTemplateId";
+    private final String listAssistHearingTemplateId = "listAssistHearingTemplateId";
+    private final String lrAppellantTemplateId = "lrAppellantTemplateId";
+    private final String lrAppellantListAssistHearingTemplateId = "lrAppellantListAssistHearingTemplateId";
+    private final String iaExUiFrontendUrl = "http://localhost";
+    private final String mockedAppellantEmailAddress = "legalRep@example.com";
+    private final String hearingCentreNameBefore = HearingCentre.MANCHESTER.toString();
+    private final String hearingCentreName = HearingCentre.TAYLOR_HOUSE.toString();
+    private final String iaAipFrontendUrl = "http://localhost";
+    private final HearingCentre tribunalCentre = HearingCentre.HATTON_CROSS;
     @Mock
     Callback<AsylumCase> callback;
     @Mock
@@ -54,38 +65,8 @@ public class AppellantEditListingPersonalisationEmailTest {
     CustomerServicesProvider customerServicesProvider;
     @Mock
     RecipientsFinder recipientsFinder;
-
     @Mock
     HearingDetailsFinder hearingDetailsFinder;
-
-    private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
-    private String listAssistHearingTemplateId = "listAssistHearingTemplateId";
-    private String lrAppellantTemplateId = "lrAppellantTemplateId";
-    private String lrAppellantListAssistHearingTemplateId = "lrAppellantListAssistHearingTemplateId";
-    private String iaExUiFrontendUrl = "http://localhost";
-    private String mockedAppellantEmailAddress = "legalRep@example.com";
-    private String hearingCentreAddress = "some hearing centre address";
-
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String ariaListingReference = "someAriaListingReference";
-    private String appellantGivenNames = "appellantGivenNames";
-    private String appellantFamilyName = "appellantFamilyName";
-    private String homeOfficeRefNumber = "homeOfficeRefNumber";
-
-    private String hearingCentreNameBefore = HearingCentre.MANCHESTER.toString();
-    private String hearingCentreName = HearingCentre.TAYLOR_HOUSE.toString();
-    private String remoteVideoCallTribunalResponse = "some tribunal response";
-    private String requirementsVulnerabilities = "someRequirementsVulnerabilities";
-    private String requirementsMultimedia = "someRequirementsMultimedia";
-    private String requirementsInCamera = "someRequirementsInCamera";
-    private String requirementsSingleSexCourt = "someRequirementsSingleSexCourt";
-    private String requirementsOther = "someRequirementsOther";
-
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
-    private String iaAipFrontendUrl = "http://localhost";
-    private HearingCentre tribunalCentre = HearingCentre.HATTON_CROSS;
     private AppellantEditListingPersonalisationEmail appellantEditListingPersonalisationEmail;
 
     @BeforeEach
@@ -124,6 +105,7 @@ public class AppellantEditListingPersonalisationEmailTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_CASE_RE_LISTED_APPELLANT_EMAIL",
             appellantEditListingPersonalisationEmail.getReferenceId(caseId));
     }
@@ -152,10 +134,10 @@ public class AppellantEditListingPersonalisationEmailTest {
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
-        assertThatThrownBy(
-            () -> appellantEditListingPersonalisationEmail.getPersonalisation((Callback<AsylumCase>) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("callback must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> appellantEditListingPersonalisationEmail.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     @Test
@@ -163,10 +145,10 @@ public class AppellantEditListingPersonalisationEmailTest {
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
         when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.empty());
-        assertThatThrownBy(
-            () -> appellantEditListingPersonalisationEmail.getPersonalisation((Callback<AsylumCase>) callback))
-            .isExactlyInstanceOf(IllegalArgumentException.class)
-            .hasMessage("No hearing centre present");
+        IllegalArgumentException exception =
+            assertThrows(IllegalArgumentException.class,
+                () -> appellantEditListingPersonalisationEmail.getPersonalisation(callback));
+        assertEquals("No hearing centre present", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -179,9 +161,13 @@ public class AppellantEditListingPersonalisationEmailTest {
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisationMapWithGivenValues());
         Map<String, String> personalisation =
             appellantEditListingPersonalisationEmail.getPersonalisation(callback);
-
-        assertThat(personalisation).isNotEmpty();
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertFalse(personalisation.isEmpty());
+        assertThat(personalisation)
+            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation())
+            .containsAllEntriesOf(getPersonalisationMapWithGivenValues())
+            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal" : "Immigration and Asylum appeal")
+            .containsEntry("tribunalCentre", tribunalCentre.getValue())
+            .containsEntry("hyperlink to service", iaAipFrontendUrl);
     }
 
     @ParameterizedTest
@@ -196,11 +182,30 @@ public class AppellantEditListingPersonalisationEmailTest {
         Map<String, String> personalisation =
             appellantEditListingPersonalisationEmail.getPersonalisation(callback);
 
-        assertThat(personalisation).isNotEmpty();
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertFalse(personalisation.isEmpty());
+        assertThat(personalisation)
+            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation())
+            .containsAllEntriesOf(getPersonalisationMapWithBlankValues())
+            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal" : "Immigration and Asylum appeal")
+            .containsEntry("tribunalCentre", tribunalCentre.getValue())
+            .containsEntry("hyperlink to service", iaAipFrontendUrl);
     }
 
     private Map<String, String> getPersonalisationMapWithGivenValues() {
+        String customerServicesEmail = "cust.services@example.com";
+        String customerServicesTelephone = "555 555 555";
+        String requirementsOther = "someRequirementsOther";
+        String requirementsSingleSexCourt = "someRequirementsSingleSexCourt";
+        String requirementsInCamera = "someRequirementsInCamera";
+        String requirementsMultimedia = "someRequirementsMultimedia";
+        String requirementsVulnerabilities = "someRequirementsVulnerabilities";
+        String remoteVideoCallTribunalResponse = "some tribunal response";
+        String homeOfficeRefNumber = "homeOfficeRefNumber";
+        String appellantFamilyName = "appellantFamilyName";
+        String appellantGivenNames = "appellantGivenNames";
+        String ariaListingReference = "someAriaListingReference";
+        String appealReferenceNumber = "someReferenceNumber";
+        String hearingCentreAddress = "some hearing centre address";
         return ImmutableMap
             .<String, String>builder()
             .put("appealReferenceNumber", appealReferenceNumber)

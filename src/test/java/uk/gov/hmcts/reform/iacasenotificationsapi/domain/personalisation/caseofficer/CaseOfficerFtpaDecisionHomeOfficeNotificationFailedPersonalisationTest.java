@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -28,6 +29,12 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @MockitoSettings(strictness = Strictness.LENIENT)
 class CaseOfficerFtpaDecisionHomeOfficeNotificationFailedPersonalisationTest {
 
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String ariaListingReference = "ariaListingReference";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String iaExUiFrontendUrl = "frontend url";
+    private final String ftpaDecisionCaseOfficerNotificationFailedTemplateId = "ftpaDecisionCaseOfficerNotificationFailedTemplateId";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -36,17 +43,6 @@ class CaseOfficerFtpaDecisionHomeOfficeNotificationFailedPersonalisationTest {
     EmailAddressFinder emailAddressFinder;
     @Mock
     private FeatureToggler featureToggler;
-
-    private String caseOfficerEmailAddress = "caseOfficer@example.com";
-    private Long caseId = 12345L;
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String ariaListingReference = "ariaListingReference";
-    private String appellantGivenNames = "appellantGivenNames";
-    private String appellantFamilyName = "appellantFamilyName";
-
-    private String iaExUiFrontendUrl = "frontend url";
-    private String ftpaDecisionCaseOfficerNotificationFailedTemplateId = "ftpaDecisionCaseOfficerNotificationFailedTemplateId";
-
     private CaseOfficerFtpaDecisionHomeOfficeNotificationFailedPersonalisation homeOfficeNotificationFailedPersonalisation;
 
     @BeforeEach
@@ -56,7 +52,7 @@ class CaseOfficerFtpaDecisionHomeOfficeNotificationFailedPersonalisationTest {
             ftpaDecisionCaseOfficerNotificationFailedTemplateId,
             personalisationProvider,
             emailAddressFinder,
-                featureToggler);
+            featureToggler);
     }
 
     @Test
@@ -66,6 +62,7 @@ class CaseOfficerFtpaDecisionHomeOfficeNotificationFailedPersonalisationTest {
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_FTPA_DECISION_HO_NOTIFICATION_FAILED_CASE_OFFICER",
             homeOfficeNotificationFailedPersonalisation.getReferenceId(caseId));
     }
@@ -73,20 +70,21 @@ class CaseOfficerFtpaDecisionHomeOfficeNotificationFailedPersonalisationTest {
     @Test
     void should_return_given_email_address_from_lookup_map_when_feature_flag_is_Off() {
         assertTrue(
-                homeOfficeNotificationFailedPersonalisation.getRecipientsList(asylumCase).isEmpty());
+            homeOfficeNotificationFailedPersonalisation.getRecipientsList(asylumCase).isEmpty());
     }
 
     @Test
     void should_return_given_email_address_from_lookup_map_when_feature_flag_is_On() {
         when(featureToggler.getValue("tcw-notifications-feature", true)).thenReturn(true);
+        String caseOfficerEmailAddress = "caseOfficer@example.com";
         when(emailAddressFinder.getListCaseHearingCentreEmailAddress(asylumCase)).thenReturn(caseOfficerEmailAddress);
         assertTrue(
-                homeOfficeNotificationFailedPersonalisation.getRecipientsList(asylumCase).contains(caseOfficerEmailAddress));
+            homeOfficeNotificationFailedPersonalisation.getRecipientsList(asylumCase).contains(caseOfficerEmailAddress));
     }
 
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_of_all_information_given(YesOrNo isAda) {
         initializePrefixes(homeOfficeNotificationFailedPersonalisation);
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
@@ -94,11 +92,12 @@ class CaseOfficerFtpaDecisionHomeOfficeNotificationFailedPersonalisationTest {
             .thenReturn(getPersonalisationMapWithGivenValues());
         Map<String, String> personalisation = homeOfficeNotificationFailedPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("ariaListingReference", ariaListingReference)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));

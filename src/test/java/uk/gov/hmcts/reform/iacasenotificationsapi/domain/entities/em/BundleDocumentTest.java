@@ -13,7 +13,7 @@ public class BundleDocumentTest {
     private static final int SORT_INDEX = 1;
     private static final Document SOURCE_DOCUMENT = mock(Document.class);
 
-    private BundleDocument bundleDocument = new BundleDocument(NAME, DESCRIPTION, SORT_INDEX, SOURCE_DOCUMENT);
+    private final BundleDocument bundleDocument = new BundleDocument(NAME, DESCRIPTION, SORT_INDEX, SOURCE_DOCUMENT);
 
 
     @Test

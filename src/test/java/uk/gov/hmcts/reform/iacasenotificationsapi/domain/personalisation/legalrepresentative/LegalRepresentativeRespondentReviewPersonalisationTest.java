@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -35,30 +35,24 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class LegalRepresentativeRespondentReviewPersonalisationTest {
 
+    private final String templateId = "someTemplateId";
+    private final String legalRepEmailAddress = "legalrep@example.com";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String legalRepRefNumber = "somelegalRepRefNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
     @Mock
     AsylumCase asylumCase;
     @Mock
     DirectionFinder directionFinder;
     @Mock
     Direction direction;
-
-    private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
-    private String directionDueDate = "2019-09-10";
-    private String expectedDirectionDueDate = "10 Oct 2019";
-
-    private String legalRepEmailAddress = "legalrep@example.com";
-
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String legalRepRefNumber = "somelegalRepRefNumber";
-    private String appellantGivenNames = "appellantGivenNames";
-    private String appellantFamilyName = "appellantFamilyName";
-
     private LegalRepresentativeRespondentReviewPersonalisation legalRepresentativeRespondentReviewPersonalisation;
 
     @BeforeEach
     public void setUp() {
 
+        String directionDueDate = "2019-09-10";
         when((direction.getDateDue())).thenReturn(directionDueDate);
         when(directionFinder.findFirst(asylumCase, DirectionTag.RESPONDENT_REVIEW)).thenReturn(Optional.of(direction));
 
@@ -82,6 +76,7 @@ public class LegalRepresentativeRespondentReviewPersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_LEGAL_REPRESENTATIVE_RESPONDENT_REVIEW_CASE",
             legalRepresentativeRespondentReviewPersonalisation.getReferenceId(caseId));
     }
@@ -96,34 +91,35 @@ public class LegalRepresentativeRespondentReviewPersonalisationTest {
     public void should_throw_exception_when_cannot_find_email_address_for_legal_rep() {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> legalRepresentativeRespondentReviewPersonalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("legalRepresentativeEmailAddress is not present");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> legalRepresentativeRespondentReviewPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
-            () -> legalRepresentativeRespondentReviewPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> legalRepresentativeRespondentReviewPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         initializePrefixes(legalRepresentativeRespondentReviewPersonalisation);
 
+        String expectedDirectionDueDate = "10 Sep 2019";
         final Map<String, String> expectedPersonalisation =
             ImmutableMap
                 .<String, String>builder()
                 .put("appealReferenceNumber", appealReferenceNumber)
                 .put("legalRepReferenceNumber", legalRepRefNumber)
                 .put("appellantGivenNames", appellantGivenNames)
-                .put("appellantFamilyName", appellantGivenNames)
+                .put("appellantFamilyName", appellantFamilyName)
                 .put("insertDate", expectedDirectionDueDate)
                 .put("subjectPrefix", isAda.equals(YesOrNo.YES)
                     ? "Accelerated detained appeal"
@@ -133,7 +129,7 @@ public class LegalRepresentativeRespondentReviewPersonalisationTest {
         Map<String, String> actualPersonalisation =
             legalRepresentativeRespondentReviewPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(actualPersonalisation).isEqualToComparingOnlyGivenFields(expectedPersonalisation);
+        assertThat(actualPersonalisation).containsAllEntriesOf(expectedPersonalisation);
     }
 
     @Test
@@ -141,8 +137,8 @@ public class LegalRepresentativeRespondentReviewPersonalisationTest {
 
         when(directionFinder.findFirst(asylumCase, DirectionTag.RESPONDENT_REVIEW)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> legalRepresentativeRespondentReviewPersonalisation.getPersonalisation(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("direction 'respondentReview' is not present");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> legalRepresentativeRespondentReviewPersonalisation.getPersonalisation(asylumCase));
+        assertEquals("direction 'respondentReview' is not present", exception.getMessage());
     }
 }

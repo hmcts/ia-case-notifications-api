@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -62,12 +63,12 @@ public class LegalRepresentativeAdaSuitabilityPersonalisationTest {
     @Test
     public void should_return_given_template_id() {
         when(asylumCase.read(SUITABILITY_REVIEW_DECISION, AdaSuitabilityReviewDecision.class))
-                .thenReturn(Optional.of(AdaSuitabilityReviewDecision.UNSUITABLE));
+            .thenReturn(Optional.of(AdaSuitabilityReviewDecision.UNSUITABLE));
         assertEquals(adaUnsuitableTemplateId,
             legalRepresentativeAdaSuitabilityPersonalisation.getTemplateId(asylumCase));
 
         when(asylumCase.read(SUITABILITY_REVIEW_DECISION, AdaSuitabilityReviewDecision.class))
-                .thenReturn(Optional.of(AdaSuitabilityReviewDecision.SUITABLE));
+            .thenReturn(Optional.of(AdaSuitabilityReviewDecision.SUITABLE));
         assertEquals(adaSuitableTemplateId,
             legalRepresentativeAdaSuitabilityPersonalisation.getTemplateId(asylumCase));
     }
@@ -88,19 +89,19 @@ public class LegalRepresentativeAdaSuitabilityPersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
-            () -> legalRepresentativeAdaSuitabilityPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> legalRepresentativeAdaSuitabilityPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_when_cannot_find_suitability_review_decision() {
         when(asylumCase.read(SUITABILITY_REVIEW_DECISION, String.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> legalRepresentativeAdaSuitabilityPersonalisation.getTemplateId(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("suitabilityReviewDecision is not present");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> legalRepresentativeAdaSuitabilityPersonalisation.getTemplateId(asylumCase));
+        assertEquals("suitabilityReviewDecision is not present", exception.getMessage());
     }
 
     @Test
@@ -109,12 +110,13 @@ public class LegalRepresentativeAdaSuitabilityPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeAdaSuitabilityPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
-        assertEquals(legalRefNumber, personalisation.get("legalRepReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("ariaListingReference", ariaListingReference)
+            .containsEntry("legalRepReferenceNumber", legalRefNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
@@ -132,12 +134,13 @@ public class LegalRepresentativeAdaSuitabilityPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeAdaSuitabilityPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("ariaListingReference"));
-        assertEquals("", personalisation.get("legalRepReferenceNumber"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("ariaListingReference", "")
+            .containsEntry("legalRepReferenceNumber", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "")
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }

@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -33,27 +34,21 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class HomeOfficeAppealOutcomePersonalisationTest {
 
+    private final String templateAllowedId = "someTemplateAllowedId";
+    private final String iaExUiFrontendUrl = "http://somefrontendurl";
+    private final String allowedEmailAddress = "homeoffice-allowed@example.com";
+    private final String dismissedEmailAddress = "homeoffice-dismissed@example.com";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String ariaListingReference = "someAriaListingReference";
+    private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
     @Mock
     AsylumCase asylumCase;
     @Mock
     CustomerServicesProvider customerServicesProvider;
-
-    private Long caseId = 12345L;
-    private String templateAllowedId = "someTemplateAllowedId";
-    private String templateDismissedId = "someTemplateDismissedId";
-    private String iaExUiFrontendUrl = "http://somefrontendurl";
-    private String allowedEmailAddress = "homeoffice-allowed@example.com";
-    private String dismissedEmailAddress = "homeoffice-dismissed@example.com";
-
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String ariaListingReference = "someAriaListingReference";
-    private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
-    private String appellantGivenNames = "appellantGivenNames";
-    private String appellantFamilyName = "appellantFamilyName";
-
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
-
     private HomeOfficeAppealOutcomePersonalisation homeOfficeAppealOutcomePersonalisation;
 
     @BeforeEach
@@ -69,6 +64,7 @@ public class HomeOfficeAppealOutcomePersonalisationTest {
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
+        String templateDismissedId = "someTemplateDismissedId";
         homeOfficeAppealOutcomePersonalisation = new HomeOfficeAppealOutcomePersonalisation(
             allowedEmailAddress,
             dismissedEmailAddress,
@@ -86,6 +82,7 @@ public class HomeOfficeAppealOutcomePersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_APPEAL_OUTCOME_HOME_OFFICE",
             homeOfficeAppealOutcomePersonalisation.getReferenceId(caseId));
     }
@@ -127,21 +124,21 @@ public class HomeOfficeAppealOutcomePersonalisationTest {
     public void should_throw_exception_when_appeal_outcome_decision_is_missing() {
         when(asylumCase.read(IS_DECISION_ALLOWED, AppealDecision.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> homeOfficeAppealOutcomePersonalisation.getAppealDecision(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("appealOutcomeDecision is not present");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> homeOfficeAppealOutcomePersonalisation.getAppealDecision(asylumCase));
+        assertEquals("appealOutcomeDecision is not present", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> homeOfficeAppealOutcomePersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> homeOfficeAppealOutcomePersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         initializePrefixes(homeOfficeAppealOutcomePersonalisation);
@@ -152,18 +149,19 @@ public class HomeOfficeAppealOutcomePersonalisationTest {
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
-        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("ariaListingReference", ariaListingReference)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
 
         initializePrefixes(homeOfficeAppealOutcomePersonalisation);
@@ -179,12 +177,13 @@ public class HomeOfficeAppealOutcomePersonalisationTest {
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("ariaListingReference"));
-        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("ariaListingReference", "")
+            .containsEntry("homeOfficeReferenceNumber", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "")
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }

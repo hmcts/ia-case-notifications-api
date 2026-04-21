@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -34,33 +35,21 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 
-
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantRequestResponseAmendPersonalisationEmailTest {
 
+    private final String emailTemplateId = "someEmailTemplateId";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
+    private final String homeOfficeReferenceNumber = "someHOReferenceNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
     @Mock
     AsylumCase asylumCase;
     @Mock
     RecipientsFinder recipientsFinder;
     @Mock
     CustomerServicesProvider customerServicesProvider;
-
-    private Long caseId = 12345L;
-    private String emailTemplateId = "someEmailTemplateId";
-
-    private String mockedAppealReferenceNumber = "someReferenceNumber";
-    private String mockedAppellantMobilePhone = "07123456789";
-    private String mockedAppellantEmail = "fake@faketest.com";
-
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String homeOfficeReferenceNumber = "someHOReferenceNumber";
-    private String appellantGivenNames = "appellantGivenNames";
-    private String appellantFamilyName = "appellantFamilyName";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
-
-
     private AppellantRequestResponseAmendPersonalisationEmail appellantRequestResponseAmendPersonalisationEmail;
 
     @BeforeEach
@@ -68,11 +57,14 @@ public class AppellantRequestResponseAmendPersonalisationEmailTest {
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class))
             .thenReturn(Optional.of(mockedAppealReferenceNumber));
+        String appealReferenceNumber = "someReferenceNumber";
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
+        String customerServicesTelephone = "555 555 555";
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
+        String customerServicesEmail = "cust.services@example.com";
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         appellantRequestResponseAmendPersonalisationEmail = new AppellantRequestResponseAmendPersonalisationEmail(
@@ -88,6 +80,7 @@ public class AppellantRequestResponseAmendPersonalisationEmailTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_REQUEST_RESPONSE_AMEND_AIP_EMAIL",
             appellantRequestResponseAmendPersonalisationEmail.getReferenceId(caseId));
     }
@@ -95,9 +88,11 @@ public class AppellantRequestResponseAmendPersonalisationEmailTest {
     @Test
     public void should_return_given_email_address_list_from_subscribers_in_asylum_case() {
 
+        String mockedAppellantEmail = "fake@faketest.com";
+        String mockedAppellantMobilePhone = "07123456789";
         Subscriber subscriber = new Subscriber(
             SubscriberType.APPELLANT, //subscriberType
-                mockedAppellantEmail, //email
+            mockedAppellantEmail, //email
             YesOrNo.YES, // wants email
             mockedAppellantMobilePhone, //mobileNumber
             YesOrNo.YES // wants sms
@@ -116,14 +111,14 @@ public class AppellantRequestResponseAmendPersonalisationEmailTest {
 
         when(recipientsFinder.findAll(null, NotificationType.EMAIL)).thenCallRealMethod();
 
-        assertThatThrownBy(() -> appellantRequestResponseAmendPersonalisationEmail.getRecipientsList(null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> appellantRequestResponseAmendPersonalisationEmail.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         initializePrefixes(appellantRequestResponseAmendPersonalisationEmail);
@@ -132,19 +127,20 @@ public class AppellantRequestResponseAmendPersonalisationEmailTest {
         Map<String, String> personalisation =
             appellantRequestResponseAmendPersonalisationEmail.getPersonalisation(asylumCase);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", mockedAppealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("appellantFamilyName", appellantFamilyName);
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_only_mandatory_information_given(YesOrNo isAda) {
 
         initializePrefixes(appellantRequestResponseAmendPersonalisationEmail);
@@ -157,10 +153,11 @@ public class AppellantRequestResponseAmendPersonalisationEmailTest {
         Map<String, String> personalisation =
             appellantRequestResponseAmendPersonalisationEmail.getPersonalisation(asylumCase);
 
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("homeOfficeReferenceNumber", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "");
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));

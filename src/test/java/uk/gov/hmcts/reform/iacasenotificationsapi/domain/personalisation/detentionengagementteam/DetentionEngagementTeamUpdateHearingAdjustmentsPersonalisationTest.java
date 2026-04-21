@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -32,30 +32,26 @@ import uk.gov.service.notify.NotificationClientException;
 
 
 @ExtendWith(MockitoExtension.class)
-@SuppressWarnings("unchecked")
 @MockitoSettings(strictness = Strictness.LENIENT)
 class DetentionEngagementTeamUpdateHearingAdjustmentsPersonalisationTest {
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    private DocumentDownloadClient documentDownloadClient;
-    @Mock
-    private DetEmailService detEmailService;
-    @Mock
-    JSONObject jsonDocument;
-    private String templateId = "templateId";
+    final DocumentWithMetadata hearingAdjustmentsChangedDoc = TestUtils.getDocumentWithMetadata(
+        "id", "hearing-adjustments-updated-letter", "some other desc", DocumentTag.INTERNAL_HEARING_ADJUSTMENTS_UPDATED_LETTER);
+    final IdValue<DocumentWithMetadata> hearingAdjustmentsChangedBundle = new IdValue<>("1", hearingAdjustmentsChangedDoc);
+    private final String templateId = "templateId";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
     private final String appellantGivenNames = "appellantGivenNames";
     private final String appellantFamilyName = "appellantFamilyName";
     private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
-    private final String adaPrefix = "ADA - SERVE IN PERSON";
-    private final Long caseId = 12345L;
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    JSONObject jsonDocument;
+    @Mock
+    private DocumentDownloadClient documentDownloadClient;
+    @Mock
+    private DetEmailService detEmailService;
     private DetentionEngagementTeamUpdateHearingAdjustmentsPersonalisation detentionEngagementTeamUpdateHearingAdjustmentsPersonalisation;
-
-    DocumentWithMetadata hearingAdjustmentsChangedDoc = TestUtils.getDocumentWithMetadata(
-        "id", "hearing-adjustments-updated-letter", "some other desc", DocumentTag.INTERNAL_HEARING_ADJUSTMENTS_UPDATED_LETTER);
-    IdValue<DocumentWithMetadata> hearingAdjustmentsChangedBundle = new IdValue<>("1", hearingAdjustmentsChangedDoc);
 
     DetentionEngagementTeamUpdateHearingAdjustmentsPersonalisationTest() {
     }
@@ -70,6 +66,7 @@ class DetentionEngagementTeamUpdateHearingAdjustmentsPersonalisationTest {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.of(newArrayList(hearingAdjustmentsChangedBundle)));
         when(documentDownloadClient.getJsonObjectFromDocument(hearingAdjustmentsChangedDoc)).thenReturn(jsonDocument);
 
+        String adaPrefix = "ADA - SERVE IN PERSON";
         detentionEngagementTeamUpdateHearingAdjustmentsPersonalisation =
             new DetentionEngagementTeamUpdateHearingAdjustmentsPersonalisation(
                 templateId,
@@ -90,6 +87,7 @@ class DetentionEngagementTeamUpdateHearingAdjustmentsPersonalisationTest {
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_INTERNAL_HEARING_ADJUSTMENTS_CHANGED_DET",
             detentionEngagementTeamUpdateHearingAdjustmentsPersonalisation.getReferenceId(caseId));
     }
@@ -139,24 +137,24 @@ class DetentionEngagementTeamUpdateHearingAdjustmentsPersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> detentionEngagementTeamUpdateHearingAdjustmentsPersonalisation.getPersonalisationForLink((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> detentionEngagementTeamUpdateHearingAdjustmentsPersonalisation.getPersonalisationForLink((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_appeal_submission_is_empty() {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> detentionEngagementTeamUpdateHearingAdjustmentsPersonalisation.getPersonalisationForLink(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("internalHearingAdjustmentsUpdatedLetter document not available");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamUpdateHearingAdjustmentsPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("internalHearingAdjustmentsUpdatedLetter document not available", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_notification_client_throws_Exception() throws NotificationClientException, IOException {
         when(documentDownloadClient.getJsonObjectFromDocument(hearingAdjustmentsChangedDoc)).thenThrow(new NotificationClientException("File size is more than 2MB"));
-        assertThatThrownBy(() -> detentionEngagementTeamUpdateHearingAdjustmentsPersonalisation.getPersonalisationForLink(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("Failed to get Internal Hearing Adjustments changed document in compatible format");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamUpdateHearingAdjustmentsPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("Failed to get Internal Hearing Adjustments changed document in compatible format", exception.getMessage());
     }
 }

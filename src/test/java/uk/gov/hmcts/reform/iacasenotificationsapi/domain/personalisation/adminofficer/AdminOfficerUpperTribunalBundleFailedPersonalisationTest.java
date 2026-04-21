@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ACCELERATED_DETAINED_APPEAL;
@@ -26,18 +27,16 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @ExtendWith(MockitoExtension.class)
 public class AdminOfficerUpperTribunalBundleFailedPersonalisationTest {
 
+    private final String adminOfficeEmailAddress = "some-email@example.com";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String ariaListingReference = "ariaListingReference";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String bundleFailedTemplateId = "bundleFailedTemplateId";
     @Mock
     AsylumCase asylumCase;
     @Mock
     PersonalisationProvider personalisationProvider;
-
-    private Long caseId = 12345L;
-    private String adminOfficeEmailAddress = "some-email@example.com";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String ariaListingReference = "ariaListingReference";
-    private String appellantGivenNames = "appellantGivenNames";
-    private String appellantFamilyName = "appellantFamilyName";
-    private String bundleFailedTemplateId = "bundleFailedTemplateId";
     private AdminOfficerUpperTribunalBundleFailedPersonalisation adminOfficerUpperTribunalBundleFailedPersonalisation;
 
     @BeforeEach
@@ -63,12 +62,13 @@ public class AdminOfficerUpperTribunalBundleFailedPersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_UPPER_TRIBUNAL_BUNDLE_FAILED_ADMIN_OFFICER",
             adminOfficerUpperTribunalBundleFailedPersonalisation.getReferenceId(caseId));
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_of_all_information_given(YesOrNo isAda) {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
 
@@ -83,10 +83,11 @@ public class AdminOfficerUpperTribunalBundleFailedPersonalisationTest {
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("ariaListingReference", ariaListingReference);
     }
 
     private Map<String, String> getPersonalisationMapWithGivenValues() {

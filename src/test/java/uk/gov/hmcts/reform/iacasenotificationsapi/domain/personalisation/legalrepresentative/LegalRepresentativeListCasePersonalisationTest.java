@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -33,6 +34,36 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsF
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class LegalRepresentativeListCasePersonalisationTest {
 
+    private final String nonAdaTemplateId = "nonAdaTemplateId";
+    private final String adaTemplateId = "adaTemplateId";
+    private final String outOfCountryTemplateId = "someOocTemplateId";
+    private final String iaExUiFrontendUrl = "http://somefrontendurl";
+    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    private final String legalRepEmailAddress = "legalRepEmailAddress@example.com";
+    private final String hearingCentreAddress = "some hearing centre address";
+    //Remote hearing
+    private final HearingCentre remoteHearingCentre = HearingCentre.REMOTE_HEARING;
+    private final String hearingDate = "2019-08-27";
+    private final String hearingTime = "14:25";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String ariaListingReference = "someAriaListingReference";
+    private final String legalRepRefNumber = "someLegalRepRefNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String requirementsVulnerabilities = "someRequirementsVulnerabilities";
+    private final String requirementsMultimedia = "someRequirementsMultimedia";
+    private final String requirementsSingleSexCourt = "someRequirementsSingleSexCourt";
+    private final String requirementsInCamera = "someRequirementsInCamera";
+    private final String requirementsOther = "someRequirementsOther";
+    private final String caseOfficerReviewedVulnerabilities = "someCaseOfficerReviewedVulnerabilities";
+    private final String caseOfficerReviewedMultimedia = "someCaseOfficerReviewedMultimedia";
+    private final String caseOfficerReviewedSingleSexCourt = "someCaseOfficerReviewedSingleSexCourt";
+    private final String caseOfficerReviewedInCamera = "someCaseOfficerReviewedInCamera";
+    private final String caseOfficerReviewedOther = "someCaseOfficerReviewedOther";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
+    private final int appellantProvidingAppealArgumentDeadline = 13;
+    private final int respondentResponseToAppealArgumentDeadline = 15;
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -43,51 +74,6 @@ public class LegalRepresentativeListCasePersonalisationTest {
     CustomerServicesProvider customerServicesProvider;
     @Mock
     HearingDetailsFinder hearingDetailsFinder;
-
-    private Long caseId = 12345L;
-    private String nonAdaTemplateId = "nonAdaTemplateId";
-    private String adaTemplateId = "adaTemplateId";
-    private String outOfCountryTemplateId = "someOocTemplateId";
-    private String listAssistHearingTemplateId = "listAssistHearingTemplateId";
-    private String listAssistHearingOutOfCountryTemplateId = "listAssistHearingOocTemplateId";
-    private String iaExUiFrontendUrl = "http://somefrontendurl";
-    private HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
-    private String legalRepEmailAddress = "legalRepEmailAddress@example.com";
-    private String hearingCentreAddress = "some hearing centre address";
-
-    //Remote hearing
-    private HearingCentre remoteHearingCentre = HearingCentre.REMOTE_HEARING;
-    private String remoteHearingCentreAddress = "remoteHearing Remote Hearing";
-
-    private String hearingDateTime = "2019-08-27T14:25:15.000";
-    private String hearingDate = "2019-08-27";
-    private String hearingTime = "14:25";
-
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String ariaListingReference = "someAriaListingReference";
-    private String legalRepRefNumber = "someLegalRepRefNumber";
-    private String appellantGivenNames = "appellantGivenNames";
-    private String appellantFamilyName = "appellantFamilyName";
-
-    private String requirementsVulnerabilities = "someRequirementsVulnerabilities";
-    private String requirementsMultimedia = "someRequirementsMultimedia";
-    private String requirementsSingleSexCourt = "someRequirementsSingleSexCourt";
-    private String requirementsInCamera = "someRequirementsInCamera";
-    private String requirementsOther = "someRequirementsOther";
-    private String videoHearingSuitability = "someVideoHearingSuitability";
-
-    private String caseOfficerReviewedVulnerabilities = "someCaseOfficerReviewedVulnerabilities";
-    private String caseOfficerReviewedMultimedia = "someCaseOfficerReviewedMultimedia";
-    private String caseOfficerReviewedSingleSexCourt = "someCaseOfficerReviewedSingleSexCourt";
-    private String caseOfficerReviewedInCamera = "someCaseOfficerReviewedInCamera";
-    private String caseOfficerReviewedOther = "someCaseOfficerReviewedOther";
-
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
-
-    private int appellantProvidingAppealArgumentDeadline = 13;
-    private int respondentResponseToAppealArgumentDeadline = 15;
-
     private LegalRepresentativeListCasePersonalisation legalRepresentativeListCasePersonalisation;
 
     @BeforeEach
@@ -97,6 +83,7 @@ public class LegalRepresentativeListCasePersonalisationTest {
             .thenReturn(Optional.of(legalRepEmailAddress));
 
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
+        String hearingDateTime = "2019-08-27T14:25:15.000";
         when(asylumCase.read(LIST_CASE_HEARING_DATE, String.class)).thenReturn(Optional.of(hearingDateTime));
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(ariaListingReference));
@@ -138,6 +125,8 @@ public class LegalRepresentativeListCasePersonalisationTest {
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
         when(hearingDetailsFinder.getHearingCentreLocation(asylumCase)).thenReturn(hearingCentreAddress);
 
+        String listAssistHearingOutOfCountryTemplateId = "listAssistHearingOocTemplateId";
+        String listAssistHearingTemplateId = "listAssistHearingTemplateId";
         legalRepresentativeListCasePersonalisation = new LegalRepresentativeListCasePersonalisation(
             nonAdaTemplateId,
             adaTemplateId,
@@ -166,6 +155,7 @@ public class LegalRepresentativeListCasePersonalisationTest {
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_CASE_LISTED_LEGAL_REPRESENTATIVE",
             legalRepresentativeListCasePersonalisation.getReferenceId(caseId));
     }
@@ -180,21 +170,21 @@ public class LegalRepresentativeListCasePersonalisationTest {
     void should_throw_exception_when_cannot_find_email_address_for_legal_rep() {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> legalRepresentativeListCasePersonalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("legalRepresentativeEmailAddress is not present");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> legalRepresentativeListCasePersonalisation.getRecipientsList(asylumCase));
+        assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> legalRepresentativeListCasePersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> legalRepresentativeListCasePersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
@@ -204,31 +194,33 @@ public class LegalRepresentativeListCasePersonalisationTest {
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
-        assertEquals(legalRepRefNumber, personalisation.get("legalRepReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
-        assertEquals(requirementsVulnerabilities, personalisation.get("hearingRequirementVulnerabilities"));
-        assertEquals(requirementsMultimedia, personalisation.get("hearingRequirementMultimedia"));
-        assertEquals(requirementsSingleSexCourt, personalisation.get("hearingRequirementSingleSexCourt"));
-        assertEquals(requirementsInCamera, personalisation.get("hearingRequirementInCameraCourt"));
-        assertEquals(requirementsOther, personalisation.get("hearingRequirementOther"));
-        assertEquals(hearingDate, personalisation.get("hearingDate"));
-        assertEquals(hearingTime, personalisation.get("hearingTime"));
-        assertEquals(hearingCentreAddress, personalisation.get("hearingCentreAddress"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("ariaListingReference", ariaListingReference)
+            .containsEntry("legalRepReferenceNumber", legalRepRefNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("hearingRequirementVulnerabilities", requirementsVulnerabilities)
+            .containsEntry("hearingRequirementMultimedia", requirementsMultimedia)
+            .containsEntry("hearingRequirementSingleSexCourt", requirementsSingleSexCourt)
+            .containsEntry("hearingRequirementInCameraCourt", requirementsInCamera)
+            .containsEntry("hearingRequirementOther", requirementsOther)
+            .containsEntry("hearingDate", hearingDate)
+            .containsEntry("hearingTime", hearingTime)
+            .containsEntry("hearingCentreAddress", hearingCentreAddress);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_information_given_in_remote_hearing_case(YesOrNo isAda) {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         initializePrefixes(legalRepresentativeListCasePersonalisation);
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(remoteHearingCentre));
         when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
+        String remoteHearingCentreAddress = "remoteHearing Remote Hearing";
         when(hearingDetailsFinder.getHearingCentreAddress(asylumCase))
             .thenReturn(remoteHearingCentreAddress);
 
@@ -241,7 +233,7 @@ public class LegalRepresentativeListCasePersonalisationTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_co_records_hearing_response(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
@@ -252,20 +244,21 @@ public class LegalRepresentativeListCasePersonalisationTest {
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
-        assertEquals(legalRepRefNumber, personalisation.get("legalRepReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
-        assertEquals(caseOfficerReviewedVulnerabilities, personalisation.get("hearingRequirementVulnerabilities"));
-        assertEquals(caseOfficerReviewedMultimedia, personalisation.get("hearingRequirementMultimedia"));
-        assertEquals(caseOfficerReviewedSingleSexCourt, personalisation.get("hearingRequirementSingleSexCourt"));
-        assertEquals(caseOfficerReviewedInCamera, personalisation.get("hearingRequirementInCameraCourt"));
-        assertEquals(caseOfficerReviewedOther, personalisation.get("hearingRequirementOther"));
-        assertEquals(hearingDate, personalisation.get("hearingDate"));
-        assertEquals(hearingTime, personalisation.get("hearingTime"));
-        assertEquals(hearingCentreAddress, personalisation.get("hearingCentreAddress"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("ariaListingReference", ariaListingReference)
+            .containsEntry("legalRepReferenceNumber", legalRepRefNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("hearingRequirementVulnerabilities", caseOfficerReviewedVulnerabilities)
+            .containsEntry("hearingRequirementMultimedia", caseOfficerReviewedMultimedia)
+            .containsEntry("hearingRequirementSingleSexCourt", caseOfficerReviewedSingleSexCourt)
+            .containsEntry("hearingRequirementInCameraCourt", caseOfficerReviewedInCamera)
+            .containsEntry("hearingRequirementOther", caseOfficerReviewedOther)
+            .containsEntry("hearingDate", hearingDate)
+            .containsEntry("hearingTime", hearingTime)
+            .containsEntry("hearingCentreAddress", hearingCentreAddress);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
@@ -293,20 +286,22 @@ public class LegalRepresentativeListCasePersonalisationTest {
         when(asylumCase.read(SINGLE_SEX_COURT_DECISION_FOR_DISPLAY, String.class)).thenReturn(Optional.of("Refused - Refused to single sex court"));
         when(asylumCase.read(IN_CAMERA_COURT_TRIBUNAL_RESPONSE, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(ADDITIONAL_TRIBUNAL_RESPONSE, String.class)).thenReturn(Optional.empty());
+        String videoHearingSuitability = "someVideoHearingSuitability";
         when(asylumCase.read(REMOTE_VIDEO_CALL_TRIBUNAL_RESPONSE, String.class)).thenReturn(Optional.of(videoHearingSuitability));
         initializePrefixes(legalRepresentativeListCasePersonalisation);
         Map<String, String> personalisation = legalRepresentativeListCasePersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals("Request Granted - Granted to vulnerabilities", personalisation.get("hearingRequirementVulnerabilities"));
-        assertEquals("Request Granted - Granted to multimedia", personalisation.get("hearingRequirementMultimedia"));
-        assertEquals("Request Refused - Refused to single sex court", personalisation.get("hearingRequirementSingleSexCourt"));
-        assertEquals("The hearing will be held in public court", personalisation.get("hearingRequirementInCameraCourt"));
-        assertEquals("No other adjustments are being made", personalisation.get("hearingRequirementOther"));
-        assertEquals(videoHearingSuitability, personalisation.get("remoteVideoCallTribunalResponse"));
+        assertThat(personalisation)
+            .containsEntry("hearingRequirementVulnerabilities", "Request Granted - Granted to vulnerabilities")
+            .containsEntry("hearingRequirementMultimedia", "Request Granted - Granted to multimedia")
+            .containsEntry("hearingRequirementSingleSexCourt", "Request Refused - Refused to single sex court")
+            .containsEntry("hearingRequirementInCameraCourt", "The hearing will be held in public court")
+            .containsEntry("hearingRequirementOther", "No other adjustments are being made")
+            .containsEntry("remoteVideoCallTribunalResponse", videoHearingSuitability);
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
@@ -325,22 +320,25 @@ public class LegalRepresentativeListCasePersonalisationTest {
 
         Map<String, String> personalisation = legalRepresentativeListCasePersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("ariaListingReference"));
-        assertEquals("", personalisation.get("legalRepReferenceNumber"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("ariaListingReference", "")
+            .containsEntry("legalRepReferenceNumber", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "")
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals("No special adjustments are being made to accommodate vulnerabilities",
             personalisation.get("hearingRequirementVulnerabilities"));
-        assertEquals("No multimedia equipment is being provided", personalisation.get("hearingRequirementMultimedia"));
-        assertEquals("The court will not be single sex", personalisation.get("hearingRequirementSingleSexCourt"));
+        assertThat(personalisation)
+            .containsEntry("hearingRequirementMultimedia", "No multimedia equipment is being provided")
+            .containsEntry("hearingRequirementSingleSexCourt", "The court will not be single sex");
         assertEquals("The hearing will be held in public court",
             personalisation.get("hearingRequirementInCameraCourt"));
-        assertEquals("No other adjustments are being made", personalisation.get("hearingRequirementOther"));
-        assertEquals(hearingDate, personalisation.get("hearingDate"));
-        assertEquals(hearingTime, personalisation.get("hearingTime"));
-        assertEquals(hearingCentreAddress, personalisation.get("hearingCentreAddress"));
+        assertThat(personalisation)
+            .containsEntry("hearingRequirementOther", "No other adjustments are being made")
+            .containsEntry("hearingDate", hearingDate)
+            .containsEntry("hearingTime", hearingTime)
+            .containsEntry("hearingCentreAddress", hearingCentreAddress);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YesOrNo.YES)

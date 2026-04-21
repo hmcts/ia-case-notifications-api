@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -41,6 +41,16 @@ import uk.gov.service.notify.NotificationClientException;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class DetentionEngagementTeamMaintainCaseUnlinkAppealPersonalisationTest {
 
+    final DocumentWithMetadata internalMaintainCaseUnlinkAppealLetter = getDocumentWithMetadata(
+        "1", "Maintain case unlink letter", "some other desc", DocumentTag.MAINTAIN_CASE_UNLINK_APPEAL_LETTER);
+    final IdValue<DocumentWithMetadata> internalMaintainCaseLinksLetterId = new IdValue<>("1", internalMaintainCaseUnlinkAppealLetter);
+    private final String templateId = "someTemplateId";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String homeOfficeReferenceNumber = "someReferenceNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String adaPrefix = "ADA - SERVE BY POST";
+    private final String nonAdaPrefix = "IAFT - SERVE BY POST";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -51,19 +61,6 @@ class DetentionEngagementTeamMaintainCaseUnlinkAppealPersonalisationTest {
     DocumentDownloadClient documentDownloadClient;
     @Mock
     private PersonalisationProvider personalisationProvider;
-
-    private final String templateId = "someTemplateId";
-    private final String personalisationReferenceId = "_INTERNAL_DET_MAINTAIN_CASE_UNLINK_APPEAL_EMAIL";
-    private final String detEmailAddress = "some@example.com";
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String homeOfficeReferenceNumber = "someReferenceNumber";
-    private final String appellantGivenNames = "appellantGivenNames";
-    private final String appellantFamilyName = "appellantFamilyName";
-    private final String adaPrefix = "ADA - SERVE BY POST";
-    private final String nonAdaPrefix = "IAFT - SERVE BY POST";
-    DocumentWithMetadata internalMaintainCaseUnlinkAppealLetter = getDocumentWithMetadata(
-            "1", "Maintain case unlink letter", "some other desc", DocumentTag.MAINTAIN_CASE_UNLINK_APPEAL_LETTER);
-    IdValue<DocumentWithMetadata> internalMaintainCaseLinksLetterId = new IdValue<>("1", internalMaintainCaseUnlinkAppealLetter);
     private DetentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation detentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation;
 
     @BeforeEach
@@ -79,14 +76,14 @@ class DetentionEngagementTeamMaintainCaseUnlinkAppealPersonalisationTest {
         when(documentDownloadClient.getJsonObjectFromDocument(internalMaintainCaseUnlinkAppealLetter)).thenReturn(jsonDocument);
 
         detentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation =
-                new DetentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation(
-                        templateId,
-                        detEmailService,
-                        documentDownloadClient,
-                        personalisationProvider,
-                        adaPrefix,
-                        nonAdaPrefix
-                );
+            new DetentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation(
+                templateId,
+                detEmailService,
+                documentDownloadClient,
+                personalisationProvider,
+                adaPrefix,
+                nonAdaPrefix
+            );
 
         initializePrefixesForInternalAppealByPost(detentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation);
     }
@@ -99,18 +96,20 @@ class DetentionEngagementTeamMaintainCaseUnlinkAppealPersonalisationTest {
     @Test
     void should_return_given_reference_id() {
         Long caseId = 12345L;
+        String personalisationReferenceId = "_INTERNAL_DET_MAINTAIN_CASE_UNLINK_APPEAL_EMAIL";
         assertEquals(caseId + personalisationReferenceId,
-                detentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation.getReferenceId(caseId));
+            detentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation.getReferenceId(caseId));
     }
 
     @Test
     void should_return_given_email_address_from_asylum_case() {
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
+        String detEmailAddress = "some@example.com";
         when(detEmailService.getRecipientsList(asylumCase)).thenReturn(Collections.singleton(detEmailAddress));
 
         assertTrue(
-                detentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation.getRecipientsList(asylumCase).contains(detEmailAddress));
+            detentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation.getRecipientsList(asylumCase).contains(detEmailAddress));
     }
 
     @Test
@@ -134,20 +133,20 @@ class DetentionEngagementTeamMaintainCaseUnlinkAppealPersonalisationTest {
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
-        assertThatThrownBy(
-                () -> detentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation.getPersonalisationForLink((AsylumCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> detentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation.getPersonalisationForLink((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_internal_maintain_case_links_document_is_missing() {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(
-                () -> detentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation.getPersonalisationForLink(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("maintainCaseUnlinkAppealLetter document not available");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class,
+                () -> detentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("maintainCaseUnlinkAppealLetter document not available", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -169,7 +168,7 @@ class DetentionEngagementTeamMaintainCaseUnlinkAppealPersonalisationTest {
         }
 
         Map<String, Object> actualPersonalisation =
-                detentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation.getPersonalisationForLink(asylumCase);
+            detentionEngagementTeamMaintainCaseUnlinkAppealPersonalisation.getPersonalisationForLink(asylumCase);
 
         assertTrue(compareStringsAndJsonObjects(expectedPersonalisation, actualPersonalisation));
     }

@@ -1,9 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
@@ -37,30 +36,22 @@ import uk.gov.service.notify.NotificationClientException;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class DetentionEngagementTeamAppealDecidedPersonalisationTest {
 
+    final DocumentWithMetadata appealDecidedDoc = TestUtils.getDocumentWithMetadata(
+        "id", "appeal_decided", "some other desc", DocumentTag.INTERNAL_DET_DECISION_AND_REASONS_LETTER);
+    final IdValue<DocumentWithMetadata> appealDecided = new IdValue<>("1", appealDecidedDoc);
+    private final JSONObject jsonObject = new JSONObject("{\"title\": \"Test JsonDocument\"}");
+    private final AppealDecision appealDismissed = AppealDecision.DISMISSED;
+    private final AppealDecision appealAllowed = AppealDecision.ALLOWED;
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
     @Mock
     AsylumCase asylumCase;
     @Mock
     private DocumentDownloadClient documentDownloadClient;
     @Mock
     private DetentionEmailService detEmailService;
-    private final JSONObject jsonObject = new JSONObject("{\"title\": \"Test JsonDocument\"}");
-    private final AppealDecision appealDismissed = AppealDecision.DISMISSED;
-    private final AppealDecision appealAllowed = AppealDecision.ALLOWED;
-
-    private final Long caseId = 12345L;
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
-    private final String appellantGivenNames = "appellantGivenNames";
-    private final String appellantFamilyName = "appellantFamilyName";
-    private final String detentionEngagementTeamUploadAppealDecidedDismissedTemplateId = "detentionEngagementTeamUploadAppealDecidedDismissedTemplateId";
-    private final String detentionEngagementTeamUploadAppealDecidedAllowedTemplateId = "detentionEngagementTeamUploadAppealDecidedAllowedTemplateId";
-    private final String formNameForAdaDismissed = "IAFT-ADA5: Ask for permission to appeal to the Upper Tribunal (Immigration and Asylum Chamber) – Accelerated detained appeal (ADA)";
-    private final String formLinkForAdaDismissed = "This form can be found here: http://www.gov.uk/government/publications/ask-for-permission-to-appeal-to-the-upper-tribunal-immigration-and-asylum-chamber-accelerated-detained-appeal-form-iaftada5";
-    private final String formNameForNonAdaDismissed = "IAFT-DE5: Ask for permission to appeal to the Upper Tribunal (Immigration and Asylum Chamber) – Detained appeal";
-    private final String formLinkForNonAdaDismissed = "This form can be found here: https://www.gov.uk/government/publications/ask-for-permission-to-appeal-to-the-upper-tribunal-immigration-and-asylum-chamber-detained-appeal-form-iaft-de5";
-    DocumentWithMetadata appealDecidedDoc = TestUtils.getDocumentWithMetadata(
-            "id", "appeal_decided", "some other desc", DocumentTag.INTERNAL_DET_DECISION_AND_REASONS_LETTER);
-    IdValue<DocumentWithMetadata> appealDecided = new IdValue<>("1", appealDecidedDoc);
     private DetentionEngagementTeamAppealDecidedPersonalisation detentionEngagementTeamAppealDecidedPersonalisation;
 
     public DetentionEngagementTeamAppealDecidedPersonalisationTest() {
@@ -68,11 +59,13 @@ class DetentionEngagementTeamAppealDecidedPersonalisationTest {
 
     @BeforeEach
     void setup() throws NotificationClientException, IOException {
+        String detentionEngagementTeamUploadAppealDecidedAllowedTemplateId = "detentionEngagementTeamUploadAppealDecidedAllowedTemplateId";
+        String detentionEngagementTeamUploadAppealDecidedDismissedTemplateId = "detentionEngagementTeamUploadAppealDecidedDismissedTemplateId";
         detentionEngagementTeamAppealDecidedPersonalisation = new DetentionEngagementTeamAppealDecidedPersonalisation(
-                detentionEngagementTeamUploadAppealDecidedDismissedTemplateId,
-                detentionEngagementTeamUploadAppealDecidedAllowedTemplateId,
-                detEmailService,
-                documentDownloadClient
+            detentionEngagementTeamUploadAppealDecidedDismissedTemplateId,
+            detentionEngagementTeamUploadAppealDecidedAllowedTemplateId,
+            detEmailService,
+            documentDownloadClient
         );
 
         ReflectionTestUtils.setField(detentionEngagementTeamAppealDecidedPersonalisation, "adaSubjectPrefix", "ADA - SERVE IN PERSON");
@@ -90,8 +83,9 @@ class DetentionEngagementTeamAppealDecidedPersonalisationTest {
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_INTERNAL_DET_APPEAL_DECIDED_EMAIL",
-                detentionEngagementTeamAppealDecidedPersonalisation.getReferenceId(caseId));
+            detentionEngagementTeamAppealDecidedPersonalisation.getReferenceId(caseId));
     }
 
 
@@ -103,7 +97,7 @@ class DetentionEngagementTeamAppealDecidedPersonalisationTest {
         when(detEmailService.getDetentionEmailAddress(asylumCase)).thenReturn(detentionEngagementTeamEmail);
 
         assertTrue(
-                detentionEngagementTeamAppealDecidedPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
+            detentionEngagementTeamAppealDecidedPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
     }
 
     @Test
@@ -121,23 +115,26 @@ class DetentionEngagementTeamAppealDecidedPersonalisationTest {
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> detentionEngagementTeamAppealDecidedPersonalisation.getPersonalisationForLink((AsylumCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> detentionEngagementTeamAppealDecidedPersonalisation.getPersonalisationForLink((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     void should_return_personalisation_if_decision_dismissed_for_ada() throws NotificationClientException, IOException {
         Map<String, Object> personalisation = detentionEngagementTeamAppealDecidedPersonalisation.getPersonalisationForLink(asylumCase);
 
-        assertEquals("ADA - SERVE IN PERSON", personalisation.get("subjectPrefix"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(jsonObject, personalisation.get("documentLink"));
-        assertEquals(formNameForAdaDismissed, personalisation.get("formName"));
-        assertEquals(formLinkForAdaDismissed, personalisation.get("formLinkText"));
+        String formLinkForAdaDismissed = "This form can be found here: http://www.gov.uk/government/publications/ask-for-permission-to-appeal-to-the-upper-tribunal-immigration-and-asylum-chamber-accelerated-detained-appeal-form-iaftada5";
+        String formNameForAdaDismissed = "IAFT-ADA5: Ask for permission to appeal to the Upper Tribunal (Immigration and Asylum Chamber) – Accelerated detained appeal (ADA)";
+        assertThat(personalisation)
+            .containsEntry("subjectPrefix", "ADA - SERVE IN PERSON")
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("documentLink", jsonObject)
+            .containsEntry("formName", formNameForAdaDismissed)
+            .containsEntry("formLinkText", formLinkForAdaDismissed);
     }
 
     @Test
@@ -145,9 +142,12 @@ class DetentionEngagementTeamAppealDecidedPersonalisationTest {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(NO));
         Map<String, Object> personalisation = detentionEngagementTeamAppealDecidedPersonalisation.getPersonalisationForLink(asylumCase);
 
-        assertEquals("IAFT - SERVE IN PERSON", personalisation.get("subjectPrefix"));
-        assertEquals(formNameForNonAdaDismissed, personalisation.get("formName"));
-        assertEquals(formLinkForNonAdaDismissed, personalisation.get("formLinkText"));
+        String formLinkForNonAdaDismissed = "This form can be found here: https://www.gov.uk/government/publications/ask-for-permission-to-appeal-to-the-upper-tribunal-immigration-and-asylum-chamber-detained-appeal-form-iaft-de5";
+        String formNameForNonAdaDismissed = "IAFT-DE5: Ask for permission to appeal to the Upper Tribunal (Immigration and Asylum Chamber) – Detained appeal";
+        assertThat(personalisation)
+            .containsEntry("subjectPrefix", "IAFT - SERVE IN PERSON")
+            .containsEntry("formName", formNameForNonAdaDismissed)
+            .containsEntry("formLinkText", formLinkForNonAdaDismissed);
     }
 
     @Test

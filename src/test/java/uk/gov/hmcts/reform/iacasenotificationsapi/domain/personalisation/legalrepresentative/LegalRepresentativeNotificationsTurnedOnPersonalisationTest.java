@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
@@ -25,15 +24,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @MockitoSettings(strictness = Strictness.LENIENT)
 class LegalRepresentativeNotificationsTurnedOnPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    Callback<AsylumCase> callback;
-    @Mock
-    PersonalisationProvider personalisationProvider;
     private final String beforeListingTemplateId = "beforeListingTemplateId";
     private final String afterListingTemplateId = "afterListingTemplateId";
-    private final Long caseId = 12345L;
     private final String iaExUiFrontendUrl = "http://localhost";
     private final String appealReferenceNumber = "appealReferenceNumber";
     private final String ariaListingReference = "someAriaListingReference";
@@ -43,7 +35,12 @@ class LegalRepresentativeNotificationsTurnedOnPersonalisationTest {
     private final String dateOfBirth = "1 Mar 2020";
     private final String legalRepEmailEjp = "legalRep@example.com";
     private final String ccdReferenceNumberForDisplay = "someRefNumber";
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    Callback<AsylumCase> callback;
+    @Mock
+    PersonalisationProvider personalisationProvider;
     private LegalRepresentativeNotificationsTurnedOnPersonalisation legalRepresentativeNotificationsTurnedOnPersonalisation;
 
     @BeforeEach
@@ -81,8 +78,8 @@ class LegalRepresentativeNotificationsTurnedOnPersonalisationTest {
     @Test
     public void should_return_given_reference_id() {
 
-        assertThat(legalRepresentativeNotificationsTurnedOnPersonalisation.getReferenceId(caseId))
-            .isEqualTo(caseId + "_NOTIFICATIONS_TURNED_ON");
+        Long caseId = 12345L;
+        assertEquals(caseId + "_NOTIFICATIONS_TURNED_ON", legalRepresentativeNotificationsTurnedOnPersonalisation.getReferenceId(caseId));
     }
 
     @Test
@@ -95,21 +92,19 @@ class LegalRepresentativeNotificationsTurnedOnPersonalisationTest {
     public void should_throw_exception_when_email_address_is_null() {
 
         when(asylumCase.read(LEGAL_REP_EMAIL_EJP, String.class)).thenReturn(Optional.empty());
-        assertThatThrownBy(
-            () -> legalRepresentativeNotificationsTurnedOnPersonalisation.getRecipientsList(asylumCase))
-            .hasMessage("legalRepresentativeEmailAddress is not present")
-            .isExactlyInstanceOf(IllegalStateException.class);
+        IllegalStateException exception = assertThrows(IllegalStateException.class,
+            () -> legalRepresentativeNotificationsTurnedOnPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
-
 
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
-            () -> legalRepresentativeNotificationsTurnedOnPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> legalRepresentativeNotificationsTurnedOnPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -119,10 +114,11 @@ class LegalRepresentativeNotificationsTurnedOnPersonalisationTest {
             legalRepresentativeNotificationsTurnedOnPersonalisation.getPersonalisation(asylumCase);
 
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisationMapWithGivenValues());
-        assertEquals(legalRepReferenceEjp, personalisation.get("legalRepReferenceNumberEjp"));
-        assertEquals(dateOfBirth, personalisation.get("dateOfBirth"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
-        assertEquals(ccdReferenceNumberForDisplay, personalisation.get("ccdReferenceNumberForDisplay"));
+        assertThat(personalisation)
+            .containsEntry("legalRepReferenceNumberEjp", legalRepReferenceEjp)
+            .containsEntry("dateOfBirth", dateOfBirth)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("ccdReferenceNumberForDisplay", ccdReferenceNumberForDisplay);
     }
 
     private Map<String, String> getPersonalisationMapWithGivenValues() {

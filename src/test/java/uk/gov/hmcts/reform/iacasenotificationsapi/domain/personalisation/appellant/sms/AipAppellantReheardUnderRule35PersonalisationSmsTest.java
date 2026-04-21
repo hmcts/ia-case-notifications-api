@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -28,21 +29,17 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AipAppellantReheardUnderRule35PersonalisationSmsTest {
 
+    private final String smsTemplateId = "someSmsTemplateId";
+    private final long mockedAppealReferenceNumber = 1236;
+    private final String iaAipFrontendUrl = "http://localhost";
     @Mock
     Callback<AsylumCase> callback;
-    @Mock
-    private CaseDetails<AsylumCase> caseDetails;
     @Mock
     AsylumCase asylumCase;
     @Mock
     RecipientsFinder recipientsFinder;
-    private Long caseId = 12345L;
-    private String smsTemplateId = "someSmsTemplateId";
-    private long mockedAppealReferenceNumber = 1236;
-    private String mockedAppellantMobilePhone = "07123456789";
-    private String mockedAppellantGivenNames = "appellantGivenNames";
-    private String mockedAppellantFamilyName = "appellantFamilyName";
-    private String iaAipFrontendUrl = "http://localhost";
+    @Mock
+    private CaseDetails<AsylumCase> caseDetails;
     private AipAppellantReheardUnderRule35PersonalisationSms aipAppellantReheardUnderRule35PersonalisationSms;
 
     @BeforeEach
@@ -51,7 +48,9 @@ class AipAppellantReheardUnderRule35PersonalisationSmsTest {
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
         when(callback.getCaseDetails().getId()).thenReturn(mockedAppealReferenceNumber);
 
+        String mockedAppellantGivenNames = "someAppellantGivenNames";
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(mockedAppellantGivenNames));
+        String mockedAppellantFamilyName = "someAppellantFamilyName";
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(mockedAppellantFamilyName));
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(String.valueOf(mockedAppealReferenceNumber)));
 
@@ -65,6 +64,7 @@ class AipAppellantReheardUnderRule35PersonalisationSmsTest {
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_AIP_REHEARD_UNDER_RULE_35_APPELLANT_SMS",
             aipAppellantReheardUnderRule35PersonalisationSms.getReferenceId(caseId));
     }
@@ -74,13 +74,14 @@ class AipAppellantReheardUnderRule35PersonalisationSmsTest {
         when(recipientsFinder.findAll(null, NotificationType.SMS))
             .thenThrow(new NullPointerException("asylumCase must not be null"));
 
-        assertThatThrownBy(() -> aipAppellantReheardUnderRule35PersonalisationSms.getRecipientsList(null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> aipAppellantReheardUnderRule35PersonalisationSms.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     void should_return_given_mobile_mobile_list_from_subscribers_in_asylum_case() {
+        String mockedAppellantMobilePhone = "07123456789";
         when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
             .thenReturn(Collections.singleton(mockedAppellantMobilePhone));
 
@@ -91,16 +92,17 @@ class AipAppellantReheardUnderRule35PersonalisationSmsTest {
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> aipAppellantReheardUnderRule35PersonalisationSms.getPersonalisation((Callback<AsylumCase>) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("callback must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> aipAppellantReheardUnderRule35PersonalisationSms.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     @Test
     void should_return_personalisation_when_all_information_given() {
         Map<String, String> personalisation = aipAppellantReheardUnderRule35PersonalisationSms.getPersonalisation(callback);
-        assertEquals(String.valueOf(mockedAppealReferenceNumber), personalisation.get("appealReferenceNumber"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("linkToService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", String.valueOf(mockedAppealReferenceNumber))
+            .containsEntry("linkToService", iaAipFrontendUrl);
     }
 
 }

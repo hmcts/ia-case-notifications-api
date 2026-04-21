@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -14,6 +15,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,28 +33,22 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class LegalRepresentativePendingPaymentPaidPersonalisationTest {
 
+    private final String beforeListingTemplateId = "someTemplateId";
+    private final String afterListingtemplateId = "someTemplateId";
+    private final String iaExUiFrontendUrl = "http://localhost";
+    private final String legalRepEmailAddress = "legalRep@example.com";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String legalRepRefNumber = "somelegalRepRefNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    private final AppealType appealTypePa = AppealType.PA;
+    private final AppealType appealTypeHu = AppealType.HU;
+    private final AppealType appealTypeEa = AppealType.EA;
     @Mock
     AsylumCase asylumCase;
     @Mock
     CustomerServicesProvider customerServicesProvider;
-
-    private Long caseId = 12345L;
-    private String beforeListingTemplateId = "someTemplateId";
-    private String afterListingtemplateId = "someTemplateId";
-    private String eaHuTemplateId = "someTemplateId";
-    private String iaExUiFrontendUrl = "http://localhost";
-    private String legalRepEmailAddress = "legalRep@example.com";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String legalRepRefNumber = "somelegalRepRefNumber";
-    private String appellantGivenNames = "appellantGivenNames";
-    private String appellantFamilyName = "appellantFamilyName";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
-    private HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
-    private AppealType appealTypePa = AppealType.PA;
-    private AppealType appealTypeHu = AppealType.HU;
-    private AppealType appealTypeEa = AppealType.EA;
-
     private LegalRepresentativePendingPaymentPaidPersonalisation
         legalRepresentativeAppealPendingPaymentPaidPersonalisation;
 
@@ -66,9 +62,12 @@ public class LegalRepresentativePendingPaymentPaidPersonalisationTest {
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepRefNumber));
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class))
             .thenReturn(Optional.of(legalRepEmailAddress));
+        String customerServicesTelephone = "555 555 555";
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
+        String customerServicesEmail = "cust.services@example.com";
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
+        String eaHuTemplateId = "someTemplateId";
         legalRepresentativeAppealPendingPaymentPaidPersonalisation =
             new LegalRepresentativePendingPaymentPaidPersonalisation(
                 beforeListingTemplateId,
@@ -91,6 +90,7 @@ public class LegalRepresentativePendingPaymentPaidPersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_PENDING_PAYMENT_PAID_LEGAL_REPRESENTATIVE",
             legalRepresentativeAppealPendingPaymentPaidPersonalisation.getReferenceId(caseId));
     }
@@ -105,19 +105,19 @@ public class LegalRepresentativePendingPaymentPaidPersonalisationTest {
     public void should_throw_exception_when_cannot_find_email_address_for_legal_rep() {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(
-            () -> legalRepresentativeAppealPendingPaymentPaidPersonalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("legalRepresentativeEmailAddress is not present");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class,
+                () -> legalRepresentativeAppealPendingPaymentPaidPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
-            () -> legalRepresentativeAppealPendingPaymentPaidPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> legalRepresentativeAppealPendingPaymentPaidPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -126,10 +126,14 @@ public class LegalRepresentativePendingPaymentPaidPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeAppealPendingPaymentPaidPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isNotEmpty();
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
+        assertFalse(personalisation.isEmpty());
+        assertThat(personalisation)
+            .containsEntry("legalRepReferenceNumber", legalRepRefNumber)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("ariaListingReference", "")
+            .containsEntry("appellantFamilyName", appellantFamilyName);
     }
 
     @Test
@@ -143,9 +147,16 @@ public class LegalRepresentativePendingPaymentPaidPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeAppealPendingPaymentPaidPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isNotEmpty();
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
+        assertFalse(personalisation.isEmpty());
+        assertThat(personalisation)
+            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation())
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
+
+        assertThat(personalisation).allSatisfy((key, value) -> {
+            if (!Objects.equals("linkToOnlineService", key)) {
+                assertThat(value).isEmpty();
+            }
+        });
+
     }
 }

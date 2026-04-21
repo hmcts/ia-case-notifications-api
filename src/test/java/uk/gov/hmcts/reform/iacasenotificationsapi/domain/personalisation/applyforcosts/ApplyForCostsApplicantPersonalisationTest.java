@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.applyforcosts;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -31,6 +32,19 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class ApplyForCostsApplicantPersonalisationTest {
+    private static final String applyForCostsCreationDate = "2023-11-24";
+    private static final String homeOffice = "Home office";
+    private final String applyForCostsNotificationForApplicantTemplateId = "applyForCostsNotificationForRespondentTemplateId";
+    private final String homeOfficeEmailAddress = "homeOfficeEmailAddress@gmail.com";
+    private final String legalRepEmailAddress = "legalRepEmailAddress@gmail.com";
+    private final String iaExUiFrontendUrl = "http://localhost";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String legalRepRefNumber = "someLegalRepRefNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
+    private final String homeOfficeReferenceNumber = "A1234567/001";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -39,25 +53,16 @@ class ApplyForCostsApplicantPersonalisationTest {
     CustomerServicesProvider customerServicesProvider;
     @Mock
     PersonalisationProvider personalisationProvider;
-
-    private static final String applyForCostsCreationDate = "2023-11-24";
-    private Long caseId = 12345L;
-    private String applyForCostsNotificationForApplicantTemplateId = "applyForCostsNotificationForRespondentTemplateId";
-    private String homeOfficeEmailAddress = "homeOfficeEmailAddress@gmail.com";
-    private String legalRepEmailAddress = "legalRepEmailAddress@gmail.com";
-    private String iaExUiFrontendUrl = "http://localhost";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String legalRepRefNumber = "someLegalRepRefNumber";
-    private String appellantGivenNames = "appellantGivenNames";
-    private String appellantFamilyName = "appellantFamilyName";
-    private static String homeOffice = "Home office";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
-    private static String newestApplicationCreatedNumber = "1";
-    private static String unreasonableCostsType = "Unreasonable costs";
-    private String homeOfficeReferenceNumber = "A1234567/001";
-
     private ApplyForCostsApplicantPersonalisation applyForCostsApplicantPersonalisation;
+
+    static Stream<Arguments> appliesForCostsProvider() {
+        String unreasonableCostsType = "Unreasonable costs";
+        String newestApplicationCreatedNumber = "1";
+        return Stream.of(
+            Arguments.of(List.of(new IdValue<>(newestApplicationCreatedNumber, new ApplyForCosts(unreasonableCostsType, "Legal representative", homeOffice, applyForCostsCreationDate)))),
+            Arguments.of(List.of(new IdValue<>(newestApplicationCreatedNumber, new ApplyForCosts("Wasted costs", homeOffice, "Legal representative", applyForCostsCreationDate))))
+        );
+    }
 
     @BeforeEach
     void setup() {
@@ -103,6 +108,7 @@ class ApplyForCostsApplicantPersonalisationTest {
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_APPLY_FOR_COSTS_APPLICANT_EMAIL",
             applyForCostsApplicantPersonalisation.getReferenceId(caseId));
     }
@@ -122,9 +128,9 @@ class ApplyForCostsApplicantPersonalisationTest {
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> applyForCostsApplicantPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> applyForCostsApplicantPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -138,28 +144,25 @@ class ApplyForCostsApplicantPersonalisationTest {
 
         Map<String, String> personalisation = applyForCostsApplicantPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-        assertEquals("Wasted", personalisation.get("appliedCostsType"));
-        assertEquals("24 Nov 2023", personalisation.get("creationDate"));
+        assertThat(personalisation)
+            .containsEntry("appliedCostsType", "Wasted")
+            .containsEntry("creationDate", "24 Nov 2023");
 
         if (applyForCostsList.get(0).getValue().getApplyForCostsApplicantType().equals("Home office")) {
-            assertEquals("Home office", personalisation.get("recipient"));
-            assertEquals(homeOfficeReferenceNumber, personalisation.get("recipientReferenceNumber"));
+            assertThat(personalisation)
+                .containsEntry("recipient", "Home office")
+                .containsEntry("recipientReferenceNumber", homeOfficeReferenceNumber);
         } else {
-            assertEquals("Your", personalisation.get("recipient"));
-            assertEquals(legalRepRefNumber, personalisation.get("recipientReferenceNumber"));
+            assertThat(personalisation)
+                .containsEntry("recipient", "Your")
+                .containsEntry("recipientReferenceNumber", legalRepRefNumber);
         }
-    }
-
-    static Stream<Arguments> appliesForCostsProvider() {
-        return Stream.of(
-            Arguments.of(List.of(new IdValue<>(newestApplicationCreatedNumber, new ApplyForCosts(unreasonableCostsType, "Legal representative", homeOffice, applyForCostsCreationDate)))),
-            Arguments.of(List.of(new IdValue<>(newestApplicationCreatedNumber, new ApplyForCosts("Wasted costs", homeOffice, "Legal representative", applyForCostsCreationDate))))
-        );
     }
 }

@@ -41,32 +41,20 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 @MockitoSettings(strictness = Strictness.LENIENT)
 class HomeOfficeRemoveRepresentationPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    AppealService appealService;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-    @Mock
-    EmailAddressFinder emailAddressFinder;
-
-    private final Long caseId = 12345L;
     private final String beforeListingTemplateId = "beforeListingTemplateId";
     private final String afterListingTemplateId = "afterListingTemplateId";
     private final String iaExUiFrontendUrl = "http://somefrontendurl";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String ariaListingReference = "someReferenceNumber";
-    private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
-    private final String appellantGivenNames = "appellantGivenNames";
-    private final String appellantFamilyName = "appellantFamilyName";
-    private String apcPrivateBetaInboxHomeOfficeEmailAddress = "homeoffice-apc@example.com";
-    private String respondentReviewDirectionEmail = "homeoffice-respondent@example.com";
-    private String homeOfficeHearingCentreEmail = "hc-taylorhouse@example.com";
-    private String homeOfficeEmail = "ho-taylorhouse@example.com";
-    private String legalRepName = "legalRepName";
-    private String legalRepCompanyAddress = "legalRepCompanyAddress";
-    private String legalRepEmailAddress = "legalRepEmailAddress";
-
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String apcPrivateBetaInboxHomeOfficeEmailAddress = "homeoffice-apc@example.com";
+    private final String respondentReviewDirectionEmail = "homeoffice-respondent@example.com";
+    private final String homeOfficeHearingCentreEmail = "hc-taylorhouse@example.com";
+    private final String homeOfficeEmail = "ho-taylorhouse@example.com";
+    private final String legalRepName = "legalRepName";
+    private final String legalRepCompanyAddress = "legalRepCompanyAddress";
+    private final String legalRepEmailAddress = "legalRepEmailAddress";
     private final String addressLine1 = "A";
     private final String addressLine2 = "B";
     private final String addressLine3 = "C";
@@ -74,8 +62,7 @@ class HomeOfficeRemoveRepresentationPersonalisationTest {
     private final String county = "E";
     private final String postCode = "F";
     private final String country = "G";
-
-    private AddressUk addressUk = new AddressUk(
+    private final AddressUk addressUk = new AddressUk(
         addressLine1,
         addressLine2,
         addressLine3,
@@ -84,7 +71,14 @@ class HomeOfficeRemoveRepresentationPersonalisationTest {
         postCode,
         country
     );
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    AppealService appealService;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    EmailAddressFinder emailAddressFinder;
     private HomeOfficeRemoveRepresentationPersonalisation
         homeOfficeRemoveRepresentationPersonalisation;
 
@@ -93,6 +87,7 @@ class HomeOfficeRemoveRepresentationPersonalisationTest {
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(ariaListingReference));
+        String homeOfficeRefNumber = "someHomeOfficeRefNumber";
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeRefNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
@@ -188,21 +183,9 @@ class HomeOfficeRemoveRepresentationPersonalisationTest {
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_REMOVE_REPRESENTATION_HOME_OFFICE",
             homeOfficeRemoveRepresentationPersonalisation.getReferenceId(caseId));
-    }
-
-    @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
-    void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
-        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
-        initializePrefixes(homeOfficeRemoveRepresentationPersonalisation);
-
-        Map<String, String> personalisation =
-            homeOfficeRemoveRepresentationPersonalisation.getPersonalisation(asylumCase);
-
-        assertThat(personalisation).isNotEmpty();
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
     }
 
     @Test
@@ -232,7 +215,7 @@ class HomeOfficeRemoveRepresentationPersonalisationTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_information_given_case_listed(YesOrNo isAda) {
         when(appealService.isAppealListed(asylumCase)).thenReturn(true);
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
@@ -240,31 +223,33 @@ class HomeOfficeRemoveRepresentationPersonalisationTest {
 
         Map<String, String> personalisation = homeOfficeRemoveRepresentationPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
-        assertEquals(legalRepName, personalisation.get("legalRepresentativeName"));
-        assertEquals(legalRepEmailAddress, personalisation.get("legalRepresentativeEmailAddress"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("ariaListingReference", ariaListingReference)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("legalRepresentativeName", legalRepName)
+            .containsEntry("legalRepresentativeEmailAddress", legalRepEmailAddress);
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_information_given_and_case_not_listed(YesOrNo isAda) {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         initializePrefixes(homeOfficeRemoveRepresentationPersonalisation);
         Map<String, String> personalisation = homeOfficeRemoveRepresentationPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
-        assertEquals(legalRepName, personalisation.get("legalRepresentativeName"));
-        assertEquals(legalRepEmailAddress, personalisation.get("legalRepresentativeEmailAddress"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("legalRepresentativeName", legalRepName)
+            .containsEntry("legalRepresentativeEmailAddress", legalRepEmailAddress);
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));

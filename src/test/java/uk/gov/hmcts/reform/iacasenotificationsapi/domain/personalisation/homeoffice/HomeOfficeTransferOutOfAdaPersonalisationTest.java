@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
@@ -23,30 +23,26 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class HomeOfficeTransferOutOfAdaPersonalisationTest {
 
+    private final String beforeListingTemplateId = "beforeListingTemplateId";
+    private final String afterListingTemplateId = "afterListingTemplateId";
+    private final String iaExUiFrontendUrl = "http://localhost";
+    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    private final String beforeListingEmailAddress = "homeoffice@example.com";
+    private final String afterListingEmailAddress = "hearinge@example.com";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String ariaListingReference = "someAriaListingReference";
+    private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
+    private final String transferOutOfAdaReason = "Determined unsuitable following Suitability Review";
     @Mock
     AsylumCase asylumCase;
     @Mock
     EmailAddressFinder emailAddressFinder;
     @Mock
     CustomerServicesProvider customerServicesProvider;
-
-    private Long caseId = 12345L;
-    private String beforeListingTemplateId = "beforeListingTemplateId";
-    private String afterListingTemplateId = "afterListingTemplateId";
-    private String iaExUiFrontendUrl = "http://localhost";
-    private HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
-    private String beforeListingEmailAddress = "homeoffice@example.com";
-    private String afterListingEmailAddress = "hearinge@example.com";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String ariaListingReference = "someAriaListingReference";
-    private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
-    private String appellantGivenNames = "appellantGivenNames";
-    private String appellantFamilyName = "appellantFamilyName";
-
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
-    private final String transferOutOfAdaReason = "Determined unsuitable following Suitability Review";
-
     private HomeOfficeTransferOutOfAdaPersonalisation homeOfficeTransferOutOfAdaPersonalisation;
 
     @BeforeEach
@@ -63,32 +59,33 @@ public class HomeOfficeTransferOutOfAdaPersonalisationTest {
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         homeOfficeTransferOutOfAdaPersonalisation = new HomeOfficeTransferOutOfAdaPersonalisation(
-                beforeListingTemplateId,
-                afterListingTemplateId,
-                beforeListingEmailAddress,
-                iaExUiFrontendUrl,
-                customerServicesProvider,
-                emailAddressFinder
-                );
+            beforeListingTemplateId,
+            afterListingTemplateId,
+            beforeListingEmailAddress,
+            iaExUiFrontendUrl,
+            customerServicesProvider,
+            emailAddressFinder
+        );
     }
 
     @Test
     public void should_return_given_template_id() {
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class))
-                .thenReturn(Optional.of(HearingCentre.TAYLOR_HOUSE));
+            .thenReturn(Optional.of(HearingCentre.TAYLOR_HOUSE));
         assertEquals(afterListingTemplateId,
-                homeOfficeTransferOutOfAdaPersonalisation.getTemplateId(asylumCase));
+            homeOfficeTransferOutOfAdaPersonalisation.getTemplateId(asylumCase));
 
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
         assertEquals(beforeListingTemplateId,
-                homeOfficeTransferOutOfAdaPersonalisation.getTemplateId(asylumCase));
+            homeOfficeTransferOutOfAdaPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_TRANSFER_OUT_OF_ADA_HOME_OFFICE",
-                homeOfficeTransferOutOfAdaPersonalisation.getReferenceId(caseId));
+            homeOfficeTransferOutOfAdaPersonalisation.getReferenceId(caseId));
     }
 
     @Test
@@ -103,24 +100,25 @@ public class HomeOfficeTransferOutOfAdaPersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> homeOfficeTransferOutOfAdaPersonalisation.getPersonalisation((AsylumCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> homeOfficeTransferOutOfAdaPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_return_personalisation_when_all_information_given() {
 
         Map<String, String> personalisation =
-                homeOfficeTransferOutOfAdaPersonalisation.getPersonalisation(asylumCase);
+            homeOfficeTransferOutOfAdaPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
-        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(transferOutOfAdaReason, personalisation.get("transferOutOfAdaReason"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("ariaListingReference", ariaListingReference)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("transferOutOfAdaReason", transferOutOfAdaReason)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
@@ -137,15 +135,16 @@ public class HomeOfficeTransferOutOfAdaPersonalisationTest {
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
-                homeOfficeTransferOutOfAdaPersonalisation.getPersonalisation(asylumCase);
+            homeOfficeTransferOutOfAdaPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("ariaListingReference"));
-        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals("", personalisation.get("transferOutOfAdaReason"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("ariaListingReference", "")
+            .containsEntry("homeOfficeReferenceNumber", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "")
+            .containsEntry("transferOutOfAdaReason", "")
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }

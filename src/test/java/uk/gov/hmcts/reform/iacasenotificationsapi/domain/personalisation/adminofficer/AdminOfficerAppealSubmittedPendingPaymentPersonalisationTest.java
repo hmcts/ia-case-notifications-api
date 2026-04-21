@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -20,25 +21,22 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AdminOfficerAppealSubmittedPendingPaymentPersonalisationTest {
 
+    private final String templateId = "someTemplateId";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String adminOfficerEmailAddress = "adminOfficer@example.com";
+    private final String iaExUiFrontendUrl = "http://localhost";
     @Mock
     AsylumCase asylumCase;
     @Mock
     AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
-
-    private String templateId = "someTemplateId";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String appellantGivenNames = "appellantGivenNames";
-    private String appellantFamilyName = "appellantFamilyName";
-    private String listRef = "LP/12345/2019";
-    private String adminOfficerEmailAddress = "adminOfficer@example.com";
-    private String paymentExceptionsAdminOfficerEmailAddress = "payment-exceptions-ao@example.com";
-    private String iaExUiFrontendUrl = "http://localhost";
-
     private AdminOfficerAppealSubmittedPendingPaymentPersonalisation
         adminOfficerAppealSubmittedPendingPaymentPersonalisation;
 
     @BeforeEach
     void setup() {
+        String listRef = "LP/12345/2019";
         when(adminOfficerPersonalisationProvider.getChangeToHearingRequirementsPersonalisation(asylumCase))
             .thenReturn(ImmutableMap
                 .<String, String>builder()
@@ -49,6 +47,7 @@ class AdminOfficerAppealSubmittedPendingPaymentPersonalisationTest {
                 .put("linkToOnlineService", iaExUiFrontendUrl)
                 .build());
 
+        String paymentExceptionsAdminOfficerEmailAddress = "payment-exceptions-ao@example.com";
         adminOfficerAppealSubmittedPendingPaymentPersonalisation =
             new AdminOfficerAppealSubmittedPendingPaymentPersonalisation(
                 templateId,
@@ -78,10 +77,10 @@ class AdminOfficerAppealSubmittedPendingPaymentPersonalisationTest {
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
-            () -> adminOfficerAppealSubmittedPendingPaymentPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> adminOfficerAppealSubmittedPendingPaymentPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -90,9 +89,10 @@ class AdminOfficerAppealSubmittedPendingPaymentPersonalisationTest {
         Map<String, String> personalisation =
             adminOfficerAppealSubmittedPendingPaymentPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
     }
 }

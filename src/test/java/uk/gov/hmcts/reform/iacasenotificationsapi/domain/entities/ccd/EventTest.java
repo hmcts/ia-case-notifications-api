@@ -10,8 +10,19 @@ import org.junit.jupiter.params.provider.EnumSource;
 
 public class EventTest {
 
+    private static String convertToCamelCase(String snakeCase) {
+        String[] words = snakeCase.split("_");
+        StringBuilder camelCase = new StringBuilder();
+        camelCase.append(words[0].toLowerCase());
+        for (int i = 1; i < words.length; i++) {
+            camelCase.append(words[i].substring(0, 1).toUpperCase());
+            camelCase.append(words[i].substring(1).toLowerCase());
+        }
+        return camelCase.toString();
+    }
+
     @ParameterizedTest
-    @EnumSource(value = Event.class, names = { "APPLY_FOR_FTPA_APPELLANT", "APPLY_FOR_FTPA_RESPONDENT" }, mode = EXCLUDE)
+    @EnumSource(value = Event.class, names = {"APPLY_FOR_FTPA_APPELLANT", "APPLY_FOR_FTPA_RESPONDENT"}, mode = EXCLUDE)
     public void has_correct_values(Event event) {
         assertEquals(convertToCamelCase(event.name()), event.toString());
     }
@@ -22,7 +33,6 @@ public class EventTest {
         assertEquals("editAppeal", Event.EDIT_APPEAL.toString());
         assertEquals("submitAppeal", Event.SUBMIT_APPEAL.toString());
         assertEquals("payAndSubmitAppeal", Event.PAY_AND_SUBMIT_APPEAL.toString());
-        assertEquals("payForAppeal", Event.PAY_FOR_APPEAL.toString());
         assertEquals("sendDirection", Event.SEND_DIRECTION.toString());
         assertEquals("requestRespondentEvidence", Event.REQUEST_RESPONDENT_EVIDENCE.toString());
         assertEquals("uploadRespondentEvidence", Event.UPLOAD_RESPONDENT_EVIDENCE.toString());
@@ -149,19 +159,8 @@ public class EventTest {
         assertEquals("applyForFTPARespondent", APPLY_FOR_FTPA_RESPONDENT.toString());
     }
 
-    private static String convertToCamelCase(String snakeCase) {
-        String[] words = snakeCase.split("_");
-        StringBuilder camelCase = new StringBuilder();
-        camelCase.append(words[0].toLowerCase());
-        for (int i = 1; i < words.length; i++) {
-            camelCase.append(words[i].substring(0, 1).toUpperCase());
-            camelCase.append(words[i].substring(1).toLowerCase());
-        }
-        return camelCase.toString();
-    }
-
     @Test
     public void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(130, Event.values().length);
+        assertEquals(129, Event.values().length);
     }
 }

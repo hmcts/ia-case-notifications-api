@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -39,8 +38,21 @@ import uk.gov.service.notify.NotificationClientException;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class DetentionEngagementTeamDecideAnApplicationPersonalisationTest {
 
+    final DocumentWithMetadata decideAnApplicationLetter = TestUtils.getDocumentWithMetadata(
+        "id", "internal_appeal_submission", "some other desc", DocumentTag.INTERNAL_DECIDE_AN_APPELLANT_APPLICATION_LETTER);
+    final IdValue<DocumentWithMetadata> document = new IdValue<>("1", decideAnApplicationLetter);
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String detentionEngagementTeamDecideAnApplicationApplicantTemplateId = "detentionEngagementTeamDecideAnApplicationApplicantTemplateId";
+    private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
+    private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
+    private final String adaPrefix = "ADA - SERVE IN PERSON";
     @Mock
     AsylumCase asylumCase;
+    @Mock
+    DocumentDownloadClient documentDownloadClient;
     @Mock
     private CustomerServicesProvider customerServicesProvider;
     @Mock
@@ -49,22 +61,6 @@ class DetentionEngagementTeamDecideAnApplicationPersonalisationTest {
     private MakeAnApplication makeAnApplication;
     @Mock
     private DetentionEmailService detEmailService;
-
-    private final Long caseId = 12345L;
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
-    private final String appellantGivenNames = "appellantGivenNames";
-    private final String appellantFamilyName = "appellantFamilyName";
-    private final String detentionEngagementTeamDecideAnApplicationApplicantTemplateId = "detentionEngagementTeamDecideAnApplicationApplicantTemplateId";
-    private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
-    DocumentWithMetadata decideAnApplicationLetter = TestUtils.getDocumentWithMetadata(
-            "id", "internal_appeal_submission", "some other desc", DocumentTag.INTERNAL_DECIDE_AN_APPELLANT_APPLICATION_LETTER);
-    IdValue<DocumentWithMetadata> document = new IdValue<>("1", decideAnApplicationLetter);
-    private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
-    private final String adaPrefix = "ADA - SERVE IN PERSON";
-    @Mock
-    DocumentDownloadClient documentDownloadClient;
-
     private DetentionEngagementTeamDecideAnApplicationPersonalisation detentionEngagementTeamDecideAnApplicationPersonalisation;
 
     @BeforeEach
@@ -94,6 +90,7 @@ class DetentionEngagementTeamDecideAnApplicationPersonalisationTest {
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_DECIDE_AN_APPLICATION_DET",
             detentionEngagementTeamDecideAnApplicationPersonalisation.getReferenceId(caseId));
     }
@@ -143,9 +140,9 @@ class DetentionEngagementTeamDecideAnApplicationPersonalisationTest {
         assertEquals(homeOfficeReferenceNumber, personalisationForLink.get("homeOfficeReferenceNumber"));
         assertEquals(jsonObject, personalisationForLink.get("documentLink"));
         assertEquals(isAcceleratedDetained ? "*IAFT-ADA4: Make an application – Accelerated detained appeal (ADA)" : "*IAFT-DE4: Make an application – Detained appeal",
-                personalisationForLink.get("form"));
+            personalisationForLink.get("form"));
         assertEquals(isAcceleratedDetained ? "https://www.gov.uk/government/publications/make-an-application-accelerated-detained-appeal-form-iaft-ada4" : "https://www.gov.uk/government/publications/make-an-application-detained-appeal-form-iaft-de4",
-                personalisationForLink.get("formLink"));
+            personalisationForLink.get("formLink"));
     }
 
     @ParameterizedTest
@@ -165,12 +162,12 @@ class DetentionEngagementTeamDecideAnApplicationPersonalisationTest {
         assertEquals("", personalisationForLink.get("form"));
         assertEquals("", personalisationForLink.get("formLink"));
     }
-    
+
     @Test
     void should_throw_exception_when_make_an_application_list_is_empty() {
         when((makeAnApplicationService.getMakeAnApplication(asylumCase, true))).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> detentionEngagementTeamDecideAnApplicationPersonalisation.getPersonalisationForLink(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("MakeAnApplication is not present");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamDecideAnApplicationPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("MakeAnApplication is not present", exception.getMessage());
     }
 }

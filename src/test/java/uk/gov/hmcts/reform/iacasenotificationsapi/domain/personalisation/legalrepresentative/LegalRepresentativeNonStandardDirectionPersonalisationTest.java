@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -34,6 +34,11 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class LegalRepresentativeNonStandardDirectionPersonalisationTest {
 
+    private final String beforeListingTemplateId = "beforeListingTemplateId";
+    private final String afterListingTemplateId = "afterListingTemplateId";
+    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    private final String legalRepEmailAddress = "legalrep@example.com";
+    private final String iaExUiFrontendUrl = "http://localhost";
     @Mock
     Callback<AsylumCase> callback;
     @Mock
@@ -44,30 +49,15 @@ public class LegalRepresentativeNonStandardDirectionPersonalisationTest {
     PersonalisationProvider personalisationProvider;
     @Mock
     CustomerServicesProvider customerServicesProvider;
-
-    private Long caseId = 12345L;
-    private String beforeListingTemplateId = "beforeListingTemplateId";
-    private String afterListingTemplateId = "afterListingTemplateId";
-    private HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
-    private String legalRepEmailAddress = "legalrep@example.com";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String ariaListingReference = "someAriaListingReference";
-    private String legalRepReferenceNumber = "someLegalRepReferenceNumber";
-    private String appellantGivenNames = "appellantGivenNames";
-    private String appellantFamilyNames = "appellantFamilyNames";
-    private String iaExUiFrontendUrl = "http://localhost";
-    private String directionExplanation = "someExplanation";
-    private String directionDueDate = "2019-10-29";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "customer.services@example.com";
-
     private LegalRepresentativeNonStandardDirectionPersonalisation
         legalRepresentativeNonStandardDirectionPersonalisation;
 
     @BeforeEach
     public void setUp() {
 
+        String customerServicesTelephone = "555 555 555";
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
+        String customerServicesEmail = "customer.services@example.com";
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         legalRepresentativeNonStandardDirectionPersonalisation =
@@ -92,6 +82,7 @@ public class LegalRepresentativeNonStandardDirectionPersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_LEGAL_REP_NON_STANDARD_DIRECTION",
             legalRepresentativeNonStandardDirectionPersonalisation.getReferenceId(caseId));
     }
@@ -99,14 +90,14 @@ public class LegalRepresentativeNonStandardDirectionPersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> legalRepresentativeNonStandardDirectionPersonalisation
-            .getPersonalisation((Callback<AsylumCase>) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("callback must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> legalRepresentativeNonStandardDirectionPersonalisation
+                .getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
@@ -118,17 +109,22 @@ public class LegalRepresentativeNonStandardDirectionPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeNonStandardDirectionPersonalisation.getPersonalisation(callback);
 
-        assertThat(personalisation).isNotEmpty();
-        assertEquals(isAda.equals(YesOrNo.YES)
-            ? "Accelerated detained appeal"
-            : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-        assertThat(personalisation).isNotEmpty();
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
+        assertFalse(personalisation.isEmpty());
+        assertThat(personalisation)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal"
+                : "Immigration and Asylum appeal")
+            .containsAllEntriesOf(getPersonalisationMapWithGivenValues());
     }
 
     private Map<String, String> getPersonalisationMapWithGivenValues() {
+        String directionDueDate = "2019-10-29";
+        String directionExplanation = "someExplanation";
+        String appellantFamilyNames = "someAppellantFamilyNames";
+        String appellantGivenNames = "someAppellantGivenNames";
+        String legalRepReferenceNumber = "someLegalRepReferenceNumber";
+        String ariaListingReference = "someAriaListingReference";
+        String appealReferenceNumber = "someReferenceNumber";
         return ImmutableMap
             .<String, String>builder()
             .put("appealReferenceNumber", appealReferenceNumber)
@@ -136,7 +132,6 @@ public class LegalRepresentativeNonStandardDirectionPersonalisationTest {
             .put("legalRepReferenceNumber", legalRepReferenceNumber)
             .put("appellantGivenNames", appellantGivenNames)
             .put("appellantFamilyName", appellantFamilyNames)
-            .put("iaExUiFrontendUrl", iaExUiFrontendUrl)
             .put("explanation", directionExplanation)
             .put("dueDate", directionDueDate)
             .build();

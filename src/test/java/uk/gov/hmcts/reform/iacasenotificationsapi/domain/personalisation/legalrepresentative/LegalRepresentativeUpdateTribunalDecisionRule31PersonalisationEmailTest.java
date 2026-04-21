@@ -20,7 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
@@ -28,27 +29,24 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Hearing
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-@SuppressWarnings("unchecked")
 class LegalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmailTest {
+    private final Long caseId = 12345L;
+    private final String legalRepresentativeUpdateTribunalDecisionRule31EmailTemplateId = "legalRepresentativeUpdateTribunalDecisionRule31EmailTemplateId";
+    private final String exUiFrontendUrl = "http://localhost";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
+    private final String legalRepReferenceNumber = "someLRReferenceNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
     @Mock
     Callback<AsylumCase> callback;
     @Mock
     AsylumCase asylumCase;
     @Mock
-    private CaseDetails<AsylumCase> caseDetails;
-    @Mock
     CustomerServicesProvider customerServicesProvider;
-
-    private Long caseId = 12345L;
-    private final String legalRepresentativeUpdateTribunalDecisionRule31EmailTemplateId = "legalRepresentativeUpdateTribunalDecisionRule31EmailTemplateId";
-    private String exUiFrontendUrl = "http://localhost";
-    private String mockedAppealReferenceNumber = "someReferenceNumber";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String legalRepReferenceNumber = "someLRReferenceNumber";
-    private String appellantGivenNames = "appellantGivenNames";
-    private String appellantFamilyName = "appellantFamilyName";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
+    @Mock
+    private CaseDetails<AsylumCase> caseDetails;
     private LegalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmail legalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmail;
 
     @BeforeEach
@@ -57,6 +55,7 @@ class LegalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmailTest {
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
         when(callback.getCaseDetails().getId()).thenReturn(caseId);
 
+        String appealReferenceNumber = "someReferenceNumber";
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
@@ -81,37 +80,38 @@ class LegalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmailTest {
     @Test
     void should_return_given_reference_id() {
         assertEquals(caseId + "_LEGAL_REPRESENTATIVE_UPDATE_TRIBUNAL_DECISION_RULE_31_EMAIL",
-                legalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmail.getReferenceId(caseId));
+            legalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmail.getReferenceId(caseId));
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> legalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmail.getPersonalisation((Callback<AsylumCase>) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("callback must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> legalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmail.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     @Test
     void should_return_personalisation_first_check_when_all_information_given() {
 
         DynamicList dynamicList = new DynamicList(new Value("dismissed", "Yes, change decision to Dismissed"),
-                List.of(
-                        new Value("DISMISSED", "Yes, change decision to Dismissed"),
-                        new Value("ALLOWED", "No")));
+            List.of(
+                new Value("DISMISSED", "Yes, change decision to Dismissed"),
+                new Value("ALLOWED", "No")));
 
         when(asylumCase.read(TYPES_OF_UPDATE_TRIBUNAL_DECISION, DynamicList.class)).thenReturn(Optional.of(dynamicList));
         when(asylumCase.read(UPDATE_TRIBUNAL_DECISION_AND_REASONS_FINAL_CHECK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
 
         Map<String, String> personalisation = legalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmail.getPersonalisation(callback);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(legalRepReferenceNumber, personalisation.get("legalRepReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(exUiFrontendUrl, personalisation.get("linkToService"));
-        assertEquals("the appeal decision has been changed", personalisation.get("firstBulletPoint"));
-        assertEquals("no", personalisation.get("bothChanges"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", mockedAppealReferenceNumber)
+            .containsEntry("legalRepReferenceNumber", legalRepReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToService", exUiFrontendUrl)
+            .containsEntry("firstBulletPoint", "the appeal decision has been changed")
+            .containsEntry("bothChanges", "no");
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
@@ -121,22 +121,23 @@ class LegalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmailTest {
     void should_return_personalisation_second_check_when_all_information_given() {
 
         DynamicList dynamicList = new DynamicList(new Value("DISMISSED", "No"),
-                List.of(
-                        new Value("ALLOWED", "Yes, change decision to Dismissed"),
-                        new Value("DISMISSED", "No")));
+            List.of(
+                new Value("ALLOWED", "Yes, change decision to Dismissed"),
+                new Value("DISMISSED", "No")));
 
         when(asylumCase.read(TYPES_OF_UPDATE_TRIBUNAL_DECISION, DynamicList.class)).thenReturn(Optional.of(dynamicList));
         when(asylumCase.read(UPDATE_TRIBUNAL_DECISION_AND_REASONS_FINAL_CHECK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
 
         Map<String, String> personalisation = legalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmail.getPersonalisation(callback);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(legalRepReferenceNumber, personalisation.get("legalRepReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(exUiFrontendUrl, personalisation.get("linkToService"));
-        assertEquals("a new Decision and Reasons document is available to view in the documents tab", personalisation.get("firstBulletPoint"));
-        assertEquals("no", personalisation.get("bothChanges"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", mockedAppealReferenceNumber)
+            .containsEntry("legalRepReferenceNumber", legalRepReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToService", exUiFrontendUrl)
+            .containsEntry("firstBulletPoint", "a new Decision and Reasons document is available to view in the documents tab")
+            .containsEntry("bothChanges", "no");
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
@@ -146,22 +147,23 @@ class LegalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmailTest {
     void should_return_personalisation_both_checks_when_all_information_given() {
 
         DynamicList dynamicList = new DynamicList(new Value("allowed", "Yes, change decision to Dismissed"),
-                List.of(
-                        new Value("ALLOWED", "Yes, change decision to Dismissed"),
-                        new Value("DISMISSED", "No")));
+            List.of(
+                new Value("ALLOWED", "Yes, change decision to Dismissed"),
+                new Value("DISMISSED", "No")));
 
         when(asylumCase.read(TYPES_OF_UPDATE_TRIBUNAL_DECISION, DynamicList.class)).thenReturn(Optional.of(dynamicList));
         when(asylumCase.read(UPDATE_TRIBUNAL_DECISION_AND_REASONS_FINAL_CHECK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
 
         Map<String, String> personalisation = legalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmail.getPersonalisation(callback);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(legalRepReferenceNumber, personalisation.get("legalRepReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(exUiFrontendUrl, personalisation.get("linkToService"));
-        assertEquals("the appeal decision has been changed", personalisation.get("firstBulletPoint"));
-        assertEquals("yes", personalisation.get("bothChanges"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", mockedAppealReferenceNumber)
+            .containsEntry("legalRepReferenceNumber", legalRepReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToService", exUiFrontendUrl)
+            .containsEntry("firstBulletPoint", "the appeal decision has been changed")
+            .containsEntry("bothChanges", "yes");
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 

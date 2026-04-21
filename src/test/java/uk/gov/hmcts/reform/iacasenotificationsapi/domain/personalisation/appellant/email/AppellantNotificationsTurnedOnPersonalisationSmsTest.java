@@ -3,8 +3,8 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appell
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
@@ -16,6 +16,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_EJP;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.MOBILE_NUMBER;
+
 import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,48 +33,43 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppellantNotificationsTurnedOnPersonalisationSmsTest {
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
-    @Mock
-    PinInPostDetails pinInPostDetails;
     private final String representedTemplateId = "representedTemplateId";
     private final String unrepresentedTemplateId = "unrepresentedTemplateId";
-    private final Long caseId = 12345L;
     private final String iaExUiFrontendUrl = "http://localhost";
     private final String appealReferenceNumber = "appealReferenceNumber";
     private final String ariaListingReference = "someAriaListingReference";
-    private final String legalRepReferenceEjp = "someLegalRepReferenceNumber";
-    private final String appellantGivenNames = "appellantGivenNames";
-    private final String appellantFamilyName = "appellantFamilyName";
-    private String dateOfBirth = "2020-03-01";
-    private final String expectedDateOfBirth = "1 Mar 2020";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
     private final String appellantMobileNumberEjp = "07777777777";
     private final String ccdReferenceNumberForDisplay = "someRefNumber";
     private final String homeOfficeRef = "homeOfficeRef";
     private final String customerServicesTelephone = "customerServicesTelephone";
     private final String customerServicesEmail = "customerServicesEmail";
     private final String securityCode = "securityCode";
-    private final String validDate = "2024-03-01";
-    private final String expectedValidDate = "1 Mar 2024";
-
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    PinInPostDetails pinInPostDetails;
     private AppellantNotificationsTurnedOnPersonalisationSms appellantNotificationsTurnedOnPersonalisationSms;
 
     @BeforeEach
     public void setup() {
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(ariaListingReference));
+        String legalRepReferenceEjp = "someLegalRepReferenceNumber";
         when(asylumCase.read(LEGAL_REP_REFERENCE_EJP, String.class)).thenReturn(Optional.of(legalRepReferenceEjp));
         when(asylumCase.read(MOBILE_NUMBER, String.class)).thenReturn(Optional.of(appellantMobileNumberEjp));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
+        String dateOfBirth = "2020-03-01";
         when(asylumCase.read(APPELLANT_DATE_OF_BIRTH, String.class)).thenReturn(Optional.of(dateOfBirth));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeRef));
         when(asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class)).thenReturn(Optional.of(ccdReferenceNumberForDisplay));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_PIN_IN_POST, PinInPostDetails.class)).thenReturn(Optional.of(pinInPostDetails));
         when(pinInPostDetails.getAccessCode()).thenReturn(securityCode);
+        String validDate = "2024-03-01";
         when(pinInPostDetails.getExpiryDate()).thenReturn(validDate);
 
         appellantNotificationsTurnedOnPersonalisationSms = new AppellantNotificationsTurnedOnPersonalisationSms(
@@ -101,8 +97,8 @@ class AppellantNotificationsTurnedOnPersonalisationSmsTest {
     @Test
     public void should_return_given_reference_id() {
 
-        assertThat(appellantNotificationsTurnedOnPersonalisationSms.getReferenceId(caseId))
-            .isEqualTo(caseId + "_APPELLANT_NOTIFICATIONS_TURNED_ON_SMS");
+        Long caseId = 12345L;
+        assertEquals(caseId + "_APPELLANT_NOTIFICATIONS_TURNED_ON_SMS", appellantNotificationsTurnedOnPersonalisationSms.getReferenceId(caseId));
     }
 
     @Test
@@ -121,14 +117,13 @@ class AppellantNotificationsTurnedOnPersonalisationSmsTest {
     }
 
 
-
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
-            () -> appellantNotificationsTurnedOnPersonalisationSms.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> appellantNotificationsTurnedOnPersonalisationSms.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -138,18 +133,21 @@ class AppellantNotificationsTurnedOnPersonalisationSmsTest {
         Map<String, String> personalisation =
             appellantNotificationsTurnedOnPersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals("\nListing reference: " + ariaListingReference, personalisation.get("listingReferenceLine"));
-        assertEquals(homeOfficeRef, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(ccdReferenceNumberForDisplay, personalisation.get("ccdReferenceNumberForDisplay"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(expectedDateOfBirth, personalisation.get("dateOfBirth"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
-        assertEquals(customerServicesTelephone, personalisation.get("customerServicesTelephone"));
-        assertEquals(customerServicesEmail, personalisation.get("customerServicesEmail"));
-        assertEquals(securityCode, personalisation.get("securityCode"));
-        assertEquals(expectedValidDate, personalisation.get("validDate"));
+        String expectedValidDate = "1 Mar 2024";
+        String expectedDateOfBirth = "1 Mar 2020";
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("listingReferenceLine", "\nListing reference: " + ariaListingReference)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRef)
+            .containsEntry("ccdReferenceNumberForDisplay", ccdReferenceNumberForDisplay)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("dateOfBirth", expectedDateOfBirth)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("customerServicesTelephone", customerServicesTelephone)
+            .containsEntry("customerServicesEmail", customerServicesEmail)
+            .containsEntry("securityCode", securityCode)
+            .containsEntry("validDate", expectedValidDate);
 
     }
 

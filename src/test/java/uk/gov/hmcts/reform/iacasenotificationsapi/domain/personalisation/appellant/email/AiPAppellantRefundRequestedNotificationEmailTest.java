@@ -1,10 +1,9 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 
 import java.util.Collections;
 import java.util.Map;
@@ -27,30 +26,24 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvi
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-@SuppressWarnings("unchecked")
 class AiPAppellantRefundRequestedNotificationEmailTest {
 
+    private final Long caseId = 12345L;
+    private final String refundRequestedAipPaPayLaterEmailTemplateId = "refundRequestedAipPaPayLaterEmailTemplateId";
+    private final String refundRequestedAipEmailTemplateId = "refundRequestedAipEmailTemplateId";
+    private final String iaAipFrontendUrl = "http://localhost";
+    private final String homeOfficeReferenceNumber = "someHOReferenceNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final SystemDateProvider systemDateProvider = new SystemDateProvider();
     @Mock
     Callback<AsylumCase> callback;
     @Mock
     AsylumCase asylumCase;
     @Mock
-    private CaseDetails<AsylumCase> caseDetails;
-    @Mock
     RecipientsFinder recipientsFinder;
-
-    private Long caseId = 12345L;
-    private String refundRequestedAipPaPayLaterEmailTemplateId = "refundRequestedAipPaPayLaterEmailTemplateId";
-    private String refundRequestedAipEmailTemplateId = "refundRequestedAipEmailTemplateId";
-    private String iaAipFrontendUrl = "http://localhost";
-    private String mockedAppealReferenceNumber = "someReferenceNumber";
-    private String mockedAppellantEmail = "fake@faketest.com";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String homeOfficeReferenceNumber = "someHOReferenceNumber";
-    private String appellantGivenNames = "appellantGivenNames";
-    private String appellantFamilyName = "appellantFamilyName";
-    private String refundDateMock = "12/03/2024";
-    private final SystemDateProvider systemDateProvider = new SystemDateProvider();
+    @Mock
+    private CaseDetails<AsylumCase> caseDetails;
     private AiPAppellantRefundRequestedNotificationEmail aipAppellantRefundRequestedNotificationEmail;
 
     @BeforeEach
@@ -59,10 +52,12 @@ class AiPAppellantRefundRequestedNotificationEmailTest {
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
         when(callback.getCaseDetails().getId()).thenReturn(caseId);
 
+        String appealReferenceNumber = "someReferenceNumber";
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
+        String refundDateMock = "12/03/2024";
         when(asylumCase.read(REQUEST_FEE_REMISSION_DATE, String.class)).thenReturn(Optional.of(refundDateMock));
 
         aipAppellantRefundRequestedNotificationEmail = new AiPAppellantRefundRequestedNotificationEmail(
@@ -121,6 +116,7 @@ class AiPAppellantRefundRequestedNotificationEmailTest {
 
     @Test
     void should_return_given_email_address_list_from_subscribers_in_asylum_case() {
+        String mockedAppellantEmail = "fake@faketest.com";
         when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL))
             .thenReturn(Collections.singleton(mockedAppellantEmail));
 
@@ -134,9 +130,9 @@ class AiPAppellantRefundRequestedNotificationEmailTest {
         when(recipientsFinder.findAll(null, NotificationType.EMAIL))
             .thenThrow(new NullPointerException("asylumCase must not be null"));
 
-        assertThatThrownBy(() -> aipAppellantRefundRequestedNotificationEmail.getRecipientsList(null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> aipAppellantRefundRequestedNotificationEmail.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -144,30 +140,32 @@ class AiPAppellantRefundRequestedNotificationEmailTest {
 
         Map<String, String> personalisation = aipAppellantRefundRequestedNotificationEmail.getPersonalisation(callback);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
+        String mockedAppealReferenceNumber = "someReferenceNumber";
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", mockedAppealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("Hyperlink to service", iaAipFrontendUrl);
 
     }
 
     @Test
     void should_return_personalisation_for_payLater_payOffline() {
         when(asylumCase.read(APPEAL_TYPE, AppealType.class))
-                .thenReturn(Optional.of(AppealType.PA));
+            .thenReturn(Optional.of(AppealType.PA));
 
         when(asylumCase.read(PA_APPEAL_TYPE_AIP_PAYMENT_OPTION, String.class))
-                .thenReturn(Optional.of("payLater"));
+            .thenReturn(Optional.of("payLater"));
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class))
-                .thenReturn(Optional.of("A1234567"));
+            .thenReturn(Optional.of("A1234567"));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class))
-                .thenReturn(Optional.of("HO123456"));
+            .thenReturn(Optional.of("HO123456"));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class))
-                .thenReturn(Optional.of("Test"));
+            .thenReturn(Optional.of("Test"));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class))
-                .thenReturn(Optional.of("User"));
+            .thenReturn(Optional.of("User"));
 
         Map<String, String> personalisation = aipAppellantRefundRequestedNotificationEmail.getPersonalisation(asylumCase);
 

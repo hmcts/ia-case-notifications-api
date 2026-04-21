@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -40,6 +40,18 @@ import uk.gov.service.notify.NotificationClientException;
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class DetentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonalisationTest {
 
+    final DocumentWithMetadata internalFtpaDecidedByRjLetter = getDocumentWithMetadata(
+        "1", "FTPA decided by resident judge letter", "some other desc", DocumentTag.INTERNAL_APPELLANT_FTPA_DECIDED_LETTER);
+    final IdValue<DocumentWithMetadata> internalFtpaDecidedByRjLetterId = new IdValue<>("1", internalFtpaDecidedByRjLetter);
+    private final String appellantFtpaDecidedByResidentJudgeTemplateId = "someTemplateId";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String homeOfficeReferenceNumber = "someReferenceNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String adaPrefix = "ADA - SERVE IN PERSON";
+    private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
+    private final String iaut1FormUrl = "https://www.gov.uk/government/publications/form-iaut1-application-for-permission-to-appeal-from-first-tier-tribunal";
+    private final String formLinkForTemplateIfRequired = "*IAUT1: Application for permission to appeal from First-tier Tribunal\n" + iaut1FormUrl;
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -50,21 +62,6 @@ public class DetentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonali
     DocumentDownloadClient documentDownloadClient;
     @Mock
     private PersonalisationProvider personalisationProvider;
-
-    private final String appellantFtpaDecidedByResidentJudgeTemplateId = "someTemplateId";
-    private final String detentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonalisationReferenceId = "_INTERNAL_APPELLANT_FTPA_DECIDED_BY_RESIDENT_JUDGE_DET";
-    private final String detEmailAddress = "some@example.com";
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String homeOfficeReferenceNumber = "someReferenceNumber";
-    private final String appellantGivenNames = "appellantGivenNames";
-    private final String appellantFamilyName = "appellantFamilyName";
-    private final String adaPrefix = "ADA - SERVE IN PERSON";
-    private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
-    private final String iaut1FormUrl = "https://www.gov.uk/government/publications/form-iaut1-application-for-permission-to-appeal-from-first-tier-tribunal";
-    private final String formLinkForTemplateIfRequired = "*IAUT1: Application for permission to appeal from First-tier Tribunal\n" + iaut1FormUrl;
-    DocumentWithMetadata internalFtpaDecidedByRjLetter = getDocumentWithMetadata(
-            "1", "FTPA decided by resident judge letter", "some other desc", DocumentTag.INTERNAL_APPELLANT_FTPA_DECIDED_LETTER);
-    IdValue<DocumentWithMetadata> internalFtpaDecidedByRjLetterId = new IdValue<>("1", internalFtpaDecidedByRjLetter);
     private DetentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonalisation detentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonalisation;
 
     @BeforeEach
@@ -83,14 +80,14 @@ public class DetentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonali
         when(documentDownloadClient.getJsonObjectFromDocument(internalFtpaDecidedByRjLetter)).thenReturn(jsonDocument);
 
         detentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonalisation =
-                new DetentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonalisation(
-                        appellantFtpaDecidedByResidentJudgeTemplateId,
-                        detEmailService,
-                        documentDownloadClient,
-                        adaPrefix,
-                        nonAdaPrefix,
-                        personalisationProvider
-                );
+            new DetentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonalisation(
+                appellantFtpaDecidedByResidentJudgeTemplateId,
+                detEmailService,
+                documentDownloadClient,
+                adaPrefix,
+                nonAdaPrefix,
+                personalisationProvider
+            );
 
         initializePrefixesForInternalAppeal(detentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonalisation);
         ReflectionTestUtils.setField(detentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonalisation, "iaut1FormUrl", iaut1FormUrl);
@@ -105,18 +102,20 @@ public class DetentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonali
     @Test
     public void should_return_given_reference_id() {
         Long caseId = 12345L;
+        String detentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonalisationReferenceId = "_INTERNAL_APPELLANT_FTPA_DECIDED_BY_RESIDENT_JUDGE_DET";
         assertEquals(caseId + detentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonalisationReferenceId,
-                detentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonalisation.getReferenceId(caseId));
+            detentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonalisation.getReferenceId(caseId));
     }
 
     @Test
     public void should_return_given_email_address_from_asylum_case() {
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
+        String detEmailAddress = "some@example.com";
         when(detEmailService.getDetEmailAddress(asylumCase)).thenReturn(detEmailAddress);
 
         assertTrue(
-                detentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonalisation.getRecipientsList(asylumCase).contains(detEmailAddress));
+            detentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonalisation.getRecipientsList(asylumCase).contains(detEmailAddress));
     }
 
     @Test
@@ -140,30 +139,30 @@ public class DetentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonali
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
-        assertThatThrownBy(
-                () -> detentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonalisation.getPersonalisationForLink((AsylumCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> detentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonalisation.getPersonalisationForLink((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_internal_ftpa_decided_document_is_missing() {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(
-                () -> detentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonalisation.getPersonalisationForLink(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("internalAppellantFtpaDecidedLetter document not available");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class,
+                () -> detentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("internalAppellantFtpaDecidedLetter document not available", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_ftpa_decision_is_missing() {
         when(asylumCase.read(FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(
-                () -> detentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonalisation.getPersonalisationForLink(asylumCase))
-                .isExactlyInstanceOf(RequiredFieldMissingException.class)
-                .hasMessage("FTPA decision not found");
+        RequiredFieldMissingException exception =
+            assertThrows(RequiredFieldMissingException.class,
+                () -> detentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("FTPA decision not found", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -187,7 +186,7 @@ public class DetentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonali
         when(asylumCase.read(FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)).thenReturn(Optional.of(ftpaDecisionOutcomeType));
 
         Map<String, Object> actualPersonalisation =
-                detentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonalisation.getPersonalisationForLink(asylumCase);
+            detentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonalisation.getPersonalisationForLink(asylumCase);
 
         assertTrue(compareStringsAndJsonObjects(expectedPersonalisation, actualPersonalisation));
     }
@@ -214,7 +213,7 @@ public class DetentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonali
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
 
         Map<String, Object> actualPersonalisation =
-                detentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonalisation.getPersonalisationForLink(asylumCase);
+            detentionEngagementTeamAppellantFtpaDecidedByResidentJudgePersonalisation.getPersonalisationForLink(asylumCase);
 
         assertTrue(compareStringsAndJsonObjects(expectedPersonalisation, actualPersonalisation));
     }

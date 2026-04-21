@@ -24,7 +24,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -35,6 +37,26 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisationTest {
 
+    private final Long ccdCaseId = 12345L;
+    private final String approvedLetterTemplateId = "someLetterTemplateId";
+    private final String partiallyApprovedLetterTemplateId = "someLetterTemplateId";
+    private final String appealReferenceNumber = "someAppealRefNumber";
+    private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String addressLine1 = "50";
+    private final String addressLine2 = "Building name";
+    private final String addressLine3 = "Street name";
+    private final String postCode = "XX1 2YY";
+    private final String postTown = "Town name";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "example@example.com";
+    private final String oocAddressLine1 = "Calle Toledo 32";
+    private final String oocAddressLine2 = "Madrid";
+    private final String oocAddressLine3 = "28003";
+    private final NationalityFieldValue oocAddressCountry = mock(NationalityFieldValue.class);
+    private final int daysAfterRemissionDecision = 14;
+    private final String refundFeeAmountInGbp = "180.00";
     @Mock
     Callback<AsylumCase> callback;
     @Mock
@@ -47,29 +69,6 @@ class AppellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisationTest 
     AddressUk address;
     @Mock
     SystemDateProvider systemDateProvider;
-
-    private Long ccdCaseId = 12345L;
-    private String approvedLetterTemplateId = "someLetterTemplateId";
-    private String partiallyApprovedLetterTemplateId = "someLetterTemplateId";
-    private String appealReferenceNumber = "someAppealRefNumber";
-    private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
-    private String appellantGivenNames = "appellantGivenNames";
-    private String appellantFamilyName = "appellantFamilyName";
-    private String addressLine1 = "50";
-    private String addressLine2 = "Building name";
-    private String addressLine3 = "Street name";
-    private String postCode = "XX1 2YY";
-    private String postTown = "Town name";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "example@example.com";
-    private String oocAddressLine1 = "Calle Toledo 32";
-    private String oocAddressLine2 = "Madrid";
-    private String oocAddressLine3 = "28003";
-    private NationalityFieldValue oocAddressCountry = mock(NationalityFieldValue.class);
-    private int daysAfterRemissionDecision = 14;
-    private String refundFeeAmount = "18000";
-    private String refundFeeAmountInGbp = "180.00";
-
     private AppellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation;
 
     @BeforeEach
@@ -98,6 +97,7 @@ class AppellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisationTest 
         when(asylumCase.read(REMISSION_DECISION, RemissionDecision.class)).thenReturn(Optional.of(RemissionDecision.APPROVED));
         final String dueDate = LocalDate.now().plusDays(daysAfterRemissionDecision).format(DateTimeFormatter.ofPattern("d MMM yyyy"));
         when(systemDateProvider.dueDate(daysAfterRemissionDecision)).thenReturn(dueDate);
+        String refundFeeAmount = "18000";
         when(asylumCase.read(AMOUNT_REMITTED, String.class)).thenReturn(Optional.of(refundFeeAmount));
 
         appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation = new AppellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation(
@@ -125,17 +125,17 @@ class AppellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisationTest 
     void should_return_null_template_id_for_rejected_remission_decision() {
         when(asylumCase.read(REMISSION_DECISION, RemissionDecision.class)).thenReturn(Optional.of(RemissionDecision.REJECTED));
         String templateId = appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation.getTemplateId(asylumCase);
-        assertEquals(null, templateId);
+        assertNull(templateId);
     }
 
     @Test
     void should_throw_exception_when_remission_decision_is_not_present() {
         when(asylumCase.read(REMISSION_DECISION, RemissionDecision.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() ->
-                appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation.getTemplateId(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("Remission decision not found");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () ->
+                appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation.getTemplateId(asylumCase));
+        assertEquals("Remission decision not found", exception.getMessage());
     }
 
     @Test
@@ -148,10 +148,12 @@ class AppellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisationTest 
     void should_return_address_in_correct_format() {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        assertTrue(appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation.getRecipientsList(asylumCase).contains("appellantGivenNamesappellantFamilyName_50_Buildingname_Streetname_Townname_XX12YY"));
+        assertTrue(appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation.getRecipientsList(asylumCase)
+                .contains("someAppellantGivenNamessomeAppellantFamil_50_Buildingname_Streetname_Townname_XX12YY"));
 
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
-        assertTrue(appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation.getRecipientsList(asylumCase).contains("appellantGivenNamesappellantFamilyName_CalleToledo32_Madrid_28003_Spain"));
+        assertTrue(appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation.getRecipientsList(asylumCase)
+                .contains("someAppellantGivenNamessomeAppellantFamil_CalleToledo32_Madrid_28003_Spain"));
     }
 
     @Test
@@ -169,9 +171,9 @@ class AppellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisationTest 
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("appellantAddress is not present");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("appellantAddress is not present", exception.getMessage());
     }
 
     @Test
@@ -179,19 +181,19 @@ class AppellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisationTest 
         legalRepInCountryDataSetup();
         when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_ADDRESS_U_K, AddressUk.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("legalRepAddressUK is not present");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("legalRepAddressUK is not present", exception.getMessage());
     }
 
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
-            () -> appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation.getPersonalisation((Callback<AsylumCase>) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("callback must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     @Test
@@ -202,20 +204,22 @@ class AppellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisationTest 
         Map<String, String> personalisation =
             appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation.getPersonalisation(callback);
 
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(appellantGivenNames + " " + appellantFamilyName, personalisation.get("address_line_1"));
-        assertEquals(addressLine1, personalisation.get("address_line_2"));
-        assertEquals(addressLine2, personalisation.get("address_line_3"));
-        assertEquals(addressLine3, personalisation.get("address_line_4"));
-        assertEquals(postTown, personalisation.get("address_line_5"));
-        assertEquals(postCode, personalisation.get("address_line_6"));
+        assertThat(personalisation)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
+            .containsEntry("address_line_1", (appellantGivenNames + " " + appellantFamilyName).substring(0, 42))
+            .containsEntry("address_line_2", addressLine1)
+            .containsEntry("address_line_3", addressLine2)
+            .containsEntry("address_line_4", addressLine3)
+            .containsEntry("address_line_5", postTown)
+            .containsEntry("address_line_6", postCode);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-        assertEquals(systemDateProvider.dueDate(daysAfterRemissionDecision), personalisation.get("daysAfterRemissionDecision"));
-        assertEquals(refundFeeAmountInGbp, personalisation.get("refundAmount"));
+        assertThat(personalisation)
+            .containsEntry("daysAfterRemissionDecision", systemDateProvider.dueDate(daysAfterRemissionDecision))
+            .containsEntry("refundAmount", refundFeeAmountInGbp);
     }
 
     @Test
@@ -226,19 +230,21 @@ class AppellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisationTest 
         Map<String, String> personalisation =
             appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation.getPersonalisation(callback);
 
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(appellantGivenNames + " " + appellantFamilyName, personalisation.get("address_line_1"));
-        assertEquals(oocAddressLine1, personalisation.get("address_line_2"));
-        assertEquals(oocAddressLine2, personalisation.get("address_line_3"));
-        assertEquals(oocAddressLine3, personalisation.get("address_line_4"));
-        assertEquals(Nationality.ES.toString(), personalisation.get("address_line_5"));
+        assertThat(personalisation)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
+            .containsEntry("address_line_1", (appellantGivenNames + " " + appellantFamilyName).substring(0, 42))
+            .containsEntry("address_line_2", oocAddressLine1)
+            .containsEntry("address_line_3", oocAddressLine2)
+            .containsEntry("address_line_4", oocAddressLine3)
+            .containsEntry("address_line_5", Nationality.ES.toString());
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-        assertEquals(systemDateProvider.dueDate(daysAfterRemissionDecision), personalisation.get("daysAfterRemissionDecision"));
-        assertEquals(refundFeeAmountInGbp, personalisation.get("refundAmount"));
+        assertThat(personalisation)
+            .containsEntry("daysAfterRemissionDecision", systemDateProvider.dueDate(daysAfterRemissionDecision))
+            .containsEntry("refundAmount", refundFeeAmountInGbp);
     }
 
     @Test
@@ -247,19 +253,21 @@ class AppellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisationTest 
         Map<String, String> personalisation =
             appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation.getPersonalisation(callback);
 
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(addressLine1, personalisation.get("address_line_1"));
-        assertEquals(addressLine2, personalisation.get("address_line_2"));
-        assertEquals(addressLine3, personalisation.get("address_line_3"));
-        assertEquals(postTown, personalisation.get("address_line_4"));
-        assertEquals(postCode, personalisation.get("address_line_5"));
+        assertThat(personalisation)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
+            .containsEntry("address_line_1", addressLine1)
+            .containsEntry("address_line_2", addressLine2)
+            .containsEntry("address_line_3", addressLine3)
+            .containsEntry("address_line_4", postTown)
+            .containsEntry("address_line_5", postCode);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-        assertEquals(systemDateProvider.dueDate(daysAfterRemissionDecision), personalisation.get("daysAfterRemissionDecision"));
-        assertEquals(refundFeeAmountInGbp, personalisation.get("refundAmount"));
+        assertThat(personalisation)
+            .containsEntry("daysAfterRemissionDecision", systemDateProvider.dueDate(daysAfterRemissionDecision))
+            .containsEntry("refundAmount", refundFeeAmountInGbp);
     }
 
     @Test
@@ -268,19 +276,21 @@ class AppellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisationTest 
         Map<String, String> personalisation =
             appellantInternalLateRemissionPartiallyOrGrantedLetterPersonalisation.getPersonalisation(callback);
 
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(oocAddressLine1, personalisation.get("address_line_1"));
-        assertEquals(oocAddressLine2, personalisation.get("address_line_2"));
-        assertEquals(oocAddressLine3, personalisation.get("address_line_3"));
-        assertEquals(postTown, personalisation.get("address_line_4"));
-        assertEquals(Nationality.ES.toString(), personalisation.get("address_line_5"));
+        assertThat(personalisation)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
+            .containsEntry("address_line_1", oocAddressLine1)
+            .containsEntry("address_line_2", oocAddressLine2)
+            .containsEntry("address_line_3", oocAddressLine3)
+            .containsEntry("address_line_4", postTown)
+            .containsEntry("address_line_5", Nationality.ES.toString());
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-        assertEquals(systemDateProvider.dueDate(daysAfterRemissionDecision), personalisation.get("daysAfterRemissionDecision"));
-        assertEquals(refundFeeAmountInGbp, personalisation.get("refundAmount"));
+        assertThat(personalisation)
+            .containsEntry("daysAfterRemissionDecision", systemDateProvider.dueDate(daysAfterRemissionDecision))
+            .containsEntry("refundAmount", refundFeeAmountInGbp);
     }
 
     private void legalRepOutOfCountryDataSetup() {

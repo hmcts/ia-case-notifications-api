@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -40,36 +41,28 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppellantUpdateTribunalDecisionRule31PersonalisationSmsTest {
 
+    private final String updateTribunalDecisionRule31DecisionTemplateId = "decisionTemplateId";
+    private final String updateTribunalDecisionRule31DocumentTemplateId = "documentTemplateId";
+    private final String updateTribunalDecisionRule31BothTemplateId = "bothTemplateId";
+    private final long mockedAppealReferenceNumber = 1236;
+    private final String iaAipFrontendUrl = "http://localhost";
+    private final DynamicList dynamicAllowedDecisionList = new DynamicList(
+        new Value("allowed", "Yes, change decision to Allowed"),
+        newArrayList()
+    );
+    private final DynamicList dynamicDismissedDecisionList = new DynamicList(
+        new Value("dismissed", "No"),
+        newArrayList()
+    );
     @Mock
     Callback<AsylumCase> callback;
-    @Mock
-    private CaseDetails<AsylumCase> caseDetails;
     @Mock
     AsylumCase asylumCase;
     @Mock
     RecipientsFinder recipientsFinder;
-    private Long caseId = 12345L;
-    private final String updateTribunalDecisionRule31DecisionTemplateId = "decisionTemplateId";
-    private final String updateTribunalDecisionRule31DocumentTemplateId = "documentTemplateId";
-    private final String updateTribunalDecisionRule31BothTemplateId  = "bothTemplateId";
-    private final String allowed = "Allowed";
-    private final String dismissed = "Dismissed";
-    private final String days28 = "28 days";
-    private final String days14 = "14 days";
-    private long mockedAppealReferenceNumber = 1236;
-    private String mockedAppellantMobilePhone = "07123456789";
-    private String mockedAppellantGivenNames = "appellantGivenNames";
-    private String mockedAppellantFamilyName = "appellantFamilyName";
-    private String iaAipFrontendUrl = "http://localhost";
+    @Mock
+    private CaseDetails<AsylumCase> caseDetails;
     private AppellantUpdateTribunalDecisionRule31PersonalisationSms appellantUpdateTribunalDecisionRule31PersonalisationSms;
-    private final DynamicList dynamicAllowedDecisionList = new DynamicList(
-            new Value("allowed", "Yes, change decision to Allowed"),
-            newArrayList()
-    );
-    private final DynamicList dynamicDismissedDecisionList = new DynamicList(
-            new Value("dismissed", "No"),
-            newArrayList()
-    );
 
     @BeforeEach
     void setup() {
@@ -77,38 +70,41 @@ class AppellantUpdateTribunalDecisionRule31PersonalisationSmsTest {
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
         when(callback.getCaseDetails().getId()).thenReturn(mockedAppealReferenceNumber);
 
+        String mockedAppellantGivenNames = "someAppellantGivenNames";
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(mockedAppellantGivenNames));
+        String mockedAppellantFamilyName = "someAppellantFamilyName";
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(mockedAppellantFamilyName));
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(String.valueOf(mockedAppealReferenceNumber)));
 
         appellantUpdateTribunalDecisionRule31PersonalisationSms =
-                new AppellantUpdateTribunalDecisionRule31PersonalisationSms(
-                        updateTribunalDecisionRule31DecisionTemplateId,
-                        updateTribunalDecisionRule31DocumentTemplateId,
-                        updateTribunalDecisionRule31BothTemplateId,
-                        recipientsFinder,
-                        iaAipFrontendUrl);
+            new AppellantUpdateTribunalDecisionRule31PersonalisationSms(
+                updateTribunalDecisionRule31DecisionTemplateId,
+                updateTribunalDecisionRule31DocumentTemplateId,
+                updateTribunalDecisionRule31BothTemplateId,
+                recipientsFinder,
+                iaAipFrontendUrl);
     }
 
     @Test
     void should_return_given_template_id() {
         when(asylumCase.read(TYPES_OF_UPDATE_TRIBUNAL_DECISION, DynamicList.class))
-                .thenReturn(Optional.of(dynamicDismissedDecisionList));
+            .thenReturn(Optional.of(dynamicDismissedDecisionList));
         assertEquals(updateTribunalDecisionRule31DocumentTemplateId, appellantUpdateTribunalDecisionRule31PersonalisationSms.getTemplateId(asylumCase));
 
         when(asylumCase.read(TYPES_OF_UPDATE_TRIBUNAL_DECISION, DynamicList.class))
-                .thenReturn(Optional.of(dynamicAllowedDecisionList));
+            .thenReturn(Optional.of(dynamicAllowedDecisionList));
         when(asylumCase.read(UPDATE_TRIBUNAL_DECISION_AND_REASONS_FINAL_CHECK, YesOrNo.class))
-                .thenReturn(Optional.of(YesOrNo.YES));
+            .thenReturn(Optional.of(YesOrNo.YES));
         assertEquals(updateTribunalDecisionRule31BothTemplateId, appellantUpdateTribunalDecisionRule31PersonalisationSms.getTemplateId(asylumCase));
 
         when(asylumCase.read(UPDATE_TRIBUNAL_DECISION_AND_REASONS_FINAL_CHECK, YesOrNo.class))
-                .thenReturn(Optional.of(YesOrNo.NO));
+            .thenReturn(Optional.of(YesOrNo.NO));
         assertEquals(updateTribunalDecisionRule31DecisionTemplateId, appellantUpdateTribunalDecisionRule31PersonalisationSms.getTemplateId(asylumCase));
     }
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_APPELLANT_UPDATE_TRIBUNAL_DECISION_RULE_31_SMS",
             appellantUpdateTribunalDecisionRule31PersonalisationSms.getReferenceId(caseId));
     }
@@ -118,13 +114,14 @@ class AppellantUpdateTribunalDecisionRule31PersonalisationSmsTest {
         when(recipientsFinder.findAll(null, NotificationType.SMS))
             .thenThrow(new NullPointerException("asylumCase must not be null"));
 
-        assertThatThrownBy(() -> appellantUpdateTribunalDecisionRule31PersonalisationSms.getRecipientsList(null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> appellantUpdateTribunalDecisionRule31PersonalisationSms.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     void should_return_given_mobile_mobile_list_from_subscribers_in_asylum_case() {
+        String mockedAppellantMobilePhone = "07123456789";
         when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
             .thenReturn(Collections.singleton(mockedAppellantMobilePhone));
 
@@ -135,29 +132,34 @@ class AppellantUpdateTribunalDecisionRule31PersonalisationSmsTest {
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> appellantUpdateTribunalDecisionRule31PersonalisationSms.getPersonalisation((Callback<AsylumCase>) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("callback must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> appellantUpdateTribunalDecisionRule31PersonalisationSms.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_information_given_decision_updated(YesOrNo outOfCountry) {
         when(asylumCase.read(TYPES_OF_UPDATE_TRIBUNAL_DECISION, DynamicList.class))
-                .thenReturn(Optional.of(dynamicAllowedDecisionList));
+            .thenReturn(Optional.of(dynamicAllowedDecisionList));
         when(asylumCase.read(UPDATE_TRIBUNAL_DECISION_AND_REASONS_FINAL_CHECK, YesOrNo.class))
-                .thenReturn(Optional.of(YesOrNo.YES));
+            .thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(AsylumCaseDefinition.APPEAL_OUT_OF_COUNTRY, YesOrNo.class))
-                .thenReturn(Optional.of(outOfCountry));
+            .thenReturn(Optional.of(outOfCountry));
         when(asylumCase.read(UPDATED_APPEAL_DECISION, String.class)).thenReturn(Optional.of("Allowed"));
         Map<String, String> personalisation = appellantUpdateTribunalDecisionRule31PersonalisationSms.getPersonalisation(callback);
-        assertEquals(String.valueOf(mockedAppealReferenceNumber), personalisation.get("appealReferenceNumber"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("linkToService"));
-        assertEquals(dismissed, personalisation.get("oldDecision"));
-        assertEquals(allowed, personalisation.get("newDecision"));
+        String dismissed = "Dismissed";
+        String allowed = "Allowed";
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", String.valueOf(mockedAppealReferenceNumber))
+            .containsEntry("linkToService", iaAipFrontendUrl)
+            .containsEntry("oldDecision", dismissed)
+            .containsEntry("newDecision", allowed);
         if (outOfCountry.equals(YesOrNo.YES)) {
+            String days28 = "28 days";
             assertEquals(days28, personalisation.get("period"));
         } else {
+            String days14 = "14 days";
             assertEquals(days14, personalisation.get("period"));
         }
     }
@@ -165,13 +167,14 @@ class AppellantUpdateTribunalDecisionRule31PersonalisationSmsTest {
     @Test
     void should_return_personalisation_when_all_information_given_decision_not_updated() {
         when(asylumCase.read(TYPES_OF_UPDATE_TRIBUNAL_DECISION, DynamicList.class))
-                .thenReturn(Optional.of(dynamicDismissedDecisionList));
+            .thenReturn(Optional.of(dynamicDismissedDecisionList));
         when(asylumCase.read(UPDATE_TRIBUNAL_DECISION_AND_REASONS_FINAL_CHECK, YesOrNo.class))
-                .thenReturn(Optional.of(YesOrNo.YES));
+            .thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(UPDATED_APPEAL_DECISION, String.class)).thenReturn(Optional.of("Allowed"));
         Map<String, String> personalisation = appellantUpdateTribunalDecisionRule31PersonalisationSms.getPersonalisation(callback);
-        assertEquals(String.valueOf(mockedAppealReferenceNumber), personalisation.get("appealReferenceNumber"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("linkToService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", String.valueOf(mockedAppealReferenceNumber))
+            .containsEntry("linkToService", iaAipFrontendUrl);
         assertNull(personalisation.get("oldDecision"));
         assertNull(personalisation.get("newDecision"));
         assertNull(personalisation.get("period"));

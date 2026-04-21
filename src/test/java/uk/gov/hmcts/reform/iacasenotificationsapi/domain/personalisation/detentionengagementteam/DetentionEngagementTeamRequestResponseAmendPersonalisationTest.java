@@ -1,12 +1,12 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ACCELERATED_DETAINED_APPEAL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixesForInternalAppealByPost;
 
@@ -15,7 +15,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import org.assertj.core.api.Assertions;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,38 +40,32 @@ import uk.gov.service.notify.NotificationClientException;
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class DetentionEngagementTeamRequestResponseAmendPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    PersonalisationProvider personalisationProvider;
-    @Mock
-    private DetEmailService detEmailService;
-    @Mock
-    DocumentDownloadClient documentDownloadClient;
-
+    final DocumentWithMetadata requestResponseAmendLetter = TestUtils.getDocumentWithMetadata(
+        "id", "home-office-amend-appeal-response", "some other desc", DocumentTag.AMEND_HOME_OFFICE_APPEAL_RESPONSE);
+    final IdValue<DocumentWithMetadata> document = new IdValue<>("1", requestResponseAmendLetter);
     private final String detentionEngagementTeamRequestResponseAmendTemplateId = "Some template id";
-    private final String referenceId = "_REQUEST_RESPONSE_AMEND_DET";
-    private final Long caseId = 12345L;
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
     private final String appellantGivenNames = "appellantGivenNames";
     private final String appellantFamilyName = "appellantFamilyName";
     private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
-    DocumentWithMetadata requestResponseAmendLetter = TestUtils.getDocumentWithMetadata(
-            "id", "home-office-amend-appeal-response", "some other desc", DocumentTag.AMEND_HOME_OFFICE_APPEAL_RESPONSE);
-    IdValue<DocumentWithMetadata> document = new IdValue<>("1", requestResponseAmendLetter);
-    private final String nonAdaPrefix = "IAFT - SERVE BY POST";
-    private final String adaPrefix = "ADA - SERVE BY POST";
-    private final String detentionEngagementTeamEmail = "det@email.com";
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    PersonalisationProvider personalisationProvider;
+    @Mock
+    DocumentDownloadClient documentDownloadClient;
+    @Mock
+    private DetEmailService detEmailService;
     private DetentionEngagementTeamRequestResponseAmendPersonalisation detentionEngagementTeamRequestResponseAmendPersonalisation;
 
     @BeforeEach
     void setup() throws NotificationClientException, IOException {
         detentionEngagementTeamRequestResponseAmendPersonalisation = new DetentionEngagementTeamRequestResponseAmendPersonalisation(
-                detentionEngagementTeamRequestResponseAmendTemplateId,
-                personalisationProvider,
-                detEmailService,
-                documentDownloadClient
+            detentionEngagementTeamRequestResponseAmendTemplateId,
+            personalisationProvider,
+            detEmailService,
+            documentDownloadClient
         );
 
         Map<String, String> appelantInfo = new HashMap<>();
@@ -95,24 +88,27 @@ public class DetentionEngagementTeamRequestResponseAmendPersonalisationTest {
     @Test
     void should_return_given_template_id() {
         assertEquals(detentionEngagementTeamRequestResponseAmendTemplateId,
-                detentionEngagementTeamRequestResponseAmendPersonalisation.getTemplateId(asylumCase));
+            detentionEngagementTeamRequestResponseAmendPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
+        String referenceId = "_REQUEST_RESPONSE_AMEND_DET";
         assertEquals(caseId + referenceId,
-                detentionEngagementTeamRequestResponseAmendPersonalisation.getReferenceId(caseId));
+            detentionEngagementTeamRequestResponseAmendPersonalisation.getReferenceId(caseId));
     }
 
     @Test
     void should_return_given_det_email_address() {
 
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
+        String detentionEngagementTeamEmail = "det@email.com";
         when(detEmailService.getRecipientsList(asylumCase)).thenReturn(Collections.singleton(detentionEngagementTeamEmail));
 
         assertTrue(detentionEngagementTeamRequestResponseAmendPersonalisation
-                .getRecipientsList(asylumCase)
-                .contains(detentionEngagementTeamEmail));
+            .getRecipientsList(asylumCase)
+            .contains(detentionEngagementTeamEmail));
     }
 
     @Test
@@ -142,8 +138,10 @@ public class DetentionEngagementTeamRequestResponseAmendPersonalisationTest {
         assertEquals(jsonObject, personalisationForLink.get("documentLink"));
 
         if (yesOrNo.equals(YES)) {
+            String adaPrefix = "ADA - SERVE BY POST";
             assertEquals(adaPrefix, personalisationForLink.get("subjectPrefix"));
         } else {
+            String nonAdaPrefix = "IAFT - SERVE BY POST";
             assertEquals(nonAdaPrefix, personalisationForLink.get("subjectPrefix"));
         }
     }
@@ -152,10 +150,10 @@ public class DetentionEngagementTeamRequestResponseAmendPersonalisationTest {
     public void should_throw_exception_on_personalisation_when_amend_home_office_response_letter_is_missing() {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
 
-        Assertions.assertThatThrownBy(
-                        () -> detentionEngagementTeamRequestResponseAmendPersonalisation.getPersonalisationForLink(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("amendHomeOfficeAppealResponse document not available");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class,
+                () -> detentionEngagementTeamRequestResponseAmendPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("amendHomeOfficeAppealResponse document not available", exception.getMessage());
     }
 
 }

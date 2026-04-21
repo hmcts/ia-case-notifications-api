@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -39,6 +40,14 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantChangeDirectionDueDateOfHomeOfficePersonalisationEmailTest {
 
+    private final String beforeListingEmailTemplateId = "beforeListingEmailTemplateId";
+    private final String afterListingEmailTemplateId = "afterListingEmailTemplateId";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
+    private final String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
+    private final String mockedAppellantGivenNames = "someAppellantGivenNames";
+    private final String mockedAppellantFamilyName = "someAppellantFamilyName";
+    private final String ariaListingRef = "someAriaListingRef";
+    private final String directionExplanation = "Some HO change direction due date content";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -53,41 +62,27 @@ public class AppellantChangeDirectionDueDateOfHomeOfficePersonalisationEmailTest
     PersonalisationProvider personalisationProvider;
     @Mock
     AppealService appealService;
-
-    private Long caseId = 12345L;
-    private String beforeListingEmailTemplateId = "beforeListingEmailTemplateId";
-    private String afterListingEmailTemplateId = "afterListingEmailTemplateId";
-
-    private String mockedAppealReferenceNumber = "someReferenceNumber";
-    private String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
-    private String mockedAppellantGivenNames = "appellantGivenNames";
-    private String mockedAppellantFamilyName = "appellantFamilyName";
-    private String mockedAppellantEmailAddress = "appelant@example.net";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
-    private String ariaListingRef = "someAriaListingRef";
-
     private AppellantChangeDirectionDueDateOfHomeOfficePersonalisationEmail appellantChangeDirectionDueDateOfHomeOfficePersonalisationEmail;
-    private String directionExplanation = "Some HO change direction due date content";
-    private String dueDate = "2020-10-08";
 
     @BeforeEach
     public void setup() {
 
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
+        String customerServicesTelephone = "555 555 555";
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
+        String customerServicesEmail = "cust.services@example.com";
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         appellantChangeDirectionDueDateOfHomeOfficePersonalisationEmail =
-                new AppellantChangeDirectionDueDateOfHomeOfficePersonalisationEmail(
-                        afterListingEmailTemplateId,
-                        beforeListingEmailTemplateId,
-                        personalisationProvider,
-                        recipientsFinder,
-                        appealService,
-                        customerServicesProvider
-                );
+            new AppellantChangeDirectionDueDateOfHomeOfficePersonalisationEmail(
+                afterListingEmailTemplateId,
+                beforeListingEmailTemplateId,
+                personalisationProvider,
+                recipientsFinder,
+                appealService,
+                customerServicesProvider
+            );
     }
 
     @Test
@@ -99,40 +94,42 @@ public class AppellantChangeDirectionDueDateOfHomeOfficePersonalisationEmailTest
     public void should_return_given_template_id_for_after_listing() {
 
         when(appealService.isAppealListed(asylumCase))
-                .thenReturn(true);
+            .thenReturn(true);
 
         assertEquals(afterListingEmailTemplateId, appellantChangeDirectionDueDateOfHomeOfficePersonalisationEmail.getTemplateId(asylumCase));
     }
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_APPELLANT_CHANGE_DIRECTION_DUE_DATE_OF_HOME_OFFICE_EMAIL",
-                appellantChangeDirectionDueDateOfHomeOfficePersonalisationEmail.getReferenceId(caseId));
+            appellantChangeDirectionDueDateOfHomeOfficePersonalisationEmail.getReferenceId(caseId));
     }
 
     @Test
     public void should_return_given_email_address_list_from_subscribers_in_asylum_case() {
 
+        String mockedAppellantEmailAddress = "appelant@example.net";
         when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL))
-                .thenReturn(Collections.singleton(mockedAppellantEmailAddress));
+            .thenReturn(Collections.singleton(mockedAppellantEmailAddress));
 
         assertTrue(appellantChangeDirectionDueDateOfHomeOfficePersonalisationEmail.getRecipientsList(asylumCase)
-                .contains(mockedAppellantEmailAddress));
+            .contains(mockedAppellantEmailAddress));
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         when(recipientsFinder.findAll(null, NotificationType.EMAIL))
-                .thenThrow(new NullPointerException("asylumCase must not be null"));
+            .thenThrow(new NullPointerException("asylumCase must not be null"));
 
-        assertThatThrownBy(() -> appellantChangeDirectionDueDateOfHomeOfficePersonalisationEmail.getRecipientsList(null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> appellantChangeDirectionDueDateOfHomeOfficePersonalisationEmail.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given_before_listing(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
@@ -141,24 +138,25 @@ public class AppellantChangeDirectionDueDateOfHomeOfficePersonalisationEmailTest
 
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.empty());
         when(personalisationProvider.getPersonalisation(callback))
-                .thenReturn(getPersonalisationForAppellant(mockedAppealReferenceNumber, mockedAppealHomeOfficeReferenceNumber, mockedAppellantGivenNames, mockedAppellantFamilyName));
+            .thenReturn(getPersonalisationForAppellant(mockedAppealReferenceNumber, mockedAppealHomeOfficeReferenceNumber, mockedAppellantGivenNames, mockedAppellantFamilyName));
 
         Map<String, String> personalisation =
-                appellantChangeDirectionDueDateOfHomeOfficePersonalisationEmail.getPersonalisation(callback);
+            appellantChangeDirectionDueDateOfHomeOfficePersonalisationEmail.getPersonalisation(callback);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(mockedAppealHomeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(mockedAppellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(mockedAppellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals("8 Oct 2020", personalisation.get("dueDate"));
-        assertEquals(directionExplanation, personalisation.get("explanation"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", mockedAppealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", mockedAppealHomeOfficeReferenceNumber)
+            .containsEntry("appellantGivenNames", mockedAppellantGivenNames)
+            .containsEntry("appellantFamilyName", mockedAppellantFamilyName)
+            .containsEntry("dueDate", "8 Oct 2020")
+            .containsEntry("explanation", directionExplanation);
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given_after_listing(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
@@ -167,25 +165,26 @@ public class AppellantChangeDirectionDueDateOfHomeOfficePersonalisationEmailTest
 
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(HearingCentre.BELFAST));
         when(personalisationProvider.getPersonalisation(callback))
-                .thenReturn(getPersonalisationForAppellant(mockedAppealReferenceNumber, mockedAppealHomeOfficeReferenceNumber, mockedAppellantGivenNames, mockedAppellantFamilyName));
+            .thenReturn(getPersonalisationForAppellant(mockedAppealReferenceNumber, mockedAppealHomeOfficeReferenceNumber, mockedAppellantGivenNames, mockedAppellantFamilyName));
 
         Map<String, String> personalisation =
-                appellantChangeDirectionDueDateOfHomeOfficePersonalisationEmail.getPersonalisation(callback);
+            appellantChangeDirectionDueDateOfHomeOfficePersonalisationEmail.getPersonalisation(callback);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(mockedAppealHomeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(mockedAppellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(mockedAppellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals("8 Oct 2020", personalisation.get("dueDate"));
-        assertEquals(ariaListingRef, personalisation.get("ariaListingReference"));
-        assertEquals(directionExplanation, personalisation.get("explanation"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", mockedAppealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", mockedAppealHomeOfficeReferenceNumber)
+            .containsEntry("appellantGivenNames", mockedAppellantGivenNames)
+            .containsEntry("appellantFamilyName", mockedAppellantFamilyName)
+            .containsEntry("dueDate", "8 Oct 2020")
+            .containsEntry("ariaListingReference", ariaListingRef)
+            .containsEntry("explanation", directionExplanation);
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_only_mandatory_information_given(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
@@ -195,14 +194,15 @@ public class AppellantChangeDirectionDueDateOfHomeOfficePersonalisationEmailTest
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisationForAppellant("", "", "", ""));
 
         Map<String, String> personalisation =
-                appellantChangeDirectionDueDateOfHomeOfficePersonalisationEmail.getPersonalisation(callback);
+            appellantChangeDirectionDueDateOfHomeOfficePersonalisationEmail.getPersonalisation(callback);
 
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals("8 Oct 2020", personalisation.get("dueDate"));
-        assertEquals(directionExplanation, personalisation.get("explanation"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("homeOfficeReferenceNumber", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "")
+            .containsEntry("dueDate", "8 Oct 2020")
+            .containsEntry("explanation", directionExplanation);
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
@@ -210,19 +210,20 @@ public class AppellantChangeDirectionDueDateOfHomeOfficePersonalisationEmailTest
 
     private Map<String, String> getPersonalisationForAppellant(String mockedAppealReferenceNumber, String mockedAppealHomeOfficeReferenceNumber,
                                                                String mockedAppellantGivenNames, String mockedAppellantFamilyName) {
+        String dueDate = "2020-10-08";
         return ImmutableMap
-                .<String, String>builder()
-                .put("appealReferenceNumber", mockedAppealReferenceNumber)
-                .put("homeOfficeReferenceNumber", mockedAppealHomeOfficeReferenceNumber)
-                .put("appellantGivenNames", mockedAppellantGivenNames)
-                .put("appellantFamilyName", mockedAppellantFamilyName)
-                .put("ariaListingReference", ariaListingRef)
-                .put("explanation", directionExplanation)
-                .put("dueDate", LocalDate
-                        .parse(dueDate)
-                        .format(DateTimeFormatter.ofPattern("d MMM yyyy"))
-                )
-                .build();
+            .<String, String>builder()
+            .put("appealReferenceNumber", mockedAppealReferenceNumber)
+            .put("homeOfficeReferenceNumber", mockedAppealHomeOfficeReferenceNumber)
+            .put("appellantGivenNames", mockedAppellantGivenNames)
+            .put("appellantFamilyName", mockedAppellantFamilyName)
+            .put("ariaListingReference", ariaListingRef)
+            .put("explanation", directionExplanation)
+            .put("dueDate", LocalDate
+                .parse(dueDate)
+                .format(DateTimeFormatter.ofPattern("d MMM yyyy"))
+            )
+            .build();
     }
 
 }

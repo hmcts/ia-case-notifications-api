@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -40,30 +41,25 @@ import uk.gov.service.notify.NotificationClientException;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class DetentionEngagementTeamHomeOfficeApplicationDecidedPersonalisationTest {
 
+    final DocumentWithMetadata appealCanProceedLetter = getDocumentWithMetadata(
+        "1",
+        "home-office-application-decided-letter",
+        "Home office application decided letter",
+        DocumentTag.HOME_OFFICE_APPLICATION_DECIDED_LETTER);
+    final IdValue<DocumentWithMetadata> appealCanProceedLetterId = new IdValue<>("1", appealCanProceedLetter);
+    private final String templateId = "someTemplateId";
+    private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
     @Mock
     AsylumCase asylumCase;
     @Mock
     DetentionEmailService detentionEmailService;
     @Mock
     DocumentDownloadClient documentDownloadClient;
-
-    private final Long caseId = 12345L;
-    private final String templateId = "someTemplateId";
-    private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
-    private final String appellantGivenNames = "appellantGivenNames";
-    private final String appellantFamilyName = "appellantFamilyName";
-
-    DocumentWithMetadata appealCanProceedLetter = getDocumentWithMetadata(
-            "1",
-            "home-office-application-decided-letter",
-            "Home office application decided letter",
-            DocumentTag.HOME_OFFICE_APPLICATION_DECIDED_LETTER);
-
-    IdValue<DocumentWithMetadata> appealCanProceedLetterId = new IdValue<>("1", appealCanProceedLetter);
-    private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
-
     private DetentionEngagementTeamHomeOfficeApplicationDecidedPersonalisation detentionEngagementTeamHomeOfficeApplicationDecidedPersonalisation;
 
     DetentionEngagementTeamHomeOfficeApplicationDecidedPersonalisationTest() {
@@ -72,10 +68,10 @@ class DetentionEngagementTeamHomeOfficeApplicationDecidedPersonalisationTest {
     @BeforeEach
     void setup() throws NotificationClientException, IOException {
         detentionEngagementTeamHomeOfficeApplicationDecidedPersonalisation = new DetentionEngagementTeamHomeOfficeApplicationDecidedPersonalisation(
-                templateId,
-                nonAdaPrefix,
-                detentionEmailService,
-                documentDownloadClient
+            templateId,
+            nonAdaPrefix,
+            detentionEmailService,
+            documentDownloadClient
         );
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
@@ -88,6 +84,7 @@ class DetentionEngagementTeamHomeOfficeApplicationDecidedPersonalisationTest {
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_HOME_OFFICE_APPLICATION_DECIDED",
             detentionEngagementTeamHomeOfficeApplicationDecidedPersonalisation.getReferenceId(caseId));
     }
@@ -132,12 +129,13 @@ class DetentionEngagementTeamHomeOfficeApplicationDecidedPersonalisationTest {
     void should_return_personalisation_of_all_information() throws NotificationClientException, IOException {
         Map<String, Object> personalisation = detentionEngagementTeamHomeOfficeApplicationDecidedPersonalisation.getPersonalisationForLink(asylumCase);
 
-        assertEquals(nonAdaPrefix, personalisation.get("subjectPrefix"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(jsonObject, personalisation.get("documentLink"));
+        assertThat(personalisation)
+            .containsEntry("subjectPrefix", nonAdaPrefix)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("documentLink", jsonObject);
     }
 
     @Test
@@ -149,42 +147,43 @@ class DetentionEngagementTeamHomeOfficeApplicationDecidedPersonalisationTest {
 
         Map<String, Object> personalisation = detentionEngagementTeamHomeOfficeApplicationDecidedPersonalisation.getPersonalisationForLink(asylumCase);
 
-        assertEquals(nonAdaPrefix, personalisation.get("subjectPrefix"));
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals(jsonObject, personalisation.get("documentLink"));
+        assertThat(personalisation)
+            .containsEntry("subjectPrefix", nonAdaPrefix)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("homeOfficeReferenceNumber", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "")
+            .containsEntry("documentLink", jsonObject);
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
-        assertThatThrownBy(() -> detentionEngagementTeamHomeOfficeApplicationDecidedPersonalisation.getPersonalisationForLink((AsylumCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> detentionEngagementTeamHomeOfficeApplicationDecidedPersonalisation.getPersonalisationForLink((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_appeal_can_proceed_document_is_empty() {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> detentionEngagementTeamHomeOfficeApplicationDecidedPersonalisation.getPersonalisationForLink(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("homeOfficeApplicationDecidedLetter document not available");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamHomeOfficeApplicationDecidedPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("homeOfficeApplicationDecidedLetter document not available", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_notification_client_throws_Exception() throws NotificationClientException, IOException {
         when(documentDownloadClient.getJsonObjectFromDocument(appealCanProceedLetter)).thenThrow(new NotificationClientException("File size is more than 2MB"));
-        assertThatThrownBy(() -> detentionEngagementTeamHomeOfficeApplicationDecidedPersonalisation.getPersonalisationForLink(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("Failed to get Internal 'Appeal can proceed' Letter in compatible format");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamHomeOfficeApplicationDecidedPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("Failed to get Internal 'Appeal can proceed' Letter in compatible format", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_io_exception_occurs() throws NotificationClientException, IOException {
         when(documentDownloadClient.getJsonObjectFromDocument(appealCanProceedLetter)).thenThrow(new IOException("IO Exception occurred"));
-        assertThatThrownBy(() -> detentionEngagementTeamHomeOfficeApplicationDecidedPersonalisation.getPersonalisationForLink(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("Failed to get Internal 'Appeal can proceed' Letter in compatible format");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamHomeOfficeApplicationDecidedPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("Failed to get Internal 'Appeal can proceed' Letter in compatible format", exception.getMessage());
     }
 }

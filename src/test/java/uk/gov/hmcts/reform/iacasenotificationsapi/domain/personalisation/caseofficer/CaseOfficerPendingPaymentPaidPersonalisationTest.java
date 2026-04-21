@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -25,21 +26,18 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class CaseOfficerPendingPaymentPaidPersonalisationTest {
 
+    private final String iaFrontendCcdUrl = "http://somefrontendyurl";
+    private final String templateId = "someTemplateId";
+    private final String hearingCentreEmailAddress = "hearingCentre@example.com";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
     @Mock
     AsylumCase asylumCase;
     @Mock
     EmailAddressFinder emailAddressFinder;
     @Mock
     private FeatureToggler featureToggler;
-
-    private Long caseId = 12345L;
-    private String iaFrontendCcdUrl = "http://somefrontendyurl";
-    private String templateId = "someTemplateId";
-    private String hearingCentreEmailAddress = "hearingCentre@example.com";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String appellantGivenNames = "appellantGivenNames";
-    private String appellantFamilyName = "appellantFamilyName";
-
     private CaseOfficerPendingPaymentPaidPersonalisation caseOfficerPendingPaymentPaidPersonalisation;
 
     @BeforeEach
@@ -54,7 +52,7 @@ public class CaseOfficerPendingPaymentPaidPersonalisationTest {
             templateId,
             iaFrontendCcdUrl,
             emailAddressFinder,
-                featureToggler);
+            featureToggler);
     }
 
     @Test
@@ -64,6 +62,7 @@ public class CaseOfficerPendingPaymentPaidPersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_PENDING_PAYMENT_PAID_CASE_OFFICER",
             caseOfficerPendingPaymentPaidPersonalisation.getReferenceId(caseId));
     }
@@ -71,23 +70,23 @@ public class CaseOfficerPendingPaymentPaidPersonalisationTest {
     @Test
     public void should_return_given_email_address_from_lookup_map_when_feature_flag_is_Off() {
         assertTrue(caseOfficerPendingPaymentPaidPersonalisation.getRecipientsList(asylumCase)
-                .isEmpty());
+            .isEmpty());
     }
 
     @Test
     public void should_return_given_email_address_from_lookup_map_when_feature_flag_is_On() {
         when(featureToggler.getValue("tcw-notifications-feature", false)).thenReturn(true);
         assertTrue(caseOfficerPendingPaymentPaidPersonalisation.getRecipientsList(asylumCase)
-                .contains(hearingCentreEmailAddress));
+            .contains(hearingCentreEmailAddress));
     }
 
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> caseOfficerPendingPaymentPaidPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> caseOfficerPendingPaymentPaidPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -96,10 +95,11 @@ public class CaseOfficerPendingPaymentPaidPersonalisationTest {
         Map<String, String> personalisation =
             caseOfficerPendingPaymentPaidPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaFrontendCcdUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaFrontendCcdUrl);
     }
 
     @Test
@@ -112,9 +112,10 @@ public class CaseOfficerPendingPaymentPaidPersonalisationTest {
         Map<String, String> personalisation =
             caseOfficerPendingPaymentPaidPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals(iaFrontendCcdUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "")
+            .containsEntry("linkToOnlineService", iaFrontendCcdUrl);
     }
 }

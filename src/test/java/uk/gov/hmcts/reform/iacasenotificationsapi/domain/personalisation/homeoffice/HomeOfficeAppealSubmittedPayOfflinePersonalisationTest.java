@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice;
 
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -27,24 +28,20 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class HomeOfficeAppealSubmittedPayOfflinePersonalisationTest {
 
+    private final String emailTemplateId = "emailTemplateId";
+    private final String iaExUiFrontendUrl = "http://somefrontendurl";
+    private final String adaPrefix = "Accelerated detained appeal";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String homeOfficeEmail = "apchomeoffice@example.com";
     @Mock
     AsylumCase asylumCase;
     @Mock
     CustomerServicesProvider customerServicesProvider;
-
-
-    private Long caseId = 12345L;
-    private String emailTemplateId = "emailTemplateId";
-    private String iaExUiFrontendUrl = "http://somefrontendurl";
-    private String adaPrefix = "Accelerated detained appeal";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
-    private String appellantGivenNames = "appellantGivenNames";
-    private String appellantFamilyName = "appellantFamilyName";
-    private String homeOfficeEmail = "apchomeoffice@example.com";
-
     private HomeOfficeAppealSubmittedPayOfflinePersonalisation
-            homeOfficeAppealSubmittedPayOfflinePersonalisation;
+        homeOfficeAppealSubmittedPayOfflinePersonalisation;
 
     @BeforeEach
     public void setUp() {
@@ -56,11 +53,11 @@ public class HomeOfficeAppealSubmittedPayOfflinePersonalisationTest {
 
         homeOfficeAppealSubmittedPayOfflinePersonalisation =
             new HomeOfficeAppealSubmittedPayOfflinePersonalisation(
-                    homeOfficeEmail,
+                homeOfficeEmail,
                 emailTemplateId,
                 iaExUiFrontendUrl,
                 customerServicesProvider
-                );
+            );
     }
 
     @Test
@@ -76,23 +73,28 @@ public class HomeOfficeAppealSubmittedPayOfflinePersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_APPEAL_SUBMITTED_PAY_OFFLINE_HOME_OFFICE",
-                homeOfficeAppealSubmittedPayOfflinePersonalisation.getReferenceId(caseId));
+            homeOfficeAppealSubmittedPayOfflinePersonalisation.getReferenceId(caseId));
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         initializePrefixes(homeOfficeAppealSubmittedPayOfflinePersonalisation);
         Map<String, String> personalisation =
             homeOfficeAppealSubmittedPayOfflinePersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isNotEmpty();
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
-        assertEquals(isAda.equals(YesOrNo.YES)
-            ? "Accelerated detained appeal"
-            : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
+        assertFalse(personalisation.isEmpty());
+        assertThat(personalisation)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal"
+                : "Immigration and Asylum appeal")
+            .containsEntry("appellantFamilyName", appellantFamilyName);
     }
 
 }

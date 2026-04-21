@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -24,27 +25,14 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 class LegalRepresentativeRemissionDecisionPaPartiallyApprovedPersonalisationTest {
 
+    private final String iaExUiFrontendUrl = "http://somefrontendurl";
+    private final String templateId = "someTemplateId";
     @Mock
     private AsylumCase asylumCase;
     @Mock
     private CustomerServicesProvider customerServicesProvider;
     @Mock
     private FeatureToggler featureToggler;
-
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String legalRepRefNumber = "someLegalRepRefNumber";
-    private String appellantGivenNames = "appellantGivenNames";
-    private String appellantFamilyName = "appellantFamilyName";
-    private String iaExUiFrontendUrl = "http://somefrontendurl";
-    private String templateId = "someTemplateId";
-    private String legalRepEmailAddress = "legalRepEmailAddress@example.com";
-    private String amountLeftToPay = "4000";
-    private String amountLeftToPayInGbp = "40.00";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
-    private String someTestDateEmail = "14/14/2024";
-    private String onlineCaseReferenceNumber = "1111222233334444";
-
     private LegalRepresentativeRemissionDecisionPaPartiallyApprovedPersonalisation
         legalRepresentativeRemissionDecisionPartiallyApprovedPersonalisation;
 
@@ -67,42 +55,54 @@ class LegalRepresentativeRemissionDecisionPaPartiallyApprovedPersonalisationTest
     public void should_return_given_email_address_from_lookup_map_when_feature_flag_is_on_or_off(boolean value) {
         when(featureToggler.getValue("dlrm-telephony-feature-flag", false)).thenReturn(value);
         if (value) {
+            String legalRepEmailAddress = "legalRepEmailAddress@example.com";
             when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class))
-                    .thenReturn(Optional.of(legalRepEmailAddress));
+                .thenReturn(Optional.of(legalRepEmailAddress));
             assertTrue(
-                    legalRepresentativeRemissionDecisionPartiallyApprovedPersonalisation
-                            .getRecipientsList(asylumCase).contains("legalRepEmailAddress@example.com"));
+                legalRepresentativeRemissionDecisionPartiallyApprovedPersonalisation
+                    .getRecipientsList(asylumCase).contains("legalRepEmailAddress@example.com"));
         } else {
             assertTrue(legalRepresentativeRemissionDecisionPartiallyApprovedPersonalisation
-                    .getRecipientsList(asylumCase).isEmpty());
+                .getRecipientsList(asylumCase).isEmpty());
         }
     }
 
     @Test
     void should_return_personalisation_when_all_information_given() {
 
+        String appealReferenceNumber = "someReferenceNumber";
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
 
+        String legalRepRefNumber = "someLegalRepRefNumber";
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepRefNumber));
+        String appellantGivenNames = "someAppellantGivenNames";
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
+        String appellantFamilyName = "someAppellantFamilyName";
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
+        String amountLeftToPay = "4000";
         when(asylumCase.read(AMOUNT_LEFT_TO_PAY, String.class)).thenReturn(Optional.of(amountLeftToPay));
+        String onlineCaseReferenceNumber = "1111222233334444";
         when(asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class)).thenReturn(Optional.of(onlineCaseReferenceNumber));
+        String someTestDateEmail = "14/14/2024";
         when(asylumCase.read(REMISSION_REJECTED_DATE_PLUS_14DAYS, String.class)).thenReturn(Optional.of(someTestDateEmail));
+        String customerServicesTelephone = "555 555 555";
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
+        String customerServicesEmail = "cust.services@example.com";
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         Map<String, String> personalisation =
             legalRepresentativeRemissionDecisionPartiallyApprovedPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(legalRepRefNumber, personalisation.get("legalRepReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
-        assertEquals(amountLeftToPayInGbp, personalisation.get("feeAmount"));
-        assertEquals(someTestDateEmail, personalisation.get("14 days after remission decision"));
-        assertEquals(onlineCaseReferenceNumber, personalisation.get("onlineCaseReferenceNumber"));
+        String amountLeftToPayInGbp = "40.00";
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("legalRepReferenceNumber", legalRepRefNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("feeAmount", amountLeftToPayInGbp)
+            .containsEntry("14 days after remission decision", someTestDateEmail)
+            .containsEntry("onlineCaseReferenceNumber", onlineCaseReferenceNumber);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }

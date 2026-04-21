@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -25,6 +26,15 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppellantRemoveRepresentationPersonalisationSmsTest {
 
+    private final long ccdCaseId = 12345L;
+    private final String mobileNumber = "555 555 555";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
+    private final String smsTemplateId = "someTemplateId";
+    private final String securityCode = "securityCode";
+    private final String linkToPiPStartPage = "iaAipFrontendUrl/iaAipPathToSelfRepresentation";
     @Mock
     Callback<AsylumCase> callback;
     @Mock
@@ -35,24 +45,6 @@ class AppellantRemoveRepresentationPersonalisationSmsTest {
     CustomerServicesProvider customerServicesProvider;
     @Mock
     PinInPostDetails pinInPostDetails;
-
-    private long ccdCaseId = 12345L;
-    private String mobileNumber = "555 555 555";
-    private String legalRepReferenceNumber = "somelegalRepRefNumber";
-    private String appellantGivenNames = "appellantGivenNames";
-    private String appellantFamilyName = "appellantFamilyName";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
-    private String smsTemplateId = "someTemplateId";
-    private String securityCode = "securityCode";
-    private String validDate = "2022-12-31";
-    private String validDateFormatted = "31 Dec 2022";
-    private String appellantDateOfBirth = "2000-01-01";
-    private String appellantDateOfBirthFormatted = "1 Jan 2000";
-    private String iaAipFrontendUrl = "iaAipFrontendUrl/";
-    private String iaAipPathToSelfRepresentation = "iaAipPathToSelfRepresentation";
-    private String linkToPiPStartPage = "iaAipFrontendUrl/iaAipPathToSelfRepresentation";
-
     private AppellantRemoveRepresentationPersonalisationSms appellantRemoveRepresentationPersonalisationSms;
 
     @BeforeEach
@@ -61,17 +53,22 @@ class AppellantRemoveRepresentationPersonalisationSmsTest {
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getId()).thenReturn(ccdCaseId);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
-        when(asylumCase.read(AsylumCaseDefinition.MOBILE_NUMBER, String.class)).thenReturn(Optional.of(String.valueOf(mobileNumber)));
+        when(asylumCase.read(AsylumCaseDefinition.MOBILE_NUMBER, String.class)).thenReturn(Optional.of(mobileNumber));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
+        String appellantDateOfBirth = "2000-01-01";
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_DATE_OF_BIRTH, String.class)).thenReturn(Optional.of(appellantDateOfBirth));
+        String legalRepReferenceNumber = "somelegalRepRefNumber";
         when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepReferenceNumber));
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_PIN_IN_POST, PinInPostDetails.class)).thenReturn(Optional.of(pinInPostDetails));
         when(pinInPostDetails.getAccessCode()).thenReturn(securityCode);
+        String validDate = "2022-12-31";
         when(pinInPostDetails.getExpiryDate()).thenReturn(validDate);
 
+        String iaAipPathToSelfRepresentation = "iaAipPathToSelfRepresentation";
+        String iaAipFrontendUrl = "iaAipFrontendUrl/";
         appellantRemoveRepresentationPersonalisationSms = new AppellantRemoveRepresentationPersonalisationSms(
             iaAipFrontendUrl,
             iaAipPathToSelfRepresentation,
@@ -97,18 +94,18 @@ class AppellantRemoveRepresentationPersonalisationSmsTest {
 
         when(asylumCase.read(AsylumCaseDefinition.MOBILE_NUMBER, String.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> appellantRemoveRepresentationPersonalisationSms.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("appellantMobileNumber is not present");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> appellantRemoveRepresentationPersonalisationSms.getRecipientsList(asylumCase));
+        assertEquals("appellantMobileNumber is not present", exception.getMessage());
 
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> appellantRemoveRepresentationPersonalisationSms.getPersonalisation((Callback<AsylumCase>) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("callback must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> appellantRemoveRepresentationPersonalisationSms.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     @Test
@@ -117,13 +114,16 @@ class AppellantRemoveRepresentationPersonalisationSmsTest {
         Map<String, String> personalisation =
             appellantRemoveRepresentationPersonalisationSms.getPersonalisation(callback);
 
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(appellantDateOfBirthFormatted, personalisation.get("appellantDateOfBirth"));
-        assertEquals(String.valueOf(ccdCaseId), personalisation.get("ccdCaseId"));
-        assertEquals(linkToPiPStartPage, personalisation.get("linkToPiPStartPage"));
-        assertEquals(securityCode, personalisation.get("securityCode"));
-        assertEquals(validDateFormatted, personalisation.get("validDate"));
+        String appellantDateOfBirthFormatted = "1 Jan 2000";
+        String validDateFormatted = "31 Dec 2022";
+        assertThat(personalisation)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("appellantDateOfBirth", appellantDateOfBirthFormatted)
+            .containsEntry("ccdCaseId", String.valueOf(ccdCaseId))
+            .containsEntry("linkToPiPStartPage", linkToPiPStartPage)
+            .containsEntry("securityCode", securityCode)
+            .containsEntry("validDate", validDateFormatted);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
@@ -142,13 +142,14 @@ class AppellantRemoveRepresentationPersonalisationSmsTest {
         Map<String, String> personalisation =
             appellantRemoveRepresentationPersonalisationSms.getPersonalisation(callback);
 
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals("", personalisation.get("appellantDateOfBirth"));
-        assertEquals("", personalisation.get("securityCode"));
-        assertEquals("", personalisation.get("validDate"));
-        assertEquals(String.valueOf(ccdCaseId), personalisation.get("ccdCaseId"));
-        assertEquals(linkToPiPStartPage, personalisation.get("linkToPiPStartPage"));
+        assertThat(personalisation)
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "")
+            .containsEntry("appellantDateOfBirth", "")
+            .containsEntry("securityCode", "")
+            .containsEntry("validDate", "")
+            .containsEntry("ccdCaseId", String.valueOf(ccdCaseId))
+            .containsEntry("linkToPiPStartPage", linkToPiPStartPage);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }

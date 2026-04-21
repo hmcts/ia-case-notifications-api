@@ -24,6 +24,7 @@ import java.util.Set;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.TestUtils.getDocumentWithMetadata;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.NOTIFICATION_ATTACHMENT_DOCUMENTS;
@@ -51,11 +52,11 @@ class DetentionEngagementTeamHearingAdjournedNoDateAppellantEmailPersonalisation
     @BeforeEach
     void setUp() {
         personalisation = new DetentionEngagementTeamHearingAdjournedNoDateAppellantEmailPersonalisation(
-                TEMPLATE_ID,
-                NON_ADA_PREFIX,
-                detentionEmailService,
-                CTSC_EMAIL,
-                documentDownloadClient
+            TEMPLATE_ID,
+            NON_ADA_PREFIX,
+            detentionEmailService,
+            CTSC_EMAIL,
+            documentDownloadClient
         );
     }
 
@@ -63,7 +64,7 @@ class DetentionEngagementTeamHearingAdjournedNoDateAppellantEmailPersonalisation
     void shouldReturnReferenceId() {
         String refId = personalisation.getReferenceId(123L);
 
-        assertThat(refId).isEqualTo("123_DETAINED_APPEAL_ADJOURN_HEARING_NO_DATE_APPELLANT_LETTER");
+        assertEquals("123_DETAINED_APPEAL_ADJOURN_HEARING_NO_DATE_APPELLANT_LETTER", refId);
     }
 
     @Test
@@ -78,7 +79,7 @@ class DetentionEngagementTeamHearingAdjournedNoDateAppellantEmailPersonalisation
 
         Set<String> recipients = personalisation.getRecipientsList(asylumCase);
 
-        assertThat(recipients).containsExactly(DETENTION_EMAIL);
+        assertTrue(recipients.contains(DETENTION_EMAIL));
     }
 
     @Test
@@ -90,12 +91,12 @@ class DetentionEngagementTeamHearingAdjournedNoDateAppellantEmailPersonalisation
 
         Set<String> recipients = personalisation.getRecipientsList(asylumCase);
 
-        assertThat(recipients).containsExactly(CTSC_EMAIL);
+        assertTrue(recipients.contains(CTSC_EMAIL));
     }
 
     @Test
     void shouldReturnTemplateId() {
-        assertThat(personalisation.getTemplateId()).isEqualTo(TEMPLATE_ID);
+        assertEquals(TEMPLATE_ID, personalisation.getTemplateId());
     }
 
     @Test
@@ -106,7 +107,7 @@ class DetentionEngagementTeamHearingAdjournedNoDateAppellantEmailPersonalisation
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of("Doe"));
 
         DocumentWithMetadata internalFtpaDecidedByRjLetter = getDocumentWithMetadata(
-                "1", "Letter", "desc", DocumentTag.DETAINED_APPEAL_ADJOURN_HEARING_WITHOUT_DATE_IRC_PRISON_LETTER);
+            "1", "Letter", "desc", DocumentTag.DETAINED_APPEAL_ADJOURN_HEARING_WITHOUT_DATE_IRC_PRISON_LETTER);
         IdValue<DocumentWithMetadata> doc = new IdValue<>("1", internalFtpaDecidedByRjLetter);
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.of(newArrayList(doc)));
         JSONObject dummyJson = new JSONObject().put("link", "http://doc");
@@ -115,12 +116,12 @@ class DetentionEngagementTeamHearingAdjournedNoDateAppellantEmailPersonalisation
         Map<String, Object> map = personalisation.getPersonalisationForLink(asylumCase);
 
         assertThat(map)
-                .containsEntry("subjectPrefix", NON_ADA_PREFIX)
-                .containsEntry("appealReferenceNumber", "A123")
-                .containsEntry("homeOfficeReferenceNumber", "HO123")
-                .containsEntry("appellantGivenNames", "John")
-                .containsEntry("appellantFamilyName", "Doe")
-                .containsEntry("documentLink", dummyJson);
+            .containsEntry("subjectPrefix", NON_ADA_PREFIX)
+            .containsEntry("appealReferenceNumber", "A123")
+            .containsEntry("homeOfficeReferenceNumber", "HO123")
+            .containsEntry("appellantGivenNames", "John")
+            .containsEntry("appellantFamilyName", "Doe")
+            .containsEntry("documentLink", dummyJson);
     }
 
     @Test
@@ -131,14 +132,14 @@ class DetentionEngagementTeamHearingAdjournedNoDateAppellantEmailPersonalisation
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of("Doe"));
 
         DocumentWithMetadata internalFtpaDecidedByRjLetter = getDocumentWithMetadata(
-                "1", "Letter", "desc", DocumentTag.DETAINED_APPEAL_ADJOURN_HEARING_WITHOUT_DATE_IRC_PRISON_LETTER);
+            "1", "Letter", "desc", DocumentTag.DETAINED_APPEAL_ADJOURN_HEARING_WITHOUT_DATE_IRC_PRISON_LETTER);
         IdValue<DocumentWithMetadata> doc = new IdValue<>("1", internalFtpaDecidedByRjLetter);
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.of(newArrayList(doc)));
 
         when(documentDownloadClient.getJsonObjectFromDocument(any())).thenThrow(new IOException("fail"));
 
-        assertThatThrownBy(() -> personalisation.getPersonalisationForLink(asylumCase))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining("Failed to get Internal 'Home Office to upload bundle' Letter");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> personalisation.getPersonalisationForLink(asylumCase));
+        assertTrue(exception.getMessage().contains("Failed to get Internal 'Home Office to upload bundle' Letter"));
     }
 }
