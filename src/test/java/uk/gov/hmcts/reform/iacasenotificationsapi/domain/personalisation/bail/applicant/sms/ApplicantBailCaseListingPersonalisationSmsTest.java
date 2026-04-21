@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.applicant.sms;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.*;
@@ -28,13 +28,12 @@ class ApplicantBailCaseListingPersonalisationSmsTest {
     private final String initialTemplateId = "initialTemplateId";
     private final String relistingTemplateId = "relistingTemplateId";
     private final String conditionalBailRelistingTemplateId = "conditionalBailRelistingTemplateId";
-    private String mobileNumber = "07781122334";
+    private final String mobileNumber = "07781122334";
     private final String bailReferenceNumber = "someReferenceNumber";
-    private String bailHearingDateTime = "2024-01-01T10:29:00.000";
-    private String bailHearingLocationName = "Yarl’s Wood\n" +
-            "Yarl’s Wood Immigration and Asylum Hearing Centre, Twinwood Road, MK44 1FD";
-    private String hearingDate = "2024-01-21";
-    private String hearingTime = "10:29";
+    private final String bailHearingLocationName = "Yarl’s Wood\n" +
+        "Yarl’s Wood Immigration and Asylum Hearing Centre, Twinwood Road, MK44 1FD";
+    private final String hearingDate = "2024-01-21";
+    private final String hearingTime = "10:29";
     @Mock
     BailCase bailCase;
     @Mock
@@ -49,6 +48,7 @@ class ApplicantBailCaseListingPersonalisationSmsTest {
         when(bailCase.read(APPLICANT_MOBILE_NUMBER_1, String.class)).thenReturn(Optional.of(mobileNumber));
         when(bailCase.read(BAIL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(bailReferenceNumber));
         when(bailCase.read(LISTING_LOCATION, BailHearingLocation.class)).thenReturn(Optional.of(BailHearingLocation.GLASGOW_TRIBUNAL_CENTRE));
+        String bailHearingDateTime = "2024-01-01T10:29:00.000";
         when(bailCase.read(LISTING_HEARING_DATE, String.class)).thenReturn(Optional.of(bailHearingDateTime));
         when(hearingDetailsFinder.getBailHearingDateTime(bailCase)).thenReturn(bailHearingDateTime);
         when(hearingDetailsFinder.getListingLocationAddressFromRefDataOrCcd(bailCase)).thenReturn(bailHearingLocationName);
@@ -62,7 +62,7 @@ class ApplicantBailCaseListingPersonalisationSmsTest {
                 conditionalBailRelistingTemplateId,
                 hearingDetailsFinder,
                 dateTimeExtractor
-                );
+            );
     }
 
     @Test
@@ -103,10 +103,10 @@ class ApplicantBailCaseListingPersonalisationSmsTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
-            () -> applicantBailCaseListingPersonalisationSms.getPersonalisation((BailCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("bailCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> applicantBailCaseListingPersonalisationSms.getPersonalisation((BailCase) null));
+        assertEquals("bailCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -115,9 +115,10 @@ class ApplicantBailCaseListingPersonalisationSmsTest {
         Map<String, String> personalisation =
             applicantBailCaseListingPersonalisationSms.getPersonalisation(bailCase);
 
-        assertEquals(bailReferenceNumber, personalisation.get("bailReferenceNumber"));
-        assertEquals(hearingDate, personalisation.get("hearingDate"));
-        assertEquals(hearingTime, personalisation.get("hearingTime"));
-        assertEquals(bailHearingLocationName, personalisation.get("hearingCentre"));
+        assertThat(personalisation)
+            .containsEntry("bailReferenceNumber", bailReferenceNumber)
+            .containsEntry("hearingDate", hearingDate)
+            .containsEntry("hearingTime", hearingTime)
+            .containsEntry("hearingCentre", bailHearingLocationName);
     }
 }

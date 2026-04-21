@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -31,9 +32,11 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-@SuppressWarnings("unchecked")
 public class CaseOfficerSubmittedHearingRequirementsPersonalisationTest {
 
+    private final String templateId = "someTemplateId";
+    private final String iaExUiFrontendUrl = "http://localhost";
+    private final String hearingCentreEmailAddress = "hearingCentre@example.com";
     @Mock
     Callback<AsylumCase> callback;
     @Mock
@@ -46,15 +49,6 @@ public class CaseOfficerSubmittedHearingRequirementsPersonalisationTest {
     PersonalisationProvider personalisationProvider;
     @Mock
     private FeatureToggler featureToggler;
-
-    private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
-    private String iaExUiFrontendUrl = "http://localhost";
-    private String hearingCentreEmailAddress = "hearingCentre@example.com";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
-
     private CaseOfficerSubmittedHearingRequirementsPersonalisation
         caseOfficerSubmittedHearingRequirementsPersonalisation;
 
@@ -69,7 +63,7 @@ public class CaseOfficerSubmittedHearingRequirementsPersonalisationTest {
                 iaExUiFrontendUrl,
                 personalisationProvider,
                 emailAddressFinder,
-                    featureToggler);
+                featureToggler);
     }
 
     @Test
@@ -86,17 +80,18 @@ public class CaseOfficerSubmittedHearingRequirementsPersonalisationTest {
     public void should_return_given_email_address_from_asylum_case_when_feature_flag_is_On() {
         when(featureToggler.getValue("tcw-notifications-feature", true)).thenReturn(true);
         assertEquals(Collections.singleton(hearingCentreEmailAddress),
-                caseOfficerSubmittedHearingRequirementsPersonalisation.getRecipientsList(asylumCase));
+            caseOfficerSubmittedHearingRequirementsPersonalisation.getRecipientsList(asylumCase));
     }
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_CASE_OFFICER_OF_SUBMITTED_HEARING_REQUIREMENTS",
             caseOfficerSubmittedHearingRequirementsPersonalisation.getReferenceId(caseId));
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         initializePrefixes(caseOfficerSubmittedHearingRequirementsPersonalisation);
@@ -108,20 +103,27 @@ public class CaseOfficerSubmittedHearingRequirementsPersonalisationTest {
         Map<String, String> personalisation =
             caseOfficerSubmittedHearingRequirementsPersonalisation.getPersonalisation(callback);
 
-        assertThat(personalisation).isNotEmpty();
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertFalse(personalisation.isEmpty());
+        assertThat(personalisation)
+            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal"
+                : "Immigration and Asylum appeal")
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsAllEntriesOf(getPersonalisation());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> caseOfficerSubmittedHearingRequirementsPersonalisation
-            .getPersonalisation((Callback<AsylumCase>) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("callback must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> caseOfficerSubmittedHearingRequirementsPersonalisation
+                .getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     private Map<String, String> getPersonalisation() {
+        String appellantFamilyName = "someAppellantFamilyName";
+        String appellantGivenNames = "someAppellantGivenNames";
+        String appealReferenceNumber = "someReferenceNumber";
         return ImmutableMap
             .<String, String>builder()
             .put("appealReferenceNumber", appealReferenceNumber)

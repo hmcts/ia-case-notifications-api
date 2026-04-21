@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -15,7 +16,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,7 +42,6 @@ class AppellantHomeOfficeUploadAddendumEvidencePersonalisationEmailTest {
     private final String ariaListingReference = "ariaListingReference";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-    private final String appellantEmailAddress = "appellant@example.com";
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "customer.services@example.com";
     private final String iaAipFrontendUrl = "iaAipFrontendUrl";
@@ -72,13 +71,13 @@ class AppellantHomeOfficeUploadAddendumEvidencePersonalisationEmailTest {
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         appellantHomeOfficeUploadAddendumEvidencePersonalisationEmail =
-                new AppellantHomeOfficeUploadAddendumEvidencePersonalisationEmail(
-                        templateId,
-                        iaAipFrontendUrl,
-                        recipientsFinder,
-                        customerServicesProvider,
-                        featureToggler
-                );
+            new AppellantHomeOfficeUploadAddendumEvidencePersonalisationEmail(
+                templateId,
+                iaAipFrontendUrl,
+                recipientsFinder,
+                customerServicesProvider,
+                featureToggler
+            );
     }
 
     @Test
@@ -89,53 +88,55 @@ class AppellantHomeOfficeUploadAddendumEvidencePersonalisationEmailTest {
     @Test
     void should_throw_exception_on_recipients_when_case_is_null() {
         when(recipientsFinder.findAll(null, NotificationType.EMAIL))
-                .thenThrow(new NullPointerException("asylumCase must not be null"));
+            .thenThrow(new NullPointerException("asylumCase must not be null"));
 
-        assertThatThrownBy(() -> appellantHomeOfficeUploadAddendumEvidencePersonalisationEmail.getRecipientsList(null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> appellantHomeOfficeUploadAddendumEvidencePersonalisationEmail.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     void should_return_given_reference_id() {
         assertEquals(12345L + "_HOME_OFFICE_UPLOADED_ADDENDUM_EVIDENCE_AIP_APPELLANT_EMAIL",
-                appellantHomeOfficeUploadAddendumEvidencePersonalisationEmail.getReferenceId(12345L));
+            appellantHomeOfficeUploadAddendumEvidencePersonalisationEmail.getReferenceId(12345L));
     }
 
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
-                () -> appellantHomeOfficeUploadAddendumEvidencePersonalisationEmail.getPersonalisation((AsylumCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> appellantHomeOfficeUploadAddendumEvidencePersonalisationEmail.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_return_appellant_email_address_from_asylum_case() {
         when(featureToggler.getValue("aip-upload-addendum-evidence-feature", false)).thenReturn(true);
+        String appellantEmailAddress = "appellant@example.com";
         when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL))
-                .thenReturn(Collections.singleton(appellantEmailAddress));
+            .thenReturn(Collections.singleton(appellantEmailAddress));
 
         assertTrue(appellantHomeOfficeUploadAddendumEvidencePersonalisationEmail.getRecipientsList(asylumCase)
-                .contains(appellantEmailAddress));
+            .contains(appellantEmailAddress));
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         initializePrefixes(appellantHomeOfficeUploadAddendumEvidencePersonalisationEmail);
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
 
         Map<String, String> personalisation =
-                appellantHomeOfficeUploadAddendumEvidencePersonalisationEmail.getPersonalisation(asylumCase);
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+            appellantHomeOfficeUploadAddendumEvidencePersonalisationEmail.getPersonalisation(asylumCase);
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
+            .containsEntry("ariaListingReference", ariaListingReference)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName);
         String directLinkToNewEvidencePage = iaAipFrontendUrl + "home-office-evidence/addendum";
         assertEquals(directLinkToNewEvidencePage, personalisation.get("Direct link to new evidence page"));
         assertEquals(isAda.equals(YesOrNo.YES)
@@ -144,7 +145,7 @@ class AppellantHomeOfficeUploadAddendumEvidencePersonalisationEmailTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
 
         initializePrefixes(appellantHomeOfficeUploadAddendumEvidencePersonalisationEmail);
@@ -156,9 +157,14 @@ class AppellantHomeOfficeUploadAddendumEvidencePersonalisationEmailTest {
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
-                appellantHomeOfficeUploadAddendumEvidencePersonalisationEmail.getPersonalisation(asylumCase);
+            appellantHomeOfficeUploadAddendumEvidencePersonalisationEmail.getPersonalisation(asylumCase);
 
-        Assertions.assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("homeOfficeReferenceNumber", "")
+            .containsEntry("ariaListingReference", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "");
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YesOrNo.YES)

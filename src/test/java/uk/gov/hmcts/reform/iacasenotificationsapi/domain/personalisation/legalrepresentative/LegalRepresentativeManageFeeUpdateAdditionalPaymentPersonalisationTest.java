@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
@@ -29,23 +29,18 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvi
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class LegalRepresentativeManageFeeUpdateAdditionalPaymentPersonalisationTest {
 
-    private Long caseId = 12345L;
-    private String templateId = "legalRepAdditionalPaymentTemplateId";
-    private String legalRepEmail = "example@example.com";
-    private String appealReferenceNumber = "appealReferenceNumber";
-    private String legalRepReferenceNumber = "legalRepReferenceNumber";
-    private String onlineCaseReferenceNumber = "onlineCaseReferenceNumber";
-    private String appellantGivenNames = "GivenNames";
-    private String appellantFamilyName = "FamilyName";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "customer@example.com";
-    private String iaExUiFrontendUrl = "http://somefrontendurl";
-    private int daysAfterManageFeeUpdate = 14;
-    private String originalFee = "8000";
-    private String newFee = "14000";
-    private String additionalAmount = "6000";
-    private FeeUpdateReason feeUpdateReason = APPEAL_WITHDRAWN;
-    private String feeUpdateReasonString = APPEAL_WITHDRAWN.getNormalizedValue();
+    private final String templateId = "legalRepAdditionalPaymentTemplateId";
+    private final String legalRepEmail = "example@example.com";
+    private final String appealReferenceNumber = "appealReferenceNumber";
+    private final String legalRepReferenceNumber = "legalRepReferenceNumber";
+    private final String appellantGivenNames = "GivenNames";
+    private final String appellantFamilyName = "FamilyName";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "customer@example.com";
+    private final String iaExUiFrontendUrl = "http://somefrontendurl";
+    private final int daysAfterManageFeeUpdate = 14;
+    private final FeeUpdateReason feeUpdateReason = APPEAL_WITHDRAWN;
+    private final String feeUpdateReasonString = APPEAL_WITHDRAWN.getNormalizedValue();
 
     @Mock
     AsylumCase asylumCase;
@@ -65,9 +60,13 @@ public class LegalRepresentativeManageFeeUpdateAdditionalPaymentPersonalisationT
         Mockito.when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         Mockito.when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         Mockito.when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepReferenceNumber));
+        String onlineCaseReferenceNumber = "onlineCaseReferenceNumber";
         Mockito.when(asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class)).thenReturn(Optional.of(onlineCaseReferenceNumber));
+        String originalFee = "8000";
         Mockito.when(asylumCase.read(PREVIOUS_FEE_AMOUNT_GBP, String.class)).thenReturn(Optional.of(originalFee));
+        String newFee = "14000";
         Mockito.when(asylumCase.read(FEE_AMOUNT_GBP, String.class)).thenReturn(Optional.of(newFee));
+        String additionalAmount = "6000";
         Mockito.when(asylumCase.read(MANAGE_FEE_REQUESTED_AMOUNT, String.class)).thenReturn(Optional.of(additionalAmount));
         Mockito.when(asylumCase.read(FEE_UPDATE_REASON, FeeUpdateReason.class)).thenReturn(Optional.of(feeUpdateReason));
         Mockito.when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class))
@@ -104,6 +103,7 @@ public class LegalRepresentativeManageFeeUpdateAdditionalPaymentPersonalisationT
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_LEGAL_REPRESENTATIVE_ADDITIONAL_PAYMENT_REQUESTED",
             legalRepresentativeManageFeeUpdateAdditionalPaymentPersonalisation.getReferenceId(caseId));
     }
@@ -119,17 +119,17 @@ public class LegalRepresentativeManageFeeUpdateAdditionalPaymentPersonalisationT
     public void should_throw_exception_when_cannot_find_email_address_for_legal_rep() {
         Mockito.when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
         when(featureToggler.getValue("dlrm-telephony-feature-flag", false)).thenReturn(true);
-        assertThatThrownBy(() -> legalRepresentativeManageFeeUpdateAdditionalPaymentPersonalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("legalRepresentativeEmailAddress is not present");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> legalRepresentativeManageFeeUpdateAdditionalPaymentPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> legalRepresentativeManageFeeUpdateAdditionalPaymentPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> legalRepresentativeManageFeeUpdateAdditionalPaymentPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -143,16 +143,17 @@ public class LegalRepresentativeManageFeeUpdateAdditionalPaymentPersonalisationT
         Map<String, String> personalisation =
             legalRepresentativeManageFeeUpdateAdditionalPaymentPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(legalRepReferenceNumber, personalisation.get("legalRepReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
-        assertEquals("80.00", personalisation.get("originalFee"));
-        assertEquals("140.00", personalisation.get("newFee"));
-        assertEquals("60.00", personalisation.get("additionalFee"));
-        assertEquals(systemDateProvider.dueDate(daysAfterManageFeeUpdate), personalisation.get("dueDate"));
-        assertEquals(feeUpdateReasonString, personalisation.get("feeUpdateReason"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("legalRepReferenceNumber", legalRepReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("originalFee", "80.00")
+            .containsEntry("newFee", "140.00")
+            .containsEntry("additionalFee", "60.00")
+            .containsEntry("dueDate", systemDateProvider.dueDate(daysAfterManageFeeUpdate))
+            .containsEntry("feeUpdateReason", feeUpdateReasonString);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }

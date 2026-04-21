@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -29,17 +30,12 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantFtpaSubmittedPersonalisationSmsTest {
 
+    private final String iaAipFrontendUrl = "frontendHyperlink";
+    private final String emailTemplateId = "someEmailTemplateId";
     @Mock
     AsylumCase asylumCase;
     @Mock
     RecipientsFinder recipientsFinder;
-
-    private Long caseId = 12345L;
-    private String iaAipFrontendUrl = "frontendHyperlink";
-    private String referenceNumber = "someReferenceNumber";
-    private String emailTemplateId = "someEmailTemplateId";
-    private String mockedAppellantMobilePhone = "07123456789";
-
     private AppellantFtpaSubmittedPersonalisationSms appellantFtpaSubmittedPersonalisationSms;
 
     @BeforeEach
@@ -57,6 +53,7 @@ public class AppellantFtpaSubmittedPersonalisationSmsTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_APPELLANT_IN_PERSON_FTPA_SUBMITTED_SMS",
             appellantFtpaSubmittedPersonalisationSms.getReferenceId(caseId));
     }
@@ -64,6 +61,7 @@ public class AppellantFtpaSubmittedPersonalisationSmsTest {
     @Test
     public void should_return_given_phone_number_list_from_subscribers_in_asylum_case() {
 
+        String mockedAppellantMobilePhone = "07123456789";
         Subscriber subscriber = new Subscriber(
             SubscriberType.APPELLANT, //subscriberType
             "", //email
@@ -85,20 +83,22 @@ public class AppellantFtpaSubmittedPersonalisationSmsTest {
 
         when(recipientsFinder.findAll(null, NotificationType.SMS)).thenCallRealMethod();
 
-        assertThatThrownBy(() -> appellantFtpaSubmittedPersonalisationSms.getRecipientsList(null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> appellantFtpaSubmittedPersonalisationSms.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
 
     @Test
     public void should_return_personalisation() {
 
+        String referenceNumber = "someReferenceNumber";
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(referenceNumber));
         Map<String, String> personalisation =
             appellantFtpaSubmittedPersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals(referenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("linkToService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", referenceNumber)
+            .containsEntry("linkToService", iaAipFrontendUrl);
     }
 }

@@ -7,7 +7,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import java.util.Collections;
 import java.util.List;
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,6 +32,11 @@ public class SpringAuthorizedRolesProviderTest {
         SecurityContextHolder.setContext(securityContext);
     }
 
+    @AfterEach
+    public void cleanUp() {
+        SecurityContextHolder.clearContext();
+    }
+
     @Test
     public void should_return_empty_list_when_authentication_is_null() {
 
@@ -54,10 +59,5 @@ public class SpringAuthorizedRolesProviderTest {
         when(securityContext.getAuthentication()).thenReturn(authentication);
 
         assertEquals(Sets.newHashSet("ccd-role", "ccd-admin"), authorizedRolesProvider.getRoles());
-    }
-
-    @After
-    public void cleanUp() {
-        SecurityContextHolder.clearContext();
     }
 }
