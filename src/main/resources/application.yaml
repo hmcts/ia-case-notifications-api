@@ -1534,11 +1534,11 @@ govnotify:
         letter: 69820c60-76b6-4707-ba8b-06c21dfaa272
     completeCaseReviewStatutoryTimeframe24Weeks:
       homeOffice:
-        email: 2d0c35b4-5bb5-49e2-ad87-856d5682ea0f
+        email: 778af412-31bb-40b8-9cd7-39471eeb5dbd
       legalRep:
-        email: c2a95d8a-56b9-4c7a-9ed4-3678ae7e88f1
+        email: 068fa543-6167-4494-a532-74291b931d59
       appellant:
-        email: 12bf5ed3-2d4f-4de8-b7d9-6a3d29caf1a3
+        email: d2a75610-004c-4fd8-8724-5fb7700cc27d
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
     timeout: 5000
