@@ -1,6 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.homeoffice.email;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.APPLICANT_FAMILY_NAME;
@@ -34,7 +36,6 @@ class HomeOfficeForceCaseToHearingPersonalisationTest {
 
     private final String homeOfficeEmailAddress = "someHomeOfficeEmailAddress";
     private final String bailReferenceNumber = "someReferenceNumber";
-    private final String legalRepReference = "someLegalRepReference";
     private final String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
     private final String applicantGivenNames = "someApplicantGivenNames";
     private final String applicantFamilyName = "someApplicantFamilyName";
@@ -46,6 +47,7 @@ class HomeOfficeForceCaseToHearingPersonalisationTest {
     public void setup() {
 
         when(bailCase.read(BAIL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(bailReferenceNumber));
+        String legalRepReference = "someLegalRepReference";
         when(bailCase.read(LEGAL_REP_REFERENCE, String.class)).thenReturn(Optional.of(legalRepReference));
         when(bailCase.read(APPLICANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(applicantGivenNames));
         when(bailCase.read(APPLICANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(applicantFamilyName));
@@ -76,10 +78,10 @@ class HomeOfficeForceCaseToHearingPersonalisationTest {
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
-            () -> homeOfficeForceCaseToHearingPersonalisationTest.getPersonalisation((BailCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("bailCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> homeOfficeForceCaseToHearingPersonalisationTest.getPersonalisation((BailCase) null));
+        assertEquals("bailCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -89,11 +91,14 @@ class HomeOfficeForceCaseToHearingPersonalisationTest {
         Map<String, String> personalisation =
             homeOfficeForceCaseToHearingPersonalisationTest.getPersonalisation(bailCase);
 
-        assertEquals(bailReferenceNumber, personalisation.get("bailReferenceNumber"));
-        assertEquals(choice == YesOrNo.NO ? null : legalRepReference, personalisation.get("legalRepReference"));
-        assertEquals(applicantGivenNames, personalisation.get("applicantGivenNames"));
-        assertEquals(applicantFamilyName, personalisation.get("applicantFamilyName"));
-        assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
+        assertThat(personalisation)
+            .containsEntry("bailReferenceNumber", bailReferenceNumber)
+            .containsEntry("applicantGivenNames", applicantGivenNames)
+            .containsEntry("applicantFamilyName", applicantFamilyName)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber);
+        if (choice == YesOrNo.NO) {
+            assertNull(personalisation.get("legalRepReference"));
+        }
     }
 
     @ParameterizedTest
@@ -109,11 +114,14 @@ class HomeOfficeForceCaseToHearingPersonalisationTest {
         Map<String, String> personalisation =
             homeOfficeForceCaseToHearingPersonalisationTest.getPersonalisation(bailCase);
 
-        assertEquals("", personalisation.get("bailReferenceNumber"));
-        assertEquals(choice == YesOrNo.NO ? null : "", personalisation.get("legalRepReference"));
-        assertEquals("", personalisation.get("applicantGivenNames"));
-        assertEquals("", personalisation.get("applicantFamilyName"));
-        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
+        assertThat(personalisation)
+            .containsEntry("bailReferenceNumber", "")
+            .containsEntry("applicantGivenNames", "")
+            .containsEntry("applicantFamilyName", "")
+            .containsEntry("homeOfficeReferenceNumber", "");
+        if (choice == YesOrNo.NO) {
+            assertNull(personalisation.get("legalRepReference"));
+        }
     }
 
     @Test

@@ -14,7 +14,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 import java.util.Map;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
@@ -80,7 +80,9 @@ class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisationTest {
 
     @Test
     void shouldThrowExceptionOnPersonalisationWhenCaseIsNull() {
-        assertThatThrownBy(() -> personalisation.getPersonalisation((AsylumCase) null)).isExactlyInstanceOf(NullPointerException.class).hasMessage("asylumCase must not be null");
+        NullPointerException exception = assertThrows(NullPointerException.class,
+            () -> personalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -116,7 +118,7 @@ class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisationTest {
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(APPELLANT_FAMILY_NAME_VALUE));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(HOME_OFFICE_REF_NUMBER_VALUE));
         when(asylumCase.read(COMPLETE_CASE_REVIEW_DATE, String.class))
-                .thenReturn(Optional.of(REVIEW_DATE));
+            .thenReturn(Optional.of(REVIEW_DATE));
     }
 
     private void setupEmptyAsylumCaseMocks() {

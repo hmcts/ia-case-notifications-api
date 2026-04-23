@@ -17,7 +17,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.le
 import java.util.Map;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -29,20 +30,18 @@ import static org.mockito.Mockito.when;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class LegalRepresentativeBailApplicationEditedDisposalPersonalisationEmailTest {
 
-    @Mock
-    BailCase bailCase;
-    @Mock
-    UserDetailsProvider userDetailsProvider;
-    @Mock
-    UserDetails userDetails;
-
     private final String templateId = "someTemplateId";
     private final String iaExUiFrontendUrl = "url";
     private final String legalRepEmailAddress = "legalRep@example.com";
     private final String legalRepReference = "someLegalRepReference";
     private final String legalRepName = "someLegalRepName";
     private final String legalRepFamilyName = "someLegalRepFamilyName";
-
+    @Mock
+    BailCase bailCase;
+    @Mock
+    UserDetailsProvider userDetailsProvider;
+    @Mock
+    UserDetails userDetails;
     private LegalRepresentativeBailApplicationEditedDisposalPersonalisationEmail legalRepresentativeBailApplicationEditedDisposalPersonalisationEmail;
 
     @BeforeEach
@@ -73,7 +72,7 @@ class LegalRepresentativeBailApplicationEditedDisposalPersonalisationEmailTest {
     public void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_BAIL_APPLICATION_EDITED_DISPOSAL_LEGAL_REPRESENTATIVE",
-                legalRepresentativeBailApplicationEditedDisposalPersonalisationEmail.getReferenceId(caseId));
+            legalRepresentativeBailApplicationEditedDisposalPersonalisationEmail.getReferenceId(caseId));
     }
 
     @Test
@@ -84,10 +83,10 @@ class LegalRepresentativeBailApplicationEditedDisposalPersonalisationEmailTest {
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
-        assertThatThrownBy(
-            () -> legalRepresentativeBailApplicationEditedDisposalPersonalisationEmail.getPersonalisation((BailCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("bailCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> legalRepresentativeBailApplicationEditedDisposalPersonalisationEmail.getPersonalisation((BailCase) null));
+        assertEquals("bailCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -95,13 +94,14 @@ class LegalRepresentativeBailApplicationEditedDisposalPersonalisationEmailTest {
         // given
         // when
         Map<String, String> personalisation =
-                legalRepresentativeBailApplicationEditedDisposalPersonalisationEmail.getPersonalisation(bailCase);
+            legalRepresentativeBailApplicationEditedDisposalPersonalisationEmail.getPersonalisation(bailCase);
 
         // then
-        assertEquals(legalRepReference, personalisation.get("legalRepReference"));
-        assertEquals(legalRepName, personalisation.get("legalRepName"));
-        assertEquals(legalRepFamilyName, personalisation.get("legalRepFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("legalRepReference", legalRepReference)
+            .containsEntry("legalRepName", legalRepName)
+            .containsEntry("legalRepFamilyName", legalRepFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertNotNull(personalisation.get("editingDate"));
         verify(bailCase, times(1))
             .write(BailCaseFieldDefinition.LAST_EDIT_APPLICATION_NOTIFICATION_DATE, LocalDate.now().toString());
@@ -116,12 +116,13 @@ class LegalRepresentativeBailApplicationEditedDisposalPersonalisationEmailTest {
 
         // when
         Map<String, String> personalisation =
-                legalRepresentativeBailApplicationEditedDisposalPersonalisationEmail.getPersonalisation(bailCase);
+            legalRepresentativeBailApplicationEditedDisposalPersonalisationEmail.getPersonalisation(bailCase);
 
         // then
-        assertEquals("", personalisation.get("legalRepReference"));
-        assertEquals("", personalisation.get("legalRepName"));
-        assertEquals("", personalisation.get("legalRepFamilyName"));
+        assertThat(personalisation)
+            .containsEntry("legalRepReference", "")
+            .containsEntry("legalRepName", "")
+            .containsEntry("legalRepFamilyName", "");
         verify(bailCase, times(1))
             .write(BailCaseFieldDefinition.LAST_EDIT_APPLICATION_NOTIFICATION_DATE, LocalDate.now().toString());
     }

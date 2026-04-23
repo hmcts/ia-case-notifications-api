@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 public class BailCaseFieldDefinitionTest {
 
-    List<BailCaseFieldDefinition> fieldsNamesWithDifferentNaming =
+    final List<BailCaseFieldDefinition> fieldsNamesWithDifferentNaming =
         Arrays.asList(SUPPORTER_DOB, SUPPORTER_2_DOB, SUPPORTER_3_DOB, SUPPORTER_4_DOB, TTL);
 
     @Test
@@ -21,11 +21,11 @@ public class BailCaseFieldDefinitionTest {
             .filter(v -> !fieldsNamesWithDifferentNaming.contains(v))
             .forEach(v -> assertEquals(UPPER_UNDERSCORE.to(LOWER_CAMEL, v.name()), v.value()));
 
-        assertEquals(SUPPORTER_DOB.value(), "supporterDOB");
-        assertEquals(SUPPORTER_2_DOB.value(), "supporter2DOB");
-        assertEquals(SUPPORTER_3_DOB.value(), "supporter3DOB");
-        assertEquals(SUPPORTER_4_DOB.value(), "supporter4DOB");
-        assertEquals(TTL.value(), "TTL");
+        assertEquals("supporterDOB", SUPPORTER_DOB.value());
+        assertEquals("supporter2DOB", SUPPORTER_2_DOB.value());
+        assertEquals("supporter3DOB", SUPPORTER_3_DOB.value());
+        assertEquals("supporter4DOB", SUPPORTER_4_DOB.value());
+        assertEquals("TTL", TTL.value());
     }
 
     @Test

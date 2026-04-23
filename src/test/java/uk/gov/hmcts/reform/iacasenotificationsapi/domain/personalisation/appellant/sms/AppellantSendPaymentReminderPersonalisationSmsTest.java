@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
@@ -24,24 +24,23 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvi
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppellantSendPaymentReminderPersonalisationSmsTest {
 
+    private final int daysAfterNotification = 7;
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String templateId = "templateId";
+    private final String appellantMobileNumber = "07781122334";
+    private final String ccdReferenceNumber = "1111 2222 3333 4444";
     @Mock
     AsylumCase asylumCase;
     @Mock
     SystemDateProvider systemDateProvider;
     private AppellantSendPaymentReminderPersonalisationSms appellantSendPaymentReminderPersonalisationSms;
-    private Long caseId = 12345L;
-    private int daysAfterNotification = 7;
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String templateId = "templateId";
-    private String appellantMobileNumber = "07781122334";
-    private final String feeAmount = "14000";
-    private String ccdReferenceNumber = "1111 2222 3333 4444";
 
     @BeforeEach
     public void setUp() {
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(INTERNAL_APPELLANT_MOBILE_NUMBER, String.class)).thenReturn(Optional.ofNullable(appellantMobileNumber));
         when(asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class)).thenReturn(Optional.of(ccdReferenceNumber));
+        String feeAmount = "14000";
         when(asylumCase.read(AsylumCaseDefinition.FEE_AMOUNT_GBP, String.class)).thenReturn(Optional.of(feeAmount));
 
         appellantSendPaymentReminderPersonalisationSms = new AppellantSendPaymentReminderPersonalisationSms(
@@ -65,6 +64,7 @@ class AppellantSendPaymentReminderPersonalisationSmsTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_INTERNAL_PAYMENT_REMINDER_APPELLANT_SMS",
             appellantSendPaymentReminderPersonalisationSms.getReferenceId(caseId));
     }
@@ -78,18 +78,19 @@ class AppellantSendPaymentReminderPersonalisationSmsTest {
         Map<String, String> personalisation =
             appellantSendPaymentReminderPersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(ccdReferenceNumber, personalisation.get("onlineCaseReferenceNumber"));
-        assertEquals("140.00", personalisation.get("feeAmount"));
-        assertEquals(dueDate, personalisation.get("dueDate"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("onlineCaseReferenceNumber", ccdReferenceNumber)
+            .containsEntry("feeAmount", "140.00")
+            .containsEntry("dueDate", dueDate);
     }
 
     @Test
     public void should_throw_exception_when_callback_is_null() {
 
-        assertThatThrownBy(
-            () -> appellantSendPaymentReminderPersonalisationSms.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> appellantSendPaymentReminderPersonalisationSms.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 }

@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.security.idam;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -93,9 +93,9 @@ public class IdamUserDetailsProviderTest {
 
         when(idamService.getUserInfo(accessToken)).thenReturn(userInfo);
 
-        assertThatThrownBy(() -> idamUserDetailsProvider.getUserDetails())
-            .hasMessage("IDAM user details missing 'uid' field")
-            .isExactlyInstanceOf(IllegalStateException.class);
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> idamUserDetailsProvider.getUserDetails());
+        assertEquals("IDAM user details missing 'uid' field", exception.getMessage());
     }
 
     @Test
@@ -116,9 +116,9 @@ public class IdamUserDetailsProviderTest {
 
         when(idamService.getUserInfo(accessToken)).thenReturn(userInfo);
 
-        assertThatThrownBy(() -> idamUserDetailsProvider.getUserDetails())
-            .hasMessage("IDAM user details missing 'roles' field")
-            .isExactlyInstanceOf(IllegalStateException.class);
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> idamUserDetailsProvider.getUserDetails());
+        assertEquals("IDAM user details missing 'roles' field", exception.getMessage());
     }
 
     @Test
@@ -139,9 +139,9 @@ public class IdamUserDetailsProviderTest {
 
         when(idamService.getUserInfo(accessToken)).thenReturn(userInfo);
 
-        assertThatThrownBy(() -> idamUserDetailsProvider.getUserDetails())
-            .hasMessage("IDAM user details missing 'sub' field")
-            .isExactlyInstanceOf(IllegalStateException.class);
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> idamUserDetailsProvider.getUserDetails());
+        assertEquals("IDAM user details missing 'sub' field", exception.getMessage());
     }
 
     @Test
@@ -162,9 +162,9 @@ public class IdamUserDetailsProviderTest {
 
         when(idamService.getUserInfo(accessToken)).thenReturn(userInfo);
 
-        assertThatThrownBy(() -> idamUserDetailsProvider.getUserDetails())
-            .hasMessage("IDAM user details missing 'given_name' field")
-            .isExactlyInstanceOf(IllegalStateException.class);
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> idamUserDetailsProvider.getUserDetails());
+        assertEquals("IDAM user details missing 'given_name' field", exception.getMessage());
     }
 
     @Test
@@ -186,9 +186,9 @@ public class IdamUserDetailsProviderTest {
         when(idamService.getUserInfo(accessToken)).thenReturn(userInfo);
 
 
-        assertThatThrownBy(() -> idamUserDetailsProvider.getUserDetails())
-            .hasMessage("IDAM user details missing 'family_name' field")
-            .isExactlyInstanceOf(IllegalStateException.class);
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> idamUserDetailsProvider.getUserDetails());
+        assertEquals("IDAM user details missing 'family_name' field", exception.getMessage());
     }
 
     @Test
@@ -202,10 +202,10 @@ public class IdamUserDetailsProviderTest {
 
         when(idamService.getUserInfo(anyString())).thenThrow(restClientException);
 
-        assertThatThrownBy(() -> idamUserDetailsProvider.getUserDetails())
-            .isExactlyInstanceOf(IdentityManagerResponseException.class)
-            .hasMessage("Could not get user details with IDAM")
-            .hasCause(restClientException);
+        IdentityManagerResponseException exception =
+            assertThrows(IdentityManagerResponseException.class, () -> idamUserDetailsProvider.getUserDetails());
+        assertEquals("Could not get user details with IDAM", exception.getMessage());
+        assertEquals(restClientException, exception.getCause());
     }
 
     @Test
@@ -219,9 +219,9 @@ public class IdamUserDetailsProviderTest {
 
         when(idamService.getUserInfo(anyString())).thenThrow(restClientException);
 
-        assertThatThrownBy(() -> idamUserDetailsProvider.getUserDetails())
-            .isExactlyInstanceOf(IdentityManagerResponseException.class)
-            .hasMessage("Could not get user details with IDAM")
-            .hasCause(restClientException);
+        IdentityManagerResponseException exception =
+            assertThrows(IdentityManagerResponseException.class, () -> idamUserDetailsProvider.getUserDetails());
+        assertEquals("Could not get user details with IDAM", exception.getMessage());
+        assertEquals(restClientException, exception.getCause());
     }
 }

@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -37,17 +38,10 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class RespondentEvidenceDirectionPersonalisationTest {
 
-    @Mock AsylumCase asylumCase;
-    @Mock DirectionFinder directionFinder;
-    @Mock Direction direction;
-    @Mock CustomerServicesProvider customerServicesProvider;
-
-    private final Long caseId = 12345L;
     private final String templateId = "someTemplateId";
     private final String ejpTemplateId = "someEjpTemplateId";
     private final String detentionTemplateId = "someDetentionTemplateId";
     private final String respondentReviewEmailAddress = "respondentReview@example.com";
-
     private final String expectedDirectionDueDate = "27 Aug 2019";
     private final String companyName = "Legal Rep Company Name";
     private final String companyAddress = "45 Lunar House Spa Road London SE1 3HP";
@@ -57,26 +51,29 @@ public class RespondentEvidenceDirectionPersonalisationTest {
     private final String legalRepEmail = "Legal Rep Email";
     private final String legalRepEjpGivenName = "Given Name";
     private final String legalRepEjpFamilyName = "Family Name";
-
     private final String legalRepEjpReference = "Legal Rep Reference Ejp";
     private final String legalRepEjpEmail = "Legal Rep Email Ejp";
     private final String legalRepEjpCompanyName = "Legal Rep Company Name Ejp";
-
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-
     private final AddressUk legalRepCompanyAddress = new AddressUk("45 Lunar House",
-            "Spa Road",
-            "Woolworth",
-            "London",
-            "London",
-            "SE1 3HP", "UK");
-
+        "Spa Road",
+        "Woolworth",
+        "London",
+        "London",
+        "SE1 3HP", "UK");
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "customer.services@example.com";
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    DirectionFinder directionFinder;
+    @Mock
+    Direction direction;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
     private RespondentEvidenceDirectionPersonalisation respondentEvidenceDirectionPersonalisation;
 
 
@@ -107,7 +104,7 @@ public class RespondentEvidenceDirectionPersonalisationTest {
             ejpTemplateId,
             detentionTemplateId,
             respondentReviewEmailAddress,
-                iaExUiFrontendUrl,
+            iaExUiFrontendUrl,
             directionFinder,
             customerServicesProvider);
         when(asylumCase.read(IS_EJP, YesOrNo.class)).thenReturn(Optional.of(NO));
@@ -153,6 +150,7 @@ public class RespondentEvidenceDirectionPersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_RESPONDENT_EVIDENCE_DIRECTION", respondentEvidenceDirectionPersonalisation.getReferenceId(caseId));
     }
 
@@ -164,13 +162,13 @@ public class RespondentEvidenceDirectionPersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> respondentEvidenceDirectionPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> respondentEvidenceDirectionPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(NO));
@@ -178,16 +176,17 @@ public class RespondentEvidenceDirectionPersonalisationTest {
         initializePrefixes(respondentEvidenceDirectionPersonalisation);
         Map<String, String> personalisation = respondentEvidenceDirectionPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(companyName, personalisation.get("companyName"));
-        assertEquals(companyAddress, personalisation.get("companyAddress"));
-        assertEquals(legalRepName + " " + legalRepFamilyName, personalisation.get("legalRepName"));
-        assertEquals(legalRepEmail, personalisation.get("legalRepEmail"));
-        assertEquals(legalRepReference, personalisation.get("legalRepReference"));
-        assertEquals(expectedDirectionDueDate, personalisation.get("dueDate"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("companyName", companyName)
+            .containsEntry("companyAddress", companyAddress)
+            .containsEntry("legalRepName", legalRepName + " " + legalRepFamilyName)
+            .containsEntry("legalRepEmail", legalRepEmail)
+            .containsEntry("legalRepReference", legalRepReference)
+            .containsEntry("dueDate", expectedDirectionDueDate);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YES)
@@ -197,7 +196,7 @@ public class RespondentEvidenceDirectionPersonalisationTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_mandatory_information_given_icc_lr(YesOrNo isAda) {
         when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(NO));
@@ -227,16 +226,17 @@ public class RespondentEvidenceDirectionPersonalisationTest {
 
         Map<String, String> personalisation = respondentEvidenceDirectionPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals(companyName, personalisation.get("companyName"));
-        assertEquals(companyAddress, personalisation.get("companyAddress"));
-        assertEquals(legalRepName + " " + legalRepFamilyName, personalisation.get("legalRepName"));
-        assertEquals(legalRepEmail, personalisation.get("legalRepEmail"));
-        assertEquals(legalRepReference, personalisation.get("legalRepReference"));
-        assertEquals(expectedDirectionDueDate, personalisation.get("dueDate"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("homeOfficeReferenceNumber", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "")
+            .containsEntry("companyName", companyName)
+            .containsEntry("companyAddress", companyAddress)
+            .containsEntry("legalRepName", legalRepName + " " + legalRepFamilyName)
+            .containsEntry("legalRepEmail", legalRepEmail)
+            .containsEntry("legalRepReference", legalRepReference)
+            .containsEntry("dueDate", expectedDirectionDueDate);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YES)
@@ -245,7 +245,7 @@ public class RespondentEvidenceDirectionPersonalisationTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_mandatory_information_given_icc_aip(YesOrNo isAda) {
         when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YES));
@@ -275,16 +275,17 @@ public class RespondentEvidenceDirectionPersonalisationTest {
 
         Map<String, String> personalisation = respondentEvidenceDirectionPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals(companyName, personalisation.get("companyName"));
-        assertEquals(companyAddress, personalisation.get("companyAddress"));
-        assertEquals(legalRepName + " " + legalRepFamilyName, personalisation.get("legalRepName"));
-        assertEquals(legalRepEmail, personalisation.get("legalRepEmail"));
-        assertEquals(legalRepReference, personalisation.get("legalRepReference"));
-        assertEquals(expectedDirectionDueDate, personalisation.get("dueDate"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("homeOfficeReferenceNumber", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "")
+            .containsEntry("companyName", companyName)
+            .containsEntry("companyAddress", companyAddress)
+            .containsEntry("legalRepName", legalRepName + " " + legalRepFamilyName)
+            .containsEntry("legalRepEmail", legalRepEmail)
+            .containsEntry("legalRepReference", legalRepReference)
+            .containsEntry("dueDate", expectedDirectionDueDate);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YES)
@@ -304,23 +305,24 @@ public class RespondentEvidenceDirectionPersonalisationTest {
 
         Map<String, String> personalisation = respondentEvidenceDirectionPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals(companyName, personalisation.get("companyName"));
-        assertEquals(companyAddress, personalisation.get("companyAddress"));
-        assertEquals(legalRepName + " " + legalRepFamilyName, personalisation.get("legalRepName"));
-        assertEquals(legalRepEmail, personalisation.get("legalRepEmail"));
-        assertEquals(legalRepReference, personalisation.get("legalRepReference"));
-        assertEquals(expectedDirectionDueDate, personalisation.get("dueDate"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("homeOfficeReferenceNumber", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "")
+            .containsEntry("companyName", companyName)
+            .containsEntry("companyAddress", companyAddress)
+            .containsEntry("legalRepName", legalRepName + " " + legalRepFamilyName)
+            .containsEntry("legalRepEmail", legalRepEmail)
+            .containsEntry("legalRepReference", legalRepReference)
+            .containsEntry("dueDate", expectedDirectionDueDate);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals("Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_empty_company_details_for_notice_of_change_found(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
@@ -335,16 +337,17 @@ public class RespondentEvidenceDirectionPersonalisationTest {
             ));
         Map<String, String> personalisation = respondentEvidenceDirectionPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals("", personalisation.get("companyName"));
-        assertEquals("", personalisation.get("companyAddress"));
-        assertEquals("", personalisation.get("legalRepName"));
-        assertEquals("", personalisation.get("legalRepEmail"));
-        assertEquals("", personalisation.get("legalRepReference"));
-        assertEquals(expectedDirectionDueDate, personalisation.get("dueDate"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("companyName", "")
+            .containsEntry("companyAddress", "")
+            .containsEntry("legalRepName", "")
+            .containsEntry("legalRepEmail", "")
+            .containsEntry("legalRepReference", "")
+            .containsEntry("dueDate", expectedDirectionDueDate);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YES)
@@ -353,7 +356,7 @@ public class RespondentEvidenceDirectionPersonalisationTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_company_details_for_notice_of_change_found_with_valid_case_role(YesOrNo isAda) {
 
         Value caseRole =
@@ -372,16 +375,17 @@ public class RespondentEvidenceDirectionPersonalisationTest {
             ));
         Map<String, String> personalisation = respondentEvidenceDirectionPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(companyName, personalisation.get("companyName"));
-        assertEquals(companyAddress, personalisation.get("companyAddress"));
-        assertEquals(legalRepName + " " + legalRepFamilyName, personalisation.get("legalRepName"));
-        assertEquals(legalRepEmail, personalisation.get("legalRepEmail"));
-        assertEquals(legalRepReference, personalisation.get("legalRepReference"));
-        assertEquals(expectedDirectionDueDate, personalisation.get("dueDate"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("companyName", companyName)
+            .containsEntry("companyAddress", companyAddress)
+            .containsEntry("legalRepName", legalRepName + " " + legalRepFamilyName)
+            .containsEntry("legalRepEmail", legalRepEmail)
+            .containsEntry("legalRepReference", legalRepReference)
+            .containsEntry("dueDate", expectedDirectionDueDate);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YES)
@@ -394,9 +398,9 @@ public class RespondentEvidenceDirectionPersonalisationTest {
 
         when(directionFinder.findFirst(asylumCase, DirectionTag.RESPONDENT_EVIDENCE)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> respondentEvidenceDirectionPersonalisation.getPersonalisation(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("direction 'respondentEvidence' is not present");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> respondentEvidenceDirectionPersonalisation.getPersonalisation(asylumCase));
+        assertEquals("direction 'respondentEvidence' is not present", exception.getMessage());
     }
 
     @Test
@@ -407,14 +411,15 @@ public class RespondentEvidenceDirectionPersonalisationTest {
         when(asylumCase.read(LEGAL_REP_NAME, String.class)).thenReturn(Optional.empty());
         Map<String, String> personalisation = respondentEvidenceDirectionPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(legalRepEjpCompanyName, personalisation.get("companyName"));
-        assertEquals(legalRepEjpEmail, personalisation.get("legalRepEmail"));
-        assertEquals(legalRepEjpReference, personalisation.get("legalRepReference"));
-        assertEquals(legalRepEjpGivenName +  " " + legalRepEjpFamilyName, personalisation.get("legalRepName"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("companyName", legalRepEjpCompanyName)
+            .containsEntry("legalRepEmail", legalRepEjpEmail)
+            .containsEntry("legalRepReference", legalRepEjpReference)
+            .containsEntry("legalRepName", legalRepEjpGivenName + " " + legalRepEjpFamilyName);
 
         assertEquals(expectedDirectionDueDate, personalisation.get("dueDate"));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());

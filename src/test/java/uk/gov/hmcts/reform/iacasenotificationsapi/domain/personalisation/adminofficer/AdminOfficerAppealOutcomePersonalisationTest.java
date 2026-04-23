@@ -1,10 +1,9 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_DECISION_ALLOWED;
 
 import java.util.Map;
 import java.util.Optional;
@@ -26,25 +25,17 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AdminOfficerAppealOutcomePersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-
-    @Mock
-    private EmailAddressFinder emailAddressFinder;
-
-
-    AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
-
-    AdminOfficerAppealOutcomePersonalisation adminOfficerAppealOutcomePersonalisation;
-
-
     private final String decisionAndReasonUploadedTemplateId = "someTemplateId";
-
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String ariaListingReference = "someAriaListingReference";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-
+    @Mock
+    AsylumCase asylumCase;
+    AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
+    AdminOfficerAppealOutcomePersonalisation adminOfficerAppealOutcomePersonalisation;
+    @Mock
+    private EmailAddressFinder emailAddressFinder;
 
     @BeforeEach
     public void setup() {
@@ -58,13 +49,13 @@ class AdminOfficerAppealOutcomePersonalisationTest {
         adminOfficerPersonalisationProvider = new AdminOfficerPersonalisationProvider(iaExUiFrontendUrl);
 
         adminOfficerAppealOutcomePersonalisation = new AdminOfficerAppealOutcomePersonalisation(
-                decisionAndReasonUploadedTemplateId,
-                adminOfficerPersonalisationProvider,
-                emailAddressFinder
+            decisionAndReasonUploadedTemplateId,
+            adminOfficerPersonalisationProvider,
+            emailAddressFinder
         );
     }
 
-    
+
     @Test
     void should_return_given_template_id() {
         assertEquals(decisionAndReasonUploadedTemplateId, adminOfficerAppealOutcomePersonalisation.getTemplateId(asylumCase));
@@ -74,15 +65,15 @@ class AdminOfficerAppealOutcomePersonalisationTest {
     void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_APPEAL_OUTCOME_ADMIN",
-                adminOfficerAppealOutcomePersonalisation.getReferenceId(caseId));
+            adminOfficerAppealOutcomePersonalisation.getReferenceId(caseId));
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> adminOfficerAppealOutcomePersonalisation.getPersonalisation((AsylumCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> adminOfficerAppealOutcomePersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -103,12 +94,13 @@ class AdminOfficerAppealOutcomePersonalisationTest {
         Map<String, String> personalisation = adminOfficerPersonalisationProvider.getAdminPersonalisation(asylumCase);
 
         // Then
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(hearingCentre, personalisation.get("hearingCentre"));
-        assertEquals(applicationDecision, personalisation.get("applicationDecision"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("ariaListingReference", ariaListingReference)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("hearingCentre", hearingCentre)
+            .containsEntry("applicationDecision", applicationDecision);
     }
 }
 

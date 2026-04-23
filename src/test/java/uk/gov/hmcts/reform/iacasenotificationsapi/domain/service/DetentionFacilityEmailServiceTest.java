@@ -59,7 +59,7 @@ class DetentionFacilityEmailServiceTest {
         when(prisonEmailMappingService.getPrisonEmail("HMP Unknown")).thenReturn(Optional.empty());
 
         IllegalStateException ex = assertThrows(IllegalStateException.class,
-                () -> detentionFacilityEmailService.getDetentionEmailAddress(asylumCase));
+            () -> detentionFacilityEmailService.getDetentionEmailAddress(asylumCase));
 
         assertEquals("Prison email address not found for Prison: HMP Unknown", ex.getMessage());
     }
@@ -70,7 +70,7 @@ class DetentionFacilityEmailServiceTest {
         when(asylumCase.read(PRISON_NAME, String.class)).thenReturn(Optional.empty());
 
         IllegalStateException ex = assertThrows(IllegalStateException.class,
-                () -> detentionFacilityEmailService.getDetentionEmailAddress(asylumCase));
+            () -> detentionFacilityEmailService.getDetentionEmailAddress(asylumCase));
 
         assertEquals("Prison name is not present", ex.getMessage());
     }
@@ -80,7 +80,7 @@ class DetentionFacilityEmailServiceTest {
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.empty());
 
         IllegalStateException ex = assertThrows(IllegalStateException.class,
-                () -> detentionFacilityEmailService.getDetentionEmailAddress(asylumCase));
+            () -> detentionFacilityEmailService.getDetentionEmailAddress(asylumCase));
 
         assertEquals("Detention facility is not present", ex.getMessage());
     }

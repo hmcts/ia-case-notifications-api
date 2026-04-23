@@ -1,13 +1,14 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CASE_FLAG_SET_ASIDE_REHEARD_EXISTS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ACCELERATED_DETAINED_APPEAL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_REHEARD_APPEAL_ENABLED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
@@ -26,19 +27,19 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesO
 @ExtendWith(MockitoExtension.class)
 class AdminOfficerReviewHearingRequirementsPersonalisationTest {
 
-    @Mock AsylumCase asylumCase;
-    @Mock AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
-
-    private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
-    private String reviewHearingRequirementsTemplateId = "someTemplateId";
-    private String reviewReheardHearingRequirementsTemplateId = "anotherTemplateId";
-    private String reviewHearingRequirementsAdminOfficerEmailAddress = "adminofficer-review-hearing-requirements@example.com";
+    private final String templateId = "someTemplateId";
+    private final String reviewHearingRequirementsTemplateId = "someTemplateId";
+    private final String reviewReheardHearingRequirementsTemplateId = "anotherTemplateId";
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
     private AdminOfficerReviewHearingRequirementsPersonalisation adminOfficerReviewHearingRequirementsPersonalisation;
 
     @BeforeEach
     public void setup() {
 
+        String reviewHearingRequirementsAdminOfficerEmailAddress = "adminofficer-review-hearing-requirements@example.com";
         adminOfficerReviewHearingRequirementsPersonalisation = new AdminOfficerReviewHearingRequirementsPersonalisation(
             reviewHearingRequirementsTemplateId,
             reviewReheardHearingRequirementsTemplateId,
@@ -72,6 +73,7 @@ class AdminOfficerReviewHearingRequirementsPersonalisationTest {
     @Test
     void should_return_given_reference_id() {
 
+        Long caseId = 12345L;
         assertEquals(caseId + "_REVIEW_HEARING_REQUIREMENTS_ADMIN_OFFICER",
             adminOfficerReviewHearingRequirementsPersonalisation.getReferenceId(caseId));
     }
@@ -79,14 +81,14 @@ class AdminOfficerReviewHearingRequirementsPersonalisationTest {
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
-            () -> adminOfficerReviewHearingRequirementsPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> adminOfficerReviewHearingRequirementsPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         initializePrefixes(adminOfficerReviewHearingRequirementsPersonalisation);
@@ -97,21 +99,10 @@ class AdminOfficerReviewHearingRequirementsPersonalisationTest {
         Map<String, String> personalisation =
             adminOfficerReviewHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
-
-    }
-
-    @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
-    void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
-
-        initializePrefixes(adminOfficerReviewHearingRequirementsPersonalisation);
-        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
-        when(adminOfficerPersonalisationProvider.getReviewedHearingRequirementsPersonalisation(asylumCase))
-            .thenReturn(ImmutableMap.<String, String>builder().build());
-        Map<String, String> personalisation =
-            adminOfficerReviewHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
-
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        String nonAdaPrefix = "Immigration and Asylum appeal";
+        String adaPrefix = "Accelerated detained appeal";
+        assertThat(personalisation)
+            .containsAllEntriesOf(adminOfficerPersonalisationProvider.getReviewedHearingRequirementsPersonalisation(asylumCase))
+            .containsEntry("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix);
     }
 }

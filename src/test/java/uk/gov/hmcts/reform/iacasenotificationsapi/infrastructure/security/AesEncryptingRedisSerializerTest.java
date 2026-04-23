@@ -8,8 +8,11 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.model.i
 
 import java.util.Base64;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class AesEncryptingRedisSerializerTest {
 
@@ -27,12 +30,12 @@ class AesEncryptingRedisSerializerTest {
 
     @Test
     void serialize_null_returnsNull() {
-        assertThat(serializer.serialize(null)).isNull();
+        assertNull(serializer.serialize(null));
     }
 
     @Test
     void deserialize_null_returnsNull() {
-        assertThat(serializer.deserialize(null)).isNull();
+        assertNull(serializer.deserialize(null));
     }
 
     @Test
@@ -42,7 +45,7 @@ class AesEncryptingRedisSerializerTest {
         byte[] serialized = serializer.serialize(original);
         String deserialized = serializer.deserialize(serialized);
 
-        assertThat(deserialized).isEqualTo(original);
+        assertEquals(original, deserialized);
     }
 
     @Test
@@ -57,8 +60,8 @@ class AesEncryptingRedisSerializerTest {
         byte[] serialized = userInfoSerializer.serialize(userInfo);
         UserInfo deserialized = userInfoSerializer.deserialize(serialized);
 
-        assertThat(deserialized.getEmail()).isEqualTo(userInfo.getEmail());
-        assertThat(deserialized.getName()).isEqualTo(userInfo.getName());
+        assertEquals(userInfo.getEmail(), deserialized.getEmail());
+        assertEquals(userInfo.getName(), deserialized.getName());
     }
 
     @Test
@@ -67,7 +70,7 @@ class AesEncryptingRedisSerializerTest {
 
         byte[] encrypted = serializer.serialize(token);
 
-        assertThat(new String(encrypted)).doesNotContain("token");
+        assertFalse(new String(encrypted).contains("token"));
     }
 
     @Test
@@ -78,7 +81,7 @@ class AesEncryptingRedisSerializerTest {
         byte[] second = serializer.serialize(token);
 
         // Different encrypted text, even for the same token
-        assertThat(first).isNotEqualTo(second);
+        assertNotEquals(second, first);
     }
 
     @Test
@@ -94,8 +97,6 @@ class AesEncryptingRedisSerializerTest {
         byte[] encryptedWithA = serializerA.serialize("Bearer sometoken");
 
         // only key A can decrypt
-        assertThatThrownBy(() -> serializerB.deserialize(encryptedWithA))
-            .isInstanceOf(SerializationException.class);
+        assertThrows(SerializationException.class, () -> serializerB.deserialize(encryptedWithA));
     }
-
 }

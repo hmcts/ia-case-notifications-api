@@ -4,8 +4,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.Document;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 
 class StoredNotificationTest {
@@ -39,30 +40,38 @@ class StoredNotificationTest {
 
     @Test
     void should_hold_onto_values() {
-        assertThat(storedNotification.getNotificationId()).isEqualTo(notificationId);
-        assertThat(storedNotification.getNotificationMethod()).isEqualTo(notificationMethod);
-        assertThat(storedNotification.getNotificationSentTo()).isEqualTo(notificationSentTo);
-        assertThat(storedNotification.getNotificationStatus()).isEqualTo(notificationStatus);
-        assertThat(storedNotification.getNotificationBody()).isEqualTo(notificationBody);
-        assertThat(storedNotification.getNotificationDateSent()).isEqualTo(notificationDateSent);
-        assertThat(storedNotification.getNotificationReference()).isEqualTo(notificationReference);
-        assertThat(storedNotification.getNotificationSubject()).isEqualTo(notificationSubject);
-        assertThat(storedNotification.getNotificationDocument()).isNull();
+        assertEquals(notificationId, storedNotification.getNotificationId());
+        assertEquals(notificationMethod, storedNotification.getNotificationMethod());
+        assertEquals(notificationSentTo, storedNotification.getNotificationSentTo());
+        assertEquals(notificationStatus, storedNotification.getNotificationStatus());
+        assertEquals(notificationBody, storedNotification.getNotificationBody());
+        assertEquals(notificationDateSent, storedNotification.getNotificationDateSent());
+        assertEquals(notificationReference, storedNotification.getNotificationReference());
+        assertEquals(notificationSubject, storedNotification.getNotificationSubject());
+        assertNull(storedNotification.getNotificationDocument());
         storedNotification.setNotificationDocument(document);
-        assertThat(storedNotification.getNotificationDocument()).isEqualTo(document);
+        assertEquals(document, storedNotification.getNotificationDocument());
     }
 
     @Test
     void should_not_allow_null_arguments_other_than_document() {
 
         StoredNotification.StoredNotificationBuilder builder = StoredNotification.builder();
-        assertThatThrownBy(() -> builder.notificationId(null)).isExactlyInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> builder.notificationDateSent(null)).isExactlyInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> builder.notificationSentTo(null)).isExactlyInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> builder.notificationBody(null)).isExactlyInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> builder.notificationMethod(null)).isExactlyInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> builder.notificationStatus(null)).isExactlyInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> builder.notificationReference(null)).isExactlyInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> builder.notificationSubject(null)).isExactlyInstanceOf(NullPointerException.class);
+        assertThrows(NullPointerException.class,
+            () -> builder.notificationId(null));
+        assertThrows(NullPointerException.class,
+            () -> builder.notificationDateSent(null));
+        assertThrows(NullPointerException.class,
+            () -> builder.notificationSentTo(null));
+        assertThrows(NullPointerException.class,
+            () -> builder.notificationBody(null));
+        assertThrows(NullPointerException.class,
+            () -> builder.notificationMethod(null));
+        assertThrows(NullPointerException.class,
+            () -> builder.notificationStatus(null));
+        assertThrows(NullPointerException.class,
+            () -> builder.notificationReference(null));
+        assertThrows(NullPointerException.class,
+            () -> builder.notificationSubject(null));
     }
 }
