@@ -310,4 +310,5 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
             throw new RuntimeException(e);
         }
     }
+
 }
