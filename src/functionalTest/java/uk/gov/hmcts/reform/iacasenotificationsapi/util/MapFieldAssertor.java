@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.Map;
@@ -83,9 +84,8 @@ public final class MapFieldAssertor {
 
                     expectedValueString = expectedValueString.substring(2, expectedValueString.length() - 1);
 
-                    assertEquals(
-                        expectedValueString,
-                        actualValueString,
+                    assertTrue(
+                        actualValueString.matches(expectedValueString),
                         "Expected field matches regular expression (" + path + ")"
                     );
 
