@@ -12,7 +12,6 @@ plugins {
     id 'uk.gov.hmcts.java' version '0.12.68'
     id 'io.freefair.lombok' version '9.2.0'
     id 'au.com.dius.pact' version '4.6.20'
-    id "name.remal.randomize-test-classes" version "1.5.0"
     id 'org.gradle.test-retry' version '1.6.4'
     id 'net.serenity-bdd.serenity-gradle-plugin' version '5.3.9'
 }
@@ -105,18 +104,20 @@ processIntegrationTestResources {
 }
 
 idea {
-    testSources.from(
-            project.sourceSets.integrationTest.java.srcDirs,
-            project.sourceSets.functionalTest.java.srcDirs,
-            project.sourceSets.smokeTest.java.srcDirs,
-            project.sourceSets.contractTest.java.srcDirs
-    )
-    testResources.from(
-            project.sourceSets.integrationTest.resources.srcDirs,
-            project.sourceSets.functionalTest.resources.srcDirs,
-            project.sourceSets.smokeTest.resources.srcDirs,
-            project.sourceSets.contractTest.resources.srcDirs
-    )
+    module {
+        testSources.from(
+                project.sourceSets.integrationTest.java.srcDirs,
+                project.sourceSets.functionalTest.java.srcDirs,
+                project.sourceSets.smokeTest.java.srcDirs,
+                project.sourceSets.contractTest.java.srcDirs
+        )
+        testResources.from(
+                project.sourceSets.integrationTest.resources.srcDirs,
+                project.sourceSets.functionalTest.resources.srcDirs,
+                project.sourceSets.smokeTest.resources.srcDirs,
+                project.sourceSets.contractTest.resources.srcDirs
+        )
+    }
 }
 
 configurations {
@@ -164,7 +165,7 @@ tasks.register('functional', Test) {
     classpath = sourceSets.functionalTest.runtimeClasspath
     finalizedBy aggregate
     testLogging {
-        outputs.upToDateWhen {false}
+        outputs.upToDateWhen { false }
         showStandardStreams = true
         showStackTraces = true
     }
@@ -220,7 +221,7 @@ tasks.named('pitest') {
 project.ext {
     pacticipant = 'ia_caseNotificationsApi'
     if (System.env.GIT_COMMIT) {
-        pacticipantVersion = System.env.GIT_COMMIT.substring(0,9)
+        pacticipantVersion = System.env.GIT_COMMIT.substring(0, 9)
     } else {
         pacticipantVersion = getCheckedOutGitCommitHash()
     }
@@ -363,9 +364,9 @@ dependencies {
         }
     }
 
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'    implementation 'org.springframework.boot:spring-boot-starter-aop'    implementation 'org.springframework.boot:spring-boot-starter-json'    implementation 'org.springframework.boot:spring-boot-starter-security'    implementation 'org.springframework.boot:spring-boot-starter-web'    implementation 'org.springframework.boot:spring-boot-starter-validation'    implementation 'org.springframework.boot:spring-boot-starter-data-redis'    implementation 'org.springframework.boot:spring-boot-starter-cache'
-    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'    implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
-    implementation 'org.springframework.security:spring-security-oauth2-client'    implementation 'org.springframework.security:spring-security-oauth2-resource-server'    implementation 'org.springframework.security:spring-security-oauth2-jose'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator' implementation 'org.springframework.boot:spring-boot-starter-aop' implementation 'org.springframework.boot:spring-boot-starter-json' implementation 'org.springframework.boot:spring-boot-starter-security' implementation 'org.springframework.boot:spring-boot-starter-web' implementation 'org.springframework.boot:spring-boot-starter-validation' implementation 'org.springframework.boot:spring-boot-starter-data-redis' implementation 'org.springframework.boot:spring-boot-starter-cache'
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign' implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
+    implementation 'org.springframework.security:spring-security-oauth2-client' implementation 'org.springframework.security:spring-security-oauth2-resource-server' implementation 'org.springframework.security:spring-security-oauth2-jose'
     // CVE-2019-17195
     implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '10.9'
 
@@ -374,7 +375,7 @@ dependencies {
 
     implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.9.3'
 
-    implementation 'com.fasterxml.jackson.core:jackson-core'    implementation 'com.fasterxml.jackson.core:jackson-databind'    implementation 'com.fasterxml.jackson.core:jackson-annotations'    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv'
+    implementation 'com.fasterxml.jackson.core:jackson-core' implementation 'com.fasterxml.jackson.core:jackson-databind' implementation 'com.fasterxml.jackson.core:jackson-annotations' implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310' implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv'
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.8.17'
 
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.5.32'
