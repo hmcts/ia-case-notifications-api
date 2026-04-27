@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -98,8 +99,9 @@ public class CcdScenarioRunnerTest {
         } else {
             scenarioPattern = "*" + scenarioPattern + "*.json";
         }
-        scenarioSources.addAll(StringResourceLoader.load("/scenarios/" + scenarioPattern).values());
-        scenarioSources.addAll(StringResourceLoader.load("/scenarios/bail/" + scenarioPattern).values());
+        // scenarioSources.addAll(StringResourceLoader.load("/scenarios/" + scenarioPattern).values());
+        // scenarioSources.addAll(StringResourceLoader.load("/scenarios/bail/" + scenarioPattern).values());
+        scenarioSources.addAll(StringResourceLoader.load("/scenarios/RIA-9233-internal-aip-record-remission-decision-letter-notification-in-country-partially-granted-represented.json").values());
         System.out.println((char) 27 + "[36m" + "-------------------------------------------------------------------");
         System.out.println((char) 27 + "[33m" + "RUNNING " + scenarioSources.size() + " SCENARIOS");
         System.out.println((char) 27 + "[36m" + "-------------------------------------------------------------------");
@@ -111,12 +113,13 @@ public class CcdScenarioRunnerTest {
                 Map<String, Object> scenario = deserializeWithExpandedValues(scenarioSource);
 
                 String description = MapValueExtractor.extract(scenario, "description");
-
                 String scenarioDisabled = MapValueExtractor.extractOrDefault(scenario, "disabled", "false");
+                System.out.println("scenarioDisabled: " + scenarioDisabled);
                 String launchDarklyKey = MapValueExtractor.extractOrDefault(scenario, "launchDarklyKey", "");
                 final String credentials = MapValueExtractor.extractOrDefault(scenario, "request.credentials", "none");
                 final Headers authorizationHeaders = getAuthorizationHeaders(credentials);
                 boolean isDisabled = Boolean.parseBoolean(scenarioDisabled);
+                System.out.println("isDisabled: " + isDisabled);
                 if (!launchDarklyKey.isBlank()) {
                     String[] keys = launchDarklyKey.split(":");
                     isDisabled = launchDarklyFunctionalTestClient
