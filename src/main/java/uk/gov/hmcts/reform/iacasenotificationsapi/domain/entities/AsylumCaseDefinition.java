@@ -447,6 +447,9 @@ public enum AsylumCaseDefinition {
     OTHER_DECISION_FOR_DISPLAY(
         "otherDecisionForDisplay", new TypeReference<String>() {}),
 
+    REVOKE_ACCESS_DL(
+        "revokeAccessDl", new TypeReference<DynamicList>(){}),
+
     REQUEST_FEE_REMISSION_DATE(
         "requestFeeRemissionDate", new TypeReference<String>(){}),
     REMISSION_REJECTED_DATE_PLUS_14DAYS(
@@ -630,7 +633,8 @@ public enum AsylumCaseDefinition {
 
     LAST_EDIT_APPEAL_NOTIFICATION_DATE(
         "lastEditAppealNotificationDate", new TypeReference<String>(){}),
-    ;
+
+    COMPLETE_CASE_REVIEW_DATE("completeCaseReviewDate", new TypeReference<String>(){});
 
 
     private final String value;

@@ -13,7 +13,7 @@ class MessageTest {
     private final String body = "success body";
 
 
-    Message message =
+    final Message message =
         new Message(
             header,
             body

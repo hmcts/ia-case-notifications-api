@@ -34,6 +34,10 @@ class IdamServiceTest {
 
     private IdamService idamService;
 
+    private static Stream<String> amOnboardedRolesProvider() {
+        return IdamService.amOnboardedRoles.stream();
+    }
+
     @BeforeEach
     void setUp() {
         idamService = new IdamService(idamApi, roleAssignmentService);
@@ -136,10 +140,6 @@ class IdamServiceTest {
         assertEquals(expectedEmailAddress, actualUserInfo.getEmail());
         assertEquals(expectedForename, actualUserInfo.getGivenName());
         assertEquals(expectedSurname, actualUserInfo.getFamilyName());
-    }
-
-    private static Stream<String> amOnboardedRolesProvider() {
-        return IdamService.amOnboardedRoles.stream();
     }
 
     @ParameterizedTest

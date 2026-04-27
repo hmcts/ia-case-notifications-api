@@ -1,9 +1,9 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.AMOUNT_LEFT_TO_PAY;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision.PARTIALLY_APPROVED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision.REJECTED;
 
@@ -24,22 +24,16 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecis
 @MockitoSettings(strictness = Strictness.LENIENT)
 class LegalRepRemissionPaymentReminderPersonalisationTest {
 
+    private final String paymentRejectedReminderTemplateId = "paymentRejectedReminderTemplateId";
+    private final String paymentPartiallyApprovedReminderTemplateId = "paymentPartiallyApprovedReminderTemplateId";
+    private final String iaExUiFrontendUrl = "http://localhost";
+    private final String appealReferenceNumber = "appealReferenceNumber";
+    private final String appellantGivenNames = "GivenNames";
+    private final String appellantFamilyName = "FamilyName";
+    private final String legalRepRefNumber = "somelegalRepRefNumber";
+    private final String someTestDateEmail = "14/14/2024";
     @Mock
     AsylumCase asylumCase;
-    private Long caseId = 12345L;
-    private String paymentRejectedReminderTemplateId = "paymentRejectedReminderTemplateId";
-    private String paymentPartiallyApprovedReminderTemplateId = "paymentPartiallyApprovedReminderTemplateId";
-    private String iaExUiFrontendUrl = "http://localhost";
-    private String appealReferenceNumber = "appealReferenceNumber";
-    private String onlineCaseReferenceNumber = "1111222233334444";
-    private String homeOfficeReferenceNumber = "homeOfficeReferenceNumber";
-    private String appellantGivenNames = "GivenNames";
-    private String appellantFamilyName = "FamilyName";
-    private String amountLeftToPay = "4000";
-    private String amountLeftToPayInGbp = "40.00";
-    private String feeAmount = "14000";
-    private String legalRepRefNumber = "somelegalRepRefNumber";
-    private String someTestDateEmail = "14/14/2024";
     private LegalRepRemissionPaymentReminderPersonalisation legalRepRemissionPaymentReminderPersonalisation;
 
     @BeforeEach
@@ -49,6 +43,7 @@ class LegalRepRemissionPaymentReminderPersonalisationTest {
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepRefNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
+        String homeOfficeReferenceNumber = "homeOfficeReferenceNumber";
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
         when(asylumCase.read(REMISSION_REJECTED_DATE_PLUS_14DAYS, String.class)).thenReturn(Optional.of(someTestDateEmail));
 
@@ -78,30 +73,36 @@ class LegalRepRemissionPaymentReminderPersonalisationTest {
     }
 
     @Test
-     void should_return_given_reference_id() {
+    void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_REMISSION_REMINDER_DECISION_LEGAL_REPRESENTATIVE",
             legalRepRemissionPaymentReminderPersonalisation.getReferenceId(caseId));
     }
 
     @Test
-     void should_return_personalisation_when_all_mandatory_information_given() {
+    void should_return_personalisation_when_all_mandatory_information_given() {
 
+        String onlineCaseReferenceNumber = "1111222233334444";
         when(asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class)).thenReturn(Optional.of(onlineCaseReferenceNumber));
+        String amountLeftToPay = "4000";
         when(asylumCase.read(AMOUNT_LEFT_TO_PAY, String.class)).thenReturn(Optional.of(amountLeftToPay));
+        String feeAmount = "14000";
         when(asylumCase.read(FEE_AMOUNT_GBP, String.class)).thenReturn(Optional.of(feeAmount));
 
         Map<String, String> personalisation =
             legalRepRemissionPaymentReminderPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(legalRepRefNumber, personalisation.get("legalRepReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
-        assertEquals(amountLeftToPayInGbp, personalisation.get("feeAmount"));
-        assertEquals(someTestDateEmail, personalisation.get("deadline"));
-        assertEquals(onlineCaseReferenceNumber, personalisation.get("onlineCaseReferenceNumber"));
-        assertEquals("140.00", personalisation.get("feeAmountRejected"));
+        String amountLeftToPayInGbp = "40.00";
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("legalRepReferenceNumber", legalRepRefNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("feeAmount", amountLeftToPayInGbp)
+            .containsEntry("deadline", someTestDateEmail)
+            .containsEntry("onlineCaseReferenceNumber", onlineCaseReferenceNumber)
+            .containsEntry("feeAmountRejected", "140.00");
     }
 }
 

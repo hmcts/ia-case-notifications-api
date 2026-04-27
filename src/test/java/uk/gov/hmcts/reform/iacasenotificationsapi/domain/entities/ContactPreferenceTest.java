@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
@@ -9,8 +9,8 @@ class ContactPreferenceTest {
 
     @Test
     void has_correct_asylum_contact_preference() {
-        assertThat(ContactPreference.from("wantsEmail").get()).isEqualByComparingTo(ContactPreference.WANTS_EMAIL);
-        assertThat(ContactPreference.from("wantsSms").get()).isEqualByComparingTo(ContactPreference.WANTS_SMS);
+        assertEquals(ContactPreference.WANTS_EMAIL, ContactPreference.from("wantsEmail").get());
+        assertEquals(ContactPreference.WANTS_SMS, ContactPreference.from("wantsSms").get());
     }
 
     @Test
@@ -21,7 +21,7 @@ class ContactPreferenceTest {
 
     @Test
     void returns_optional_for_unknown_contact_preference() {
-        assertThat(ContactPreference.from("some_unknown_type")).isEmpty();
+        assertTrue(ContactPreference.from("some_unknown_type").isEmpty());
     }
 
     @Test

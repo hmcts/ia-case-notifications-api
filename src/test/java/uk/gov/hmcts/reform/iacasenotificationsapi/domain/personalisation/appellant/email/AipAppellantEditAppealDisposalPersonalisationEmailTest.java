@@ -18,6 +18,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 import java.util.Map;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -35,23 +36,21 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AipAppellantEditAppealDisposalPersonalisationEmailTest {
 
+    private final Long caseId = 12345L;
+    private final String emailTemplateId = "someEmailTemplateId";
+    private final String mockedAppellantEmailAddress = "appelant@example.net";
     @Mock
     Callback<AsylumCase> callback;
     @Mock
     AsylumCase asylumCase;
-    @Mock
-    private CaseDetails<AsylumCase> caseDetails;
     @Mock
     CustomerServicesProvider customerServicesProvider;
     @Mock
     UserDetailsProvider userDetailsProvider;
     @Mock
     UserDetails userDetails;
-
-    private final Long caseId = 12345L;
-    private final String emailTemplateId = "someEmailTemplateId";
-    private final String mockedAppellantEmailAddress = "appelant@example.net";
-
+    @Mock
+    private CaseDetails<AsylumCase> caseDetails;
     private AipAppellantEditAppealDisposalPersonalisationEmail aipAppellantEditAppealDisposalPersonalisationEmail;
 
     @BeforeEach
@@ -114,9 +113,10 @@ class AipAppellantEditAppealDisposalPersonalisationEmailTest {
             aipAppellantEditAppealDisposalPersonalisationEmail.getPersonalisation(callback);
 
         // then
-        assertEquals("someAppellantGivenNames someAppellantFamilyName", personalisation.get("appellantFullName"));
-        assertEquals("someHomeOfficeReferenceNumber", personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("http://localhost", personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appellantFullName", "someAppellantGivenNames someAppellantFamilyName")
+            .containsEntry("homeOfficeReferenceNumber", "someHomeOfficeReferenceNumber")
+            .containsEntry("linkToOnlineService", "http://localhost");
         assertNotNull(personalisation.get("editingDate"));
     }
 
@@ -133,9 +133,10 @@ class AipAppellantEditAppealDisposalPersonalisationEmailTest {
             aipAppellantEditAppealDisposalPersonalisationEmail.getPersonalisation(callback);
 
         // then
-        assertThat(personalisation).isNotEmpty();
-        assertEquals("Appellant", personalisation.get("appellantFullName"));
-        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
+        assertFalse(personalisation.isEmpty());
+        assertThat(personalisation)
+            .containsEntry("appellantFullName", "Appellant")
+            .containsEntry("homeOfficeReferenceNumber", "");
         verify(asylumCase).write(LAST_EDIT_APPEAL_NOTIFICATION_DATE, LocalDate.now().toString());
     }
 }

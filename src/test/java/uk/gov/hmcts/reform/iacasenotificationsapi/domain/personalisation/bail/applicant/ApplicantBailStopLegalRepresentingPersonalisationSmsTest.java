@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.applicant;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -28,13 +29,10 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.ap
 public class ApplicantBailStopLegalRepresentingPersonalisationSmsTest {
 
     private final String smsTemplateId = "someTemplateId";
-    private String mobileNumber = "111 111 111";
+    private final String mobileNumber = "111 111 111";
     private final String bailReferenceNumber = "someReferenceNumber";
-    private String legalRepReference = "someLegalRepReference";
-    private String applicantDateOfBirth = "1999-01-25";
-    private String expectedApplicantDateOfBirth = "25 Jan 1999";
-    private String applicantGivenNames = "someApplicantGivenNames";
-    private String applicantFamilyName = "someApplicantFamilyName";
+    private final String applicantGivenNames = "someApplicantGivenNames";
+    private final String applicantFamilyName = "someApplicantFamilyName";
 
     @Mock
     BailCase bailCase;
@@ -48,7 +46,9 @@ public class ApplicantBailStopLegalRepresentingPersonalisationSmsTest {
         when(bailCase.read(BAIL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(bailReferenceNumber));
         when(bailCase.read(APPLICANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(applicantGivenNames));
         when(bailCase.read(APPLICANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(applicantFamilyName));
+        String legalRepReference = "someLegalRepReference";
         when(bailCase.read(LEGAL_REP_REFERENCE, String.class)).thenReturn(Optional.of(legalRepReference));
+        String applicantDateOfBirth = "1999-01-25";
         when(bailCase.read(APPLICANT_DATE_OF_BIRTH, String.class)).thenReturn(Optional.of(applicantDateOfBirth));
 
         applicantBailStopLegalRepresentingPersonalisationSms =
@@ -64,13 +64,13 @@ public class ApplicantBailStopLegalRepresentingPersonalisationSmsTest {
     public void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_BAIL_STOP_LEGAL_REPRESENTING_APPLICANT_SMS",
-                applicantBailStopLegalRepresentingPersonalisationSms.getReferenceId(caseId));
+            applicantBailStopLegalRepresentingPersonalisationSms.getReferenceId(caseId));
     }
 
     @Test
     public void should_return_given_mobile_number() {
         assertTrue(
-                applicantBailStopLegalRepresentingPersonalisationSms.getRecipientsList(bailCase).contains(mobileNumber));
+            applicantBailStopLegalRepresentingPersonalisationSms.getRecipientsList(bailCase).contains(mobileNumber));
 
         when(bailCase.read(APPLICANT_MOBILE_NUMBER_1, String.class)).thenReturn(Optional.empty());
 
@@ -80,22 +80,24 @@ public class ApplicantBailStopLegalRepresentingPersonalisationSmsTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
-            () -> applicantBailStopLegalRepresentingPersonalisationSms.getPersonalisation((BailCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("bailCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> applicantBailStopLegalRepresentingPersonalisationSms.getPersonalisation((BailCase) null));
+        assertEquals("bailCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_return_personalisation_when_all_information_given() {
 
         Map<String, String> personalisation =
-                applicantBailStopLegalRepresentingPersonalisationSms.getPersonalisation(bailCase);
+            applicantBailStopLegalRepresentingPersonalisationSms.getPersonalisation(bailCase);
 
-        assertEquals(bailReferenceNumber, personalisation.get("bailReferenceNumber"));
-        assertEquals(applicantGivenNames, personalisation.get("applicantGivenNames"));
-        assertEquals(applicantFamilyName, personalisation.get("applicantFamilyName"));
-        assertEquals(expectedApplicantDateOfBirth, personalisation.get("applicantDateOfBirth"));
+        String expectedApplicantDateOfBirth = "25 Jan 1999";
+        assertThat(personalisation)
+            .containsEntry("bailReferenceNumber", bailReferenceNumber)
+            .containsEntry("applicantGivenNames", applicantGivenNames)
+            .containsEntry("applicantFamilyName", applicantFamilyName)
+            .containsEntry("applicantDateOfBirth", expectedApplicantDateOfBirth);
     }
 
     @Test
@@ -104,8 +106,8 @@ public class ApplicantBailStopLegalRepresentingPersonalisationSmsTest {
         when(bailCase.read(BAIL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
-                applicantBailStopLegalRepresentingPersonalisationSms.getPersonalisation(bailCase);
-
-        assertEquals("", personalisation.get("bailReferenceNumber"));
+            applicantBailStopLegalRepresentingPersonalisationSms.getPersonalisation(bailCase);
+        assertThat(personalisation)
+            .containsEntry("bailReferenceNumber", "");
     }
 }

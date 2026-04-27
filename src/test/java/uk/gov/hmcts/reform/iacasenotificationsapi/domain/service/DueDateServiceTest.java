@@ -1,8 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.service;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 import java.time.LocalTime;
@@ -48,7 +46,7 @@ class DueDateServiceTest {
         );
         ZonedDateTime actualDateTime = dueDateService.calculateWorkingDaysDueDate(eventDateTime, workingDaysAllowed);
 
-        assertThat(actualDateTime, is(expectedDueDateTime));
+        assertEquals(expectedDueDateTime, actualDateTime);
         verify(holidayService, times(3)).isHoliday(any(ZonedDateTime.class));
     }
 
@@ -69,7 +67,7 @@ class DueDateServiceTest {
         );
         ZonedDateTime actualDateTime = dueDateService.calculateCalendarDaysDueDate(eventDateTime, calendarDaysAllowed);
 
-        assertThat(actualDateTime, is(expectedDueDateTime));
+        assertEquals(expectedDueDateTime, actualDateTime);
     }
 
     @Test
@@ -90,7 +88,7 @@ class DueDateServiceTest {
         ZonedDateTime expectedDelayDateTime = expectedDelayDate.with(LocalTime.of(16, 0, 0, 0));
         ZonedDateTime actualDateTime = dueDateService.calculateDelayUntil(eventDateTime, delayDuration);
 
-        assertThat(actualDateTime, is(expectedDelayDateTime));
+        assertEquals(expectedDelayDateTime, actualDateTime);
         verify(holidayService, times(2)).isHoliday(any(ZonedDateTime.class));
     }
 

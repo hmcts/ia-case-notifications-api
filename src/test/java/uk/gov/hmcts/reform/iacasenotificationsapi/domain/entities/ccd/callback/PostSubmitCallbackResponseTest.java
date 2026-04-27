@@ -11,7 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class PostSubmitCallbackResponseTest {
 
-    private PostSubmitCallbackResponse postSubmitCallbackResponse =
+    private final PostSubmitCallbackResponse postSubmitCallbackResponse =
         new PostSubmitCallbackResponse();
 
     @Test
