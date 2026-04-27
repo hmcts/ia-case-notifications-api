@@ -1,7 +1,9 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.util;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.text.MatchesPattern.matchesPattern;
 
 import java.util.List;
 import java.util.Map;
@@ -34,7 +36,10 @@ public final class MapFieldAssertor {
             Object expectedValue = expectedEntry.getValue();
             Object actualValue = actualMap.get(key);
 
-            if ((expectedValue instanceof List expectedValueCollection) && (actualValue instanceof List actualValueCollection)) {
+            if ((expectedValue instanceof List) && (actualValue instanceof List)) {
+
+                List expectedValueCollection = (List) expectedValue;
+                List actualValueCollection = (List) actualValue;
 
                 for (int i = 0; i < expectedValueCollection.size(); i++) {
 
@@ -70,11 +75,16 @@ public final class MapFieldAssertor {
 
         } else {
 
-            if ((expectedValue instanceof String expectedValueString) && (actualValue instanceof String actualValueString)) {
+            if ((expectedValue instanceof String) && (actualValue instanceof String)) {
+
+                String expectedValueString = (String) expectedValue;
 
                 if (isPathContainsNotificationsSentReference(path)) {
-                    assertEquals(expectedValue, removeTimestampFromNotificationReference(actualValueString),
-                        "Expected field matches (" + path + ")");
+                    assertThat(
+                        "Expected field matches (" + path + ")",
+                        removeTimestampFromNotificationReference((String) actualValue),
+                        equalTo(expectedValue)
+                    );
                     return;
                 }
 
@@ -84,9 +94,12 @@ public final class MapFieldAssertor {
 
                     expectedValueString = expectedValueString.substring(2, expectedValueString.length() - 1);
 
-                    assertTrue(
-                        actualValueString.matches(expectedValueString),
-                        "Expected field matches regular expression (" + path + ")"
+                    String actualValueString = (String) actualValue;
+
+                    assertThat(
+                        "Expected field matches regular expression (" + path + ")",
+                        actualValueString,
+                        matchesPattern(expectedValueString)
                     );
 
                     return;
@@ -98,20 +111,20 @@ public final class MapFieldAssertor {
                         .of(expectedValueString.substring(10, expectedValueString.length() - 2)
                             .split(","))
                         .forEach(expectedValueItem -> {
-                            assertEquals(
-                                expectedValueItem,
+                            assertThat(
+                                "Expected field contains (" + path + ")",
                                 String.valueOf(actualValue),
-                                "Expected field contains (" + path + ")"
+                                containsString(expectedValueItem)
                             );
                         });
                     return;
                 }
             }
 
-            assertEquals(
-                expectedValue,
+            assertThat(
+                "Expected field matches (" + path + ")",
                 actualValue,
-                "Expected field matches (" + path + ")"
+                equalTo(expectedValue)
             );
         }
     }
