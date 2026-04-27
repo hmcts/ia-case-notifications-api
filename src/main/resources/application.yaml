@@ -329,6 +329,9 @@ govnotify:
       appellant:
         email: 50f1b88e-51d5-446c-b2da-1188feb7e26c
         sms: a7056fd8-6de7-408e-881b-c6f9984fe5cf
+        paPayLater:
+          email: d85f7601-5129-4b53-9c14-2e4e33cc2500
+          sms: da116491-7668-445e-86c4-192528fe7c18
     submitReasonsForAppeal:
       appellant:
         email: cd10866a-094d-43aa-bdf5-1e20fda9b10d
@@ -1411,6 +1414,18 @@ govnotify:
         email: 390843b2-0cab-4860-8e12-be98b9db2ca4
       legalRep:
         email: ec2e4278-9638-499c-b2cb-0ac6307e6071
+    caseBuilding:
+      paPayLater:
+        email: d85f7601-5129-4b53-9c14-2e4e33cc2500
+        sms: da116491-7668-445e-86c4-192528fe7c18
+    listing:
+      paPayLater:
+        email: f2f9ddb7-e063-472e-b67d-a5a7882a464a
+        sms: b36db177-96b0-49aa-a234-42b3049f5c0a
+    decision:
+      paPayLater:
+        email: d72c84b8-b92d-4ce3-9938-fd86818576a5
+        sms: 75400401-ed1b-4cf6-93ec-8d77c5b12c1b
     turnOnNotifications:
       homeOffice:
         beforeListing:
@@ -2645,6 +2660,7 @@ homeOfficeFtpaEmailAddresses:
   belfast: ${IA_HOME_OFFICE_GLASGOW_EMAIL:ho-glasgow@example.com}
   harmondsworth: ${IA_FTPA_HOME_OFFICE_HARMONDSWORTH_EMAIL:ho-ftpa-harmondsworth@example.com}
   yarlswood: ${IA_FTPA_HOME_OFFICE_YARLSWOOD_EMAIL:ho-ftpa-yarlswood@example.com}
+  iacNationalVirtual: ${IA_HOME_OFFICE_MANCHESTER_EMAIL:ho-manchester@example.com}
 
 
 hearingCentreTelephoneNumber:
