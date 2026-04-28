@@ -581,11 +581,20 @@ public class AsylumCaseUtils {
         return LocalDate.parse(reviewDate).format(DateTimeFormatter.ofPattern("d MMM yyyy"));
     }
 
+    public static @NonNull String getSubmissionDate(AsylumCase asylumCase) {
+        Optional<String> submissionDate = asylumCase
+                .read(COMPLETE_CASE_REVIEW_DATE, String.class);
+        final String reviewDate = submissionDate
+                .orElseThrow(() -> new IllegalStateException("Complete CaseReview Date is not present"));
+
+        return LocalDate.parse(reviewDate).format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+    }
+
     public static boolean hasStf24WeeksStatus(AsylumCase asylumCase) {
-        final YesOrNo reviewDate = asylumCase
+        final YesOrNo status = asylumCase
                 .read(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)
                 .orElseThrow(() -> new IllegalStateException("STF 24W CURRENT STATUS AUTO GENERATED is not present"));
-        return reviewDate.equals(YES);
+        return status.equals(YES);
     }
 
     public static @NonNull Set<String> getApplicantEmail(AsylumCase asylumCase) {
@@ -599,5 +608,23 @@ public class AsylumCaseUtils {
                     .orElse(Collections.emptySet());
         }
         return emails;
+    }
+
+
+    public static String getAppealReceivedDate(AsylumCase asylumCase) {
+        Optional<String> submissionDate = asylumCase
+                .read(APPEAL_SUBMISSION_DATE, String.class);
+        final String reviewDate = submissionDate
+                .orElseThrow(() -> new IllegalStateException("Complete CaseReview Date is not present"));
+
+        return LocalDate.parse(reviewDate).format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+    }
+
+    public static LocalDate caseReviewDate(AsylumCase asylumCase) {
+        Optional<String> submissionDate = asylumCase
+                .read(COMPLETE_CASE_REVIEW_DATE, String.class);
+        final String reviewDate = submissionDate
+                .orElseThrow(() -> new IllegalStateException("Complete CaseReview Date is not present"));
+        return LocalDate.parse(reviewDate);
     }
 }

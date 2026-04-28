@@ -11,6 +11,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -32,6 +34,9 @@ public class HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisatio
     private static final String LINK_TO_ONLINE_SERVICE_KEY = "linkToOnlineService";
     private static final String COMPLETE_CASE_REVIEW_DATE_KEY = "completeCaseReviewDate";
     private static final String EMPTY_STRING = "";
+    public static final int DAYS_14 = 14;
+    public static final int DAYS_42 = 42;
+    public static final int DAYS_56 = 56;
     private final String templateId;
     private final String iaExUiFrontendUrl;
     private final String apcPrivateHomeOfficeEmailAddress;
@@ -73,16 +78,23 @@ public class HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisatio
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
-
+        LocalDate caseReviewDate = AsylumCaseUtils.caseReviewDate(asylumCase);
         return ImmutableMap.<String, String>builder()
                 .put(SUBJECT_PREFIX_KEY, nonAdaPrefix)
-                .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
                 .put(HOME_OFFICE_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
                 .put(APPEAL_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING))
+
                 .put(APPELLANT_GIVEN_NAMES_KEY, asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(EMPTY_STRING))
                 .put(APPELLANT_FAMILY_NAME_KEY, asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(EMPTY_STRING))
                 .put(LINK_TO_ONLINE_SERVICE_KEY, iaExUiFrontendUrl)
-                .put(COMPLETE_CASE_REVIEW_DATE_KEY, AsylumCaseUtils.getCompleteCasedReviewDate(asylumCase))
+                .put("appealReceivedDate", AsylumCaseUtils.getAppealReceivedDate(asylumCase))
+                .put("decisionSentDate", caseReviewDate.plusDays(1).format(DateTimeFormatter.ofPattern("d MMM yyyy")))
+                .put("24WeeksDeadline", caseReviewDate.plusDays(2).format(DateTimeFormatter.ofPattern("d MMM yyyy")))
+                .put("practiceDirection", caseReviewDate.plusDays(3).format(DateTimeFormatter.ofPattern("d MMM yyyy")))
+                .put("14DaysFromDateOfDirection", caseReviewDate.plusDays(DAYS_14).format(DateTimeFormatter.ofPattern("d MMM yyyy")))
+                .put("42DaysFromDateOfDirection", caseReviewDate.plusDays(DAYS_42).format(DateTimeFormatter.ofPattern("d MMM yyyy")))
+                .put("56DaysFromDateOfDirection", caseReviewDate.plusDays(DAYS_56).format(DateTimeFormatter.ofPattern("d MMM yyyy")))
+                .put(COMPLETE_CASE_REVIEW_DATE_KEY, caseReviewDate.format(DateTimeFormatter.ofPattern("d MMM yyyy")))
                 .build();
     }
 
