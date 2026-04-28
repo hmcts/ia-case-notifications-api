@@ -41,6 +41,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fix
 import static uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fixtures.CallbackForTest.CallbackForTestBuilder.callback;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fixtures.CaseDetailsForTest.CaseDetailsForTestBuilder.someCaseDetailsWith;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_SUBMISSION_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_IN_UK;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.COMPLETE_CASE_REVIEW_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL;
@@ -82,6 +83,7 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
                 .with(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, APPEAL_SUBMITTED)
                 .with(SUBSCRIPTIONS, anySubscriptions())
                 .with(COMPLETE_CASE_REVIEW_DATE, "2002-02-02")
+                .with(APPEAL_SUBMISSION_DATE, "2002-02-02")
                 .with(APPELLANT_IN_UK, inCountry)
                 .with(AsylumCaseDefinition.APPELLANT_ADDRESS, new AddressUk("l1", "l2", "l2", "pt", "county", "pc", "uk"));
     }
@@ -247,6 +249,7 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
         assertThat(notifications.size()).isEqualTo(3);
         List<String> idList = notifications.stream().map(IdValue::getId).toList();
         String idsString = String.join(",", idList);
+        System.out.println(idsString);
         assertThat(idsString).contains(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL);
         assertThat(idsString).contains(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL);
         assertThat(idsString).contains(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL);
