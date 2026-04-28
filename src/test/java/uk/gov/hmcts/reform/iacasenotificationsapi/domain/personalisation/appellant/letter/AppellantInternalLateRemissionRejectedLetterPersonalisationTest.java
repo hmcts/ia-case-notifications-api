@@ -104,10 +104,12 @@ class AppellantInternalLateRemissionRejectedLetterPersonalisationTest {
     void should_return_appellant_address_in_correct_format() {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        assertTrue(appellantInternalLateRemissionRejectedLetterPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_XX12YY"));
+        assertTrue(appellantInternalLateRemissionRejectedLetterPersonalisation.getRecipientsList(asylumCase)
+                .contains("someAppellantGivenNamessomeAppellantFamil_50_Buildingname_Streetname_Townname_XX12YY"));
 
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
-        assertTrue(appellantInternalLateRemissionRejectedLetterPersonalisation.getRecipientsList(asylumCase).contains("CalleToledo32_Madrid_28003_Spain"));
+        assertTrue(appellantInternalLateRemissionRejectedLetterPersonalisation.getRecipientsList(asylumCase)
+                .contains("someAppellantGivenNamessomeAppellantFamil_CalleToledo32_Madrid_28003_Spain"));
     }
 
     @Test
@@ -163,11 +165,12 @@ class AppellantInternalLateRemissionRejectedLetterPersonalisationTest {
             .containsEntry("appealReferenceNumber", appealReferenceNumber)
             .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
             .containsEntry("RemissionReasons", remissionReasons)
-            .containsEntry("address_line_1", addressLine1)
-            .containsEntry("address_line_2", addressLine2)
-            .containsEntry("address_line_3", addressLine3)
-            .containsEntry("address_line_4", postTown)
-            .containsEntry("address_line_5", postCode);
+            .containsEntry("address_line_1", (appellantGivenNames + " " + appellantFamilyName).substring(0, 42))
+            .containsEntry("address_line_2", addressLine1)
+            .containsEntry("address_line_3", addressLine2)
+            .containsEntry("address_line_4", addressLine3)
+            .containsEntry("address_line_5", postTown)
+            .containsEntry("address_line_6", postCode);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
@@ -186,10 +189,11 @@ class AppellantInternalLateRemissionRejectedLetterPersonalisationTest {
             .containsEntry("appealReferenceNumber", appealReferenceNumber)
             .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
             .containsEntry("RemissionReasons", remissionReasons)
-            .containsEntry("address_line_1", oocAddressLine1)
-            .containsEntry("address_line_2", oocAddressLine2)
-            .containsEntry("address_line_3", oocAddressLine3)
-            .containsEntry("address_line_4", Nationality.ES.toString());
+            .containsEntry("address_line_1", (appellantGivenNames + " " + appellantFamilyName).substring(0, 42))
+            .containsEntry("address_line_2", oocAddressLine1)
+            .containsEntry("address_line_3", oocAddressLine2)
+            .containsEntry("address_line_4", oocAddressLine3)
+            .containsEntry("address_line_5", Nationality.ES.toString());
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
