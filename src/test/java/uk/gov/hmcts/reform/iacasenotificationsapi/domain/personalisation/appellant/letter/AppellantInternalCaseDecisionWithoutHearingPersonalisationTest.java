@@ -144,11 +144,12 @@ public class AppellantInternalCaseDecisionWithoutHearingPersonalisationTest {
             .containsEntry("appellantGivenNames", appellantGivenNames)
             .containsEntry("appellantFamilyName", appellantFamilyName)
             .containsEntry("appealReferenceNumber", appealReferenceNumber)
-            .containsEntry("address_line_1", addressLine1)
-            .containsEntry("address_line_2", addressLine2)
-            .containsEntry("address_line_3", addressLine3)
-            .containsEntry("address_line_4", postTown)
-            .containsEntry("address_line_5", postCode);
+            .containsEntry("address_line_1", (appellantGivenNames + " " + appellantFamilyName).substring(0, 42))
+            .containsEntry("address_line_2", addressLine1)
+            .containsEntry("address_line_3", addressLine2)
+            .containsEntry("address_line_4", addressLine3)
+            .containsEntry("address_line_5", postTown)
+            .containsEntry("address_line_6", postCode);
     }
 
     @Test
@@ -161,11 +162,12 @@ public class AppellantInternalCaseDecisionWithoutHearingPersonalisationTest {
             .containsEntry("appellantGivenNames", appellantGivenNames)
             .containsEntry("appellantFamilyName", appellantFamilyName)
             .containsEntry("appealReferenceNumber", appealReferenceNumber)
-            .containsEntry("address_line_1", addressLine1)
-            .containsEntry("address_line_2", addressLine2)
-            .containsEntry("address_line_3", addressLine3)
-            .containsEntry("address_line_4", postTown)
-            .containsEntry("address_line_5", Nationality.ES.toString());
+            .containsEntry("address_line_1", (appellantGivenNames + " " + appellantFamilyName).substring(0, 42))
+            .containsEntry("address_line_2", addressLine1)
+            .containsEntry("address_line_3", addressLine2)
+            .containsEntry("address_line_4", addressLine3)
+            .containsEntry("address_line_5", postTown)
+            .containsEntry("address_line_6", Nationality.ES.toString());
     }
 
     @Test
