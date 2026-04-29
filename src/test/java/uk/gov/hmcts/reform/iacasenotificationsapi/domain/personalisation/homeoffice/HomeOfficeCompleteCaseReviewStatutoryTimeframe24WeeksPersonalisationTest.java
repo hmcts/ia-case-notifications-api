@@ -82,7 +82,7 @@ class HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationTest {
         setupAsylumCaseMocks();
         setupCustomerServicesMocks();
 
-        personalisation = new HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation(BEFORE_LISTING_TEMPLATE_ID, BEFORE_LISTING_EMAIL_ADDRESS, MOCK_PREFIX, IA_EX_UI_FRONTEND_URL);
+        personalisation = new HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation(BEFORE_LISTING_TEMPLATE_ID, BEFORE_LISTING_EMAIL_ADDRESS, MOCK_PREFIX, IA_EX_UI_FRONTEND_URL, customerServicesProvider);
     }
 
     @Test
