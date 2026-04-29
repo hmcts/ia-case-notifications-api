@@ -70,7 +70,6 @@ class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationEmailTe
     @Mock
     private AsylumCase asylumCase;
 
-
     @Mock
     private CustomerServicesProvider customerServicesProvider;
 

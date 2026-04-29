@@ -608,13 +608,13 @@ public class AsylumCaseUtils {
         String tribunalReceivedDate = getCaseDateDate(asylumCase, TRIBUNAL_RECEIVED_DATE);
         String appealReceivedDate;
         if (isEmpty(tribunalReceivedDate)) {
-            appealReceivedDate =  getCaseDateDate(asylumCase, APPEAL_SUBMISSION_DATE);
+            appealReceivedDate = getCaseDateDate(asylumCase, APPEAL_SUBMISSION_DATE);
         } else {
             appealReceivedDate = tribunalReceivedDate;
         }
 
         if (isEmpty(appealReceivedDate)) {
-           throw new IllegalStateException("Received date  is not present");
+            throw new IllegalStateException("Received date  is not present");
         }
         return LocalDate.parse(appealReceivedDate).format(DateTimeFormatter.ofPattern(D_MMM_YYYY));
     }
@@ -624,7 +624,7 @@ public class AsylumCaseUtils {
         return LocalDate.parse(homeOfficeDecisionDate).format(DateTimeFormatter.ofPattern(D_MMM_YYYY));
     }
 
-    public static String populateSTF24wDate(AsylumCase asylumCase) {
+    public static String populateStatutoryTimeFrame24wDate(AsylumCase asylumCase) {
         String tribunalReceivedDate = getCaseDateDate(asylumCase, TRIBUNAL_RECEIVED_DATE);
         String stf24WeeksAddedToDate;
         if (isEmpty(tribunalReceivedDate)) {

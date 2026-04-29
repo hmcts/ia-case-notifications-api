@@ -22,7 +22,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation.DAYS_56;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation.HOME_OFFICE_REFERENCE_NUMBER_KEY;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.D_MMM_YYYY;
-
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLegalRepEmailInternalOrLegalRepJourneyNonMandatory;
 
 @Service
@@ -82,7 +81,7 @@ public class LegalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPerso
                 .put(LINK_TO_ONLINE_SERVICE_KEY, iaExUiFrontendUrl)
                 .put("appealReceivedDate", AsylumCaseUtils.getAppealReceivedDate(asylumCase))
                 .put("decisionSentDate", AsylumCaseUtils.getHomeOfficeDecisionDate(asylumCase))
-                .put("24WeeksDeadline", AsylumCaseUtils.populateSTF24wDate( asylumCase))
+                .put("24WeeksDeadline", AsylumCaseUtils.populateStatutoryTimeFrame24wDate(asylumCase))
                 .put("practiceDirection", now.format(ofPattern(D_MMM_YYYY)))
                 .put("14DaysFromDateOfDirection", now.plusDays(DAYS_14).format(ofPattern(D_MMM_YYYY)))
                 .put("42DaysFromDateOfDirection", now.plusDays(DAYS_42).format(ofPattern(D_MMM_YYYY)))

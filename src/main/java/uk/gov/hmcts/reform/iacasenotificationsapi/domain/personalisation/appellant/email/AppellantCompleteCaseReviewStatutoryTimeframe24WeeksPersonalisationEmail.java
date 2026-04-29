@@ -83,7 +83,7 @@ public class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation
                 .put("appellantFullName", givenNames + " " + familyName)
                 .put("appealReceivedDate", AsylumCaseUtils.getAppealReceivedDate(asylumCase))
                 .put("decisionSentDate", AsylumCaseUtils.getHomeOfficeDecisionDate(asylumCase))
-                .put("24WeeksDeadline", AsylumCaseUtils.populateSTF24wDate( asylumCase))
+                .put("24WeeksDeadline", AsylumCaseUtils.populateStatutoryTimeFrame24wDate(asylumCase))
                 .put("practiceDirection", now.format(DateTimeFormatter.ofPattern(D_MMM_YYYY)))
                 .put("14DaysFromDateOfDirection", now.plusDays(DAYS_14).format(DateTimeFormatter.ofPattern(D_MMM_YYYY)))
                 .put("42DaysFromDateOfDirection", now.plusDays(DAYS_42).format(DateTimeFormatter.ofPattern(D_MMM_YYYY)))
