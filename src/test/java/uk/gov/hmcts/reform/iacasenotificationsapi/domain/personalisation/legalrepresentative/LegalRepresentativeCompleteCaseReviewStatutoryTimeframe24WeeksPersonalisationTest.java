@@ -29,6 +29,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.TRIBUNAL_RECEIVED_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation.DAYS_14;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation.DAYS_42;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation.DAYS_56;
@@ -135,11 +136,12 @@ class LegalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisat
 
 
     @Test
-    void shouldThrowExceptionWhenNoAppealSubmissionDateGiven() {
+    void shouldThrowExceptionWhenNoAppealReceivedDateGiven() {
         when(asylumCase.read(APPEAL_SUBMISSION_DATE, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(TRIBUNAL_RECEIVED_DATE, String.class)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> personalisation.getPersonalisation(asylumCase))
                 .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("APPEAL_SUBMISSION_DATE is not present");
+                .hasMessage("Received date  is not present");
     }
 
     private void setupAsylumCaseMocks() {
@@ -161,7 +163,9 @@ class LegalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisat
                 .thenReturn(Optional.of(REVIEW_DATE));
         when(asylumCase.read(HOME_OFFICE_DECISION_DATE, String.class))
                 .thenReturn(Optional.of(REVIEW_DATE));
-
+        when(asylumCase.read(TRIBUNAL_RECEIVED_DATE, String.class))
+                .thenReturn(Optional.empty());
+        when(asylumCase.read(HOME_OFFICE_DECISION_DATE, String.class)).thenReturn(Optional.of(REVIEW_DATE));
     }
 
 }

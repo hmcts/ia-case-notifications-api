@@ -23,6 +23,7 @@ import java.util.function.Function;
 import static java.time.LocalDate.parse;
 import static java.util.Collections.*;
 import static java.util.stream.Collectors.*;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType.DC;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType.RP;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
@@ -603,21 +604,19 @@ public class AsylumCaseUtils {
         return emails;
     }
 
-
     public static String getAppealReceivedDate(AsylumCase asylumCase) {
-        final String submissionDateDate = getCaseDateDate(asylumCase, APPEAL_SUBMISSION_DATE);
-        return LocalDate.parse(submissionDateDate).format(DateTimeFormatter.ofPattern(D_MMM_YYYY));
-    }
+        String tribunalReceivedDate = getCaseDateDate(asylumCase, TRIBUNAL_RECEIVED_DATE);
+        String appealReceivedDate;
+        if (isEmpty(tribunalReceivedDate)) {
+            appealReceivedDate =  getCaseDateDate(asylumCase, APPEAL_SUBMISSION_DATE);
+        } else {
+            appealReceivedDate = tribunalReceivedDate;
+        }
 
-    public static String getTribunalReceivedDate(AsylumCase asylumCase) {
-        final String tribunalReceivedDate = getCaseDateDate(asylumCase, TRIBUNAL_RECEIVED_DATE);
-        return LocalDate.parse(tribunalReceivedDate).format(DateTimeFormatter.ofPattern(D_MMM_YYYY));
-    }
-
-    public static String getCaseDateDate(AsylumCase asylumCase, AsylumCaseDefinition asylumCaseDefinition) {
-        return asylumCase
-                .read(asylumCaseDefinition, String.class)
-                .orElseThrow(() -> new IllegalStateException(asylumCaseDefinition.toString() + " is not present"));
+        if (isEmpty(appealReceivedDate)) {
+           throw new IllegalStateException("Received date  is not present");
+        }
+        return LocalDate.parse(appealReceivedDate).format(DateTimeFormatter.ofPattern(D_MMM_YYYY));
     }
 
     public static String getHomeOfficeDecisionDate(AsylumCase asylumCase) {
@@ -625,7 +624,25 @@ public class AsylumCaseUtils {
         return LocalDate.parse(homeOfficeDecisionDate).format(DateTimeFormatter.ofPattern(D_MMM_YYYY));
     }
 
-    public static String add24WeeksToDate(String date) {
+    public static String populateSTF24wDate(AsylumCase asylumCase) {
+        String tribunalReceivedDate = getCaseDateDate(asylumCase, TRIBUNAL_RECEIVED_DATE);
+        String stf24WeeksAddedToDate;
+        if (isEmpty(tribunalReceivedDate)) {
+            String appealSubmissionDate = getCaseDateDate(asylumCase, APPEAL_SUBMISSION_DATE);
+            stf24WeeksAddedToDate = add24WeeksToDate(appealSubmissionDate);
+        } else {
+            stf24WeeksAddedToDate = add24WeeksToDate(tribunalReceivedDate);
+        }
+        return stf24WeeksAddedToDate;
+    }
+
+    private static String getCaseDateDate(AsylumCase asylumCase, AsylumCaseDefinition asylumCaseDefinition) {
+        return asylumCase
+                .read(asylumCaseDefinition, String.class)
+                .orElse("");
+    }
+
+    private static String add24WeeksToDate(String date) {
         LocalDate appealDate = parse(date);
         LocalDate stf24WeeksDate = appealDate.plusWeeks(24);
         return stf24WeeksDate.format(DateTimeFormatter.ofPattern(D_MMM_YYYY));

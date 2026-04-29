@@ -18,9 +18,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.TRIBUNAL_RECEIVED_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.D_MMM_YYYY;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getCaseDateDate;
 
 
 @Service
@@ -78,7 +76,6 @@ public class HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisatio
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
-        String tribunalReceivedDate = AsylumCaseUtils.getTribunalReceivedDate(asylumCase);
         LocalDate now = LocalDate.now();
         return ImmutableMap.<String, String>builder()
                 .put(SUBJECT_PREFIX_KEY, nonAdaPrefix)
@@ -88,9 +85,9 @@ public class HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisatio
                 .put(APPELLANT_GIVEN_NAMES_KEY, asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(EMPTY_STRING))
                 .put(APPELLANT_FAMILY_NAME_KEY, asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(EMPTY_STRING))
                 .put(LINK_TO_ONLINE_SERVICE_KEY, iaExUiFrontendUrl)
-                .put("appealReceivedDate", tribunalReceivedDate)
-                .put("decisionSentDate", tribunalReceivedDate)
-                .put("24WeeksDeadline", AsylumCaseUtils.add24WeeksToDate(getCaseDateDate(asylumCase, TRIBUNAL_RECEIVED_DATE)))
+                .put("appealReceivedDate", AsylumCaseUtils.getAppealReceivedDate(asylumCase))
+                .put("decisionSentDate", AsylumCaseUtils.getHomeOfficeDecisionDate(asylumCase))
+                .put("24WeeksDeadline", AsylumCaseUtils.populateSTF24wDate(asylumCase))
                 .put("practiceDirection", now.format(DateTimeFormatter.ofPattern(D_MMM_YYYY)))
                 .put("14DaysFromDateOfDirection", now.plusDays(DAYS_14).format(DateTimeFormatter.ofPattern(D_MMM_YYYY)))
                 .put("42DaysFromDateOfDirection", now.plusDays(DAYS_42).format(DateTimeFormatter.ofPattern(D_MMM_YYYY)))
