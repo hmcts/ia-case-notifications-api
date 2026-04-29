@@ -20,6 +20,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Function;
 
+import static java.time.LocalDate.parse;
 import static java.util.Collections.*;
 import static java.util.stream.Collectors.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType.DC;
@@ -40,6 +41,7 @@ public class AsylumCaseUtils {
     public static final String JUDGE = "Tribunal";
     private static final String INCORRECT_APPLICANT_TYPE_ERROR_MESSAGE = "Correct applicant type is not present";
     private static final String INCORRECT_RESPONDENT_TYPE_ERROR_MESSAGE = "Correct respondent type is not present";
+    public static final String D_MMM_YYYY = "d MMM yyyy";
 
 
     private AsylumCaseUtils() {
@@ -578,16 +580,7 @@ public class AsylumCaseUtils {
         final String reviewDate = asylumCase
                 .read(AsylumCaseDefinition.COMPLETE_CASE_REVIEW_DATE, String.class)
                 .orElseThrow(() -> new IllegalStateException("Complete CaseReview Date is not present"));
-        return LocalDate.parse(reviewDate).format(DateTimeFormatter.ofPattern("d MMM yyyy"));
-    }
-
-    public static @NonNull String getSubmissionDate(AsylumCase asylumCase) {
-        Optional<String> submissionDate = asylumCase
-                .read(COMPLETE_CASE_REVIEW_DATE, String.class);
-        final String reviewDate = submissionDate
-                .orElseThrow(() -> new IllegalStateException("Complete CaseReview Date is not present"));
-
-        return LocalDate.parse(reviewDate).format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+        return LocalDate.parse(reviewDate).format(DateTimeFormatter.ofPattern(D_MMM_YYYY));
     }
 
     public static boolean hasStf24WeeksStatus(AsylumCase asylumCase) {
@@ -612,19 +605,29 @@ public class AsylumCaseUtils {
 
 
     public static String getAppealReceivedDate(AsylumCase asylumCase) {
-        Optional<String> submissionDate = asylumCase
-                .read(APPEAL_SUBMISSION_DATE, String.class);
-        final String reviewDate = submissionDate
-                .orElseThrow(() -> new IllegalStateException("Complete CaseReview Date is not present"));
-
-        return LocalDate.parse(reviewDate).format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+        final String submissionDateDate = getCaseDateDate(asylumCase, APPEAL_SUBMISSION_DATE);
+        return LocalDate.parse(submissionDateDate).format(DateTimeFormatter.ofPattern(D_MMM_YYYY));
     }
 
-    public static LocalDate caseReviewDate(AsylumCase asylumCase) {
-        Optional<String> submissionDate = asylumCase
-                .read(COMPLETE_CASE_REVIEW_DATE, String.class);
-        final String reviewDate = submissionDate
-                .orElseThrow(() -> new IllegalStateException("Complete CaseReview Date is not present"));
-        return LocalDate.parse(reviewDate);
+    public static String getTribunalReceivedDate(AsylumCase asylumCase) {
+        final String tribunalReceivedDate = getCaseDateDate(asylumCase, TRIBUNAL_RECEIVED_DATE);
+        return LocalDate.parse(tribunalReceivedDate).format(DateTimeFormatter.ofPattern(D_MMM_YYYY));
+    }
+
+    public static String getCaseDateDate(AsylumCase asylumCase, AsylumCaseDefinition asylumCaseDefinition) {
+        return asylumCase
+                .read(asylumCaseDefinition, String.class)
+                .orElseThrow(() -> new IllegalStateException(asylumCaseDefinition.toString() + " is not present"));
+    }
+
+    public static String getHomeOfficeDecisionDate(AsylumCase asylumCase) {
+        final String homeOfficeDecisionDate = getCaseDateDate(asylumCase, HOME_OFFICE_DECISION_DATE);
+        return LocalDate.parse(homeOfficeDecisionDate).format(DateTimeFormatter.ofPattern(D_MMM_YYYY));
+    }
+
+    public static String add24WeeksToDate(String date) {
+        LocalDate appealDate = parse(date);
+        LocalDate stf24WeeksDate = appealDate.plusWeeks(24);
+        return stf24WeeksDate.format(DateTimeFormatter.ofPattern(D_MMM_YYYY));
     }
 }

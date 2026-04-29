@@ -11,9 +11,11 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
+import java.time.LocalDate;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.time.format.DateTimeFormatter.ofPattern;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -25,13 +27,30 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.COMPLETE_CASE_REVIEW_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.TRIBUNAL_RECEIVED_DATE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation.DAYS_14;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation.DAYS_42;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation.DAYS_56;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.D_MMM_YYYY;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 @SuppressWarnings("PMD.TooManyFields")
 class HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationTest {
-
     public static final String REVIEW_DATE = "2002-02-02";
+    public static final String JUL_2002 = "20 Jul 2002";
+    public static final String FEB_2002 = "2 Feb 2002";
+    public static final String DAYS_42_FROM_DATE_OF_DIRECTION_KEY = "42DaysFromDateOfDirection";
+    public static final String DECISION_SENT_DATE = "decisionSentDate";
+    public static final String DECISION_SENT_DATE_KEY = DECISION_SENT_DATE;
+    public static final String WEEKS_DEADLINE = "24WeeksDeadline";
+    public static final String WEEKS_DEADLINE_KEY = WEEKS_DEADLINE;
+    public static final String APPEAL_RECEIVED_DATE = "appealReceivedDate";
+    public static final String APPEAL_RECEIVED_DATE_KEY = APPEAL_RECEIVED_DATE;
+    public static final String PRACTICE_DIRECTION_KEY = "practiceDirection";
+    public static final String DAYS_14_FROM_DATE_OF_DIRECTION_KEY = "14DaysFromDateOfDirection";
+    public static final String DAYS_56_FROM_DATE_OF_DIRECTION = "56DaysFromDateOfDirection";
+
     private static final String APPELLANT_GIVEN_NAMES_KEY = "appellantGivenNames";
     private static final String APPELLANT_FAMILY_NAME_KEY = "appellantFamilyName";
     private static final String LINK_TO_ONLINE_SERVICE_KEY = "linkToOnlineService";
@@ -44,7 +63,6 @@ class HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationTest {
     private static final String ARIA_LISTING_REFERENCE_VALUE = "someAriaListingReference";
     private static final String HOME_OFFICE_REF_NUMBER_VALUE = "someHomeOfficeRefNumber";
     private static final String APPELLANT_GIVEN_NAMES_VALUE = "someAppellantGivenNames";
-    private static final String COMPLETE_CASE_REVIEW_DATE_KEY = "completeCaseReviewDate";
     private static final String APPELLANT_FAMILY_NAME_VALUE = "someAppellantFamilyName";
     private static final String CUSTOMER_SERVICES_TELEPHONE = "555 555 555";
     private static final String CUSTOMER_SERVICES_EMAIL = "cust.services@example.com";
@@ -64,7 +82,7 @@ class HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationTest {
         setupAsylumCaseMocks();
         setupCustomerServicesMocks();
 
-        personalisation = new HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation(BEFORE_LISTING_TEMPLATE_ID, BEFORE_LISTING_EMAIL_ADDRESS, MOCK_PREFIX, IA_EX_UI_FRONTEND_URL, customerServicesProvider);
+        personalisation = new HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation(BEFORE_LISTING_TEMPLATE_ID, BEFORE_LISTING_EMAIL_ADDRESS, MOCK_PREFIX, IA_EX_UI_FRONTEND_URL);
     }
 
     @Test
@@ -95,7 +113,13 @@ class HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationTest {
         assertEquals(IA_EX_UI_FRONTEND_URL, result.get(LINK_TO_ONLINE_SERVICE_KEY));
         assertEquals(CUSTOMER_SERVICES_TELEPHONE, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(CUSTOMER_SERVICES_EMAIL, customerServicesProvider.getCustomerServicesEmail());
-        assertEquals("2 Feb 2002", result.get(COMPLETE_CASE_REVIEW_DATE_KEY));
+        assertEquals(FEB_2002, result.get(DECISION_SENT_DATE_KEY));
+        assertEquals(JUL_2002, result.get(WEEKS_DEADLINE_KEY));
+        assertEquals(FEB_2002, result.get(APPEAL_RECEIVED_DATE_KEY));
+        assertEquals(LocalDate.now().format(ofPattern(D_MMM_YYYY)), result.get(PRACTICE_DIRECTION_KEY));
+        assertEquals(LocalDate.now().plusDays(DAYS_14).format(ofPattern(D_MMM_YYYY)), result.get(DAYS_14_FROM_DATE_OF_DIRECTION_KEY));
+        assertEquals(LocalDate.now().plusDays(DAYS_42).format(ofPattern(D_MMM_YYYY)), result.get(DAYS_42_FROM_DATE_OF_DIRECTION_KEY));
+        assertEquals(LocalDate.now().plusDays(DAYS_56).format(ofPattern(D_MMM_YYYY)), result.get(DAYS_56_FROM_DATE_OF_DIRECTION));
     }
 
 
@@ -107,6 +131,7 @@ class HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationTest {
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(HOME_OFFICE_REF_NUMBER_VALUE));
         when(asylumCase.read(COMPLETE_CASE_REVIEW_DATE, String.class)).thenReturn(Optional.of(REVIEW_DATE));
         when(asylumCase.read(APPEAL_SUBMISSION_DATE, String.class)).thenReturn(Optional.of(REVIEW_DATE));
+        when(asylumCase.read(TRIBUNAL_RECEIVED_DATE, String.class)).thenReturn(Optional.of(REVIEW_DATE));
 
     }
 
