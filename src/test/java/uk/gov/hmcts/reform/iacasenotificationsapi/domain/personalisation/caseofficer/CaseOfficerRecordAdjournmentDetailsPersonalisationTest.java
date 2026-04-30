@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -25,22 +25,17 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class CaseOfficerRecordAdjournmentDetailsPersonalisationTest {
 
+    private final String templateId = "someTemplateId";
+    private final String caseOfficerEmailAddress = "caseOfficer@example.com";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
     @Mock
     AsylumCase asylumCase;
     @Mock
     EmailAddressFinder emailAddressFinder;
     @Mock
     FeatureToggler featureToggler;
-
-    private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
-
-    private String caseOfficerEmailAddress = "caseOfficer@example.com";
-
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
-
     private CaseOfficerRecordAdjournmentDetailsPersonalisation caseOfficerRecordAdjournmentDetailsPersonalisation;
 
     @BeforeEach
@@ -61,6 +56,7 @@ public class CaseOfficerRecordAdjournmentDetailsPersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_CASE_OFFICER_RECORD_ADJOURNMENT_DETAILS",
             caseOfficerRecordAdjournmentDetailsPersonalisation.getReferenceId(caseId));
     }
@@ -75,16 +71,16 @@ public class CaseOfficerRecordAdjournmentDetailsPersonalisationTest {
     @Test
     public void should_return_given_email_address_from_asylum_case_when_feature_flag_is_Off() {
         assertTrue(caseOfficerRecordAdjournmentDetailsPersonalisation.getRecipientsList(asylumCase)
-                .isEmpty());
+            .isEmpty());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
-            () -> caseOfficerRecordAdjournmentDetailsPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> caseOfficerRecordAdjournmentDetailsPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -93,6 +89,20 @@ public class CaseOfficerRecordAdjournmentDetailsPersonalisationTest {
         Map<String, String> personalisation =
             caseOfficerRecordAdjournmentDetailsPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName);
+    }
+
+    @Test
+    public void should_return_personalisation_when_no_information_given() {
+        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
+        Map<String, String> personalisation =
+            caseOfficerRecordAdjournmentDetailsPersonalisation.getPersonalisation(asylumCase);
+
+        assertThat(personalisation).allSatisfy((key, value) -> assertThat(value).isEmpty());
     }
 }

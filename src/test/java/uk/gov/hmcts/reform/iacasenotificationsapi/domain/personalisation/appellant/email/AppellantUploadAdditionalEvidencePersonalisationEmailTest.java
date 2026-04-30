@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
 
-import org.assertj.core.api.Assertions;
+import java.util.Objects;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +16,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 import java.util.Map;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
@@ -27,12 +28,12 @@ class AppellantUploadAdditionalEvidencePersonalisationEmailTest {
 
     private final String beforeListingTemplateId = "beforeListingTemplateId";
     private final String afterListingTemplateId = "afterListingTemplateId";
-    private HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "homeOfficeReferenceNumber";
     private final String ariaListingReference = "ariaListingReference";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String appellantGivenNames = "appellantGivenNames";
+    private final String appellantFamilyName = "appellantFamilyName";
     private final String appellantEmailAddress = "appelant@example.net";
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "customer.services@example.com";
@@ -73,41 +74,42 @@ class AppellantUploadAdditionalEvidencePersonalisationEmailTest {
     @Test
     void should_return_given_template_id() {
         assertEquals(beforeListingTemplateId,
-                appellantUploadAdditionalEvidencePersonalisationEmail.getTemplateId(asylumCase));
+            appellantUploadAdditionalEvidencePersonalisationEmail.getTemplateId(asylumCase));
 
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
 
         assertEquals(afterListingTemplateId,
-                appellantUploadAdditionalEvidencePersonalisationEmail.getTemplateId(asylumCase));
+            appellantUploadAdditionalEvidencePersonalisationEmail.getTemplateId(asylumCase));
     }
 
     @Test
     void should_return_given_reference_id() {
         assertEquals(12345L + "_UPLOADED_ADDITIONAL_EVIDENCE_AIP_APPELLANT_EMAIL",
-                appellantUploadAdditionalEvidencePersonalisationEmail.getReferenceId(12345L));
+            appellantUploadAdditionalEvidencePersonalisationEmail.getReferenceId(12345L));
     }
 
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
-            () -> appellantUploadAdditionalEvidencePersonalisationEmail.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> appellantUploadAdditionalEvidencePersonalisationEmail.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     void should_return_personalisation_when_all_information_given() {
 
         Map<String, String> personalisation =
-                appellantUploadAdditionalEvidencePersonalisationEmail.getPersonalisation(asylumCase);
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("hyperlink to service"));
+            appellantUploadAdditionalEvidencePersonalisationEmail.getPersonalisation(asylumCase);
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
+            .containsEntry("ariaListingReference", ariaListingReference)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("hyperlink to service", iaAipFrontendUrl);
     }
 
     @Test
@@ -120,9 +122,13 @@ class AppellantUploadAdditionalEvidencePersonalisationEmailTest {
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
-                appellantUploadAdditionalEvidencePersonalisationEmail.getPersonalisation(asylumCase);
+            appellantUploadAdditionalEvidencePersonalisationEmail.getPersonalisation(asylumCase);
 
-        Assertions.assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(personalisation).allSatisfy((key, value) -> {
+            if (!Objects.equals("hyperlink to service", key)) {
+                assertThat(value).isEmpty();
+            }
+        });
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }

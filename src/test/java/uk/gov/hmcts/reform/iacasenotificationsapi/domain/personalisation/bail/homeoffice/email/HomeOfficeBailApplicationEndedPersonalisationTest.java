@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.homeoffice.email;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.*;
@@ -22,19 +23,17 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesO
 @MockitoSettings(strictness = Strictness.LENIENT)
 class HomeOfficeBailApplicationEndedPersonalisationTest {
 
-    private Long caseId = 12345L;
-    private String templateIdWithLegalRep = "someTemplateIdWithLegalRep";
-    private String templateIdWithoutLegalRep = "someTemplateIdWithoutLegalRep";
-    private String homeOfficeEmailAddress = "HO_user@example.com";
-    private String bailReferenceNumber = "someReferenceNumber";
-    private String legalRepReference = "someLegalRepReference";
-    private String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
-    private String applicantGivenNames = "someApplicantGivenNames";
-    private String applicantFamilyName = "someApplicantFamilyName";
-    private String outcomeOfApplication = "someOutcome";
-    private String reasonsOfOutcome = "someReason";
-    private String endApplicationDate = "2022-05-13";
-    @Mock BailCase bailCase;
+    private final String templateIdWithLegalRep = "someTemplateIdWithLegalRep";
+    private final String templateIdWithoutLegalRep = "someTemplateIdWithoutLegalRep";
+    private final String bailReferenceNumber = "someReferenceNumber";
+    private final String legalRepReference = "someLegalRepReference";
+    private final String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
+    private final String applicantGivenNames = "someApplicantGivenNames";
+    private final String applicantFamilyName = "someApplicantFamilyName";
+    private final String outcomeOfApplication = "someOutcome";
+    private final String reasonsOfOutcome = "someReason";
+    @Mock
+    BailCase bailCase;
     private HomeOfficeBailApplicationEndedPersonalisation homeOfficeBailApplicationEndedPersonalisation;
 
     @BeforeEach
@@ -48,7 +47,9 @@ class HomeOfficeBailApplicationEndedPersonalisationTest {
         when(bailCase.read(IS_LEGALLY_REPRESENTED_FOR_FLAG, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(bailCase.read(BailCaseFieldDefinition.END_APPLICATION_REASONS, String.class)).thenReturn(Optional.of(reasonsOfOutcome));
         when(bailCase.read(BailCaseFieldDefinition.END_APPLICATION_OUTCOME, String.class)).thenReturn(Optional.of(outcomeOfApplication));
+        String endApplicationDate = "2022-05-13";
         when(bailCase.read(BailCaseFieldDefinition.END_APPLICATION_DATE, String.class)).thenReturn(Optional.of(endApplicationDate));
+        String homeOfficeEmailAddress = "HO_user@example.com";
         homeOfficeBailApplicationEndedPersonalisation =
             new HomeOfficeBailApplicationEndedPersonalisation(templateIdWithLegalRep, templateIdWithoutLegalRep, homeOfficeEmailAddress);
     }
@@ -60,6 +61,7 @@ class HomeOfficeBailApplicationEndedPersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_BAIL_APPLICATION_ENDED_HOME_OFFICE",
             homeOfficeBailApplicationEndedPersonalisation.getReferenceId(caseId));
     }
@@ -67,10 +69,10 @@ class HomeOfficeBailApplicationEndedPersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
-            () -> homeOfficeBailApplicationEndedPersonalisation.getPersonalisation((BailCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("bailCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> homeOfficeBailApplicationEndedPersonalisation.getPersonalisation((BailCase) null));
+        assertEquals("bailCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -79,14 +81,15 @@ class HomeOfficeBailApplicationEndedPersonalisationTest {
         Map<String, String> personalisation =
             homeOfficeBailApplicationEndedPersonalisation.getPersonalisation(bailCase);
 
-        assertEquals(bailReferenceNumber, personalisation.get("bailReferenceNumber"));
-        assertEquals(legalRepReference, personalisation.get("legalRepReference"));
-        assertEquals(applicantGivenNames, personalisation.get("applicantGivenNames"));
-        assertEquals(applicantFamilyName, personalisation.get("applicantFamilyName"));
-        assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(outcomeOfApplication, personalisation.get("endApplicationOutcome"));
-        assertEquals(reasonsOfOutcome, personalisation.get("endApplicationReasons"));
-        assertEquals("13 May 2022", personalisation.get("endApplicationDate"));
+        assertThat(personalisation)
+            .containsEntry("bailReferenceNumber", bailReferenceNumber)
+            .containsEntry("legalRepReference", legalRepReference)
+            .containsEntry("applicantGivenNames", applicantGivenNames)
+            .containsEntry("applicantFamilyName", applicantFamilyName)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
+            .containsEntry("endApplicationOutcome", outcomeOfApplication)
+            .containsEntry("endApplicationReasons", reasonsOfOutcome)
+            .containsEntry("endApplicationDate", "13 May 2022");
     }
 
     @Test
@@ -97,13 +100,14 @@ class HomeOfficeBailApplicationEndedPersonalisationTest {
             homeOfficeBailApplicationEndedPersonalisation.getPersonalisation(bailCase);
 
         assertEquals(templateIdWithoutLegalRep, homeOfficeBailApplicationEndedPersonalisation.getTemplateId(bailCase));
-        assertEquals(bailReferenceNumber, personalisation.get("bailReferenceNumber"));
-        assertEquals(applicantGivenNames, personalisation.get("applicantGivenNames"));
-        assertEquals(applicantFamilyName, personalisation.get("applicantFamilyName"));
-        assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(outcomeOfApplication, personalisation.get("endApplicationOutcome"));
-        assertEquals(reasonsOfOutcome, personalisation.get("endApplicationReasons"));
-        assertEquals("13 May 2022", personalisation.get("endApplicationDate"));
+        assertThat(personalisation)
+            .containsEntry("bailReferenceNumber", bailReferenceNumber)
+            .containsEntry("applicantGivenNames", applicantGivenNames)
+            .containsEntry("applicantFamilyName", applicantFamilyName)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
+            .containsEntry("endApplicationOutcome", outcomeOfApplication)
+            .containsEntry("endApplicationReasons", reasonsOfOutcome)
+            .containsEntry("endApplicationDate", "13 May 2022");
     }
 
     @Test
@@ -121,14 +125,15 @@ class HomeOfficeBailApplicationEndedPersonalisationTest {
         Map<String, String> personalisation =
             homeOfficeBailApplicationEndedPersonalisation.getPersonalisation(bailCase);
 
-        assertEquals("", personalisation.get("bailReferenceNumber"));
-        assertEquals("", personalisation.get("legalRepReference"));
-        assertEquals("", personalisation.get("applicantGivenNames"));
-        assertEquals("", personalisation.get("applicantFamilyName"));
-        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("", personalisation.get("endApplicationOutcome"));
-        assertEquals("No reason given", personalisation.get("endApplicationReasons"));
-        assertEquals("", personalisation.get("endApplicationDate"));
+        assertThat(personalisation)
+            .containsEntry("bailReferenceNumber", "")
+            .containsEntry("legalRepReference", "")
+            .containsEntry("applicantGivenNames", "")
+            .containsEntry("applicantFamilyName", "")
+            .containsEntry("homeOfficeReferenceNumber", "")
+            .containsEntry("endApplicationOutcome", "")
+            .containsEntry("endApplicationReasons", "No reason given")
+            .containsEntry("endApplicationDate", "");
     }
 
 }

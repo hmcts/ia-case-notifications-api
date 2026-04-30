@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -29,6 +30,23 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppellantInternalEditAppealPostSubmitLetterPersonalisationTest {
 
+    private final Long ccdCaseId = 12345L;
+    private final String letterTemplateId = "someLetterTemplateId";
+    private final String appealReferenceNumber = "someAppealRefNumber";
+    private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String addressLine1 = "50";
+    private final String addressLine2 = "Building name";
+    private final String addressLine3 = "Street name";
+    private final String postCode = "XX1 2YY";
+    private final String postTown = "Town name";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "example@example.com";
+    private final String oocAddressLine1 = "Calle Toledo 32";
+    private final String oocAddressLine2 = "Madrid";
+    private final String oocAddressLine3 = "28003";
+    private final NationalityFieldValue oocAddressCountry = mock(NationalityFieldValue.class);
     @Mock
     Callback<AsylumCase> callback;
     @Mock
@@ -39,26 +57,6 @@ class AppellantInternalEditAppealPostSubmitLetterPersonalisationTest {
     CustomerServicesProvider customerServicesProvider;
     @Mock
     AddressUk address;
-
-    private Long ccdCaseId = 12345L;
-    private String letterTemplateId = "someLetterTemplateId";
-    private String appealReferenceNumber = "someAppealRefNumber";
-    private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
-    private String addressLine1 = "50";
-    private String addressLine2 = "Building name";
-    private String addressLine3 = "Street name";
-    private String postCode = "XX1 2YY";
-    private String postTown = "Town name";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "example@example.com";
-    private String oocAddressLine1 = "Calle Toledo 32";
-    private String oocAddressLine2 = "Madrid";
-    private String oocAddressLine3 = "28003";
-    private NationalityFieldValue oocAddressCountry = mock(NationalityFieldValue.class);
-
-
     private AppellantInternalEditAppealPostSubmitLetterPersonalisation appellantInternalEditAppealPostSubmitLetterPersonalisation;
 
     @BeforeEach
@@ -88,7 +86,7 @@ class AppellantInternalEditAppealPostSubmitLetterPersonalisationTest {
         appellantInternalEditAppealPostSubmitLetterPersonalisation = new AppellantInternalEditAppealPostSubmitLetterPersonalisation(
             letterTemplateId,
             customerServicesProvider
-            );
+        );
     }
 
     @Test
@@ -106,10 +104,12 @@ class AppellantInternalEditAppealPostSubmitLetterPersonalisationTest {
     void should_return_appellant_address_in_correct_format() {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        assertTrue(appellantInternalEditAppealPostSubmitLetterPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_XX12YY"));
+        assertTrue(appellantInternalEditAppealPostSubmitLetterPersonalisation.getRecipientsList(asylumCase)
+                .contains("someAppellantGivenNamessomeAppellantFamil_50_Buildingname_Streetname_Townname_XX12YY"));
 
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
-        assertTrue(appellantInternalEditAppealPostSubmitLetterPersonalisation.getRecipientsList(asylumCase).contains("CalleToledo32_Madrid_28003_Spain"));
+        assertTrue(appellantInternalEditAppealPostSubmitLetterPersonalisation.getRecipientsList(asylumCase)
+                .contains("someAppellantGivenNamessomeAppellantFamil_CalleToledo32_Madrid_28003_Spain"));
     }
 
     @Test
@@ -127,9 +127,9 @@ class AppellantInternalEditAppealPostSubmitLetterPersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> appellantInternalEditAppealPostSubmitLetterPersonalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("appellantAddress is not present");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> appellantInternalEditAppealPostSubmitLetterPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("appellantAddress is not present", exception.getMessage());
     }
 
     @Test
@@ -137,18 +137,18 @@ class AppellantInternalEditAppealPostSubmitLetterPersonalisationTest {
         legalRepInCountryDataSetup();
         when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_ADDRESS_U_K, AddressUk.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> appellantInternalEditAppealPostSubmitLetterPersonalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("legalRepAddressUK is not present");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> appellantInternalEditAppealPostSubmitLetterPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("legalRepAddressUK is not present", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
-            () -> appellantInternalEditAppealPostSubmitLetterPersonalisation.getPersonalisation((Callback<AsylumCase>) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("callback must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> appellantInternalEditAppealPostSubmitLetterPersonalisation.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     @Test
@@ -159,15 +159,17 @@ class AppellantInternalEditAppealPostSubmitLetterPersonalisationTest {
         Map<String, String> personalisation =
             appellantInternalEditAppealPostSubmitLetterPersonalisation.getPersonalisation(callback);
 
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(addressLine1, personalisation.get("address_line_1"));
-        assertEquals(addressLine2, personalisation.get("address_line_2"));
-        assertEquals(addressLine3, personalisation.get("address_line_3"));
-        assertEquals(postTown, personalisation.get("address_line_4"));
-        assertEquals(postCode, personalisation.get("address_line_5"));
+        assertThat(personalisation)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
+            .containsEntry("address_line_1", (appellantGivenNames + " " + appellantFamilyName).substring(0, 42))
+            .containsEntry("address_line_2", addressLine1)
+            .containsEntry("address_line_3", addressLine2)
+            .containsEntry("address_line_4", addressLine3)
+            .containsEntry("address_line_5", postTown)
+            .containsEntry("address_line_6", postCode);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
@@ -180,14 +182,16 @@ class AppellantInternalEditAppealPostSubmitLetterPersonalisationTest {
         Map<String, String> personalisation =
             appellantInternalEditAppealPostSubmitLetterPersonalisation.getPersonalisation(callback);
 
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(oocAddressLine1, personalisation.get("address_line_1"));
-        assertEquals(oocAddressLine2, personalisation.get("address_line_2"));
-        assertEquals(oocAddressLine3, personalisation.get("address_line_3"));
-        assertEquals(Nationality.ES.toString(), personalisation.get("address_line_4"));
+        assertThat(personalisation)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
+            .containsEntry("address_line_1", (appellantGivenNames + " " + appellantFamilyName).substring(0, 42))
+            .containsEntry("address_line_2", oocAddressLine1)
+            .containsEntry("address_line_3", oocAddressLine2)
+            .containsEntry("address_line_4", oocAddressLine3)
+            .containsEntry("address_line_5", Nationality.ES.toString());
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
@@ -198,15 +202,16 @@ class AppellantInternalEditAppealPostSubmitLetterPersonalisationTest {
         Map<String, String> personalisation =
             appellantInternalEditAppealPostSubmitLetterPersonalisation.getPersonalisation(callback);
 
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(addressLine1, personalisation.get("address_line_1"));
-        assertEquals(addressLine2, personalisation.get("address_line_2"));
-        assertEquals(addressLine3, personalisation.get("address_line_3"));
-        assertEquals(postTown, personalisation.get("address_line_4"));
-        assertEquals(postCode, personalisation.get("address_line_5"));
+        assertThat(personalisation)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
+            .containsEntry("address_line_1", addressLine1)
+            .containsEntry("address_line_2", addressLine2)
+            .containsEntry("address_line_3", addressLine3)
+            .containsEntry("address_line_4", postTown)
+            .containsEntry("address_line_5", postCode);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
@@ -217,15 +222,16 @@ class AppellantInternalEditAppealPostSubmitLetterPersonalisationTest {
         Map<String, String> personalisation =
             appellantInternalEditAppealPostSubmitLetterPersonalisation.getPersonalisation(callback);
 
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(oocAddressLine1, personalisation.get("address_line_1"));
-        assertEquals(oocAddressLine2, personalisation.get("address_line_2"));
-        assertEquals(oocAddressLine3, personalisation.get("address_line_3"));
-        assertEquals(postTown, personalisation.get("address_line_4"));
-        assertEquals(Nationality.ES.toString(), personalisation.get("address_line_5"));
+        assertThat(personalisation)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
+            .containsEntry("address_line_1", oocAddressLine1)
+            .containsEntry("address_line_2", oocAddressLine2)
+            .containsEntry("address_line_3", oocAddressLine3)
+            .containsEntry("address_line_4", postTown)
+            .containsEntry("address_line_5", Nationality.ES.toString());
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }

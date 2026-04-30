@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.editbaildocuments;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -42,8 +42,8 @@ public class EditBailDocumentServiceTest {
         List<String> editedDocsInCaseNote = List.of("documentToBeUpdated", "documentToBeDeleted", "addedDocument");
 
 
-        return new Object[] {
-            new Object[] {
+        return new Object[]{
+            new Object[]{
                 bailCase,
                 bailCaseBefore,
                 editedDocsInCaseNote,
@@ -81,7 +81,7 @@ public class EditBailDocumentServiceTest {
         List<String> documents =
             editBailDocumentService.getFormattedDocumentsGivenCaseAndDocNames(bailCaseBefore, bailCase, docNamesFromCaseNote);
 
-        assertThat(documents.toString()).isEqualTo(expectedDocumentsList.toString());
+        assertEquals(expectedDocumentsList.toString(), documents.toString());
     }
 
 }

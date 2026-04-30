@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
@@ -13,6 +12,8 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
@@ -25,6 +26,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
@@ -32,27 +34,24 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class HomeOfficeMarkAsReadyForUtTransferPersonalisationTest {
-    @Mock
-    Callback<AsylumCase> callback;
-    @Mock
-    CaseDetails caseDetails;
     private final String beforeListingTemplateId = "beforeListingTemplateId";
     private final String afterListingTemplateId = "afterListingTemplateId";
     private final String iaExUiFrontendUrl = "http://localhost";
     private final String emailAddress = "legalRep@example.com";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String ariaListingReference = "someAriaListingReference";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String appellantGivenNames = "appellantGivenNames";
+    private final String appellantFamilyName = "appellantFamilyName";
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "cust.services@example.com";
     private final String utAppealReferenceNumber = "1234567890";
-    private String homeOfficeRefNumber = "someRepRefNumber";
     private final String homeOfficeApcEmailAddress = "homeOfficeAPC@example.com";
     private final String homeOfficeLartEmailAddress = "homeOfficeLART@example.com";
     private final String endAppealEmailAddresses = "HO-end-appeal@example.com";
-
-
+    @Mock
+    Callback<AsylumCase> callback;
+    @Mock
+    CaseDetails caseDetails;
     @Mock
     PersonalisationProvider personalisationProvider;
     @Mock
@@ -62,6 +61,11 @@ public class HomeOfficeMarkAsReadyForUtTransferPersonalisationTest {
     @Mock
     CustomerServicesProvider customerServicesProvider;
     private HomeOfficeMarkAppealReadyForUtTransferPersonalisation homeOfficeMarkAppealReadyForUtTransferPersonalisation;
+
+    public static void initializePrefixes(Object testClass) {
+        ReflectionTestUtils.setField(testClass, "adaPrefix", "Accelerated detained appeal");
+        ReflectionTestUtils.setField(testClass, "nonAdaPrefix", "Immigration and Asylum appeal");
+    }
 
     @BeforeEach
     public void setup() {
@@ -110,7 +114,7 @@ public class HomeOfficeMarkAsReadyForUtTransferPersonalisationTest {
     @Test
     public void should_return_the_ho_apc_email_address_until_case_under_review() {
         when(asylumCase.read(AsylumCaseDefinition.STATE_BEFORE_END_APPEAL, State.class))
-                .thenReturn(Optional.of(State.CASE_UNDER_REVIEW));
+            .thenReturn(Optional.of(State.CASE_UNDER_REVIEW));
 
         assertEquals(Collections.singleton(homeOfficeApcEmailAddress), homeOfficeMarkAppealReadyForUtTransferPersonalisation.getRecipientsList(asylumCase));
     }
@@ -118,7 +122,7 @@ public class HomeOfficeMarkAsReadyForUtTransferPersonalisationTest {
     @Test
     public void should_return_the_ho_lart_email_address_until_listing() {
         when(asylumCase.read(AsylumCaseDefinition.STATE_BEFORE_END_APPEAL, State.class))
-                .thenReturn(Optional.of(State.LISTING));
+            .thenReturn(Optional.of(State.LISTING));
 
         assertEquals(Collections.singleton(homeOfficeLartEmailAddress), homeOfficeMarkAppealReadyForUtTransferPersonalisation.getRecipientsList(asylumCase));
     }
@@ -128,7 +132,7 @@ public class HomeOfficeMarkAsReadyForUtTransferPersonalisationTest {
         String homeOfficeBhamEmailAddress = "ho-birmingham@example.com";
         when(emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase)).thenReturn(homeOfficeBhamEmailAddress);
         when(asylumCase.read(AsylumCaseDefinition.STATE_BEFORE_END_APPEAL, State.class))
-                .thenReturn(Optional.of(State.PRE_HEARING));
+            .thenReturn(Optional.of(State.PRE_HEARING));
 
         assertEquals(Collections.singleton(homeOfficeBhamEmailAddress), homeOfficeMarkAppealReadyForUtTransferPersonalisation.getRecipientsList(asylumCase));
     }
@@ -156,10 +160,10 @@ public class HomeOfficeMarkAsReadyForUtTransferPersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
-            () -> homeOfficeMarkAppealReadyForUtTransferPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> homeOfficeMarkAppealReadyForUtTransferPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -168,20 +172,23 @@ public class HomeOfficeMarkAsReadyForUtTransferPersonalisationTest {
         Map<String, String> personalisation =
             homeOfficeMarkAppealReadyForUtTransferPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(utAppealReferenceNumber, personalisation.get("utAppealReferenceNumber"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("ariaListingReference", ariaListingReference)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("utAppealReferenceNumber", utAppealReferenceNumber)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
     }
 
-    @Test
-    public void should_return_personalisation_when_all_mandatory_information_given() {
+    @ParameterizedTest
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
+    public void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
         initializePrefixes(homeOfficeMarkAppealReadyForUtTransferPersonalisation);
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
@@ -190,28 +197,27 @@ public class HomeOfficeMarkAsReadyForUtTransferPersonalisationTest {
 
         Map<String, String> personalisation =
             homeOfficeMarkAppealReadyForUtTransferPersonalisation.getPersonalisation(asylumCase);
-
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
-    }
-
-    public static void initializePrefixes(Object testClass) {
-        ReflectionTestUtils.setField(testClass, "adaPrefix", "Accelerated detained appeal");
-        ReflectionTestUtils.setField(testClass, "nonAdaPrefix", "Immigration and Asylum appeal");
+        assertThat(personalisation)
+            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal"
+                : "Immigration and Asylum appeal")
+            .containsEntry("utAppealReferenceNumber", "")
+            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation())
+            .containsAllEntriesOf(getPersonalisationForHomeOffice())
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
     }
 
     private Map<String, String> getPersonalisationForHomeOffice() {
+        String homeOfficeRefNumber = "someRepRefNumber";
         return ImmutableMap
-                .<String, String>builder()
-                .put("appealReferenceNumber", appealReferenceNumber)
-                .put("ariaListingReference", ariaListingReference)
-                .put("homeOfficeReference", homeOfficeRefNumber)
-                .put("appellantGivenNames", appellantGivenNames)
-                .put("appellantFamilyName", appellantFamilyName)
-                .put("customerServicesTelephone", customerServicesTelephone)
-                .put("customerServicesEmail", customerServicesEmail)
-                .build();
+            .<String, String>builder()
+            .put("appealReferenceNumber", appealReferenceNumber)
+            .put("ariaListingReference", ariaListingReference)
+            .put("homeOfficeReference", homeOfficeRefNumber)
+            .put("appellantGivenNames", appellantGivenNames)
+            .put("appellantFamilyName", appellantFamilyName)
+            .put("customerServicesTelephone", customerServicesTelephone)
+            .put("customerServicesEmail", customerServicesEmail)
+            .build();
     }
 
 }

@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
@@ -70,13 +71,13 @@ class AppellantRemoveStatutoryTimeframe24WeeksLetterPersonalisationTest {
 
     @Test
     void should_return_template_id() {
-        assertThat(personalisation.getTemplateId()).isEqualTo(TEMPLATE_ID);
+        assertEquals(TEMPLATE_ID, personalisation.getTemplateId());
     }
 
     @Test
     void should_return_reference_id() {
         String reference = personalisation.getReferenceId(CASE_ID);
-        assertThat(reference).isEqualTo(CASE_ID + "_REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER");
+        assertEquals(CASE_ID + "_REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER", reference);
     }
 
     @Test
@@ -107,11 +108,12 @@ class AppellantRemoveStatutoryTimeframe24WeeksLetterPersonalisationTest {
             .containsEntry("appellantFamilyName", "Doe")
             .containsEntry("completeCaseReviewDate", "15 May 1990")
             .containsEntry("customerServices", "value")
-            .containsEntry("address_line_1", "10")
-            .containsEntry("address_line_2", "Main St")
-            .containsEntry("address_line_3", "")
-            .containsEntry("address_line_4", "Sometown")
-            .containsEntry("address_line_5", "CM3 4DC");
+            .containsEntry("address_line_1", "John Doe")
+            .containsEntry("address_line_2", "10")
+            .containsEntry("address_line_3", "Main St")
+            .containsEntry("address_line_4", "")
+            .containsEntry("address_line_5", "Sometown")
+            .containsEntry("address_line_6", "CM3 4DC");
     }
 
     @Test

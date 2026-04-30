@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -26,21 +27,14 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantAppealOutcomePersonalisationSmsTest {
 
+    private final String appealOutcomeDismissedAppellantTemplateId = "appealOutcomeDismissedAppellantTemplateId";
+    private final String appealOutcomeAllowedAppellantTemplateId = "appealOutcomeAllowedAppellantTemplateId";
+    private final String iaAipFrontendUrl = "http://localhost";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
     @Mock
     AsylumCase asylumCase;
     @Mock
     RecipientsFinder recipientsFinder;
-
-    private Long caseId = 12345L;
-    private String appealOutcomeDismissedAppellantTemplateId = "appealOutcomeDismissedAppellantTemplateId";
-    private String appealOutcomeAllowedAppellantTemplateId = "appealOutcomeAllowedAppellantTemplateId";
-    private String iaAipFrontendUrl = "http://localhost";
-
-    private String mockedAppealReferenceNumber = "someReferenceNumber";
-    private String mockedAppellantMobilePhone = "07123456789";
-    private String twoWeeksToAppeal = "14 days";
-    private String fourWeeksToAppeal = "28 days";
-
     private AppellantAppealOutcomePersonalisationSms appellantAppealOutcomePersonalisationSms;
 
     @BeforeEach
@@ -50,10 +44,10 @@ public class AppellantAppealOutcomePersonalisationSmsTest {
             .thenReturn(Optional.of(mockedAppealReferenceNumber));
 
         appellantAppealOutcomePersonalisationSms = new AppellantAppealOutcomePersonalisationSms(
-                appealOutcomeAllowedAppellantTemplateId,
+            appealOutcomeAllowedAppellantTemplateId,
             appealOutcomeDismissedAppellantTemplateId,
-                iaAipFrontendUrl,
-                recipientsFinder);
+            iaAipFrontendUrl,
+            recipientsFinder);
     }
 
 
@@ -75,6 +69,7 @@ public class AppellantAppealOutcomePersonalisationSmsTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_APPEAL_OUTCOME_AIP_APPELLANT_SMS",
             appellantAppealOutcomePersonalisationSms.getReferenceId(caseId));
     }
@@ -82,6 +77,7 @@ public class AppellantAppealOutcomePersonalisationSmsTest {
     @Test
     public void should_return_given_email_address_list_from_subscribers_in_asylum_case() {
 
+        String mockedAppellantMobilePhone = "07123456789";
         Subscriber subscriber = new Subscriber(
             SubscriberType.APPELLANT, //subscriberType
             "", //email
@@ -103,9 +99,9 @@ public class AppellantAppealOutcomePersonalisationSmsTest {
 
         when(recipientsFinder.findAll(null, NotificationType.SMS)).thenCallRealMethod();
 
-        assertThatThrownBy(() -> appellantAppealOutcomePersonalisationSms.getRecipientsList(null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> appellantAppealOutcomePersonalisationSms.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -116,9 +112,11 @@ public class AppellantAppealOutcomePersonalisationSmsTest {
         Map<String, String> personalisation =
             appellantAppealOutcomePersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(twoWeeksToAppeal, personalisation.get("14 or 28 days after judge uploads decisions and reasons document"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("link to timeline"));
+        String twoWeeksToAppeal = "14 days";
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", mockedAppealReferenceNumber)
+            .containsEntry("14 or 28 days after judge uploads decisions and reasons document", twoWeeksToAppeal)
+            .containsEntry("link to timeline", iaAipFrontendUrl);
 
     }
 
@@ -130,9 +128,11 @@ public class AppellantAppealOutcomePersonalisationSmsTest {
         Map<String, String> personalisation =
             appellantAppealOutcomePersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(fourWeeksToAppeal, personalisation.get("14 or 28 days after judge uploads decisions and reasons document"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("link to timeline"));
+        String fourWeeksToAppeal = "28 days";
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", mockedAppealReferenceNumber)
+            .containsEntry("14 or 28 days after judge uploads decisions and reasons document", fourWeeksToAppeal)
+            .containsEntry("link to timeline", iaAipFrontendUrl);
 
     }
 }

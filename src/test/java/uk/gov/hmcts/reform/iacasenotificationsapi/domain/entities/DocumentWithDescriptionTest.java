@@ -12,7 +12,7 @@ public class DocumentWithDescriptionTest {
     private final Document document = mock(Document.class);
     private final String description = "Some evidence";
 
-    private DocumentWithDescription documentWithDescription =
+    private final DocumentWithDescription documentWithDescription =
         new DocumentWithDescription(
             document,
             description

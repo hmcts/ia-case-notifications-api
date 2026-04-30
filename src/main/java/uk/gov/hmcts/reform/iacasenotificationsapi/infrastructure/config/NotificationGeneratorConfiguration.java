@@ -115,6 +115,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalre
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.letter.LegalRepresentativeRemoveDetentionStatusLetterPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.linkunlinkappeal.LegalRepresentativeLinkAppealPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.linkunlinkappeal.LegalRepresentativeUnlinkAppealPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.nonlegalrep.RevokeCitizenAccessPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentAdjournHearingWithoutDatePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentAppellantFtpaSubmittedPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent.RespondentChangeDirectionDueDatePersonalisation;
@@ -3400,6 +3401,138 @@ public class NotificationGeneratorConfiguration {
                 notificationSender,
                 notificationIdAppender
             )
+        );
+    }
+
+    @Bean("aipPaPayLaterRequestReasonsForAppealNotificationGenerator")
+    public List<NotificationGenerator> aipPaPayLaterRequestReasonsForAppealNotificationHandler(
+            AipPaPayLaterRequestReasonsForAppealPersonalisationEmail aipPaPayLaterRequestReasonsForAppealPersonalisationEmail,
+            AipPaPayLaterRequestReasonsForAppealPersonalisationSms aipPaPayLaterRequestReasonsForAppealPersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                aipPaPayLaterRequestReasonsForAppealPersonalisationEmail
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(
+                                aipPaPayLaterRequestReasonsForAppealPersonalisationSms
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("aipPaPayLaterListingNotificationGenerator")
+    public List<NotificationGenerator> aipPaPayLaterListingNotificationHandler(
+            AipPaPayLaterListingPersonalisationEmail aipPaPayLaterListingPersonalisationEmail,
+            AipPaPayLaterListingPersonalisationSms aipPaPayLaterListingPersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                aipPaPayLaterListingPersonalisationEmail
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(
+                                aipPaPayLaterListingPersonalisationSms
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("aipPaPayLaterDecisionNotificationGenerator")
+    public List<NotificationGenerator> aipPaPayLaterDecisionNotificationHandler(
+            AipPaPayLaterDecisionPersonalisationEmail aipPaPayLaterDecisionPersonalisationEmail,
+            AipPaPayLaterDecisionPersonalisationSms aipPaPayLaterDecisionPersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                aipPaPayLaterDecisionPersonalisationEmail
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(
+                                aipPaPayLaterDecisionPersonalisationSms
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("legalRepPaPayLaterCaseBuildingNotificationGenerator")
+    public List<NotificationGenerator> legalRepPaPayLaterCaseBuildingNotificationHandler(
+            LegalRepPaPayLaterCaseBuildingPersonalisationEmail legalRepPaPayLaterCaseBuildingPersonalisationEmail,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepPaPayLaterCaseBuildingPersonalisationEmail
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("legalRepPaPayLaterListingNotificationGenerator")
+    public List<NotificationGenerator> legalRepPaPayLaterListingNotificationHandler(
+            LegalRepPaPayLaterListingPersonalisationEmail legalRepPaPayLaterListingPersonalisationEmail,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepPaPayLaterListingPersonalisationEmail
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("legalRepPaPayLaterDecisionNotificationGenerator")
+    public List<NotificationGenerator> legalRepPaPayLaterDecisionNotificationHandler(
+            LegalRepPaPayLaterDecisionPersonalisationEmail legalRepPaPayLaterDecisionPersonalisationEmail,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepPaPayLaterDecisionPersonalisationEmail
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
@@ -7177,6 +7310,21 @@ public class NotificationGeneratorConfiguration {
                         notificationIdAppender
                 )
 
+        );
+    }
+
+    @Bean("generateRevokeCitizenAccessNotificationGenerator")
+    public List<NotificationGenerator> generateRevokeCitizenAccessNotificationGenerator(
+        RevokeCitizenAccessPersonalisation revokeCitizenAccessPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return List.of(
+            new EmailNotificationGenerator(
+                newArrayList(revokeCitizenAccessPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
         );
     }
 }

@@ -17,18 +17,18 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 class CommonUtilsTest {
 
-    @ParameterizedTest
-    @MethodSource("generateCanHandleScenarios")
-    void should_correctly_convert_asylum_case_value_to_amount(String asylumCaseValue, String expectedValue) {
-        assertEquals(expectedValue, convertAsylumCaseFeeValue(asylumCaseValue));
-    }
-
     private static Stream<Arguments> generateCanHandleScenarios() {
         return Stream.of(
             Arguments.of("1000", "10.00"),
             Arguments.of("", ""),
             Arguments.of("80", "0.80")
         );
+    }
+
+    @ParameterizedTest
+    @MethodSource("generateCanHandleScenarios")
+    void should_correctly_convert_asylum_case_value_to_amount(String asylumCaseValue, String expectedValue) {
+        assertEquals(expectedValue, convertAsylumCaseFeeValue(asylumCaseValue));
     }
 
     @Test

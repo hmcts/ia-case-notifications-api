@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -58,6 +59,18 @@ public class HomeOfficeDecideAnApplicationPersonalisationTest {
     private final String homeOfficeDecideAnApplicationRefusedAfterListingTemplateId = "SomeTemplateRefusedAfterListing";
     private final String homeOfficeDecideAnApplicationRefusedOtherPartyAfterListingTemplateId =
         "SomeTemplateOtherRefusedAfterListing";
+    private final String iaExUiFrontendUrl = "http://somefrontendurl";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String ariaListingReference = "someAriaListingReference";
+    private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
+    private final String appellantGivenNames = "appellantGivenNames";
+    private final String appellantFamilyName = "appellantFamilyName";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
+    private final String apcHomeOfficeEmailAddress = "homeoffice-apc@example.com";
+    private final String lartHomeOfficeEmailAddress = "homeoffice-respondent@example.com";
+    private final String homeOfficeHearingCentreEmail = "hc-taylorhouse@example.com";
+    private final String homeOfficeEmail = "ho-taylorhouse@example.com";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -68,20 +81,6 @@ public class HomeOfficeDecideAnApplicationPersonalisationTest {
     EmailAddressFinder emailAddressFinder;
     @Mock
     MakeAnApplication makeAnApplication;
-    private final String iaExUiFrontendUrl = "http://somefrontendurl";
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String ariaListingReference = "someAriaListingReference";
-    private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-    private final String customerServicesTelephone = "555 555 555";
-    private final String customerServicesEmail = "cust.services@example.com";
-    private final String apcHomeOfficeEmailAddress = "homeoffice-apc@example.com";
-    private final String lartHomeOfficeEmailAddress = "homeoffice-respondent@example.com";
-    private final String homeOfficeHearingCentreEmail = "hc-taylorhouse@example.com";
-    private final String homeOfficeEmail = "ho-taylorhouse@example.com";
-
-
     private HomeOfficeDecideAnApplicationPersonalisation homeOfficeDecideAnApplicationPersonalisation;
 
     @BeforeEach
@@ -204,7 +203,7 @@ public class HomeOfficeDecideAnApplicationPersonalisationTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { LEGAL_REP_USER, ADMIN_OFFICER })
+    @ValueSource(strings = {LEGAL_REP_USER, ADMIN_OFFICER})
     public void test_email_address_for_home_office_when_legal_rep_or_admin_applied(String role) {
 
         when(makeAnApplication.getApplicantRole()).thenReturn(role);
@@ -415,21 +414,21 @@ public class HomeOfficeDecideAnApplicationPersonalisationTest {
         when(makeAnApplication.getApplicantRole()).thenReturn("");
         when(makeAnApplication.getState()).thenReturn("appealTakenOffline");
 
-        assertThatThrownBy(() -> homeOfficeDecideAnApplicationPersonalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("homeOffice email Address cannot be found");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> homeOfficeDecideAnApplicationPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("homeOffice email Address cannot be found", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> homeOfficeDecideAnApplicationPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> homeOfficeDecideAnApplicationPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         initializePrefixes(homeOfficeDecideAnApplicationPersonalisation);
@@ -441,18 +440,19 @@ public class HomeOfficeDecideAnApplicationPersonalisationTest {
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
-        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("ariaListingReference", ariaListingReference)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
 
         initializePrefixes(homeOfficeDecideAnApplicationPersonalisation);
@@ -473,15 +473,16 @@ public class HomeOfficeDecideAnApplicationPersonalisationTest {
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("ariaListingReference"));
-        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals("Other", personalisation.get("applicationType"));
-        assertEquals("No Reason Given", personalisation.get("applicationDecisionReason"));
-        assertEquals("Judge", personalisation.get("decisionMaker"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("ariaListingReference", "")
+            .containsEntry("homeOfficeReferenceNumber", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "")
+            .containsEntry("applicationType", "Other")
+            .containsEntry("applicationDecisionReason", "No Reason Given")
+            .containsEntry("decisionMaker", "Judge")
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
