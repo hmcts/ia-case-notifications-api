@@ -82,7 +82,7 @@ class LegalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisat
         setupAsylumCaseMocks();
 
         personalisation = new LegalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation(
-                STF_24_WEEKS_TEMPLATE_ID,
+                customerServicesProvider, STF_24_WEEKS_TEMPLATE_ID,
                 IA_EX_UI_FRONTEND_URL,
                 MOCK_PREFIX
         );

@@ -8,6 +8,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -39,15 +40,16 @@ public class LegalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPerso
     private final String templateId;
     private final String iaExUiFrontendUrl;
     private final String nonAdaPrefix;
-
+    private final CustomerServicesProvider customerServicesProvider;
 
     public LegalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation(
-            @NotNull(message = "templateId cannot be null") @Value("${govnotify.template.completeCaseReviewStatutoryTimeframe24Weeks.legalRep.email}") String templateId,
+            CustomerServicesProvider customerServicesProvider, @NotNull(message = "templateId cannot be null") @Value("${govnotify.template.completeCaseReviewStatutoryTimeframe24Weeks.legalRep.email}") String templateId,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
             @Value("${govnotify.emailPrefix.nonAda}") String nonAdaPrefix) {
         this.templateId = templateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.nonAdaPrefix = nonAdaPrefix;
+        this.customerServicesProvider = customerServicesProvider;
     }
 
     @Override
@@ -73,6 +75,7 @@ public class LegalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPerso
         LocalDate now = LocalDate.now();
         return ImmutableMap.<String, String>builder()
                 .put(SUBJECT_PREFIX_KEY, nonAdaPrefix)
+                .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
                 .put(HOME_OFFICE_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
                 .put(APPEAL_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING))
                 .put(LEGAL_REP_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING))
