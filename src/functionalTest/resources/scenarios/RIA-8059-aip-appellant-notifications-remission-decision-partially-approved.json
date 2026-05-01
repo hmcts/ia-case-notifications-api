@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 8059,
+      "id": 1252,
       "eventId": "recordRemissionDecision",
       "state": "pendingPayment",
       "caseData": {
@@ -56,11 +56,11 @@
         ],
         "notificationsSent": [
           {
-            "id": "8059_REMISSION_DECISION_DECIDED_AIP_APPELLANT_EMAIL",
+            "id": "1252_REMISSION_DECISION_DECIDED_AIP_APPELLANT_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "8059_REMISSION_DECISION_DECIDED_AIP_APPELLANT_SMS",
+            "id": "1252_REMISSION_DECISION_DECIDED_AIP_APPELLANT_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -68,7 +68,7 @@
     },
     "notifications": [
       {
-        "reference": "8059_REMISSION_DECISION_DECIDED_AIP_APPELLANT_EMAIL",
+        "reference": "1252_REMISSION_DECISION_DECIDED_AIP_APPELLANT_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
         "subject": "Immigration and Asylum appeal: Your request for support to pay the fee has been decided",
         "body": [
@@ -84,7 +84,7 @@
         ]
       },
       {
-        "reference": "8059_REMISSION_DECISION_DECIDED_AIP_APPELLANT_SMS",
+        "reference": "1252_REMISSION_DECISION_DECIDED_AIP_APPELLANT_SMS",
         "recipient": "{$TEST_CITIZEN_MOBILE}",
         "subject": "",
         "body": [

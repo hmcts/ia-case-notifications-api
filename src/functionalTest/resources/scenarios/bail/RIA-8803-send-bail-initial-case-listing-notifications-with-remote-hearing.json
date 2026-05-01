@@ -4,7 +4,7 @@
     "uri": "/bail/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 88032,
+      "id": 2095,
       "eventId": "caseListing",
       "state": "applicationSubmitted",
       "caseData": {
@@ -28,11 +28,11 @@
         "isRemoteHearing": "Yes",
         "notificationsSent": [
           {
-            "id": "88032_BAIL_UPLOAD_BAIL_SUMMARY_DIRECTION_HOME_OFFICE",
+            "id": "2095_BAIL_UPLOAD_BAIL_SUMMARY_DIRECTION_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "88032_BAIL_APPLICATION_CASE_LISTING_HOME_OFFICE",
+            "id": "2095_BAIL_APPLICATION_CASE_LISTING_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -40,7 +40,7 @@
     },
     "notifications": [
       {
-        "reference": "88032_BAIL_APPLICATION_CASE_LISTING_HOME_OFFICE",
+        "reference": "2095_BAIL_APPLICATION_CASE_LISTING_HOME_OFFICE",
         "recipient": "{$bailHomeOfficeEmailAddress}",
         "subject": "Bail application: Bail hearing listed",
         "body": [

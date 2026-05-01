@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "HomeOfficeGeneric",
     "input": {
-      "id": 923410,
+      "id": 1059,
       "eventId": "uploadAdditionalEvidenceHomeOffice",
       "state": "prepareForHearing",
       "caseData": {
@@ -33,11 +33,11 @@
         "ariaListingReference": "LP/12345/2019",
         "notificationsSent": [
           {
-            "id": "923410_UPLOADED_ADDITIONAL_EVIDENCE_LEGAL_REP",
+            "id": "1059_UPLOADED_ADDITIONAL_EVIDENCE_LEGAL_REP",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "923410_UPLOADED_ADDITIONAL_EVIDENCE_CASE_OFFICER",
+            "id": "1059_UPLOADED_ADDITIONAL_EVIDENCE_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -45,7 +45,7 @@
     },
     "notifications": [
       {
-        "reference": "923410_UPLOADED_ADDITIONAL_EVIDENCE_LEGAL_REP",
+        "reference": "1059_UPLOADED_ADDITIONAL_EVIDENCE_LEGAL_REP",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: additional evidence uploaded",
         "body": [
@@ -59,7 +59,7 @@
         ]
       },
       {
-        "reference": "923410_UPLOADED_ADDITIONAL_EVIDENCE_CASE_OFFICER",
+        "reference": "1059_UPLOADED_ADDITIONAL_EVIDENCE_CASE_OFFICER",
         "recipient": "{$hearingCentreEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: additional evidence uploaded",
         "body": [

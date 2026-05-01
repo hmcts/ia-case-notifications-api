@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 8307,
+      "id": 1196,
       "eventId": "recordRemissionDecision",
       "state": "pendingPayment",
       "caseData": {
@@ -63,7 +63,7 @@
       },
       "notificationsSent": [
         {
-          "id": "8307_INTERNAL_REMISSION_GRANTED_IN_TIME_APPELLANT_LETTER",
+          "id": "1196_INTERNAL_REMISSION_GRANTED_IN_TIME_APPELLANT_LETTER",
           "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
         }
       ]

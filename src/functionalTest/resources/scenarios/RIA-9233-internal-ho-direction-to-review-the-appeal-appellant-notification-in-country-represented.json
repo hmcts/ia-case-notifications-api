@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 9233,
+      "id": 1075,
       "eventId": "requestRespondentReview",
       "state": "caseUnderReview",
       "caseData": {
@@ -74,11 +74,11 @@
         "hearingCentre": "taylorHouse",
         "notificationsSent": [
           {
-            "id": "9233_RESPONDENT_REVIEW_DIRECTION",
+            "id": "1075_RESPONDENT_REVIEW_DIRECTION",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "9233_INTERNAL_HO_REVIEW_THE_APPEAL_APPELLANT_LETTER",
+            "id": "1075_INTERNAL_HO_REVIEW_THE_APPEAL_APPELLANT_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

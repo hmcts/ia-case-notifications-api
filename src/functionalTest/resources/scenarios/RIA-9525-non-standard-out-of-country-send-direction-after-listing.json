@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 952519,
+      "id": 1018,
       "eventId": "sendDirection",
       "state": "preHearing",
       "caseData": {
@@ -60,11 +60,11 @@
         ],
         "notificationsSent": [
           {
-            "id": "952519_RESPONDENT_NON_STANDARD_DIRECTION",
+            "id": "1018_RESPONDENT_NON_STANDARD_DIRECTION",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "952519_LEGAL_REP_NON_STANDARD_DIRECTION",
+            "id": "1018_LEGAL_REP_NON_STANDARD_DIRECTION",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ],
@@ -73,7 +73,7 @@
     },
     "notifications": [
       {
-        "reference": "952519_RESPONDENT_NON_STANDARD_DIRECTION",
+        "reference": "1018_RESPONDENT_NON_STANDARD_DIRECTION",
         "recipient": "{$homeOfficeEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: direction",
         "body": [
@@ -87,7 +87,7 @@
         ]
       },
       {
-        "reference": "952519_LEGAL_REP_NON_STANDARD_DIRECTION",
+        "reference": "1018_LEGAL_REP_NON_STANDARD_DIRECTION",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: direction",
         "body": [

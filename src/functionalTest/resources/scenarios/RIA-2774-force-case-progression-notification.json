@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 2774,
+      "id": 1898,
       "eventId": "forceRequestCaseBuilding",
       "state": "awaitingRespondentEvidence",
       "caseData": {
@@ -47,11 +47,11 @@
         ],
         "notificationsSent": [
           {
-            "id": "2774_RESPONDENT_FORCE_CASE_PROGRESSION",
+            "id": "1898_RESPONDENT_FORCE_CASE_PROGRESSION",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "2774_LEGAL_REPRESENTATIVE_REQUEST_CASE_BUILDING",
+            "id": "1898_LEGAL_REPRESENTATIVE_REQUEST_CASE_BUILDING",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ],
@@ -60,7 +60,7 @@
     },
     "notifications": [
       {
-        "reference": "2774_RESPONDENT_FORCE_CASE_PROGRESSION",
+        "reference": "1898_RESPONDENT_FORCE_CASE_PROGRESSION",
         "recipient": "{$IA_RESPONDENT_EVIDENCE_DIRECTION_EMAIL}",
         "subject": "Immigration and Asylum appeal: Case progressed without respondent evidence",
         "body": [
@@ -73,7 +73,7 @@
         ]
       },
       {
-        "reference": "2774_LEGAL_REPRESENTATIVE_REQUEST_CASE_BUILDING",
+        "reference": "1898_LEGAL_REPRESENTATIVE_REQUEST_CASE_BUILDING",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: review Build your case direction",
         "body": [

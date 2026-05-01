@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 7698,
+      "id": 1287,
       "eventId": "transferOutOfAda",
       "state": "appealSubmitted",
       "caseData": {
@@ -47,7 +47,7 @@
         "appellantInDetention": "Yes",
         "notificationsSent": [
           {
-            "id": "7698_INTERNAL_DETAINED_TRANSFERRED_OUT_OF_ADA_DET",
+            "id": "1287_INTERNAL_DETAINED_TRANSFERRED_OUT_OF_ADA_DET",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -55,7 +55,7 @@
     },
     "notifications": [
       {
-        "reference": "7698_INTERNAL_DETAINED_TRANSFERRED_OUT_OF_ADA_DET",
+        "reference": "1287_INTERNAL_DETAINED_TRANSFERRED_OUT_OF_ADA_DET",
         "recipient": "det-irc-brookhouse@example.com",
         "subject": "IAFT – SERVE BY POST: Appeal transferred out of ADA",
         "body": [

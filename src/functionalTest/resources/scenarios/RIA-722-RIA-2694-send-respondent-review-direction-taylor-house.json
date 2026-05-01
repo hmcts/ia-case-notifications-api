@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 1005,
+      "id": 1354,
       "eventId": "requestRespondentReview",
       "state": "caseBuilding",
       "caseData": {
@@ -48,11 +48,11 @@
         ],
         "notificationsSent": [
           {
-            "id": "1005_RESPONDENT_REVIEW_DIRECTION",
+            "id": "1354_RESPONDENT_REVIEW_DIRECTION",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1005_LEGAL_REPRESENTATIVE_RESPONDENT_REVIEW_CASE",
+            "id": "1354_LEGAL_REPRESENTATIVE_RESPONDENT_REVIEW_CASE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ],
@@ -61,7 +61,7 @@
     },
     "notifications": [
       {
-        "reference": "1005_RESPONDENT_REVIEW_DIRECTION",
+        "reference": "1354_RESPONDENT_REVIEW_DIRECTION",
         "recipient": "{$respondentEmailAddresses.respondentReviewDirection}",
         "subject": "Immigration and Asylum appeal: review Appeal Skeleton Argument direction",
         "body": [

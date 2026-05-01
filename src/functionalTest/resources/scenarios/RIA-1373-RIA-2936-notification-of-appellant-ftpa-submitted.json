@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "LegalRepresentative",
     "input": {
-      "id": 1373,
+      "id": 2010,
       "eventId": "applyForFTPAAppellant",
       "state": "ftpaSubmitted",
       "caseData": {
@@ -25,11 +25,11 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "1373_FTPA_SUBMITTED_LEGAL_REP",
+            "id": "2010_FTPA_SUBMITTED_LEGAL_REP",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1373_RESPONDENT_APPELLANT_FTPA_SUBMITTED",
+            "id": "2010_RESPONDENT_APPELLANT_FTPA_SUBMITTED",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -37,7 +37,7 @@
     },
     "notifications": [
       {
-        "reference": "1373_FTPA_SUBMITTED_LEGAL_REP",
+        "reference": "2010_FTPA_SUBMITTED_LEGAL_REP",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
         "body": [
@@ -51,7 +51,7 @@
         ]
       },
       {
-        "reference": "1373_RESPONDENT_APPELLANT_FTPA_SUBMITTED",
+        "reference": "2010_RESPONDENT_APPELLANT_FTPA_SUBMITTED",
         "recipient": "{$homeOfficeFtpaEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
         "body": [

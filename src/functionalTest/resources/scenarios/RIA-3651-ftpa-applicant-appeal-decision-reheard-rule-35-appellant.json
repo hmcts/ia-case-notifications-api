@@ -6,7 +6,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
-      "id": 36513,
+      "id": 1680,
       "eventId": "residentJudgeFtpaDecision",
       "state": "ftpaSubmitted",
       "caseData": {
@@ -31,15 +31,15 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "36513_FTPA_APPLICATION_DECISION_HOME_OFFICE_APPELLANT",
+            "id": "1680_FTPA_APPLICATION_DECISION_HOME_OFFICE_APPELLANT",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "36513_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_APPELLANT",
+            "id": "1680_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_APPELLANT",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "36513_FTPA_APPLICATION_DECISION_CASE_OFFICER",
+            "id": "1680_FTPA_APPLICATION_DECISION_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -47,7 +47,7 @@
     },
     "notifications": [
       {
-        "reference": "36513_FTPA_APPLICATION_DECISION_HOME_OFFICE_APPELLANT",
+        "reference": "1680_FTPA_APPLICATION_DECISION_HOME_OFFICE_APPELLANT",
         "recipient": "{$upperTribunalNoticesEmailAddress}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
         "body": [
@@ -58,7 +58,7 @@
         ]
       },
       {
-        "reference": "36513_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_APPELLANT",
+        "reference": "1680_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_APPELLANT",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
         "body": [
@@ -69,7 +69,7 @@
         ]
       },
       {
-        "reference": "36513_FTPA_APPLICATION_DECISION_CASE_OFFICER",
+        "reference": "1680_FTPA_APPLICATION_DECISION_CASE_OFFICER",
         "recipient": "{$hearingCentreEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
         "body": [

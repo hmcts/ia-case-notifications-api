@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 1234,
+      "id": 2089,
       "eventId": "forceCaseToSubmitHearingRequirements",
       "state": "respondentReview",
       "appellantInDetention": "Yes",
@@ -21,11 +21,11 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "1234_FORCE_CASE_TO_SUBMIT_HEARING_REQUIREMENTS_RESPONDENT",
+            "id": "2089_FORCE_CASE_TO_SUBMIT_HEARING_REQUIREMENTS_RESPONDENT",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1234_FORCE_CASE_TO_SUBMIT_HEARING_REQUIREMENTS_LEGAL_REPRESENTATIVE",
+            "id": "2089_FORCE_CASE_TO_SUBMIT_HEARING_REQUIREMENTS_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -33,7 +33,7 @@
     },
     "notifications": [
       {
-        "reference": "1234_FORCE_CASE_TO_SUBMIT_HEARING_REQUIREMENTS_RESPONDENT",
+        "reference": "2089_FORCE_CASE_TO_SUBMIT_HEARING_REQUIREMENTS_RESPONDENT",
         "recipient": "{$respondentEmailAddresses.respondentReviewDirection}",
         "subject": "Immigration and Asylum appeal: Case progressed to Submit Hearing Requirements",
         "body": [

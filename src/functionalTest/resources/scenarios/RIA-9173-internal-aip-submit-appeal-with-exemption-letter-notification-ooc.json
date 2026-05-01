@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "LegalRepresentative",
     "input": {
-      "id": 9173,
+      "id": 1112,
       "eventId": "submitAppeal",
       "state": "appealSubmitted",
       "caseData": {
@@ -44,11 +44,11 @@
         "submissionOutOfTime": "No",
         "notificationsSent": [
           {
-            "id": "9173_APPEAL_SUBMITTED_HOME_OFFICE",
+            "id": "1112_APPEAL_SUBMITTED_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "9173_INTERNAL_SUBMIT_APPEAL_WITH_EXEMPTION_APPELLANT_LETTER",
+            "id": "1112_INTERNAL_SUBMIT_APPEAL_WITH_EXEMPTION_APPELLANT_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

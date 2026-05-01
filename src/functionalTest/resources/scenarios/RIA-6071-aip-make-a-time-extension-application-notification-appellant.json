@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Citizen",
     "input": {
-      "id": 113000,
+      "id": 1534,
       "eventId": "makeAnApplication",
       "state": "reasonsForAppealSubmitted",
       "caseData": {
@@ -71,19 +71,19 @@
         ],
         "notificationsSent": [
           {
-            "id": "113000_MAKE_AN_APPLICATION_APPELLANT_AIP_EMAIL",
+            "id": "1534_MAKE_AN_APPLICATION_APPELLANT_AIP_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "113000_MAKE_AN_APPLICATION_CASE_OFFICER",
+            "id": "1534_MAKE_AN_APPLICATION_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "113000_MAKE_AN_APPLICATION_HOME_OFFICE",
+            "id": "1534_MAKE_AN_APPLICATION_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "113000_MAKE_AN_APPLICATION_APPELLANT_AIP_SMS",
+            "id": "1534_MAKE_AN_APPLICATION_APPELLANT_AIP_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -91,7 +91,7 @@
     },
     "notifications": [
       {
-        "reference": "113000_MAKE_AN_APPLICATION_APPELLANT_AIP_EMAIL",
+        "reference": "1534_MAKE_AN_APPLICATION_APPELLANT_AIP_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
         "subject": "Immigration and Asylum appeal: You sent the Tribunal a request",
         "body": [
@@ -103,7 +103,7 @@
         ]
       },
       {
-        "reference": "113000_MAKE_AN_APPLICATION_CASE_OFFICER",
+        "reference": "1534_MAKE_AN_APPLICATION_CASE_OFFICER",
         "recipient": "{$hearingCentreEmailAddresses.manchester}",
         "subject": "Immigration and Asylum appeal: An application has been submitted",
         "body": [
@@ -113,7 +113,7 @@
         ]
       },
       {
-        "reference": "113000_MAKE_AN_APPLICATION_HOME_OFFICE",
+        "reference": "1534_MAKE_AN_APPLICATION_HOME_OFFICE",
         "recipient": "{$apcHomeOfficeEmailAddress}",
         "subject": "Immigration and Asylum appeal: An appellant application has been submitted",
         "body": [
@@ -123,7 +123,7 @@
         ]
       },
       {
-        "reference": "113000_MAKE_AN_APPLICATION_APPELLANT_AIP_SMS",
+        "reference": "1534_MAKE_AN_APPLICATION_APPELLANT_AIP_SMS",
         "recipient": "{$TEST_CITIZEN_MOBILE}",
         "subject": "",
         "body": [

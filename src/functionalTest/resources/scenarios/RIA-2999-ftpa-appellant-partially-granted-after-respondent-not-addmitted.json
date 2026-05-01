@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
-      "id": 9005,
+      "id": 1838,
       "eventId": "leadershipJudgeFtpaDecision",
       "state": "ftpaSubmitted",
       "caseData": {
@@ -18,7 +18,7 @@
           "ariaListingReference": "987654321",
           "notificationsSent": [
             {
-              "id": "9005_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT",
+              "id": "1838_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT",
               "value": "34e146c9-6050-4894-a64e-acd461a5f934"
             }
           ]
@@ -37,7 +37,7 @@
     },
     "notifications": [
       {
-        "reference": "9005_FTPA_APPLICATION_DECISION_HOME_OFFICE_APPELLANT",
+        "reference": "1838_FTPA_APPLICATION_DECISION_HOME_OFFICE_APPELLANT",
         "recipient": "{$upperTribunalNoticesEmailAddress}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal partially granted",
         "body": [
@@ -48,7 +48,7 @@
         ]
       },
       {
-        "reference": "9005_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_APPELLANT",
+        "reference": "1838_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_APPELLANT",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal partially granted",
         "body": [
@@ -59,7 +59,7 @@
         ]
       },
       {
-        "reference": "9005_FTPA_APPLICATION_DECISION_ADMIN_OFFICER_APPELLANT",
+        "reference": "1838_FTPA_APPLICATION_DECISION_ADMIN_OFFICER_APPELLANT",
         "recipient": "{$upperTribunalPermissionApplicationsEmailAddress}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal partially granted",
         "body": [

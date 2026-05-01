@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 7696,
+      "id": 1289,
       "eventId": "changeDirectionDueDate",
       "state": "submitHearingRequirements",
       "caseData": {
@@ -57,7 +57,7 @@
         "directionEditParties": "appellantAndRespondent",
         "notificationsSent": [
           {
-            "id": "7696_INTERNAL_DETAINED_CHANGE_DIRECTION_DUE_DATE_DET",
+            "id": "1289_INTERNAL_DETAINED_CHANGE_DIRECTION_DUE_DATE_DET",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -65,7 +65,7 @@
     },
     "notifications": [
       {
-        "reference": "7696_INTERNAL_DETAINED_CHANGE_DIRECTION_DUE_DATE_DET",
+        "reference": "1289_INTERNAL_DETAINED_CHANGE_DIRECTION_DUE_DATE_DET",
         "recipient": "det-irc-brookhouse@example.com",
         "subject": "IAFT – SERVE BY POST: Direction due date changed",
         "body": [

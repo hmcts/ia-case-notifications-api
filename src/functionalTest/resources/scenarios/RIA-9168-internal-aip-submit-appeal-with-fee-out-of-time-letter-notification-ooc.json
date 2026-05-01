@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "LegalRepresentative",
     "input": {
-      "id": 9168,
+      "id": 1114,
       "eventId": "submitAppeal",
       "state": "appealSubmitted",
       "caseData": {
@@ -44,7 +44,7 @@
         "countryGovUkOocAdminJ": "ES",
         "notificationsSent": [
           {
-            "id": "9168_INTERNAL_SUBMIT_APPEAL_WITH_FEE_OUT_OF_TIME_APPELLANT_LETTER",
+            "id": "1114_INTERNAL_SUBMIT_APPEAL_WITH_FEE_OUT_OF_TIME_APPELLANT_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

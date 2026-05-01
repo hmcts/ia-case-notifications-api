@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "HomeOfficePOU",
     "input": {
-      "id": 7675,
+      "id": 1308,
       "eventId": "applyForFTPARespondent",
       "state": "ftpaSubmitted",
       "caseData": {
@@ -50,11 +50,11 @@
         "appellantsRepresentation" : "Yes",
         "notificationsSent": [
           {
-            "id": "7675_INTERNAL_DETAINED_APPLY_FOR_FTPA_RESPONDENT",
+            "id": "1308_INTERNAL_DETAINED_APPLY_FOR_FTPA_RESPONDENT",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "7675_FTPA_SUBMITTED_RESPONDENT",
+            "id": "1308_FTPA_SUBMITTED_RESPONDENT",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -62,7 +62,7 @@
     },
     "notifications": [
       {
-        "reference": "7675_INTERNAL_DETAINED_APPLY_FOR_FTPA_RESPONDENT",
+        "reference": "1308_INTERNAL_DETAINED_APPLY_FOR_FTPA_RESPONDENT",
         "recipient": "det-irc-brookhouse@example.com",
         "subject": "IAFT – SERVE IN PERSON",
         "body": [

@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "LegalRepresentative",
     "input": {
-      "id": 39954,
+      "id": 1638,
       "eventId": "submitAppeal",
       "state": "appealSubmitted",
       "caseData": {
@@ -35,11 +35,11 @@
         "paymentStatus": "Paid",
         "notificationsSent": [
           {
-            "id": "39954_APPEAL_SUBMITTED_HOME_OFFICE",
+            "id": "1638_APPEAL_SUBMITTED_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "39954_APPEAL_SUBMITTED_APPELLANT_AIP_SMS",
+            "id": "1638_APPEAL_SUBMITTED_APPELLANT_AIP_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -47,7 +47,7 @@
     },
     "notifications": [
       {
-        "reference": "39954_APPEAL_SUBMITTED_HOME_OFFICE",
+        "reference": "1638_APPEAL_SUBMITTED_HOME_OFFICE",
         "recipient": "{$apcPrivateHomeOfficeEmailAddress}",
         "subject": "Immigration and Asylum appeal: appeal submitted",
         "body": [
@@ -60,7 +60,7 @@
         ]
       },
       {
-        "reference": "39954_APPEAL_SUBMITTED_APPELLANT_AIP_SMS",
+        "reference": "1638_APPEAL_SUBMITTED_APPELLANT_AIP_SMS",
         "recipient": "{$TEST_CITIZEN_MOBILE}",
         "subject": "",
         "body": [

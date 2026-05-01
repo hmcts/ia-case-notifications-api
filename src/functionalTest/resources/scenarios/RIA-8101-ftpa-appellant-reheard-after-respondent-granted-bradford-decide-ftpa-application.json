@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
-      "id": 1020,
+      "id": 1241,
       "eventId": "decideFtpaApplication",
       "state": "ftpaSubmitted",
       "caseData": {
@@ -19,7 +19,7 @@
           "ariaListingReference": "987654321",
           "notificationsSent": [
             {
-              "id": "1020_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT",
+              "id": "1241_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT",
               "value": "34e146c9-6050-4894-a64e-acd461a5f934"
             }
           ]
@@ -35,15 +35,15 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "1020_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT",
+            "id": "1241_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1020_FTPA_APPLICATION_DECISION_HOME_OFFICE_APPELLANT",
+            "id": "1241_FTPA_APPLICATION_DECISION_HOME_OFFICE_APPELLANT",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1020_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_APPELLANT",
+            "id": "1241_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_APPELLANT",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -51,7 +51,7 @@
     },
     "notifications": [
       {
-        "reference": "1020_FTPA_APPLICATION_DECISION_HOME_OFFICE_APPELLANT",
+        "reference": "1241_FTPA_APPLICATION_DECISION_HOME_OFFICE_APPELLANT",
         "recipient": "{$upperTribunalNoticesEmailAddress}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
         "body": [
@@ -62,7 +62,7 @@
         ]
       },
       {
-        "reference": "1020_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_APPELLANT",
+        "reference": "1241_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_APPELLANT",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
         "body": [

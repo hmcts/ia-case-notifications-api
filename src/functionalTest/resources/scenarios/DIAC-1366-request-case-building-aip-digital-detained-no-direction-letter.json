@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 1366,
+      "id": 2055,
       "eventId": "requestCaseBuilding",
       "state": "awaitingRespondentEvidence",
       "caseData": {

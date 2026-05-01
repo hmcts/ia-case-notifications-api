@@ -4,7 +4,7 @@
     "uri": "/bail/ccdSubmitted",
     "credentials": "LegalRepresentative",
     "input": {
-      "id": 5782,
+      "id": 2104,
       "eventId": "stopLegalRepresenting",
       "state": "applicationSubmitted",
       "caseData": {
@@ -29,11 +29,11 @@
     "errors": [],
     "confirmation": {
       "header": "success",
-      "body": "contains([5782_BAIL_STOP_LEGAL_REPRESENTING_ADMIN_OFFICER,5782_BAIL_STOP_LEGAL_REPRESENTING_LEGAL_REP,5782_BAIL_STOP_LEGAL_REPRESENTING_HOME_OFFICE,5782_BAIL_STOP_LEGAL_REPRESENTING_APPLICANT_SMS])"
+      "body": "contains([2104_BAIL_STOP_LEGAL_REPRESENTING_ADMIN_OFFICER,2104_BAIL_STOP_LEGAL_REPRESENTING_LEGAL_REP,2104_BAIL_STOP_LEGAL_REPRESENTING_HOME_OFFICE,2104_BAIL_STOP_LEGAL_REPRESENTING_APPLICANT_SMS])"
     },
     "notifications": [
       {
-        "reference": "5782_BAIL_STOP_LEGAL_REPRESENTING_ADMIN_OFFICER",
+        "reference": "2104_BAIL_STOP_LEGAL_REPRESENTING_ADMIN_OFFICER",
         "recipient": "{$bailHearingCentreEmailAddresses.newport}",
         "subject": "Bail application: Applicant no longer represented",
         "body": [
@@ -44,7 +44,7 @@
         ]
       },
       {
-        "reference": "5782_BAIL_STOP_LEGAL_REPRESENTING_LEGAL_REP",
+        "reference": "2104_BAIL_STOP_LEGAL_REPRESENTING_LEGAL_REP",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Bail application: You have stopped representing a client",
         "body": [
@@ -55,7 +55,7 @@
         ]
       },
       {
-        "reference": "5782_BAIL_STOP_LEGAL_REPRESENTING_HOME_OFFICE",
+        "reference": "2104_BAIL_STOP_LEGAL_REPRESENTING_HOME_OFFICE",
         "recipient": "{$bailHomeOfficeEmailAddress}",
         "subject": "Bail application: Applicant no longer represented",
         "body": [
@@ -69,7 +69,7 @@
         ]
       },
       {
-        "reference": "5782_BAIL_STOP_LEGAL_REPRESENTING_APPLICANT_SMS",
+        "reference": "2104_BAIL_STOP_LEGAL_REPRESENTING_APPLICANT_SMS",
         "recipient": "{$IA_TEST_APPLICANT_MOBILE}",
         "subject": "",
         "body": [

@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 4861,
+      "id": 1553,
       "eventId": "listCase",
       "state": "prepareForHearing",
       "caseData": {
@@ -55,19 +55,19 @@
         ],
         "notificationsSent": [
           {
-            "id": "4861_CASE_LISTED_CASE_OFFICER",
+            "id": "1553_CASE_LISTED_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "4861_CASE_LISTED_AIP_APPELLANT_EMAIL",
+            "id": "1553_CASE_LISTED_AIP_APPELLANT_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "4861_CASE_LISTED_HOME_OFFICE",
+            "id": "1553_CASE_LISTED_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "4861_CASE_LISTED_AIP_APPELLANT_SMS",
+            "id": "1553_CASE_LISTED_AIP_APPELLANT_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -75,7 +75,7 @@
     },
     "notifications": [
       {
-        "reference": "4861_CASE_LISTED_CASE_OFFICER",
+        "reference": "1553_CASE_LISTED_CASE_OFFICER",
         "recipient": "{$hearingCentreEmailAddresses.birmingham}",
         "subject": "Immigration and Asylum appeal: case listed",
         "body": [
@@ -88,7 +88,7 @@
         ]
       },
       {
-        "reference": "4861_CASE_LISTED_AIP_APPELLANT_EMAIL",
+        "reference": "1553_CASE_LISTED_AIP_APPELLANT_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
         "subject": "Immigration and Asylum appeal: Your hearing details",
         "body": [
@@ -105,7 +105,7 @@
         ]
       },
       {
-        "reference": "4861_CASE_LISTED_AIP_APPELLANT_SMS",
+        "reference": "1553_CASE_LISTED_AIP_APPELLANT_SMS",
         "recipient": "{$TEST_CITIZEN_MOBILE}",
         "subject": "",
         "body": [
@@ -117,7 +117,7 @@
         ]
       },
       {
-        "reference": "4861_CASE_LISTED_HOME_OFFICE",
+        "reference": "1553_CASE_LISTED_HOME_OFFICE",
         "recipient": "{$homeOfficeEmailAddresses.birmingham}",
         "subject": "Immigration and Asylum appeal: case listed",
         "body": [

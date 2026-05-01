@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 8246,
+      "id": 1214,
       "eventId": "manageFeeUpdate",
       "state": "appealSubmitted",
       "caseData": {
@@ -30,7 +30,7 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "8246_LEGAL_REPRESENTATIVE_ADDITIONAL_PAYMENT_REQUESTED",
+            "id": "1214_LEGAL_REPRESENTATIVE_ADDITIONAL_PAYMENT_REQUESTED",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -38,7 +38,7 @@
     },
     "notifications": [
       {
-        "reference": "8246_LEGAL_REPRESENTATIVE_ADDITIONAL_PAYMENT_REQUESTED",
+        "reference": "1214_LEGAL_REPRESENTATIVE_ADDITIONAL_PAYMENT_REQUESTED",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: Appeal fee changed",
         "body": [

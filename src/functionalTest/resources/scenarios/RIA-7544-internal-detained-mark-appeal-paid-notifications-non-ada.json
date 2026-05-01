@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 7947,
+      "id": 1319,
       "eventId": "markAppealPaid",
       "state": "appealSubmitted",
       "caseData": {
@@ -52,11 +52,11 @@
         "paymentStatus": "Paid",
         "notificationsSent": [
           {
-            "id": "7947_PENDING_PAYMENT_PAID_CASE_OFFICER",
+            "id": "1319_PENDING_PAYMENT_PAID_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "7947_APPEAL_SUBMITTED_HOME_OFFICE",
+            "id": "1319_APPEAL_SUBMITTED_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -64,7 +64,7 @@
     },
     "notifications": [
       {
-        "reference": "7947_PENDING_PAYMENT_PAID_CASE_OFFICER",
+        "reference": "1319_PENDING_PAYMENT_PAID_CASE_OFFICER",
         "recipient": "{$hearingCentreEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: A fee has been paid",
         "body": [
@@ -74,7 +74,7 @@
         ]
       },
       {
-        "reference": "7947_APPEAL_SUBMITTED_HOME_OFFICE",
+        "reference": "1319_APPEAL_SUBMITTED_HOME_OFFICE",
         "recipient": "apc_privatebetainbox@example.com",
         "subject": "Immigration and Asylum appeal: appeal submitted",
         "body": [

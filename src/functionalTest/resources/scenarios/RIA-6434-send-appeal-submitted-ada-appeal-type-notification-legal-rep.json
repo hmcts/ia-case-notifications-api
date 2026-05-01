@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "LegalRepresentative",
     "input": {
-      "id": 64341,
+      "id": 1496,
       "eventId": "submitAppeal",
       "state": "appealSubmitted",
       "caseData": {
@@ -29,7 +29,7 @@
         "isAcceleratedDetainedAppeal": "Yes",
         "notificationsSent": [
           {
-            "id": "64341_APPEAL_SUBMITTED_LEGAL_REP",
+            "id": "1496_APPEAL_SUBMITTED_LEGAL_REP",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -37,7 +37,7 @@
     },
     "notifications": [
       {
-        "reference": "64341_APPEAL_SUBMITTED_LEGAL_REP",
+        "reference": "1496_APPEAL_SUBMITTED_LEGAL_REP",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Accelerated detained appeal: Your appeal has been submitted",
         "body": [

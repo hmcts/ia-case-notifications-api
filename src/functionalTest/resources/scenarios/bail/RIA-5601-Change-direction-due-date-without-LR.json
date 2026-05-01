@@ -4,7 +4,7 @@
     "uri": "/bail/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 56012,
+      "id": 2105,
       "eventId": "changeBailDirectionDueDate",
       "state": "applicationSubmitted",
       "caseData": {
@@ -30,7 +30,7 @@
         "isLegallyRepresentedForFlag": "No",
         "notificationsSent": [
           {
-            "id": "56012_CHANGE_BAIL_DIRECTION_DUE_DATE_HOME_OFFICE",
+            "id": "2105_CHANGE_BAIL_DIRECTION_DUE_DATE_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -38,7 +38,7 @@
     },
     "notifications": [
       {
-        "reference": "56012_CHANGE_BAIL_DIRECTION_DUE_DATE_HOME_OFFICE",
+        "reference": "2105_CHANGE_BAIL_DIRECTION_DUE_DATE_HOME_OFFICE",
         "recipient": "{$bailHomeOfficeEmailAddress}",
         "subject": "Bail application: You have a direction",
         "body": [

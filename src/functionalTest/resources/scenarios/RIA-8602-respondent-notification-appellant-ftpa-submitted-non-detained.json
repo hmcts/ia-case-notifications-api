@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 7674,
+      "id": 1141,
       "eventId": "applyForFTPAAppellant",
       "state": "decided",
       "caseData": {
@@ -47,7 +47,7 @@
         "ircName": "Brookhouse",
         "notificationsSent": [
           {
-            "id": "7674_RESPONDENT_APPELLANT_FTPA_SUBMITTED",
+            "id": "1141_RESPONDENT_APPELLANT_FTPA_SUBMITTED",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

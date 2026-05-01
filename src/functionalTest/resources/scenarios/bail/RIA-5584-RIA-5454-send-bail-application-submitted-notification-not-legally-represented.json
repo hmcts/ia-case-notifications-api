@@ -4,7 +4,7 @@
     "uri": "/bail/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 5584,
+      "id": 2110,
       "eventId": "submitApplication",
       "state": "applicationSubmitted",
       "caseData": {
@@ -26,11 +26,11 @@
         "isLegallyRepresentedForFlag": "No",
         "notificationsSent": [
           {
-            "id": "5584_BAIL_APPLICATION_SUBMITTED_HEARING_CENTRE",
+            "id": "2110_BAIL_APPLICATION_SUBMITTED_HEARING_CENTRE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "5584_BAIL_APPLICATION_SUBMITTED_HOME_OFFICE",
+            "id": "2110_BAIL_APPLICATION_SUBMITTED_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -38,7 +38,7 @@
     },
     "notifications": [
       {
-        "reference": "5584_BAIL_APPLICATION_SUBMITTED_HEARING_CENTRE",
+        "reference": "2110_BAIL_APPLICATION_SUBMITTED_HEARING_CENTRE",
         "recipient": "{$bailHearingCentreEmailAddresses.birmingham}",
         "subject": "Bail application: Application submitted",
         "body": [
@@ -51,7 +51,7 @@
         ]
       },
       {
-        "reference": "5584_BAIL_APPLICATION_SUBMITTED_HOME_OFFICE",
+        "reference": "2110_BAIL_APPLICATION_SUBMITTED_HOME_OFFICE",
         "recipient": "{$bailHomeOfficeEmailAddress}",
         "subject": "Bail application: Application submitted",
         "body": [

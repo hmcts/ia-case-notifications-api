@@ -6,7 +6,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 7031,
+      "id": 1416,
       "eventId": "submitAppeal",
       "state": "appealSubmitted",
       "caseData": {
@@ -34,11 +34,11 @@
         "appealType": "protection",
         "notificationsSent": [
           {
-            "id": "7031_APPEAL_SUBMITTED_PAY_OFFLINE_ADMIN_OFFICER",
+            "id": "1416_APPEAL_SUBMITTED_PAY_OFFLINE_ADMIN_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "7031_APPEAL_SUBMITTED_PAY_OFFLINE_HOME_OFFICE",
+            "id": "1416_APPEAL_SUBMITTED_PAY_OFFLINE_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -46,7 +46,7 @@
     },
     "notifications": [
       {
-        "reference": "7031_APPEAL_SUBMITTED_CASE_OFFICER",
+        "reference": "1416_APPEAL_SUBMITTED_CASE_OFFICER",
         "recipient": "{$hearingCentreEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: appeal submitted",
         "body": [
@@ -56,7 +56,7 @@
         ]
       },
       {
-        "reference": "7031_APPEAL_SUBMITTED_PAY_OFFLINE_HOME_OFFICE",
+        "reference": "1416_APPEAL_SUBMITTED_PAY_OFFLINE_HOME_OFFICE",
         "recipient": "{$apcPrivateHomeOfficeEmailAddress}",
         "subject": "Immigration and Asylum appeal: appeal submitted",
         "body": [

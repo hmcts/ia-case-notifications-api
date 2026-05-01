@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "LegalRepresentative",
     "input": {
-      "id": 49611,
+      "id": 1547,
       "eventId": "editPaymentMethod",
       "state": "pendingPayment",
       "caseData": {
@@ -33,7 +33,7 @@
         "remissionDecision": "rejected",
         "notificationsSent": [
           {
-            "id": "49611_EDIT_PAYMENT_METHOD_PENDING_PAYMENT_ADMIN_OFFICER",
+            "id": "1547_EDIT_PAYMENT_METHOD_PENDING_PAYMENT_ADMIN_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -41,7 +41,7 @@
     },
     "notifications": [
       {
-        "reference": "49611_EDIT_PAYMENT_METHOD_PENDING_PAYMENT_ADMIN_OFFICER",
+        "reference": "1547_EDIT_PAYMENT_METHOD_PENDING_PAYMENT_ADMIN_OFFICER",
         "recipient": "{$feesAdminOfficerEmailAddress}",
         "subject": "Immigration and Asylum appeal: appeal submitted pending payment",
         "body": [

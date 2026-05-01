@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Citizen",
     "input": {
-      "id": 772,
+      "id": 2019,
       "eventId": "uploadAdditionalEvidence",
       "state": "prepareForHearing",
       "caseData": {
@@ -53,15 +53,15 @@
         "ariaListingReference": "LP/12345/2019",
         "notificationsSent": [
           {
-            "id": "772_UPLOADED_ADDITIONAL_EVIDENCE_HOME_OFFICE",
+            "id": "2019_UPLOADED_ADDITIONAL_EVIDENCE_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "772_UPLOADED_ADDITIONAL_EVIDENCE_AIP_APPELLANT_EMAIL",
+            "id": "2019_UPLOADED_ADDITIONAL_EVIDENCE_AIP_APPELLANT_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "772_UPLOADED_ADDITIONAL_EVIDENCE_AIP_APPELLANT_SMS",
+            "id": "2019_UPLOADED_ADDITIONAL_EVIDENCE_AIP_APPELLANT_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -69,7 +69,7 @@
     },
     "notifications": [
       {
-        "reference": "772_UPLOADED_ADDITIONAL_EVIDENCE_HOME_OFFICE",
+        "reference": "2019_UPLOADED_ADDITIONAL_EVIDENCE_HOME_OFFICE",
         "recipient": "{$respondentEmailAddresses.respondentReviewDirection}",
         "subject": "Immigration and Asylum appeal: additional evidence uploaded",
         "body": [
@@ -83,7 +83,7 @@
         ]
       },
       {
-        "reference": "772_UPLOADED_ADDITIONAL_EVIDENCE_AIP_APPELLANT_EMAIL",
+        "reference": "2019_UPLOADED_ADDITIONAL_EVIDENCE_AIP_APPELLANT_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
         "subject": "Immigration and Asylum appeal: You provided new evidence",
         "body": [
@@ -97,7 +97,7 @@
         ]
       },
       {
-        "reference": "772_UPLOADED_ADDITIONAL_EVIDENCE_AIP_APPELLANT_SMS",
+        "reference": "2019_UPLOADED_ADDITIONAL_EVIDENCE_AIP_APPELLANT_SMS",
         "recipient": "{$TEST_CITIZEN_MOBILE}",
         "subject": "",
         "body": [

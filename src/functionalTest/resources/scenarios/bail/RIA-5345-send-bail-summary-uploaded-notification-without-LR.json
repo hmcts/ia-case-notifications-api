@@ -4,7 +4,7 @@
     "uri": "/bail/ccdAboutToSubmit",
     "credentials": "HomeOfficeGeneric",
     "input": {
-      "id": 5345,
+      "id": 2122,
       "eventId": "uploadBailSummary",
       "state": "bailSummaryUploaded",
       "caseData": {
@@ -34,7 +34,7 @@
         "currentCaseStateVisibleToLegalRepresentative": "bailSummaryUploaded",
         "notificationsSent": [
           {
-            "id": "5345_BAIL_SUMMARY_UPLOADED_ADMIN_OFFICER",
+            "id": "2122_BAIL_SUMMARY_UPLOADED_ADMIN_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -42,7 +42,7 @@
     },
     "notifications": [
       {
-        "reference": "5345_BAIL_SUMMARY_UPLOADED_ADMIN_OFFICER",
+        "reference": "2122_BAIL_SUMMARY_UPLOADED_ADMIN_OFFICER",
         "recipient": "{$bailHearingCentreEmailAddresses.newport}",
         "subject": "Bail application: Upload the Bail Summary direction",
         "body": [

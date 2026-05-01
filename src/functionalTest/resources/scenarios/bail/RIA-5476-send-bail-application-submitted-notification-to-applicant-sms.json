@@ -4,7 +4,7 @@
     "uri": "/bail/ccdAboutToSubmit",
     "credentials": "LegalRepresentative",
     "input": {
-      "id": 5476,
+      "id": 2121,
       "eventId": "submitApplication",
       "state": "applicationSubmitted",
       "caseData": {
@@ -26,19 +26,19 @@
         "applicantMobileNumber1": "{$IA_TEST_APPLICANT_MOBILE}",
         "notificationsSent": [
           {
-            "id": "5476_BAIL_APPLICATION_SUBMITTED_HEARING_CENTRE",
+            "id": "2121_BAIL_APPLICATION_SUBMITTED_HEARING_CENTRE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "5476_BAIL_APPLICATION_SUBMITTED_APPLICANT_SMS",
+            "id": "2121_BAIL_APPLICATION_SUBMITTED_APPLICANT_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "5476_BAIL_APPLICATION_SUBMITTED_HOME_OFFICE",
+            "id": "2121_BAIL_APPLICATION_SUBMITTED_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "5476_BAIL_APPLICATION_SUBMITTED_LEGAL_REP",
+            "id": "2121_BAIL_APPLICATION_SUBMITTED_LEGAL_REP",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -46,7 +46,7 @@
     },
     "notifications": [
       {
-        "reference": "5476_BAIL_APPLICATION_SUBMITTED_HEARING_CENTRE",
+        "reference": "2121_BAIL_APPLICATION_SUBMITTED_HEARING_CENTRE",
         "recipient": "{$bailHearingCentreEmailAddresses.newport}",
         "subject": "Bail application: Application submitted",
         "body": [
@@ -57,7 +57,7 @@
         ]
       },
       {
-        "reference": "5476_BAIL_APPLICATION_SUBMITTED_HOME_OFFICE",
+        "reference": "2121_BAIL_APPLICATION_SUBMITTED_HOME_OFFICE",
         "recipient": "{$bailHomeOfficeEmailAddress}",
         "subject": "Bail application: Application submitted",
         "body": [
@@ -68,7 +68,7 @@
         ]
       },
       {
-        "reference": "5476_BAIL_APPLICATION_SUBMITTED_LEGAL_REP",
+        "reference": "2121_BAIL_APPLICATION_SUBMITTED_LEGAL_REP",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Bail application: Application submitted",
         "body": [
@@ -79,7 +79,7 @@
         ]
       },
       {
-        "reference": "5476_BAIL_APPLICATION_SUBMITTED_APPLICANT_SMS",
+        "reference": "2121_BAIL_APPLICATION_SUBMITTED_APPLICANT_SMS",
         "recipient": "{$IA_TEST_APPLICANT_MOBILE}",
         "subject": "",
         "body": [

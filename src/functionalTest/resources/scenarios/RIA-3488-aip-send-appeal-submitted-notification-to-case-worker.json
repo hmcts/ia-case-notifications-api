@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Citizen",
     "input": {
-      "id": 34882,
+      "id": 1736,
       "eventId": "submitAppeal",
       "state": "pendingPayment",
       "caseData": {
@@ -25,7 +25,7 @@
         "hearingCentre": "manchester",
         "notificationsSent": [
           {
-            "id": "34882_APPEAL_SUBMITTED_CASE_OFFICER",
+            "id": "1736_APPEAL_SUBMITTED_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -33,7 +33,7 @@
     },
     "notifications": [
       {
-        "reference": "34882_APPEAL_SUBMITTED_CASE_OFFICER",
+        "reference": "1736_APPEAL_SUBMITTED_CASE_OFFICER",
         "recipient": "{$hearingCentreEmailAddresses.manchester}",
         "subject": "Immigration and Asylum appeal: appeal submitted",
         "body": [

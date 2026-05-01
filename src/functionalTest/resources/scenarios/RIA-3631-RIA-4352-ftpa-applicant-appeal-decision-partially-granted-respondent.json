@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
-      "id": 1007,
+      "id": 1713,
       "eventId": "leadershipJudgeFtpaDecision",
       "state": "ftpaSubmitted",
       "caseData": {
@@ -26,11 +26,11 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "1007_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_RESPONDENT",
+            "id": "1713_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_RESPONDENT",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1007_FTPA_APPLICATION_DECISION_ADMIN_OFFICER_RESPONDENT",
+            "id": "1713_FTPA_APPLICATION_DECISION_ADMIN_OFFICER_RESPONDENT",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -38,7 +38,7 @@
     },
     "notifications": [
       {
-        "reference": "1007_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_RESPONDENT",
+        "reference": "1713_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_RESPONDENT",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal partially granted",
         "body": [
@@ -49,7 +49,7 @@
         ]
       },
       {
-        "reference": "1007_FTPA_APPLICATION_DECISION_ADMIN_OFFICER_RESPONDENT",
+        "reference": "1713_FTPA_APPLICATION_DECISION_ADMIN_OFFICER_RESPONDENT",
         "recipient": "{$reviewHearingRequirementsAdminOfficerEmailAddress}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal partially granted",
         "body": [

@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 1003,
+      "id": 1618,
       "eventId": "sendDirection",
       "state": "prepareForHearing",
       "caseData": {
@@ -53,11 +53,11 @@
         ],
         "notificationsSent": [
           {
-            "id": "1003_RESPONDENT_NON_STANDARD_DIRECTION",
+            "id": "1618_RESPONDENT_NON_STANDARD_DIRECTION",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1003_LEGAL_REP_NON_STANDARD_DIRECTION_OF_HOME_OFFICE",
+            "id": "1618_LEGAL_REP_NON_STANDARD_DIRECTION_OF_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ],
@@ -66,7 +66,7 @@
     },
     "notifications": [
       {
-        "reference": "1003_RESPONDENT_NON_STANDARD_DIRECTION",
+        "reference": "1618_RESPONDENT_NON_STANDARD_DIRECTION",
         "recipient": "{$homeOfficeEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: direction",
         "body": [
@@ -81,7 +81,7 @@
         ]
       },
       {
-        "reference": "1003_LEGAL_REP_NON_STANDARD_DIRECTION_OF_HOME_OFFICE",
+        "reference": "1618_LEGAL_REP_NON_STANDARD_DIRECTION_OF_HOME_OFFICE",
         "recipient": "RIA-1003-test-case-1@example.com",
         "subject": "Immigration and Asylum appeal: direction",
         "body": [

@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 1031,
+      "id": 1815,
       "eventId": "reviewTimeExtension",
       "state": "awaitingCmaRequirements",
       "caseData": {
@@ -77,11 +77,11 @@
         ],
         "notificationsSent": [
           {
-            "id": "1031_REVIEW_TIME_EXTENSION_GRANTED_APPELLANT_AIP_EMAIL",
+            "id": "1815_REVIEW_TIME_EXTENSION_GRANTED_APPELLANT_AIP_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1031_REVIEW_TIME_EXTENSION_GRANTED_APPELLANT_AIP_SMS",
+            "id": "1815_REVIEW_TIME_EXTENSION_GRANTED_APPELLANT_AIP_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -89,7 +89,7 @@
     },
     "notifications": [
       {
-        "reference": "1031_REVIEW_TIME_EXTENSION_GRANTED_APPELLANT_AIP_EMAIL",
+        "reference": "1815_REVIEW_TIME_EXTENSION_GRANTED_APPELLANT_AIP_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
         "subject": "Your request for more time has been granted",
         "body": [
@@ -102,7 +102,7 @@
         ]
       },
       {
-        "reference": "1031_REVIEW_TIME_EXTENSION_GRANTED_APPELLANT_AIP_SMS",
+        "reference": "1815_REVIEW_TIME_EXTENSION_GRANTED_APPELLANT_AIP_SMS",
         "recipient": "{$TEST_CITIZEN_MOBILE}",
         "subject": "",
         "body": [

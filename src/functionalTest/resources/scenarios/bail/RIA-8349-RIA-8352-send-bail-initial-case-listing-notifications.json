@@ -4,7 +4,7 @@
     "uri": "/bail/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 8349,
+      "id": 2099,
       "eventId": "caseListing",
       "state": "applicationSubmitted",
       "caseData": {
@@ -30,19 +30,19 @@
         "listingEvent": "initialListing",
         "notificationsSent": [
           {
-            "id": "8349_BAIL_UPLOAD_BAIL_SUMMARY_DIRECTION_HOME_OFFICE",
+            "id": "2099_BAIL_UPLOAD_BAIL_SUMMARY_DIRECTION_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "8349_BAIL_APPLICATION_CASE_LISTING_HOME_OFFICE",
+            "id": "2099_BAIL_APPLICATION_CASE_LISTING_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "8349_BAIL_APPLICATION_CASE_LISTING_LEGAL_REPRESENTATIVE",
+            "id": "2099_BAIL_APPLICATION_CASE_LISTING_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "8349_BAIL_APPLICATION_CASE_LISTING_APPLICANT_SMS",
+            "id": "2099_BAIL_APPLICATION_CASE_LISTING_APPLICANT_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -50,7 +50,7 @@
     },
     "notifications": [
       {
-        "reference": "8349_BAIL_UPLOAD_BAIL_SUMMARY_DIRECTION_HOME_OFFICE",
+        "reference": "2099_BAIL_UPLOAD_BAIL_SUMMARY_DIRECTION_HOME_OFFICE",
         "recipient": "{$bailHomeOfficeEmailAddress}",
         "subject": "Bail application: Upload the Bail Summary direction",
         "body": [
@@ -62,7 +62,7 @@
         ]
       },
       {
-        "reference": "8349_BAIL_APPLICATION_CASE_LISTING_HOME_OFFICE",
+        "reference": "2099_BAIL_APPLICATION_CASE_LISTING_HOME_OFFICE",
         "recipient": "{$bailHomeOfficeEmailAddress}",
         "subject": "Bail application: Bail hearing listed",
         "body": [
@@ -77,7 +77,7 @@
         ]
       },
       {
-        "reference": "8349_BAIL_APPLICATION_CASE_LISTING_LEGAL_REPRESENTATIVE",
+        "reference": "2099_BAIL_APPLICATION_CASE_LISTING_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Bail application: Bail hearing listed",
         "body": [
@@ -92,7 +92,7 @@
         ]
       },
       {
-        "reference": "8349_BAIL_APPLICATION_CASE_LISTING_APPLICANT_SMS",
+        "reference": "2099_BAIL_APPLICATION_CASE_LISTING_APPLICANT_SMS",
         "recipient": "{$TEST_CITIZEN_MOBILE}",
         "subject": "",
         "body": [

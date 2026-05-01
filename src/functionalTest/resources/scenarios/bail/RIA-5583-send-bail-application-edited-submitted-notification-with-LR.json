@@ -4,7 +4,7 @@
     "uri": "/bail/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 5583,
+      "id": 2112,
       "eventId": "editBailApplicationAfterSubmit",
       "state": "applicationSubmitted",
       "caseData": {
@@ -26,11 +26,11 @@
         "applicantMobileNumber1": "{$IA_TEST_APPLICANT_MOBILE}",
         "notificationsSent": [
           {
-            "id": "5583_BAIL_APPLICATION_EDITED_AND_SUBMITTED_HOME_OFFICE",
+            "id": "2112_BAIL_APPLICATION_EDITED_AND_SUBMITTED_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "5583_BAIL_APPLICATION_EDITED_AND_SUBMITTED_LEGAL_REP",
+            "id": "2112_BAIL_APPLICATION_EDITED_AND_SUBMITTED_LEGAL_REP",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -38,7 +38,7 @@
     },
     "notifications": [
       {
-        "reference": "5583_BAIL_APPLICATION_EDITED_AND_SUBMITTED_HOME_OFFICE",
+        "reference": "2112_BAIL_APPLICATION_EDITED_AND_SUBMITTED_HOME_OFFICE",
         "recipient": "{$bailHomeOfficeEmailAddress}",
         "subject": "Bail application: Application details updated",
         "body": [
@@ -49,7 +49,7 @@
         ]
       },
       {
-        "reference": "5583_BAIL_APPLICATION_EDITED_AND_SUBMITTED_LEGAL_REP",
+        "reference": "2112_BAIL_APPLICATION_EDITED_AND_SUBMITTED_LEGAL_REP",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Bail application: Application details updated",
         "body": [

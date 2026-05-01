@@ -4,7 +4,7 @@
     "uri": "/bail/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 5597,
+      "id": 2107,
       "eventId": "sendBailDirection",
       "state": "applicationSubmitted",
       "caseData": {
@@ -50,11 +50,11 @@
         ],
         "notificationsSent": [
           {
-            "id": "5597_BAIL_SENT_DIRECTION_LEGAL_REPRESENTATIVE",
+            "id": "2107_BAIL_SENT_DIRECTION_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "5597_BAIL_SENT_DIRECTION_HOME_OFFICE",
+            "id": "2107_BAIL_SENT_DIRECTION_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -62,7 +62,7 @@
     },
     "notifications": [
       {
-        "reference": "5597_BAIL_SENT_DIRECTION_HOME_OFFICE",
+        "reference": "2107_BAIL_SENT_DIRECTION_HOME_OFFICE",
         "recipient": "{$bailHomeOfficeEmailAddress}",
         "subject": "Bail application: A direction has been sent to the Legal Representative",
         "body": [
@@ -76,7 +76,7 @@
         ]
       },
       {
-        "reference": "5597_BAIL_SENT_DIRECTION_LEGAL_REPRESENTATIVE",
+        "reference": "2107_BAIL_SENT_DIRECTION_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Bail application: You have a direction",
         "body": [

@@ -4,7 +4,7 @@
     "uri": "/bail/ccdAboutToSubmit",
     "credentials": "LegalRepresentative",
     "input": {
-      "id": 55841,
+      "id": 2109,
       "eventId": "submitApplication",
       "state": "applicationSubmitted",
       "caseData": {
@@ -24,15 +24,15 @@
         "hearingCentre": "manchester",
         "notificationsSent": [
           {
-            "id": "55841_BAIL_APPLICATION_SUBMITTED_HEARING_CENTRE",
+            "id": "2109_BAIL_APPLICATION_SUBMITTED_HEARING_CENTRE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "55841_BAIL_APPLICATION_SUBMITTED_HOME_OFFICE",
+            "id": "2109_BAIL_APPLICATION_SUBMITTED_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "55841_BAIL_APPLICATION_SUBMITTED_LEGAL_REP",
+            "id": "2109_BAIL_APPLICATION_SUBMITTED_LEGAL_REP",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -40,7 +40,7 @@
     },
     "notifications": [
       {
-        "reference": "55841_BAIL_APPLICATION_SUBMITTED_HEARING_CENTRE",
+        "reference": "2109_BAIL_APPLICATION_SUBMITTED_HEARING_CENTRE",
         "recipient": "{$bailHearingCentreEmailAddresses.manchester}",
         "subject": "Bail application: Application submitted",
         "body": [
@@ -51,7 +51,7 @@
         ]
       },
       {
-        "reference": "55841_BAIL_APPLICATION_SUBMITTED_HOME_OFFICE",
+        "reference": "2109_BAIL_APPLICATION_SUBMITTED_HOME_OFFICE",
         "recipient": "{$bailHomeOfficeEmailAddress}",
         "subject": "Bail application: Application submitted",
         "body": [
@@ -62,7 +62,7 @@
         ]
       },
       {
-        "reference": "55841_BAIL_APPLICATION_SUBMITTED_LEGAL_REP",
+        "reference": "2109_BAIL_APPLICATION_SUBMITTED_LEGAL_REP",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Bail application: Application submitted",
         "body": [

@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 952510,
+      "id": 1027,
       "eventId": "editCaseListing",
       "state": "prepareForHearing",
       "caseData": {
@@ -48,11 +48,11 @@
         "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
         "notificationsSent": [
           {
-            "id": "952510_CASE_RE_LISTED_HOME_OFFICE",
+            "id": "1027_CASE_RE_LISTED_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "952510_RE_LIST_CASE_ADMIN_OFFICER",
+            "id": "1027_RE_LIST_CASE_ADMIN_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -60,7 +60,7 @@
     },
     "notifications": [
       {
-        "reference": "952510_CASE_RE_LISTED_HOME_OFFICE",
+        "reference": "1027_CASE_RE_LISTED_HOME_OFFICE",
         "recipient": "{$homeOfficeEmailAddresses.harmondsworth}",
         "subject": "Immigration and Asylum appeal: case re-listed",
         "body": [
@@ -71,7 +71,7 @@
         ]
       },
       {
-        "reference": "952510_RE_LIST_CASE_ADMIN_OFFICER",
+        "reference": "1027_RE_LIST_CASE_ADMIN_OFFICER",
         "recipient": "{$reviewHearingRequirementsAdminOfficerEmailAddress}",
         "subject": "Immigration and Asylum appeal: re-list case",
         "body": [

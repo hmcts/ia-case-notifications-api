@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 83092,
+      "id": 1192,
       "eventId": "recordRemissionDecision",
       "state": "pendingPayment",
       "caseData": {
@@ -48,7 +48,7 @@
         "ccdReferenceNumberForDisplay": "1111222233334444",
         "notificationsSent": [
           {
-            "id": "83092_INTERNAL_REMISSION_PARTIALLY_GRANTED_REFUSED_APPELLANT_LETTER",
+            "id": "1192_INTERNAL_REMISSION_PARTIALLY_GRANTED_REFUSED_APPELLANT_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

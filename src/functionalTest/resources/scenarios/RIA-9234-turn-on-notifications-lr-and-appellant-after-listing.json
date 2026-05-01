@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 923428,
+      "id": 1043,
       "eventId": "turnOnNotifications",
       "state": "appealSubmitted",
       "caseData": {
@@ -87,27 +87,27 @@
         },
         "notificationsSent": [
           {
-            "id": "923428_TURN_ON_NOTIFICATIONS_RESPONDENT",
+            "id": "1043_TURN_ON_NOTIFICATIONS_RESPONDENT",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "923428_APPELLANT_NOTIFICATIONS_TURNED_ON",
+            "id": "1043_APPELLANT_NOTIFICATIONS_TURNED_ON",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "923428_APPELLANT_NOTIFICATIONS_TURNED_ON_SMS",
+            "id": "1043_APPELLANT_NOTIFICATIONS_TURNED_ON_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "923428_NOTIFICATIONS_TURNED_ON",
+            "id": "1043_NOTIFICATIONS_TURNED_ON",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "923428_APPELLANT_NOTIFICATIONS_TURNED_ON",
+            "id": "1043_APPELLANT_NOTIFICATIONS_TURNED_ON",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "923428_APPELLANT_NOTIFICATIONS_TURNED_ON_SMS",
+            "id": "1043_APPELLANT_NOTIFICATIONS_TURNED_ON_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -115,7 +115,7 @@
     },
     "notifications": [
       {
-        "reference": "923428_TURN_ON_NOTIFICATIONS_RESPONDENT",
+        "reference": "1043_TURN_ON_NOTIFICATIONS_RESPONDENT",
         "recipient": "{$HOME_OFFICE_EMAIL_APC}",
         "subject": "Immigration and Asylum appeal: Appeal transferred to the First-tier tribunal",
         "body": [
@@ -129,7 +129,7 @@
         ]
       },
       {
-        "reference": "923428_NOTIFICATIONS_TURNED_ON",
+        "reference": "1043_NOTIFICATIONS_TURNED_ON",
         "recipient": "ia.legalrep.a.ccd@gmail.com",
         "subject": "Immigration and asylum appeal: Appeal transferred to the First-tier Tribunal",
         "body": [
@@ -141,7 +141,7 @@
         ]
       },
       {
-        "reference": "923428_APPELLANT_NOTIFICATIONS_TURNED_ON",
+        "reference": "1043_APPELLANT_NOTIFICATIONS_TURNED_ON",
         "recipient": "appellant@test.com",
         "subject": "Immigration and asylum appeal: Appeal transferred to the First-tier Tribunal",
         "body": [
@@ -151,7 +151,7 @@
         ]
       },
       {
-        "reference": "923428_APPELLANT_NOTIFICATIONS_TURNED_ON_SMS",
+        "reference": "1043_APPELLANT_NOTIFICATIONS_TURNED_ON_SMS",
         "recipient": "{$TEST_CITIZEN_MOBILE}",
         "subject": "",
         "body": [

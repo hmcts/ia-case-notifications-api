@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 923432,
+      "id": 1039,
       "eventId": "recordApplication",
       "state": "pendingPayment",
       "caseData": {
@@ -37,11 +37,11 @@
         "applicationDecision": "Refused",
         "notificationsSent": [
           {
-            "id": "923432_RECORD_APPLICATION_HOME_OFFICE",
+            "id": "1039_RECORD_APPLICATION_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "923432_RECORD_APPLICATION_LEGAL_REPRESENTATIVE",
+            "id": "1039_RECORD_APPLICATION_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -49,7 +49,7 @@
     },
     "notifications": [
       {
-        "reference": "923432_RECORD_APPLICATION_HOME_OFFICE",
+        "reference": "1039_RECORD_APPLICATION_HOME_OFFICE",
         "recipient": "{$endAppealHomeOfficeEmailAddress}",
         "subject": "Immigration and Asylum appeal: application for withdraw refused",
         "body": [
@@ -66,7 +66,7 @@
         ]
       },
       {
-        "reference": "923432_RECORD_APPLICATION_LEGAL_REPRESENTATIVE",
+        "reference": "1039_RECORD_APPLICATION_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: application for withdraw refused",
         "body": [

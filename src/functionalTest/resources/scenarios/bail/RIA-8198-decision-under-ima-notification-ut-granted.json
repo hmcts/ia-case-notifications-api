@@ -4,7 +4,7 @@
     "uri": "/bail/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
-      "id": 8198,
+      "id": 2102,
       "eventId": "recordTheDecision",
       "state": "bailSummaryUploaded",
       "caseData": {
@@ -26,7 +26,7 @@
         "recordDecisionType": "granted",
         "notificationsSent": [
           {
-            "id": "8198_BAIL_RECORD_DECISION_IMA_UPPER_TRIBUNAL",
+            "id": "2102_BAIL_RECORD_DECISION_IMA_UPPER_TRIBUNAL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -34,7 +34,7 @@
     },
     "notifications": [
       {
-        "reference": "8198_BAIL_RECORD_DECISION_IMA_UPPER_TRIBUNAL",
+        "reference": "2102_BAIL_RECORD_DECISION_IMA_UPPER_TRIBUNAL",
         "recipient": "{$bailUpperTribunalEmailAddress}",
         "subject": "Bail application: Access the decision",
         "body": [

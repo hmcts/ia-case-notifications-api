@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
-      "id": 1008,
+      "id": 1996,
       "eventId": "leadershipJudgeFtpaDecision",
       "state": "ftpaSubmitted",
       "caseData": {
@@ -27,11 +27,11 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "1008_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT",
+            "id": "1996_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1008_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_RESPONDENT",
+            "id": "1996_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_RESPONDENT",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -39,7 +39,7 @@
     },
     "notifications": [
       {
-        "reference": "1008_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT",
+        "reference": "1996_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT",
         "recipient": "{$upperTribunalNoticesEmailAddress}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal refused",
         "body": [
@@ -50,7 +50,7 @@
         ]
       },
       {
-        "reference": "1008_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_RESPONDENT",
+        "reference": "1996_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_RESPONDENT",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal refused",
         "body": [

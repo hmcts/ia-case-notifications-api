@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 1366,
+      "id": 2053,
       "eventId": "requestCaseBuilding",
       "state": "awaitingRespondentEvidence",
       "caseData": {
@@ -60,7 +60,7 @@
         ],
         "notificationsSent": [
           {
-            "id": "1366_INTERNAL_REQUEST_CASE_BUILDING_LEGAL_REPRESENTATIVE_LETTER",
+            "id": "2053_INTERNAL_REQUEST_CASE_BUILDING_LEGAL_REPRESENTATIVE_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

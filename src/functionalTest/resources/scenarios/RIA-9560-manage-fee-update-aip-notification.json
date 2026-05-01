@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 8247,
+      "id": 1000,
       "eventId": "manageFeeUpdate",
       "state": "*",
       "caseData": {

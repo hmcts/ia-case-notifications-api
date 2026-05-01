@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 1253,
+      "id": 2090,
       "eventId": "requestCaseBuilding",
       "state": "awaitingRespondentEvidence",
       "caseData": {
@@ -50,7 +50,7 @@
         ],
         "notificationsSent": [
           {
-            "id": "1253_LEGAL_REPRESENTATIVE_DETAINED_REQUEST_CASE_BUILDING",
+            "id": "2090_LEGAL_REPRESENTATIVE_DETAINED_REQUEST_CASE_BUILDING",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ],
@@ -59,7 +59,7 @@
     },
     "notifications": [
       {
-        "reference": "1253_LEGAL_REPRESENTATIVE_DETAINED_REQUEST_CASE_BUILDING",
+        "reference": "2090_LEGAL_REPRESENTATIVE_DETAINED_REQUEST_CASE_BUILDING",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: review Build your case direction",
         "body": [

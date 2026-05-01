@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 46262,
+      "id": 1571,
       "eventId": "requestRespondentReview",
       "state": "reasonsForAppealSubmitted",
       "caseData": {
@@ -72,11 +72,11 @@
         ],
         "notificationsSent": [
           {
-            "id": "46262_REQUEST_RESPONDENT_REVIEW_APPELLANT_AIP_EMAIL",
+            "id": "1571_REQUEST_RESPONDENT_REVIEW_APPELLANT_AIP_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "46262_REQUEST_RESPONDENT_REVIEW_APPELLANT_AIP_SMS",
+            "id": "1571_REQUEST_RESPONDENT_REVIEW_APPELLANT_AIP_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ],
@@ -85,7 +85,7 @@
     },
     "notifications": [
       {
-        "reference": "46262_REQUEST_RESPONDENT_REVIEW_APPELLANT_AIP_EMAIL",
+        "reference": "1571_REQUEST_RESPONDENT_REVIEW_APPELLANT_AIP_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
         "subject": "Immigration and Asylum appeal: The Home Office will review your appeal",
         "body": [
@@ -100,7 +100,7 @@
         ]
       },
       {
-        "reference": "46262_REQUEST_RESPONDENT_REVIEW_APPELLANT_AIP_SMS",
+        "reference": "1571_REQUEST_RESPONDENT_REVIEW_APPELLANT_AIP_SMS",
         "recipient": "{$TEST_CITIZEN_MOBILE}",
         "subject": "",
         "body": [

@@ -6,7 +6,7 @@
     "uri": "/asylum/ccdSubmitted",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 13413,
+      "id": 2072,
       "eventId": "hearingCancelled",
       "state": "preHearing",
       "caseData": {

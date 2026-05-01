@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 952523,
+      "id": 1014,
       "eventId": "recordOutOfTimeDecision",
       "state": "appealSubmitted",
       "caseData": {
@@ -48,7 +48,7 @@
         "outOfTimeDecisionType": "inTime",
         "notificationsSent": [
           {
-            "id": "952523_INTERNAL_OUT_OF_TIME_DECISION_LETTER_BUNDLE",
+            "id": "1014_INTERNAL_OUT_OF_TIME_DECISION_LETTER_BUNDLE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

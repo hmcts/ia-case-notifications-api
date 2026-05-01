@@ -6,7 +6,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 81921,
+      "id": 1223,
       "eventId": "adjournHearingWithoutDate",
       "state": "preHearing",
       "caseData": {
@@ -28,15 +28,15 @@
         "listCaseHearingCentre": "taylorHouse",
         "notificationsSent": [
           {
-            "id": "81921_LEGAL_REPRESENTATIVE_ADJOURN_HEARING_WITHOUT_DATE",
+            "id": "1223_LEGAL_REPRESENTATIVE_ADJOURN_HEARING_WITHOUT_DATE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "81921_RESPONDENT_ADJOURN_HEARING_WITHOUT_DATE",
+            "id": "1223_RESPONDENT_ADJOURN_HEARING_WITHOUT_DATE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "81921_CASE_OFFICER_ADJOURN_HEARING_WITHOUT_DATE",
+            "id": "1223_CASE_OFFICER_ADJOURN_HEARING_WITHOUT_DATE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -44,7 +44,7 @@
     },
     "notifications": [
       {
-        "reference": "81921_LEGAL_REPRESENTATIVE_ADJOURN_HEARING_WITHOUT_DATE",
+        "reference": "1223_LEGAL_REPRESENTATIVE_ADJOURN_HEARING_WITHOUT_DATE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: Hearing adjourned",
         "body": [
@@ -55,7 +55,7 @@
         ]
       },
       {
-        "reference": "81921_RESPONDENT_ADJOURN_HEARING_WITHOUT_DATE",
+        "reference": "1223_RESPONDENT_ADJOURN_HEARING_WITHOUT_DATE",
         "recipient": "{$homeOfficeEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: Hearing adjourned",
         "body": [
@@ -65,7 +65,7 @@
         ]
       },
       {
-        "reference": "81921_CASE_OFFICER_ADJOURN_HEARING_WITHOUT_DATE",
+        "reference": "1223_CASE_OFFICER_ADJOURN_HEARING_WITHOUT_DATE",
         "recipient": "{$hearingCentreEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: Hearing adjourned",
         "body": [

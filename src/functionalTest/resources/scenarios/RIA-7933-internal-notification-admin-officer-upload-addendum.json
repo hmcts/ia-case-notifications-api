@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 7933,
+      "id": 1266,
       "eventId": "uploadAddendumEvidenceAdminOfficer",
       "state": "preHearing",
       "caseData": {
@@ -46,7 +46,7 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "7933_UPLOADED_ADDENDUM_EVIDENCE_HOME_OFFICE",
+            "id": "1266_UPLOADED_ADDENDUM_EVIDENCE_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

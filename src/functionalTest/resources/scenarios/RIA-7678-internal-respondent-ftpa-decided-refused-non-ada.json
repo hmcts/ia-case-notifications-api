@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
-      "id": 7678,
+      "id": 1305,
       "eventId": "residentJudgeFtpaDecision",
       "state": "ftpaSubmitted",
       "caseData": {
@@ -84,7 +84,7 @@
         "ftpaRespondentRjDecisionOutcomeType": "refused",
         "notificationsSent": [
           {
-            "id": "7678_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT",
+            "id": "1305_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT",
             "value":"$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

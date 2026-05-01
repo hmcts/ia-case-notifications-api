@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 7661,
+      "id": 1315,
       "eventId": "turnOnNotifications",
       "state": "appealSubmitted",
       "caseData": {
@@ -42,11 +42,11 @@
         "isNotificationTurnedOff": "Yes",
         "notificationsSent": [
           {
-            "id": "7661_TURN_ON_NOTIFICATIONS_RESPONDENT",
+            "id": "1315_TURN_ON_NOTIFICATIONS_RESPONDENT",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "7661_APPELLANT_NOTIFICATIONS_TURNED_ON_SMS",
+            "id": "1315_APPELLANT_NOTIFICATIONS_TURNED_ON_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -54,7 +54,7 @@
     },
     "notifications": [
       {
-        "reference": "7661_TURN_ON_NOTIFICATIONS_RESPONDENT",
+        "reference": "1315_TURN_ON_NOTIFICATIONS_RESPONDENT",
         "recipient": "{$HOME_OFFICE_EMAIL_APC}",
         "subject": "Immigration and Asylum appeal: Appeal transferred to the First-tier tribunal",
         "body": [

@@ -4,7 +4,7 @@
     "uri": "/bail/ccdSubmitted",
     "credentials": "LegalRepresentative",
     "input": {
-      "id": 149,
+      "id": 2126,
       "eventId": "nocRequestBail",
       "state": "applicationSubmitted",
       "caseData": {
@@ -22,11 +22,11 @@
     "errors": [],
     "confirmation": {
       "header": "success",
-      "body": "contains([149_BAIL_NOC_CHANGED_LR_ADMIN,149_BAIL_NOC_CHANGED_LR_HOME_OFFICE])"
+      "body": "contains([2126_BAIL_NOC_CHANGED_LR_ADMIN,2126_BAIL_NOC_CHANGED_LR_HOME_OFFICE])"
     },
     "notifications": [
       {
-        "reference": "149_BAIL_NOC_CHANGED_LR_HOME_OFFICE",
+        "reference": "2126_BAIL_NOC_CHANGED_LR_HOME_OFFICE",
         "recipient": "{$bailHomeOfficeEmailAddress}",
         "subject": "Bail application: Applicant has a new legal representative",
         "body": [
@@ -37,7 +37,7 @@
         ]
       },
       {
-        "reference": "149_BAIL_NOC_CHANGED_LR_ADMIN",
+        "reference": "2126_BAIL_NOC_CHANGED_LR_ADMIN",
         "recipient": "{$bailHearingCentreEmailAddresses.newport}",
         "subject": "Bail application: Applicant has a new legal representative",
         "body": [

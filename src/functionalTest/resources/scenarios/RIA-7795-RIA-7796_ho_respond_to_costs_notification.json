@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "HomeOfficeGeneric",
     "input": {
-      "id": 7796,
+      "id": 1278,
       "eventId": "respondToCosts",
       "state": "appealSubmitted",
       "caseData": {
@@ -82,7 +82,7 @@
     },
     "notifications": [
       {
-        "reference": "7796_RESPOND_TO_COSTS_APPLICANT_EMAIL",
+        "reference": "1278_RESPOND_TO_COSTS_APPLICANT_EMAIL",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: Costs application response received",
         "body": [
@@ -95,7 +95,7 @@
         ]
       },
       {
-        "reference": "7796_RESPOND_TO_COSTS_RESPONDENT_EMAIL",
+        "reference": "1278_RESPOND_TO_COSTS_RESPONDENT_EMAIL",
         "recipient": "{$applyForCostsHomeOfficeEmailAddress}",
         "subject": "Immigration and Asylum appeal: Costs application response submitted",
         "body": [

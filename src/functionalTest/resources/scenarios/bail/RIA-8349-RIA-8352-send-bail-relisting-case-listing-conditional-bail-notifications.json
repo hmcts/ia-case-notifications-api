@@ -4,7 +4,7 @@
     "uri": "/bail/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 83492,
+      "id": 2098,
       "eventId": "caseListing",
       "state": "applicationSubmitted",
       "caseData": {
@@ -32,15 +32,15 @@
         "currentCaseStateVisibleToAllUsers": "decisionConditionalBail",
         "notificationsSent": [
           {
-            "id": "83492_BAIL_APPLICATION_CASE_LISTING_HOME_OFFICE",
+            "id": "2098_BAIL_APPLICATION_CASE_LISTING_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "83492_BAIL_APPLICATION_CASE_LISTING_LEGAL_REPRESENTATIVE",
+            "id": "2098_BAIL_APPLICATION_CASE_LISTING_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "83492_BAIL_APPLICATION_CASE_LISTING_APPLICANT_SMS",
+            "id": "2098_BAIL_APPLICATION_CASE_LISTING_APPLICANT_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -48,7 +48,7 @@
     },
     "notifications": [
       {
-        "reference": "83492_BAIL_APPLICATION_CASE_LISTING_HOME_OFFICE",
+        "reference": "2098_BAIL_APPLICATION_CASE_LISTING_HOME_OFFICE",
         "recipient": "{$bailHomeOfficeEmailAddress}",
         "subject": "Bail application: Conditional Bail Review hearing",
         "body": [
@@ -63,7 +63,7 @@
         ]
       },
       {
-        "reference": "83492_BAIL_APPLICATION_CASE_LISTING_LEGAL_REPRESENTATIVE",
+        "reference": "2098_BAIL_APPLICATION_CASE_LISTING_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Bail application: Conditional Bail Review hearing",
         "body": [
@@ -78,7 +78,7 @@
         ]
       },
       {
-        "reference": "83492_BAIL_APPLICATION_CASE_LISTING_APPLICANT_SMS",
+        "reference": "2098_BAIL_APPLICATION_CASE_LISTING_APPLICANT_SMS",
         "recipient": "{$TEST_CITIZEN_MOBILE}",
         "subject": "",
         "body": [

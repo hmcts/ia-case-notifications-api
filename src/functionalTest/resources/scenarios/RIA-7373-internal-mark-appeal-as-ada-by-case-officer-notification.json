@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 7373,
+      "id": 1337,
       "eventId": "markAppealAsAda",
       "state": "appealSubmitted",
       "caseData": {
@@ -42,7 +42,7 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "7373_INTERNAL_MARK_APPEAL_AS_ADA",
+            "id": "1337_INTERNAL_MARK_APPEAL_AS_ADA",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -50,7 +50,7 @@
     },
     "notifications": [
       {
-        "reference": "7373_INTERNAL_MARK_APPEAL_AS_ADA",
+        "reference": "1337_INTERNAL_MARK_APPEAL_AS_ADA",
         "recipient": "det-irc-brookhouse@example.com",
         "subject": "ADA – SERVE BY POST: Appeal now ADA",
         "body": [

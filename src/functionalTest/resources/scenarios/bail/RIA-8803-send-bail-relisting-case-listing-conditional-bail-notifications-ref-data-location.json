@@ -4,7 +4,7 @@
     "uri": "/bail/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 88033,
+      "id": 2094,
       "eventId": "caseListing",
       "state": "applicationSubmitted",
       "caseData": {
@@ -30,7 +30,7 @@
         "isRemoteHearing": "No",
         "notificationsSent": [
           {
-            "id": "88033_BAIL_APPLICATION_CASE_LISTING_HOME_OFFICE",
+            "id": "2094_BAIL_APPLICATION_CASE_LISTING_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -38,7 +38,7 @@
     },
     "notifications": [
       {
-        "reference": "88033_BAIL_APPLICATION_CASE_LISTING_HOME_OFFICE",
+        "reference": "2094_BAIL_APPLICATION_CASE_LISTING_HOME_OFFICE",
         "recipient": "{$bailHomeOfficeEmailAddress}",
         "subject": "Bail application: Conditional Bail Review hearing",
         "body": [

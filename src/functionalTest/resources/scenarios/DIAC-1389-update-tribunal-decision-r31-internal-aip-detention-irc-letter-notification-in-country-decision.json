@@ -6,7 +6,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
-      "id": 13891,
+      "id": 2041,
       "eventId": "updateTribunalDecision",
       "state": "decided",
       "caseData": {
@@ -79,11 +79,11 @@
         "appealDecision": "Dismissed",
         "notificationsSent": [
           {
-            "id": "13891_RESPONDENT_UPDATE_TRIBUNAL_DECISION_RULE_31_EMAIL",
+            "id": "2041_RESPONDENT_UPDATE_TRIBUNAL_DECISION_RULE_31_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "13891_INTERNAL_DETAINED_UPDATE_TRIBUNAL_DECISION_RULE_31_IRC_PRISON",
+            "id": "2041_INTERNAL_DETAINED_UPDATE_TRIBUNAL_DECISION_RULE_31_IRC_PRISON",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 8320,
+      "id": 1191,
       "eventId": "manageFeeUpdate",
       "state": "appealSubmitted",
       "caseData": {
@@ -54,7 +54,7 @@
         },
         "notificationsSent": [
           {
-            "id": "8320_INTERNAL_MANAGE_FEE_UPDATE_APPELLANT_LETTER",
+            "id": "1191_INTERNAL_MANAGE_FEE_UPDATE_APPELLANT_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
