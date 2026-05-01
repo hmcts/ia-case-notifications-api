@@ -14,8 +14,7 @@
           "currentCaseStateVisibleToJudge": "ftpaSubmitted",
           "ftpaAppellantRjDecisionOutcomeType": "remadeRule31",
           "ftpaApplicantType": "appellant",
-          "isDlrmSetAsideEnabled": "Yes",
-          "notificationsSent": []
+          "isDlrmSetAsideEnabled": "Yes"
         }
       }
     }

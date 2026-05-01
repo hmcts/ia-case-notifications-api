@@ -15,8 +15,8 @@
           "appellantInUk": "Yes",
           "appellantInDetention": "Yes",
           "detentionFacility": "prison",
+          "prisonName": "Albany",
           "submissionOutOfTime": "Yes",
-          "appealType":"refusalOfHumanRights",
           "paymentStatus": "Payment pending",
           "appellantAddress": {
             "County": "",
@@ -25,7 +25,23 @@
             "PostTown": "Example Town",
             "AddressLine1": "5",
             "AddressLine2": "Example Street"
-          }
+          },
+          "notificationAttachmentDocuments": [
+            {
+              "id": "1",
+              "value": {
+                "tag": "internalDetainedAppealSubmittedOutOfTimeWithFeeLetter",
+                "document": {
+                  "document_url": "{$FIXTURE_DOC1_PDF_URL}",
+                  "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
+                  "document_filename": "{$FIXTURE_DOC1_PDF_FILENAME}"
+                },
+                "suppliedBy": "",
+                "description": "",
+                "dateUploaded": "{$TODAY}"
+              }
+            }
+          ]
         }
       }
     }
@@ -41,8 +57,8 @@
         "appellantInUk": "Yes",
         "appellantInDetention": "Yes",
         "detentionFacility": "prison",
+        "prisonName": "Albany",
         "submissionOutOfTime": "Yes",
-        "appealType":"refusalOfHumanRights",
         "paymentStatus": "Payment pending",
         "appellantAddress": {
           "County": "",
@@ -54,7 +70,7 @@
         },
         "notificationsSent": [
           {
-            "id": "2061_INTERNAL_SUBMIT_APPEAL_WITH_FEE_OUT_OF_TIME_APPELLANT_LETTER",
+            "id": "2061_INTERNAL_NON_ADA_APPEAL_SUBMITTED_LATE_WITH_FEE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

@@ -16,7 +16,6 @@
           "ftpaAppellantRjDecisionOutcomeType": "reheardRule32",
           "ftpaRespondentRjDecisionOutcomeType": "granted",
           "ftpaApplicantType": "appellant",
-          "ftpaApplicantType": "respondent",
           "listCaseHearingCentre": "bradford",
           "ariaListingReference": "987654321",
           "notificationsSent": [

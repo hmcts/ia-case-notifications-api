@@ -15,8 +15,7 @@
           "ftpaRespondentRjDecisionOutcomeType": "reheardRule35",
           "listCaseHearingCentre": "glasgow",
           "ftpaApplicantType": "respondent",
-          "isDlrmSetAsideEnabled": "Yes",
-          "notificationsSent": []
+          "isDlrmSetAsideEnabled": "Yes"
         }
       }
     }

@@ -24,8 +24,7 @@
           ],
           "listCaseHearingCentre": "taylorHouse",
           "ariaListingReference": "LP/12345/2019",
-          "removeAppealFromOnlineReason": "Some reason to take remove it from online",
-          "notificationsSent": []
+          "removeAppealFromOnlineReason": "Some reason to take remove it from online"
         }
       }
     }

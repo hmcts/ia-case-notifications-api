@@ -17,8 +17,7 @@
           "feeAmountGbp": "8000",
           "previousFeeAmountGbp": "14000",
           "manageFeeRequestedAmount": "6000",
-          "isDlrmFeeRefundEnabled": "Yes",
-          "notificationsSent": []
+          "isDlrmFeeRefundEnabled": "Yes"
         }
       }
     }

@@ -8,8 +8,7 @@
       "eventId": "unlinkAppeal",
       "state": "awaitingRespondentEvidence",
       "caseData": {
-        "template": "minimal-appeal-submitted.json",
-        "notificationsSent": []
+        "template": "minimal-appeal-submitted.json"
       }
     }
   },

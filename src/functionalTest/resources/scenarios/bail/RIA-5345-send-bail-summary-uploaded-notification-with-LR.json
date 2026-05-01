@@ -1,9 +1,8 @@
 {
   "description": "RIA-5345 send bail summary uploaded notification to newport hearing centre and legal representative",
-  "launchDarklyKey": "tcw-notifications-feature:true",
   "request": {
     "uri": "/bail/ccdAboutToSubmit",
-    "credentials": "HomeOfficeGENERIC",
+    "credentials": "HomeOfficeGeneric",
     "input": {
       "id": 5345,
       "eventId": "uploadBailSummary",
@@ -11,12 +10,11 @@
       "caseData": {
         "template": "minimal-bail-application-submitted.json",
         "replacements": {
-          "bailHearingCentre": "newport",
-          "isLegallyRepresentedForFlag": "Yes",
           "currentCaseStateVisibleToJudge": "bailSummaryUploaded",
           "currentCaseStateVisibleToHomeOffice": "bailSummaryUploaded",
           "currentCaseStateVisibleToAdminOfficer": "bailSummaryUploaded",
-          "currentCaseStateVisibleToLegalRepresentative": "bailSummaryUploaded"
+          "currentCaseStateVisibleToLegalRepresentative": "bailSummaryUploaded",
+          "hearingCentre": "newport"
         }
       }
     }
@@ -27,8 +25,7 @@
     "caseData": {
       "template": "minimal-bail-application-submitted.json",
       "replacements": {
-        "bailHearingCentre": "newport",
-        "isLegallyRepresentedForFlag": "Yes",
+        "hearingCentre": "newport",
         "currentCaseStateVisibleToJudge": "bailSummaryUploaded",
         "currentCaseStateVisibleToHomeOffice": "bailSummaryUploaded",
         "currentCaseStateVisibleToAdminOfficer": "bailSummaryUploaded",
@@ -48,14 +45,13 @@
     "notifications": [
       {
         "reference": "5345_BAIL_SUMMARY_UPLOADED_ADMIN_OFFICER",
-        "recipient": "{bailHearingCentreEmailAddresses.newport}",
+        "recipient": "{$bailHearingCentreEmailAddresses.newport}",
         "subject": "Bail application: Upload the Bail Summary direction",
         "body": [
           "1650-6221-2061-5101",
           "John Smith",
-          "{$iaExUiFrontendUrl}",
-          "The Home Office has uploaded the Bail Summary to the online service.",
-          "Sign in to your account to see the Bail Summary in the documents tab."
+          "A12345",
+          "123654LR"
         ]
       },
       {
@@ -65,9 +61,8 @@
         "body": [
           "1650-6221-2061-5101",
           "John Smith",
-          "{$iaExUiFrontendUrl}",
-          "The Home Office has uploaded the Bail Summary to the online service.",
-          "Sign in to your account to see the Bail Summary in the documents tab."
+          "A12345",
+          "123654LR"
         ]
       }
     ]

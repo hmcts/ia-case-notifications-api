@@ -16,8 +16,7 @@
           "endAppealOutcome": "Withdrawn",
           "endAppealApproverType": "Judge",
           "endAppealDate": "2019-08-13",
-          "endAppealOutcomeReason": "some outcome reason",
-          "notificationsSent": []
+          "endAppealOutcomeReason": "some outcome reason"
         }
       }
     }

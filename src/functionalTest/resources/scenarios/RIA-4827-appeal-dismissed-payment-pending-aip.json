@@ -14,8 +14,7 @@
           "hearingCentre": "taylorHouse",
           "ariaListingReference": "LP/12345/2019",
           "isDecisionAllowed": "dismissed",
-          "paymentStatus": "Payment pending",
-          "notificationsSent": []
+          "paymentStatus": "Payment pending"
         }
       }
     }

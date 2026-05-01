@@ -5,9 +5,7 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,7 +72,7 @@ public class CcdScenarioRunnerTest {
     private LaunchDarklyFunctionalTestClient launchDarklyFunctionalTestClient;
 
     private Map<String, Object> actualResponse = null;
-    private final Collection<String> scenarioSources = new ArrayList<>();
+    private final Map<String, String> scenarioSources = new HashMap<>();
 
     @BeforeAll
     public void beforeAll() throws IOException, InterruptedException {
@@ -98,35 +96,46 @@ public class CcdScenarioRunnerTest {
         } else {
             scenarioPattern = "*" + scenarioPattern + "*.json";
         }
-        scenarioSources.addAll(StringResourceLoader.load("/scenarios/" + scenarioPattern).values());
-        scenarioSources.addAll(StringResourceLoader.load("/scenarios/bail/" + scenarioPattern).values());
+
+        scenarioSources.putAll(StringResourceLoader.load("/scenarios/" + scenarioPattern));
+        scenarioSources.putAll(StringResourceLoader.load("/scenarios/bail/" + scenarioPattern));
+
         System.out.println((char) 27 + "[36m" + "-------------------------------------------------------------------");
         System.out.println((char) 27 + "[33m" + "RUNNING " + scenarioSources.size() + " SCENARIOS");
         System.out.println((char) 27 + "[36m" + "-------------------------------------------------------------------");
     }
 
     private Stream<Arguments> scenarioSources() {
-        return scenarioSources.stream().map(scenarioSource -> {
+        return scenarioSources.entrySet().stream().map(entry -> {
+            String fileName = entry.getKey();
+            String scenarioSource = entry.getValue();
             try {
                 Map<String, Object> scenario = deserializeWithExpandedValues(scenarioSource);
+                final String credentials = MapValueExtractor.extractOrDefault(scenario, "request.credentials", "none");
+                final Headers authorizationHeaders = getAuthorizationHeaders(credentials);
 
-                String scenarioDisabled = MapValueExtractor.extractOrDefault(scenario, "disabled", "false");
+                String description = MapValueExtractor.extractOrDefault(scenario, "description", "null");
+
+                String scenarioFeature = MapValueExtractor.extractOrDefault(scenario, "launchDarklyKey", "");
+
+                boolean launchDarklyFeature = false;
+                if (scenarioFeature.contains(":")) {
+                    String[] keys = scenarioFeature.split(":");
+                    launchDarklyFeature = launchDarklyFunctionalTestClient
+                        .getKey(keys[0], authorizationHeaders.getValue("Authorization"))
+                        && Boolean.parseBoolean(keys[1]);
+                }
+
+                String scenarioDisabled = MapValueExtractor.extractOrDefault(scenario, "disabled", "");
                 boolean isDisabled = scenarioDisabled.startsWith("!")
                     ? !Boolean.parseBoolean(scenarioDisabled.substring(1))
                     : Boolean.parseBoolean(scenarioDisabled);
-                final String credentials = MapValueExtractor.extractOrDefault(scenario, "request.credentials", "none");
-                final Headers authorizationHeaders = getAuthorizationHeaders(credentials);
-                String launchDarklyKey = MapValueExtractor.extractOrDefault(scenario, "launchDarklyKey", "");
-                if (!launchDarklyKey.isBlank()) {
-                    String[] keys = launchDarklyKey.split(":");
-                    isDisabled = launchDarklyFunctionalTestClient
-                        .getKey(keys[0], authorizationHeaders.getValue("Authorization"))
-                        && !Boolean.parseBoolean(keys[1]);
-                }
-                String description = MapValueExtractor.extract(scenario, "description");
+
                 if (isDisabled) {
-                    return Arguments.of("Disabled: " + description, null, null, null, null, 0, 0, null);
+                    System.out.println("Scenario is disabled, skipping execution");
+                    return Arguments.of("Disabled: " + fileName, description, null, null, null, null, 0, 0, null);
                 }
+
                 Map<String, String> templatesByFilename = StringResourceLoader.load("/templates/*.json");
 
                 final long scenarioTestCaseId = MapValueExtractor.extractOrDefault(
@@ -145,14 +154,20 @@ public class CcdScenarioRunnerTest {
                     templatesByFilename
                 );
 
-                final String requestUri = MapValueExtractor.extract(scenario, "request.uri");
-                final int expectedStatus = MapValueExtractor.extractOrDefault(scenario, "expectation.status", 200);
+                final String requestUri = MapValueExtractor.extractOrThrow(scenario, "request.uri");
+                if (requestUri.contains("bail")) {
+                    fileName = "[BAIL] " + fileName;
+                } else if (requestUri.contains("asylum")) {
+                    fileName = "[ASYLUM] " + fileName;
+                }
+                int expectedStatus = MapValueExtractor.extractOrDefault(scenario, "expectation.status", 200, launchDarklyFeature);
                 String expectedResponseBody = buildCallbackResponseBody(
                     MapValueExtractor.extract(scenario, "expectation"),
                     templatesByFilename
                 );
                 Map<String, Object> expectedResponse = MapSerializer.deserialize(expectedResponseBody);
                 return Arguments.of(
+                    fileName,
                     description,
                     scenario,
                     authorizationHeaders,
@@ -162,7 +177,6 @@ public class CcdScenarioRunnerTest {
                     testCaseId,
                     expectedResponse
                 );
-
             } catch (IOException e) {
                 System.out.println("Failed to load scenario" + e);
                 return null;
@@ -170,9 +184,10 @@ public class CcdScenarioRunnerTest {
         });
     }
 
-    @ParameterizedTest(name = "{0}")
+    @ParameterizedTest(name = "{0}:{1}")
     @MethodSource("scenarioSources")
-    public void scenarios_should_behave_as_specified(String description,
+    public void scenarios_should_behave_as_specified(String filename,
+                                                     String description,
                                                      Map<String, Object> scenario,
                                                      Headers authorizationHeaders,
                                                      String requestBody,
@@ -181,7 +196,7 @@ public class CcdScenarioRunnerTest {
                                                      long testCaseId,
                                                      Map<String, Object> expectedResponse) throws IOException {
         int maxRetries = 3;
-        assumeFalse(description.startsWith("Disabled:"), "Test marked as disabled");
+        assumeFalse(filename.startsWith("Disabled:"), "Test marked as disabled");
         for (int i = 0; i < maxRetries; i++) {
             try {
                 actualResponse = null;
@@ -194,6 +209,8 @@ public class CcdScenarioRunnerTest {
                         .when()
                         .post(requestUri)
                         .then()
+                        .log().ifError()
+                        .log().ifValidationFails()
                         .statusCode(expectedStatus)
                         .and()
                         .extract()
@@ -201,8 +218,8 @@ public class CcdScenarioRunnerTest {
                         .asString();
 
                 actualResponse = MapSerializer.deserialize(actualResponseBody);
-
                 verifiers.forEach(verifier -> verifier.verify(
+                        filename,
                         testCaseId,
                         scenario,
                         expectedResponse,

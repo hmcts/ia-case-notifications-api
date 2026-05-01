@@ -11,11 +11,9 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "currentCaseStateVisibleToLegalRepresentative": "finalBundling",
-          "currentCaseStateVisibleToHomeOfficeAll": "finalBundling",
           "directionEditExplanation": "Upload additional evidence",
           "directionEditDateDue": "{$TODAY+14}",
           "directionEditParties": "respondent",
-          "notificationsSent": [],
           "listCaseHearingCentre": "birmingham",
           "currentCaseStateVisibleToHomeOfficeAll": "finalBundling"
         }

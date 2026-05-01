@@ -10,8 +10,7 @@
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
-          "reasonForLinkAppeal": "Familial",
-          "notificationsSent": []
+          "reasonForLinkAppeal": "Familial"
         }
       }
     }

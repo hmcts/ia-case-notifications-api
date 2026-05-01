@@ -1,6 +1,5 @@
 {
   "description": "RIA-5601 send change direction due date notification to HomeOffice and legal representative",
-  "launchDarklyKey": "tcw-notifications-feature:true",
   "request": {
     "uri": "/bail/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
@@ -9,13 +8,11 @@
       "eventId": "changeBailDirectionDueDate",
       "state": "applicationSubmitted",
       "caseData": {
-        "template": "minimal-bail-application-submitted-direction-sent.json",
+        "template": "minimal-bail-application-submitted.json",
         "replacements": {
-          "isLegallyRepresentedForFlag": "Yes",
-          "currentCaseStateVisibleToJudge": "applicationSubmitted",
-          "currentCaseStateVisibleToHomeOffice": "applicationSubmitted",
-          "currentCaseStateVisibleToAdminOfficer": "applicationSubmitted",
-          "currentCaseStateVisibleToLegalRepresentative": "applicationSubmitted"
+          "bailDirectionEditExplanation": "Some explanation for changing the direction due date",
+          "bailDirectionEditParties": "Some parties",
+          "bailDirectionEditDateDue": "2026-05-12"
         }
       }
     }
@@ -26,11 +23,9 @@
     "caseData": {
       "template": "minimal-bail-application-submitted.json",
       "replacements": {
-        "isLegallyRepresentedForFlag": "Yes",
-        "currentCaseStateVisibleToJudge": "applicationSubmitted",
-        "currentCaseStateVisibleToHomeOffice": "applicationSubmitted",
-        "currentCaseStateVisibleToAdminOfficer": "applicationSubmitted",
-        "currentCaseStateVisibleToLegalRepresentative": "applicationSubmitted",
+        "bailDirectionEditExplanation": "Some explanation for changing the direction due date",
+        "bailDirectionEditParties": "Some parties",
+        "bailDirectionEditDateDue": "2026-05-12",
         "notificationsSent": [
           {
             "id": "5601_CHANGE_BAIL_DIRECTION_DUE_DATE_HOME_OFFICE",
@@ -51,9 +46,11 @@
         "body": [
           "1650-6221-2061-5101",
           "John Smith",
-          "{$iaExUiFrontendUrl}",
-          "A direction due date has been changed in the online service.",
-          "Sign in to your account to view the updated direction(s) in the directions tab."
+          "A12345",
+          "123654LR",
+          "12 May 2026",
+          "Some explanation for changing the direction due date",
+          "Some parties"
         ]
       },
       {
@@ -63,9 +60,11 @@
         "body": [
           "1650-6221-2061-5101",
           "John Smith",
-          "{$iaExUiFrontendUrl}",
-          "A direction due date has been changed in the online service.",
-          "Sign in to your account to view the updated direction(s) in the directions tab."
+          "A12345",
+          "123654LR",
+          "12 May 2026",
+          "Some explanation for changing the direction due date",
+          "Some parties"
         ]
       }
     ]

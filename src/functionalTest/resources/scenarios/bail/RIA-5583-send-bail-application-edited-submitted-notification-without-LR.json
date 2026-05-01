@@ -1,17 +1,16 @@
 {
   "description": "RIA-5583 send bail application edited submitted notification without LR",
-  "launchDarklyKey": "tcw-notifications-feature:true",
   "request": {
     "uri": "/bail/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 2002,
-      "eventId": "editApplicationAfterSubmit",
-      "state": "applicationEditedSubmitted",
+      "id": 55832,
+      "eventId": "editBailApplicationAfterSubmit",
+      "state": "applicationSubmitted",
       "caseData": {
-        "template": "minimal-bail-application-submitted-not-legally-represented.json",
+        "template": "minimal-bail-application-submitted.json",
         "replacements": {
-          "bailHearingCentre": "birmingham"
+          "isLegallyRepresentedForFlag": "No"
         }
       }
     }
@@ -20,12 +19,12 @@
     "status": 200,
     "errors": [],
     "caseData": {
-      "template": "minimal-bail-application-submitted-not-legally-represented.json",
+      "template": "minimal-bail-application-submitted.json",
       "replacements": {
-        "bailHearingCentre": "birmingham",
+        "isLegallyRepresentedForFlag": "No",
         "notificationsSent": [
           {
-            "id": "2002_BAIL_APPLICATION_EDITED_AND_SUBMITTED_HOME_OFFICE",
+            "id": "55832_BAIL_APPLICATION_EDITED_AND_SUBMITTED_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -33,13 +32,16 @@
     },
     "notifications": [
       {
-        "reference": "2002_BAIL_APPLICATION_EDITED_AND_SUBMITTED_HOME_OFFICE",
+        "reference": "55832_BAIL_APPLICATION_EDITED_AND_SUBMITTED_HOME_OFFICE",
         "recipient": "{$bailHomeOfficeEmailAddress}",
         "subject": "Bail application: Application details updated",
         "body": [
-          "1650-9687-2604-3754",
-          "John Doe",
-          "{$iaExUiFrontendUrl}"
+          "1650-6221-2061-5101",
+          "John Smith",
+          "A12345"
+        ],
+        "bodyExclusions": [
+          "123654LR"
         ]
       }
     ]

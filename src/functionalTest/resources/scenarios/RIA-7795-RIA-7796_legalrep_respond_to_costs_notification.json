@@ -25,7 +25,6 @@
               "id": "11",
               "value": {
                 "applyForCostsRespondentRole": "Legal representative",
-                "appliedCostsType": "Wasted costs",
                 "appliedCostsType": "Unreasonable costs",
                 "respondentToCostsOrder": "Legal representative",
                 "applyForCostsHearingType": "No",
@@ -51,12 +50,12 @@
           "respondToCostsList": {
             "value": {
               "code": "11",
-              "label": "Costs 5, Wasted costs, 22 Nov 2023"
+              "label": "Costs 5, Unreasonable costs, 22 Nov 2023"
             },
             "list_items": [
               {
                 "code": "11",
-                "label": "Costs 1, Wasted costs, 22 Nov 2023"
+                "label": "Costs 1, Unreasonable costs, 22 Nov 2023"
               }
             ]
           }

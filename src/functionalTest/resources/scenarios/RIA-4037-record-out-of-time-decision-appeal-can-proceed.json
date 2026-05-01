@@ -11,8 +11,7 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "appealType":"protection",
-          "outOfTimeDecisionType": "inTime",
-          "notificationsSent": []
+          "outOfTimeDecisionType": "inTime"
         }
       }
     }

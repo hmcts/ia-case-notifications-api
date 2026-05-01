@@ -32,7 +32,20 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
-        "notificationsSent": []
+        "notificationsSent": [
+          {
+            "id": "9003_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_APPELLANT",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "9003_FTPA_APPLICATION_DECISION_HOME_OFFICE_APPELLANT",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "9003_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT",
+            "value": "34e146c9-6050-4894-a64e-acd461a5f934"
+          }
+        ]
       }
     },
     "notifications": [

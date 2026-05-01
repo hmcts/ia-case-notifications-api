@@ -14,7 +14,6 @@
           "applicationDecisionReason": "Some decision reason",
           "applicationSupplier": "The respondent",
           "applicationDecision": "Refused",
-          "notificationsSent": [],
           "currentCaseStateVisibleToHomeOfficeAll": "appealSubmitted"
         }
       }

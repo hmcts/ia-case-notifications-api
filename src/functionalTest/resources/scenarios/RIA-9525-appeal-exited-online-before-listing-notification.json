@@ -14,8 +14,7 @@
           "appellantsRepresentation": "No",
           "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
           "endAppealOutcome": "appealTakenOffline",
-          "legalRepReferenceNumber": "REF54321",
-          "notificationsSent": []
+          "legalRepReferenceNumber": "REF54321"
         }
       }
     }

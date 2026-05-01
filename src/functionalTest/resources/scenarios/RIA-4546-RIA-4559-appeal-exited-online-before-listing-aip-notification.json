@@ -23,8 +23,7 @@
             }
           ],
           "endAppealOutcome": "appealTakenOffline",
-          "removeAppealFromOnlineReason": "Some reason to take remove it from online",
-          "notificationsSent": []
+          "removeAppealFromOnlineReason": "Some reason to take remove it from online"
         }
       }
     }

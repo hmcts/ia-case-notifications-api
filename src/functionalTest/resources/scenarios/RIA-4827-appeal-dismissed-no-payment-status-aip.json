@@ -13,8 +13,7 @@
         "replacements": {
           "hearingCentre": "taylorHouse",
           "ariaListingReference": "LP/12345/2019",
-          "isDecisionAllowed": "dismissed",
-          "notificationsSent": []
+          "isDecisionAllowed": "dismissed"
         }
       }
     }

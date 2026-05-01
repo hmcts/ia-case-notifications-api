@@ -17,8 +17,7 @@
           "currentCaseStateVisibleToJudge": "ftpaSubmitted",
           "ftpaRespondentRjDecisionOutcomeType": "remadeRule32",
           "ftpaApplicantType": "respondent",
-          "isDlrmSetAsideEnabled": "Yes",
-          "notificationsSent": []
+          "isDlrmSetAsideEnabled": "Yes"
         }
       }
     }

@@ -1,5 +1,5 @@
 {
-  "description": "DIAC-2061 Send letter notification to for Submit Appeal out of time fee to pay - non detained",
+  "description": "DIAC-2061 Send letter notification for Submit Appeal out of time fee to pay - non detained",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
@@ -11,13 +11,12 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "isAdmin": "Yes",
-          "appellantInUk": "Yes",
           "appellantsRepresentation": "No",
+          "appellantInUk": "Yes",
           "appellantInDetention": "No",
           "submissionOutOfTime": "Yes",
           "paymentStatus": "Payment pending",
-          "legalRepHasAddress": "Yes",
-          "legalRepAddressUK": {
+          "appellantAddress": {
             "County": "",
             "Country": "United Kingdom",
             "PostCode": "NE21JX",
@@ -36,13 +35,12 @@
       "template": "minimal-appeal-submitted.json",
       "replacements": {
         "isAdmin": "Yes",
-        "appellantInUk": "Yes",
         "appellantsRepresentation": "No",
+        "appellantInUk": "Yes",
         "appellantInDetention": "No",
         "submissionOutOfTime": "Yes",
         "paymentStatus": "Payment pending",
-        "legalRepHasAddress": "Yes",
-        "legalRepAddressUK": {
+        "appellantAddress": {
           "County": "",
           "Country": "United Kingdom",
           "PostCode": "NE21JX",
@@ -50,12 +48,7 @@
           "AddressLine1": "5",
           "AddressLine2": "Example Street"
         },
-        "notificationsSent": [
-          {
-            "id": "2061_INTERNAL_SUBMIT_APPEAL_WITH_FEE_OUT_OF_TIME_APPELLANT_LETTER",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          }
-        ]
+        "notificationsSent": []
       }
     }
   }

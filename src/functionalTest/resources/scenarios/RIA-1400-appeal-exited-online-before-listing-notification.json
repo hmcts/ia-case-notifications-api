@@ -11,8 +11,7 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "endAppealOutcome": "appealTakenOffline",
-          "legalRepReferenceNumber": "REF54321",
-          "notificationsSent": []
+          "legalRepReferenceNumber": "REF54321"
         }
       }
     }

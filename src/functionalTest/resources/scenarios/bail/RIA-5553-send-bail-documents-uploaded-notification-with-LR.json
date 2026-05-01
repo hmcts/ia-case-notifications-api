@@ -1,6 +1,5 @@
 {
   "description": "RIA-5553 send bail documents uploaded notification to HomeOffice and legal representative",
-  "launchDarklyKey": "tcw-notifications-feature:true",
   "request": {
     "uri": "/bail/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
@@ -51,9 +50,8 @@
         "body": [
           "1650-6221-2061-5101",
           "John Smith",
-          "{$iaExUiFrontendUrl}",
-          "New documentation has been uploaded to the online service.",
-          "Sign in to your account to view the uploaded document(s) in the documents tab."
+          "A12345",
+          "123654LR"
         ]
       },
       {
@@ -63,9 +61,8 @@
         "body": [
           "1650-6221-2061-5101",
           "John Smith",
-          "{$iaExUiFrontendUrl}",
-          "New documentation has been uploaded to the online service.",
-          "Sign in to your account to view the uploaded document(s) in the documents tab."
+          "A12345",
+          "123654LR"
         ]
       }
     ]

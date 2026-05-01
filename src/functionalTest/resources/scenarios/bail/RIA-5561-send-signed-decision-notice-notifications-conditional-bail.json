@@ -1,0 +1,90 @@
+{
+  "description": "RIA-5561 send bail signed decision notice notifications to Applicant (sms) and HO and LR (email)",
+  "request": {
+    "uri": "/bail/ccdAboutToSubmit",
+    "credentials": "Judge",
+    "input": {
+      "id": 55612,
+      "eventId": "uploadSignedDecisionNotice",
+      "state": "unsignedDecision",
+      "caseData": {
+        "template": "minimal-bail-application-submitted.json",
+        "replacements": {
+          "applicantHasMobile": "Yes",
+          "applicantMobileNumber1": "{$IA_TEST_APPLICANT_MOBILE}",
+          "recordDecisionType": "conditionalGrant"
+        }
+      }
+    }
+  },
+  "expectation": {
+    "status": 200,
+    "errors": [],
+    "caseData": {
+      "template": "minimal-bail-application-submitted.json",
+      "replacements": {
+        "applicantHasMobile": "Yes",
+        "applicantMobileNumber1": "{$IA_TEST_APPLICANT_MOBILE}",
+        "recordDecisionType": "conditionalGrant",
+        "notificationsSent": [
+          {
+            "id": "55612_BAIL_SIGNED_DECISION_NOTICE_UPLOADED_APPLICANT_SMS",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "55612_BAIL_UPLOADED_SIGNED_DECISION_NOTICE_HOME_OFFICE",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "55612_BAIL_UPLOADED_SIGNED_DECISION_NOTICE_LEGAL_REPRESENTATIVE",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }
+        ]
+      }
+    },
+    "notifications": [
+      {
+        "reference": "55612_BAIL_SIGNED_DECISION_NOTICE_UPLOADED_APPLICANT_SMS",
+        "recipient": "{$IA_TEST_APPLICANT_MOBILE}",
+        "subject": "",
+        "body": [
+          "1650-6221-2061-5101",
+          "granted"
+        ],
+        "bodyExclusions": [
+          "refused"
+        ]
+      },
+      {
+        "reference": "55612_BAIL_UPLOADED_SIGNED_DECISION_NOTICE_HOME_OFFICE",
+        "recipient": "{$bailHomeOfficeEmailAddress}",
+        "subject": "Bail Application: Access the decision",
+        "body": [
+          "1650-6221-2061-5101",
+          "John Smith",
+          "A12345",
+          "123654LR",
+          "Granted"
+        ],
+        "bodyExclusions": [
+          "Refused"
+        ]
+      },
+      {
+        "reference": "55612_BAIL_UPLOADED_SIGNED_DECISION_NOTICE_LEGAL_REPRESENTATIVE",
+        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "subject": "Bail Application: Access the decision",
+        "body": [
+          "1650-6221-2061-5101",
+          "John Smith",
+          "A12345",
+          "123654LR",
+          "Granted"
+        ],
+        "bodyExclusions": [
+          "Refused"
+        ]
+      }
+    ]
+  }
+}

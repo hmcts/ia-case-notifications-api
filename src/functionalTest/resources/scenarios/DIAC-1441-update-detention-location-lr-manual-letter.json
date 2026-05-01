@@ -25,7 +25,6 @@
             "AddressLine2": "Tamarind Court",
             "AddressLine3": "1 Sanders Lane"
           },
-          "notificationsSent": [],
           "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
           "detentionFacility": "prison",
           "prisonName": "Aylesbury",

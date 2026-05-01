@@ -24,7 +24,6 @@
               }
             }
           ],
-          "notificationsSent": [],
           "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}"
         }
       }

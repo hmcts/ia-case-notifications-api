@@ -26,7 +26,6 @@
           "directionEditExplanation": "Upload additional evidence",
           "directionEditDateDue": "{$TODAY+14}",
           "directionEditParties": "appellantAndRespondent",
-          "notificationsSent": [],
           "ariaListingReference": "ARIA-LISTING-REFERENCE"
         }
       }

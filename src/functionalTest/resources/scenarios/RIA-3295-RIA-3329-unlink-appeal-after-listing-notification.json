@@ -11,8 +11,7 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "listCaseHearingCentre": "taylorHouse",
-          "ariaListingReference": "LP/12345/2019",
-          "notificationsSent": []
+          "ariaListingReference": "LP/12345/2019"
         }
       }
     }

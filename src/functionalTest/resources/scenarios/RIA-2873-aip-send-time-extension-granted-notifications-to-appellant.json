@@ -36,8 +36,7 @@
                 "decisionOutcomeDate": "{$TODAY+14}"
               }
             }
-          ],
-          "notificationsSent": []
+          ]
         }
       }
     }

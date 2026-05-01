@@ -16,8 +16,7 @@
           "currentCaseStateVisibleToJudge": "ftpaSubmitted",
           "ftpaRespondentDecisionOutcomeType": "partiallyGranted",
           "ftpaApplicantType": "respondent",
-          "ariaListingReference": "987654321",
-          "notificationsSent": []
+          "ariaListingReference": "987654321"
         }
       }
     }
@@ -32,6 +31,10 @@
         "notificationsSent": [
           {
             "id": "91802_FTPA_APPLICATION_DECISION_ADMIN_OFFICER_RESPONDENT",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "91802_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

@@ -1,21 +1,19 @@
 {
   "description": "RIA-8349 RIA-8352 Send bail relisting case listing notification to HO, LR and Applicant",
-  "launchDarklyKey": "tcw-notifications-feature:true",
   "request": {
     "uri": "/bail/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 8352,
+      "id": 83493,
       "eventId": "caseListing",
       "state": "applicationSubmitted",
       "caseData": {
-        "template": "minimal-bail-application-submitted.json",
+        "template": "bail-application-case-listing.json",
         "replacements": {
+          "isLegallyRepresentedForFlag": "Yes",
           "applicantHasMobile": "Yes",
           "applicantMobileNumber1": "{$TEST_CITIZEN_MOBILE}",
-          "listingEvent": "relisting",
-          "listingHearingDate": "2024-01-01T10:29:00.000",
-          "listingLocation": "glasgowTribunalsCentre"
+          "listingEvent": "relisting"
         }
       }
     }
@@ -24,59 +22,71 @@
     "status": 200,
     "errors": [],
     "caseData": {
-      "template": "minimal-bail-application-submitted.json",
+      "template": "bail-application-case-listing.json",
       "replacements": {
+        "isLegallyRepresentedForFlag": "Yes",
         "applicantHasMobile": "Yes",
         "applicantMobileNumber1": "{$TEST_CITIZEN_MOBILE}",
         "listingEvent": "relisting",
-        "listingHearingDate": "2024-01-01T10:29:00.000",
-        "listingLocation": "glasgowTribunalsCentre",
         "notificationsSent": [
           {
-            "id": "8352_BAIL_APPLICATION_CASE_LISTING_HOME_OFFICE",
+            "id": "83493_BAIL_APPLICATION_CASE_LISTING_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "8352_BAIL_APPLICATION_CASE_LISTING_LEGAL_REPRESENTATIVE",
+            "id": "83493_BAIL_APPLICATION_CASE_LISTING_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "8352_BAIL_APPLICATION_CASE_LISTING_APPLICANT_SMS",
+            "id": "83493_BAIL_APPLICATION_CASE_LISTING_APPLICANT_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
+      }
+    },
+    "notifications": [
+      {
+        "reference": "83493_BAIL_APPLICATION_CASE_LISTING_HOME_OFFICE",
+        "recipient": "{$bailHomeOfficeEmailAddress}",
+        "subject": "Bail application: Updated Bail hearing",
+        "body": [
+          "1650-6221-2061-5101",
+          "123654LR",
+          "John Smith",
+          "A12345",
+          "1 Jan 2024",
+          "Newport",
+          "IAC Newport, Columbus House, Langstone Business Park, Chepstow Road, Newport, NP18 2LX",
+          "10:29"
+        ]
       },
-      "notifications": [
-        {
-          "reference": "8352_BAIL_APPLICATION_CASE_LISTING_HOME_OFFICE",
-          "recipient": "{$bailHomeOfficeEmailAddress}",
-          "subject": "Bail application: Updated Bail hearing",
-          "body": [
-            "1650-6221-2061-5101",
-            "John Smith",
-            "{$iaExUiFrontendUrl}"
-          ]
-        },
-        {
-          "reference": "8352_BAIL_APPLICATION_CASE_LISTING_LEGAL_REPRESENTATIVE",
-          "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-          "subject": "Bail application: Updated Bail hearing",
-          "body": [
-            "1650-6221-2061-5101",
-            "John Smith",
-            "{$iaExUiFrontendUrl}"
-          ]
-        },
-        {
-          "reference": "8352_BAIL_UPLOAD_BAIL_SUMMARY_DIRECTION_HOME_OFFICE",
-          "recipient": "{$TEST_CITIZEN_MOBILE}",
-          "subject": "Bail application: Updated Bail hearing",
-          "body": [
-            "1650-6221-2061-5101",
-            "John Smith"
-          ]
-        }
-      ]
-    }
+      {
+        "reference": "83493_BAIL_APPLICATION_CASE_LISTING_LEGAL_REPRESENTATIVE",
+        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "subject": "Bail application: Updated Bail hearing",
+        "body": [
+          "1650-6221-2061-5101",
+          "123654LR",
+          "John Smith",
+          "A12345",
+          "1 Jan 2024",
+          "10:29",
+          "Newport",
+          "IAC Newport, Columbus House, Langstone Business Park, Chepstow Road, Newport, NP18 2LX"
+        ]
+      },
+      {
+        "reference": "83493_BAIL_APPLICATION_CASE_LISTING_APPLICANT_SMS",
+        "recipient": "{$TEST_CITIZEN_MOBILE}",
+        "subject": "",
+        "body": [
+          "1650-6221-2061-5101",
+          "1 Jan 2024",
+          "10:29",
+          "Newport",
+          "IAC Newport, Columbus House, Langstone Business Park, Chepstow Road, Newport, NP18 2LX"
+        ]
+      }
+    ]
   }
 }

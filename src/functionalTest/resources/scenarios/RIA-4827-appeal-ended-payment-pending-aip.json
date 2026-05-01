@@ -28,8 +28,7 @@
           "endAppealDate": "2019-08-13",
           "endAppealOutcomeReason": "some outcome reason",
           "hearingCentre": "taylorHouse",
-          "paymentStatus": "Payment pending",
-          "notificationsSent": []
+          "paymentStatus": "Payment pending"
         }
       }
     }

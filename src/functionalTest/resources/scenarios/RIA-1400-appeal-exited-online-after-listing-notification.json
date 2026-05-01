@@ -13,8 +13,7 @@
           "listCaseHearingCentre": "taylorHouse",
           "ariaListingReference": "LP/12345/2019",
           "legalRepReferenceNumber": "REF54321",
-          "endAppealOutcome": "appealTakenOffline",
-          "notificationsSent": []
+          "endAppealOutcome": "appealTakenOffline"
         }
       }
     }

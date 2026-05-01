@@ -67,7 +67,7 @@
         "isDlrmSetAsideEnabled": "Yes",
         "feeAmountGbp": "14000",
         "feeUpdateTribunalAction": "additionalPayment",
-        "notificationsSent": null
+        "notificationsSent": []
       }
     }
   }

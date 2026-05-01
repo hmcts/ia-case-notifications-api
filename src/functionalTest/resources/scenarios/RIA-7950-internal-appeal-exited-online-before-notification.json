@@ -11,8 +11,7 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "isAdmin": "Yes",
-          "endAppealOutcome": "appealTakenOffline",
-          "notificationsSent": []
+          "endAppealOutcome": "appealTakenOffline"
         }
       }
     }

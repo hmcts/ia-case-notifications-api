@@ -13,7 +13,6 @@
         "replacements": {
           "listCaseHearingCentre": "taylorHouse",
           "ariaListingReference": "LP/12345/2019",
-          "notificationsSent": [],
           "caseNotes": [
             {
               "id": "1",

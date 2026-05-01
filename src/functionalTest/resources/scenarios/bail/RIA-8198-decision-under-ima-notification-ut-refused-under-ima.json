@@ -1,0 +1,52 @@
+{
+  "description": "RIA-8198 record decision event for a bail application under IMA with Legal Representative",
+  "request": {
+    "uri": "/bail/ccdAboutToSubmit",
+    "credentials": "Judge",
+    "input": {
+      "id": 81983,
+      "eventId": "recordTheDecision",
+      "state": "bailSummaryUploaded",
+      "caseData": {
+        "template": "minimal-bail-application-submitted.json",
+        "replacements": {
+          "hoSelectImaStatus": "Yes",
+          "recordDecisionType": "refusedUnderIma"
+        }
+      }
+    }
+  },
+  "expectation": {
+    "status": 200,
+    "errors": [],
+    "caseData": {
+      "template": "minimal-bail-application-submitted.json",
+      "replacements": {
+        "hoSelectImaStatus": "Yes",
+        "recordDecisionType": "refusedUnderIma",
+        "notificationsSent": [
+          {
+            "id": "81983_BAIL_RECORD_DECISION_IMA_UPPER_TRIBUNAL",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }
+        ]
+      }
+    },
+    "notifications": [
+      {
+        "reference": "81983_BAIL_RECORD_DECISION_IMA_UPPER_TRIBUNAL",
+        "recipient": "{$bailUpperTribunalEmailAddress}",
+        "subject": "Bail application: Access the decision",
+        "body": [
+          "1650-6221-2061-5101",
+          "John Smith",
+          "A12345",
+          " Refused under IMA because 28 days have not expired since the date of detention"
+        ],
+        "bodyExclusions": [
+          "Granted"
+        ]
+      }
+    ]
+  }
+}

@@ -24,9 +24,8 @@
       "replacements": {
         "appealType": "refusalOfHumanRights",
         "hearingCentre": "manchester",
-        "notificationsSent": null
+        "notificationsSent": []
       }
-    },
-    "notifications": null
+    }
   }
 }

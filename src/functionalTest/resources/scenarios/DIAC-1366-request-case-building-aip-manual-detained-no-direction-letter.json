@@ -36,7 +36,6 @@
               }
             }
           ],
-          "notificationsSent": [],
           "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}"
         }
       }

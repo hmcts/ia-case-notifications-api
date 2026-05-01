@@ -16,7 +16,6 @@
           "ftpaRespondentRjDecisionOutcomeType": "reheardRule32",
           "ftpaAppellantRjDecisionOutcomeType": "refused",
           "ftpaApplicantType": "respondent",
-          "ftpaApplicantType": "appellant",
           "listCaseHearingCentre": "glasgow",
           "ariaListingReference": "987654321",
           "notificationsSent": [
