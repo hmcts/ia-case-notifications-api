@@ -72,10 +72,11 @@ public class CcdScenarioRunnerTest {
     private LaunchDarklyFunctionalTestClient launchDarklyFunctionalTestClient;
 
     private Map<String, Object> actualResponse = null;
+    private final Map<String, Headers> authHeaders = new HashMap<>();
     private final Map<String, String> scenarioSources = new HashMap<>();
 
     @BeforeAll
-    public void beforeAll() throws IOException, InterruptedException {
+    public void beforeAll() throws IOException {
         MapSerializer.setObjectMapper(objectMapper);
         RestAssured.baseURI = targetInstance;
         RestAssured.useRelaxedHTTPSValidation();
@@ -103,6 +104,7 @@ public class CcdScenarioRunnerTest {
         System.out.println((char) 27 + "[36m" + "-------------------------------------------------------------------");
         System.out.println((char) 27 + "[33m" + "RUNNING " + scenarioSources.size() + " SCENARIOS");
         System.out.println((char) 27 + "[36m" + "-------------------------------------------------------------------");
+        authHeaders.putAll(fetchAuthorizationHeaders());
     }
 
     private Stream<Arguments> scenarioSources() {
@@ -358,31 +360,22 @@ public class CcdScenarioRunnerTest {
         }
     }
 
+    private Map<String, Headers> fetchAuthorizationHeaders() {
+        Map<String, Headers> map = new HashMap<>();
+        map.put("legalrepresentative", authorizationHeadersProvider.getLegalRepresentativeAuthorization());
+        map.put("caseofficer", authorizationHeadersProvider.getCaseOfficerAuthorization());
+        map.put("adminofficer", authorizationHeadersProvider.getAdminOfficerAuthorization());
+        map.put("homeofficeapc", authorizationHeadersProvider.getHomeOfficeApcAuthorization());
+        map.put("homeofficelart", authorizationHeadersProvider.getHomeOfficeLartAuthorization());
+        map.put("homeofficepou", authorizationHeadersProvider.getHomeOfficePouAuthorization());
+        map.put("homeofficegeneric", authorizationHeadersProvider.getHomeOfficeGenericAuthorization());
+        map.put("judge", authorizationHeadersProvider.getJudgeAuthorization());
+        map.put("citizen", authorizationHeadersProvider.getCitizenAuthorization());
+        map.put("systemuser", authorizationHeadersProvider.getSystemUserAuthorization());
+        return map;
+    }
+
     private Headers getAuthorizationHeaders(String credentials) {
-        return switch (credentials.toLowerCase()) {
-            case "legalrepresentative" -> authorizationHeadersProvider
-                .getLegalRepresentativeAuthorization();
-            case "caseofficer" -> authorizationHeadersProvider
-                .getCaseOfficerAuthorization();
-            case "adminofficer" -> authorizationHeadersProvider
-                .getAdminOfficerAuthorization();
-            case "homeofficeapc" -> authorizationHeadersProvider
-                .getHomeOfficeApcAuthorization();
-            case "homeofficelart" -> authorizationHeadersProvider
-                .getHomeOfficeLartAuthorization();
-            case "homeofficepou" -> authorizationHeadersProvider
-                .getHomeOfficePouAuthorization();
-            case "homeofficegeneric" -> authorizationHeadersProvider
-                .getHomeOfficeGenericAuthorization();
-            case "legalrepresentativeorga" -> authorizationHeadersProvider
-                .getLegalRepresentativeOrgAAuthorization();
-            case "judge" -> authorizationHeadersProvider
-                .getJudgeAuthorization();
-            case "citizen" -> authorizationHeadersProvider
-                .getCitizenAuthorization();
-            case "systemuser" -> authorizationHeadersProvider
-                .getSystemUserAuthorization();
-            default -> new Headers();
-        };
+        return authHeaders.getOrDefault(credentials.toLowerCase(), new Headers());
     }
 }

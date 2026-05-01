@@ -186,9 +186,9 @@ public class NotificationVerifier implements Verifier {
     private boolean getVerification(String expectedBodyMatch, String actualBody) {
         boolean verification = actualBody.contains(expectedBodyMatch);
         if (expectedBodyMatch.equals(iaExUiFrontendUrl)) {
-            verification = actualBody.contains("https://manage-case") && actualBody.contains("platform.hmcts.net");
+            verification = verification || (actualBody.contains("https://manage-case") && actualBody.contains("platform.hmcts.net"));
         } else if (expectedBodyMatch.equals(iaAipFrontendUrl)) {
-            verification = actualBody.contains(expectedBodyMatch) || actualBody.contains("https://www.appeal-immigration-asylum-decision.service.gov.uk/");
+            verification = verification || actualBody.contains("https://www.appeal-immigration-asylum-decision.service.gov.uk/");
         }
         return verification;
     }
