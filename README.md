@@ -4,6 +4,7 @@ Immigration &amp; Asylum case notifications API
 
 ## Purpose
 
+
 Immigration &amp; Asylum case notifications API is a Spring Boot based application to send notifications to Immigration & Asylum Appellants and Legal Representatives.
 
 ### Prerequisites
