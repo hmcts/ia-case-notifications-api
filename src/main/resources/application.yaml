@@ -353,6 +353,12 @@ govnotify:
         email: b96c8935-66b1-4a46-aca6-f8e86d7a5d8f
         detention:
           email: 68fdfc26-6bef-45c8-84cf-ae1ece8572cf
+    raiseQuery:
+      legalRep:
+        email: 18fc759f-0292-461e-82ad-ce094b3fe2fe
+    respondQuery:
+      legalRep:
+        email: 967dd872-890e-4c0c-86aa-6e34638b4f1b
     reviewDirection:
       legalRep:
         email: 99f45880-25a3-4ca4-bce0-fdc7e0a81a88
@@ -1748,6 +1754,7 @@ security:
       - "applyForCosts"
       - "respondToCosts"
       - "addEvidenceForCosts"
+      - "queryManagementRaiseQuery"
     tribunal-caseworker:
       - "sendDirection"
       - "changeDirectionDueDate"
@@ -1947,6 +1954,7 @@ security:
       - "revokeCitizenAccess"
     # These events are used by the bails service, they will need to be migrated to the admin access management roles - see DIAC-855
     caseworker-ia-admofficer:
+      - "queryManagementRespondQuery"
       - "editBailApplication"
       - "uploadSignedDecisionNotice"
       - "uploadSignedDecisionNoticeConditionalGrant"
@@ -2013,6 +2021,7 @@ security:
       - "hearingCancelled"
       - "revokeCitizenAccess"
     ctsc:
+      - "queryManagementRespondQuery"
       - "progressMigratedCase"
       - "requestFeeRemission"
       - "buildCase"

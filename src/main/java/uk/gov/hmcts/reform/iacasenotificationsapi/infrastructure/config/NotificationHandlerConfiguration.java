@@ -8002,6 +8002,36 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> legalRepresentativeRaiseQueryEmailNotificationHandler(
+            @Qualifier("legalRepresentationRaiseQueryNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == QUERY_MANAGEMENT_RAISE_QUERY;
+                },
+                notificationGenerators,
+                getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> legalRepresentativeRespondQueryEmailNotificationHandler(
+            @Qualifier("legalRepresentationRespondQueryNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == QUERY_MANAGEMENT_RESPOND_QUERY;
+                },
+                notificationGenerators,
+                getErrorHandler()
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> aipAppellantRecordRefundDecisionNotificationHandler(
         @Qualifier("aipAppellantRecordRefundDecisionNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {

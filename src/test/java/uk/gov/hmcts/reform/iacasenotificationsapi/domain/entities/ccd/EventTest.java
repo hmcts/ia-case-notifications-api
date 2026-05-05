@@ -146,6 +146,8 @@ public class EventTest {
                 Arguments.of("refundConfirmation", Event.REFUND_CONFIRMATION.toString()),
                 Arguments.of("hearingCancelled", HEARING_CANCELLED.toString()),
                 Arguments.of("revokeCitizenAccess", REVOKE_CITIZEN_ACCESS.toString()),
+                Arguments.of("queryManagementRaiseQuery", QUERY_MANAGEMENT_RAISE_QUERY.toString()),
+                Arguments.of("queryManagementRespondQuery", QUERY_MANAGEMENT_RESPOND_QUERY.toString()),
                 Arguments.of("unknown", Event.UNKNOWN.toString()));
     }
 
