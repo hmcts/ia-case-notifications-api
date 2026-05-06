@@ -385,8 +385,8 @@ dependencies {
 
     testImplementation 'org.springframework.security:spring-security-test'
 
-    testImplementation 'net.serenity-bdd:net.serenity-rest-assured'
-    testImplementation 'net.serenity-bdd:net.serenity-spring'
+    testImplementation 'net.serenity-bdd:serenity-rest-assured'
+    testImplementation 'net.serenity-bdd:serenity-spring'
 
     testImplementation group: 'com.github.hmcts', name: 'fortify-client', version: '1.4.10', classifier: 'all', {
         exclude group: 'commons-io', module: 'commons-io'
