@@ -134,7 +134,7 @@ configurations {
 
 checkstyle {
     maxWarnings = 0
-    toolVersion = '10.12.5'
+    toolVersion = '13.4.2'
     setConfigFile(new File(rootDir, 'config/checkstyle/checkstyle.xml'))
 }
 
