@@ -89,13 +89,14 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesO
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AccessCodeGenerator;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class AsylumCaseUtilsTest {
 
     private static final String applyForCostsCreationDate = "2023-11-24";
     private final MockedStatic<AccessCodeGenerator> generatorMockedStatic = mockStatic(AccessCodeGenerator.class);
     private final String legalOfficerAddendumUploadedByLabel = "TCW";
     private final String legalOfficerAddendumUploadSuppliedByLabel = "The respondent";
-    @Mock(lenient = true)
+    @Mock
     private AsylumCase asylumCase;
     @Spy
     private AsylumCase asylumCaseSpy;
@@ -281,7 +282,7 @@ public class AsylumCaseUtilsTest {
         );
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
 
-        assertEquals(applyForCostsList.get(0).getValue(), retrieveLatestApplyForCosts(asylumCase));
+        assertEquals(applyForCostsList.getFirst().getValue(), retrieveLatestApplyForCosts(asylumCase));
     }
 
     @Test
@@ -295,7 +296,7 @@ public class AsylumCaseUtilsTest {
         when(asylumCase.read(RESPOND_TO_COSTS_LIST, DynamicList.class)).thenReturn(Optional.of(respondsToCostsList));
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
 
-        assertEquals(applyForCostsList.get(0).getValue(), getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST));
+        assertEquals(applyForCostsList.getFirst().getValue(), getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST));
     }
 
     @Test

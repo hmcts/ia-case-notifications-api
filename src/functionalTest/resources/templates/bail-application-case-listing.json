@@ -42,7 +42,7 @@
   "hasFinancialCondSupporter": "No",
   "homeOfficeReferenceNumber": "A12345",
   "hasPreviousBailApplication": "No",
-  "isLegallyRepresentedForFlag": "Yes",
+  "isLegallyRepresentedForFlag": "No",
   "agreesToBoundByFinancialCond": "No",
   "transferBailManagementYesOrNo": "Yes",
   "currentCaseStateVisibleToJudge": "applicationSubmitted",
@@ -50,7 +50,30 @@
   "groundsForBailProvideEvidenceOption": "No",
   "currentCaseStateVisibleToAdminOfficer": "applicationSubmitted",
   "currentCaseStateVisibleToLegalRepresentative": "applicationSubmitted",
-  "sendDirectionDescription": "This is the content of the direction",
-  "sendDirectionList": "Home Office",
-  "dateOfCompliance": "2022-05-25"
+  "listingHearingDate": "2024-01-01T10:29:00.000",
+  "listingLocation": "newport",
+  "directions": [
+    {
+      "id": "1",
+      "value": {
+        "sendDirectionDescription":  "This is the content of the direction",
+        "sendDirectionList": "Home Office",
+        "dateOfCompliance":  "2026-05-12",
+        "dateSent": "2026-04-25",
+        "dateTimeDirectionCreated":  "2026-04-25",
+        "dateTimeDirectionModified": "2026-04-25",
+        "previousDates": []
+      }
+    }
+  ],
+  "refDataListingLocationDetail": {
+    "postcode": "NP18 2LX POSTCODE",
+    "epimms_id": "227101 EPIMMS ID",
+    "site_name": "Newport (South Wales) Immigration and Asylum Tribunal SITE NAME",
+    "court_name": "Newport Tribunal Centre - Columbus House COURT NAME",
+    "court_status": "Open COURT STATUS",
+    "court_address": "Langstone Business Park, Newport COURT ADDRESS",
+    "is_hearing_location": "Y",
+    "is_case_management_location": "Y"
+  }
 }

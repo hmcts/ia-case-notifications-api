@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
-      "id": 3855,
+      "id": 1642,
       "eventId": "residentJudgeFtpaDecision",
       "state": "ftpaSubmitted",
       "caseData": {
@@ -39,7 +39,7 @@
     },
     "notifications": [
       {
-        "reference": "3855_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT",
+        "reference": "1642_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT",
         "recipient": "{$upperTribunalNoticesEmailAddress}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal granted",
         "body": [
@@ -50,7 +50,7 @@
         ]
       },
       {
-        "reference": "3855_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_RESPONDENT",
+        "reference": "1642_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_RESPONDENT",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal granted",
         "body": [
@@ -61,7 +61,7 @@
         ]
       },
       {
-        "reference": "3855_FTPA_APPLICATION_DECISION_ADMIN_OFFICER_RESPONDENT",
+        "reference": "1642_FTPA_APPLICATION_DECISION_ADMIN_OFFICER_RESPONDENT",
         "recipient": "{$upperTribunalPermissionApplicationsEmailAddress}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal granted",
         "body": [
@@ -71,7 +71,7 @@
         ]
       },
       {
-        "reference": "3855_FTPA_DECISION_HO_NOTIFICATION_FAILED_CASE_OFFICER",
+        "reference": "1642_FTPA_DECISION_HO_NOTIFICATION_FAILED_CASE_OFFICER",
         "recipient": "{$hearingCentreEmailAddresses.bradford}",
         "subject": "Immigration and Asylum appeal: A notification to the respondent has failed",
         "body": [

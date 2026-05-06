@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
-      "id": 1021,
+      "id": 1231,
       "eventId": "decideFtpaApplication",
       "state": "ftpaSubmitted",
       "caseData": {
@@ -15,12 +15,11 @@
           "ftpaRespondentRjDecisionOutcomeType": "reheardRule32",
           "ftpaAppellantRjDecisionOutcomeType": "refused",
           "ftpaApplicantType": "respondent",
-          "ftpaApplicantType": "appellant",
           "listCaseHearingCentre": "glasgow",
           "ariaListingReference": "987654321",
           "notificationsSent": [
             {
-              "id": "1021_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_APPELLANT",
+              "id": "1231_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_APPELLANT",
               "value": "34e146c9-6050-4894-a64e-acd461a5f934"
             }
           ]
@@ -34,12 +33,25 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
-        "notificationsSent": []
+        "notificationsSent": [
+          {
+            "id": "1231_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_APPELLANT",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "1231_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "1231_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_RESPONDENT",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }
+        ]
       }
     },
     "notifications": [
       {
-        "reference": "1021_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT",
+        "reference": "1231_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT",
         "recipient": "{$upperTribunalNoticesEmailAddress}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
         "body": [
@@ -50,7 +62,7 @@
         ]
       },
       {
-        "reference": "1021_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_RESPONDENT",
+        "reference": "1231_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_RESPONDENT",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
         "body": [

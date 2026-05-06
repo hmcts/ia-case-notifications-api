@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 1368,
+      "id": 2051,
       "eventId": "editAppealAfterSubmit",
       "state": "appealSubmitted",
       "caseData": {
@@ -49,11 +49,11 @@
         },
         "notificationsSent": [
           {
-            "id": "1368_EDIT_APPEAL_AFTER_SUBMIT_RESPONDENT",
+            "id": "2051_EDIT_APPEAL_AFTER_SUBMIT_RESPONDENT",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1368_INTERNAL_EDIT_APPEAL_POST_SUBMIT_APPELLANT_LETTER",
+            "id": "2051_INTERNAL_EDIT_APPEAL_POST_SUBMIT_APPELLANT_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

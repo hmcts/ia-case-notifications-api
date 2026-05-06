@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "caseofficer",
     "input": {
-      "id": 3305,
+      "id": 1795,
       "eventId": "asyncStitchingComplete",
       "state": "preHearing",
       "caseData": {
@@ -25,7 +25,7 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "3305_STITCHING_BUNDLE_HO_NOTIFICATION_FAILED_CASE_OFFICER",
+            "id": "1795_STITCHING_BUNDLE_HO_NOTIFICATION_FAILED_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -33,7 +33,7 @@
     },
     "notifications": [
       {
-        "reference": "3305_STITCHING_BUNDLE_HO_NOTIFICATION_FAILED_CASE_OFFICER",
+        "reference": "1795_STITCHING_BUNDLE_HO_NOTIFICATION_FAILED_CASE_OFFICER",
         "recipient": "{$hearingCentreEmailAddresses.bradford}",
         "subject": "Immigration and Asylum appeal: A notification to the respondent has failed",
         "body": [

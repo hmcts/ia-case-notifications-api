@@ -31,18 +31,13 @@ public interface FtpaNotificationPersonalisationUtil {
     }
 
     default String camelCaseToSentenceCase(FtpaDecisionOutcomeType decisionType) {
-        switch (decisionType) {
-            case FTPA_GRANTED:
-                return "granted";
-            case FTPA_PARTIALLY_GRANTED:
-                return "partially granted";
-            case FTPA_REFUSED:
-                return "refused";
-            case FTPA_NOT_ADMITTED:
-                return "not admitted";
-            default:
-                return "";
-        }
+        return switch (decisionType) {
+            case FTPA_GRANTED -> "granted";
+            case FTPA_PARTIALLY_GRANTED -> "partially granted";
+            case FTPA_REFUSED -> "refused";
+            case FTPA_NOT_ADMITTED -> "not admitted";
+            default -> "";
+        };
     }
 
     default String ftpaDecisionVerbalization(FtpaDecisionOutcomeType decision) {

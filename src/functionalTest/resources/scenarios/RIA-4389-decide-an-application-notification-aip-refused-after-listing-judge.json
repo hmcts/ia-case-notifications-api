@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
-      "id": 43894,
+      "id": 1600,
       "eventId": "decideAnApplication",
       "state": "prepareForHearing",
       "caseData": {
@@ -87,15 +87,15 @@
         ],
         "notificationsSent": [
           {
-            "id": "43894_DECIDE_AN_APPLICATION_HOME_OFFICE",
+            "id": "1600_DECIDE_AN_APPLICATION_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "43894_DECIDE_AN_APPLICATION_APPELLANT_AIP_EMAIL",
+            "id": "1600_DECIDE_AN_APPLICATION_APPELLANT_AIP_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "43894_DECIDE_AN_APPLICATION_APPELLANT_AIP_SMS",
+            "id": "1600_DECIDE_AN_APPLICATION_APPELLANT_AIP_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -103,7 +103,7 @@
     },
     "notifications": [
       {
-        "reference": "43894_DECIDE_AN_APPLICATION_APPELLANT_AIP_EMAIL",
+        "reference": "1600_DECIDE_AN_APPLICATION_APPELLANT_AIP_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
         "subject": "Immigration and Asylum appeal: Your request was refused",
         "body": [
@@ -119,7 +119,7 @@
         ]
       },
       {
-        "reference": "43894_DECIDE_AN_APPLICATION_APPELLANT_AIP_SMS",
+        "reference": "1600_DECIDE_AN_APPLICATION_APPELLANT_AIP_SMS",
         "recipient": "{$TEST_CITIZEN_MOBILE}",
         "subject": "",
         "body": [
@@ -129,7 +129,7 @@
         ]
       },
       {
-        "reference": "43894_DECIDE_AN_APPLICATION_HOME_OFFICE",
+        "reference": "1600_DECIDE_AN_APPLICATION_HOME_OFFICE",
         "recipient": "{$homeOfficeEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: An appellant application has been refused",
         "body": [

@@ -5,14 +5,14 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
 import com.google.common.collect.ImmutableMap;
-import com.microsoft.applicationinsights.core.dependencies.apachecommons.lang3.StringUtils;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;

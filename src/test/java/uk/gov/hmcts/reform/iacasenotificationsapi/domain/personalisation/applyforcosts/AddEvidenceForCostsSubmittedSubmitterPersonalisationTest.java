@@ -115,9 +115,9 @@ class AddEvidenceForCostsSubmittedSubmitterPersonalisationTest {
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
         when(asylumCase.read(ADD_EVIDENCE_FOR_COSTS_LIST, DynamicList.class)).thenReturn(Optional.of(addEvidenceToCostsList));
 
-        if (("Tribunal").equals(applyForCostsList.get(0).getValue().getApplyForCostsApplicantType())) {
+        if (("Tribunal").equals(applyForCostsList.getFirst().getValue().getApplyForCostsApplicantType())) {
             assertTrue(addEvidenceForCostsSubmittedSubmitterPersonalisation.getRecipientsList(asylumCase).isEmpty());
-        } else if (applyForCostsList.get(0).getValue().getLoggedUserRole().equals(homeOffice)) {
+        } else if (applyForCostsList.getFirst().getValue().getLoggedUserRole().equals(homeOffice)) {
             assertTrue(addEvidenceForCostsSubmittedSubmitterPersonalisation.getRecipientsList(asylumCase).contains(homeOfficeEmailAddress));
         } else {
             assertTrue(addEvidenceForCostsSubmittedSubmitterPersonalisation.getRecipientsList(asylumCase).contains(legalRepEmailAddress));
@@ -135,8 +135,8 @@ class AddEvidenceForCostsSubmittedSubmitterPersonalisationTest {
     @ParameterizedTest
     @MethodSource("appliesForCostsProviderWithJudge")
     void should_return_personalisation_when_all_information_given(List<IdValue<ApplyForCosts>> applyForCostsList, DynamicList addEvidenceToCostsList) {
-        when(personalisationProvider.getTypeForSelectedApplyForCosts(any(), any())).thenReturn(Map.of("appliedCostsType", applyForCostsList.get(0).getValue().getAppliedCostsType().replaceAll("costs", "").trim()));
-        when(personalisationProvider.retrieveSelectedApplicationId(any(), any())).thenReturn(Map.of("applicationId", applyForCostsList.get(0).getId()));
+        when(personalisationProvider.getTypeForSelectedApplyForCosts(any(), any())).thenReturn(Map.of("appliedCostsType", applyForCostsList.getFirst().getValue().getAppliedCostsType().replaceAll("costs", "").trim()));
+        when(personalisationProvider.retrieveSelectedApplicationId(any(), any())).thenReturn(Map.of("applicationId", applyForCostsList.getFirst().getId()));
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
         when(asylumCase.read(ADD_EVIDENCE_FOR_COSTS_LIST, DynamicList.class)).thenReturn(Optional.of(addEvidenceToCostsList));
 
@@ -146,11 +146,11 @@ class AddEvidenceForCostsSubmittedSubmitterPersonalisationTest {
             .containsEntry("appealReferenceNumber", appealReferenceNumber)
             .containsEntry("appellantGivenNames", appellantGivenNames)
             .containsEntry("appellantFamilyName", appellantFamilyName)
-            .containsEntry("applicationId", applyForCostsList.get(0).getId());
+            .containsEntry("applicationId", applyForCostsList.getFirst().getId());
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
-        if (applyForCostsList.get(0).getValue().getLoggedUserRole().equals("Home office")) {
+        if (applyForCostsList.getFirst().getValue().getLoggedUserRole().equals("Home office")) {
             String expectedHomeOfficeReferenceNumber = "\nHome Office reference: A1234567/001";
             assertThat(personalisation)
                 .containsEntry("appliedCostsType", "Wasted")

@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 14051,
+      "id": 2033,
       "eventId": "recordRemissionDecision",
       "state": "appealSubmitted",
       "caseData": {
@@ -84,7 +84,7 @@
         },
         "notificationsSent": [
           {
-            "id": "14051_INTERNAL_DETAINED_LATE_REMISSION_REFUSED_IN_PRISON_OR_IRC",
+            "id": "2033_INTERNAL_DETAINED_LATE_REMISSION_REFUSED_IN_PRISON_OR_IRC",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

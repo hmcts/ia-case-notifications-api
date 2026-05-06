@@ -1,11 +1,11 @@
 {
   "description": "RIA-6665  Appellant FTPA Application is refused (ADA)",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
-      "id": 66651,
+      "id": 1481,
       "eventId": "residentJudgeFtpaDecision",
       "state": "ftpaSubmitted",
       "caseData": {
@@ -32,7 +32,7 @@
     },
     "notifications": [
       {
-        "reference": "66651_FTPA_APPLICATION_DECISION_HOME_OFFICE_APPELLANT",
+        "reference": "1481_FTPA_APPLICATION_DECISION_HOME_OFFICE_APPELLANT",
         "recipient": "{$upperTribunalNoticesEmailAddress}",
         "subject": "Accelerated detained appeal: application to appeal to Upper Tribunal refused",
         "body": [
@@ -43,7 +43,7 @@
         ]
       },
       {
-        "reference": "66651_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_APPELLANT",
+        "reference": "1481_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_APPELLANT",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Accelerated detained appeal: application to appeal to Upper Tribunal refused",
         "body": [

@@ -69,7 +69,7 @@ class DetentionEngagementTeamMarkAppealAsAdaPersonalisationTest {
         when(detEmailService.getDetEmailAddress(asylumCase)).thenReturn(detEmailAddress);
         when(documentDownloadClient.getJsonObjectFromDocument(any(DocumentWithMetadata.class))).thenReturn(markAsAdaLetterJsonDocument);
 
-        List<IdValue<DocumentWithMetadata>> appealResponseDocuments = TestUtils.getDocumentWithMetadataList("docId", "filename", "description", DocumentTag.INTERNAL_DET_MARK_AS_ADA_LETTER);
+        TestUtils.getDocumentWithMetadataList("docId", "filename", "description", DocumentTag.INTERNAL_DET_MARK_AS_ADA_LETTER);
         markAsAdaLetterJsonDocument = new JSONObject("{\"title\": \"JsonDocument\"}");
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.of(newArrayList(markAsAdaLetterId)));
         when(documentDownloadClient.getJsonObjectFromDocument(markAsAdaLetter)).thenReturn(markAsAdaLetterJsonDocument);

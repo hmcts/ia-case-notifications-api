@@ -1,12 +1,12 @@
 {
   "description": "RIA-3472 Send appeal submitted PA appeal type and payLater notification",
   "launchDarklyKey": "tcw-notifications-feature:true",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "LegalRepresentative",
     "input": {
-      "id": 3472,
+      "id": 1743,
       "eventId": "submitAppeal",
       "state": "appealSubmitted",
       "caseData": {
@@ -36,15 +36,23 @@
         "appealType":"protection",
         "notificationsSent": [
           {
-            "id": "3472_APPEAL_SUBMITTED_CASE_OFFICER",
+            "id": "1743_APPEAL_SUBMITTED_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "3472_APPEAL_SUBMITTED_HOME_OFFICE",
+            "id": "1743_APPEAL_SUBMITTED_PAY_LATER_LEGAL_REP",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "3472_APPEAL_SUBMITTED_PAY_LATER_LEGAL_REP",
+            "id": "1743_APPEAL_SUBMITTED_PAY_OFFLINE_HOME_OFFICE",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "1743_APPEAL_SUBMITTED_PAY_OFFLINE_LEGAL_REPRESENTATIVE",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "1743_APPEAL_SUBMITTED_PAY_OFFLINE_ADMIN_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -52,7 +60,7 @@
     },
     "notifications": [
       {
-        "reference": "3472_APPEAL_SUBMITTED_CASE_OFFICER",
+        "reference": "1743_APPEAL_SUBMITTED_CASE_OFFICER",
         "recipient": "{$hearingCentreEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: appeal submitted",
         "body": [
@@ -62,7 +70,7 @@
         ]
       },
       {
-        "reference": "3472_APPEAL_SUBMITTED_HOME_OFFICE",
+        "reference": "1743_APPEAL_SUBMITTED_HOME_OFFICE",
         "recipient": "{$apcPrivateHomeOfficeEmailAddress}",
         "subject": "Immigration and Asylum appeal: appeal submitted",
         "body": [
@@ -74,7 +82,7 @@
         ]
       },
       {
-        "reference": "3472_APPEAL_SUBMITTED_PAY_LATER_LEGAL_REP",
+        "reference": "1743_APPEAL_SUBMITTED_PAY_LATER_LEGAL_REP",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: Your appeal has been submitted",
         "body": [

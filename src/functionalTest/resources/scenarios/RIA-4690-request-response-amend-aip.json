@@ -1,11 +1,11 @@
 {
   "description": "RIA-4690 Send direction when Request response amend event is triggered",
-  "disabled": true,
+  "disabled": "true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 1003,
+      "id": 1566,
       "eventId": "requestResponseAmend",
       "state": "respondentReview",
       "caseData": {
@@ -71,15 +71,15 @@
         ],
         "notificationsSent": [
           {
-            "id": "1003_REQUEST_RESPONDENT_AMEND_DIRECTION",
+            "id": "1566_REQUEST_RESPONDENT_AMEND_DIRECTION",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1003_REQUEST_RESPONSE_AMEND_AIP_EMAIL",
+            "id": "1566_REQUEST_RESPONSE_AMEND_AIP_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1003_REQUEST_RESPONSE_AMEND_AIP_SMS",
+            "id": "1566_REQUEST_RESPONSE_AMEND_AIP_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -87,7 +87,7 @@
     },
     "notifications": [
       {
-        "reference": "1003_REQUEST_RESPONDENT_AMEND_DIRECTION",
+        "reference": "1566_REQUEST_RESPONDENT_AMEND_DIRECTION",
         "recipient": "{$respondentEmailAddresses.respondentReviewDirection}",
         "subject": "Immigration and Asylum appeal: direction",
         "body": [
@@ -102,7 +102,7 @@
         ]
       },
       {
-        "reference": "1003_REQUEST_RESPONSE_AMEND_AIP_EMAIL",
+        "reference": "1566_REQUEST_RESPONSE_AMEND_AIP_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
         "subject": "Immigration and Asylum appeal: The Tribunal has contacted the Home Office about your appeal",
         "body": [
@@ -114,7 +114,7 @@
         ]
       },
       {
-        "reference": "1003_REQUEST_RESPONSE_AMEND_AIP_SMS",
+        "reference": "1566_REQUEST_RESPONSE_AMEND_AIP_SMS",
         "recipient": "{$TEST_CITIZEN_MOBILE}",
         "subject": "",
         "body": [

@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "LegalRepresentative",
     "input": {
-      "id": 4774,
+      "id": 1563,
       "eventId": "editPaymentMethod",
       "state": "appealStarted",
       "caseData": {
@@ -24,9 +24,8 @@
       "replacements": {
         "appealType": "refusalOfHumanRights",
         "hearingCentre": "manchester",
-        "notificationsSent": null
+        "notificationsSent": []
       }
-    },
-    "notifications": null
+    }
   }
 }

@@ -1,12 +1,12 @@
 {
   "description": "DIAC-1341 End appeal - Cancellation of Production Notice - Detained ",
   "launchDarklyKey": "tcw-notifications-feature:true",
-  "disabled": true,
+  "disabled": "true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 2959123,
+      "id": 2073,
       "eventId": "endAppeal",
       "state": "preHearing",
       "caseData": {
@@ -31,15 +31,15 @@
         "listCaseHearingCentre": "taylorHouse",
         "notificationsSent": [
           {
-            "id": "2959123_END_APPEAL_HOME_OFFICE",
+            "id": "2073_END_APPEAL_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "2959123_END_APPEAL_LEGAL_REPRESENTATIVE",
+            "id": "2073_END_APPEAL_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "2959123_DETAINED_END_APPEAL_PRODUCTION_DET",
+            "id": "2073_DETAINED_END_APPEAL_PRODUCTION_DET",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -47,7 +47,7 @@
     },
     "notifications": [
       {
-        "reference": "2959123_END_APPEAL_HOME_OFFICE",
+        "reference": "2073_END_APPEAL_HOME_OFFICE",
         "recipient": "{$homeOfficeEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: appeal ended –",
         "body": [
@@ -56,7 +56,7 @@
         ]
       },
       {
-        "reference": "2959123_END_APPEAL_LEGAL_REPRESENTATIVE",
+        "reference": "2073_END_APPEAL_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: appeal ended –",
         "body": [
@@ -65,7 +65,7 @@
         ]
       },
       {
-        "reference": "2959123_DETAINED_END_APPEAL_PRODUCTION_DET",
+        "reference": "2073_DETAINED_END_APPEAL_PRODUCTION_DET",
         "recipient": "det-prison-albany@example.com",
         "subject": "IAFT – SERVE IN PERSON: appeal ended",
         "body": [

@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 7366,
+      "id": 1347,
       "eventId": "decideAnApplication",
       "state": "appealSubmitted",
       "caseData": {
@@ -91,7 +91,7 @@
         ],
         "notificationsSent":[
           {
-            "id":"7366_DECIDE_AN_APPLICATION_HOME_OFFICE",
+            "id":"1347_DECIDE_AN_APPLICATION_HOME_OFFICE",
             "value":"$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

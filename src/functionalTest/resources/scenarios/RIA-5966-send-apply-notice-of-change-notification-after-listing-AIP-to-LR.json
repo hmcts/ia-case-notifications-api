@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdSubmitted",
     "credentials": "LegalRepresentative",
     "input": {
-      "id": 5966,
+      "id": 1537,
       "eventId": "nocRequest",
       "state": "prepareForHearing",
       "caseData": {

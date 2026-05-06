@@ -1,12 +1,12 @@
 {
   "description": "RIA-9177 Adjourn hearing without date for internal journey non-detained, oot",
   "launchDarklyKey": "tcw-notifications-feature:true",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 91771,
+      "id": 1107,
       "eventId": "adjournHearingWithoutDate",
       "state": "preHearing",
       "caseData": {
@@ -46,11 +46,11 @@
         "countryGovUkOocAdminJ": "ES",
         "notificationsSent": [
           {
-            "id": "91771_ADJOURN_HEARING_WITHOUT_DATE_ADMIN_OFFICER",
+            "id": "1107_ADJOURN_HEARING_WITHOUT_DATE_ADMIN_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "91771_ADJOURN_HEARING_WITHOUT_DATE_HO",
+            "id": "1107_ADJOURN_HEARING_WITHOUT_DATE_HO",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -58,7 +58,7 @@
     },
     "notifications": [
       {
-        "reference": "91771_ADJOURN_HEARING_WITHOUT_DATE_ADMIN_OFFICER",
+        "reference": "1107_ADJOURN_HEARING_WITHOUT_DATE_ADMIN_OFFICER",
         "recipient": "{$reviewHearingRequirementsAdminOfficerEmailAddress}",
         "subject": "Immigration and Asylum appeal: Hearing adjourned",
         "body": [
@@ -67,7 +67,7 @@
         ]
       },
       {
-        "reference": "91771_ADJOURN_HEARING_WITHOUT_DATE_HO",
+        "reference": "1107_ADJOURN_HEARING_WITHOUT_DATE_HO",
         "recipient": "{$homeOfficeEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: Hearing adjourned",
         "body": [

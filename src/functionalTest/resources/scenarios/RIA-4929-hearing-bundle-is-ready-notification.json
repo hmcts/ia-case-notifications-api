@@ -6,7 +6,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Citizen",
     "input": {
-      "id": 4929,
+      "id": 1552,
       "eventId": "asyncStitchingComplete",
       "state": "preHearing",
       "caseData": {
@@ -30,7 +30,6 @@
           ],
           "directions": [
           ],
-          "notificationsSent": [],
           "caseBundles": [{
             "id": "1",
             "value": {
@@ -63,15 +62,15 @@
         ],
         "notificationsSent": [
           {
-            "id": "4929_HEARING_BUNDLE_IS_READY_HOME_OFFICE",
+            "id": "1552_HEARING_BUNDLE_IS_READY_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "4929_HEARING_BUNDLE_IS_READY_APPELLANT_EMAIL",
+            "id": "1552_HEARING_BUNDLE_IS_READY_APPELLANT_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "4929_HEARING_BUNDLE_IS_READY_APPELLANT_SMS",
+            "id": "1552_HEARING_BUNDLE_IS_READY_APPELLANT_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -79,7 +78,7 @@
     },
     "notifications": [
       {
-        "reference": "4929_HEARING_BUNDLE_IS_READY_APPELLANT_EMAIL",
+        "reference": "1552_HEARING_BUNDLE_IS_READY_APPELLANT_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
         "subject": "Immigration and Asylum appeal: A hearing bundle for your appeal is ready",
         "body": [
@@ -93,7 +92,7 @@
         ]
       },
       {
-        "reference": "4929_HEARING_BUNDLE_IS_READY_APPELLANT_SMS",
+        "reference": "1552_HEARING_BUNDLE_IS_READY_APPELLANT_SMS",
         "recipient": "{$TEST_CITIZEN_MOBILE}",
         "subject": "",
         "body": [

@@ -24,11 +24,11 @@ public class LegalRepresentativePendingPaymentPaidPersonalisation implements Leg
     private final CustomerServicesProvider customerServicesProvider;
 
     public LegalRepresentativePendingPaymentPaidPersonalisation(
-            @Value("${govnotify.template.pendingPaymentBeforeListing.legalRep.paid.email}") String legalRepresentativePendingPaymentPaidBeforeListingTemplateId,
-            @Value("${govnotify.template.pendingPaymentAfterListing.legalRep.paid.email}") String legalRepresentativePendingPaymentPaidAfterListingTemplateId,
-            @Value("${govnotify.template.pendingPaymentEaHu.legalRep.paid.email}") String legalRepresentativePendingPaymentPaidEaHuTemplateId,
-            @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
-            CustomerServicesProvider customerServicesProvider
+        @Value("${govnotify.template.pendingPaymentBeforeListing.legalRep.paid.email}") String legalRepresentativePendingPaymentPaidBeforeListingTemplateId,
+        @Value("${govnotify.template.pendingPaymentAfterListing.legalRep.paid.email}") String legalRepresentativePendingPaymentPaidAfterListingTemplateId,
+        @Value("${govnotify.template.pendingPaymentEaHu.legalRep.paid.email}") String legalRepresentativePendingPaymentPaidEaHuTemplateId,
+        @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
+        CustomerServicesProvider customerServicesProvider
     ) {
         requireNonNull(iaExUiFrontendUrl, "iaExUiFrontendUrl must not be null");
         this.legalRepresentativePendingPaymentPaidBeforeListingTemplateId = legalRepresentativePendingPaymentPaidBeforeListingTemplateId;
@@ -42,24 +42,14 @@ public class LegalRepresentativePendingPaymentPaidPersonalisation implements Leg
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
         AppealType appealType = asylumCase.read(APPEAL_TYPE, AppealType.class)
-                .orElseThrow(() -> new IllegalStateException("AppealType is not present"));
+            .orElseThrow(() -> new IllegalStateException("AppealType is not present"));
 
-        String template = "";
-
-        switch (appealType) {
-            case EA:
-            case EU:
-            case HU:
-                template = legalRepresentativePendingPaymentPaidEaHuTemplateId;
-                break;
-            case PA:
-                template = isAppealListed(asylumCase)
-                        ? legalRepresentativePendingPaymentPaidAfterListingTemplateId : legalRepresentativePendingPaymentPaidBeforeListingTemplateId;
-                break;
-            default:
-                template = "";
-        }
-        return template;
+        return switch (appealType) {
+            case EA, EU, HU -> legalRepresentativePendingPaymentPaidEaHuTemplateId;
+            case PA -> isAppealListed(asylumCase)
+                ? legalRepresentativePendingPaymentPaidAfterListingTemplateId : legalRepresentativePendingPaymentPaidBeforeListingTemplateId;
+            default -> "";
+        };
     }
 
     @Override
@@ -72,21 +62,21 @@ public class LegalRepresentativePendingPaymentPaidPersonalisation implements Leg
         requireNonNull(asylumCase, "asylumCase must not be null");
 
         return
-                ImmutableMap
-                        .<String, String>builder()
-                        .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
-                        .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-                        .put("ariaListingReference", asylumCase.read(ARIA_LISTING_REFERENCE, String.class).orElse(""))
-                        .put("legalRepReferenceNumber", asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
-                        .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
-                        .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
-                        .put("linkToOnlineService", iaExUiFrontendUrl)
-                        .build();
+            ImmutableMap
+                .<String, String>builder()
+                .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+                .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("ariaListingReference", asylumCase.read(ARIA_LISTING_REFERENCE, String.class).orElse(""))
+                .put("legalRepReferenceNumber", asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
+                .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
+                .put("linkToOnlineService", iaExUiFrontendUrl)
+                .build();
     }
 
     protected boolean isAppealListed(AsylumCase asylumCase) {
         final Optional<HearingCentre> appealListed = asylumCase
-                .read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class);
+            .read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class);
         return appealListed.isPresent();
     }
 }

@@ -1,0 +1,94 @@
+{
+  "description": "RIA-8349 RIA-8352 Send bail relisting case listing conditional bail notification to HO, LR and Applicant",
+  "request": {
+    "uri": "/bail/ccdAboutToSubmit",
+    "credentials": "AdminOfficer",
+    "input": {
+      "id": 2098,
+      "eventId": "caseListing",
+      "state": "applicationSubmitted",
+      "caseData": {
+        "template": "bail-application-case-listing.json",
+        "replacements": {
+          "isLegallyRepresentedForFlag": "Yes",
+          "applicantHasMobile": "Yes",
+          "applicantMobileNumber1": "{$TEST_CITIZEN_MOBILE}",
+          "currentCaseStateVisibleToAllUsers": "decisionConditionalBail",
+          "listingEvent": "relisting"
+        }
+      }
+    }
+  },
+  "expectation": {
+    "status": 200,
+    "errors": [],
+    "caseData": {
+      "template": "bail-application-case-listing.json",
+      "replacements": {
+        "isLegallyRepresentedForFlag": "Yes",
+        "applicantHasMobile": "Yes",
+        "applicantMobileNumber1": "{$TEST_CITIZEN_MOBILE}",
+        "listingEvent": "relisting",
+        "currentCaseStateVisibleToAllUsers": "decisionConditionalBail",
+        "notificationsSent": [
+          {
+            "id": "2098_BAIL_APPLICATION_CASE_LISTING_HOME_OFFICE",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "2098_BAIL_APPLICATION_CASE_LISTING_LEGAL_REPRESENTATIVE",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "2098_BAIL_APPLICATION_CASE_LISTING_APPLICANT_SMS",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }
+        ]
+      }
+    },
+    "notifications": [
+      {
+        "reference": "2098_BAIL_APPLICATION_CASE_LISTING_HOME_OFFICE",
+        "recipient": "{$bailHomeOfficeEmailAddress}",
+        "subject": "Bail application: Conditional Bail Review hearing",
+        "body": [
+          "1650-6221-2061-5101",
+          "123654LR",
+          "John Smith",
+          "A12345",
+          "1 Jan 2024",
+          "Newport",
+          "IAC Newport, Columbus House, Langstone Business Park, Chepstow Road, Newport, NP18 2LX",
+          "10:29"
+        ]
+      },
+      {
+        "reference": "2098_BAIL_APPLICATION_CASE_LISTING_LEGAL_REPRESENTATIVE",
+        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "subject": "Bail application: Conditional Bail Review hearing",
+        "body": [
+          "1650-6221-2061-5101",
+          "123654LR",
+          "John Smith",
+          "A12345",
+          "1 Jan 2024",
+          "10:29",
+          "Newport",
+          "IAC Newport, Columbus House, Langstone Business Park, Chepstow Road, Newport, NP18 2LX"
+        ]
+      },
+      {
+        "reference": "2098_BAIL_APPLICATION_CASE_LISTING_APPLICANT_SMS",
+        "recipient": "{$TEST_CITIZEN_MOBILE}",
+        "subject": "",
+        "body": [
+          "1650-6221-2061-5101",
+          "1 Jan 2024",
+          "10:29",
+          "Newport",
+          "IAC Newport, Columbus House, Langstone Business Park, Chepstow Road, Newport, NP18 2LX"
+        ]
+      }
+    ]
+  }
+}

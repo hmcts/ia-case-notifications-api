@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
-      "id": 703329,
+      "id": 1380,
       "eventId": "decideAnApplication",
       "state": "appealSubmitted",
       "caseData": {
@@ -44,7 +44,7 @@
         "isAdmin": "Yes",
         "notificationsSent": [
           {
-            "id": "703329_DECIDE_AN_APPLICATION_HOME_OFFICE",
+            "id": "1380_DECIDE_AN_APPLICATION_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -52,7 +52,7 @@
     },
     "notifications": [
       {
-        "reference": "703329_DECIDE_AN_APPLICATION_HOME_OFFICE",
+        "reference": "1380_DECIDE_AN_APPLICATION_HOME_OFFICE",
         "recipient": "{$homeOfficeEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: application for Other refused",
         "body": [

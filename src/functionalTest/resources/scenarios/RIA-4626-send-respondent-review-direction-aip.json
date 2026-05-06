@@ -1,11 +1,11 @@
 {
   "description": "RIA-4626 Send respondent review direction (AIP) - Home Office notification enabled",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 46261,
+      "id": 1570,
       "eventId": "requestRespondentReview",
       "state": "reasonsForAppealSubmitted",
       "caseData": {
@@ -36,7 +36,6 @@
               }
             }
           ],
-          "notificationsSent": [],
           "hearingCentre": "taylorHouse"
         }
       }
@@ -75,15 +74,15 @@
         ],
         "notificationsSent": [
           {
-            "id": "46261_RESPONDENT_REVIEW_DIRECTION",
+            "id": "1570_RESPONDENT_REVIEW_DIRECTION",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "46261_REQUEST_RESPONDENT_REVIEW_APPELLANT_AIP_EMAIL",
+            "id": "1570_REQUEST_RESPONDENT_REVIEW_APPELLANT_AIP_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "46261_REQUEST_RESPONDENT_REVIEW_APPELLANT_AIP_SMS",
+            "id": "1570_REQUEST_RESPONDENT_REVIEW_APPELLANT_AIP_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ],
@@ -92,7 +91,7 @@
     },
     "notifications": [
       {
-        "reference": "46261_RESPONDENT_REVIEW_DIRECTION",
+        "reference": "1570_RESPONDENT_REVIEW_DIRECTION",
         "recipient": "{$respondentEmailAddresses.respondentReviewDirection}",
         "subject": "Immigration and Asylum appeal: review Appeal Skeleton Argument direction",
         "body": [
@@ -106,7 +105,7 @@
           "{$customerServices.emailAddress}"        ]
       },
       {
-        "reference": "46261_REQUEST_RESPONDENT_REVIEW_APPELLANT_AIP_EMAIL",
+        "reference": "1570_REQUEST_RESPONDENT_REVIEW_APPELLANT_AIP_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
         "subject": "Immigration and Asylum appeal: The Home Office will review your appeal",
         "body": [
@@ -121,7 +120,7 @@
         ]
       },
       {
-        "reference": "46261_REQUEST_RESPONDENT_REVIEW_APPELLANT_AIP_SMS",
+        "reference": "1570_REQUEST_RESPONDENT_REVIEW_APPELLANT_AIP_SMS",
         "recipient": "{$TEST_CITIZEN_MOBILE}",
         "subject": "",
         "body": [

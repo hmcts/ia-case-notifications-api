@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
-      "id": 7810,
+      "id": 1272,
       "eventId": "decideCostsApplication",
       "state": "appealSubmitted",
       "caseData": {
@@ -29,6 +29,7 @@
                 "respondentToCostsOrder": "Legal representative",
                 "applyForCostsHearingType": "No",
                 "scheduleOfCostsDocuments": [],
+                "applyForCostsDecision": "someDecision",
                 "applyForCostsCreationDate": "{$TODAY}",
                 "applyForCostsApplicantType": "Home office",
                 "argumentsAndEvidenceDetails": "",
@@ -47,22 +48,6 @@
             }
           ],
           "legalRepName": "Fake Org Ltd",
-          "appliesForCosts": [
-            {
-              "id": "11",
-              "value": {
-                "appliedCostsType": "Unreasonable costs",
-                "respondentToCostsOrder": "Legal representative",
-                "applyForCostsHearingType": "No",
-                "scheduleOfCostsDocuments": [],
-                "applyForCostsCreationDate": "{$TODAY}",
-                "applyForCostsApplicantType": "Home office",
-                "argumentsAndEvidenceDetails": "",
-                "applyForCostsHearingTypeExplanation": "",
-                "applyForCostsDecision": "Order made"
-              }
-            }
-          ],
           "decideCostsApplicationList": {
             "value": {
               "code": "11",
@@ -93,28 +78,40 @@
             "revocationHumanitarianProtection"
           ]
         },
-        "legalRepName": "Fake Org Ltd"
+        "legalRepName": "Fake Org Ltd",
+        "notificationsSent": [
+          {
+            "id": "1272_DECIDE_A_COSTS_EMAIL_TO_HO",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "1272_DECIDE_A_COSTS_EMAIL_TO_LR",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }
+        ]
       }
     },
     "notifications": [
       {
-        "reference": "7810_DECIDE_A_COSTS_EMAIL_TO_HO",
+        "reference": "1272_DECIDE_A_COSTS_EMAIL_TO_HO",
         "recipient": "{$applyForCostsHomeOfficeEmailAddress}",
         "subject": "Immigration and Asylum appeal: Costs application decided",
         "body": [
           "PA/12345/2019",
           "A1234567",
-          "Talha Awan"
+          "Talha Awan",
+          "someDecision"
         ]
       },
       {
-        "reference": "7810_DECIDE_A_COSTS_EMAIL_TO_LR",
+        "reference": "1272_DECIDE_A_COSTS_EMAIL_TO_LR",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: Costs application decided",
         "body": [
           "PA/12345/2019",
           "A1234567",
-          "Talha Awan"
+          "Talha Awan",
+          "someDecision"
         ]
       }
     ]

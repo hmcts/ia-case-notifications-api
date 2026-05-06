@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 9233,
+      "id": 1091,
       "eventId": "recordRemissionDecision",
       "state": "appealSubmitted",
       "caseData": {
@@ -62,11 +62,11 @@
         },
         "notificationsSent": [
           {
-            "id": "9233_REMISSION_DECISION_REJECTED_LEGAL_REPRESENTATIVE",
+            "id": "1091_REMISSION_DECISION_REJECTED_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "9233_INTERNAL_LATE_REMISSION_REQUEST_APPELLANT_LETTER",
+            "id": "1091_INTERNAL_LATE_REMISSION_REQUEST_APPELLANT_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

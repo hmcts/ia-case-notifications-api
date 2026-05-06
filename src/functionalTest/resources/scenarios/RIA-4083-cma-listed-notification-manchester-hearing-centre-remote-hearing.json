@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 1007,
+      "id": 1631,
       "eventId": "listCma",
       "state": "cmaAdjustmentsAgreed",
       "caseData": {
@@ -54,19 +54,19 @@
         ],
         "notificationsSent": [
           {
-            "id": "1007_LIST_CMA_APPELLANT_AIP_EMAIL",
+            "id": "1631_LIST_CMA_APPELLANT_AIP_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1007_LIST_CMA_HOME_OFFICE_EMAIL",
+            "id": "1631_LIST_CMA_HOME_OFFICE_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1007_LIST_CMA_CASE_OFFICER_EMAIL",
+            "id": "1631_LIST_CMA_CASE_OFFICER_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1007_LIST_CMA_APPELLANT_AIP_SMS",
+            "id": "1631_LIST_CMA_APPELLANT_AIP_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -74,7 +74,7 @@
     },
     "notifications": [
       {
-        "reference": "1007_LIST_CMA_APPELLANT_AIP_EMAIL",
+        "reference": "1631_LIST_CMA_APPELLANT_AIP_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
         "subject": "Your case management appointment details",
         "body": [
@@ -88,7 +88,7 @@
         ]
       },
       {
-        "reference": "1007_LIST_CMA_APPELLANT_AIP_SMS",
+        "reference": "1631_LIST_CMA_APPELLANT_AIP_SMS",
         "recipient": "{$TEST_CITIZEN_MOBILE}",
         "subject": "",
         "body": [
@@ -100,7 +100,7 @@
         ]
       },
       {
-        "reference": "1007_LIST_CMA_CASE_OFFICER_EMAIL",
+        "reference": "1631_LIST_CMA_CASE_OFFICER_EMAIL",
         "recipient": "{$hearingCentreEmailAddresses.manchester}",
         "subject": "Immigration and Asylum appeal: Case Management Appointment listed",
         "body": [
@@ -113,7 +113,7 @@
         ]
       },
       {
-        "reference": "1007_LIST_CMA_HOME_OFFICE_EMAIL",
+        "reference": "1631_LIST_CMA_HOME_OFFICE_EMAIL",
         "recipient": "{$homeOfficeEmailAddresses.manchester}",
         "subject": "Immigration and Asylum appeal: Case Management Appointment date booked",
         "body": [

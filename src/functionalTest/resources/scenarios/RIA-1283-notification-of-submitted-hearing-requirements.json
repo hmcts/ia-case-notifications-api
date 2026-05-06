@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "LegalRepresentative",
     "input": {
-      "id": 1283,
+      "id": 2011,
       "eventId": "draftHearingRequirements",
       "state": "submitHearingRequirements",
       "caseData": {
@@ -25,11 +25,11 @@
         "hearingCentre": "taylorHouse",
         "notificationsSent": [
           {
-            "id": "1283_LEGAL_REP_OF_SUBMITTED_HEARING_REQUIREMENTS",
+            "id": "2011_LEGAL_REP_OF_SUBMITTED_HEARING_REQUIREMENTS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1283_CASE_OFFICER_OF_SUBMITTED_HEARING_REQUIREMENTS",
+            "id": "2011_CASE_OFFICER_OF_SUBMITTED_HEARING_REQUIREMENTS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -37,7 +37,7 @@
     },
     "notifications": [
       {
-        "reference": "1283_LEGAL_REP_OF_SUBMITTED_HEARING_REQUIREMENTS",
+        "reference": "2011_LEGAL_REP_OF_SUBMITTED_HEARING_REQUIREMENTS",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: hearing requirements submitted",
         "body": [
@@ -50,7 +50,7 @@
         ]
       },
       {
-        "reference": "1283_CASE_OFFICER_OF_SUBMITTED_HEARING_REQUIREMENTS",
+        "reference": "2011_CASE_OFFICER_OF_SUBMITTED_HEARING_REQUIREMENTS",
         "recipient": "{$hearingCentreEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: hearing requirements submitted",
         "body": [

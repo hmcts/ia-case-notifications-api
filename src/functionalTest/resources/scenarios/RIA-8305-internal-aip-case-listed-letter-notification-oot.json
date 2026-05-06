@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 83051,
+      "id": 1200,
       "eventId": "listCase",
       "state": "listing",
       "caseData": {
@@ -86,15 +86,15 @@
         ],
         "notificationsSent": [
           {
-            "id": "83051_CASE_LISTED_HOME_OFFICE",
+            "id": "1200_CASE_LISTED_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "83051_CASE_LISTED_CASE_OFFICER",
+            "id": "1200_CASE_LISTED_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "83051_INTERNAL_CASE_LISTED_LETTER_BUNDLE",
+            "id": "1200_INTERNAL_CASE_LISTED_LETTER_BUNDLE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

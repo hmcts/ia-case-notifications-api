@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Citizen",
     "input": {
-      "id": 4848,
+      "id": 1554,
       "eventId": "draftHearingRequirements",
       "state": "submitHearingRequirements",
       "caseData": {
@@ -23,8 +23,7 @@
                 "wantsSms": "Yes"
               }
             }
-          ],
-          "notificationsSent": []
+          ]
         }
       }
     }
@@ -51,11 +50,11 @@
         ],
         "notificationsSent": [
           {
-            "id": "4848_SUBMITTED_HEARING_REQUIREMENTS_AIP_EMAIL",
+            "id": "1554_SUBMITTED_HEARING_REQUIREMENTS_AIP_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "4848_SUBMITTED_HEARING_REQUIREMENTS_AIP_SMS",
+            "id": "1554_SUBMITTED_HEARING_REQUIREMENTS_AIP_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -63,7 +62,7 @@
     },
     "notifications": [
       {
-        "reference": "4848_SUBMITTED_HEARING_REQUIREMENTS_AIP_EMAIL",
+        "reference": "1554_SUBMITTED_HEARING_REQUIREMENTS_AIP_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
         "subject": "You told us what you will need at your hearing",
         "body": [
@@ -76,7 +75,7 @@
         ]
       },
       {
-        "reference": "4848_SUBMITTED_HEARING_REQUIREMENTS_AIP_SMS",
+        "reference": "1554_SUBMITTED_HEARING_REQUIREMENTS_AIP_SMS",
         "recipient": "{$TEST_CITIZEN_MOBILE}",
         "subject": "",
         "body": [

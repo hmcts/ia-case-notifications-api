@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Citizen",
     "input": {
-      "id": 1011,
+      "id": 1920,
       "eventId": "submitReasonsForAppeal",
       "state": "awaitingReasonsForAppeal",
       "caseData": {
@@ -49,15 +49,15 @@
         ],
         "notificationsSent": [
           {
-            "id": "1011_SUBMIT_REASONS_FOR_APPEAL_APPELLANT_AIP_EMAIL",
+            "id": "1920_SUBMIT_REASONS_FOR_APPEAL_APPELLANT_AIP_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1011_REASONS_FOR_APPEAL_SUBMITTED_CASE_OFFICER",
+            "id": "1920_REASONS_FOR_APPEAL_SUBMITTED_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1011_SUBMIT_REASONS_FOR_APPEAL_APPELLANT_AIP_SMS",
+            "id": "1920_SUBMIT_REASONS_FOR_APPEAL_APPELLANT_AIP_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -65,7 +65,7 @@
     },
     "notifications": [
       {
-        "reference": "1011_SUBMIT_REASONS_FOR_APPEAL_APPELLANT_AIP_EMAIL",
+        "reference": "1920_SUBMIT_REASONS_FOR_APPEAL_APPELLANT_AIP_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
         "subject": "You told us why you think the Home Office is wrong",
         "body": [
@@ -77,7 +77,7 @@
         ]
       },
       {
-        "reference": "1011_REASONS_FOR_APPEAL_SUBMITTED_CASE_OFFICER",
+        "reference": "1920_REASONS_FOR_APPEAL_SUBMITTED_CASE_OFFICER",
         "recipient": "{$hearingCentreEmailAddresses.manchester}",
         "subject": "Immigration and Asylum appeal: Reasons for Appeal submitted",
         "body": [
@@ -87,7 +87,7 @@
         ]
       },
       {
-        "reference": "1011_SUBMIT_REASONS_FOR_APPEAL_APPELLANT_AIP_SMS",
+        "reference": "1920_SUBMIT_REASONS_FOR_APPEAL_APPELLANT_AIP_SMS",
         "recipient": "{$TEST_CITIZEN_MOBILE}",
         "subject": "",
         "body": [

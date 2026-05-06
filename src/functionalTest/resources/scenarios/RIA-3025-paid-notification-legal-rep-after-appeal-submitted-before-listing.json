@@ -1,11 +1,11 @@
 {
   "description": "RIA-3025 Send payment paid notification to legal representative (PA appeal type) after appeal submitted state (before listing)",
-  "enabled": false,
+  "disabled": "true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "LegalRepresentative",
     "input": {
-      "id": 3025,
+      "id": 1825,
       "eventId": "paymentAppeal",
       "state": "awaitingRespondentEvidence",
       "caseData": {
@@ -27,7 +27,7 @@
         "paymentStatus": "Paid",
         "notificationsSent": [
           {
-            "id": "3025_PAYMENT_PAID_LEGAL_REPRESENTATIVE",
+            "id": "1825_PAYMENT_PAID_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -35,7 +35,7 @@
     },
     "notifications": [
       {
-        "reference": "3025_PAYMENT_PAID_LEGAL_REPRESENTATIVE",
+        "reference": "1825_PAYMENT_PAID_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: Your fee has been paid",
         "body": [

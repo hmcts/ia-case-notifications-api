@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 1441,
+      "id": 2028,
       "eventId": "updateDetentionLocation",
       "state": "appealSubmitted",
       "caseData": {
@@ -25,7 +25,6 @@
             "AddressLine2": "Tamarind Court",
             "AddressLine3": "1 Sanders Lane"
           },
-          "notificationsSent": [],
           "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
           "detentionFacility": "prison",
           "prisonName": "Aylesbury",
@@ -62,7 +61,7 @@
         },
         "notificationsSent": [
           {
-            "id": "1441_UPDATE_DETENTION_LOCATION_LETTER_LEGAL_REPRESENTATIVE",
+            "id": "2028_UPDATE_DETENTION_LOCATION_LETTER_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

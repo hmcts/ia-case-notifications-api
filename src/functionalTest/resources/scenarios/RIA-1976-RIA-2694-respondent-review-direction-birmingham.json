@@ -1,11 +1,11 @@
 {
   "description": "RIA-1976-RIA-2694 Send respondent review direction (IAC Birmingham)",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 1007,
+      "id": 1968,
       "eventId": "requestRespondentReview",
       "state": "caseBuilding",
       "caseData": {
@@ -23,7 +23,6 @@
               }
             }
           ],
-          "notificationsSent": [],
           "hearingCentre": "birmingham"
         }
       }
@@ -49,7 +48,11 @@
         ],
         "notificationsSent": [
           {
-            "id": "1007_RESPONDENT_REVIEW_DIRECTION",
+            "id": "1968_RESPONDENT_REVIEW_DIRECTION",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "1968_LEGAL_REPRESENTATIVE_RESPONDENT_REVIEW_CASE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ],
@@ -58,7 +61,7 @@
     },
     "notifications": [
       {
-        "reference": "1007_RESPONDENT_REVIEW_DIRECTION",
+        "reference": "1968_RESPONDENT_REVIEW_DIRECTION",
         "recipient": "{$respondentEmailAddresses.respondentReviewDirection}",
         "subject": "Immigration and Asylum appeal: review Appeal Skeleton Argument direction",
         "body": [

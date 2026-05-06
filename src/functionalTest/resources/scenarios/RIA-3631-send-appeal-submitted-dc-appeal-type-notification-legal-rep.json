@@ -6,7 +6,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "LegalRepresentative",
     "input": {
-      "id": 3472,
+      "id": 1692,
       "eventId": "submitAppeal",
       "state": "appealSubmitted",
       "caseData": {
@@ -34,11 +34,11 @@
         "appealType":"deprivation",
         "notificationsSent": [
           {
-            "id": "3472_APPEAL_SUBMITTED_LEGAL_REP",
+            "id": "1692_APPEAL_SUBMITTED_LEGAL_REP",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "3472_APPEAL_SUBMITTED_CASE_OFFICER",
+            "id": "1692_APPEAL_SUBMITTED_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -46,7 +46,7 @@
     },
     "notifications": [
       {
-        "reference": "3472_APPEAL_SUBMITTED_LEGAL_REP",
+        "reference": "1692_APPEAL_SUBMITTED_LEGAL_REP",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: Your appeal has been submitted",
         "body": [
@@ -59,7 +59,7 @@
         ]
       },
       {
-        "reference": "3472_APPEAL_SUBMITTED_CASE_OFFICER",
+        "reference": "1692_APPEAL_SUBMITTED_CASE_OFFICER",
         "recipient": "{$hearingCentreEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: appeal submitted",
         "body": [

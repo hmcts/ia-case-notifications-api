@@ -63,7 +63,6 @@ class AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationSmsTest {
     @Test
     void should_return_personalisation_when_all_information_given_after_listing() {
 
-        String designatedHearingCentre = "belfast@hearingcentre.gov";
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
 
         Map<String, String> personalisation =

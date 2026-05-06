@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 25369,
+      "id": 1907,
       "eventId": "recordApplication",
       "state": "caseUnderReview",
       "caseData": {
@@ -14,7 +14,6 @@
           "applicationDecisionReason": "Some decision reason",
           "applicationSupplier": "The respondent",
           "applicationDecision": "Refused",
-          "notificationsSent": [],
           "currentCaseStateVisibleToHomeOfficeAll": "caseUnderReview"
         }
       }

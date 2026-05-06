@@ -4,15 +4,14 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 4037,
+      "id": 1637,
       "eventId": "recordOutOfTimeDecision",
       "state": "appealSubmitted",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "appealType":"protection",
-          "outOfTimeDecisionType": "inTime",
-          "notificationsSent": []
+          "outOfTimeDecisionType": "inTime"
         }
       }
     }
@@ -27,7 +26,7 @@
         "outOfTimeDecisionType": "inTime",
         "notificationsSent": [
           {
-            "id": "4037_RECORD_OUT_OF_TIME_DECISION_CAN_PROCEED_LEGAL_REP",
+            "id": "1637_RECORD_OUT_OF_TIME_DECISION_CAN_PROCEED_LEGAL_REP",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -35,7 +34,7 @@
     },
     "notifications": [
       {
-        "reference": "4037_RECORD_OUT_OF_TIME_DECISION_CAN_PROCEED_LEGAL_REP",
+        "reference": "1637_RECORD_OUT_OF_TIME_DECISION_CAN_PROCEED_LEGAL_REP",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: Appeal can proceed",
         "body": [

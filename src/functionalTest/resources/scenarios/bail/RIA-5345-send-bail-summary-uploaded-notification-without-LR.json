@@ -1,17 +1,16 @@
 {
   "description": "RIA-5345 send bail summary uploaded notification to newport hearing centre (without legally represented)",
-  "launchDarklyKey": "tcw-notifications-feature:true",
   "request": {
     "uri": "/bail/ccdAboutToSubmit",
-    "credentials": "HomeOfficeGENERIC",
+    "credentials": "HomeOfficeGeneric",
     "input": {
-      "id": 5345,
+      "id": 2122,
       "eventId": "uploadBailSummary",
       "state": "bailSummaryUploaded",
       "caseData": {
         "template": "minimal-bail-application-submitted.json",
         "replacements": {
-          "bailHearingCentre": "newport",
+          "hearingCentre": "newport",
           "isLegallyRepresentedForFlag": "No",
           "currentCaseStateVisibleToJudge": "bailSummaryUploaded",
           "currentCaseStateVisibleToHomeOffice": "bailSummaryUploaded",
@@ -27,7 +26,7 @@
     "caseData": {
       "template": "minimal-bail-application-submitted.json",
       "replacements": {
-        "bailHearingCentre": "newport",
+        "hearingCentre": "newport",
         "isLegallyRepresentedForFlag": "No",
         "currentCaseStateVisibleToJudge": "bailSummaryUploaded",
         "currentCaseStateVisibleToHomeOffice": "bailSummaryUploaded",
@@ -35,11 +34,7 @@
         "currentCaseStateVisibleToLegalRepresentative": "bailSummaryUploaded",
         "notificationsSent": [
           {
-            "id": "5345_BAIL_SUMMARY_UPLOADED_ADMIN_OFFICER",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          },
-          {
-            "id": "5345_BAIL_SUMMARY_UPLOADED_LEGAL_REP",
+            "id": "2122_BAIL_SUMMARY_UPLOADED_ADMIN_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -47,15 +42,16 @@
     },
     "notifications": [
       {
-        "reference": "5345_BAIL_SUMMARY_UPLOADED_ADMIN_OFFICER",
-        "recipient": "{bailHearingCentreEmailAddresses.newport}",
+        "reference": "2122_BAIL_SUMMARY_UPLOADED_ADMIN_OFFICER",
+        "recipient": "{$bailHearingCentreEmailAddresses.newport}",
         "subject": "Bail application: Upload the Bail Summary direction",
         "body": [
           "1650-6221-2061-5101",
           "John Smith",
-          "{$iaExUiFrontendUrl}",
-          "The Home Office has uploaded the Bail Summary to the online service.",
-          "Sign in to your account to see the Bail Summary in the documents tab."
+          "A12345"
+        ],
+        "bodyExclusions": [
+          "123654LR"
         ]
       }
     ]

@@ -5,7 +5,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 
 import com.google.common.collect.ImmutableMap;
 import java.util.*;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.RequiredFieldMissingException;
@@ -43,7 +43,7 @@ public class AppellantRemoveDetainedStatusPersonalisationEmail implements EmailN
         Set<String> recipients = new HashSet<>();
 
         Optional<List<String>> contactPreference = asylumCase.read(CONTACT_PREFERENCE_UN_REP);
-        if (!contactPreference.isPresent() || !contactPreference.get().contains(ContactPreference.WANTS_EMAIL.getValue())) {
+        if (contactPreference.isEmpty() || !contactPreference.get().contains(ContactPreference.WANTS_EMAIL.getValue())) {
             return recipients;
         }
 

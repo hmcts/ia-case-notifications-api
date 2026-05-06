@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 1007,
+      "id": 1160,
       "eventId": "requestHearingRequirements",
       "state": "submitHearingRequirements",
       "caseData": {
@@ -22,7 +22,6 @@
               }
             }
           ],
-          "notificationsSent": [],
           "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}"
         }
       }
@@ -48,7 +47,7 @@
         ],
         "notificationsSent": [
           {
-            "id": "1007_LEGAL_REPRESENTATIVE_HEARING_REQUIREMENTS_DIRECTION",
+            "id": "1160_LEGAL_REPRESENTATIVE_HEARING_REQUIREMENTS_DIRECTION",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ],
@@ -57,7 +56,7 @@
     },
     "notifications": [
       {
-        "reference": "1007_LEGAL_REPRESENTATIVE_HEARING_REQUIREMENTS_DIRECTION",
+        "reference": "1160_LEGAL_REPRESENTATIVE_HEARING_REQUIREMENTS_DIRECTION",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: submit hearing requirements direction",
         "body": [

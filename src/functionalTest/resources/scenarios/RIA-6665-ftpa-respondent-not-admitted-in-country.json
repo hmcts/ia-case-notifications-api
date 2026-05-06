@@ -1,11 +1,11 @@
 {
   "description": "RIA-6665  Respondent FTPA Application is not admitted (in country)",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
-      "id": 66654,
+      "id": 1480,
       "eventId": "residentJudgeFtpaDecision",
       "state": "ftpaSubmitted",
       "caseData": {
@@ -31,7 +31,7 @@
     },
     "notifications": [
       {
-        "reference": "66654_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT",
+        "reference": "1480_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT",
         "recipient": "{$upperTribunalNoticesEmailAddress}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
         "body": [
@@ -43,7 +43,7 @@
         ]
       },
       {
-        "reference": "66654_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_RESPONDENT",
+        "reference": "1480_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_RESPONDENT",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
         "body": [

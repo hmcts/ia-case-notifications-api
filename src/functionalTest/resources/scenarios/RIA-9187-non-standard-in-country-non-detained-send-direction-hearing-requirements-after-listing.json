@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 9187,
+      "id": 1102,
       "eventId": "sendDirection",
       "state": "preHearing",
       "caseData": {
@@ -28,8 +28,7 @@
                 "tag": ""
               }
             }
-          ],
-          "notificationsSent": []
+          ]
         }
       }
     }
@@ -57,11 +56,11 @@
         ],
         "notificationsSent": [
           {
-            "id": "9187_RESPONDENT_NON_STANDARD_DIRECTION",
+            "id": "1102_RESPONDENT_NON_STANDARD_DIRECTION",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "9187_LEGAL_REP_NON_STANDARD_DIRECTION",
+            "id": "1102_LEGAL_REP_NON_STANDARD_DIRECTION",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -69,7 +68,7 @@
     },
     "notifications": [
       {
-        "reference": "9187_RESPONDENT_NON_STANDARD_DIRECTION",
+        "reference": "1102_RESPONDENT_NON_STANDARD_DIRECTION",
         "recipient": "{$homeOfficeEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: direction",
         "body": [
@@ -83,7 +82,7 @@
         ]
       },
       {
-        "reference": "9187_LEGAL_REP_NON_STANDARD_DIRECTION",
+        "reference": "1102_LEGAL_REP_NON_STANDARD_DIRECTION",
         "recipient": "RIA-9187-test-case-1@example.com",
         "subject": "Immigration and Asylum appeal: direction",
         "body": [

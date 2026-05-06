@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 3799,
+      "id": 1658,
       "eventId": "manageFeeUpdate",
       "state": "preHearing",
       "caseData": {
@@ -20,8 +20,7 @@
             "values": [
               "feeUpdateRecorded"
             ]
-          },
-          "notificationsSent": []
+          }
         }
       }
     }
@@ -36,7 +35,7 @@
         "paymentStatus": "Paid",
         "notificationsSent": [
           {
-            "id": "3799_MANAGE_FEE_UPDATE_CASE_OFFICER",
+            "id": "1658_MANAGE_FEE_UPDATE_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -44,7 +43,7 @@
     },
     "notifications": [
       {
-        "reference": "3799_MANAGE_FEE_UPDATE_CASE_OFFICER",
+        "reference": "1658_MANAGE_FEE_UPDATE_CASE_OFFICER",
         "recipient": "{$nbcEmailAddress}",
         "subject": "Immigration and Asylum appeal: A fee update has been recorded",
         "body": [

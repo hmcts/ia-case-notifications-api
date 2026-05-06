@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 1010,
+      "id": 1901,
       "eventId": "requestRespondentEvidence",
       "state": "appealSubmitted",
       "caseData": {
@@ -35,8 +35,7 @@
                 "tag": "respondentEvidence"
               }
             }
-          ],
-          "notificationsSent": []
+          ]
         }
       }
     }
@@ -75,15 +74,15 @@
         ],
         "notificationsSent": [
           {
-            "id": "1010_RESPONDENT_EVIDENCE_DIRECTION",
+            "id": "1901_RESPONDENT_EVIDENCE_DIRECTION",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1010_REQUEST_RESPONDENT_EVIDENCE_DIRECTION_APPELLANT_AIP_EMAIL",
+            "id": "1901_REQUEST_RESPONDENT_EVIDENCE_DIRECTION_APPELLANT_AIP_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1010_REQUEST_RESPONDENT_EVIDENCE_DIRECTION_APPELLANT_AIP_SMS",
+            "id": "1901_REQUEST_RESPONDENT_EVIDENCE_DIRECTION_APPELLANT_AIP_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -91,7 +90,7 @@
     },
     "notifications": [
       {
-        "reference": "1010_RESPONDENT_EVIDENCE_DIRECTION",
+        "reference": "1901_RESPONDENT_EVIDENCE_DIRECTION",
         "recipient": "{$respondentEmailAddresses.respondentEvidenceDirection}",
         "subject": "Immigration and Asylum appeal: submit bundle direction",
         "body": [
@@ -105,7 +104,7 @@
         ]
       },
       {
-        "reference": "1010_REQUEST_RESPONDENT_EVIDENCE_DIRECTION_APPELLANT_AIP_EMAIL",
+        "reference": "1901_REQUEST_RESPONDENT_EVIDENCE_DIRECTION_APPELLANT_AIP_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
         "subject": "The Tribunal has contacted the Home Office about your case",
         "body": [
@@ -117,7 +116,7 @@
         ]
       },
       {
-        "reference": "1010_REQUEST_RESPONDENT_EVIDENCE_DIRECTION_APPELLANT_AIP_SMS",
+        "reference": "1901_REQUEST_RESPONDENT_EVIDENCE_DIRECTION_APPELLANT_AIP_SMS",
         "recipient": "{$TEST_CITIZEN_MOBILE}",
         "subject": "",
         "body": [

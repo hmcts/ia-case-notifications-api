@@ -1,11 +1,11 @@
 {
   "description": "DIAC-1367 Send Non Standard Direction to Appellant In Country letter notification on Internal Detained in Other Appeal.",
-  "disabled": true,
+  "disabled": "true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "caseOfficer",
     "input": {
-      "id": 1367,
+      "id": 2052,
       "eventId": "sendDirection",
       "state": "appealSubmitted",
       "caseData": {
@@ -62,11 +62,11 @@
         },
         "notificationsSent": [
           {
-            "id": "1367_RESPONDENT_NON_STANDARD_DIRECTION_OF_APPELLANT",
+            "id": "2052_RESPONDENT_NON_STANDARD_DIRECTION_OF_APPELLANT",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1367_INTERNAL_NON_STANDARD_DIRECTION_APPELLANT_LETTER",
+            "id": "2052_INTERNAL_NON_STANDARD_DIRECTION_APPELLANT_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

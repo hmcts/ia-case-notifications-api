@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 71051,
+      "id": 1373,
       "eventId": "sendDirection",
       "state": "appealSubmitted",
       "caseData": {
@@ -34,8 +34,7 @@
                 "tag": ""
               }
             }
-          ],
-          "notificationsSent": []
+          ]
         }
       }
     }
@@ -73,15 +72,15 @@
         ],
         "notificationsSent": [
           {
-            "id": "71051_RESPONDENT_NON_STANDARD_DIRECTION_OF_APPELLANT",
+            "id": "1373_RESPONDENT_NON_STANDARD_DIRECTION_OF_APPELLANT",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "71051_APPELLANT_NON_STANDARD_DIRECTION_EMAIL",
+            "id": "1373_APPELLANT_NON_STANDARD_DIRECTION_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "71051_APPELLANT_NON_STANDARD_DIRECTION_SMS",
+            "id": "1373_APPELLANT_NON_STANDARD_DIRECTION_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

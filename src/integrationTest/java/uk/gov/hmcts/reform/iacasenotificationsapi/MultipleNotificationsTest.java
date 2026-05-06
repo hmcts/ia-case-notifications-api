@@ -1,6 +1,9 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.anyMap;
 import static org.mockito.Mockito.anyString;
@@ -22,10 +25,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MvcResult;
 import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.SpringBootIntegrationTest;
 import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.WithServiceAuthStub;
@@ -44,10 +47,10 @@ class MultipleNotificationsTest extends SpringBootIntegrationTest implements Wit
 
     private static final String ABOUT_TO_SUBMIT_PATH = "/asylum/ccdAboutToSubmit";
 
-    @MockBean
+    @MockitoBean
     private CcdEventAuthorizor ccdEventAuthorizor;
 
-    @MockBean
+    @MockitoBean
     private GovNotifyNotificationSender notificationSender;
 
     private final List<Map.Entry<Event, String>> eventAndNotificationSuffixPair =
@@ -126,8 +129,8 @@ class MultipleNotificationsTest extends SpringBootIntegrationTest implements Wit
 
         AsylumCase asylumCaseResponse = callbackResponse.getData();
 
-        assertThat(asylumCaseResponse).isNotNull();
-        assertThat(asylumCaseResponse.read(NOTIFICATIONS_SENT).isPresent()).isTrue();
+        assertNotNull(asylumCaseResponse);
+        assertTrue(asylumCaseResponse.read(NOTIFICATIONS_SENT).isPresent());
 
         Optional<List<IdValue<String>>> maybeNotificationsSent = asylumCaseResponse.read(NOTIFICATIONS_SENT);
 
@@ -135,10 +138,11 @@ class MultipleNotificationsTest extends SpringBootIntegrationTest implements Wit
             maybeNotificationsSent.orElseThrow(IllegalStateException::new);
 
         if (eventWithSuffixPair.getKey() == Event.SUBMIT_APPEAL) {
-            assertThat(allNotifications.size()).isEqualTo(1);
+
+            assertEquals(1, allNotifications.size());
         } else {
-            assertThat(allNotifications.size()).isGreaterThan(1);
-            assertThat(allNotifications.get(0).getId()).isNotEqualTo(allNotifications.get(1).getId());
+            assertTrue(allNotifications.size() > 1);
+            assertNotEquals(allNotifications.get(1).getId(), allNotifications.getFirst().getId());
         }
 
 

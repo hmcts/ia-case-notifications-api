@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "HomeOfficeGeneric",
     "input": {
-      "id": 7807,
+      "id": 1276,
       "eventId": "addEvidenceForCosts",
       "state": "appealSubmitted",
       "caseData": {
@@ -82,7 +82,7 @@
     },
     "notifications": [
       {
-        "reference": "7807_ADD_EVIDENCE_FOR_COSTS_SUBMITTER_EMAIL",
+        "reference": "1276_ADD_EVIDENCE_FOR_COSTS_SUBMITTER_EMAIL",
         "recipient": "{$applyForCostsHomeOfficeEmailAddress}",
         "subject": "Immigration and Asylum appeal: Costs evidence submitted",
         "body": [

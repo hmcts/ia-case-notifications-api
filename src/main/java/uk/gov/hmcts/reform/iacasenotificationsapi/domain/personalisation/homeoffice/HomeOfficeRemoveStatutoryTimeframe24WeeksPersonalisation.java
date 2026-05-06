@@ -10,7 +10,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNo
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;

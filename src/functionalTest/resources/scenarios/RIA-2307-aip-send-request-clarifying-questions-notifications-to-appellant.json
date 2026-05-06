@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 1005,
+      "id": 1918,
       "eventId": "sendDirectionWithQuestions",
       "state": "reasonsForAppealSubmitted",
       "caseData": {
@@ -102,11 +102,11 @@
         ],
         "notificationsSent": [
           {
-            "id": "1005_REQUEST_CLARIFYING_QUESTIONS_APPELLANT_AIP_EMAIL",
+            "id": "1918_REQUEST_CLARIFYING_QUESTIONS_APPELLANT_AIP_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1005_REQUEST_CLARIFYING_QUESTIONS_APPELLANT_AIP_SMS",
+            "id": "1918_REQUEST_CLARIFYING_QUESTIONS_APPELLANT_AIP_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -114,7 +114,7 @@
     },
     "notifications": [
       {
-        "reference": "1005_REQUEST_CLARIFYING_QUESTIONS_APPELLANT_AIP_EMAIL",
+        "reference": "1918_REQUEST_CLARIFYING_QUESTIONS_APPELLANT_AIP_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
         "subject": "Immigration and Asylum appeal: You need to answers some questions about your appeal",
         "body": [
@@ -129,7 +129,7 @@
         ]
       },
       {
-        "reference": "1005_REQUEST_CLARIFYING_QUESTIONS_APPELLANT_AIP_SMS",
+        "reference": "1918_REQUEST_CLARIFYING_QUESTIONS_APPELLANT_AIP_SMS",
         "recipient": "{$TEST_CITIZEN_MOBILE}",
         "subject": "",
         "body": [

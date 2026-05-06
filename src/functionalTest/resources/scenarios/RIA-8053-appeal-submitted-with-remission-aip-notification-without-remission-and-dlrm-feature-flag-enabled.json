@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Citizen",
     "input": {
-      "id": 3689,
+      "id": 1254,
       "eventId": "submitAppeal",
       "state": "pendingPayment",
       "caseData": {
@@ -28,8 +28,7 @@
                 "wantsSms": "Yes"
               }
             }
-          ],
-          "notificationsSent": []
+          ]
         }
       }
     }

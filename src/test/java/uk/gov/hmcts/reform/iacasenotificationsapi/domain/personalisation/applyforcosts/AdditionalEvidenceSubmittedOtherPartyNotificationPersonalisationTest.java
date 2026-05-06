@@ -112,9 +112,9 @@ class AdditionalEvidenceSubmittedOtherPartyNotificationPersonalisationTest {
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
         when(asylumCase.read(ADD_EVIDENCE_FOR_COSTS_LIST, DynamicList.class)).thenReturn(Optional.of(addEvidenceToCostsList));
 
-        if (("Tribunal").equals(applyForCostsList.get(0).getValue().getApplyForCostsApplicantType())) {
+        if (("Tribunal").equals(applyForCostsList.getFirst().getValue().getApplyForCostsApplicantType())) {
             assertTrue(additionalEvidenceSubmittedOtherPartyNotificationPersonalisation.getRecipientsList(asylumCase).isEmpty());
-        } else if (applyForCostsList.get(0).getValue().getLoggedUserRole().equals(homeOffice)) {
+        } else if (applyForCostsList.getFirst().getValue().getLoggedUserRole().equals(homeOffice)) {
             assertTrue(additionalEvidenceSubmittedOtherPartyNotificationPersonalisation.getRecipientsList(asylumCase).contains(legalRepEmailAddress));
         } else {
             assertTrue(additionalEvidenceSubmittedOtherPartyNotificationPersonalisation.getRecipientsList(asylumCase).contains(homeOfficeEmailAddress));
@@ -132,8 +132,8 @@ class AdditionalEvidenceSubmittedOtherPartyNotificationPersonalisationTest {
     @ParameterizedTest
     @MethodSource("appliesForCostsProviderWithJudge")
     public void should_return_personalisation_when_all_information_given(List<IdValue<ApplyForCosts>> applyForCostsList, DynamicList addEvidenceToCostsList) {
-        when(personalisationProvider.getTypeForSelectedApplyForCosts(any(), any())).thenReturn(Map.of("appliedCostsType", applyForCostsList.get(0).getValue().getAppliedCostsType().replaceAll("costs", "").trim()));
-        when(personalisationProvider.retrieveSelectedApplicationId(any(), any())).thenReturn(Map.of("applicationId", applyForCostsList.get(0).getId()));
+        when(personalisationProvider.getTypeForSelectedApplyForCosts(any(), any())).thenReturn(Map.of("appliedCostsType", applyForCostsList.getFirst().getValue().getAppliedCostsType().replaceAll("costs", "").trim()));
+        when(personalisationProvider.retrieveSelectedApplicationId(any(), any())).thenReturn(Map.of("applicationId", applyForCostsList.getFirst().getId()));
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
         when(asylumCase.read(ADD_EVIDENCE_FOR_COSTS_LIST, DynamicList.class)).thenReturn(Optional.of(addEvidenceToCostsList));
 
@@ -143,11 +143,11 @@ class AdditionalEvidenceSubmittedOtherPartyNotificationPersonalisationTest {
             .containsEntry("appealReferenceNumber", appealReferenceNumber)
             .containsEntry("appellantGivenNames", appellantGivenNames)
             .containsEntry("appellantFamilyName", appellantFamilyName)
-            .containsEntry("applicationId", applyForCostsList.get(0).getId());
+            .containsEntry("applicationId", applyForCostsList.getFirst().getId());
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
-        if (applyForCostsList.get(0).getValue().getLoggedUserRole().equals("Home office")) {
+        if (applyForCostsList.getFirst().getValue().getLoggedUserRole().equals("Home office")) {
             String expectedAriaReferenceNumber = "\nListing reference: ariaReferenceNumber";
             String expectedLegalRepRefNumber = "\nYour reference: someLegalRepRefNumber";
             assertThat(personalisation)

@@ -1,22 +1,20 @@
 {
   "description": "RIA-5345 send bail summary uploaded notification to newport hearing centre and legal representative",
-  "launchDarklyKey": "tcw-notifications-feature:true",
   "request": {
     "uri": "/bail/ccdAboutToSubmit",
-    "credentials": "HomeOfficeGENERIC",
+    "credentials": "HomeOfficeGeneric",
     "input": {
-      "id": 5345,
+      "id": 2123,
       "eventId": "uploadBailSummary",
       "state": "bailSummaryUploaded",
       "caseData": {
         "template": "minimal-bail-application-submitted.json",
         "replacements": {
-          "bailHearingCentre": "newport",
-          "isLegallyRepresentedForFlag": "Yes",
           "currentCaseStateVisibleToJudge": "bailSummaryUploaded",
           "currentCaseStateVisibleToHomeOffice": "bailSummaryUploaded",
           "currentCaseStateVisibleToAdminOfficer": "bailSummaryUploaded",
-          "currentCaseStateVisibleToLegalRepresentative": "bailSummaryUploaded"
+          "currentCaseStateVisibleToLegalRepresentative": "bailSummaryUploaded",
+          "hearingCentre": "newport"
         }
       }
     }
@@ -27,19 +25,18 @@
     "caseData": {
       "template": "minimal-bail-application-submitted.json",
       "replacements": {
-        "bailHearingCentre": "newport",
-        "isLegallyRepresentedForFlag": "Yes",
+        "hearingCentre": "newport",
         "currentCaseStateVisibleToJudge": "bailSummaryUploaded",
         "currentCaseStateVisibleToHomeOffice": "bailSummaryUploaded",
         "currentCaseStateVisibleToAdminOfficer": "bailSummaryUploaded",
         "currentCaseStateVisibleToLegalRepresentative": "bailSummaryUploaded",
         "notificationsSent": [
           {
-            "id": "5345_BAIL_SUMMARY_UPLOADED_ADMIN_OFFICER",
+            "id": "2123_BAIL_SUMMARY_UPLOADED_ADMIN_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "5345_BAIL_SUMMARY_UPLOADED_LEGAL_REP",
+            "id": "2123_BAIL_SUMMARY_UPLOADED_LEGAL_REP",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -47,27 +44,25 @@
     },
     "notifications": [
       {
-        "reference": "5345_BAIL_SUMMARY_UPLOADED_ADMIN_OFFICER",
-        "recipient": "{bailHearingCentreEmailAddresses.newport}",
+        "reference": "2123_BAIL_SUMMARY_UPLOADED_ADMIN_OFFICER",
+        "recipient": "{$bailHearingCentreEmailAddresses.newport}",
         "subject": "Bail application: Upload the Bail Summary direction",
         "body": [
           "1650-6221-2061-5101",
           "John Smith",
-          "{$iaExUiFrontendUrl}",
-          "The Home Office has uploaded the Bail Summary to the online service.",
-          "Sign in to your account to see the Bail Summary in the documents tab."
+          "A12345",
+          "123654LR"
         ]
       },
       {
-        "reference": "5345_BAIL_SUMMARY_UPLOADED_LEGAL_REP",
+        "reference": "2123_BAIL_SUMMARY_UPLOADED_LEGAL_REP",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Bail application: Upload the Bail Summary direction",
         "body": [
           "1650-6221-2061-5101",
           "John Smith",
-          "{$iaExUiFrontendUrl}",
-          "The Home Office has uploaded the Bail Summary to the online service.",
-          "Sign in to your account to see the Bail Summary in the documents tab."
+          "A12345",
+          "123654LR"
         ]
       }
     ]

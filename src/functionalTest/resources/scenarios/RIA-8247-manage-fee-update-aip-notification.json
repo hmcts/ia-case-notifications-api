@@ -1,11 +1,11 @@
 {
   "description": "RIA-8247 Manage fee update AIP Notification",
-  "enabled": "{$featureFlag.dlrmTelephonyFeatureFlag}",
+  "disabled": "!{$featureFlag.dlrmTelephonyFeatureFlag}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 8247,
+      "id": 1213,
       "eventId": "manageFeeUpdate",
       "state": "*",
       "caseData": {
@@ -63,11 +63,11 @@
         ],
         "notificationsSent": [
           {
-            "id": "8247_MANAGE_FEE_UPDATE_AIP_APPELLANT_EMAIL",
+            "id": "1213_MANAGE_FEE_UPDATE_AIP_APPELLANT_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "8247_MANAGE_FEE_UPDATE_AIP_APPELLANT_SMS",
+            "id": "1213_MANAGE_FEE_UPDATE_AIP_APPELLANT_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

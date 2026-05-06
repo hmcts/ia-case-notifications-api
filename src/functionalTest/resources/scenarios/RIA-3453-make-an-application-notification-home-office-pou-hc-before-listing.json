@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "HomeOfficePOU",
     "input": {
-      "id": 345311,
+      "id": 1776,
       "eventId": "makeAnApplication",
       "state": "submitHearingRequirements",
       "caseData": {
@@ -67,15 +67,15 @@
         "listCaseHearingCentre": "taylorHouse",
         "notificationsSent": [
           {
-            "id": "345311_MAKE_AN_APPLICATION_LEGAL_REPRESENTATIVE",
+            "id": "1776_MAKE_AN_APPLICATION_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "345311_MAKE_AN_APPLICATION_HOME_OFFICE",
+            "id": "1776_MAKE_AN_APPLICATION_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "345311_MAKE_AN_APPLICATION_CASE_OFFICER",
+            "id": "1776_MAKE_AN_APPLICATION_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -83,7 +83,7 @@
     },
     "notifications": [
       {
-        "reference": "345311_MAKE_AN_APPLICATION_LEGAL_REPRESENTATIVE",
+        "reference": "1776_MAKE_AN_APPLICATION_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: A respondent application has been submitted",
         "body": [
@@ -96,7 +96,7 @@
         ]
       },
       {
-        "reference": "345311_MAKE_AN_APPLICATION_HOME_OFFICE",
+        "reference": "1776_MAKE_AN_APPLICATION_HOME_OFFICE",
         "recipient": "{$homeOfficeEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: Your application has been submitted",
         "body": [
@@ -106,7 +106,7 @@
         ]
       },
       {
-        "reference": "345311_MAKE_AN_APPLICATION_CASE_OFFICER",
+        "reference": "1776_MAKE_AN_APPLICATION_CASE_OFFICER",
         "recipient": "{$hearingCentreEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: An application has been submitted",
         "body": [

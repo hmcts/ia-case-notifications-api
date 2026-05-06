@@ -1,11 +1,11 @@
 {
   "description": "RIA-3488 AIP Home Office bundle request notifications (Email and SMS) to appellant and Email to HO",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 34884,
+      "id": 1735,
       "eventId": "requestRespondentEvidence",
       "state": "pendingPayment",
       "caseData": {
@@ -36,8 +36,7 @@
                 "tag": "respondentEvidence"
               }
             }
-          ],
-          "notificationsSent": []
+          ]
         }
       }
     }
@@ -76,15 +75,15 @@
         ],
         "notificationsSent": [
           {
-            "id": "34884_RESPONDENT_EVIDENCE_DIRECTION",
+            "id": "1735_RESPONDENT_EVIDENCE_DIRECTION",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "34884_REQUEST_RESPONDENT_EVIDENCE_DIRECTION_APPELLANT_AIP_EMAIL",
+            "id": "1735_REQUEST_RESPONDENT_EVIDENCE_DIRECTION_APPELLANT_AIP_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "34884_REQUEST_RESPONDENT_EVIDENCE_DIRECTION_APPELLANT_AIP_SMS",
+            "id": "1735_REQUEST_RESPONDENT_EVIDENCE_DIRECTION_APPELLANT_AIP_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -92,7 +91,7 @@
     },
     "notifications": [
       {
-        "reference": "34884_RESPONDENT_EVIDENCE_DIRECTION",
+        "reference": "1735_RESPONDENT_EVIDENCE_DIRECTION",
         "recipient": "{$respondentEmailAddresses.respondentEvidenceDirection}",
         "subject": "Immigration and Asylum appeal: submit bundle direction",
         "body": [
@@ -106,7 +105,7 @@
         ]
       },
       {
-        "reference": "34884_REQUEST_RESPONDENT_EVIDENCE_DIRECTION_APPELLANT_AIP_EMAIL",
+        "reference": "1735_REQUEST_RESPONDENT_EVIDENCE_DIRECTION_APPELLANT_AIP_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
         "subject": "The Tribunal has contacted the Home Office about your case",
         "body": [
@@ -118,7 +117,7 @@
         ]
       },
       {
-        "reference": "34884_REQUEST_RESPONDENT_EVIDENCE_DIRECTION_APPELLANT_AIP_SMS",
+        "reference": "1735_REQUEST_RESPONDENT_EVIDENCE_DIRECTION_APPELLANT_AIP_SMS",
         "recipient": "{$TEST_CITIZEN_MOBILE}",
         "subject": "",
         "body": [

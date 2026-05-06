@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Citizen",
     "input": {
-      "id": 6112,
+      "id": 1524,
       "eventId": "applyForFTPAAppellant",
       "state": "ftpaSubmitted",
       "caseData": {
@@ -37,15 +37,15 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "6112_APPELLANT_IN_PERSON_FTPA_SUBMITTED_EMAIL",
+            "id": "1524_APPELLANT_IN_PERSON_FTPA_SUBMITTED_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "6112_RESPONDENT_APPELLANT_FTPA_SUBMITTED",
+            "id": "1524_RESPONDENT_APPELLANT_FTPA_SUBMITTED",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "6112_APPELLANT_IN_PERSON_FTPA_SUBMITTED_SMS",
+            "id": "1524_APPELLANT_IN_PERSON_FTPA_SUBMITTED_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -53,7 +53,7 @@
     },
     "notifications": [
       {
-        "reference": "6112_APPELLANT_IN_PERSON_FTPA_SUBMITTED_EMAIL",
+        "reference": "1524_APPELLANT_IN_PERSON_FTPA_SUBMITTED_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
         "subject": "Immigration and Asylum appeal: You have applied for permission to appeal to the Upper Tribunal",
         "body": [
@@ -67,7 +67,7 @@
         ]
       },
       {
-        "reference": "6112_RESPONDENT_APPELLANT_FTPA_SUBMITTED",
+        "reference": "1524_RESPONDENT_APPELLANT_FTPA_SUBMITTED",
         "recipient": "{$homeOfficeFtpaEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
         "body": [
@@ -81,7 +81,7 @@
         ]
       },
       {
-        "reference": "6112_APPELLANT_IN_PERSON_FTPA_SUBMITTED_SMS",
+        "reference": "1524_APPELLANT_IN_PERSON_FTPA_SUBMITTED_SMS",
         "recipient": "{$TEST_CITIZEN_MOBILE}",
         "subject": "",
         "body": [

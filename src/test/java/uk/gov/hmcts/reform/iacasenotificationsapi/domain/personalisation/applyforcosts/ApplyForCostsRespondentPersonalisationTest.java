@@ -120,7 +120,7 @@ class ApplyForCostsRespondentPersonalisationTest {
     void should_return_given_email_address(List<IdValue<ApplyForCosts>> applyForCostsList) {
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
 
-        if (applyForCostsList.get(0).getValue().getApplyForCostsApplicantType().equals(homeOffice)) {
+        if (applyForCostsList.getFirst().getValue().getApplyForCostsApplicantType().equals(homeOffice)) {
             assertTrue(applyForCostsRespondentPersonalisation.getRecipientsList(asylumCase).contains(legalRepEmailAddress));
         } else {
             assertTrue(applyForCostsRespondentPersonalisation.getRecipientsList(asylumCase).contains(homeOfficeEmailAddress));
@@ -156,13 +156,13 @@ class ApplyForCostsRespondentPersonalisationTest {
             .containsEntry("appliedCostsType", "Wasted")
             .containsEntry("creationDate", "24 Nov 2023");
 
-        if (applyForCostsList.get(0).getValue().getApplyForCostsApplicantType().equals("Home office")) {
+        if (applyForCostsList.getFirst().getValue().getApplyForCostsApplicantType().equals("Home office")) {
             assertThat(personalisation)
                 .containsEntry("recipient", "Your")
                 .containsEntry("recipientReferenceNumber", legalRepRefNumber);
         } else {
             assertThat(personalisation)
-                .containsEntry("recipient", applyForCostsList.get(0).getValue().getApplyForCostsRespondentRole())
+                .containsEntry("recipient", applyForCostsList.getFirst().getValue().getApplyForCostsRespondentRole())
                 .containsEntry("recipientReferenceNumber", homeOfficeReferenceNumber);
         }
     }

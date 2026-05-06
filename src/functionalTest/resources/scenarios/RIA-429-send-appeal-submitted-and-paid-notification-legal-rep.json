@@ -1,12 +1,12 @@
 {
   "description": "RIA-429 Send appeal submitted and paid notification to legal representative",
   "launchDarklyKey": "tcw-notifications-feature:true",
-  "disabled": true,
+  "disabled": "true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "LegalRepresentative",
     "input": {
-      "id": 1429,
+      "id": 1614,
       "eventId": "payAndSubmitAppeal",
       "state": "appealSubmitted",
       "caseData": {
@@ -29,15 +29,15 @@
         "paymentStatus":"Paid",
         "notificationsSent": [
           {
-            "id": "1429_APPEAL_SUBMITTED_HOME_OFFICE",
+            "id": "1614_APPEAL_SUBMITTED_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1429_APPEAL_SUBMITTED_PAID_LEGAL_REPRESENTATIVE",
+            "id": "1614_APPEAL_SUBMITTED_PAID_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1429_APPEAL_SUBMITTED_CASE_OFFICER",
+            "id": "1614_APPEAL_SUBMITTED_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -45,7 +45,7 @@
     },
     "notifications": [
       {
-        "reference": "1429_APPEAL_SUBMITTED_HOME_OFFICE",
+        "reference": "1614_APPEAL_SUBMITTED_HOME_OFFICE",
         "recipient": "{$apcPrivateHomeOfficeEmailAddress}",
         "subject": "Immigration and Asylum appeal: appeal submitted",
         "body": [
@@ -57,7 +57,7 @@
         ]
       },
       {
-        "reference": "1429_APPEAL_SUBMITTED_PAID_LEGAL_REPRESENTATIVE",
+        "reference": "1614_APPEAL_SUBMITTED_PAID_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: Your appeal has been submitted",
         "body": [
@@ -70,7 +70,7 @@
         ]
       },
       {
-        "reference": "1429_APPEAL_SUBMITTED_CASE_OFFICER",
+        "reference": "1614_APPEAL_SUBMITTED_CASE_OFFICER",
         "recipient": "{$hearingCentreEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: appeal submitted",
         "body": [

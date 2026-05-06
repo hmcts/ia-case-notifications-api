@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
-      "id": 8203,
+      "id": 1221,
       "eventId": "decideFtpaApplication",
       "state": "ftpaSubmitted",
       "caseData": {
@@ -73,15 +73,15 @@
         ],
         "notificationsSent": [
           {
-            "id": "8203_RESPONDENT_REHEARD_UNDER_RULE_35_EMAIL",
+            "id": "1221_RESPONDENT_REHEARD_UNDER_RULE_35_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "8203_AIP_REHEARD_UNDER_RULE_35_APPELLANT_EMAIL",
+            "id": "1221_AIP_REHEARD_UNDER_RULE_35_APPELLANT_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "8203_AIP_REHEARD_UNDER_RULE_35_APPELLANT_SMS",
+            "id": "1221_AIP_REHEARD_UNDER_RULE_35_APPELLANT_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -89,7 +89,7 @@
     },
     "notifications": [
       {
-        "reference": "8203_AIP_REHEARD_UNDER_RULE_35_APPELLANT_EMAIL",
+        "reference": "1221_AIP_REHEARD_UNDER_RULE_35_APPELLANT_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
         "subject": "Immigration and Asylum appeal: Application decided",
         "body": [
@@ -102,7 +102,7 @@
         ]
       },
       {
-        "reference": "8203_AIP_REHEARD_UNDER_RULE_35_APPELLANT_SMS",
+        "reference": "1221_AIP_REHEARD_UNDER_RULE_35_APPELLANT_SMS",
         "recipient": "{$TEST_CITIZEN_MOBILE}",
         "subject": "",
         "body": [
@@ -112,7 +112,7 @@
         ]
       },
       {
-        "reference": "8203_RESPONDENT_REHEARD_UNDER_RULE_35_EMAIL",
+        "reference": "1221_RESPONDENT_REHEARD_UNDER_RULE_35_EMAIL",
         "recipient": "{$homeOfficeFtpaEmailAddresses.glasgow}",
         "subject": "Immigration and Asylum appeal: Application decided",
         "body": [

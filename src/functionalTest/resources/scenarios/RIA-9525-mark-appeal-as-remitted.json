@@ -1,11 +1,11 @@
 {
   "description": "RIA-9525: Mark appeal as remitted for admin and represented cases",
-  "enabled": "dlrm-remitted-feature-flag:true",
+  "launchDarklyKey": "dlrm-remitted-feature-flag:true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 952517,
+      "id": 1020,
       "eventId": "markAppealAsRemitted",
       "state": "ftpaDecided",
       "caseData": {
@@ -33,11 +33,7 @@
         "legalRepresentativeEmailAddress": "sample@mail.com",
         "notificationsSent": [
           {
-            "id": "952517_LEGAL_REP_MARK_APPEAL_AS_REMITTED",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          },
-          {
-            "id": "952517_HOME_OFFICE_MARK_APPEAL_AS_REMITTED",
+            "id": "1020_HOME_OFFICE_MARK_APPEAL_AS_REMITTED",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

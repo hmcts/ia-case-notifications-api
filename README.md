@@ -10,7 +10,7 @@ Immigration &amp; Asylum case notifications API is a Spring Boot based applicati
 
 To run the project you will need to have the following installed:
 
-* Java 17
+* Java 21
 * Docker (optional)
 
 For information about the software versions used to build this API and a complete list of it's dependencies see build.gradle

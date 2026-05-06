@@ -30,8 +30,9 @@ class ApplicantBailCaseListingPersonalisationSmsTest {
     private final String conditionalBailRelistingTemplateId = "conditionalBailRelistingTemplateId";
     private final String mobileNumber = "07781122334";
     private final String bailReferenceNumber = "someReferenceNumber";
-    private final String bailHearingLocationName = "Yarl’s Wood\n" +
-        "Yarl’s Wood Immigration and Asylum Hearing Centre, Twinwood Road, MK44 1FD";
+    private final String bailHearingLocationName = """
+        Yarl’s Wood
+        Yarl’s Wood Immigration and Asylum Hearing Centre, Twinwood Road, MK44 1FD""";
     private final String hearingDate = "2024-01-21";
     private final String hearingTime = "10:29";
     @Mock

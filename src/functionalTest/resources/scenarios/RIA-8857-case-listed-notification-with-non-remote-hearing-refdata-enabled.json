@@ -1,11 +1,11 @@
 {
   "description": "RIA-8857 Case Listed with non-remote hearing (Refdata enabled)",
-  "enabled": "{$featureFlag.appealsLocationReferenceData}",
+  "disabled": "!{$featureFlag.appealsLocationReferenceData}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 8857,
+      "id": 1127,
       "eventId": "listCase",
       "state": "prepareForHearing",
       "caseData": {
@@ -35,15 +35,15 @@
         "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
         "notificationsSent": [
           {
-            "id": "8857_CASE_LISTED_LEGAL_REPRESENTATIVE",
+            "id": "1127_CASE_LISTED_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "8857_CASE_LISTED_HOME_OFFICE",
+            "id": "1127_CASE_LISTED_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "8857_CASE_LISTED_CASE_OFFICER",
+            "id": "1127_CASE_LISTED_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -51,7 +51,7 @@
     },
     "notifications": [
       {
-        "reference": "8857_CASE_LISTED_LEGAL_REPRESENTATIVE",
+        "reference": "1127_CASE_LISTED_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: check the details of your hearing",
         "body": [
@@ -62,7 +62,7 @@
         ]
       },
       {
-        "reference": "8857_CASE_LISTED_HOME_OFFICE",
+        "reference": "1127_CASE_LISTED_HOME_OFFICE",
         "recipient": "{$homeOfficeEmailAddresses.harmondsworth}",
         "subject": "Immigration and Asylum appeal: case listed",
         "body": [
@@ -73,7 +73,7 @@
         ]
       },
       {
-        "reference": "8857_CASE_LISTED_CASE_OFFICER",
+        "reference": "1127_CASE_LISTED_CASE_OFFICER",
         "recipient": "{$hearingCentreEmailAddresses.harmondsworth}",
         "subject": "Immigration and Asylum appeal: case listed",
         "body": [

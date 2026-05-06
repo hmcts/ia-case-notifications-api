@@ -1,17 +1,15 @@
 {
   "description": "RIA-5476 send bail application submitted notification SMS to applicant",
-  "launchDarklyKey": "tcw-notifications-feature:true",
   "request": {
     "uri": "/bail/ccdAboutToSubmit",
     "credentials": "LegalRepresentative",
     "input": {
-      "id": 5476,
+      "id": 2121,
       "eventId": "submitApplication",
       "state": "applicationSubmitted",
       "caseData": {
         "template": "minimal-bail-application-submitted.json",
         "replacements": {
-          "bailHearingCentre": "newport",
           "applicantHasMobile": "Yes",
           "applicantMobileNumber1": "{$IA_TEST_APPLICANT_MOBILE}"
         }
@@ -21,9 +19,73 @@
   "expectation": {
     "status": 200,
     "errors": [],
-    "confirmation": {
-      "header": "success",
-      "body": "contains([_BAIL_APPLICATION_SUBMITTED_APPLICANT_SMS])"
-    }
+    "caseData": {
+      "template": "minimal-bail-application-submitted.json",
+      "replacements": {
+        "applicantHasMobile": "Yes",
+        "applicantMobileNumber1": "{$IA_TEST_APPLICANT_MOBILE}",
+        "notificationsSent": [
+          {
+            "id": "2121_BAIL_APPLICATION_SUBMITTED_HEARING_CENTRE",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "2121_BAIL_APPLICATION_SUBMITTED_APPLICANT_SMS",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "2121_BAIL_APPLICATION_SUBMITTED_HOME_OFFICE",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "2121_BAIL_APPLICATION_SUBMITTED_LEGAL_REP",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }
+        ]
+      }
+    },
+    "notifications": [
+      {
+        "reference": "2121_BAIL_APPLICATION_SUBMITTED_HEARING_CENTRE",
+        "recipient": "{$bailHearingCentreEmailAddresses.newport}",
+        "subject": "Bail application: Application submitted",
+        "body": [
+          "1650-6221-2061-5101",
+          "John Smith",
+          "A12345",
+          "123654LR"
+        ]
+      },
+      {
+        "reference": "2121_BAIL_APPLICATION_SUBMITTED_HOME_OFFICE",
+        "recipient": "{$bailHomeOfficeEmailAddress}",
+        "subject": "Bail application: Application submitted",
+        "body": [
+          "1650-6221-2061-5101",
+          "John Smith",
+          "A12345",
+          "123654LR"
+        ]
+      },
+      {
+        "reference": "2121_BAIL_APPLICATION_SUBMITTED_LEGAL_REP",
+        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "subject": "Bail application: Application submitted",
+        "body": [
+          "1650-6221-2061-5101",
+          "John Smith",
+          "A12345",
+          "123654LR"
+        ]
+      },
+      {
+        "reference": "2121_BAIL_APPLICATION_SUBMITTED_APPLICANT_SMS",
+        "recipient": "{$IA_TEST_APPLICANT_MOBILE}",
+        "subject": "",
+        "body": [
+          "1650-6221-2061-5101"
+        ]
+      }
+    ]
   }
 }

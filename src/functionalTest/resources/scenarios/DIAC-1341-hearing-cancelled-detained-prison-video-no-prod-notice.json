@@ -1,12 +1,12 @@
 {
   "description": "DIAC-1341 Hearing Cancelled - No Cancellation of Production Notice - Detained - Video",
   "launchDarklyKey": "tcw-notifications-feature:true",
-  "disabled": true,
+  "disabled": "true",
   "request": {
     "uri": "/asylum/ccdSubmitted",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 13412,
+      "id": 2070,
       "eventId": "hearingCancelled",
       "state": "preHearing",
       "caseData": {
@@ -55,7 +55,6 @@
         "listCaseHearingCentre": "taylorHouse",
         "notificationsSent": []
       }
-    },
-    "notifications": []
+    }
   }
 }

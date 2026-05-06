@@ -4,6 +4,8 @@ import static java.lang.String.join;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -44,8 +46,8 @@ public class DocumentDownloadSystemUserClient {
         URL url;
 
         try {
-            url = new URL(documentBinaryUrl);
-        } catch (MalformedURLException e) {
+            url = new URI(documentBinaryUrl).toURL();
+        } catch (IllegalArgumentException | MalformedURLException | URISyntaxException e) {
             throw new IllegalArgumentException("Invalid url for DocumentDownloadClientApi", e);
         }
 

@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 1375,
+      "id": 2045,
       "eventId": "recordRemissionDecision",
       "state": "appealSubmitted",
       "caseData": {
@@ -60,7 +60,7 @@
         },
         "notificationsSent": [
           {
-            "id": "1375_INTERNAL_LATE_REMISSION_REQUEST_APPELLANT_LETTER",
+            "id": "2045_INTERNAL_LATE_REMISSION_REQUEST_APPELLANT_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

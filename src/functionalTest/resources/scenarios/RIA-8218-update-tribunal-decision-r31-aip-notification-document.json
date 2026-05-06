@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
-      "id": 8218,
+      "id": 1218,
       "eventId": "updateTribunalDecision",
       "state": "ftpaDecided",
       "caseData": {
@@ -73,15 +73,15 @@
         ],
         "notificationsSent": [
           {
-            "id": "8218_RESPONDENT_UPDATE_TRIBUNAL_DECISION_RULE_31_EMAIL",
+            "id": "1218_RESPONDENT_UPDATE_TRIBUNAL_DECISION_RULE_31_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "8218_APPELLANT_UPDATE_TRIBUNAL_DECISION_RULE_31_EMAIL",
+            "id": "1218_APPELLANT_UPDATE_TRIBUNAL_DECISION_RULE_31_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "8218_APPELLANT_UPDATE_TRIBUNAL_DECISION_RULE_31_SMS",
+            "id": "1218_APPELLANT_UPDATE_TRIBUNAL_DECISION_RULE_31_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

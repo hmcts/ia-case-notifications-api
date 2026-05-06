@@ -54,7 +54,7 @@ public class AdminOfficerFtpaDecisionAppellantPersonalisation implements EmailNo
         Optional<FtpaDecisionOutcomeType> ftpaDecisionOutcomeType = asylumCase
             .read(FTPA_APPELLANT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class);
 
-        if (!ftpaDecisionOutcomeType.isPresent()) {
+        if (ftpaDecisionOutcomeType.isEmpty()) {
             ftpaDecisionOutcomeType = Optional.ofNullable(asylumCase
                 .read(FTPA_APPELLANT_RJ_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class)
                 .orElseThrow(() -> new IllegalStateException("ftpaRespondentDecisionOutcomeType is not present")));

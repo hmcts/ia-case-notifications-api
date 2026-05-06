@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 1350,
+      "id": 2068,
       "eventId": "recordOutOfTimeDecision",
       "state": "appealSubmitted",
       "caseData": {
@@ -52,7 +52,7 @@
       },
       "notificationsSent": [
         {
-          "id": "$/1350_.*OUT_OF_TIME_DECISION.*LETTER/",
+          "id": "$/2068_.*OUT_OF_TIME_DECISION.*LETTER/",
           "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
         }
       ]

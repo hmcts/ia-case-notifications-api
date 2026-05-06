@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi;
 
 import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.response.Response;
@@ -43,7 +43,7 @@ public class SmokeTest {
 
         switch (response.getStatusCode()) {
             case 200:
-                assertThat(response.getBody().asString()).contains("UP");
+                assertTrue(response.getBody().asString().contains("UP"));
                 break;
             case 503:
                 throw new RestClientException(

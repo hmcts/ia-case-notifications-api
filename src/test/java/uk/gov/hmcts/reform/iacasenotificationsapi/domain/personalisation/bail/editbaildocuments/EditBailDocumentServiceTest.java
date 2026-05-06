@@ -28,7 +28,7 @@ public class EditBailDocumentServiceTest {
             "1", "document", "document left untouched");
         IdValue<DocumentWithMetadata> idDoc2 = getDocumentWithMetadata(
             "2", "documentToBeUpdated", "document getting updated");
-        IdValue<DocumentWithMetadata> idDoc2updated = getDocumentWithMetadata(
+        getDocumentWithMetadata(
             "2", "documentToBeUpdated", "document that got updated");
         IdValue<DocumentWithMetadata> idDoc3 = getDocumentWithMetadata(
             "3", "documentToBeDeleted", "document getting deleted");

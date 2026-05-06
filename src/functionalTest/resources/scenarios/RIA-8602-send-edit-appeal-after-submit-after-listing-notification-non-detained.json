@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 1234,
+      "id": 1140,
       "eventId": "editAppealAfterSubmit",
       "state": "prepareForHearing",
       "caseData": {
@@ -31,7 +31,7 @@
         "appellantInDetention": "No",
         "notificationsSent": [
           {
-            "id": "1234_EDIT_APPEAL_AFTER_SUBMIT_RESPONDENT",
+            "id": "1140_EDIT_APPEAL_AFTER_SUBMIT_RESPONDENT",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -39,7 +39,7 @@
     },
     "notifications": [
       {
-        "reference": "1234_EDIT_APPEAL_AFTER_SUBMIT_RESPONDENT",
+        "reference": "1140_EDIT_APPEAL_AFTER_SUBMIT_RESPONDENT",
         "recipient": "{$homeOfficeEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: application amended",
         "body": [

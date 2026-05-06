@@ -1,19 +1,18 @@
 {
   "description": "RIA-1463 Send appeal (dismissed) decision notification to Home Office and Legal Representative - [Admin notification(RIA-6949)]",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 1003,
+      "id": 1991,
       "eventId": "sendDecisionAndReasons",
       "state": "decided",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "ariaListingReference": "LP/12345/2019",
-          "isDecisionAllowed": "dismissed",
-          "notificationsSent": []
+          "isDecisionAllowed": "dismissed"
         }
       }
     }
@@ -27,15 +26,15 @@
         "isDecisionAllowed": "dismissed",
         "notificationsSent": [
           {
-            "id": "1003_APPEAL_OUTCOME_HOME_OFFICE",
+            "id": "1991_APPEAL_OUTCOME_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1003_APPEAL_OUTCOME_ADMIN",
+            "id": "1991_APPEAL_OUTCOME_ADMIN",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1003_APPEAL_OUTCOME_LEGAL_REPRESENTATIVE",
+            "id": "1991_APPEAL_OUTCOME_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -43,7 +42,7 @@
     },
     "notifications": [
       {
-        "reference": "1003_APPEAL_OUTCOME_HOME_OFFICE",
+        "reference": "1991_APPEAL_OUTCOME_HOME_OFFICE",
         "recipient": "{$dismissedAppealHomeOfficeEmailAddress}",
         "subject": "Immigration and Asylum appeal: decision and reasons",
         "body": [
@@ -57,7 +56,7 @@
         ]
       },
       {
-        "reference": "1003_APPEAL_OUTCOME_ADMIN",
+        "reference": "1991_APPEAL_OUTCOME_ADMIN",
         "recipient": "{$adminEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: decision and reasons",
         "body": [
@@ -69,7 +68,7 @@
         ]
       },
       {
-        "reference": "1003_APPEAL_OUTCOME_LEGAL_REPRESENTATIVE",
+        "reference": "1991_APPEAL_OUTCOME_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: decision and reasons",
         "body": [

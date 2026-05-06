@@ -8,7 +8,7 @@ import com.google.common.collect.ImmutableMap;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

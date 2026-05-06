@@ -1,11 +1,11 @@
 {
   "description": "RIA-8258: Mark appeal as remitted",
-  "enabled": "dlrm-remitted-feature-flag:true",
+  "launchDarklyKey": "dlrm-remitted-feature-flag:true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 8258,
+      "id": 1212,
       "eventId": "markAppealAsRemitted",
       "state": "ftpaDecided",
       "caseData": {
@@ -27,11 +27,11 @@
         "legalRepresentativeEmailAddress": "sample@mail.com",
         "notificationsSent": [
           {
-            "id": "8258_LEGAL_REP_MARK_APPEAL_AS_REMITTED",
+            "id": "1212_LEGAL_REP_MARK_APPEAL_AS_REMITTED",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "8258_HOME_OFFICE_MARK_APPEAL_AS_REMITTED",
+            "id": "1212_HOME_OFFICE_MARK_APPEAL_AS_REMITTED",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

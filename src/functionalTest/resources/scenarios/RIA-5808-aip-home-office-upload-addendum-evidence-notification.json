@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "HomeOfficeLart",
     "input": {
-      "id": 34882,
+      "id": 1539,
       "eventId": "uploadAddendumEvidenceHomeOffice",
       "state": "preHearing",
       "caseData": {
@@ -52,15 +52,15 @@
         ],
         "notificationsSent": [
           {
-            "id": "34882_HOME_OFFICE_UPLOADED_ADDENDUM_EVIDENCE_AIP_APPELLANT_EMAIL",
+            "id": "1539_HOME_OFFICE_UPLOADED_ADDENDUM_EVIDENCE_AIP_APPELLANT_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "34882_UPLOADED_ADDENDUM_EVIDENCE_CASE_OFFICER",
+            "id": "1539_UPLOADED_ADDENDUM_EVIDENCE_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "34882_HOME_OFFICE_UPLOADED_ADDENDUM_EVIDENCE_AIP_APPELLANT_SMS",
+            "id": "1539_HOME_OFFICE_UPLOADED_ADDENDUM_EVIDENCE_AIP_APPELLANT_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -68,7 +68,7 @@
     },
     "notifications": [
       {
-        "reference": "34882_HOME_OFFICE_UPLOADED_ADDENDUM_EVIDENCE_AIP_APPELLANT_EMAIL",
+        "reference": "1539_HOME_OFFICE_UPLOADED_ADDENDUM_EVIDENCE_AIP_APPELLANT_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
         "subject": "Immigration and Asylum appeal: New evidence has been uploaded for this appeal",
         "body": [
@@ -79,7 +79,7 @@
         ]
       },
       {
-        "reference": "34882_UPLOADED_ADDENDUM_EVIDENCE_CASE_OFFICER",
+        "reference": "1539_UPLOADED_ADDENDUM_EVIDENCE_CASE_OFFICER",
         "recipient": "{$hearingCentreEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: addendum uploaded",
         "body": [
@@ -90,7 +90,7 @@
         ]
       },
       {
-        "reference": "34882_HOME_OFFICE_UPLOADED_ADDENDUM_EVIDENCE_AIP_APPELLANT_SMS",
+        "reference": "1539_HOME_OFFICE_UPLOADED_ADDENDUM_EVIDENCE_AIP_APPELLANT_SMS",
         "recipient": "{$TEST_CITIZEN_MOBILE}",
         "subject": "",
         "body": [

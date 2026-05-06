@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "HomeOfficePOU",
     "input": {
-      "id": 7950,
+      "id": 1261,
       "eventId": "makeAnApplication",
       "state": "decision",
       "caseData": {
@@ -133,7 +133,7 @@
         ],
         "notificationsSent": [
           {
-            "id": "7950_MAKE_AN_APPLICATION_HOME_OFFICE",
+            "id": "1261_MAKE_AN_APPLICATION_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -141,7 +141,7 @@
     },
     "notifications": [
       {
-        "reference": "7950_MAKE_AN_APPLICATION_HOME_OFFICE",
+        "reference": "1261_MAKE_AN_APPLICATION_HOME_OFFICE",
         "recipient": "{$homeOfficeEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: Your application has been submitted",
         "body": [

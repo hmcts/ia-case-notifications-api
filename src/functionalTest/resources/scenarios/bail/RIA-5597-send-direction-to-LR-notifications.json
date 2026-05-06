@@ -1,0 +1,96 @@
+{
+  "description": "RIA-5597 send direction to LR notification to HomeOffice and Legal Representative",
+  "request": {
+    "uri": "/bail/ccdAboutToSubmit",
+    "credentials": "AdminOfficer",
+    "input": {
+      "id": 2107,
+      "eventId": "sendBailDirection",
+      "state": "applicationSubmitted",
+      "caseData": {
+        "template": "minimal-bail-application-submitted.json",
+        "replacements": {
+          "directions": [
+            {
+              "id": "1",
+              "value": {
+                "sendDirectionDescription":  "This is the content of the direction",
+                "sendDirectionList": "Legal Representative",
+                "dateOfCompliance":  "2026-05-12",
+                "dateSent": "2026-04-25",
+                "dateTimeDirectionCreated":  "2026-04-25",
+                "dateTimeDirectionModified": "2026-04-25",
+                "previousDates": []
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "expectation": {
+    "status": 200,
+    "errors": [],
+    "caseData": {
+      "template": "minimal-bail-application-submitted.json",
+      "replacements": {
+        "directions": [
+          {
+            "id": "1",
+            "value": {
+              "sendDirectionDescription":  "This is the content of the direction",
+              "sendDirectionList": "Legal Representative",
+              "dateOfCompliance":  "2026-05-12",
+              "dateSent": "2026-04-25",
+              "dateTimeDirectionCreated":  "2026-04-25",
+              "dateTimeDirectionModified": "2026-04-25",
+              "previousDates": []
+            }
+          }
+        ],
+        "notificationsSent": [
+          {
+            "id": "2107_BAIL_SENT_DIRECTION_LEGAL_REPRESENTATIVE",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "2107_BAIL_SENT_DIRECTION_HOME_OFFICE",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }
+        ]
+      }
+    },
+    "notifications": [
+      {
+        "reference": "2107_BAIL_SENT_DIRECTION_HOME_OFFICE",
+        "recipient": "{$bailHomeOfficeEmailAddress}",
+        "subject": "Bail application: A direction has been sent to the Legal Representative",
+        "body": [
+          "1650-6221-2061-5101",
+          "John Smith",
+          "A12345",
+          "123654LR",
+          "12 May 2026",
+          "This is the content of the direction",
+          "Legal Representative."
+        ]
+      },
+      {
+        "reference": "2107_BAIL_SENT_DIRECTION_LEGAL_REPRESENTATIVE",
+        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "subject": "Bail application: You have a direction",
+        "body": [
+          "1650-6221-2061-5101",
+          "John Smith",
+          "A12345",
+          "123654LR",
+          "12 May 2026",
+          "This is the content of the direction"
+        ],
+        "bodyExclusions": [
+          "Legal Representative."
+        ]
+      }
+    ]
+  }
+}

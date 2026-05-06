@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.component;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
@@ -33,8 +33,8 @@ import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MvcResult;
 import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.SpringBootIntegrationTest;
 import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.WithNotificationEmailStub;
@@ -68,7 +68,7 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
     private static final String REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_APPELLANT_LETTER = "REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER";
     private static final String REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_LEGAL_REP_EMAIL = "REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL";
 
-    @MockBean
+    @MockitoBean
     private GovNotifyNotificationSender notificationSender;
 
     @Test
@@ -111,9 +111,9 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
         assertTrue(notificationsSent.isPresent());
         List<IdValue<String>> notifications = notificationsSent.get();
 
-        assertThat(notifications.size()).isEqualTo(2);
-        assertThat(notifications.get(0).getId()).contains("_RESPONDENT_NON_STANDARD_DIRECTION");
-        assertThat(notifications.get(0).getValue()).matches(UUID_PATTERN);
+        assertEquals(2, notifications.size());
+        assertTrue(notifications.getFirst().getId().contains("_RESPONDENT_NON_STANDARD_DIRECTION"));
+        assertTrue(notifications.getFirst().getValue().matches(UUID_PATTERN));
     }
 
     @Test
@@ -127,12 +127,12 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
 
         assertTrue(notificationsSent.isPresent());
         List<IdValue<String>> notifications = notificationsSent.get();
-        assertThat(notifications.size()).isEqualTo(3);
+        assertEquals(3, notifications.size());
         List<String> idList = notifications.stream().map(IdValue::getId).toList();
         String idsString = String.join(",", idList);
-        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_APPELLANT_EMAIL);
-        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_LEGAL_REP_EMAIL);
-        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_HOME_OFFICE_EMAIL);
+        assertTrue(idsString.contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_APPELLANT_EMAIL));
+        assertTrue(idsString.contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_LEGAL_REP_EMAIL));
+        assertTrue(idsString.contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_HOME_OFFICE_EMAIL));
     }
 
     @Test
@@ -147,12 +147,12 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
         assertTrue(notificationsSent.isPresent());
         List<IdValue<String>> notifications = notificationsSent.get();
 
-        assertThat(notifications.size()).isEqualTo(3);
+        assertEquals(3, notifications.size());
         List<String> idList = notifications.stream().map(IdValue::getId).toList();
         String idsString = String.join(",", idList);
-        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_LEGAL_REP_EMAIL);
-        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_HOME_OFFICE_EMAIL);
-        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_APPELLANT_LETTER);
+        assertTrue(idsString.contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_LEGAL_REP_EMAIL));
+        assertTrue(idsString.contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_HOME_OFFICE_EMAIL));
+        assertTrue(idsString.contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_APPELLANT_LETTER));
     }
 
     @Test
@@ -167,12 +167,12 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
         assertTrue(notificationsSent.isPresent());
         List<IdValue<String>> notifications = notificationsSent.get();
 
-        assertThat(notifications.size()).isEqualTo(3);
+        assertEquals(3, notifications.size());
         List<String> idList = notifications.stream().map(IdValue::getId).toList();
         String idsString = String.join(",", idList);
-        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_LEGAL_REP_EMAIL);
-        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_HOME_OFFICE_EMAIL);
-        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_APPELLANT_LETTER);
+        assertTrue(idsString.contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_LEGAL_REP_EMAIL));
+        assertTrue(idsString.contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_HOME_OFFICE_EMAIL));
+        assertTrue(idsString.contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_APPELLANT_LETTER));
     }
 
     @Test
@@ -187,11 +187,11 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
         assertTrue(notificationsSent.isPresent());
         List<IdValue<String>> notifications = notificationsSent.get();
 
-        assertThat(notifications.size()).isEqualTo(2);
+        assertEquals(2, notifications.size());
         List<String> idList = notifications.stream().map(IdValue::getId).toList();
         String idsString = String.join(",", idList);
-        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_APPELLANT_EMAIL);
-        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_HOME_OFFICE_EMAIL);
+        assertTrue(idsString.contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_APPELLANT_EMAIL));
+        assertTrue(idsString.contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_HOME_OFFICE_EMAIL));
     }
 
     @Test
@@ -205,11 +205,11 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
         assertTrue(notificationsSent.isPresent());
         List<IdValue<String>> notifications = notificationsSent.get();
 
-        assertThat(notifications.size()).isEqualTo(2);
+        assertEquals(2, notifications.size());
         List<String> idList = notifications.stream().map(IdValue::getId).toList();
         String idsString = String.join(",", idList);
-        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_APPELLANT_EMAIL);
-        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_HOME_OFFICE_EMAIL);
+        assertTrue(idsString.contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_APPELLANT_EMAIL));
+        assertTrue(idsString.contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_HOME_OFFICE_EMAIL));
     }
 
     @Test
@@ -224,11 +224,11 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
         assertTrue(notificationsSent.isPresent());
         List<IdValue<String>> notifications = notificationsSent.get();
 
-        assertThat(notifications.size()).isEqualTo(2);
+        assertEquals(2, notifications.size());
         List<String> idList = notifications.stream().map(IdValue::getId).toList();
         String idsString = String.join(",", idList);
-        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_HOME_OFFICE_EMAIL);
-        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_APPELLANT_LETTER);
+        assertTrue(idsString.contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_HOME_OFFICE_EMAIL));
+        assertTrue(idsString.contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_APPELLANT_LETTER));
     }
 
     @Test
@@ -243,10 +243,10 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
         assertTrue(notificationsSent.isPresent());
         List<IdValue<String>> notifications = notificationsSent.get();
 
-        assertThat(notifications.size()).isEqualTo(1);
+        assertEquals(1, notifications.size());
         List<String> idList = notifications.stream().map(IdValue::getId).toList();
         String idsString = String.join(",", idList);
-        assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_HOME_OFFICE_EMAIL);
+        assertTrue(idsString.contains(REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_HOME_OFFICE_EMAIL));
     }
 
 
