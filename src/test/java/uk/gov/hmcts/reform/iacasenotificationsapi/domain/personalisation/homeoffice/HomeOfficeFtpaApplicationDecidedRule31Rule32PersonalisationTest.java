@@ -71,9 +71,9 @@ class HomeOfficeFtpaApplicationDecidedRule31Rule32PersonalisationTest {
     public void getPersonalisation() {
         String appealReferenceNumber = "someReferenceNumber";
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
-        String appellantGivenNames = "someAppellantGivenNames";
+        String appellantGivenNames = "appellantGivenNames";
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
-        String appellantFamilyName = "someAppellantFamilyName";
+        String appellantFamilyName = "appellantFamilyName";
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         String homeOfficeRefNumber = "someHomeOfficeRefNumber";
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeRefNumber));
