@@ -385,8 +385,6 @@ dependencies {
 
     testImplementation 'org.springframework.security:spring-security-test'
 
-    testImplementation 'net.serenity-bdd:net.serenity-core'
-    testImplementation 'net.serenity-bdd:net.serenity-junit'
     testImplementation 'net.serenity-bdd:net.serenity-rest-assured'
     testImplementation 'net.serenity-bdd:net.serenity-spring'
 
