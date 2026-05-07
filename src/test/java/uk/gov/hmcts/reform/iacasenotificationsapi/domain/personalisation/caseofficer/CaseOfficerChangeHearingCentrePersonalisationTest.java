@@ -36,8 +36,8 @@ public class CaseOfficerChangeHearingCentrePersonalisationTest {
     private final String templateId = "someTemplateId";
     private final String hearingCentreEmailAddress = "hc-glasgow@example.com";
     private final String appealReferenceNumber = "someReferenceNumber";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String appellantGivenNames = "appellantGivenNames";
+    private final String appellantFamilyName = "appellantFamilyName";
     private final String listCaseCaseOfficerEmailAddress = "co-list-case@example.com";
     @Mock
     AsylumCase asylumCase;

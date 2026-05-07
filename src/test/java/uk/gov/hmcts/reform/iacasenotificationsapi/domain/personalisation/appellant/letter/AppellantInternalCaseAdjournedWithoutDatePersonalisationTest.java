@@ -141,11 +141,12 @@ class AppellantInternalCaseAdjournedWithoutDatePersonalisationTest {
         assertEquals(hearingDate, fieldValuesMap.get("hearingDate"));
         assertEquals("Reasons", fieldValuesMap.get("adjournedHearingReason"));
         assertEquals(formattedManchesterHearingCentreAddress, fieldValuesMap.get("hearingLocation"));
-        assertEquals(addressLine1, fieldValuesMap.get("address_line_1"));
-        assertEquals(addressLine2, fieldValuesMap.get("address_line_2"));
-        assertEquals(addressLine3, fieldValuesMap.get("address_line_3"));
-        assertEquals(postTown, fieldValuesMap.get("address_line_4"));
-        assertEquals(postCode, fieldValuesMap.get("address_line_5"));
+        Assertions.assertEquals(appellantGivenNames + " " + appellantFamilyName, fieldValuesMap.get("address_line_1"));
+        assertEquals(addressLine1, fieldValuesMap.get("address_line_2"));
+        assertEquals(addressLine2, fieldValuesMap.get("address_line_3"));
+        assertEquals(addressLine3, fieldValuesMap.get("address_line_4"));
+        assertEquals(postTown, fieldValuesMap.get("address_line_5"));
+        assertEquals(postCode, fieldValuesMap.get("address_line_6"));
     }
 
     @Test
@@ -181,10 +182,11 @@ class AppellantInternalCaseAdjournedWithoutDatePersonalisationTest {
         assertEquals(hearingDate, fieldValuesMap.get("hearingDate"));
         assertEquals("Reasons", fieldValuesMap.get("adjournedHearingReason"));
         assertEquals(formattedManchesterHearingCentreAddress, fieldValuesMap.get("hearingLocation"));
-        assertEquals(oocAddressLine1, fieldValuesMap.get("address_line_1"));
-        assertEquals(oocAddressLine2, fieldValuesMap.get("address_line_2"));
-        assertEquals(oocAddressLine3, fieldValuesMap.get("address_line_3"));
-        assertEquals(Nationality.ES.toString(), fieldValuesMap.get("address_line_4"));
+        Assertions.assertEquals(appellantGivenNames + " " + appellantFamilyName, fieldValuesMap.get("address_line_1"));
+        assertEquals(oocAddressLine1, fieldValuesMap.get("address_line_2"));
+        assertEquals(oocAddressLine2, fieldValuesMap.get("address_line_3"));
+        assertEquals(oocAddressLine3, fieldValuesMap.get("address_line_4"));
+        assertEquals(Nationality.ES.toString(), fieldValuesMap.get("address_line_5"));
     }
 
     @Test

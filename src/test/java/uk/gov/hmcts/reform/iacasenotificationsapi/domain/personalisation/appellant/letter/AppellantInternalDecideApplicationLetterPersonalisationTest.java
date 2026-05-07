@@ -129,10 +129,12 @@ public class AppellantInternalDecideApplicationLetterPersonalisationTest {
     void should_return_appellant_address_in_correct_format() {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        assertTrue(appellantInternalDecideApplicationLetterPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_XX12YY"));
+        assertTrue(appellantInternalDecideApplicationLetterPersonalisation.getRecipientsList(asylumCase)
+                .contains("someAppellantGivenNamessomeAppellantFamil_50_Buildingname_Streetname_Townname_XX12YY"));
 
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
-        assertTrue(appellantInternalDecideApplicationLetterPersonalisation.getRecipientsList(asylumCase).contains("CalleToledo32_Madrid_28003_Spain"));
+        assertTrue(appellantInternalDecideApplicationLetterPersonalisation.getRecipientsList(asylumCase)
+                .contains("someAppellantGivenNamessomeAppellantFamil_CalleToledo32_Madrid_28003_Spain"));
     }
 
     @Test
@@ -188,11 +190,12 @@ public class AppellantInternalDecideApplicationLetterPersonalisationTest {
             .containsEntry("appellantFamilyName", appellantFamilyName)
             .containsEntry("appealReferenceNumber", appealReferenceNumber)
             .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
-            .containsEntry("address_line_1", addressLine1)
-            .containsEntry("address_line_2", addressLine2)
-            .containsEntry("address_line_3", addressLine3)
-            .containsEntry("address_line_4", postTown)
-            .containsEntry("address_line_5", postCode)
+            .containsEntry("address_line_1", (appellantGivenNames + " " + appellantFamilyName).substring(0, 42))
+            .containsEntry("address_line_2", addressLine1)
+            .containsEntry("address_line_3", addressLine2)
+            .containsEntry("address_line_4", addressLine3)
+            .containsEntry("address_line_5", postTown)
+            .containsEntry("address_line_6", postCode)
             .containsEntry("decisionMaker", decisionMaker)
             .containsEntry("decision", "grant")
             .containsEntry("applicationType", "Adjourn")
@@ -211,10 +214,11 @@ public class AppellantInternalDecideApplicationLetterPersonalisationTest {
             .containsEntry("appellantFamilyName", appellantFamilyName)
             .containsEntry("appealReferenceNumber", appealReferenceNumber)
             .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
-            .containsEntry("address_line_1", oocAddressLine1)
-            .containsEntry("address_line_2", oocAddressLine2)
-            .containsEntry("address_line_3", oocAddressLine3)
-            .containsEntry("address_line_4", Nationality.ES.toString())
+            .containsEntry("address_line_1", (appellantGivenNames + " " + appellantFamilyName).substring(0, 42))
+            .containsEntry("address_line_2", oocAddressLine1)
+            .containsEntry("address_line_3", oocAddressLine2)
+            .containsEntry("address_line_4", oocAddressLine3)
+            .containsEntry("address_line_5", Nationality.ES.toString())
             .containsEntry("decisionMaker", decisionMaker)
             .containsEntry("decision", "grant")
             .containsEntry("applicationType", "Adjourn")
