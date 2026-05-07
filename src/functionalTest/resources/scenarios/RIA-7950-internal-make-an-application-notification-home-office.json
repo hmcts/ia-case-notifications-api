@@ -1,6 +1,5 @@
 {
   "description": "RIA-7950 Send make an application notification home office APC after listing for internal case",
-  "launchDarklyKey": "tcw-application-notifications-feature:true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "HomeOfficePOU",

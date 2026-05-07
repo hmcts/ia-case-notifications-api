@@ -27,7 +27,6 @@ import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.MakeAnApplication;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AppealService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.MakeAnApplicationService;
@@ -57,8 +56,7 @@ public class CaseOfficerMakeAnApplicationPersonalisationTest {
     MakeAnApplicationService makeAnApplicationService;
     @Mock
     MakeAnApplication makeAnApplication;
-    @Mock
-    private FeatureToggler featureToggler;
+
     private CaseOfficerMakeAnApplicationPersonalisation caseOfficerMakeAnApplicationPersonalisation;
 
     @BeforeEach
@@ -78,8 +76,7 @@ public class CaseOfficerMakeAnApplicationPersonalisationTest {
             iaExUiFrontendUrl,
             emailAddressFinder,
             appealService,
-            makeAnApplicationService,
-            featureToggler);
+            makeAnApplicationService);
     }
 
     @ParameterizedTest
@@ -116,14 +113,7 @@ public class CaseOfficerMakeAnApplicationPersonalisationTest {
     }
 
     @Test
-    public void should_return_given_email_address_from_lookup_map_when_feature_flag_is_Off() {
-        assertTrue(caseOfficerMakeAnApplicationPersonalisation.getRecipientsList(asylumCase)
-            .isEmpty());
-    }
-
-    @Test
-    public void should_return_given_email_address_from_lookup_map_when_feature_flag_is_On() {
-        when(featureToggler.getValue("tcw-application-notifications-feature", true)).thenReturn(true);
+    public void should_return_given_email_address_from_lookup_map() {
         assertTrue(caseOfficerMakeAnApplicationPersonalisation.getRecipientsList(asylumCase)
             .contains(hearingCentreEmailAddress));
     }

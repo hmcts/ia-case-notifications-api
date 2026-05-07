@@ -42,10 +42,9 @@ class AppellantTcwUploadAddendumEvidencePersonalisationSmsTest {
             .thenReturn(Optional.of(mockedAppealReferenceNumber));
 
         appellantTcwUploadAddendumEvidencePersonalisationSms = new AppellantTcwUploadAddendumEvidencePersonalisationSms(
-            smsTemplateId,
-            iaAipFrontendUrl,
-            recipientsFinder,
-            featureToggler);
+                smsTemplateId,
+                iaAipFrontendUrl,
+                recipientsFinder);
     }
 
     @Test
@@ -80,8 +79,10 @@ class AppellantTcwUploadAddendumEvidencePersonalisationSmsTest {
 
     @Test
     void should_return_appellant_phone_number_from_asylum_case() {
-        when(featureToggler.getValue("aip-upload-addendum-evidence-feature", false)).thenReturn(true);
+
+
         String mockedAppellantMobilePhone = "07123456789";
+
         when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
             .thenReturn(Collections.singleton(mockedAppellantMobilePhone));
 

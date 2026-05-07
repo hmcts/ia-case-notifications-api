@@ -1,6 +1,5 @@
 {
   "description": "RIA-8602 Internal non-detained appellant's FTPA partially granted by RJ as granted for ADA case",
-  "launchDarklyKey": "tcw-application-notifications-feature:true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",

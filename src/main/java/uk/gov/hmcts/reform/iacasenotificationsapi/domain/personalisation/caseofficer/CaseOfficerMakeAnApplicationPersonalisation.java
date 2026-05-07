@@ -14,7 +14,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.MakeAnApplication;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AppealService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.MakeAnApplicationService;
@@ -32,7 +31,6 @@ public class CaseOfficerMakeAnApplicationPersonalisation implements EmailNotific
     private final EmailAddressFinder emailAddressFinder;
     private final AppealService appealService;
     private final MakeAnApplicationService makeAnApplicationService;
-    private final FeatureToggler featureToggler;
 
     @Value("${govnotify.emailPrefix.ada}")
     private String adaPrefix;
@@ -48,9 +46,7 @@ public class CaseOfficerMakeAnApplicationPersonalisation implements EmailNotific
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
             EmailAddressFinder emailAddressFinder,
             AppealService appealService,
-            MakeAnApplicationService makeAnApplicationService,
-            FeatureToggler featureToggler) {
-        this.featureToggler = featureToggler;
+            MakeAnApplicationService makeAnApplicationService) {
         requireNonNull(iaExUiFrontendUrl, "iaExUiFrontendUrl must not be null");
 
         this.makeAnApplicationCaseOfficerBeforeListingTemplateId = makeAnApplicationCaseOfficerBeforeListingTemplateId;
@@ -79,9 +75,7 @@ public class CaseOfficerMakeAnApplicationPersonalisation implements EmailNotific
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return featureToggler.getValue("tcw-application-notifications-feature", true)
-                ? Collections.singleton(emailAddressFinder.getHearingCentreEmailAddress(asylumCase))
-                : Collections.emptySet();
+        return Collections.singleton(emailAddressFinder.getHearingCentreEmailAddress(asylumCase));
     }
 
     @Override

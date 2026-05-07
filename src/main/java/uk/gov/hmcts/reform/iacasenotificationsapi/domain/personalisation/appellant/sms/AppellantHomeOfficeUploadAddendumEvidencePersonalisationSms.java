@@ -3,7 +3,6 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appell
 import static java.util.Objects.requireNonNull;
 
 import com.google.common.collect.ImmutableMap;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,7 +11,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.SmsNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 
 @Service
@@ -20,20 +18,17 @@ public class AppellantHomeOfficeUploadAddendumEvidencePersonalisationSms impleme
 
     private final String templateId;
     private final String directLinkToNewEvidencePage;
-    private FeatureToggler featureToggler;
     private final RecipientsFinder recipientsFinder;
 
     public AppellantHomeOfficeUploadAddendumEvidencePersonalisationSms(
             @Value("${govnotify.template.hoOrTcwUploadedAddendumEvidence.appellant.sms}") String templateId,
             @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
-            RecipientsFinder recipientsFinder,
-            FeatureToggler featureToggler
+            RecipientsFinder recipientsFinder
     ) {
 
         this.templateId = templateId;
         this.directLinkToNewEvidencePage = iaAipFrontendUrl + "home-office-evidence/addendum";
         this.recipientsFinder = recipientsFinder;
-        this.featureToggler = featureToggler;
     }
 
     @Override
@@ -50,9 +45,7 @@ public class AppellantHomeOfficeUploadAddendumEvidencePersonalisationSms impleme
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
 
-        return featureToggler.getValue("aip-upload-addendum-evidence-feature", false)
-                ? recipientsFinder.findAll(asylumCase, NotificationType.SMS)
-                : Collections.emptySet();
+        return recipientsFinder.findAll(asylumCase, NotificationType.SMS);
     }
 
     @Override
