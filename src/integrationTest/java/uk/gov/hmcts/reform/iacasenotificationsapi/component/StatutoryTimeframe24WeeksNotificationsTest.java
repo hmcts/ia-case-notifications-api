@@ -260,6 +260,34 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
 
     @Test
     @WithMockUser(authorities = {"caseworker-ia-system"})
+    void should_not_send_24weeks_case_review_email_for_stf_24Weeks_is_no() {
+        AsylumCaseForTest caseData = mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES);
+        caseData.with(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.NO);
+        PreSubmitCallbackResponseForTest response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
+        Optional<List<IdValue<String>>> notificationsSent =
+                response
+                        .getData()
+                        .read(NOTIFICATIONS_SENT);
+
+        assertFalse(notificationsSent.isPresent());
+    }
+
+    @Test
+    @WithMockUser(authorities = {"caseworker-ia-system"})
+    void should_not_send_24weeks_case_review_email_for_non_bau_case() {
+        AsylumCaseForTest caseData = mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES);
+
+        PreSubmitCallbackResponseForTest response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
+        Optional<List<IdValue<String>>> notificationsSent =
+                response
+                        .getData()
+                        .read(NOTIFICATIONS_SENT);
+
+        assertFalse(notificationsSent.isPresent());
+    }
+
+    @Test
+    @WithMockUser(authorities = {"caseworker-ia-system"})
     void should_not_send_24weeks_case_review_email_to_all_three_if_statutory_time_frame_is_not_present() {
         AsylumCaseForTest caseData = mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES);
         caseData.with(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.NO);

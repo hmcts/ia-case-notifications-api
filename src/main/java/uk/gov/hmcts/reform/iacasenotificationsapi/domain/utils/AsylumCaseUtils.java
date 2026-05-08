@@ -585,10 +585,10 @@ public class AsylumCaseUtils {
     }
 
     public static boolean hasStf24WeeksStatus(AsylumCase asylumCase) {
-        final YesOrNo status = asylumCase
+        return asylumCase
                 .read(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)
-                .orElseThrow(() -> new IllegalStateException("STF 24W CURRENT STATUS AUTO GENERATED is not present"));
-        return status.equals(YES);
+                .map(value -> value.equals(YesOrNo.YES))
+                .orElse(false);
     }
 
     public static @NonNull Set<String> getApplicantEmail(AsylumCase asylumCase) {
