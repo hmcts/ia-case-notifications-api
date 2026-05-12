@@ -33,8 +33,8 @@ public class AdminOfficerRecordAdjournmentDetailsPersonalisationTest {
     @BeforeEach
     public void setup() {
         String appealReferenceNumber = "someReferenceNumber";
-        String appellantGivenNames = "someAppellantGivenNames";
-        String appellantFamilyName = "someAppellantFamilyName";
+        String appellantGivenNames = "appellantGivenNames";
+        String appellantFamilyName = "appellantFamilyName";
         when(adminOfficerPersonalisationProvider.getChangeToHearingRequirementsPersonalisation(asylumCase))
             .thenReturn(ImmutableMap
                 .<String, String>builder()

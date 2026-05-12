@@ -165,11 +165,12 @@ public class AppellantInternalCaseNonStandardDirectionPersonalisationTest {
             .containsEntry("appellantGivenNames", appellantGivenNames)
             .containsEntry("appellantFamilyName", appellantFamilyName)
             .containsEntry("appealReferenceNumber", appealReferenceNumber)
-            .containsEntry("address_line_1", addressLine1)
-            .containsEntry("address_line_2", addressLine2)
-            .containsEntry("address_line_3", addressLine3)
-            .containsEntry("address_line_4", postTown)
-            .containsEntry("address_line_5", postCode);
+            .containsEntry("address_line_1", (appellantGivenNames + " " + appellantFamilyName).substring(0, 42))
+            .containsEntry("address_line_2", addressLine1)
+            .containsEntry("address_line_3", addressLine2)
+            .containsEntry("address_line_4", addressLine3)
+            .containsEntry("address_line_5", postTown)
+            .containsEntry("address_line_6", postCode);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(expectedDirectionDueDate, personalisation.get("directionDueDate"));
@@ -187,10 +188,11 @@ public class AppellantInternalCaseNonStandardDirectionPersonalisationTest {
             .containsEntry("appellantGivenNames", appellantGivenNames)
             .containsEntry("appellantFamilyName", appellantFamilyName)
             .containsEntry("appealReferenceNumber", appealReferenceNumber)
-            .containsEntry("address_line_1", oocAddressLine1)
-            .containsEntry("address_line_2", oocAddressLine2)
-            .containsEntry("address_line_3", oocAddressLine3)
-            .containsEntry("address_line_4", Nationality.ES.toString());
+            .containsEntry("address_line_1", (appellantGivenNames + " " + appellantFamilyName).substring(0, 42))
+            .containsEntry("address_line_2", oocAddressLine1)
+            .containsEntry("address_line_3", oocAddressLine2)
+            .containsEntry("address_line_4", oocAddressLine3)
+            .containsEntry("address_line_5", Nationality.ES.toString());
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(expectedDirectionDueDate, personalisation.get("directionDueDate"));

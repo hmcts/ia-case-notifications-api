@@ -45,8 +45,8 @@ public class LegalRepresentativeRequestCaseEditPersonalisationTest {
     private static final String LEGAL_REP_EMAIL_ADDRESS = "legalrep@example.com";
     private static final String DIRECTION_EXPLANATION = "someDirectionExplanation";
     private static final String APPEAL_REFERENCE_NUMBER = "someAppealReferenceNumber";
-    private static final String APPELLANT_GIVEN_NAMES = "someAppellantGivenNames";
-    private static final String APPELLANT_FAMILY_NAMES = "someAppellantFamilyNames";
+    private static final String APPELLANT_GIVEN_NAMES = "appellantGivenNames";
+    private static final String APPELLANT_FAMILY_NAMES = "appellantFamilyNames";
     private static final String SOME_LEGAL_REP_REF_NUMBER = "someLegalRepRefNumber";
     private static final String CUSTOMER_SERVICES_PROVIDER_PHONE = "555 555 555";
     private static final String CUSTOMER_SERVICES_PROVIDER_EMAIL = "customer.services@example.com";

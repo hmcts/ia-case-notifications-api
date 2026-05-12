@@ -37,8 +37,8 @@ public class LegalRepresentativeForceCaseToSubmitHearingRequirementsDetentionPer
     private final String legalRepReferenceNumber = "someLegalRepReferenceNumber";
     private final String homeOfficeReferencrNumber = "someHomeOfficeReferenceNumber";
     private final String appealReferenceNumber = "someReferenceNumber";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String appellantGivenNames = "appellantGivenNames";
+    private final String appellantFamilyName = "appellantFamilyName";
     private final String linkToOnlineService = "https://immigration-appeal.demo.platform.hmcts.net/start-appeal";
     @Mock
     AsylumCase asylumCase;

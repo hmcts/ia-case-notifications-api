@@ -100,13 +100,14 @@ class AppellantInternalManageFeeUpdateLetterPersonalisationTest {
     @Test
     void should_return_address_in_correct_format_in_country() {
         appellantInCountryDataSetup();
-        assertTrue(appellantInternalManageFeeUpdateLetterPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_XX12YY"));
+        assertTrue(appellantInternalManageFeeUpdateLetterPersonalisation.getRecipientsList(asylumCase)
+                .contains("someAppellantGivenNamessomeAppellantFamil_50_Buildingname_Streetname_Townname_XX12YY"));
     }
 
     @Test
     void should_return_address_in_correct_format_out_of_country() {
         appellantOutOfCountryDataSetup();
-        assertTrue(appellantInternalManageFeeUpdateLetterPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_Spain"));
+        assertTrue(appellantInternalManageFeeUpdateLetterPersonalisation.getRecipientsList(asylumCase).contains("someAppellantGivenNamessomeAppellantFamil_50_Buildingname_Streetname_Townname_Spain"));
     }
 
     @Test
@@ -118,7 +119,8 @@ class AppellantInternalManageFeeUpdateLetterPersonalisationTest {
     @Test
     void should_return_address_in_correct_format_legalRep_out_of_country() {
         legalRepOutOfCountryDataSetup();
-        assertTrue(appellantInternalManageFeeUpdateLetterPersonalisation.getRecipientsList(asylumCase).contains("50_Buildingname_Streetname_Townname_Spain"));
+        assertTrue(appellantInternalManageFeeUpdateLetterPersonalisation.getRecipientsList(asylumCase)
+                .contains("50_Buildingname_Streetname_Townname_Spain"));
     }
 
     @Test
@@ -171,11 +173,12 @@ class AppellantInternalManageFeeUpdateLetterPersonalisationTest {
             .containsEntry("feeUpdateReasonSelected", "Decision Type Changed")
             .containsEntry("onlineCaseRefNumber", referenceNumber)
             .containsEntry("dueDate14Days", systemDateProvider.dueDate(14))
-            .containsEntry("address_line_1", addressLine1)
-            .containsEntry("address_line_2", addressLine2)
-            .containsEntry("address_line_3", addressLine3)
-            .containsEntry("address_line_4", postTown)
-            .containsEntry("address_line_5", postCode);
+            .containsEntry("address_line_1", (appellantGivenNames + " " + appellantFamilyName).substring(0, 42))
+            .containsEntry("address_line_2", addressLine1)
+            .containsEntry("address_line_3", addressLine2)
+            .containsEntry("address_line_4", addressLine3)
+            .containsEntry("address_line_5", postTown)
+            .containsEntry("address_line_6", postCode);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
@@ -198,11 +201,12 @@ class AppellantInternalManageFeeUpdateLetterPersonalisationTest {
             .containsEntry("feeUpdateReasonSelected", "Decision Type Changed")
             .containsEntry("onlineCaseRefNumber", referenceNumber)
             .containsEntry("dueDate14Days", systemDateProvider.dueDate(14))
-            .containsEntry("address_line_1", addressLine1)
-            .containsEntry("address_line_2", addressLine2)
-            .containsEntry("address_line_3", addressLine3)
-            .containsEntry("address_line_4", postTown)
-            .containsEntry("address_line_5", Nationality.ES.toString());
+            .containsEntry("address_line_1", (appellantGivenNames + " " + appellantFamilyName).substring(0, 42))
+            .containsEntry("address_line_2", addressLine1)
+            .containsEntry("address_line_3", addressLine2)
+            .containsEntry("address_line_4", addressLine3)
+            .containsEntry("address_line_5", postTown)
+            .containsEntry("address_line_6", Nationality.ES.toString());
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }

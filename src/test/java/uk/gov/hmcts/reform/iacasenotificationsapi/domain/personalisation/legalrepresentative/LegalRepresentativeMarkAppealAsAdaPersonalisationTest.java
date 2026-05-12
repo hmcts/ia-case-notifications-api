@@ -26,8 +26,8 @@ public class LegalRepresentativeMarkAppealAsAdaPersonalisationTest {
     private final String emailAddress = "legal@example.com";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String legalRefNumber = "someLegalRefNumber";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String appellantGivenNames = "appellantGivenNames";
+    private final String appellantFamilyName = "appellantFamilyName";
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "cust.services@example.com";
 
