@@ -6077,10 +6077,14 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
+                boolean isPaymentPending = asylumCase.read(PAYMENT_STATUS, PaymentStatus.class)
+                        .map(status -> status == PAYMENT_PENDING).orElse(false);
+
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.RECORD_REMISSION_REMINDER
                     && isRemissionRejectedOrPartiallyApproved(asylumCase)
-                    && isAipJourney(asylumCase);
+                    && isAipJourney(asylumCase)
+                    && isPaymentPending;
             },
             notificationGenerators,
             getErrorHandler()
@@ -8038,9 +8042,13 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
+                boolean isPaymentPending = asylumCase.read(PAYMENT_STATUS, PaymentStatus.class)
+                        .map(status -> status == PAYMENT_PENDING).orElse(false);
+
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.RECORD_REMISSION_REMINDER
-                    && isRemissionRejectedOrPartiallyApproved(asylumCase);
+                    && isRemissionRejectedOrPartiallyApproved(asylumCase)
+                    && isPaymentPending;
             },
             notificationGenerators,
             getErrorHandler()
