@@ -6077,14 +6077,14 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-                boolean isPaymentPending = asylumCase.read(PAYMENT_STATUS, PaymentStatus.class)
-                        .map(status -> status == PAYMENT_PENDING).orElse(false);
+                boolean isAppealPaid = asylumCase.read(PAYMENT_STATUS, PaymentStatus.class)
+                        .orElse(null) == PaymentStatus.PAID;
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.RECORD_REMISSION_REMINDER
                     && isRemissionRejectedOrPartiallyApproved(asylumCase)
                     && isAipJourney(asylumCase)
-                    && isPaymentPending;
+                    && !isAppealPaid;
             },
             notificationGenerators,
             getErrorHandler()
@@ -8041,14 +8041,13 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-                boolean isPaymentPending = asylumCase.read(PAYMENT_STATUS, PaymentStatus.class)
-                        .map(status -> status == PAYMENT_PENDING).orElse(false);
+                boolean isAppealPaid = asylumCase.read(PAYMENT_STATUS, PaymentStatus.class)
+                        .orElse(null) == PaymentStatus.PAID;
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.RECORD_REMISSION_REMINDER
                     && isRemissionRejectedOrPartiallyApproved(asylumCase)
-                    && isPaymentPending;
+                    && !isAppealPaid;
             },
             notificationGenerators,
             getErrorHandler()
