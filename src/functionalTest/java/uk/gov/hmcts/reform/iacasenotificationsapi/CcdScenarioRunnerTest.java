@@ -118,14 +118,14 @@ public class CcdScenarioRunnerTest {
 
                 String description = MapValueExtractor.extractOrDefault(scenario, "description", "null");
 
-                String scenarioFeature = MapValueExtractor.extractOrDefault(scenario, "launchDarklyKey", "");
+                String launchDarklyKey = MapValueExtractor.extract(scenario, "launchDarklyKey");
 
-                boolean launchDarklyFeature = false;
-                if (scenarioFeature.contains(":")) {
-                    String[] keys = scenarioFeature.split(":");
-                    launchDarklyFeature = launchDarklyFunctionalTestClient
+                boolean isDisabledByLaunchDarkly = false;
+                if (launchDarklyKey instanceof String string && !string.isBlank()) {
+                    String[] keys = string.split(":");
+                    isDisabledByLaunchDarkly = launchDarklyFunctionalTestClient
                         .getKey(keys[0], authorizationHeaders.getValue("Authorization"))
-                        && Boolean.parseBoolean(keys[1]);
+                        != Boolean.parseBoolean(keys[1]);
                 }
 
                 String scenarioDisabled = MapValueExtractor.extractOrDefault(scenario, "disabled", "");
@@ -133,7 +133,7 @@ public class CcdScenarioRunnerTest {
                     ? !Boolean.parseBoolean(scenarioDisabled.substring(1))
                     : Boolean.parseBoolean(scenarioDisabled);
 
-                if (isDisabled) {
+                if (isDisabled || isDisabledByLaunchDarkly) {
                     System.out.println("Scenario is disabled, skipping execution");
                     return Arguments.of("Disabled: " + fileName, description, null, null, null, null, 0, 0, null);
                 }
