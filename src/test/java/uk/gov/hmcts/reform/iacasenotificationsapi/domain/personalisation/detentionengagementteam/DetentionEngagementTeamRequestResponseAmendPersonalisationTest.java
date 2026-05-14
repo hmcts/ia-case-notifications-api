@@ -46,8 +46,8 @@ public class DetentionEngagementTeamRequestResponseAmendPersonalisationTest {
     private final String detentionEngagementTeamRequestResponseAmendTemplateId = "Some template id";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String appellantGivenNames = "appellantGivenNames";
+    private final String appellantFamilyName = "appellantFamilyName";
     private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
     @Mock
     AsylumCase asylumCase;

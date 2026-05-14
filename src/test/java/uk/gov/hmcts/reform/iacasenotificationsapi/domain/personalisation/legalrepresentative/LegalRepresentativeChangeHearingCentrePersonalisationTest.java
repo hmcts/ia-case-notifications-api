@@ -36,8 +36,8 @@ public class LegalRepresentativeChangeHearingCentrePersonalisationTest {
     private final String legalRepEmailAddress = "legalrep@example.com";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String legalRepRefNumber = "someLegalRepRefNumber";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String appellantGivenNames = "appellantGivenNames";
+    private final String appellantFamilyName = "appellantFamilyName";
     @Mock
     AsylumCase asylumCase;
     private LegalRepresentativeChangeHearingCentrePersonalisation legalRepresentativeChangeHearingCentrePersonalisation;
