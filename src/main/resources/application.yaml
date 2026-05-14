@@ -1820,6 +1820,8 @@ security:
       - "updateTribunalDecision"
       - "recordRemissionReminder"
       - "removeStatutoryTimeframe24Weeks"
+      - "completeCaseReview"
+      - "revokeCitizenAccess"
     challenged-access-legal-operations:
       - "sendDirection"
       - "changeDirectionDueDate"
@@ -1884,6 +1886,7 @@ security:
       - "turnOnNotifications"
       - "updateTribunalDecision"
       - "recordRemissionReminder"
+      - "revokeCitizenAccess"
     senior-tribunal-caseworker:
       - "sendDirection"
       - "changeDirectionDueDate"
@@ -1949,6 +1952,8 @@ security:
       - "updateTribunalDecision"
       - "recordRemissionReminder"
       - "removeStatutoryTimeframe24Weeks"
+      - "completeCaseReview"
+      - "revokeCitizenAccess"
     # These events are used by the bails service, they will need to be migrated to the admin access management roles - see DIAC-855
     caseworker-ia-admofficer:
       - "editBailApplication"
@@ -1971,6 +1976,7 @@ security:
       - "createBailCaseLink"
       - "markAppealAsRemitted"
       - "removeStatutoryTimeframe24Weeks"
+      - "completeCaseReview"
     hearing-centre-admin:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2015,6 +2021,7 @@ security:
       - "startAppeal"
       - "refundConfirmation"
       - "hearingCancelled"
+      - "revokeCitizenAccess"
     ctsc:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2059,6 +2066,7 @@ security:
       - "startAppeal"
       - "refundConfirmation"
       - "hearingCancelled"
+      - "revokeCitizenAccess"
     ctsc-team-leader:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2103,6 +2111,7 @@ security:
       - "refundConfirmation"
       - "editDocuments"
       - "hearingCancelled"
+      - "revokeCitizenAccess"
     national-business-centre:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2147,6 +2156,7 @@ security:
       - "startAppeal"
       - "refundConfirmation"
       - "hearingCancelled"
+      - "revokeCitizenAccess"
     challenged-access-ctsc:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2191,6 +2201,7 @@ security:
       - "startAppeal"
       - "refundConfirmation"
       - "hearingCancelled"
+      - "revokeCitizenAccess"
     challenged-access-admin:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2235,6 +2246,7 @@ security:
       - "startAppeal"
       - "refundConfirmation"
       - "hearingCancelled"
+      - "revokeCitizenAccess"
     caseworker-ia-homeofficeapc:
       - "startApplication"
       - "editBailApplication"
@@ -2318,6 +2330,7 @@ security:
       - "sendBailDirection"
       - "editBailDocuments"
       - "removeStatutoryTimeframe24Weeks"
+      - "completeCaseReview"
     judge:
       - "adaSuitabilityReview"
       - "sendDirection"
@@ -2556,6 +2569,10 @@ security:
       - "changeHearingCentre"
       - "hearingCancelled"
       - "removeStatutoryTimeframe24Weeks"
+      - "completeCaseReview"
+      - "revokeCitizenAccess"
+    caseworker-ia-internal:
+      - "revokeCitizenAccess"
     caseworker-ia-homeofficebail:
       - "startApplication"
       - "editBailApplication"
@@ -2669,6 +2686,7 @@ homeOfficeFtpaEmailAddresses:
   belfast: ${IA_HOME_OFFICE_GLASGOW_EMAIL:ho-glasgow@example.com}
   harmondsworth: ${IA_FTPA_HOME_OFFICE_HARMONDSWORTH_EMAIL:ho-ftpa-harmondsworth@example.com}
   yarlswood: ${IA_FTPA_HOME_OFFICE_YARLSWOOD_EMAIL:ho-ftpa-yarlswood@example.com}
+  iacNationalVirtual: ${IA_HOME_OFFICE_MANCHESTER_EMAIL:ho-manchester@example.com}
 
 
 hearingCentreTelephoneNumber:
