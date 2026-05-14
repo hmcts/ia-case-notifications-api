@@ -43,7 +43,7 @@ public class AsylumCaseUtils {
     public static final String JUDGE = "Tribunal";
     private static final String INCORRECT_APPLICANT_TYPE_ERROR_MESSAGE = "Correct applicant type is not present";
     private static final String INCORRECT_RESPONDENT_TYPE_ERROR_MESSAGE = "Correct respondent type is not present";
-
+    public static final String D_MMM_YYYY = "d MMM yyyy";
 
     private AsylumCaseUtils() {
         // prevent public constructor for Sonar

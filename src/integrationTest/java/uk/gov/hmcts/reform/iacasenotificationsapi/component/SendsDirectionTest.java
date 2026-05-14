@@ -25,7 +25,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -39,11 +38,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Direction;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Parties;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Subscriber;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.SubscriberType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.GovNotifyNotificationSender;
 
 @Slf4j
@@ -101,18 +97,6 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
         assertThat(notifications.size()).isEqualTo(2);
         assertThat(notifications.get(0).getId()).contains("_RESPONDENT_NON_STANDARD_DIRECTION");
         assertThat(notifications.get(0).getValue()).matches(UUID_PATTERN);
-    }
-
-    private static @NotNull Optional<List<IdValue<Subscriber>>> anySubscriptions() {
-        Subscriber subscriber = new Subscriber(
-                SubscriberType.APPELLANT, //subscriberType
-                "ppellantInSubscription@gmail.com", //email
-                YesOrNo.YES, // wants email
-                "", //mobileNumber
-                YesOrNo.NO // wants sms
-        );
-
-        return Optional.of(Collections.singletonList(new IdValue<>("foo", subscriber)));
     }
 
     private PreSubmitCallbackResponseForTest aboutToSubmit(CallbackForTest.CallbackForTestBuilder callback) {
