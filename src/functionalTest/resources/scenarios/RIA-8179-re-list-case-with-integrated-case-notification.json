@@ -22,7 +22,7 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
-        "notificationsSent": []
+        "notificationsSent": null
       }
     },
     "notifications": []

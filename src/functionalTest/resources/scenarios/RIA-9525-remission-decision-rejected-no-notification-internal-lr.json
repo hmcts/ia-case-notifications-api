@@ -27,7 +27,7 @@
         "isAdmin": "Yes",
         "appellantsRepresentation": "No",
         "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "notificationsSent": []
+        "notificationsSent": null
       }
     },
     "notifications": []
