@@ -6080,6 +6080,11 @@ public class NotificationHandlerConfiguration {
                 boolean isAppealPaid = asylumCase.read(PAYMENT_STATUS, PaymentStatus.class)
                         .orElse(null) == PaymentStatus.PAID;
 
+                log.info("----------------------1: {}", callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT);
+                log.info("----------------------2: {}", callback.getEvent() == Event.RECORD_REMISSION_REMINDER);
+                log.info("----------------------3: {}", isRemissionRejectedOrPartiallyApproved(asylumCase));
+                log.info("----------------------4: {}", isAipJourney(asylumCase));
+                log.info("----------------------isAppealPaid: {}", isAppealPaid);
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.RECORD_REMISSION_REMINDER
                     && isRemissionRejectedOrPartiallyApproved(asylumCase)
@@ -8044,6 +8049,7 @@ public class NotificationHandlerConfiguration {
                 boolean isAppealPaid = asylumCase.read(PAYMENT_STATUS, PaymentStatus.class)
                         .orElse(null) == PaymentStatus.PAID;
 
+                log.info("----------------------isAppealPaid: {}", isAppealPaid);
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.RECORD_REMISSION_REMINDER
                     && isRemissionRejectedOrPartiallyApproved(asylumCase)
