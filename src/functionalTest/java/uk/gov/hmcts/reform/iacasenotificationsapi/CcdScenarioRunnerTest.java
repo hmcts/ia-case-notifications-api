@@ -123,9 +123,9 @@ public class CcdScenarioRunnerTest {
                 boolean isDisabledByLaunchDarkly = false;
                 if (launchDarklyKey instanceof String string && !string.isBlank()) {
                     String[] keys = string.split(":");
-                    isDisabledByLaunchDarkly = launchDarklyFunctionalTestClient
-                        .getKey(keys[0], authorizationHeaders.getValue("Authorization"))
-                        != Boolean.parseBoolean(keys[1]);
+                    boolean actualLdFlagValue = launchDarklyFunctionalTestClient.getKey(keys[0], authorizationHeaders.getValue("Authorization"));
+                    boolean expectedLdFlagValue = Boolean.parseBoolean(keys[1]);
+                    isDisabledByLaunchDarkly = actualLdFlagValue != expectedLdFlagValue;
                 }
 
                 String scenarioDisabled = MapValueExtractor.extractOrDefault(scenario, "disabled", "");
@@ -162,7 +162,7 @@ public class CcdScenarioRunnerTest {
                 } else if (requestUri.contains("asylum")) {
                     fileName = "[ASYLUM] " + fileName;
                 }
-                int expectedStatus = MapValueExtractor.extractOrDefault(scenario, "expectation.status", 200, launchDarklyFeature);
+                int expectedStatus = MapValueExtractor.extractOrDefault(scenario, "expectation.status", 200);
                 String expectedResponseBody = buildCallbackResponseBody(
                     MapValueExtractor.extract(scenario, "expectation"),
                     templatesByFilename
