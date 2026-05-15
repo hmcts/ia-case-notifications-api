@@ -6080,11 +6080,12 @@ public class NotificationHandlerConfiguration {
                 boolean isAppealPaid = asylumCase.read(PAYMENT_STATUS, PaymentStatus.class)
                         .orElse(null) == PaymentStatus.PAID;
 
-                log.info("----------------------1: {}", callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT);
-                log.info("----------------------2: {}", callback.getEvent() == Event.RECORD_REMISSION_REMINDER);
-                log.info("----------------------3: {}", isRemissionRejectedOrPartiallyApproved(asylumCase));
-                log.info("----------------------4: {}", isAipJourney(asylumCase));
-                log.info("----------------------isAppealPaid: {}", isAppealPaid);
+                String ref = asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(null);
+                log.info("----------------------1: {} {}", ref, callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT);
+                log.info("----------------------2: {} {}", ref, callback.getEvent() == Event.RECORD_REMISSION_REMINDER);
+                log.info("----------------------3: {} {}", ref, isRemissionRejectedOrPartiallyApproved(asylumCase));
+                log.info("----------------------4: {} {}", ref, isAipJourney(asylumCase));
+                log.info("----------------------ref {}, isAppealPaid: {}", ref, isAppealPaid);
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.RECORD_REMISSION_REMINDER
                     && isRemissionRejectedOrPartiallyApproved(asylumCase)
