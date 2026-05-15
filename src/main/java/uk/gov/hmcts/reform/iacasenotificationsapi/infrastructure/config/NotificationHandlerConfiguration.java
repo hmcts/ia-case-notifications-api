@@ -8044,7 +8044,6 @@ public class NotificationHandlerConfiguration {
                 boolean isAppealPaid = asylumCase.read(PAYMENT_STATUS, PaymentStatus.class)
                         .orElse(null) == PaymentStatus.PAID;
 
-                log.info("----------------------isAppealPaid: {}", isAppealPaid);
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.RECORD_REMISSION_REMINDER
                     && isRemissionRejectedOrPartiallyApproved(asylumCase)
