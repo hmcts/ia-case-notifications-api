@@ -5653,7 +5653,6 @@ public class NotificationHandlerConfiguration {
                     boolean canSendAppellant = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == COMPLETE_CASE_REVIEW
                             && AsylumCaseUtils.hasStf24WeeksStatus(asylumCase) && !emails.isEmpty();
-                    log.info("case_Review  canSendAppellant {}", canSendAppellant);
                     return canSendAppellant;
                 },
                 notificationGenerators,  getErrorHandler()
@@ -5673,7 +5672,6 @@ public class NotificationHandlerConfiguration {
                     String emails = String.join(",", legalRepEmails);
                     boolean canSendLegalRep = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == COMPLETE_CASE_REVIEW && AsylumCaseUtils.hasStf24WeeksStatus(asylumCase) && !emails.isEmpty();
-                    log.info("case_Review canSendLegalRep {}", canSendLegalRep);
                     return canSendLegalRep;
                 },
                 notificationGenerators,  getErrorHandler()
@@ -5689,13 +5687,48 @@ public class NotificationHandlerConfiguration {
                             callback
                                     .getCaseDetails()
                                     .getCaseData();
-
                     boolean canSendHomeOfficeNotification = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == COMPLETE_CASE_REVIEW && AsylumCaseUtils.hasStf24WeeksStatus(asylumCase);
-                    log.info("case_Review canSendHomeOfficeNotification1 {}", canSendHomeOfficeNotification);
                     return canSendHomeOfficeNotification;
                 },
                 notificationGenerators,  getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> completeCaseReview24WeeksAppellantLetterNotificationHandler(
+            @Qualifier("completeCaseReview24WeeksAppellantLetterNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase =
+                            callback
+                                    .getCaseDetails()
+                                    .getCaseData();
+                    Set<String> appellantEmails = AsylumCaseUtils.getApplicantEmail(asylumCase);
+                    String emails = String.join(",", appellantEmails);
+                    log.info("ABC {}", emails);
+                    boolean internalCase = isInternalCase(asylumCase);
+                    log.info("internalCase {}", internalCase);
+                    boolean emailPreferred = isEmailPreferred(asylumCase);
+                    log.info("isEmailPreferred {}", emailPreferred);
+                    boolean smsPreferred = isSmsPreferred(asylumCase);
+                    log.info("smsPreferred {}", smsPreferred);
+                    boolean inCountryAppeal = inCountryAppeal(asylumCase);
+                    log.info("inCountryAppeal {}", inCountryAppeal);
+                    boolean hasStf24W = AsylumCaseUtils.hasStf24WeeksStatus(asylumCase);
+                    log.info("hasStf24WeeksStatus {}", hasStf24W);
+                    boolean canSendNotifications = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == COMPLETE_CASE_REVIEW
+                            && hasStf24W
+                            && emails.isEmpty()
+                            && internalCase
+                            && !emailPreferred
+                            && !smsPreferred
+                            && inCountryAppeal;
+                    log.info("canSendNotifications {}", canSendNotifications);
+                    return canSendNotifications;
+                },
+                notificationGenerators, getErrorHandler()
         );
     }
 
