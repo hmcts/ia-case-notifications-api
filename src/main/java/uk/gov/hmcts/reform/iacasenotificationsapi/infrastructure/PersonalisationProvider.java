@@ -38,42 +38,29 @@ public class PersonalisationProvider {
     private final HearingDetailsFinder hearingDetailsFinder;
     private final DirectionFinder directionFinder;
     private final DateTimeExtractor dateTimeExtractor;
-    private final String recipientReferenceNumber = "recipientReferenceNumber";
-    private final String recipient = "recipient";
 
-    ImmutableMap.Builder<String, AsylumCaseDefinition> personalisationBuilder = new ImmutableMap.Builder<String, AsylumCaseDefinition>()
+    private static final ImmutableMap<String, AsylumCaseDefinition> PERSONALISATION_MAP = new ImmutableMap.Builder<String, AsylumCaseDefinition>()
         .put(APPEAL_REFERENCE_NUMBER_CONST, APPEAL_REFERENCE_NUMBER)
         .put("legalRepReferenceNumber", LEGAL_REP_REFERENCE_NUMBER)
         .put(ARIA_LISTING_REFERENCE_CONST, ARIA_LISTING_REFERENCE)
         .put(HOME_OFFICE_REFERENCE_NUMBER_CONST, HOME_OFFICE_REFERENCE_NUMBER)
         .put(APPELLANT_GIVEN_NAMES_CONST, APPELLANT_GIVEN_NAMES)
-        .put(APPELLANT_FAMILY_NAME_CONST, APPELLANT_FAMILY_NAME);
+        .put(APPELLANT_FAMILY_NAME_CONST, APPELLANT_FAMILY_NAME)
+        .build();
 
-    Map<Event, Map<String, AsylumCaseDefinition>> eventDefinition = new ImmutableMap.Builder<Event, Map<String, AsylumCaseDefinition>>()
-        .put(CHANGE_DIRECTION_DUE_DATE, personalisationBuilder
-            .build())
-        .put(DRAFT_HEARING_REQUIREMENTS, personalisationBuilder
-            .build())
-        .put(EDIT_CASE_LISTING, personalisationBuilder
-            .build())
-        .put(UPLOAD_ADDITIONAL_EVIDENCE, personalisationBuilder
-            .build())
-        .put(UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE, personalisationBuilder
-            .build())
-        .put(UPLOAD_ADDENDUM_EVIDENCE, personalisationBuilder
-            .build())
-        .put(UPLOAD_ADDENDUM_EVIDENCE_LEGAL_REP, personalisationBuilder
-            .build())
-        .put(UPLOAD_ADDENDUM_EVIDENCE_HOME_OFFICE, personalisationBuilder
-            .build())
-        .put(UPLOAD_ADDENDUM_EVIDENCE_ADMIN_OFFICER, personalisationBuilder
-            .build())
-        .put(SEND_DIRECTION, personalisationBuilder
-            .build())
-        .put(APPLY_FOR_FTPA_APPELLANT, personalisationBuilder
-            .build())
-        .put(APPLY_FOR_FTPA_RESPONDENT, personalisationBuilder
-            .build())
+    private static final Map<Event, Map<String, AsylumCaseDefinition>> EVENT_DEFINITION = new ImmutableMap.Builder<Event, Map<String, AsylumCaseDefinition>>()
+        .put(CHANGE_DIRECTION_DUE_DATE, PERSONALISATION_MAP)
+        .put(DRAFT_HEARING_REQUIREMENTS, PERSONALISATION_MAP)
+        .put(EDIT_CASE_LISTING, PERSONALISATION_MAP)
+        .put(UPLOAD_ADDITIONAL_EVIDENCE, PERSONALISATION_MAP)
+        .put(UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE, PERSONALISATION_MAP)
+        .put(UPLOAD_ADDENDUM_EVIDENCE, PERSONALISATION_MAP)
+        .put(UPLOAD_ADDENDUM_EVIDENCE_LEGAL_REP, PERSONALISATION_MAP)
+        .put(UPLOAD_ADDENDUM_EVIDENCE_HOME_OFFICE, PERSONALISATION_MAP)
+        .put(UPLOAD_ADDENDUM_EVIDENCE_ADMIN_OFFICER, PERSONALISATION_MAP)
+        .put(SEND_DIRECTION, PERSONALISATION_MAP)
+        .put(APPLY_FOR_FTPA_APPELLANT, PERSONALISATION_MAP)
+        .put(APPLY_FOR_FTPA_RESPONDENT, PERSONALISATION_MAP)
         .build();
 
     public PersonalisationProvider(
@@ -241,7 +228,7 @@ public class PersonalisationProvider {
 
         AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-        Map<String, String> immutableMap = eventDefinition
+        Map<String, String> immutableMap = EVENT_DEFINITION
             .get(callback.getEvent())
             .entrySet()
             .stream()
@@ -361,22 +348,26 @@ public class PersonalisationProvider {
     }
 
     public Map<String, String> getHomeOfficeRecipientHeader(AsylumCase asylumCase) {
+        final String recipientKey = "recipient";
+        final String recipientReferenceNumberKey = "recipientReferenceNumber";
         final String homeOffice = "Home Office";
 
         return ImmutableMap
             .<String, String>builder()
-            .put(recipient, homeOffice)
-            .put(recipientReferenceNumber, asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
+            .put(recipientKey, homeOffice)
+            .put(recipientReferenceNumberKey, asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .build();
     }
 
     public Map<String, String> getLegalRepRecipientHeader(AsylumCase asylumCase) {
+        final String recipientKey = "recipient";
+        final String recipientReferenceNumberKey = "recipientReferenceNumber";
         final String yourPrefix = "Your";
 
         return ImmutableMap
             .<String, String>builder()
-            .put(recipient, yourPrefix)
-            .put(recipientReferenceNumber, asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
+            .put(recipientKey, yourPrefix)
+            .put(recipientReferenceNumberKey, asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
             .build();
     }
 
