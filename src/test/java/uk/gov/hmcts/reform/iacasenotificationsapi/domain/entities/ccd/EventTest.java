@@ -124,6 +124,7 @@ public class EventTest {
                 Arguments.of("adaSuitabilityReview", ADA_SUITABILITY_REVIEW.toString()),
                 Arguments.of("transferOutOfAda", TRANSFER_OUT_OF_ADA.toString()),
                 Arguments.of("removeStatutoryTimeframe24Weeks", REMOVE_STATUTORY_TIMEFRAME_24_WEEKS.toString()),
+                Arguments.of("completeCaseReview", COMPLETE_CASE_REVIEW.toString()),
                 Arguments.of("markAppealAsAda", MARK_APPEAL_AS_ADA.toString()),
                 Arguments.of("markAsReadyForUtTransfer", MARK_AS_READY_FOR_UT_TRANSFER.toString()),
                 Arguments.of("updateDetentionLocation", UPDATE_DETENTION_LOCATION.toString()),
