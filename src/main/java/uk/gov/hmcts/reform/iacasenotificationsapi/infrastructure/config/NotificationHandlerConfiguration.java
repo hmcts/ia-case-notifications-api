@@ -5725,7 +5725,7 @@ public class NotificationHandlerConfiguration {
                             && !emailPreferred
                             && !smsPreferred
                             && inCountryAppeal;
-                    log.info("canSendNotifications {}", canSendNotifications);
+                    log.info("canSend review letter Notifications {}", canSendNotifications);
                     return canSendNotifications;
                 },
                 notificationGenerators, getErrorHandler()

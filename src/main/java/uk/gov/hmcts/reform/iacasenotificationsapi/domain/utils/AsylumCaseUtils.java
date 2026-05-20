@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -36,6 +37,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Remissi
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 
+@Slf4j
 public class AsylumCaseUtils {
 
     public static final String HOME_OFFICE = "Home office";
@@ -585,7 +587,11 @@ public class AsylumCaseUtils {
     public static boolean hasStf24WeeksStatus(AsylumCase asylumCase) {
         return asylumCase
                 .read(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)
-                .map(value -> value.equals(YesOrNo.YES))
+                .map(value -> {
+                    boolean equals = value.equals(YES);
+                    log.info("STF_24W_CURRENT_STATUS_AUTO_GENERATED value is {} and equals YES is {}", value, equals);
+                    return equals;
+                })
                 .orElse(false);
     }
 
