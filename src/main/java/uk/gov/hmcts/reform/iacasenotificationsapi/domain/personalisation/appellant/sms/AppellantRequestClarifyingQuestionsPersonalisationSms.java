@@ -5,6 +5,7 @@ import static java.util.Objects.requireNonNull;
 import com.google.common.collect.ImmutableMap;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
@@ -63,7 +64,7 @@ public class AppellantRequestClarifyingQuestionsPersonalisationSms implements Sm
         final String directionDueDate =
             LocalDate
                 .parse(direction.getDateDue())
-                .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+                .format(DateTimeFormatter.ofPattern("d MMM yyyy", Locale.ENGLISH));
 
         return
             ImmutableMap

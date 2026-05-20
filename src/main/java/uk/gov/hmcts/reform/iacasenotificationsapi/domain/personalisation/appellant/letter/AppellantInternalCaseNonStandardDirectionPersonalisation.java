@@ -70,7 +70,7 @@ public class AppellantInternalCaseNonStandardDirectionPersonalisation implements
         final String dueDate =
                 LocalDate
                         .parse(direction.getDateDue())
-                        .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+                        .format(DateTimeFormatter.ofPattern("d MMM yyyy", Locale.ENGLISH));
 
         ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap
                 .<String, String>builder()

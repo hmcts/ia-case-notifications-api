@@ -5,6 +5,7 @@ import static java.util.Objects.requireNonNull;
 import com.google.common.collect.ImmutableMap;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,7 +62,7 @@ public class AppellantEndAppealAutomaticallyPersonalisationSms implements SmsNot
                         .put("Appeal Ref Number", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                         .put("endAppealApprover", asylumCase.read(AsylumCaseDefinition.END_APPEAL_APPROVER_TYPE, String.class).orElse(""))
                         .put("deadLine", asylumCase.read(AsylumCaseDefinition.END_APPEAL_DATE, String.class)
-                        .map(date -> LocalDate.parse(date).plusDays(daysToAskReinstate).format(DateTimeFormatter.ofPattern("d MMM yyyy")))
+                        .map(date -> LocalDate.parse(date).plusDays(daysToAskReinstate).format(DateTimeFormatter.ofPattern("d MMM yyyy", Locale.ENGLISH)))
                         .orElse(""))
                         .put("Hyperlink to service", iaAipFrontendUrl)
                         .build();

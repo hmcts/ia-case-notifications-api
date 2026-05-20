@@ -15,6 +15,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -74,7 +75,7 @@ public class AppellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisat
         final String dueDate =
             LocalDate
                 .parse(direction.getDateDue())
-                .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+                .format(DateTimeFormatter.ofPattern("d MMM yyyy", Locale.ENGLISH));
 
         ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap
             .<String, String>builder()

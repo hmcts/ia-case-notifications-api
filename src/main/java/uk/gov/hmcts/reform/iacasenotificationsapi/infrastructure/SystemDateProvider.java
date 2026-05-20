@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.DateProvider;
 
@@ -14,6 +15,6 @@ public class SystemDateProvider implements DateProvider {
 
     public String dueDate(int plusDays) {
         return LocalDate.now().plusDays(plusDays)
-            .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+            .format(DateTimeFormatter.ofPattern("d MMM yyyy", Locale.ENGLISH));
     }
 }

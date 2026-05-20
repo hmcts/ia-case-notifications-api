@@ -8,6 +8,7 @@ import com.google.common.collect.ImmutableMap;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
@@ -89,7 +90,7 @@ public class RespondentDirectionPersonalisation implements EmailNotificationPers
         final String directionDueDate =
             LocalDate
                 .parse(direction.getDateDue())
-                .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+                .format(DateTimeFormatter.ofPattern("d MMM yyyy", Locale.ENGLISH));
 
         return ImmutableMap
             .<String, String>builder()

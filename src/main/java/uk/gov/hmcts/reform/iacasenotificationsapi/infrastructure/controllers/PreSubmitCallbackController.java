@@ -46,7 +46,7 @@ public class PreSubmitCallbackController<T extends CaseData> {
     ) {
 
         LOG.info(
-            "Asylum Case CCD `{}` event `{}` received for Case ID `{}`",
+            "Asylum Case for CCD `{}` event `{}` received for Case ID `{}`",
             callbackStage,
             callback.getEvent(),
             callback.getCaseDetails().getId()

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseData;
@@ -33,7 +34,7 @@ public interface BaseNotificationPersonalisation<T extends CaseData> {
 
     default String defaultDateFormat(String dateString) {
         try {
-            return LocalDate.parse(dateString).format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+            return LocalDate.parse(dateString).format(DateTimeFormatter.ofPattern("d MMM yyyy", Locale.ENGLISH));
         } catch (DateTimeParseException e) {
             return dateString;
         }

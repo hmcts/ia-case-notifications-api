@@ -12,6 +12,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import javax.validation.constraints.NotNull;
@@ -69,7 +70,7 @@ public class LegalRepresentativeAppealStartedDisposalPersonalisation implements 
             .put("legalRepName", asylumCase.read(AsylumCaseDefinition.LEGAL_REP_NAME, String.class).orElse(""))
             .put("legalRepFamilyName", asylumCase.read(AsylumCaseDefinition.LEGAL_REP_FAMILY_NAME, String.class).orElse(""))
             .put("linkToOnlineService", iaExUiFrontendUrl)
-            .put("creationDate", LocalDate.now().format(DateTimeFormatter.ofPattern("d MMM yyyy")))
+            .put("creationDate", LocalDate.now().format(DateTimeFormatter.ofPattern("d MMM yyyy", Locale.ENGLISH)))
             .build();
 
         return res;

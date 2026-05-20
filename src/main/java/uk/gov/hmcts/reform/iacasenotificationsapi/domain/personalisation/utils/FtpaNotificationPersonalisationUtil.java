@@ -8,6 +8,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.Optional;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ApplicantType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
@@ -71,6 +72,6 @@ public interface FtpaNotificationPersonalisationUtil {
     }
 
     default String dueDate(long days) {
-        return LocalDate.now().plusDays(days).format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+        return LocalDate.now().plusDays(days).format(DateTimeFormatter.ofPattern("d MMM yyyy", Locale.ENGLISH));
     }
 }

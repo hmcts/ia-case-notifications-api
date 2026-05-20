@@ -1,6 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
+import org.slf4j.LoggerFactory;
 
 public enum Event {
 
@@ -141,10 +143,23 @@ public enum Event {
     @JsonEnumDefaultValue
     UNKNOWN("unknown");
 
+    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(Event.class);
+
     private final String id;
 
     Event(String id) {
         this.id = id;
+    }
+
+    @JsonCreator
+    public static Event fromValue(String value) {
+        for (Event event : Event.values()) {
+            if (event.id.equals(value)) {
+                return event;
+            }
+        }
+        LOG.warn("Unknown CCD event received: `{}`", value);
+        return UNKNOWN;
     }
 
     @Override

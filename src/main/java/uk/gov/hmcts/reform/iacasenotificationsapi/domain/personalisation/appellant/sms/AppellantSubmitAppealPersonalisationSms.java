@@ -8,6 +8,7 @@ import com.google.common.collect.ImmutableMap;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
@@ -89,7 +90,7 @@ public class AppellantSubmitAppealPersonalisationSms implements SmsNotificationP
                 .read(AsylumCaseDefinition.APPELLANT_DATE_OF_BIRTH,String.class)
                 .orElseThrow(() -> new IllegalStateException("Appellant's birth of date is not present"));
 
-        final  String formattedDateOfBirth = LocalDate.parse(dateOfBirth).format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+        final  String formattedDateOfBirth = LocalDate.parse(dateOfBirth).format(DateTimeFormatter.ofPattern("d MMM yyyy", Locale.ENGLISH));
 
         final String dueDate = systemDateProvider.dueDate(daysToWaitAfterSubmission);
 

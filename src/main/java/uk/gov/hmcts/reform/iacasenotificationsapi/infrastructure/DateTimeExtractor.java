@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,7 +19,7 @@ public class DateTimeExtractor {
 
         return LocalDate
                 .parse(dateValue.toString())
-                .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+                .format(DateTimeFormatter.ofPattern("d MMM yyyy", Locale.ENGLISH));
     }
 
     public String extractHearingTime(String validIso8601HearingDate) {

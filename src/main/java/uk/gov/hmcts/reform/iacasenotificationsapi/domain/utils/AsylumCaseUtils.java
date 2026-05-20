@@ -579,7 +579,7 @@ public class AsylumCaseUtils {
         final String reviewDate = asylumCase
                 .read(AsylumCaseDefinition.COMPLETE_CASE_REVIEW_DATE, String.class)
                 .orElseThrow(() -> new IllegalStateException("Complete CaseReview Date is not present"));
-        return LocalDate.parse(reviewDate).format(DateTimeFormatter.ofPattern(D_MMM_YYYY));
+        return LocalDate.parse(reviewDate).format(DateTimeFormatter.ofPattern(D_MMM_YYYY, Locale.ENGLISH));
     }
 
     public static boolean hasStf24WeeksStatus(AsylumCase asylumCase) {
@@ -614,12 +614,12 @@ public class AsylumCaseUtils {
         if (isEmpty(appealReceivedDate)) {
             throw new IllegalStateException("Received date  is not present");
         }
-        return LocalDate.parse(appealReceivedDate).format(DateTimeFormatter.ofPattern(D_MMM_YYYY));
+        return LocalDate.parse(appealReceivedDate).format(DateTimeFormatter.ofPattern(D_MMM_YYYY, Locale.ENGLISH));
     }
 
     public static String getHomeOfficeDecisionDate(AsylumCase asylumCase) {
         final String homeOfficeDecisionDate = getCaseDateDate(asylumCase, HOME_OFFICE_DECISION_DATE);
-        return LocalDate.parse(homeOfficeDecisionDate).format(DateTimeFormatter.ofPattern(D_MMM_YYYY));
+        return LocalDate.parse(homeOfficeDecisionDate).format(DateTimeFormatter.ofPattern(D_MMM_YYYY, Locale.ENGLISH));
     }
 
     public static String populateStatutoryTimeFrame24wDate(AsylumCase asylumCase) {
@@ -643,6 +643,6 @@ public class AsylumCaseUtils {
     private static String add24WeeksToDate(String date) {
         LocalDate appealDate = parse(date);
         LocalDate stf24WeeksDate = appealDate.plusWeeks(24);
-        return stf24WeeksDate.format(DateTimeFormatter.ofPattern(D_MMM_YYYY));
+        return stf24WeeksDate.format(DateTimeFormatter.ofPattern(D_MMM_YYYY, Locale.ENGLISH));
     }
 }

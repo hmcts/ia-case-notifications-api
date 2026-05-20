@@ -139,7 +139,7 @@ public class RespondentNonStandardDirectionOfAppellantPersonalization implements
         final String directionDueDate =
                 LocalDate
                         .parse(direction.getDateDue())
-                        .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+                        .format(DateTimeFormatter.ofPattern("d MMM yyyy", Locale.ENGLISH));
 
         return ImmutableMap
             .<String, String>builder()

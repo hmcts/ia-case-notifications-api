@@ -11,6 +11,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.le
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import javax.validation.constraints.NotNull;
@@ -60,7 +61,7 @@ public class LegalRepresentativeBailApplicationEditedDisposalPersonalisationEmai
             .put("legalRepName", bailCase.read(BailCaseFieldDefinition.LEGAL_REP_NAME, String.class).orElse(""))
             .put("legalRepFamilyName", bailCase.read(BailCaseFieldDefinition.LEGAL_REP_FAMILY_NAME, String.class).orElse(""))
             .put("linkToOnlineService", iaExUiFrontendUrl)
-            .put("editingDate", LocalDate.now().format(DateTimeFormatter.ofPattern("d MMM yyyy")))
+            .put("editingDate", LocalDate.now().format(DateTimeFormatter.ofPattern("d MMM yyyy", Locale.ENGLISH)))
             .build();
         bailCase.write(BailCaseFieldDefinition.LAST_EDIT_APPLICATION_NOTIFICATION_DATE, LocalDate.now().toString());
         return res;

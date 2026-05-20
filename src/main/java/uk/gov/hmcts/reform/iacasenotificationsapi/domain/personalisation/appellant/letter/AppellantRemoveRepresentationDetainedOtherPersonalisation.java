@@ -12,6 +12,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -57,7 +58,7 @@ public class AppellantRemoveRepresentationDetainedOtherPersonalisation implement
                 .read(AsylumCaseDefinition.APPELLANT_DATE_OF_BIRTH,String.class)
                 .orElseThrow(() -> new IllegalStateException("Appellant's birth of date is not present"));
 
-        final  String formattedDateOfBirth = LocalDate.parse(dateOfBirth).format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+        final  String formattedDateOfBirth = LocalDate.parse(dateOfBirth).format(DateTimeFormatter.ofPattern("d MMM yyyy", Locale.ENGLISH));
 
         ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap
             .<String, String>builder()

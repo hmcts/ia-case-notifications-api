@@ -5,6 +5,7 @@ import static java.util.Objects.requireNonNull;
 import com.google.common.collect.ImmutableMap;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.ap
 public class ApplicantBailStopLegalRepresentingPersonalisationSms implements ApplicantBailSmsNotificationPersonalisation {
 
     private final String stopLegalRepresentingApplicantSmsTemplateId;
-    private static final DateTimeFormatter NOTIFICATION_DATE_FORMAT = DateTimeFormatter.ofPattern("d MMM yyyy");
+    private static final DateTimeFormatter NOTIFICATION_DATE_FORMAT = DateTimeFormatter.ofPattern("d MMM yyyy", Locale.ENGLISH);
 
     public ApplicantBailStopLegalRepresentingPersonalisationSms(
             @Value("${govnotify.bail.template.stopLegalRepresenting.sms}") String stopLegalRepresentingApplicantSmsTemplateId) {

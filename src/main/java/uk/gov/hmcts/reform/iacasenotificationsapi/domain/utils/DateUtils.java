@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 public class DateUtils {
 
@@ -11,6 +12,6 @@ public class DateUtils {
 
     // Formatting to be used for dates within notification attachment documents
     public static String formatDateForNotification(LocalDate localDate) {
-        return localDate.format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+        return localDate.format(DateTimeFormatter.ofPattern("d MMM yyyy", Locale.ENGLISH));
     }
 }
