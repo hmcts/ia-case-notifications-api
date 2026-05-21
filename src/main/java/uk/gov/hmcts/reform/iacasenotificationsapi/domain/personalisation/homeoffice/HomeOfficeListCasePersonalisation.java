@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.*;
 
 @Service
@@ -59,11 +58,13 @@ public class HomeOfficeListCasePersonalisation implements EmailNotificationPerso
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-
-        return AsylumCaseUtils.isAcceleratedDetainedAppeal(asylumCase)
-            ? homeOfficeCaseListedAdaTemplateId
-            : asylumCase.read(IS_INTEGRATED, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES
-            ? listAssistHearingHomeOfficeCaseListedTemplateId : homeOfficeCaseListedNonAdaTemplateId;
+        if (isAcceleratedDetainedAppeal(asylumCase)) {
+            return homeOfficeCaseListedAdaTemplateId;
+        }
+        if (asylumCase.read(IS_INTEGRATED, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES) {
+            return listAssistHearingHomeOfficeCaseListedTemplateId;
+        }
+        return homeOfficeCaseListedNonAdaTemplateId;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
@@ -291,6 +292,44 @@ public class EmailAddressFinderTest {
         when(bailCase.read(BailCaseFieldDefinition.HEARING_CENTRE, BailHearingCentre.class))
             .thenReturn(Optional.of(BailHearingCentre.BRADFORD));
         assertEquals("hc-bradford@example.com", emailAddressFinder.getBailHearingCentreEmailAddress(bailCase));
+    }
+
+    @Test
+    public void should_fallback_to_hearing_centre_when_list_case_hearing_centre_is_shared_for_home_office_email() {
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(HENDON));
+        when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(TAYLOR_HOUSE));
+        when(homeOfficeEmailAddresses.get(TAYLOR_HOUSE)).thenReturn("ho-taylorhouse@example.com");
+        assertEquals("ho-taylorhouse@example.com",
+            emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase));
+    }
+
+    @Test
+    public void should_throw_when_shared_hearing_centre_and_hearing_centre_is_empty_for_home_office_email() {
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(HENDON));
+        when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase))
+            .isExactlyInstanceOf(IllegalStateException.class)
+            .hasMessage("hearingCentre is not present");
+    }
+
+    @Test
+    public void should_fallback_to_hearing_centre_when_list_case_hearing_centre_is_shared_for_case_officer_email() {
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(HENDON));
+        when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(TAYLOR_HOUSE));
+        when(hearingCentreEmailAddresses.get(TAYLOR_HOUSE)).thenReturn("hc-taylorhouse@example.com");
+        assertEquals("hc-taylorhouse@example.com",
+            emailAddressFinder.getListCaseCaseOfficerHearingCentreEmailAddress(asylumCase));
+    }
+
+    @Test
+    public void should_throw_when_shared_hearing_centre_and_hearing_centre_is_empty_for_case_officer_email() {
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(HENDON));
+        when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> emailAddressFinder.getListCaseCaseOfficerHearingCentreEmailAddress(asylumCase))
+            .isExactlyInstanceOf(IllegalStateException.class)
+            .hasMessage("hearingCentre is not present");
     }
 
     @Test
