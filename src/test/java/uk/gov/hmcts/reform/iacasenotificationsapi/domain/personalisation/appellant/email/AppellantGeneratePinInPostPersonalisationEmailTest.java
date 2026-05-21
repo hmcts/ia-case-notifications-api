@@ -118,7 +118,6 @@ class AppellantGeneratePinInPostPersonalisationEmailTest {
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
-        when(asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_PIN_IN_POST, PinInPostDetails.class)).thenReturn(Optional.empty());
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
@@ -173,9 +172,18 @@ class AppellantGeneratePinInPostPersonalisationEmailTest {
     }
 
     @Test
-    void should_throw_exception_on_personalisation_when_asylumCase_is_null() {
+    void should_throw_exception_on_personalisation_when_callback_is_null() {
         NullPointerException exception = assertThrows(NullPointerException.class,
-            () -> appellantGeneratePinInPostPersonalisationEmail.getPersonalisation((AsylumCase) null));
+            () -> appellantGeneratePinInPostPersonalisationEmail.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
+    }
+
+    @Test
+    void should_throw_exception_on_personalisation_when_asylumCase_is_null() {
+        when(callback.getCaseDetails()).thenReturn(caseDetails);
+        when(caseDetails.getCaseData()).thenReturn(null);
+        NullPointerException exception = assertThrows(NullPointerException.class,
+            () -> appellantGeneratePinInPostPersonalisationEmail.getPersonalisation(callback));
         assertEquals("asylumCase must not be null", exception.getMessage());
     }
 }

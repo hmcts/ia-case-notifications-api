@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -144,5 +145,21 @@ class AppellantGeneratePinInPostPersonalisationSmsTest {
         assertEquals("someAccessCode", personalisation.get("securityCode"));
         assertEquals("31 Dec 2024", personalisation.get("validDate"));
         assertEquals("someUrl", personalisation.get("Hyperlink to service"));
+    }
+
+    @Test
+    void should_throw_exception_on_personalisation_when_callback_is_null() {
+        NullPointerException exception = assertThrows(NullPointerException.class,
+            () -> appellantGeneratePinInPostPersonalisationSms.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
+    }
+
+    @Test
+    void should_throw_exception_on_personalisation_when_asylumCase_is_null() {
+        when(callback.getCaseDetails()).thenReturn(caseDetails);
+        when(caseDetails.getCaseData()).thenReturn(null);
+        NullPointerException exception = assertThrows(NullPointerException.class,
+            () -> appellantGeneratePinInPostPersonalisationSms.getPersonalisation(callback));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 }
