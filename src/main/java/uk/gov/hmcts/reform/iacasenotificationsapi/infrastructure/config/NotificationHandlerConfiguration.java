@@ -5709,14 +5709,15 @@ public class NotificationHandlerConfiguration {
                     log.info("ABC {}", emails);
                     boolean internalCase = isInternalCase(asylumCase);
                     log.info("internalCase {}", internalCase);
+                    boolean inCountryAppeal = inCountryAppeal(asylumCase);
+                    log.info("inCountryAppeal {}", inCountryAppeal);
                     boolean emailPreferred = isEmailPreferred(asylumCase);
                     log.info("isEmailPreferred {}", emailPreferred);
                     boolean smsPreferred = isSmsPreferred(asylumCase);
                     log.info("smsPreferred {}", smsPreferred);
-                    boolean inCountryAppeal = inCountryAppeal(asylumCase);
-                    log.info("inCountryAppeal {}", inCountryAppeal);
                     boolean hasStf24W = AsylumCaseUtils.hasStf24WeeksStatus(asylumCase);
                     log.info("hasStf24WeeksStatus {}", hasStf24W);
+
                     boolean canSendNotifications = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == COMPLETE_CASE_REVIEW
                             && hasStf24W

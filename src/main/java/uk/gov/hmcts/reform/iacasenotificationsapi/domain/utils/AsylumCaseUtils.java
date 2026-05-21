@@ -585,14 +585,18 @@ public class AsylumCaseUtils {
     }
 
     public static boolean hasStf24WeeksStatus(AsylumCase asylumCase) {
-        return asylumCase
-                .read(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)
+        Optional<YesOrNo> read = asylumCase
+                .read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class);
+        log.info("STF_24W_CURRENT_STATUS_AUTO_GENERATED value is {}", read);
+        Boolean has24wStatus = read
                 .map(value -> {
                     boolean equals = value.equals(YES);
                     log.info("STF_24W_CURRENT_STATUS_AUTO_GENERATED value is {} and equals YES is {}", value, equals);
                     return equals;
                 })
                 .orElse(false);
+        log.info("has24wStatus value is {}", has24wStatus);
+        return has24wStatus;
     }
 
     public static @NonNull Set<String> getApplicantEmail(AsylumCase asylumCase) {
