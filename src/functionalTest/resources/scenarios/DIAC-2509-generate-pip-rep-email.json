@@ -2,7 +2,7 @@
   "description": "DIAC-2509 Generate PIN in post - LR case - wantsEmail",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
-    "credentials": "System",
+    "credentials": "SystemUser",
     "input": {
       "id": 2092,
       "eventId": "generatePinInPost",
@@ -11,8 +11,8 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "journeyType": "rep",
-          "pinInPost": {
-            "accessCode": "123456",
+          "appellantPinInPost": {
+            "accessCode": "AI123BX",
             "expiryDate": "{$TODAY+7}"
           },
           "contactPreference": "wantsEmail",
@@ -29,8 +29,8 @@
       "template": "minimal-appeal-submitted.json",
       "replacements": {
         "journeyType": "rep",
-        "pinInPost": {
-          "accessCode": "123456",
+        "appellantPinInPost": {
+          "accessCode": "AI123BX",
           "expiryDate": "{$TODAY+7}"
         },
         "contactPreference": "wantsEmail",
@@ -59,8 +59,8 @@
           "{$TODAY-7300|d MMM yyyy}",
           "{$iaAipFrontendUrl}",
           "2092",
-          "{iaAipPathToSelfRepresentation}",
-          "123456",
+          "{$iaAipPathToSelfRepresentation}",
+          "AI123BX",
           "{$TODAY+7|d MMM yyyy}",
           "{$customerServices.telephoneNumber}",
           "{$customerServices.emailAddress}"
@@ -69,14 +69,14 @@
       {
         "reference": "2092_GENERATED_PIN_IN_POST_HEARING_CENTRE",
         "recipient": "{$hearingCentreEmailAddresses.taylorHouse}",
-        "subject": "Immigration and Asylum appeal: Appeal access code sent to appellant ",
+        "subject": "Immigration and Asylum appeal: Appeal access code sent to appellant",
         "body": [
           "PA/12345/2019",
           "Talha Awan",
           "{$iaAipFrontendUrl}",
-          "{iaAipPathToSelfRepresentation}",
+          "{$iaAipPathToSelfRepresentation}",
           "2092",
-          "123456",
+          "AI123BX",
           "{$TODAY+7|d MMM yyyy}"
         ]
       }

@@ -4239,10 +4239,9 @@ public class NotificationHandlerConfiguration {
         List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
-            (callbackStage, callback) -> {
-                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == GENERATE_PIN_IN_POST;
-            },
+            (callbackStage, callback) ->
+                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == GENERATE_PIN_IN_POST,
             notificationGenerators
         );
     }

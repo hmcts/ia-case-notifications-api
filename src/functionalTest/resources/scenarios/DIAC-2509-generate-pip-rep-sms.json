@@ -2,7 +2,7 @@
   "description": "DIAC-2509 Generate PIN in post - LR case - wantsSms",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
-    "credentials": "System",
+    "credentials": "SystemUser",
     "input": {
       "id": 2093,
       "eventId": "generatePinInPost",
@@ -11,8 +11,8 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "journeyType": "rep",
-          "pinInPost": {
-            "accessCode": "123456",
+          "appellantPinInPost": {
+            "accessCode": "AI123BX",
             "expiryDate": "{$TODAY+7}"
           },
           "contactPreference": "wantsSms",
@@ -29,20 +29,20 @@
       "template": "minimal-appeal-submitted.json",
       "replacements": {
         "journeyType": "rep",
-        "pinInPost": {
-          "accessCode": "123456",
+        "appellantPinInPost": {
+          "accessCode": "AI123BX",
           "expiryDate": "{$TODAY+7}"
         },
-        "contactPreference": "wantsEmail",
+        "contactPreference": "wantsSms",
         "email": "{$TEST_CITIZEN_USERNAME}",
         "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
         "notificationsSent": [
           {
-            "id": "2093_GENERATED_PIN_IN_POST_APPELLANT_SMS",
+            "id": "2093_GENERATED_PIN_IN_POST_HEARING_CENTRE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "2093_GENERATED_PIN_IN_POST_HEARING_CENTRE",
+            "id": "2093_GENERATED_PIN_IN_POST_APPELLANT_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -52,14 +52,14 @@
       {
         "reference": "2093_GENERATED_PIN_IN_POST_HEARING_CENTRE",
         "recipient": "{$hearingCentreEmailAddresses.taylorHouse}",
-        "subject": "Immigration and Asylum appeal: Appeal access code sent to appellant ",
+        "subject": "Immigration and Asylum appeal: Appeal access code sent to appellant",
         "body": [
           "PA/12345/2019",
           "Talha Awan",
           "{$iaAipFrontendUrl}",
-          "{iaAipPathToSelfRepresentation}",
+          "{$iaAipPathToSelfRepresentation}",
           "2093",
-          "123456",
+          "AI123BX",
           "{$TODAY+7|d MMM yyyy}"
         ]
       },
@@ -73,8 +73,8 @@
           "2093",
           "PA/12345/2019",
           "{$iaAipFrontendUrl}",
-          "{iaAipPathToSelfRepresentation}",
-          "123456",
+          "{$iaAipPathToSelfRepresentation}",
+          "AI123BX",
           "{$TODAY+7|d MMM yyyy}"
         ]
       }
