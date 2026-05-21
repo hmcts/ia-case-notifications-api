@@ -354,6 +354,24 @@ dependencies {
         }
     }
 
+    constraints {
+        implementation('io.netty:netty-all:4.2.13.Final') {
+            because 'CVE-2026-42586 (netty-codec-redis)\n' +
+                    'CVE-2026-42578 (netty-handler-proxy)\n' +
+                    'CVE-2026-42577 (netty-transport-native-epoll)\n' +
+                    'CVE-2026-42587 (netty-codec-http, netty-codec-http2)\n' +
+                    'CVE-2026-41417 (netty-codec-http)\n' +
+                    'CVE-2026-42581 (netty-codec-http)\n' +
+                    'CVE-2026-42580 (netty-codec-http)\n' +
+                    'CVE-2026-42585 (netty-codec-http)\n' +
+                    'CVE-2026-42579 (netty-codec-dns)\n' +
+                    'CVE-2026-42582 (netty-codec-http3)\n' +
+                    'CVE-2026-42583 (netty-codec, netty-codec-compression)\n' +
+                    'CVE-2026-42584 (netty-codec-http)\n' +
+                    'CVE-2026-44248 (netty-codec-mqtt) fix'
+        }
+    }
+
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-json'
