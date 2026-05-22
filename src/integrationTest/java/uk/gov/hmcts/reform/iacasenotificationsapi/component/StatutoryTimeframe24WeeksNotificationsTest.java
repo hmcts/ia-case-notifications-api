@@ -359,6 +359,9 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
             caseData.with(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.YES);
             caseData.with(IS_ADMIN, YesOrNo.YES);
 
+            Optional<List<IdValue<Subscriber>>> maybeSubscribers = Optional.of(new ArrayList<>());
+            caseData.with(SUBSCRIPTIONS, maybeSubscribers);
+
             PreSubmitCallbackResponseForTest response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
             Optional<List<IdValue<String>>> notificationsSent =
                     response
