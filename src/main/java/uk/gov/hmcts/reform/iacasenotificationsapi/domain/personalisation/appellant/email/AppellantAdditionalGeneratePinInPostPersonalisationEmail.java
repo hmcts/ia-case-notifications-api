@@ -1,7 +1,8 @@
-package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer;
+package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_PIN_IN_POST;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.GENERATE_PIP_EMAIL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
 import com.google.common.collect.ImmutableMap;
@@ -15,44 +16,46 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefi
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.PinInPostDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 @Service
-public class HearingCentreGeneratePinInPostPersonalisation implements EmailNotificationPersonalisation {
-
-    private final String legalOfficerTemplateId;
+public class AppellantAdditionalGeneratePinInPostPersonalisationEmail implements EmailNotificationPersonalisation {
+    private final String templateId;
+    private final CustomerServicesProvider customerServicesProvider;
     private final String iaAipFrontendUrl;
     private final String iaAipPathToSelfRepresentation;
-    private final EmailAddressFinder emailAddressFinder;
     @Value("${govnotify.emailPrefix.ada}")
     private String adaPrefix;
     @Value("${govnotify.emailPrefix.nonAda}")
     private String nonAdaPrefix;
 
-    public HearingCentreGeneratePinInPostPersonalisation(
-        @Value("${govnotify.template.generatePinInPost.hearingCentre.email}") String legalOfficerTemplateId,
+    public AppellantAdditionalGeneratePinInPostPersonalisationEmail(
+        @Value("${govnotify.template.generatePinInPost.appellant.email}") String templateId,
         @Value("${iaAipPathToSelfRepresentation}") String iaAipPathToSelfRepresentation,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
-        EmailAddressFinder emailAddressFinder) {
-        this.legalOfficerTemplateId = legalOfficerTemplateId;
-        this.iaAipFrontendUrl = iaAipFrontendUrl;
+        CustomerServicesProvider customerServicesProvider
+    ) {
+        this.templateId = templateId;
         this.iaAipPathToSelfRepresentation = iaAipPathToSelfRepresentation;
-        this.emailAddressFinder = emailAddressFinder;
+        this.iaAipFrontendUrl = iaAipFrontendUrl;
+        this.customerServicesProvider = customerServicesProvider;
     }
 
     @Override
-    public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return Collections.singleton(emailAddressFinder.getHearingCentreEmailAddress(asylumCase));
+    public String getTemplateId() {
+        return templateId;
     }
 
     @Override
-    public String getTemplateId(AsylumCase asylumCase) {
-        return legalOfficerTemplateId;
+    public Set<String> getRecipientsList(final AsylumCase asylumCase) {
+        return asylumCase.read(GENERATE_PIP_EMAIL, String.class)
+            .map(Set::of)
+            .orElse(Collections.emptySet());
     }
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_GENERATED_PIN_IN_POST_HEARING_CENTRE";
+        return caseId + "_GENERATED_PIN_IN_POST_APPELLANT_2_EMAIL";
     }
 
     @Override
@@ -60,19 +63,21 @@ public class HearingCentreGeneratePinInPostPersonalisation implements EmailNotif
         requireNonNull(callback, "callback must not be null");
         AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
         requireNonNull(asylumCase, "asylumCase must not be null");
-
         String linkToPiPStartPage = iaAipFrontendUrl + iaAipPathToSelfRepresentation;
         PinInPostDetails pip = asylumCase.read(APPELLANT_PIN_IN_POST, PinInPostDetails.class).orElse(
             PinInPostDetails.builder().accessCode("").expiryDate("").build()
         );
+        asylumCase.clear(GENERATE_PIP_EMAIL);
         return ImmutableMap
             .<String, String>builder()
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
             .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
-            .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
-            .put("linkToPiPStartPage", linkToPiPStartPage)
+            .put("appellantDateOfBirth", defaultDateFormat(asylumCase.read(AsylumCaseDefinition.APPELLANT_DATE_OF_BIRTH, String.class).orElse("")))
             .put("ccdCaseId", String.valueOf(callback.getCaseDetails().getId()))
+            .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+            .put("linkToPiPStartPage", linkToPiPStartPage)
             .put("securityCode", pip.getAccessCode())
             .put("validDate", defaultDateFormat(pip.getExpiryDate()))
             .put("Hyperlink to service", iaAipFrontendUrl)

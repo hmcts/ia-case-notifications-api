@@ -38,10 +38,6 @@
         "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
         "notificationsSent": [
           {
-            "id": "2093_GENERATED_PIN_IN_POST_HEARING_CENTRE",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          },
-          {
             "id": "2093_GENERATED_PIN_IN_POST_APPELLANT_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
@@ -49,20 +45,6 @@
       }
     },
     "notifications": [
-      {
-        "reference": "2093_GENERATED_PIN_IN_POST_HEARING_CENTRE",
-        "recipient": "{$hearingCentreEmailAddresses.taylorHouse}",
-        "subject": "Immigration and Asylum appeal: Appeal access code sent to appellant",
-        "body": [
-          "PA/12345/2019",
-          "Talha Awan",
-          "{$iaAipFrontendUrl}",
-          "{$iaAipPathToSelfRepresentation}",
-          "2093",
-          "AI123BX",
-          "{$TODAY+7|d MMM yyyy}"
-        ]
-      },
       {
         "reference": "2093_GENERATED_PIN_IN_POST_APPELLANT_SMS",
         "recipient": "{$TEST_CITIZEN_MOBILE}",

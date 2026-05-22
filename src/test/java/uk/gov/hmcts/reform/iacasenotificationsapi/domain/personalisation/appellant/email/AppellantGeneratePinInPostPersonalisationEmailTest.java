@@ -49,7 +49,7 @@ class AppellantGeneratePinInPostPersonalisationEmailTest {
 
     private AppellantGeneratePinInPostPersonalisationEmail appellantGeneratePinInPostPersonalisationEmail;
 
-    private final String templateId = "legalOfficerTemplateId";
+    private final String templateId = "someTemplateId";
     private final String emailAddress = "someEmail";
 
     @BeforeEach

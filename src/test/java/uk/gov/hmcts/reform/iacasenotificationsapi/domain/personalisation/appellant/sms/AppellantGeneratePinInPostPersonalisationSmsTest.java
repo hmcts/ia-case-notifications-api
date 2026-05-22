@@ -43,7 +43,7 @@ class AppellantGeneratePinInPostPersonalisationSmsTest {
 
     private AppellantGeneratePinInPostPersonalisationSms appellantGeneratePinInPostPersonalisationSms;
 
-    private final String templateId = "legalOfficerTemplateId";
+    private final String templateId = "someTemplateId";
     private final String phoneNumber = "someNumber";
 
     @BeforeEach

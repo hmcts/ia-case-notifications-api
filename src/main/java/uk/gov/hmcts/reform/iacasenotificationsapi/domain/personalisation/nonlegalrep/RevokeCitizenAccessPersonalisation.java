@@ -57,7 +57,7 @@ public class RevokeCitizenAccessPersonalisation implements EmailNotificationPers
     public Map<String, String> getPersonalisation(Callback<AsylumCase> callback) {
         requireNonNull(callback, "callback must not be null");
         AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-        asylumCase.write(REVOKE_ACCESS_DL, null);
+        asylumCase.clear(REVOKE_ACCESS_DL);
 
         final ImmutableMap.Builder<String, String> fields = ImmutableMap
             .<String, String>builder()

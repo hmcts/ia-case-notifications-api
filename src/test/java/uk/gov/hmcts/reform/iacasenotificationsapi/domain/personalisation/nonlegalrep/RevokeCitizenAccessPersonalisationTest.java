@@ -133,7 +133,7 @@ public class RevokeCitizenAccessPersonalisationTest {
         assertEquals(personalisation.get("appellantFamilyName"), appellantFamilyName);
         assertEquals(personalisation.get("customerServicesTelephone"), customerServicesTelephone);
         assertEquals(personalisation.get("customerServicesEmail"), customerServicesEmail);
-        verify(asylumCase, times(1)).write(REVOKE_ACCESS_DL, null);
+        verify(asylumCase, times(1)).clear(REVOKE_ACCESS_DL);
     }
 
 
