@@ -80,6 +80,8 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
     @MockBean
     private GovNotifyNotificationSender notificationSender;
 
+    // --- Test data builders / helpers ---
+
     private static AsylumCaseForTest mockCaseData(String lrEmail, String appellantEmail, String internalAppellantEmail, YesOrNo inCountry, YesOrNo wantsEmail, YesOrNo wantsSms) {
         return anAsylumCase()
                 .with(HEARING_CENTRE, HearingCentre.MANCHESTER)
@@ -99,20 +101,20 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
 
     private static @NotNull Optional<List<IdValue<Subscriber>>> anySubscriptions(YesOrNo wantsEmail, YesOrNo wantsSms) {
         Subscriber subscriber = new Subscriber(
-                SubscriberType.APPELLANT, //subscriberType
-                "ppellantInSubscription@gmail.com", //email
-                wantsEmail, // wants email
-                "", //mobileNumber
-                wantsSms // wants sms
+                SubscriberType.APPELLANT,
+                "ppellantInSubscription@gmail.com",
+                wantsEmail,
+                "",
+                wantsSms
         );
 
         return Optional.of(Collections.singletonList(new IdValue<>("foo", subscriber)));
     }
 
-
     private PreSubmitCallbackResponseForTest mockResponse(AsylumCaseForTest caseData, Event event) {
         addServiceAuthStub(server);
         addNotificationEmailStub(server);
+
         when(notificationSender.sendEmail(anyString(), anyString(), anyMap(), anyString(), any(Callback.class)))
                 .thenReturn(someNotificationId);
 
@@ -127,7 +129,6 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
     }
 
     private PreSubmitCallbackResponseForTest aboutToSubmit(CallbackForTest.CallbackForTestBuilder callback) {
-
         try {
             MvcResult response = mockMvc
                     .perform(
@@ -143,282 +144,159 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
             );
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            // test will fail
             throw new RuntimeException(e);
         }
     }
 
+    // --- Notification assertion helpers to eliminate duplication ---
+    private static Optional<List<IdValue<String>>> readNotifications(PreSubmitCallbackResponseForTest response) {
+        return response.getData().read(NOTIFICATIONS_SENT);
+    }
+
+    private static void assertNoNotifications(PreSubmitCallbackResponseForTest response) {
+        Optional<List<IdValue<String>>> maybe = readNotifications(response);
+        assertFalse(maybe.isPresent());
+    }
+
+    private static void assertNotificationsContain(PreSubmitCallbackResponseForTest response, int expectedSize, String... expectedIds) {
+        Optional<List<IdValue<String>>> maybe = readNotifications(response);
+        assertTrue(maybe.isPresent());
+        List<IdValue<String>> notifications = maybe.get();
+        assertThat(notifications.size()).isEqualTo(expectedSize);
+
+        String idsString = String.join(",", notifications.stream().map(IdValue::getId).toList());
+        for (String id : expectedIds) {
+            assertThat(idsString).contains(id);
+        }
+    }
+
+    // --- Tests ---
     @Nested
     @DisplayName("REMOVE_STATUTORY_TIMEFRAME_24_WEEKS")
     class RemoveStatutoryTimeframe24WeeksNotificationsTest {
+
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
         void should_send_24weeks_remove_email_to_all_three_users() {
-            PreSubmitCallbackResponseForTest response = mockResponse(mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES, YesOrNo.YES, YesOrNo.NO), REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
-            Optional<List<IdValue<String>>> notificationsSent =
-                    response
-                            .getData()
-                            .read(NOTIFICATIONS_SENT);
-
-            assertTrue(notificationsSent.isPresent());
-            List<IdValue<String>> notifications = notificationsSent.get();
-            assertThat(notifications.size()).isEqualTo(3);
-            List<String> idList = notifications.stream().map(IdValue::getId).toList();
-            String idsString = String.join(",", idList);
-            assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL);
-            assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL);
-            assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL);
+            var response = mockResponse(mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES, YesOrNo.YES, YesOrNo.NO), REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
+            assertNotificationsContain(response, 3, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL);
         }
 
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
         void should_send_24weeks_remove_letter_to_appellant_and_legal_rep_and_home_office_when_appellant_emails_are_empty() {
-            PreSubmitCallbackResponseForTest response = mockResponse(mockCaseData(LR_EMAIL, "", "", YesOrNo.YES, YesOrNo.YES, YesOrNo.NO), REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
-            Optional<List<IdValue<String>>> notificationsSent =
-                    response
-                            .getData()
-                            .read(NOTIFICATIONS_SENT);
-
-            assertTrue(notificationsSent.isPresent());
-            List<IdValue<String>> notifications = notificationsSent.get();
-
-            assertThat(notifications.size()).isEqualTo(3);
-            List<String> idList = notifications.stream().map(IdValue::getId).toList();
-            String idsString = String.join(",", idList);
-            assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL);
-            assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL);
-            assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER);
+            var response = mockResponse(mockCaseData(LR_EMAIL, "", "", YesOrNo.YES, YesOrNo.YES, YesOrNo.NO), REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
+            assertNotificationsContain(response, 3, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER);
         }
 
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
         void should_send_24weeks_remove_email_to_appellant_and_ho_office() {
-            PreSubmitCallbackResponseForTest response = mockResponse(mockCaseData(null, APPELLANT_MAIL, null, YesOrNo.YES, YesOrNo.YES, YesOrNo.NO), REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
-            Optional<List<IdValue<String>>> notificationsSent =
-                    response
-                            .getData()
-                            .read(NOTIFICATIONS_SENT);
-
-            assertTrue(notificationsSent.isPresent());
-            List<IdValue<String>> notifications = notificationsSent.get();
-
-            assertThat(notifications.size()).isEqualTo(2);
-            List<String> idList = notifications.stream().map(IdValue::getId).toList();
-            String idsString = String.join(",", idList);
-            assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL);
-            assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL);
+            var response = mockResponse(mockCaseData(null, APPELLANT_MAIL, null, YesOrNo.YES, YesOrNo.YES, YesOrNo.NO), REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
+            assertNotificationsContain(response, 2, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL);
         }
 
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
         void should_send_24weeks_remove_email_to_appellant_with_internal_email_and_ho_office() {
-            PreSubmitCallbackResponseForTest response = mockResponse(mockCaseData(null, null, APPELLANT_MAIL, YesOrNo.YES, YesOrNo.YES, YesOrNo.NO), REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
-            Optional<List<IdValue<String>>> notificationsSent =
-                    response
-                            .getData()
-                            .read(NOTIFICATIONS_SENT);
-            assertTrue(notificationsSent.isPresent());
-            List<IdValue<String>> notifications = notificationsSent.get();
-
-            assertThat(notifications.size()).isEqualTo(2);
-            List<String> idList = notifications.stream().map(IdValue::getId).toList();
-            String idsString = String.join(",", idList);
-            assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL);
-            assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL);
+            var response = mockResponse(mockCaseData(null, null, APPELLANT_MAIL, YesOrNo.YES, YesOrNo.YES, YesOrNo.NO), REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
+            assertNotificationsContain(response, 2, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL);
         }
 
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
         void should_send_24weeks_remove_letter_to_appellant_and_email_to_ho_office() {
-            PreSubmitCallbackResponseForTest response = mockResponse(mockCaseData(null, null, null, YesOrNo.YES, YesOrNo.YES, YesOrNo.NO), REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
-            Optional<List<IdValue<String>>> notificationsSent =
-                    response
-                            .getData()
-                            .read(NOTIFICATIONS_SENT);
-
-            assertTrue(notificationsSent.isPresent());
-            List<IdValue<String>> notifications = notificationsSent.get();
-
-            assertThat(notifications.size()).isEqualTo(2);
-            List<String> idList = notifications.stream().map(IdValue::getId).toList();
-            String idsString = String.join(",", idList);
-            assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL);
-            assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER);
+            var response = mockResponse(mockCaseData(null, null, null, YesOrNo.YES, YesOrNo.YES, YesOrNo.NO), REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
+            assertNotificationsContain(response, 2, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER);
         }
 
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
         void should_not_send_24weeks_remove_letter_to_appellant_if_application_is_ooc() {
-            PreSubmitCallbackResponseForTest response = mockResponse(mockCaseData(null, null, null, YesOrNo.NO, YesOrNo.YES, YesOrNo.NO), REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
-            Optional<List<IdValue<String>>> notificationsSent =
-                    response
-                            .getData()
-                            .read(NOTIFICATIONS_SENT);
-
-            assertTrue(notificationsSent.isPresent());
-            List<IdValue<String>> notifications = notificationsSent.get();
-
-            assertThat(notifications.size()).isEqualTo(1);
-            List<String> idList = notifications.stream().map(IdValue::getId).toList();
-            String idsString = String.join(",", idList);
-            assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL);
+            var response = mockResponse(mockCaseData(null, null, null, YesOrNo.NO, YesOrNo.YES, YesOrNo.NO), REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
+            assertNotificationsContain(response, 1, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL);
         }
 
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
         void should_send_24weeks_remove_letter_to_appellant_and_email_to_legal_rep_and_home_office() {
-            PreSubmitCallbackResponseForTest response = mockResponse(mockCaseData(LR_EMAIL, null, null, YesOrNo.YES, YesOrNo.YES, YesOrNo.NO), REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
-            Optional<List<IdValue<String>>> notificationsSent =
-                    response
-                            .getData()
-                            .read(NOTIFICATIONS_SENT);
-
-            assertTrue(notificationsSent.isPresent());
-            List<IdValue<String>> notifications = notificationsSent.get();
-
-            assertThat(notifications.size()).isEqualTo(3);
-            List<String> idList = notifications.stream().map(IdValue::getId).toList();
-            String idsString = String.join(",", idList);
-            assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL);
-            assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL);
-            assertThat(idsString).contains(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER);
+            var response = mockResponse(mockCaseData(LR_EMAIL, null, null, YesOrNo.YES, YesOrNo.YES, YesOrNo.NO), REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
+            assertNotificationsContain(response, 3, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER);
         }
     }
 
     @Nested
     @DisplayName("COMPLETE_REVIEW_STATUTORY_TIMEFRAME_24_WEEKS")
     class CompleteReviewStatutoryTimeframe24WeeksNotificationsTest {
+
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
         void should_not_send_24weeks_case_review_email_for_non_bau_case() {
-            AsylumCaseForTest caseData = mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES, YesOrNo.YES, YesOrNo.NO);
-
-            PreSubmitCallbackResponseForTest response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
-            Optional<List<IdValue<String>>> notificationsSent =
-                    response
-                            .getData()
-                            .read(NOTIFICATIONS_SENT);
-
-            assertFalse(notificationsSent.isPresent());
+            var caseData = mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES, YesOrNo.YES, YesOrNo.NO);
+            var response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
+            assertNoNotifications(response);
         }
 
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
         void should_not_send_24weeks_case_review_email_or_letter_to_all_three_if_statutory_time_frame_is_not_present() {
-            AsylumCaseForTest caseData = mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES, YesOrNo.YES, YesOrNo.NO);
+            var caseData = mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES, YesOrNo.YES, YesOrNo.NO);
             caseData.with(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.NO);
-            PreSubmitCallbackResponseForTest response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
-            Optional<List<IdValue<String>>> notificationsSent =
-                    response
-                            .getData()
-                            .read(NOTIFICATIONS_SENT);
-
-            assertFalse(notificationsSent.isPresent());
+            var response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
+            assertNoNotifications(response);
         }
 
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
         void should_not_send_24weeks_case_review_email_for_stf_24Weeks_is_no() {
-            AsylumCaseForTest caseData = mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES, YesOrNo.YES, YesOrNo.NO);
+            var caseData = mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES, YesOrNo.YES, YesOrNo.NO);
             caseData.with(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.NO);
-            PreSubmitCallbackResponseForTest response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
-            Optional<List<IdValue<String>>> notificationsSent =
-                    response
-                            .getData()
-                            .read(NOTIFICATIONS_SENT);
-
-            assertFalse(notificationsSent.isPresent());
+            var response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
+            assertNoNotifications(response);
         }
 
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
         void should_send_24weeks_case_review_email_to_all_three() {
-            AsylumCaseForTest caseData = mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES, YesOrNo.YES, YesOrNo.NO);
+            var caseData = mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES, YesOrNo.YES, YesOrNo.NO);
             caseData.with(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.YES);
-            PreSubmitCallbackResponseForTest response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
-            Optional<List<IdValue<String>>> notificationsSent =
-                    response
-                            .getData()
-                            .read(NOTIFICATIONS_SENT);
-
-            assertTrue(notificationsSent.isPresent());
-            List<IdValue<String>> notifications = notificationsSent.get();
-            assertThat(notifications.size()).isEqualTo(3);
-            List<String> idList = notifications.stream().map(IdValue::getId).toList();
-            String idsString = String.join(",", idList);
-            assertThat(idsString).contains(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL);
-
-            assertThat(idsString).contains(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL);
-            assertThat(idsString).contains(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL);
+            var response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
+            assertNotificationsContain(response, 3, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL);
         }
 
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
         void should_send_24weeks_review_letter_to_appellant_and_email_to_ho_office_and_lr() {
-            AsylumCaseForTest caseData = mockCaseData(LR_EMAIL, null, null, YesOrNo.YES, YesOrNo.NO, YesOrNo.NO);
+            var caseData = mockCaseData(LR_EMAIL, null, null, YesOrNo.YES, YesOrNo.NO, YesOrNo.NO);
             caseData.with(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.YES);
             caseData.with(IS_ADMIN, YesOrNo.YES);
+            caseData.with(SUBSCRIPTIONS, Optional.of(new ArrayList<>()));
 
-            Optional<List<IdValue<Subscriber>>> maybeSubscribers = Optional.of(new ArrayList<>());
-            caseData.with(SUBSCRIPTIONS, maybeSubscribers);
-
-            PreSubmitCallbackResponseForTest response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
-            Optional<List<IdValue<String>>> notificationsSent =
-                    response
-                            .getData()
-                            .read(NOTIFICATIONS_SENT);
-
-            assertTrue(notificationsSent.isPresent());
-            List<IdValue<String>> notifications = notificationsSent.get();
-            assertThat(notifications.size()).isEqualTo(3);
-            List<String> idList = notifications.stream().map(IdValue::getId).toList();
-            String idsString = String.join(",", idList);
-            assertThat(idsString).contains(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER);
-            assertThat(idsString).contains(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL);
-            assertThat(idsString).contains(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL);
+            var response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
+            assertNotificationsContain(response, 3, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL);
         }
 
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
         void should_not_send_24weeks_review_letter_to_appellant_if_case_is_not_internal() {
-            AsylumCaseForTest caseData = mockCaseData(LR_EMAIL, null, null, YesOrNo.YES, YesOrNo.YES, YesOrNo.NO);
+            var caseData = mockCaseData(LR_EMAIL, null, null, YesOrNo.YES, YesOrNo.YES, YesOrNo.NO);
             caseData.with(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.YES);
             caseData.with(IS_ADMIN, YesOrNo.NO);
-            Optional<List<IdValue<Subscriber>>> maybeSubscribers = Optional.of(new ArrayList<>());
-            caseData.with(SUBSCRIPTIONS, maybeSubscribers);
-            PreSubmitCallbackResponseForTest response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
-            Optional<List<IdValue<String>>> notificationsSent =
-                    response
-                            .getData()
-                            .read(NOTIFICATIONS_SENT);
+            caseData.with(SUBSCRIPTIONS, Optional.of(new ArrayList<>()));
 
-            assertTrue(notificationsSent.isPresent());
-            List<IdValue<String>> notifications = notificationsSent.get();
-            assertThat(notifications.size()).isEqualTo(2);
-            List<String> idList = notifications.stream().map(IdValue::getId).toList();
-            String idsString = String.join(",", idList);
-            assertThat(idsString).contains(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL);
-            assertThat(idsString).contains(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL);
+            var response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
+            assertNotificationsContain(response, 2, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL);
         }
 
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
         void should_not_send_24weeks_review_letter_to_appellant_if_has_subscription() {
-            AsylumCaseForTest caseData = mockCaseData(LR_EMAIL, null, null, YesOrNo.YES, YesOrNo.YES, YesOrNo.NO);
+            var caseData = mockCaseData(LR_EMAIL, null, null, YesOrNo.YES, YesOrNo.YES, YesOrNo.NO);
             caseData.with(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.YES);
             caseData.with(IS_ADMIN, YesOrNo.YES);
-            PreSubmitCallbackResponseForTest response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
-            Optional<List<IdValue<String>>> notificationsSent =
-                    response
-                            .getData()
-                            .read(NOTIFICATIONS_SENT);
-            assertTrue(notificationsSent.isPresent());
-            List<IdValue<String>> notifications = notificationsSent.get();
-            assertThat(notifications.size()).isEqualTo(2);
-            List<String> idList = notifications.stream().map(IdValue::getId).toList();
-            String idsString = String.join(",", idList);
-            assertThat(idsString).contains(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL);
-            assertThat(idsString).contains(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL);
+
+            var response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
+            assertNotificationsContain(response, 2, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL);
         }
     }
 }

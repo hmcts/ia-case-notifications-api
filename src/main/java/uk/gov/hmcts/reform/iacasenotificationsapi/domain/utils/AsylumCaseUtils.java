@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils;
 
+import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -642,6 +643,14 @@ public class AsylumCaseUtils {
             stf24WeeksAddedToDate = add24WeeksToDate(tribunalReceivedDate);
         }
         return stf24WeeksAddedToDate;
+    }
+
+    public static void buildAddressFor24WeeksLetter(AsylumCase asylumCase, ImmutableMap.Builder<String, String> builder) {
+        List<String> address = getAppellantAddressAsList(asylumCase);
+
+        for (int i = 0; i < address.size(); i++) {
+            builder.put("address_line_" + (i + 1), address.get(i));
+        }
     }
 
     private static String getCaseDateDate(AsylumCase asylumCase, AsylumCaseDefinition asylumCaseDefinition) {

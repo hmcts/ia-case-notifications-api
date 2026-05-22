@@ -20,6 +20,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation.DAYS_42;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation.DAYS_56;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.D_MMM_YYYY;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.buildAddressFor24WeeksLetter;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressInCountryOrOoc;
 
 @Service
@@ -71,7 +72,8 @@ public class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation
         LocalDate now = LocalDate.now();
         String familyName = asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(EMPTY_STRING);
         String givenNames = asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(EMPTY_STRING);
-        return ImmutableMap.<String, String>builder()
+
+        ImmutableMap.Builder<String, String> builder = ImmutableMap.<String, String>builder()
 
                 .put(APPEAL_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING))
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
@@ -85,10 +87,14 @@ public class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation
                 .put("14DaysFromDateOfDirection", now.plusDays(DAYS_14).format(DateTimeFormatter.ofPattern(D_MMM_YYYY)))
                 .put("42DaysFromDateOfDirection", now.plusDays(DAYS_42).format(DateTimeFormatter.ofPattern(D_MMM_YYYY)))
                 .put("56DaysFromDateOfDirection", now.plusDays(DAYS_56).format(DateTimeFormatter.ofPattern(D_MMM_YYYY)))
+                .put(LINK_TO_SERVICE_KEY, iaAipFrontendUrl);
 
-                .put(LINK_TO_SERVICE_KEY, iaAipFrontendUrl)
-                .build();
+        buildAddressFor24WeeksLetter(asylumCase, builder);
+
+        return builder.build();
     }
+
+
 
 
 }

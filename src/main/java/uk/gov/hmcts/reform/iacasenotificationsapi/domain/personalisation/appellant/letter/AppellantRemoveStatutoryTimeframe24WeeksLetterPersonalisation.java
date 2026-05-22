@@ -11,20 +11,19 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.LetterN
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressAsList;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.buildAddressFor24WeeksLetter;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressInCountryOrOoc;
 
 @Slf4j
 @Service
 public class AppellantRemoveStatutoryTimeframe24WeeksLetterPersonalisation implements LetterNotificationPersonalisation {
+    private static final String COMPLETE_CASE_REVIEW_DATE_KEY = "completeCaseReviewDate";
     private final String appellantInternalCaseSubmitAppealWithRemissionLetterTemplateId;
     private final CustomerServicesProvider customerServicesProvider;
-    private static final String COMPLETE_CASE_REVIEW_DATE_KEY = "completeCaseReviewDate";
 
     public AppellantRemoveStatutoryTimeframe24WeeksLetterPersonalisation(
             @Value("${govnotify.template.removeStatutoryTimeframe24Weeks.appellant.letter}") String removeStatutoryTimeframe24WeeksAppellantLetterId,
@@ -67,11 +66,7 @@ public class AppellantRemoveStatutoryTimeframe24WeeksLetterPersonalisation imple
                 .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                 .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
                 .put(COMPLETE_CASE_REVIEW_DATE_KEY, AsylumCaseUtils.getCompleteCasedReviewDate(asylumCase));
-        List<String> address = getAppellantAddressAsList(asylumCase);
-
-        for (int i = 0; i < address.size(); i++) {
-            personalizationBuilder.put("address_line_" + (i + 1), address.get(i));
-        }
+        buildAddressFor24WeeksLetter(asylumCase, personalizationBuilder);
         return personalizationBuilder.build();
     }
 }
