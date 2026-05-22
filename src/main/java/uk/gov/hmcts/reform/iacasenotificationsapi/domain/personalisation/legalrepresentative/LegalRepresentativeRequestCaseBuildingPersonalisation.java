@@ -10,7 +10,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 import com.google.common.collect.ImmutableMap;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -67,7 +66,7 @@ public class LegalRepresentativeRequestCaseBuildingPersonalisation implements Le
         final String directionDueDate =
             LocalDate
                 .parse(direction.getDateDue())
-                .format(DateTimeFormatter.ofPattern("d MMM yyyy", Locale.ENGLISH));
+                .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
 
         return
             ImmutableMap

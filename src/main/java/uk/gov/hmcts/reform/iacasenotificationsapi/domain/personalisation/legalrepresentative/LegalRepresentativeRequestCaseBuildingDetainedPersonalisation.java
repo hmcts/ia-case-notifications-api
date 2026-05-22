@@ -11,7 +11,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
@@ -65,7 +64,7 @@ public class LegalRepresentativeRequestCaseBuildingDetainedPersonalisation imple
         final String directionDueDate =
             LocalDate
                 .parse(direction.getDateDue())
-                .format(DateTimeFormatter.ofPattern("d MMM yyyy", Locale.ENGLISH));
+                .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
 
         return
             ImmutableMap
