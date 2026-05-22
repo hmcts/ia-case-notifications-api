@@ -4044,6 +4044,7 @@ public class NotificationGeneratorConfiguration {
     @Bean("generatePinInPostNotificationGenerator")
     public List<NotificationGenerator> generatePinInPostNotificationGenerator(
         AppellantGeneratePinInPostPersonalisationEmail appellantGeneratePinInPostPersonalisationEmail,
+        AppellantAdditionalGeneratePinInPostPersonalisationEmail appellantAdditionalGeneratePinInPostPersonalisationEmail,
         AppellantGeneratePinInPostPersonalisationSms appellantGeneratePinInPostPersonalisationSms,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
@@ -4052,7 +4053,8 @@ public class NotificationGeneratorConfiguration {
         return Arrays.asList(
             new EmailNotificationGenerator(
                 List.of(
-                    appellantGeneratePinInPostPersonalisationEmail
+                    appellantGeneratePinInPostPersonalisationEmail,
+                    appellantAdditionalGeneratePinInPostPersonalisationEmail
                 ),
                 notificationSender,
                 notificationIdAppender
