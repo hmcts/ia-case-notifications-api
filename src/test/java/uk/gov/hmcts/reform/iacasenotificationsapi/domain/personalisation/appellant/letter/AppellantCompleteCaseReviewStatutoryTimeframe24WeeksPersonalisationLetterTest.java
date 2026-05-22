@@ -9,7 +9,6 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 import java.time.LocalDate;
@@ -74,14 +73,14 @@ class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationLetterT
     @Mock
     private CustomerServicesProvider customerServicesProvider;
 
-    private AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationEmail personalisation;
+    private AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationLetter personalisation;
 
     @BeforeEach
     void setup() {
         setupAsylumCaseMocks();
         setupCustomerServicesMocks();
 
-        personalisation = new AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationEmail(
+        personalisation = new AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationLetter(
                 EMAIL_TEMPLATE_ID,
                 IA_EX_UI_FRONTEND_URL,
                 MOCK_PREFIX,
