@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ACCELERATED_DETAINED_APPEAL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
@@ -24,9 +25,11 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesO
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
 @ExtendWith(MockitoExtension.class)
-@SuppressWarnings("unchecked")
 public class AdminOfficerFtpaSubmittedPersonalisationTest {
 
+    private final String templateId = "ftpaSubmittedTemplateId";
+    private final String iaExUiFrontendUrl = "http://localhost";
+    private final String adminOfficerEmailAddress = "adminOfficer@example.com";
     @Mock
     PersonalisationProvider personalisationProvider;
     @Mock
@@ -35,13 +38,6 @@ public class AdminOfficerFtpaSubmittedPersonalisationTest {
     CaseDetails<AsylumCase> caseDetails;
     @Mock
     AsylumCase asylumCase;
-
-    private Long caseId = 12345L;
-    private String templateId = "ftpaSubmittedTemplateId";
-    private String iaExUiFrontendUrl = "http://localhost";
-    private String adminOfficerEmailAddress = "adminOfficer@example.com";
-    private String ariaListingReference = "someAriaListingReference";
-
     private AdminOfficerFtpaSubmittedPersonalisation adminOfficerFtpaSubmittedPersonalisation;
 
     @BeforeEach
@@ -55,7 +51,7 @@ public class AdminOfficerFtpaSubmittedPersonalisationTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_given_personalisation(YesOrNo isAda) {
 
         initializePrefixes(adminOfficerFtpaSubmittedPersonalisation);
@@ -64,43 +60,50 @@ public class AdminOfficerFtpaSubmittedPersonalisationTest {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
 
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisation());
-        Map<String, String> expectedPersonalisation =
+        Map<String, String> personalisation =
             adminOfficerFtpaSubmittedPersonalisation.getPersonalisation(callback);
 
-        assertThat(expectedPersonalisation).isEqualToComparingOnlyGivenFields(getPersonalisation());
+        String nonAdaPrefix = "Immigration and Asylum appeal";
+        String adaPrefix = "Accelerated detained appeal";
+        assertThat(personalisation)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES)
+                ? adaPrefix
+                : nonAdaPrefix)
+            .containsAllEntriesOf(getPersonalisation());
     }
 
     @Test
     public void should_throw_exception_when_callback_is_null() {
 
-        assertThatThrownBy(
-            () -> adminOfficerFtpaSubmittedPersonalisation.getPersonalisation((Callback<AsylumCase>) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("callback must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> adminOfficerFtpaSubmittedPersonalisation.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     @Test
     public void should_return_given_reference_id() {
 
-        assertThat(adminOfficerFtpaSubmittedPersonalisation.getReferenceId(caseId))
-            .isEqualTo(caseId + "_FTPA_SUBMITTED_ADMIN_OFFICER");
+        Long caseId = 12345L;
+        assertEquals(caseId + "_FTPA_SUBMITTED_ADMIN_OFFICER", adminOfficerFtpaSubmittedPersonalisation.getReferenceId(caseId));
     }
 
     @Test
     public void should_return_given_email_address() {
 
-        assertThat(adminOfficerFtpaSubmittedPersonalisation.getRecipientsList(asylumCase))
-            .isEqualTo(Collections.singleton(adminOfficerEmailAddress));
+        assertEquals(Collections.singleton(adminOfficerEmailAddress), adminOfficerFtpaSubmittedPersonalisation.getRecipientsList(asylumCase));
     }
 
     @Test
     public void should_return_given_template_id() {
 
-        assertThat(adminOfficerFtpaSubmittedPersonalisation.getTemplateId()).isEqualTo(templateId);
+        assertEquals(templateId, adminOfficerFtpaSubmittedPersonalisation.getTemplateId());
     }
 
     private Map<String, String> getPersonalisation() {
 
+        String ariaListingReference = "someAriaListingReference";
         return ImmutableMap
             .<String, String>builder()
             .put("appealReferenceNumber", "PA/12345/001")

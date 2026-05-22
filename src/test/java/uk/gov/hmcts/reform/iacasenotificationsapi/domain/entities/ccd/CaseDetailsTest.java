@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import java.time.LocalDateTime;
@@ -16,7 +17,7 @@ public class CaseDetailsTest {
     private final CaseData caseData = mock(CaseData.class);
     private final LocalDateTime createdDate = LocalDateTime.parse("2019-01-31T11:22:33");
 
-    private CaseDetails<CaseData> caseDetails = new CaseDetails<>(
+    private final CaseDetails<CaseData> caseDetails = new CaseDetails<>(
         id,
         jurisdiction,
         state,
@@ -45,20 +46,20 @@ public class CaseDetailsTest {
             null
         );
 
-        assertThatThrownBy(caseDetails::getJurisdiction)
-            .isExactlyInstanceOf(RequiredFieldMissingException.class)
-            .hasMessageContaining("jurisdiction");
+        RequiredFieldMissingException exception =
+            assertThrows(RequiredFieldMissingException.class, caseDetails::getJurisdiction);
+        assertTrue(exception.getMessage().contains("jurisdiction"));
 
-        assertThatThrownBy(caseDetails::getState)
-            .isExactlyInstanceOf(RequiredFieldMissingException.class)
-            .hasMessageContaining("state");
+        RequiredFieldMissingException exceptionTwo =
+            assertThrows(RequiredFieldMissingException.class, caseDetails::getState);
+        assertTrue(exceptionTwo.getMessage().contains("state"));
 
-        assertThatThrownBy(caseDetails::getCaseData)
-            .isExactlyInstanceOf(RequiredFieldMissingException.class)
-            .hasMessageContaining("caseData");
+        RequiredFieldMissingException exceptionThree =
+            assertThrows(RequiredFieldMissingException.class, caseDetails::getCaseData);
+        assertTrue(exceptionThree.getMessage().contains("caseData"));
 
-        assertThatThrownBy(caseDetails::getCreatedDate)
-            .isExactlyInstanceOf(RequiredFieldMissingException.class)
-            .hasMessageContaining("createdDate");
+        RequiredFieldMissingException exceptionFour =
+            assertThrows(RequiredFieldMissingException.class, caseDetails::getCreatedDate);
+        assertTrue(exceptionFour.getMessage().contains("createdDate"));
     }
 }

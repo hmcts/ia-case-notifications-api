@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Collections;
@@ -10,10 +10,10 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdVa
 
 public class BailDirectionTest {
 
-    private static String TEST_VALUE = "some-value";
-    private static List<IdValue<PreviousDates>> TEST_VALUE_PD = Collections.emptyList();
+    private static final String TEST_VALUE = "some-value";
+    private static final List<IdValue<PreviousDates>> TEST_VALUE_PD = Collections.emptyList();
 
-    private BailDirection bailDirection = new BailDirection(
+    private final BailDirection bailDirection = new BailDirection(
         TEST_VALUE,
         TEST_VALUE,
         TEST_VALUE,
@@ -39,8 +39,8 @@ public class BailDirectionTest {
     @Test
     public void should_not_allow_null_arguments() {
 
-        assertThatThrownBy(() -> new BailDirection(null, null, null, null, null, null, null))
-            .isExactlyInstanceOf(NullPointerException.class);
+        assertThrows(NullPointerException.class,
+            () -> new BailDirection(null, null, null, null, null, null, null));
 
     }
 }

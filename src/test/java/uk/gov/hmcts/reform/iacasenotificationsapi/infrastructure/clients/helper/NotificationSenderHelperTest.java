@@ -33,10 +33,10 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doThrow;
@@ -54,11 +54,17 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 public class NotificationSenderHelperTest {
 
     private static final org.slf4j.Logger LOG = getLogger(NotificationSenderHelperTest.class);
-
-    private static class UnknownCase extends HashMap<String, Object> implements CaseData {
-        // noop
-    }
-
+    private final NotificationSenderHelper<AsylumCase> senderHelper = new NotificationSenderHelper<>();
+    private final NotificationSenderHelper<BailCase> bailSenderHelper = new NotificationSenderHelper<>();
+    private final NotificationSenderHelper<UnknownCase> unknownSenderHelper = new NotificationSenderHelper<>();
+    private final int deduplicateSendsWithinSeconds = 1;
+    private final String templateId = "a-b-c-d-e-f";
+    private final String emailAddress = "recipient@example.com";
+    private final String phoneNumber = "07123456789";
+    private final String address = "20_realstreet_London";
+    private final Map<String, String> personalisation = mock(Map.class);
+    private final Map<String, Object> personalisationWithLink = mock(Map.class);
+    private final String reference = "our-reference";
     @Mock
     private RetryableNotificationClient notificationClient;
     @Mock
@@ -83,22 +89,8 @@ public class NotificationSenderHelperTest {
     private StoredNotification storedNotificationMock;
     @Mock
     private StoredNotification storedNotificationMock2;
-
-    private NotificationSenderHelper<AsylumCase> senderHelper = new NotificationSenderHelper<AsylumCase>();
-    private NotificationSenderHelper<BailCase> bailSenderHelper = new NotificationSenderHelper<BailCase>();
-    private NotificationSenderHelper<UnknownCase> unknownSenderHelper = new NotificationSenderHelper<UnknownCase>();
-
     @Mock
     private InputStream stream;
-
-    private int deduplicateSendsWithinSeconds = 1;
-    private String templateId = "a-b-c-d-e-f";
-    private String emailAddress = "recipient@example.com";
-    private String phoneNumber = "07123456789";
-    private String address = "20_realstreet_London";
-    private Map<String, String> personalisation = mock(Map.class);
-    private Map<String, Object> personalisationWithLink = mock(Map.class);
-    private String reference = "our-reference";
 
     @Test
     public void should_not_send_duplicate_emails_in_short_space_of_time() throws NotificationClientException {
@@ -725,8 +717,8 @@ public class NotificationSenderHelperTest {
                 personalisationWithLink,
                 reference);
 
-        assertThatThrownBy(() ->
-            senderHelper.sendEmailWithLink(
+        NotificationServiceResponseException exception = assertThrows(NotificationServiceResponseException.class,
+            () -> senderHelper.sendEmailWithLink(
                 templateId,
                 emailAddress,
                 personalisationWithLink,
@@ -735,9 +727,9 @@ public class NotificationSenderHelperTest {
                 deduplicateSendsWithinSeconds,
                 LOG
             )
-        ).isExactlyInstanceOf(NotificationServiceResponseException.class)
-            .hasMessage("Failed to send email using GovNotify")
-            .hasCause(underlyingException);
+        );
+        assertEquals("Failed to send email using GovNotify", exception.getMessage());
+        assertEquals(underlyingException, exception.getCause());
 
     }
 
@@ -815,7 +807,6 @@ public class NotificationSenderHelperTest {
         assertEquals(1, result.size());
         assertEquals("", result.get(0));
     }
-
 
     @Test
     void storeFailedNotification_should_store_for_asylum_case() throws Exception {
@@ -964,5 +955,9 @@ public class NotificationSenderHelperTest {
         assertEquals("future-ref", notifications.get(0).getValue().getNotificationReference());
         assertEquals(reference, notifications.get(1).getValue().getNotificationReference());
         assertEquals("past-ref", notifications.get(2).getValue().getNotificationReference());
+    }
+
+    private static class UnknownCase extends HashMap<String, Object> implements CaseData {
+        // noop
     }
 }

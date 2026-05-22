@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -39,6 +39,15 @@ import uk.gov.service.notify.NotificationClientException;
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class DetentionEngagementTeamUploadAppealResponsePersonalisationTest {
 
+    final DocumentWithMetadata appealResponseLetter = getDocumentWithMetadata(
+        "1", "ADA-Appellant-letter-suitability-decision-suitable", "some other desc", DocumentTag.UPLOAD_THE_APPEAL_RESPONSE);
+    final IdValue<DocumentWithMetadata> appealResponseLetterId = new IdValue<>("1", appealResponseLetter);
+    private final String templateId = "someTemplateId";
+    private final String adaPrefix = "Accelerated detained appeal";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -47,19 +56,6 @@ public class DetentionEngagementTeamUploadAppealResponsePersonalisationTest {
     DetEmailService detEmailService;
     @Mock
     DocumentDownloadClient documentDownloadClient;
-
-    private final String templateId = "someTemplateId";
-    private final String adaPrefix = "Accelerated detained appeal";
-    private final String detEmailAddress = "legalrep@example.com";
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String listingReference = "listingReference";
-    private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-
-    DocumentWithMetadata appealResponseLetter = getDocumentWithMetadata(
-            "1", "ADA-Appellant-letter-suitability-decision-suitable", "some other desc", DocumentTag.UPLOAD_THE_APPEAL_RESPONSE);
-    IdValue<DocumentWithMetadata> appealResponseLetterId = new IdValue<>("1", appealResponseLetter);
     private JSONObject appealResponseJsonDocument;
 
     private DetentionEngagementTeamUploadAppealResponsePersonalisation
@@ -68,12 +64,14 @@ public class DetentionEngagementTeamUploadAppealResponsePersonalisationTest {
     @BeforeEach
     public void setUp() throws NotificationClientException, IOException {
 
+        String detEmailAddress = "legalrep@example.com";
         when(detEmailService.getDetEmailAddress(asylumCase)).thenReturn(detEmailAddress);
         when(documentDownloadClient.getJsonObjectFromDocument(any(DocumentWithMetadata.class))).thenReturn(appealResponseJsonDocument);
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
+        String listingReference = "listingReference";
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(listingReference));
         when(asylumCase.read(APPEAL_REVIEW_OUTCOME, AppealReviewOutcome.class))
             .thenReturn(Optional.of(AppealReviewOutcome.DECISION_WITHDRAWN));
@@ -87,7 +85,7 @@ public class DetentionEngagementTeamUploadAppealResponsePersonalisationTest {
         when(asylumCase.read(LIST_CASE_HEARING_DATE, String.class)).thenReturn(Optional.of(hearingDate));
 
         List<IdValue<DocumentWithMetadata>> appealResponseDocuments = TestUtils.getDocumentWithMetadataList("docId", "filename", "description", DocumentTag.APPEAL_RESPONSE);
-        appealResponseJsonDocument =  new JSONObject("{\"title\": \"Home Office Response JsonDocument\"}");
+        appealResponseJsonDocument = new JSONObject("{\"title\": \"Home Office Response JsonDocument\"}");
         when(asylumCase.read(RESPONDENT_DOCUMENTS)).thenReturn(Optional.of(appealResponseDocuments));
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.of(newArrayList(appealResponseLetterId)));
         when(documentDownloadClient.getJsonObjectFromDocument(appealResponseLetter)).thenReturn(appealResponseJsonDocument);
@@ -139,40 +137,40 @@ public class DetentionEngagementTeamUploadAppealResponsePersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
-            () -> detentionEngagementTeamUploadAppealResponsePersonalisation.getPersonalisationForLink((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> detentionEngagementTeamUploadAppealResponsePersonalisation.getPersonalisationForLink((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_appeal_review_outcome_is_missing() {
         when(asylumCase.read(APPEAL_REVIEW_OUTCOME, AppealReviewOutcome.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(
-            () -> detentionEngagementTeamUploadAppealResponsePersonalisation.getPersonalisationForLink(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("Appeal review outcome is not present");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class,
+                () -> detentionEngagementTeamUploadAppealResponsePersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("Appeal review outcome is not present", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_appeal_response_document_is_missing() {
         when(asylumCase.read(APPEAL_REVIEW_OUTCOME, AppealReviewOutcome.class))
-                .thenReturn(Optional.of(AppealReviewOutcome.DECISION_MAINTAINED));
+            .thenReturn(Optional.of(AppealReviewOutcome.DECISION_MAINTAINED));
 
         DocumentWithMetadata letter = getDocumentWithMetadata(
-                "1", "ADA-Appellant-letter-suitability-decision-suitable", "some other desc", DocumentTag.ADA_SUITABILITY);
+            "1", "ADA-Appellant-letter-suitability-decision-suitable", "some other desc", DocumentTag.ADA_SUITABILITY);
         IdValue<DocumentWithMetadata> adaLetter = new IdValue<>("1", letter);
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.of(newArrayList(adaLetter)));
 
-        assertThatThrownBy(
-            () -> detentionEngagementTeamUploadAppealResponsePersonalisation.getPersonalisationForLink(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("Appeal response letter not available");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class,
+                () -> detentionEngagementTeamUploadAppealResponsePersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("Appeal response letter not available", exception.getMessage());
     }
 
     @Test
-    public void should_return_personalisation_when_all_information_given_maintain() throws NotificationClientException, IOException {
+    public void should_return_personalisation_when_all_information_given_maintain() {
 
         when(asylumCase.read(APPEAL_REVIEW_OUTCOME, AppealReviewOutcome.class))
             .thenReturn(Optional.of(AppealReviewOutcome.DECISION_MAINTAINED));
@@ -197,7 +195,7 @@ public class DetentionEngagementTeamUploadAppealResponsePersonalisationTest {
     }
 
     @Test
-    public void should_return_personalisation_when_all_information_given_withdrawn() throws NotificationClientException, IOException {
+    public void should_return_personalisation_when_all_information_given_withdrawn() {
 
         when(asylumCase.read(APPEAL_REVIEW_OUTCOME, AppealReviewOutcome.class))
             .thenReturn(Optional.of(AppealReviewOutcome.DECISION_WITHDRAWN));

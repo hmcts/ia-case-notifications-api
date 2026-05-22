@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -27,23 +28,20 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesO
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AdminOfficerAdjournHearingWithoutDatePersonalisationTest {
 
+    private final String templateId = "someTemplateId";
+    private final String adminOfficerEmailAddress = "adminOfficer@example.com";
     @Mock
     AsylumCase asylumCase;
     @Mock
     AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
-
-    private String templateId = "someTemplateId";
-
-    private String adminOfficerEmailAddress = "adminOfficer@example.com";
-
     private AdminOfficerAdjournHearingWithoutDatePersonalisation adminOfficerdjournHearingWithoutDatePersonalisation;
 
     @BeforeEach
     public void setup() {
-        String appealReferenceNumber = "someReferenceNumber";
-        String appellantGivenNames = "someAppellantGivenNames";
-        String appellantFamilyName = "someAppellantFamilyName";
         String listRef = "LP/12345/2019";
+        String appellantFamilyName = "someAppellantFamilyName";
+        String appellantGivenNames = "someAppellantGivenNames";
+        String appealReferenceNumber = "someReferenceNumber";
         when(adminOfficerPersonalisationProvider.getChangeToHearingRequirementsPersonalisation(asylumCase))
             .thenReturn(ImmutableMap
                 .<String, String>builder()
@@ -79,14 +77,14 @@ public class AdminOfficerAdjournHearingWithoutDatePersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
-            () -> adminOfficerdjournHearingWithoutDatePersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> adminOfficerdjournHearingWithoutDatePersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         when(adminOfficerPersonalisationProvider.getChangeToHearingRequirementsPersonalisation(asylumCase))
@@ -96,7 +94,10 @@ public class AdminOfficerAdjournHearingWithoutDatePersonalisationTest {
         Map<String, String> personalisation =
             adminOfficerdjournHearingWithoutDatePersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isNotEmpty();
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertFalse(personalisation.isEmpty());
+        String nonAdaPrefix = "Immigration and Asylum appeal";
+        String adaPrefix = "Accelerated detained appeal";
+        assertThat(personalisation)
+            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? adaPrefix : nonAdaPrefix);
     }
 }

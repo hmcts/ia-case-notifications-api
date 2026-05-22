@@ -14,22 +14,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 public class EventTest {
 
-    @ParameterizedTest
-    @MethodSource("eventMapping")
-    void has_correct_values(String expected, String actual) {
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void if_this_test_fails_it_is_because_eventMapping_needs_updating_with_your_changes() {
-        List<String> eventMappingStrings = eventMapping().map(arg -> arg.get()[1])
-            .map(String.class::cast)
-            .toList();
-        List<Event> missingEvents = Arrays.stream(Event.values())
-            .filter(event -> !eventMappingStrings.contains(event.toString())).toList();
-        assertTrue(missingEvents.isEmpty(), "The following events are missing from the eventMapping method: " + missingEvents);
-    }
-
     static Stream<Arguments> eventMapping() {
         return Stream.of(
             Arguments.of("startAppeal", Event.START_APPEAL.toString()),
@@ -139,6 +123,8 @@ public class EventTest {
             Arguments.of("maintainBailCaseLinks", Event.MAINTAIN_BAIL_CASE_LINKS.toString()),
             Arguments.of("adaSuitabilityReview", ADA_SUITABILITY_REVIEW.toString()),
             Arguments.of("transferOutOfAda", TRANSFER_OUT_OF_ADA.toString()),
+            Arguments.of("removeStatutoryTimeframe24Weeks", REMOVE_STATUTORY_TIMEFRAME_24_WEEKS.toString()),
+            Arguments.of("completeCaseReview", COMPLETE_CASE_REVIEW.toString()),
             Arguments.of("markAppealAsAda", MARK_APPEAL_AS_ADA.toString()),
             Arguments.of("markAsReadyForUtTransfer", MARK_AS_READY_FOR_UT_TRANSFER.toString()),
             Arguments.of("updateDetentionLocation", UPDATE_DETENTION_LOCATION.toString()),
@@ -160,12 +146,27 @@ public class EventTest {
             Arguments.of("recordRemissionReminder", Event.RECORD_REMISSION_REMINDER.toString()),
             Arguments.of("refundConfirmation", Event.REFUND_CONFIRMATION.toString()),
             Arguments.of("hearingCancelled", HEARING_CANCELLED.toString()),
-            Arguments.of("revokeCitizenAccess", Event.REVOKE_CITIZEN_ACCESS.toString()),
+            Arguments.of("revokeCitizenAccess", REVOKE_CITIZEN_ACCESS.toString()),
             Arguments.of("sendInviteToNonLegalRep", Event.SEND_INVITE_TO_NON_LEGAL_REP.toString()),
             Arguments.of("sendPipToNonLegalRep", Event.SEND_PIP_TO_NON_LEGAL_REP.toString()),
             Arguments.of("joinAppealConfirmation", Event.JOIN_APPEAL_CONFIRMATION.toString()),
             Arguments.of("nlrDetailsUpdated", Event.NLR_DETAILS_UPDATED.toString()),
-            Arguments.of("removeStatutoryTimeframe24Weeks", REMOVE_STATUTORY_TIMEFRAME_24_WEEKS.toString()),
             Arguments.of("unknown", Event.UNKNOWN.toString()));
+    }
+
+    @ParameterizedTest
+    @MethodSource("eventMapping")
+    void has_correct_values(String expected, String actual) {
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void if_this_test_fails_it_is_because_eventMapping_needs_updating_with_your_changes() {
+        List<String> eventMappingStrings = eventMapping().map(arg -> arg.get()[1])
+            .map(String.class::cast)
+            .toList();
+        List<Event> missingEvents = Arrays.stream(Event.values())
+            .filter(event -> !eventMappingStrings.contains(event.toString())).toList();
+        assertTrue(missingEvents.isEmpty(), "The following events are missing from the eventMapping method: " + missingEvents);
     }
 }

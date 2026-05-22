@@ -30,18 +30,18 @@ class AssignmentTest {
 
         assertEquals(
             "Assignment(id=id, "
-            + "created=" + now + ","
-            + " authorisations=[],"
-            + " actorIdType=IDAM,"
-            + " actorId=actorId,"
-            + " roleType=CASE,"
-            + " roleName=tribunal-caseworker,"
-            + " roleCategory=JUDICIAL,"
-            + " classification=PRIVATE,"
-            + " grantType=BASIC,"
-            + " readOnly=true,"
-            + " attributes={}"
-            + ")",
+                + "created=" + now + ","
+                + " authorisations=[],"
+                + " actorIdType=IDAM,"
+                + " actorId=actorId,"
+                + " roleType=CASE,"
+                + " roleName=tribunal-caseworker,"
+                + " roleCategory=JUDICIAL,"
+                + " classification=PRIVATE,"
+                + " grantType=BASIC,"
+                + " readOnly=true,"
+                + " attributes={}"
+                + ")",
             assignment.toString()
         );
 

@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -33,22 +32,18 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class CaseOfficerSubmitTimeExtensionPersonalisationTest {
 
+    private final String templateId = "someTemplateId";
+    private final String hearingCentreEmailAddress = "hearingCentre@example.com";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String appellantGivenName = "Pablo";
+    private final String appellantFamilyName = "Jimenez";
+    private final String iaExUiFrontendUrl = "http://localhost";
     @Mock
     AsylumCase asylumCase;
     @Mock
     EmailAddressFinder emailAddressFinder;
     @Mock
     private FeatureToggler featureToggler;
-
-    private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
-    private String hearingCentreEmailAddress = "hearingCentre@example.com";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String appellantGivenName = "Pablo";
-    private String appellantFamilyName = "Jimenez";
-    private String iaExUiFrontendUrl = "http://localhost";
-
-
     private CaseOfficerSubmitTimeExtensionPersonalisation caseOfficerSubmitTimeExtensionPersonalisation;
 
     @BeforeEach
@@ -65,7 +60,7 @@ public class CaseOfficerSubmitTimeExtensionPersonalisationTest {
                 templateId,
                 iaExUiFrontendUrl,
                 emailAddressFinder,
-                    featureToggler);
+                featureToggler);
     }
 
     @Test
@@ -75,6 +70,7 @@ public class CaseOfficerSubmitTimeExtensionPersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_SUBMIT_TIME_EXTENSION_CASE_OFFICER",
             caseOfficerSubmitTimeExtensionPersonalisation.getReferenceId(caseId));
     }
@@ -82,26 +78,26 @@ public class CaseOfficerSubmitTimeExtensionPersonalisationTest {
     @Test
     public void should_return_given_email_address_from_asylum_case_when_feature_flag_is_Off() {
         assertTrue(caseOfficerSubmitTimeExtensionPersonalisation.getRecipientsList(asylumCase)
-                .isEmpty());
+            .isEmpty());
     }
 
     @Test
     public void should_return_given_email_address_from_asylum_case_when_feature_flag_is_On() {
         when(featureToggler.getValue("tcw-application-notifications-feature", true)).thenReturn(true);
         assertTrue(caseOfficerSubmitTimeExtensionPersonalisation.getRecipientsList(asylumCase)
-                .contains(hearingCentreEmailAddress), hearingCentreEmailAddress);
+            .contains(hearingCentreEmailAddress), hearingCentreEmailAddress);
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> caseOfficerSubmitTimeExtensionPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase cannot be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> caseOfficerSubmitTimeExtensionPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase cannot be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         initializePrefixes(caseOfficerSubmitTimeExtensionPersonalisation);
@@ -122,11 +118,11 @@ public class CaseOfficerSubmitTimeExtensionPersonalisationTest {
         Map<String, String> actualPersonalisation =
             caseOfficerSubmitTimeExtensionPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(actualPersonalisation).isEqualTo(expectedPersonalisation);
+        assertEquals(expectedPersonalisation, actualPersonalisation);
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
 
         initializePrefixes(caseOfficerSubmitTimeExtensionPersonalisation);
@@ -151,6 +147,6 @@ public class CaseOfficerSubmitTimeExtensionPersonalisationTest {
         Map<String, String> actualPersonalisation =
             caseOfficerSubmitTimeExtensionPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(actualPersonalisation).isEqualTo(expectedPersonalisation);
+        assertEquals(expectedPersonalisation, actualPersonalisation);
     }
 }

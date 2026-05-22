@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
@@ -15,8 +14,8 @@ public class SubscriberTypeTest {
 
     @Test
     public void has_correct_subscriber_types() {
-        assertThat(SubscriberType.from("appellant").get()).isEqualByComparingTo(SubscriberType.APPELLANT);
-        assertThat(SubscriberType.from("supporter").get()).isEqualByComparingTo(SubscriberType.SUPPORTER);
+        assertEquals(SubscriberType.APPELLANT, SubscriberType.from("appellant").get());
+        assertEquals(SubscriberType.SUPPORTER, SubscriberType.from("supporter").get());
     }
 
     @Test

@@ -1,11 +1,9 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import org.json.JSONObject;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentWithDescription;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentWithMetadata;
@@ -21,11 +19,11 @@ public class TestUtils {
     public static List<IdValue<DocumentWithMetadata>> getDocumentWithMetadataList(String docId, String filename,
                                                                                   String description, DocumentTag tag) {
 
-        return Arrays.asList(new IdValue<>(docId, getDocumentWithMetadata(docId, filename, description, tag)));
+        return List.of(new IdValue<>(docId, getDocumentWithMetadata(docId, filename, description, tag)));
     }
 
     public static DocumentWithMetadata getDocumentWithMetadata(String docId, String filename,
-                                                                                  String description, DocumentTag tag) {
+                                                               String description, DocumentTag tag) {
         String documentUrl = "http://dm-store/" + docId;
         Document document = new Document(documentUrl, documentUrl + "/binary", filename);
 
@@ -33,7 +31,7 @@ public class TestUtils {
     }
 
     public static DocumentWithDescription getDocumentWithDescription(String docId, String filename,
-                                                               String description) {
+                                                                     String description) {
         String documentUrl = "http://dm-store/" + docId;
         Document document = new Document(documentUrl, documentUrl + "/binary", filename);
 
@@ -46,8 +44,8 @@ public class TestUtils {
         for (String key : expected.keySet()) {
             Object expectedObj = expected.get(key);
             Object actualObj = actual.get(key);
-            String expectedValue = expectedObj instanceof String ? (String) expectedObj : ((JSONObject)expectedObj).toString();
-            String actualValue = actualObj instanceof String ? (String) actualObj : ((JSONObject)actualObj).toString();
+            String expectedValue = expectedObj instanceof String ? (String) expectedObj : expectedObj.toString();
+            String actualValue = actualObj instanceof String ? (String) actualObj : actualObj.toString();
             result &= Objects.equals(actualValue, expectedValue);
         }
 

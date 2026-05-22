@@ -30,10 +30,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 class LegalRepresentativeEmailNotificationPersonalisationTest {
 
     private final String legalRepEmailAddress = "legalrep@example.com";
-    private final String ejpLegalRepEmailAddress = "ejplegalrep@example.com";
-    private String iaExUiFrontendUrl = "http://localhost";
-    private String afterListingTemplateId = "afterListingTemplateId";
-    private String beforeListingTemplateId = "beforeListingTemplateId";
 
     @Mock
     AsylumCase asylumCase;
@@ -50,6 +46,9 @@ class LegalRepresentativeEmailNotificationPersonalisationTest {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class))
             .thenReturn(Optional.of(legalRepEmailAddress));
 
+        String beforeListingTemplateId = "beforeListingTemplateId";
+        String afterListingTemplateId = "afterListingTemplateId";
+        String iaExUiFrontendUrl = "http://localhost";
         personalisation = new LegalRepresentativeChangeDirectionDueDatePersonalisation(beforeListingTemplateId,
             afterListingTemplateId, iaExUiFrontendUrl, personalisationProvider, customerServicesProvider);
     }
@@ -66,6 +65,7 @@ class LegalRepresentativeEmailNotificationPersonalisationTest {
     @Test
     public void should_return_given_ejp_lr_email_address_from_asylum_case_if_it_is_ejp() {
         when(asylumCase.read(IS_EJP, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        String ejpLegalRepEmailAddress = "ejplegalrep@example.com";
         when(asylumCase.read(LEGAL_REP_EMAIL_EJP, String.class))
             .thenReturn(Optional.of(ejpLegalRepEmailAddress));
 

@@ -1,8 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
 import java.time.LocalDate;
@@ -14,7 +14,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -28,21 +27,15 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvi
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AipAppellantRefundConfirmationPersonalisationEmailTest {
 
-    private Long caseId = 12345L;
-    private String refundConfirmationInCountryTemplateId = "refundConfirmationInCountryTemplateId";
-    private String refundConfirmationOutOfCountryTemplateId = "refundConfirmationOutOfCountryTemplateId";
-    private String iaAipFrontendUrl = "http://localhost";
-    private String appealReferenceNumber = "appealReferenceNumber";
-    private String homeOfficeReferenceNumber = "homeOfficeReferenceNumber";
-    private String appellantGivenNames = "GivenNames";
-    private String appellantFamilyName = "FamilyName";
-    private String appellantEmail = "test@email.com";
-    private int daysAfterRemissionDecision = 14;
-    private String newFeeAmount = "8000";
-    private String withHearing = "decisionWithHearing";
-    private String withoutHearing = "decisionWithoutHearing";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
+    private final String refundConfirmationInCountryTemplateId = "refundConfirmationInCountryTemplateId";
+    private final String refundConfirmationOutOfCountryTemplateId = "refundConfirmationOutOfCountryTemplateId";
+    private final String appealReferenceNumber = "appealReferenceNumber";
+    private final String homeOfficeReferenceNumber = "homeOfficeReferenceNumber";
+    private final String appellantGivenNames = "GivenNames";
+    private final String appellantFamilyName = "FamilyName";
+    private final int daysAfterRemissionDecision = 14;
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
 
     @Mock
     AsylumCase asylumCase;
@@ -62,12 +55,16 @@ class AipAppellantRefundConfirmationPersonalisationEmailTest {
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
+        String newFeeAmount = "8000";
         when(asylumCase.read(NEW_FEE_AMOUNT, String.class)).thenReturn(Optional.of(newFeeAmount));
+        String withHearing = "decisionWithHearing";
         when(asylumCase.read(PREVIOUS_DECISION_HEARING_FEE_OPTION, String.class)).thenReturn(Optional.of(withHearing));
+        String withoutHearing = "decisionWithoutHearing";
         when(asylumCase.read(DECISION_HEARING_FEE_OPTION, String.class)).thenReturn(Optional.of(withoutHearing));
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
+        String iaAipFrontendUrl = "http://localhost";
         aipAppellantRefundConfirmationPersonalisationEmail = new AipAppellantRefundConfirmationPersonalisationEmail(
             refundConfirmationInCountryTemplateId,
             refundConfirmationOutOfCountryTemplateId,
@@ -76,7 +73,7 @@ class AipAppellantRefundConfirmationPersonalisationEmailTest {
             customerServicesProvider,
             recipientsFinder,
             systemDateProvider
-            );
+        );
     }
 
     @Test
@@ -90,13 +87,15 @@ class AipAppellantRefundConfirmationPersonalisationEmailTest {
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_REFUND_CONFIRMATION_AIP_APPELLANT_EMAIL",
             aipAppellantRefundConfirmationPersonalisationEmail.getReferenceId(12345L));
     }
 
     @Test
     void should_return_appellant_email_address_from_asylum_case() {
-        Mockito.when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL))
+        String appellantEmail = "test@email.com";
+        when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL))
             .thenReturn(Collections.singleton(appellantEmail));
 
         assertTrue(aipAppellantRefundConfirmationPersonalisationEmail.getRecipientsList(asylumCase)
@@ -105,10 +104,10 @@ class AipAppellantRefundConfirmationPersonalisationEmailTest {
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
-        assertThatThrownBy(
-            () -> aipAppellantRefundConfirmationPersonalisationEmail.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> aipAppellantRefundConfirmationPersonalisationEmail.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -121,14 +120,15 @@ class AipAppellantRefundConfirmationPersonalisationEmailTest {
         Map<String, String> personalisation =
             aipAppellantRefundConfirmationPersonalisationEmail.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("Decision with hearing", personalisation.get("previousDecisionHearingFeeOption"));
-        assertEquals("Decision without hearing", personalisation.get("updatedDecisionHearingFeeOption"));
-        assertEquals("80.00", personalisation.get("newFee"));
-        assertEquals(systemDateProvider.dueDate(daysAfterRemissionDecision), personalisation.get("dueDate"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
+            .containsEntry("previousDecisionHearingFeeOption", "Decision with hearing")
+            .containsEntry("updatedDecisionHearingFeeOption", "Decision without hearing")
+            .containsEntry("newFee", "80.00")
+            .containsEntry("dueDate", systemDateProvider.dueDate(daysAfterRemissionDecision));
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }

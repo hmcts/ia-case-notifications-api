@@ -36,12 +36,37 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.SmsNoti
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.GovNotifyNotificationSender;
-import uk.gov.service.notify.NotificationClientException;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class NotificationGeneratorTest {
 
+    @Mock
+    static ApplicationContext applicationContext;
+    @Mock
+    static CustomerServicesProvider customerServicesProvider;
+    private final Long caseId = 12345L;
+    private final String templateId1 = "templateId1";
+    private final String templateId2 = "templateId1";
+    private final String refId1 = "refId1";
+    private final String refId2 = "refId2";
+    private final String emailAddress1 = "email1@example.com";
+    private final String emailAddress2 = "email2@example.com";
+    private final String phoneNumber1 = "07123456789";
+    private final String phoneNumber2 = "07123456780";
+    private final String address1 = "20_realstreet_London";
+    private final String address2 = "80_realstreet_London";
+    private final Map<String, String> personalizationMap1 = emptyMap();
+    private final Map<String, String> personalizationMap2 = emptyMap();
+    private final List<IdValue<String>> notificationsSent = newArrayList();
+    private final String notificationId1 = "notificationId1";
+    private final String notificationId2 = "notificationId2";
+    private final String documentBinaryUrl = "http://host:8080/a/b/c";
+    final Document document = new Document(documentBinaryUrl, documentBinaryUrl, "end-appeal-notice");
+    private final DocumentTag documentTag = DocumentTag.END_APPEAL;
+    final DocumentWithMetadata documentWithMetadata = new DocumentWithMetadata(document, "desc", null, documentTag);
+    final IdValue<DocumentWithMetadata> documentWithMetadataId = new IdValue<>("1", documentWithMetadata);
+    private final String refId3 = caseId + "_" + documentTag.name();
     @Mock
     EmailNotificationPersonalisation emailNotificationPersonalisation;
     @Mock
@@ -66,59 +91,20 @@ public class NotificationGeneratorTest {
     AsylumCase asylumCase;
     MockedStatic<ApplicationContextProvider> mocked;
     @Mock
-    static ApplicationContext applicationContext;
-    @Mock
-    static CustomerServicesProvider customerServicesProvider;
-    @Mock
     DocumentDownloadClient documentDownloadClient;
     @Mock
     Resource resource;
     @Mock
     InputStream mockInputStream;
-
     private List<EmailNotificationPersonalisation> repEmailNotificationPersonalisationList;
     private List<EmailNotificationPersonalisation> aipEmailNotificationPersonalisationList;
     private List<SmsNotificationPersonalisation> aipSmsNotificationPersonalisationList;
     private List<LetterNotificationPersonalisation> letterNotificationPersonalisationList;
     private List<DocumentTag> documentTagList;
-
     private NotificationGenerator notificationGenerator;
 
-    private Long caseId = 12345L;
-
-    private String templateId1 = "templateId1";
-    private String templateId2 = "templateId1";
-
-    private String refId1 = "refId1";
-    private String refId2 = "refId2";
-    private String emailAddress1 = "email1@example.com";
-    private String emailAddress2 = "email2@example.com";
-
-    private String phoneNumber1 = "07123456789";
-    private String phoneNumber2 = "07123456780";
-
-    private String address1 = "20_realstreet_London";
-    private String address2 = "80_realstreet_London";
-
-    private Map<String, String> personalizationMap1 = emptyMap();
-    private Map<String, String> personalizationMap2 = emptyMap();
-
-    private List<IdValue<String>> notificationsSent = newArrayList();
-
-    private String notificationId1 = "notificationId1";
-    private String notificationId2 = "notificationId2";
-    private String documentBinaryUrl = "http://host:8080/a/b/c";
-
-    private DocumentTag documentTag = DocumentTag.END_APPEAL;
-
-    Document document = new Document(documentBinaryUrl, documentBinaryUrl, "end-appeal-notice");
-    DocumentWithMetadata documentWithMetadata = new DocumentWithMetadata(document, "desc", null, documentTag);
-    IdValue<DocumentWithMetadata> documentWithMetadataId = new IdValue<>("1", documentWithMetadata);
-    private String refId3 = caseId + "_" + documentTag.name();
-
-
     @BeforeEach
-    public void setup() throws NotificationClientException, IOException {
+    public void setup() throws IOException {
         mocked = mockStatic(ApplicationContextProvider.class);
         mocked.when(ApplicationContextProvider::getApplicationContext).thenReturn(applicationContext);
         when(applicationContext.getBean(CustomerServicesProvider.class)).thenReturn(customerServicesProvider);

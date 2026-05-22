@@ -15,7 +15,7 @@ public class AddressUkTest {
     private final String postCode = "F";
     private final String country = "G";
 
-    private AddressUk addressUk = new AddressUk(
+    private final AddressUk addressUk = new AddressUk(
         addressLine1,
         addressLine2,
         addressLine3,

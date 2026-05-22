@@ -1,8 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -124,7 +123,7 @@ public class PreSubmitCallbackDispatcherTest {
 
             assertNotNull(callbackResponse);
             assertEquals(caseDataMutation2, callbackResponse.getData());
-            assertThat(callbackResponse.getErrors()).containsAll(expectedErrors);
+            assertTrue(callbackResponse.getErrors().containsAll(expectedErrors));
 
             verify(ccdEventAuthorizor, times(1)).throwIfNotAuthorized(Event.BUILD_CASE);
 
@@ -206,8 +205,8 @@ public class PreSubmitCallbackDispatcherTest {
                 .when(ccdEventAuthorizor)
                 .throwIfNotAuthorized(Event.BUILD_CASE);
 
-            assertThatThrownBy(() -> preSubmitCallbackDispatcher.handle(callbackStage, callback))
-                .isExactlyInstanceOf(AccessDeniedException.class);
+            assertThrows(AccessDeniedException.class,
+                () -> preSubmitCallbackDispatcher.handle(callbackStage, callback));
 
             verify(ccdEventAuthorizor, times(1)).throwIfNotAuthorized(Event.BUILD_CASE);
 
@@ -257,28 +256,28 @@ public class PreSubmitCallbackDispatcherTest {
     @Test
     public void should_not_allow_null_ccd_event_authorizor() {
 
-        assertThatThrownBy(() -> new PreSubmitCallbackDispatcher<>(null, Collections.emptyList()))
-            .hasMessage("ccdEventAuthorizor must not be null")
-            .isExactlyInstanceOf(NullPointerException.class);
+        NullPointerException exception = assertThrows(NullPointerException.class,
+            () -> new PreSubmitCallbackDispatcher<>(null, Collections.emptyList()));
+        assertEquals("ccdEventAuthorizor must not be null", exception.getMessage());
     }
 
     @Test
     public void should_not_allow_null_handlers() {
 
-        assertThatThrownBy(() -> new PreSubmitCallbackDispatcher<>(ccdEventAuthorizor, null))
-            .hasMessage("callbackHandlers must not be null")
-            .isExactlyInstanceOf(NullPointerException.class);
+        NullPointerException exception = assertThrows(NullPointerException.class,
+            () -> new PreSubmitCallbackDispatcher<>(ccdEventAuthorizor, null));
+        assertEquals("callbackHandlers must not be null", exception.getMessage());
     }
 
     @Test
     public void should_not_allow_null_arguments() {
 
-        assertThatThrownBy(() -> preSubmitCallbackDispatcher.handle(null, callback))
-            .hasMessage("callbackStage must not be null")
-            .isExactlyInstanceOf(NullPointerException.class);
+        NullPointerException exception = assertThrows(NullPointerException.class,
+            () -> preSubmitCallbackDispatcher.handle(null, callback));
+        assertEquals("callbackStage must not be null", exception.getMessage());
 
-        assertThatThrownBy(() -> preSubmitCallbackDispatcher.handle(PreSubmitCallbackStage.ABOUT_TO_SUBMIT, null))
-            .hasMessage("callback must not be null")
-            .isExactlyInstanceOf(NullPointerException.class);
+        NullPointerException exceptionTwo = assertThrows(NullPointerException.class,
+            () -> preSubmitCallbackDispatcher.handle(PreSubmitCallbackStage.ABOUT_TO_SUBMIT, null));
+        assertEquals("callback must not be null", exceptionTwo.getMessage());
     }
 }

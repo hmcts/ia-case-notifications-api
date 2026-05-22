@@ -24,8 +24,8 @@ public class HearingLengthTest {
 
     @Test
     public void can_be_created_from() {
-        assertEquals(HearingLength.from(30).get(), HearingLength.LENGTH_30_MINUTES);
-        assertEquals(HearingLength.from(360).get(), HearingLength.LENGTH_6_HOURS);
+        assertEquals(HearingLength.LENGTH_30_MINUTES, HearingLength.from(30).get());
+        assertEquals(HearingLength.LENGTH_6_HOURS, HearingLength.from(360).get());
     }
 
     @Test

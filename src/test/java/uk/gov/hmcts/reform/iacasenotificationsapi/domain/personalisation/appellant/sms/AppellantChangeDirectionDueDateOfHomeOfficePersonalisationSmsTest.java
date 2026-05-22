@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -28,11 +29,13 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
 
-
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantChangeDirectionDueDateOfHomeOfficePersonalisationSmsTest {
 
+    private final String smsTemplateId = "afterListingEmailTemplateId";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
+    private final String directionExplanation = "Some HO change direction due date content";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -43,16 +46,7 @@ public class AppellantChangeDirectionDueDateOfHomeOfficePersonalisationSmsTest {
     RecipientsFinder recipientsFinder;
     @Mock
     PersonalisationProvider personalisationProvider;
-
-    private Long caseId = 12345L;
-    private String smsTemplateId = "afterListingEmailTemplateId";
-
-    private String mockedAppealReferenceNumber = "someReferenceNumber";
-    private String mockedAppellantMobilePhone = "07123456789";
-
     private AppellantChangeDirectionDueDateOfHomeOfficePersonalisationSms appellantChangeDirectionDueDateOfHomeOfficePersonalisationSms;
-    private String directionExplanation = "Some HO change direction due date content";
-    private String dueDate = "2020-10-08";
 
     @BeforeEach
     public void setup() {
@@ -60,14 +54,14 @@ public class AppellantChangeDirectionDueDateOfHomeOfficePersonalisationSmsTest {
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class))
-                .thenReturn(Optional.of(mockedAppealReferenceNumber));
+            .thenReturn(Optional.of(mockedAppealReferenceNumber));
 
         appellantChangeDirectionDueDateOfHomeOfficePersonalisationSms =
-                new AppellantChangeDirectionDueDateOfHomeOfficePersonalisationSms(
-                        smsTemplateId,
-                        personalisationProvider,
-                        recipientsFinder
-                );
+            new AppellantChangeDirectionDueDateOfHomeOfficePersonalisationSms(
+                smsTemplateId,
+                personalisationProvider,
+                recipientsFinder
+            );
     }
 
     @Test
@@ -78,29 +72,31 @@ public class AppellantChangeDirectionDueDateOfHomeOfficePersonalisationSmsTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_APPELLANT_CHANGE_DIRECTION_DUE_DATE_OF_HOME_OFFICE_SMS",
-                appellantChangeDirectionDueDateOfHomeOfficePersonalisationSms.getReferenceId(caseId));
+            appellantChangeDirectionDueDateOfHomeOfficePersonalisationSms.getReferenceId(caseId));
     }
 
     @Test
     public void should_return_given_email_address_list_from_subscribers_in_asylum_case() {
 
+        String mockedAppellantMobilePhone = "07123456789";
         when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
-                .thenReturn(Collections.singleton(mockedAppellantMobilePhone));
+            .thenReturn(Collections.singleton(mockedAppellantMobilePhone));
 
         assertTrue(appellantChangeDirectionDueDateOfHomeOfficePersonalisationSms.getRecipientsList(asylumCase)
-                .contains(mockedAppellantMobilePhone));
+            .contains(mockedAppellantMobilePhone));
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         when(recipientsFinder.findAll(null, NotificationType.SMS))
-                .thenThrow(new NullPointerException("asylumCase must not be null"));
+            .thenThrow(new NullPointerException("asylumCase must not be null"));
 
-        assertThatThrownBy(() -> appellantChangeDirectionDueDateOfHomeOfficePersonalisationSms.getRecipientsList(null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> appellantChangeDirectionDueDateOfHomeOfficePersonalisationSms.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -110,11 +106,12 @@ public class AppellantChangeDirectionDueDateOfHomeOfficePersonalisationSmsTest {
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisationForAppellant());
 
         Map<String, String> personalisation =
-                appellantChangeDirectionDueDateOfHomeOfficePersonalisationSms.getPersonalisation(callback);
+            appellantChangeDirectionDueDateOfHomeOfficePersonalisationSms.getPersonalisation(callback);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
-        assertEquals("8 Oct 2020", personalisation.get("dueDate"));
-        assertEquals(directionExplanation, personalisation.get("explanation"));
+        assertThat(personalisation)
+            .containsEntry("Appeal Ref Number", mockedAppealReferenceNumber)
+            .containsEntry("dueDate", "8 Oct 2020")
+            .containsEntry("explanation", directionExplanation);
     }
 
     @Test
@@ -124,22 +121,24 @@ public class AppellantChangeDirectionDueDateOfHomeOfficePersonalisationSmsTest {
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisationForAppellant());
 
         Map<String, String> personalisation =
-                appellantChangeDirectionDueDateOfHomeOfficePersonalisationSms.getPersonalisation(callback);
+            appellantChangeDirectionDueDateOfHomeOfficePersonalisationSms.getPersonalisation(callback);
 
-        assertEquals("", personalisation.get("Appeal Ref Number"));
-        assertEquals("8 Oct 2020", personalisation.get("dueDate"));
-        assertEquals(directionExplanation, personalisation.get("explanation"));
+        assertThat(personalisation)
+            .containsEntry("Appeal Ref Number", "")
+            .containsEntry("dueDate", "8 Oct 2020")
+            .containsEntry("explanation", directionExplanation);
     }
 
     private Map<String, String> getPersonalisationForAppellant() {
+        String dueDate = "2020-10-08";
         return ImmutableMap
-                .<String, String>builder()
-                .put("explanation", directionExplanation)
-                .put("dueDate", LocalDate
-                        .parse(dueDate)
-                        .format(DateTimeFormatter.ofPattern("d MMM yyyy"))
-)
-                .build();
+            .<String, String>builder()
+            .put("explanation", directionExplanation)
+            .put("dueDate", LocalDate
+                .parse(dueDate)
+                .format(DateTimeFormatter.ofPattern("d MMM yyyy"))
+            )
+            .build();
     }
 
 }

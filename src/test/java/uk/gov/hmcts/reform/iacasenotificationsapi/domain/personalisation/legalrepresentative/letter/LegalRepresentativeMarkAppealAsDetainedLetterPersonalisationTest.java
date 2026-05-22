@@ -19,6 +19,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
@@ -27,11 +28,16 @@ class LegalRepresentativeMarkAppealAsDetainedLetterPersonalisationTest {
     private static final String TEMPLATE_ID = "template-xyz";
     private static final long CASE_ID = 11111L;
 
-    @Mock private CustomerServicesProvider customerServicesProvider;
-    @Mock private SystemDateProvider systemDateProvider;
-    @Mock private Callback<AsylumCase> callback;
-    @Mock private CaseDetails<AsylumCase> caseDetails;
-    @Mock private AsylumCase asylumCase;
+    @Mock
+    private CustomerServicesProvider customerServicesProvider;
+    @Mock
+    private SystemDateProvider systemDateProvider;
+    @Mock
+    private Callback<AsylumCase> callback;
+    @Mock
+    private CaseDetails<AsylumCase> caseDetails;
+    @Mock
+    private AsylumCase asylumCase;
 
     private LegalRepresentativeMarkAppealAsDetainedLetterPersonalisation personalisation;
 
@@ -53,13 +59,12 @@ class LegalRepresentativeMarkAppealAsDetainedLetterPersonalisationTest {
 
     @Test
     void should_return_template_id() {
-        assertThat(personalisation.getTemplateId()).isEqualTo(TEMPLATE_ID);
+        assertEquals(TEMPLATE_ID, personalisation.getTemplateId());
     }
 
     @Test
     void should_return_reference_id() {
-        assertThat(personalisation.getReferenceId(CASE_ID))
-            .isEqualTo(CASE_ID + "_MARK_APPEAL_AS_DETAINED_LEGAL_REP_LETTER");
+        assertEquals(CASE_ID + "_MARK_APPEAL_AS_DETAINED_LEGAL_REP_LETTER", personalisation.getReferenceId(CASE_ID));
     }
 
     @Test

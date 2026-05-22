@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities;
 
-import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -16,12 +15,12 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdVa
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.NationalityFieldValue;
 
 public class BailCaseTest {
-    private final String caseData = "{\"applicantFamilyName\": \"family\", \"applicantGivenNames\": \"test\", \"applicantDateOfBirth\": \"2000-02-02\", \"applicantDetainedLoc\": \"immigrationRemovalCentre\", \"applicantNationality\": \"HAS_NATIONALITY\", \"applicantNationalities\": [{\"id\": \"f90f10db-1a34-43d9-a8f8-1cc9fac91891\", \"value\": {\"code\": \"Algerian\"}}], \"applicantPrisonDetails\": null, \"hasAppealHearingPending\": \"DontKnow\", \"applicantArrivalInUKDate\": \"2021-12-12\"}";
     private final ObjectMapper objectMapper = new ObjectMapper();
     private BailCase bailCase;
 
     @BeforeEach
     public void setUp() throws JsonProcessingException {
+        String caseData = "{\"applicantFamilyName\": \"family\", \"applicantGivenNames\": \"test\", \"applicantDateOfBirth\": \"2000-02-02\", \"applicantDetainedLoc\": \"immigrationRemovalCentre\", \"applicantNationality\": \"HAS_NATIONALITY\", \"applicantNationalities\": [{\"id\": \"f90f10db-1a34-43d9-a8f8-1cc9fac91891\", \"value\": {\"code\": \"Algerian\"}}], \"applicantPrisonDetails\": null, \"hasAppealHearingPending\": \"DontKnow\", \"applicantArrivalInUKDate\": \"2021-12-12\"}";
         bailCase = objectMapper.readValue(caseData, BailCase.class);
     }
 
@@ -58,16 +57,16 @@ public class BailCaseTest {
                     "some-doc-binary-url",
                     "some-doc-filename"),
                 "some-description"));
-        bailCase.write(UPLOAD_THE_BAIL_EVIDENCE_DOCS, asList(idValue));
+        bailCase.write(UPLOAD_THE_BAIL_EVIDENCE_DOCS, List.of(idValue));
         Optional<List<IdValue<DocumentWithDescription>>> maybeEvidence = bailCase.read(UPLOAD_THE_BAIL_EVIDENCE_DOCS);
         IdValue<DocumentWithDescription> documentWithDescriptionIdValue = maybeEvidence.get().get(0);
 
-        Assertions.assertEquals(maybeEvidence.get().size(), 1);
-        Assertions.assertEquals(documentWithDescriptionIdValue.getId(), "some-id");
-        Assertions.assertEquals(documentWithDescriptionIdValue.getValue().getDocument().get().getDocumentUrl(), "some-doc-url");
-        Assertions.assertEquals(documentWithDescriptionIdValue.getValue().getDocument().get().getDocumentBinaryUrl(), "some-doc-binary-url");
-        Assertions.assertEquals(documentWithDescriptionIdValue.getValue().getDocument().get().getDocumentFilename(), "some-doc-filename");
-        Assertions.assertEquals(documentWithDescriptionIdValue.getValue().getDescription().get(), "some-description");
+        Assertions.assertEquals(1, maybeEvidence.get().size());
+        Assertions.assertEquals("some-id", documentWithDescriptionIdValue.getId());
+        Assertions.assertEquals("some-doc-url", documentWithDescriptionIdValue.getValue().getDocument().get().getDocumentUrl());
+        Assertions.assertEquals("some-doc-binary-url", documentWithDescriptionIdValue.getValue().getDocument().get().getDocumentBinaryUrl());
+        Assertions.assertEquals("some-doc-filename", documentWithDescriptionIdValue.getValue().getDocument().get().getDocumentFilename());
+        Assertions.assertEquals("some-description", documentWithDescriptionIdValue.getValue().getDescription().get());
     }
 
     @Test

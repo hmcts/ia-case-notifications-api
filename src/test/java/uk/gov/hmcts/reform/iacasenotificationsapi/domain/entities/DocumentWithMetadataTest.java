@@ -13,7 +13,7 @@ public class DocumentWithMetadataTest {
     private final String dateUploaded = "2018-12-25";
     private final DocumentTag documentTag = DocumentTag.CASE_ARGUMENT;
 
-    private DocumentWithMetadata documentWithMetadata =
+    private final DocumentWithMetadata documentWithMetadata =
         new DocumentWithMetadata(
             document,
             description,

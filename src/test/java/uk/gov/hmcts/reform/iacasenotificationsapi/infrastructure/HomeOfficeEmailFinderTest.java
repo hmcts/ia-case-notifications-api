@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
@@ -24,16 +25,18 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State;
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class HomeOfficeEmailFinderTest {
-    String apcHomeOfficeEmailAddress = "apcHomeOffice@Email.com";
-    String lartHomeOfficeEmailAddress = "lartHomeOffice@Email.com";
-    String listCaseFtpaHomeOfficeEmailAddress = "listCaseFtpa@Email.com";
-    String homeOfficeEmailAddress = "homeOffice@Email.com";
-    String listCaseHomeOfficeEmailAddress = "listCaseHo@Email.com";
+    final String apcHomeOfficeEmailAddress = "apcHomeOffice@Email.com";
+    final String lartHomeOfficeEmailAddress = "lartHomeOffice@Email.com";
+    final String listCaseFtpaHomeOfficeEmailAddress = "listCaseFtpa@Email.com";
+    final String homeOfficeEmailAddress = "homeOffice@Email.com";
+    final String listCaseHomeOfficeEmailAddress = "listCaseHo@Email.com";
 
     @Mock
     AppealService appealService;
-    @Mock EmailAddressFinder emailAddressFinder;
-    @Mock AsylumCase asylumCase;
+    @Mock
+    EmailAddressFinder emailAddressFinder;
+    @Mock
+    AsylumCase asylumCase;
 
     HomeOfficeEmailFinder homeOfficeEmailFinder;
 
@@ -41,9 +44,9 @@ public class HomeOfficeEmailFinderTest {
     @BeforeEach
     void setUp() {
         homeOfficeEmailFinder = new HomeOfficeEmailFinder(appealService,
-                emailAddressFinder,
-                apcHomeOfficeEmailAddress,
-                lartHomeOfficeEmailAddress);
+            emailAddressFinder,
+            apcHomeOfficeEmailAddress,
+            lartHomeOfficeEmailAddress);
     }
 
     @ParameterizedTest
@@ -57,7 +60,7 @@ public class HomeOfficeEmailFinderTest {
     public void should_return_apcHomeOfficeEmailAddress_based_on_state(State state) {
         // given
         when(asylumCase.read(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class))
-                .thenReturn(Optional.of(state));
+            .thenReturn(Optional.of(state));
         // when
         Set<String> recipientsList = homeOfficeEmailFinder.getRecipientsList(asylumCase);
         // then
@@ -75,7 +78,7 @@ public class HomeOfficeEmailFinderTest {
     public void should_return_lartHomeOfficeEmailAddress_based_on_state(State state) {
         // given
         when(asylumCase.read(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class))
-                .thenReturn(Optional.of(state));
+            .thenReturn(Optional.of(state));
         // when
         Set<String> recipientsList = homeOfficeEmailFinder.getRecipientsList(asylumCase);
         // then
@@ -90,11 +93,11 @@ public class HomeOfficeEmailFinderTest {
     public void should_return_list_case_ftpa_ho_email_address(State state) {
         when(emailAddressFinder.getListCaseFtpaHomeOfficeEmailAddress(asylumCase)).thenReturn(listCaseFtpaHomeOfficeEmailAddress);
         when(asylumCase.read(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class))
-                .thenReturn(Optional.of(state));
+            .thenReturn(Optional.of(state));
         Set<String> recipientsList = homeOfficeEmailFinder.getRecipientsList(asylumCase);
         assertTrue(recipientsList.contains(listCaseFtpaHomeOfficeEmailAddress));
     }
-    
+
     @ParameterizedTest
     @EnumSource(value = State.class, names = {
         "LISTING",
@@ -106,7 +109,7 @@ public class HomeOfficeEmailFinderTest {
         when(emailAddressFinder.getHomeOfficeEmailAddress(asylumCase)).thenReturn(homeOfficeEmailAddress);
         when(appealService.isAppealListed(asylumCase)).thenReturn(false);
         when(asylumCase.read(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class))
-                .thenReturn(Optional.of(state));
+            .thenReturn(Optional.of(state));
         Set<String> recipientsList = homeOfficeEmailFinder.getRecipientsList(asylumCase);
         assertTrue(recipientsList.contains(homeOfficeEmailAddress));
     }
@@ -127,7 +130,7 @@ public class HomeOfficeEmailFinderTest {
         when(appealService.isAppealListed(asylumCase)).thenReturn(true);
         when(emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase)).thenReturn(listCaseHomeOfficeEmailAddress);
         when(asylumCase.read(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class))
-                .thenReturn(Optional.of(state));
+            .thenReturn(Optional.of(state));
         Set<String> recipientsList = homeOfficeEmailFinder.getRecipientsList(asylumCase);
         assertTrue(recipientsList.contains(listCaseHomeOfficeEmailAddress));
     }
@@ -135,9 +138,9 @@ public class HomeOfficeEmailFinderTest {
     @Test
     public void should_throw_exception_when_state_is_not_present() {
         when(asylumCase.read(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, State.class))
-                .thenReturn(Optional.empty());
-        assertThatThrownBy(() -> homeOfficeEmailFinder.getRecipientsList(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("currentCaseStateVisibleToHomeOfficeAll flag is not present");
+            .thenReturn(Optional.empty());
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> homeOfficeEmailFinder.getRecipientsList(asylumCase));
+        assertEquals("currentCaseStateVisibleToHomeOfficeAll flag is not present", exception.getMessage());
     }
 }

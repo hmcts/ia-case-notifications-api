@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
@@ -24,28 +24,23 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class HomeOfficeAdaSuitabilityPersonalisationTest {
 
+    private final String adaUnsuitableTemplateId = "adaUnsuitableTemplateId";
+    private final String adaSuitableTemplateId = "adaSuitableTemplateId";
+    private final String iaExUiFrontendUrl = "http://localhost";
+    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String ariaListingReference = "someAriaListingReference";
+    private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String customerServicesTelephone = "555 555 555";
+    private final String customerServicesEmail = "cust.services@example.com";
     @Mock
     AsylumCase asylumCase;
     @Mock
     EmailAddressFinder emailAddressFinder;
     @Mock
     CustomerServicesProvider customerServicesProvider;
-
-    private Long caseId = 12345L;
-    private String adaUnsuitableTemplateId = "adaUnsuitableTemplateId";
-    private String adaSuitableTemplateId = "adaSuitableTemplateId";
-    private String iaExUiFrontendUrl = "http://localhost";
-    private HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
-    private String hearingEmailAddress = "hearinge@example.com";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String ariaListingReference = "someAriaListingReference";
-    private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
-
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
-
     private HomeOfficeAdaSuitabilityPersonalisation homeOfficeAdaSuitabilityPersonalisation;
 
     @BeforeEach
@@ -71,16 +66,17 @@ public class HomeOfficeAdaSuitabilityPersonalisationTest {
     @Test
     public void should_return_given_template_id() {
         when(asylumCase.read(SUITABILITY_REVIEW_DECISION, AdaSuitabilityReviewDecision.class))
-                .thenReturn(Optional.of(AdaSuitabilityReviewDecision.UNSUITABLE));
+            .thenReturn(Optional.of(AdaSuitabilityReviewDecision.UNSUITABLE));
         assertEquals(adaUnsuitableTemplateId, homeOfficeAdaSuitabilityPersonalisation.getTemplateId(asylumCase));
 
         when(asylumCase.read(SUITABILITY_REVIEW_DECISION, AdaSuitabilityReviewDecision.class))
-                .thenReturn(Optional.of(AdaSuitabilityReviewDecision.SUITABLE));
+            .thenReturn(Optional.of(AdaSuitabilityReviewDecision.SUITABLE));
         assertEquals(adaSuitableTemplateId, homeOfficeAdaSuitabilityPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_ADA_SUITABILITY_DETERMINED_HOME_OFFICE",
             homeOfficeAdaSuitabilityPersonalisation.getReferenceId(caseId));
     }
@@ -88,6 +84,7 @@ public class HomeOfficeAdaSuitabilityPersonalisationTest {
     @Test
     public void should_return_given_email_address() {
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
+        String hearingEmailAddress = "hearinge@example.com";
         when(emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase)).thenReturn(hearingEmailAddress);
         assertTrue(homeOfficeAdaSuitabilityPersonalisation.getRecipientsList(asylumCase).contains(hearingEmailAddress));
     }
@@ -95,18 +92,18 @@ public class HomeOfficeAdaSuitabilityPersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> homeOfficeAdaSuitabilityPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> homeOfficeAdaSuitabilityPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_when_cannot_find_suitability_review_decision() {
         when(asylumCase.read(SUITABILITY_REVIEW_DECISION, String.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> homeOfficeAdaSuitabilityPersonalisation.getTemplateId(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("suitabilityReviewDecision is not present");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> homeOfficeAdaSuitabilityPersonalisation.getTemplateId(asylumCase));
+        assertEquals("suitabilityReviewDecision is not present", exception.getMessage());
     }
 
     @Test
@@ -115,12 +112,13 @@ public class HomeOfficeAdaSuitabilityPersonalisationTest {
         Map<String, String> personalisation =
             homeOfficeAdaSuitabilityPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
-        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("ariaListingReference", ariaListingReference)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
@@ -138,12 +136,13 @@ public class HomeOfficeAdaSuitabilityPersonalisationTest {
         Map<String, String> personalisation =
             homeOfficeAdaSuitabilityPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("ariaListingReference"));
-        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("ariaListingReference", "")
+            .containsEntry("homeOfficeReferenceNumber", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "")
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }

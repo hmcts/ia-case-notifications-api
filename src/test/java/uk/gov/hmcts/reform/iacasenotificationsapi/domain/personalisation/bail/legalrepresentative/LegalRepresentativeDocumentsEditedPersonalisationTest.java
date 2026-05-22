@@ -1,12 +1,12 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.legalrepresentative;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.CASE_NOTES;
 
 import java.util.Collections;
 import java.util.List;
@@ -32,15 +32,14 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.le
 @MockitoSettings(strictness = Strictness.LENIENT)
 class LegalRepresentativeDocumentsEditedPersonalisationTest {
 
-    private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
-    private String bailReferenceNumber = "someReferenceNumber";
-    private String legalRepReference = "someLegalRepReference";
-    private String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
-    private String applicantGivenNames = "someApplicantGivenNames";
-    private String applicantFamilyName = "someApplicantFamilyName";
-    private String latestModifiedDocuments = "Document1.pdf,\nDocument2.pdf,\nDocument3.pdf";
-    private String reasonForChange = "someReasonForChange";
+    private final String templateId = "someTemplateId";
+    private final String bailReferenceNumber = "someReferenceNumber";
+    private final String legalRepReference = "someLegalRepReference";
+    private final String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
+    private final String applicantGivenNames = "someApplicantGivenNames";
+    private final String applicantFamilyName = "someApplicantFamilyName";
+    private final String latestModifiedDocuments = "Document1.pdf,\nDocument2.pdf,\nDocument3.pdf";
+    private final String reasonForChange = "someReasonForChange";
     @Mock
     BailCase bailCase;
     @Mock
@@ -91,6 +90,7 @@ class LegalRepresentativeDocumentsEditedPersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_BAIL_EDITED_DOCUMENTS_LEGAL_REPRESENTATIVE",
             legalRepresentativeBailDocumentsEditedPersonalisation.getReferenceId(caseId));
     }
@@ -98,10 +98,10 @@ class LegalRepresentativeDocumentsEditedPersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
-            () -> legalRepresentativeBailDocumentsEditedPersonalisation.getPersonalisation((Callback<BailCase>) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("bailCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> legalRepresentativeBailDocumentsEditedPersonalisation.getPersonalisation((Callback<BailCase>) null));
+        assertEquals("bailCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -110,13 +110,14 @@ class LegalRepresentativeDocumentsEditedPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeBailDocumentsEditedPersonalisation.getPersonalisation(callBack);
 
-        assertEquals(bailReferenceNumber, personalisation.get("bailReferenceNumber"));
-        assertEquals(legalRepReference, personalisation.get("legalRepReference"));
-        assertEquals(applicantGivenNames, personalisation.get("applicantGivenNames"));
-        assertEquals(applicantFamilyName, personalisation.get("applicantFamilyName"));
-        assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(latestModifiedDocuments, personalisation.get("latestModifiedDocuments"));
-        assertEquals(reasonForChange, personalisation.get("reasonForChange"));
+        assertThat(personalisation)
+            .containsEntry("bailReferenceNumber", bailReferenceNumber)
+            .containsEntry("legalRepReference", legalRepReference)
+            .containsEntry("applicantGivenNames", applicantGivenNames)
+            .containsEntry("applicantFamilyName", applicantFamilyName)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
+            .containsEntry("latestModifiedDocuments", latestModifiedDocuments)
+            .containsEntry("reasonForChange", reasonForChange);
     }
 
     @Test
@@ -126,12 +127,13 @@ class LegalRepresentativeDocumentsEditedPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeBailDocumentsEditedPersonalisation.getPersonalisation(callBack);
 
-        assertEquals(bailReferenceNumber, personalisation.get("bailReferenceNumber"));
-        assertEquals(applicantGivenNames, personalisation.get("applicantGivenNames"));
-        assertEquals(applicantFamilyName, personalisation.get("applicantFamilyName"));
-        assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(latestModifiedDocuments, personalisation.get("latestModifiedDocuments"));
-        assertEquals(reasonForChange, personalisation.get("reasonForChange"));
+        assertThat(personalisation)
+            .containsEntry("bailReferenceNumber", bailReferenceNumber)
+            .containsEntry("applicantGivenNames", applicantGivenNames)
+            .containsEntry("applicantFamilyName", applicantFamilyName)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
+            .containsEntry("latestModifiedDocuments", latestModifiedDocuments)
+            .containsEntry("reasonForChange", reasonForChange);
     }
 
     @Test
@@ -149,13 +151,14 @@ class LegalRepresentativeDocumentsEditedPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeBailDocumentsEditedPersonalisation.getPersonalisation(callBack);
 
-        assertEquals("", personalisation.get("bailReferenceNumber"));
-        assertEquals("", personalisation.get("legalRepReference"));
-        assertEquals("", personalisation.get("applicantGivenNames"));
-        assertEquals("", personalisation.get("applicantFamilyName"));
-        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("", personalisation.get("latestModifiedDocuments"));
-        assertEquals("", personalisation.get("reasonForChange"));
+        assertThat(personalisation)
+            .containsEntry("bailReferenceNumber", "")
+            .containsEntry("legalRepReference", "")
+            .containsEntry("applicantGivenNames", "")
+            .containsEntry("applicantFamilyName", "")
+            .containsEntry("homeOfficeReferenceNumber", "")
+            .containsEntry("latestModifiedDocuments", "")
+            .containsEntry("reasonForChange", "");
     }
 
 }

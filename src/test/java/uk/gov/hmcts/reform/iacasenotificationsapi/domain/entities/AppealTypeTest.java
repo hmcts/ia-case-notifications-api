@@ -9,13 +9,13 @@ public class AppealTypeTest {
 
     @Test
     public void has_correct_asylum_appeal_types() {
-        assertEquals(AppealType.from("revocationOfProtection").get(), AppealType.RP);
-        assertEquals(AppealType.from("protection").get(), AppealType.PA);
-        assertEquals(AppealType.from("refusalOfEu").get(), AppealType.EA);
-        assertEquals(AppealType.from("refusalOfHumanRights").get(), AppealType.HU);
-        assertEquals(AppealType.from("deprivation").get(), AppealType.DC);
-        assertEquals(AppealType.from("euSettlementScheme").get(), AppealType.EU);
-        assertEquals(AppealType.from("ageAssessment").get(), AppealType.AG);        
+        assertEquals(AppealType.RP, AppealType.from("revocationOfProtection").get());
+        assertEquals(AppealType.PA, AppealType.from("protection").get());
+        assertEquals(AppealType.EA, AppealType.from("refusalOfEu").get());
+        assertEquals(AppealType.HU, AppealType.from("refusalOfHumanRights").get());
+        assertEquals(AppealType.DC, AppealType.from("deprivation").get());
+        assertEquals(AppealType.EU, AppealType.from("euSettlementScheme").get());
+        assertEquals(AppealType.AG, AppealType.from("ageAssessment").get());
     }
 
     @Test

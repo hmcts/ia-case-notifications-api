@@ -18,7 +18,8 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
@@ -38,51 +39,46 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Journey
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppellantMarkAppealAsRemittedNonDetainedPersonalisationEmailTest {
 
+    private final String iaAipFrontendUrl = "https://aip-url";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String templateId = "templateId";
+    private final String iaServicesPhone = "0100000000";
+    private final String iaServicesEmail = "services@email.com";
+    private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
+    private final String appellantEmail = "test@test.com";
+    private final String securityCode = "securityCode";
+    private final String ccdReferenceNumber = "0000 0000 0000 0001";
+    private final SourceOfRemittal sourceOfRemittal = SourceOfRemittal.UPPER_TRIBUNAL;
+    private final Map<String, String> customerServices = Map.of("customerServicesTelephone", iaServicesPhone,
+        "customerServicesEmail", iaServicesEmail);
     @Mock
     AsylumCase asylumCase;
     @Mock
     CustomerServicesProvider customerServicesProvider;
-
-    private AppellantMarkAppealAsRemittedNonDetainedPersonalisationEmail
-        appellantMarkAppealAsRemittedNonDetainedPersonalisationEmail;
-    private Long caseId = 12345L;
-    private String iaAipFrontendUrl = "https://aip-url";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String ariaListingReference = "someReferenceNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
-    private String templateId = "templateId";
-    private String iaServicesPhone = "0100000000";
-    private String iaServicesEmail = "services@email.com";
-    private String legalRepEmailAddress = "legalRep@example.com";
-    private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
-    private String appellantEmail = "test@test.com";
-    private final String validDate = "2024-03-01";
-    private final String validDateShown = "1 Mar 2024";
-    private final String securityCode = "securityCode";
-    private String ccdReferenceNumber = "0000 0000 0000 0001";
-
-    private SourceOfRemittal sourceOfRemittal = SourceOfRemittal.UPPER_TRIBUNAL;
-    private Map<String, String> customerServices = Map.of("customerServicesTelephone", iaServicesPhone,
-        "customerServicesEmail", iaServicesEmail);
-
     @Mock
     PinInPostDetails pinInPostDetails;
+    private AppellantMarkAppealAsRemittedNonDetainedPersonalisationEmail
+        appellantMarkAppealAsRemittedNonDetainedPersonalisationEmail;
 
     @BeforeEach
     public void setUp() {
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeRefNumber));
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
+        String ariaListingReference = "someReferenceNumber";
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(ariaListingReference));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(SOURCE_OF_REMITTAL, SourceOfRemittal.class)).thenReturn(Optional.of(sourceOfRemittal));
         when(customerServicesProvider.getCustomerServicesPersonalisation()).thenReturn(customerServices);
+        String legalRepEmailAddress = "legalRep@example.com";
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class))
             .thenReturn(Optional.of(legalRepEmailAddress));
         when(asylumCase.read(INTERNAL_APPELLANT_EMAIL, String.class)).thenReturn(Optional.ofNullable(appellantEmail));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_PIN_IN_POST, PinInPostDetails.class)).thenReturn(Optional.of(pinInPostDetails));
         when(pinInPostDetails.getAccessCode()).thenReturn(securityCode);
+        String validDate = "2024-03-01";
         when(pinInPostDetails.getExpiryDate()).thenReturn(validDate);
         when(asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class)).thenReturn(Optional.of(ccdReferenceNumber));
 
@@ -110,6 +106,7 @@ class AppellantMarkAppealAsRemittedNonDetainedPersonalisationEmailTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_APPELLANT_MARK_APPEAL_AS_REMITTED_NON_DETAINED_APPELLANT_EMAIL",
             appellantMarkAppealAsRemittedNonDetainedPersonalisationEmail.getReferenceId(caseId));
     }
@@ -119,34 +116,36 @@ class AppellantMarkAppealAsRemittedNonDetainedPersonalisationEmailTest {
         Map<String, String> personalisation =
             appellantMarkAppealAsRemittedNonDetainedPersonalisationEmail.getPersonalisation(asylumCase);
 
-        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(iaServicesPhone, personalisation.get("customerServicesTelephone"));
-        assertEquals(iaServicesEmail, personalisation.get("customerServicesEmail"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("urlLink"));
-        assertEquals(ccdReferenceNumber, personalisation.get("ccdRefNumber"));
-        assertEquals(securityCode, personalisation.get("securityCode"));
-        assertEquals(validDateShown, personalisation.get("expirationDate"));
+        String validDateShown = "1 Mar 2024";
+        assertThat(personalisation)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
+            .containsEntry("customerServicesTelephone", iaServicesPhone)
+            .containsEntry("customerServicesEmail", iaServicesEmail)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("urlLink", iaAipFrontendUrl)
+            .containsEntry("ccdRefNumber", ccdReferenceNumber)
+            .containsEntry("securityCode", securityCode)
+            .containsEntry("expirationDate", validDateShown);
 
     }
 
     @Test
     public void should_throw_exception_when_callback_is_null() {
 
-        assertThatThrownBy(
-            () -> appellantMarkAppealAsRemittedNonDetainedPersonalisationEmail.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> appellantMarkAppealAsRemittedNonDetainedPersonalisationEmail.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_throw_error_if_remittal_source_missing() {
         when(asylumCase.read(SOURCE_OF_REMITTAL, SourceOfRemittal.class)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> appellantMarkAppealAsRemittedNonDetainedPersonalisationEmail.getPersonalisation(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("sourceOfRemittal is not present");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> appellantMarkAppealAsRemittedNonDetainedPersonalisationEmail.getPersonalisation(asylumCase));
+        assertEquals("sourceOfRemittal is not present", exception.getMessage());
     }
 
 }

@@ -354,6 +354,24 @@ dependencies {
         }
     }
 
+    constraints {
+        implementation('io.netty:netty-all:4.2.13.Final') {
+            because 'CVE-2026-42586 (netty-codec-redis)\n' +
+                    'CVE-2026-42578 (netty-handler-proxy)\n' +
+                    'CVE-2026-42577 (netty-transport-native-epoll)\n' +
+                    'CVE-2026-42587 (netty-codec-http, netty-codec-http2)\n' +
+                    'CVE-2026-41417 (netty-codec-http)\n' +
+                    'CVE-2026-42581 (netty-codec-http)\n' +
+                    'CVE-2026-42580 (netty-codec-http)\n' +
+                    'CVE-2026-42585 (netty-codec-http)\n' +
+                    'CVE-2026-42579 (netty-codec-dns)\n' +
+                    'CVE-2026-42582 (netty-codec-http3)\n' +
+                    'CVE-2026-42583 (netty-codec, netty-codec-compression)\n' +
+                    'CVE-2026-42584 (netty-codec-http)\n' +
+                    'CVE-2026-44248 (netty-codec-mqtt) fix'
+        }
+    }
+
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-json'
@@ -385,8 +403,8 @@ dependencies {
     implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.13'
     implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '8.1'
 
-    implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: '9.0.115'
-    implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: '9.0.115'
+    implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: '9.0.117'
+    implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: '9.0.117'
 
     implementation group: 'com.sun.xml.bind', name: 'jaxb-osgi', version: '2.3.9'
     implementation (group: 'com.github.hmcts', name: 'document-management-client', version: '7.0.1'){
@@ -425,13 +443,10 @@ dependencies {
     implementation group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: '6.3.0'
 
     testImplementation group: 'org.mockito', name: 'mockito-inline', version: '3.12.4'
-    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.16.1'
     testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.9'
     testImplementation(group: 'org.springframework.boot', name: 'spring-boot-starter-test') {
         exclude group: "com.vaadin.external.google", module: "android-json"
     }
-    testImplementation group: 'org.testcontainers', name: 'testcontainers', version: '2.0.2'
-    testImplementation group: 'org.testcontainers', name: 'testcontainers-junit-jupiter', version: '2.0.2'
 
 
     testImplementation group: 'org.pitest', name: 'pitest', version: versions.pitest

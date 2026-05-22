@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -34,8 +34,12 @@ import uk.gov.service.notify.NotificationClientException;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-@SuppressWarnings("unchecked")
 class DetentionEngagementTeamMarkAppealAsAdaPersonalisationTest {
+    final DocumentWithMetadata markAsAdaLetter = getDocumentWithMetadata(
+        "1", "mark-as-ada", "some other desc", DocumentTag.INTERNAL_DET_MARK_AS_ADA_LETTER);
+    final IdValue<DocumentWithMetadata> markAsAdaLetterId = new IdValue<>("1", markAsAdaLetter);
+    private final String templateId = "someTemplateId";
+    private final String adaPrefix = "Accelerated detained appeal";
     @Mock
     PersonalisationProvider personalisationProvider;
     @Mock
@@ -44,17 +48,6 @@ class DetentionEngagementTeamMarkAppealAsAdaPersonalisationTest {
     DocumentDownloadClient documentDownloadClient;
     @Mock
     AsylumCase asylumCase;
-    private final String templateId = "someTemplateId";
-    private final String adaPrefix = "Accelerated detained appeal";
-    private final String detEmailAddress = "legalrep@example.com";
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-
-    DocumentWithMetadata markAsAdaLetter = getDocumentWithMetadata(
-            "1", "mark-as-ada", "some other desc", DocumentTag.INTERNAL_DET_MARK_AS_ADA_LETTER);
-    IdValue<DocumentWithMetadata> markAsAdaLetterId = new IdValue<>("1", markAsAdaLetter);
     private JSONObject markAsAdaLetterJsonDocument;
 
     private DetentionEngagementTeamMarkAppealAsAdaPersonalisation detentionEngagementTeamMarkAppealAsAdaPersonalisation;
@@ -62,12 +55,17 @@ class DetentionEngagementTeamMarkAppealAsAdaPersonalisationTest {
     @BeforeEach
     public void setUp() throws NotificationClientException, IOException {
         Map<String, String> appelantInfo = new HashMap<>();
+        String appellantGivenNames = "someAppellantGivenNames";
         appelantInfo.put("appellantGivenNames", appellantGivenNames);
+        String appellantFamilyName = "someAppellantFamilyName";
         appelantInfo.put("appellantFamilyName", appellantFamilyName);
+        String homeOfficeReferenceNumber = "1234-1234-1234-1234";
         appelantInfo.put("homeOfficeReferenceNumber", homeOfficeReferenceNumber);
+        String appealReferenceNumber = "someReferenceNumber";
         appelantInfo.put("appealReferenceNumber", appealReferenceNumber);
 
         when(personalisationProvider.getAppellantPersonalisation(asylumCase)).thenReturn(appelantInfo);
+        String detEmailAddress = "legalrep@example.com";
         when(detEmailService.getDetEmailAddress(asylumCase)).thenReturn(detEmailAddress);
         when(documentDownloadClient.getJsonObjectFromDocument(any(DocumentWithMetadata.class))).thenReturn(markAsAdaLetterJsonDocument);
 
@@ -77,13 +75,13 @@ class DetentionEngagementTeamMarkAppealAsAdaPersonalisationTest {
         when(documentDownloadClient.getJsonObjectFromDocument(markAsAdaLetter)).thenReturn(markAsAdaLetterJsonDocument);
 
         detentionEngagementTeamMarkAppealAsAdaPersonalisation =
-                new DetentionEngagementTeamMarkAppealAsAdaPersonalisation(
-                        templateId,
-                        adaPrefix,
-                        detEmailService,
-                        personalisationProvider,
-                        documentDownloadClient
-                );
+            new DetentionEngagementTeamMarkAppealAsAdaPersonalisation(
+                templateId,
+                adaPrefix,
+                detEmailService,
+                personalisationProvider,
+                documentDownloadClient
+            );
     }
 
     @Test
@@ -95,7 +93,7 @@ class DetentionEngagementTeamMarkAppealAsAdaPersonalisationTest {
     void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_INTERNAL_MARK_APPEAL_AS_ADA",
-                detentionEngagementTeamMarkAppealAsAdaPersonalisation.getReferenceId(caseId));
+            detentionEngagementTeamMarkAppealAsAdaPersonalisation.getReferenceId(caseId));
     }
 
     @Test
@@ -105,7 +103,7 @@ class DetentionEngagementTeamMarkAppealAsAdaPersonalisationTest {
         when(detEmailService.getRecipientsList(asylumCase)).thenReturn(Collections.singleton(detentionEngagementTeamEmail));
 
         assertTrue(
-                detentionEngagementTeamMarkAppealAsAdaPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
+            detentionEngagementTeamMarkAppealAsAdaPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
     }
 
     @Test
@@ -116,33 +114,33 @@ class DetentionEngagementTeamMarkAppealAsAdaPersonalisationTest {
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
-        assertThatThrownBy(
-                () -> detentionEngagementTeamMarkAppealAsAdaPersonalisation.getPersonalisationForLink((AsylumCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> detentionEngagementTeamMarkAppealAsAdaPersonalisation.getPersonalisationForLink((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     void should_throw_exception_on_personalisation_when_letter_for_notification_is_not_found() {
-        assertThatThrownBy(
-                () -> detentionEngagementTeamMarkAppealAsAdaPersonalisation.getPersonalisationForLink((AsylumCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> detentionEngagementTeamMarkAppealAsAdaPersonalisation.getPersonalisationForLink((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     void should_return_personalisation_when_all_information_given_maintain() throws NotificationClientException, IOException {
 
         final Map<String, Object> expectedPersonalisation =
-                ImmutableMap
-                        .<String, Object>builder()
-                        .putAll(personalisationProvider.getAppellantPersonalisation(asylumCase))
-                        .put("subjectPrefix", adaPrefix)
-                        .put("documentLink", markAsAdaLetterJsonDocument)
-                        .build();
+            ImmutableMap
+                .<String, Object>builder()
+                .putAll(personalisationProvider.getAppellantPersonalisation(asylumCase))
+                .put("subjectPrefix", adaPrefix)
+                .put("documentLink", markAsAdaLetterJsonDocument)
+                .build();
 
         Map<String, Object> actualPersonalisation =
-                detentionEngagementTeamMarkAppealAsAdaPersonalisation.getPersonalisationForLink(asylumCase);
+            detentionEngagementTeamMarkAppealAsAdaPersonalisation.getPersonalisationForLink(asylumCase);
 
         assertTrue(compareStringsAndJsonObjects(expectedPersonalisation, actualPersonalisation));
     }

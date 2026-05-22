@@ -1,13 +1,12 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.mockito.Mockito.when;
 
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ADDENDUM_EVIDENCE_DOCUMENTS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_TYPE;
@@ -93,18 +92,16 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AccessCodeGener
 @ExtendWith(MockitoExtension.class)
 public class AsylumCaseUtilsTest {
 
+    private static final String applyForCostsCreationDate = "2023-11-24";
+    private final MockedStatic<AccessCodeGenerator> generatorMockedStatic = mockStatic(AccessCodeGenerator.class);
+    private final String legalOfficerAddendumUploadedByLabel = "TCW";
+    private final String legalOfficerAddendumUploadSuppliedByLabel = "The respondent";
     @Mock(lenient = true)
     private AsylumCase asylumCase;
     @Spy
     private AsylumCase asylumCaseSpy;
     @Mock
     private Document document;
-    private final MockedStatic<AccessCodeGenerator> generatorMockedStatic = mockStatic(AccessCodeGenerator.class);
-
-
-    private final String legalOfficerAddendumUploadedByLabel = "TCW";
-    private final String legalOfficerAddendumUploadSuppliedByLabel = "The respondent";
-    private static final String applyForCostsCreationDate = "2023-11-24";
     private final IdValue<DocumentWithMetadata> addendumOne = new IdValue<>(
         "1",
         new DocumentWithMetadata(
@@ -127,9 +124,6 @@ public class AsylumCaseUtilsTest {
             legalOfficerAddendumUploadedByLabel
         )
     );
-
-    private final String legalRepEmailEjp = "legalRep@example.com";
-    private final String generatedCode = "12345";
 
     @AfterEach
     void tearDown() {
@@ -261,6 +255,7 @@ public class AsylumCaseUtilsTest {
     @Test
     public void testIsLegalRepEjp() {
 
+        String legalRepEmailEjp = "legalRep@example.com";
         Mockito.when(asylumCase.read(LEGAL_REP_REFERENCE_EJP, String.class)).thenReturn(Optional.of(legalRepEmailEjp));
         assertTrue(isLegalRepEjp(asylumCase));
     }
@@ -274,9 +269,9 @@ public class AsylumCaseUtilsTest {
     @Test
     void should_throw_when_applies_for_costs_are_not_present() {
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> retrieveLatestApplyForCosts(asylumCase))
-            .hasMessage("Applies for costs are not present")
-            .isExactlyInstanceOf(IllegalStateException.class);
+        IllegalStateException exception = assertThrows(IllegalStateException.class,
+            () -> retrieveLatestApplyForCosts(asylumCase));
+        assertEquals("Applies for costs are not present", exception.getMessage());
     }
 
     @Test
@@ -311,9 +306,9 @@ public class AsylumCaseUtilsTest {
         when(asylumCase.read(RESPOND_TO_COSTS_LIST, DynamicList.class)).thenReturn(Optional.of(respondsToCostsList));
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST))
-            .hasMessage("appliesForCost are not present")
-            .isExactlyInstanceOf(IllegalStateException.class);
+        IllegalStateException exception = assertThrows(IllegalStateException.class,
+            () -> getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST));
+        assertEquals("appliesForCost are not present", exception.getMessage());
     }
 
     @Test
@@ -327,9 +322,9 @@ public class AsylumCaseUtilsTest {
         when(asylumCase.read(RESPOND_TO_COSTS_LIST, DynamicList.class)).thenReturn(Optional.of(respondsToCostsList));
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
 
-        assertThatThrownBy(() -> getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST))
-            .hasMessage("Apply for costs with id 3 not found")
-            .isExactlyInstanceOf(IllegalStateException.class);
+        IllegalStateException exception = assertThrows(IllegalStateException.class,
+            () -> getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST));
+        assertEquals("Apply for costs with id 3 not found", exception.getMessage());
     }
 
     @Test
@@ -355,9 +350,9 @@ public class AsylumCaseUtilsTest {
         when(asylumCase.read(RESPOND_TO_COSTS_LIST, DynamicList.class)).thenReturn(Optional.of(respondsToCostsList));
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
 
-        assertThatThrownBy(() -> isLoggedUserIsHomeOffice(asylumCase, testFunc -> getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST)))
-            .hasMessage("Correct applicant type is not present")
-            .isExactlyInstanceOf(IllegalStateException.class);
+        IllegalStateException exception = assertThrows(IllegalStateException.class,
+            () -> isLoggedUserIsHomeOffice(asylumCase, testFunc -> getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST)));
+        assertEquals("Correct applicant type is not present", exception.getMessage());
     }
 
     @Test
@@ -388,9 +383,9 @@ public class AsylumCaseUtilsTest {
         when(asylumCase.read(RESPOND_TO_COSTS_LIST, DynamicList.class)).thenReturn(Optional.of(selectedValue));
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
 
-        assertThatThrownBy(() -> getApplicantAndRespondent(asylumCase, testFunc -> getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST)))
-            .hasMessage("Correct applicant type is not present")
-            .isExactlyInstanceOf(IllegalStateException.class);
+        IllegalStateException exception = assertThrows(IllegalStateException.class,
+            () -> getApplicantAndRespondent(asylumCase, testFunc -> getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST)));
+        assertEquals("Correct applicant type is not present", exception.getMessage());
     }
 
     @Test
@@ -404,9 +399,9 @@ public class AsylumCaseUtilsTest {
         when(asylumCase.read(RESPOND_TO_COSTS_LIST, DynamicList.class)).thenReturn(Optional.of(selectedValue));
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
 
-        assertThatThrownBy(() -> getApplicantAndRespondent(asylumCase, testFunc -> getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST)))
-            .hasMessage("Correct respondent type is not present")
-            .isExactlyInstanceOf(IllegalStateException.class);
+        IllegalStateException exception = assertThrows(IllegalStateException.class,
+            () -> getApplicantAndRespondent(asylumCase, testFunc -> getApplicationById(asylumCase, RESPOND_TO_COSTS_LIST)));
+        assertEquals("Correct respondent type is not present", exception.getMessage());
     }
 
     @Test
@@ -425,7 +420,8 @@ public class AsylumCaseUtilsTest {
 
     @Test
     void generateAppellantPin_generate_new_pin_if_not_present() {
-        generatorMockedStatic.when(() -> AccessCodeGenerator.generateAccessCode())
+        String generatedCode = "12345";
+        generatorMockedStatic.when(AccessCodeGenerator::generateAccessCode)
             .thenReturn(generatedCode);
 
         PinInPostDetails generatedPinDetails = generateAppellantPinIfNotPresent(asylumCaseSpy);
@@ -578,14 +574,14 @@ public class AsylumCaseUtilsTest {
     void should_return_true_when_appellant_is_in_detention_and_facility_type_matches() {
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
-        
+
         assertTrue(isDetainedInFacilityType(asylumCase, DetentionFacility.IRC));
     }
 
     @Test
     void should_return_false_when_appellant_is_not_in_detention() {
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(NO));
-        
+
         assertFalse(isDetainedInFacilityType(asylumCase, DetentionFacility.IRC));
     }
 
@@ -593,7 +589,7 @@ public class AsylumCaseUtilsTest {
     void should_return_false_when_facility_type_does_not_match() {
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("prison"));
-        
+
         assertFalse(isDetainedInFacilityType(asylumCase, DetentionFacility.IRC));
     }
 
@@ -601,7 +597,7 @@ public class AsylumCaseUtilsTest {
     void should_return_false_when_detention_facility_is_empty() {
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.empty());
-        
+
         assertFalse(isDetainedInFacilityType(asylumCase, DetentionFacility.IRC));
     }
 
@@ -614,7 +610,7 @@ public class AsylumCaseUtilsTest {
     void should_return_true_for_all_facility_types_when_appellant_is_detained(String detentionFacilityValue, DetentionFacility facilityType) {
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of(detentionFacilityValue));
-        
+
         assertTrue(isDetainedInFacilityType(asylumCase, facilityType));
     }
 
@@ -690,7 +686,7 @@ public class AsylumCaseUtilsTest {
 
         boolean result = AsylumCaseUtils.isRemissionApproved(asylumCase);
 
-        assertThat(result).isTrue();
+        assertTrue(result);
     }
 
     @Test
@@ -700,7 +696,7 @@ public class AsylumCaseUtilsTest {
 
         boolean result = AsylumCaseUtils.isRemissionApproved(asylumCase);
 
-        assertThat(result).isFalse();
+        assertFalse(result);
     }
 
     @Test
@@ -710,17 +706,17 @@ public class AsylumCaseUtilsTest {
 
         boolean result = AsylumCaseUtils.isRemissionApproved(asylumCase);
 
-        assertThat(result).isFalse();
+        assertFalse(result);
     }
 
     @Test
     void should_return_true_when_is_hearing_channel() {
         DynamicList hearingChannelList = new DynamicList(
-                new Value("INTER", "In Person"),
-                List.of(new Value("INTER", "In Person"),
-                        new Value("NA", "Not in Attendance"),
-                        new Value("VID", "Video"),
-                        new Value("TEL", "Telephone"))
+            new Value("INTER", "In Person"),
+            List.of(new Value("INTER", "In Person"),
+                new Value("NA", "Not in Attendance"),
+                new Value("VID", "Video"),
+                new Value("TEL", "Telephone"))
         );
 
         when(asylumCase.read(HEARING_CHANNEL, DynamicList.class)).thenReturn(Optional.of(hearingChannelList));
@@ -731,11 +727,11 @@ public class AsylumCaseUtilsTest {
     @Test
     void should_return_false_when_not_hearing_channel() {
         DynamicList hearingChannelList = new DynamicList(
+            new Value("VID", "Video"),
+            List.of(new Value("INTER", "In Person"),
+                new Value("NA", "Not in Attendance"),
                 new Value("VID", "Video"),
-                List.of(new Value("INTER", "In Person"),
-                        new Value("NA", "Not in Attendance"),
-                        new Value("VID", "Video"),
-                        new Value("TEL", "Telephone"))
+                new Value("TEL", "Telephone"))
         );
 
         when(asylumCase.read(HEARING_CHANNEL, DynamicList.class)).thenReturn(Optional.of(hearingChannelList));
@@ -905,7 +901,7 @@ public class AsylumCaseUtilsTest {
         setupHearingDataNotUpdated(asylumCase, asylumCaseBefore);
 
         Mockito.when(asylumCase.read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class))
-                .thenReturn(Optional.of(HearingCentre.MANCHESTER));
+            .thenReturn(Optional.of(HearingCentre.MANCHESTER));
 
         assertTrue(AsylumCaseUtils.isHearingDetailsUpdated(asylumCase, Optional.of(caseDetailsBefore)));
     }
@@ -944,7 +940,7 @@ public class AsylumCaseUtilsTest {
         setupHearingDataNotUpdated(asylumCase, asylumCaseBefore);
 
         Mockito.when(asylumCase.read(AsylumCaseDefinition.LIST_CASE_HEARING_DATE, String.class))
-                .thenReturn(Optional.of("2023-10-02"));
+            .thenReturn(Optional.of("2023-10-02"));
 
         assertTrue(AsylumCaseUtils.isHearingDetailsUpdated(asylumCase, Optional.of(caseDetailsBefore)));
     }
@@ -961,7 +957,7 @@ public class AsylumCaseUtilsTest {
         setupHearingDataNotUpdated(asylumCase, asylumCaseBefore);
 
         Mockito.when(asylumCase.read(AsylumCaseDefinition.HEARING_CHANNEL, DynamicList.class))
-                .thenReturn(Optional.of(new DynamicList(new Value("telephone", "Telephone"), List.of(new Value("telephone", "Telephone")))));
+            .thenReturn(Optional.of(new DynamicList(new Value("telephone", "Telephone"), List.of(new Value("telephone", "Telephone")))));
 
         assertTrue(AsylumCaseUtils.isHearingDetailsUpdated(asylumCase, Optional.of(caseDetailsBefore)));
     }
@@ -979,13 +975,13 @@ public class AsylumCaseUtilsTest {
         setupHearingDataNotUpdated(asylumCase, asylumCaseBefore);
 
         Mockito.when(asylumCase.read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class))
-                .thenReturn(Optional.of(HearingCentre.MANCHESTER));
+            .thenReturn(Optional.of(HearingCentre.MANCHESTER));
 
         Mockito.when(asylumCase.read(AsylumCaseDefinition.LIST_CASE_HEARING_DATE, String.class))
-                .thenReturn(Optional.of("2023-10-02"));
+            .thenReturn(Optional.of("2023-10-02"));
 
         Mockito.when(asylumCase.read(AsylumCaseDefinition.HEARING_CHANNEL, DynamicList.class))
-                .thenReturn(Optional.of(new DynamicList(new Value("telephone", "Telephone"), List.of(new Value("telephone", "Telephone")))));
+            .thenReturn(Optional.of(new DynamicList(new Value("telephone", "Telephone"), List.of(new Value("telephone", "Telephone")))));
 
         assertTrue(AsylumCaseUtils.isHearingDetailsUpdated(asylumCase, Optional.of(caseDetailsBefore)));
     }
@@ -994,18 +990,18 @@ public class AsylumCaseUtilsTest {
     void setupHearingDataNotUpdated(AsylumCase asylumCase, AsylumCase asylumCaseBefore) {
 
         Mockito.when(asylumCase.read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class))
-                .thenReturn(Optional.of(HearingCentre.TAYLOR_HOUSE));
+            .thenReturn(Optional.of(HearingCentre.TAYLOR_HOUSE));
         Mockito.when(asylumCaseBefore.read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class))
-                .thenReturn(Optional.of(HearingCentre.TAYLOR_HOUSE));
+            .thenReturn(Optional.of(HearingCentre.TAYLOR_HOUSE));
 
         Mockito.when(asylumCase.read(AsylumCaseDefinition.LIST_CASE_HEARING_DATE, String.class))
-                .thenReturn(Optional.of("2023-10-01"));
+            .thenReturn(Optional.of("2023-10-01"));
         Mockito.when(asylumCaseBefore.read(AsylumCaseDefinition.LIST_CASE_HEARING_DATE, String.class))
-                .thenReturn(Optional.of("2023-10-01"));
+            .thenReturn(Optional.of("2023-10-01"));
 
         Mockito.when(asylumCase.read(AsylumCaseDefinition.HEARING_CHANNEL, DynamicList.class))
-                .thenReturn(Optional.of(new DynamicList(new Value("video", "Video"), List.of(new Value("video", "Video")))));
+            .thenReturn(Optional.of(new DynamicList(new Value("video", "Video"), List.of(new Value("video", "Video")))));
         Mockito.when(asylumCaseBefore.read(AsylumCaseDefinition.HEARING_CHANNEL, DynamicList.class))
-                .thenReturn(Optional.of(new DynamicList(new Value("video", "Video"), List.of(new Value("video", "Video")))));
+            .thenReturn(Optional.of(new DynamicList(new Value("video", "Video"), List.of(new Value("video", "Video")))));
     }
 }

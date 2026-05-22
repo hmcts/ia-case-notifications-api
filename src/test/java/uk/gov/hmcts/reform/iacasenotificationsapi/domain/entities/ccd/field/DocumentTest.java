@@ -10,7 +10,7 @@ public class DocumentTest {
     private final String documentBinaryUrl = "http://doc-store/A/binary";
     private final String documentFilename = "evidence.pdf";
 
-    private Document document = new Document(
+    private final Document document = new Document(
         documentUrl,
         documentBinaryUrl,
         documentFilename

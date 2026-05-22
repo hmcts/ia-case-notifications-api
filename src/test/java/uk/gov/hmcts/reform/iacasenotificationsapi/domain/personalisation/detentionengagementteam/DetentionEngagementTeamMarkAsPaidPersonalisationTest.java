@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -37,6 +37,15 @@ import uk.gov.service.notify.NotificationClientException;
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class DetentionEngagementTeamMarkAsPaidPersonalisationTest {
 
+    final DocumentWithMetadata markAppealPaidDoc = getDocumentWithMetadata(
+        "1", "ADA appellant letter-appeal reasons", "some other desc", DocumentTag.INTERNAL_DET_MARK_AS_PAID_LETTER);
+    final IdValue<DocumentWithMetadata> markAppealPaidDocId = new IdValue<>("1", markAppealPaidDoc);
+    private final String internalDetMarkAsPaidTemplateId = "someDetainedTemplateId";
+    private final String detainedPrefix = "IAFT - SERVE BY POST";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -45,21 +54,8 @@ public class DetentionEngagementTeamMarkAsPaidPersonalisationTest {
     JSONObject jsonDocument;
     @Mock
     DocumentDownloadClient documentDownloadClient;
-
-    private final String internalDetMarkAsPaidTemplateId = "someDetainedTemplateId";
-    private final String requestCaseBuildingPersonalisationReferenceId = "_INTERNAL_DET_MARK_APPEAL_AS_PAID_EMAIL";
-    private final String detainedPrefix = "IAFT - SERVE BY POST";
-    private final String ircName = "Tinsley House";
-    private final String detEmailAddress = "some@example.com";
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-    DocumentWithMetadata markAppealPaidDoc = getDocumentWithMetadata(
-            "1", "ADA appellant letter-appeal reasons", "some other desc", DocumentTag.INTERNAL_DET_MARK_AS_PAID_LETTER);
-    IdValue<DocumentWithMetadata> markAppealPaidDocId = new IdValue<>("1", markAppealPaidDoc);
     private DetentionEngagementTeamMarkAsPaidPersonalisation
-            detentionEngagementTeamMarkAsPaidPersonalisation;
+        detentionEngagementTeamMarkAsPaidPersonalisation;
 
     @BeforeEach
     public void setUp() throws NotificationClientException, IOException {
@@ -68,19 +64,20 @@ public class DetentionEngagementTeamMarkAsPaidPersonalisationTest {
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
+        String ircName = "Tinsley House";
         when(asylumCase.read(IRC_NAME, String.class)).thenReturn(Optional.of(ircName));
 
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.of(newArrayList(markAppealPaidDocId)));
         when(documentDownloadClient.getJsonObjectFromDocument(markAppealPaidDoc)).thenReturn(jsonDocument);
 
         detentionEngagementTeamMarkAsPaidPersonalisation =
-                new DetentionEngagementTeamMarkAsPaidPersonalisation(
-                        internalDetMarkAsPaidTemplateId,
-                        detEmailService,
-                        documentDownloadClient,
-                        detainedPrefix
+            new DetentionEngagementTeamMarkAsPaidPersonalisation(
+                internalDetMarkAsPaidTemplateId,
+                detEmailService,
+                documentDownloadClient,
+                detainedPrefix
 
-                );
+            );
     }
 
     @Test
@@ -94,14 +91,16 @@ public class DetentionEngagementTeamMarkAsPaidPersonalisationTest {
     @Test
     public void should_return_given_reference_id() {
         Long caseId = 12345L;
+        String requestCaseBuildingPersonalisationReferenceId = "_INTERNAL_DET_MARK_APPEAL_AS_PAID_EMAIL";
         assertEquals(caseId + requestCaseBuildingPersonalisationReferenceId,
-                detentionEngagementTeamMarkAsPaidPersonalisation.getReferenceId(caseId));
+            detentionEngagementTeamMarkAsPaidPersonalisation.getReferenceId(caseId));
     }
 
     @Test
     public void should_return_given_email_address_from_asylum_case() {
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
+        String detEmailAddress = "some@example.com";
         when(detEmailService.getRecipientsList(asylumCase)).thenReturn(Collections.singleton(detEmailAddress));
 
         assertTrue(
@@ -130,37 +129,37 @@ public class DetentionEngagementTeamMarkAsPaidPersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
-                () -> detentionEngagementTeamMarkAsPaidPersonalisation.getPersonalisationForLink((AsylumCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> detentionEngagementTeamMarkAsPaidPersonalisation.getPersonalisationForLink((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_request_case_building_document_is_missing() {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(
-                () -> detentionEngagementTeamMarkAsPaidPersonalisation.getPersonalisationForLink(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("internalDetMarkAsPaidLetter document not available");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class,
+                () -> detentionEngagementTeamMarkAsPaidPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("internalDetMarkAsPaidLetter document not available", exception.getMessage());
     }
 
     @Test
     public void should_return_personalisation_when_all_information_given_refused() {
         final Map<String, Object> expectedPersonalisation =
-                ImmutableMap
-                        .<String, Object>builder()
-                        .put("subjectPrefix", detainedPrefix)
-                        .put("appealReferenceNumber", appealReferenceNumber)
-                        .put("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
-                        .put("appellantGivenNames", appellantGivenNames)
-                        .put("appellantFamilyName", appellantFamilyName)
-                        .put("documentLink", jsonDocument)
-                        .build();
+            ImmutableMap
+                .<String, Object>builder()
+                .put("subjectPrefix", detainedPrefix)
+                .put("appealReferenceNumber", appealReferenceNumber)
+                .put("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
+                .put("appellantGivenNames", appellantGivenNames)
+                .put("appellantFamilyName", appellantFamilyName)
+                .put("documentLink", jsonDocument)
+                .build();
 
         Map<String, Object> actualPersonalisation =
-                detentionEngagementTeamMarkAsPaidPersonalisation.getPersonalisationForLink(asylumCase);
+            detentionEngagementTeamMarkAsPaidPersonalisation.getPersonalisationForLink(asylumCase);
 
         assertTrue(compareStringsAndJsonObjects(expectedPersonalisation, actualPersonalisation));
     }
@@ -168,8 +167,8 @@ public class DetentionEngagementTeamMarkAsPaidPersonalisationTest {
     @Test
     public void should_throw_exception_when_notification_client_throws_Exception() throws NotificationClientException, IOException {
         when(documentDownloadClient.getJsonObjectFromDocument(markAppealPaidDoc)).thenThrow(new NotificationClientException("File size is more than 2MB"));
-        assertThatThrownBy(() -> detentionEngagementTeamMarkAsPaidPersonalisation.getPersonalisationForLink(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("Failed to get Internal Detained Mark As Paid document in compatible format");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamMarkAsPaidPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("Failed to get Internal Detained Mark As Paid document in compatible format", exception.getMessage());
     }
 }

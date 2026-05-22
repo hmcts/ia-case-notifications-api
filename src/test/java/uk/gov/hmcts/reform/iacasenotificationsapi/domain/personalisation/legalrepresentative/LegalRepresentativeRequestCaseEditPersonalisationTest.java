@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -45,8 +45,8 @@ public class LegalRepresentativeRequestCaseEditPersonalisationTest {
     private static final String LEGAL_REP_EMAIL_ADDRESS = "legalrep@example.com";
     private static final String DIRECTION_EXPLANATION = "someDirectionExplanation";
     private static final String APPEAL_REFERENCE_NUMBER = "someAppealReferenceNumber";
-    private static final String APPELLANT_GIVEN_NAMES = "someAppellantGivenNames";
-    private static final String APPELLANT_FAMILY_NAMES = "someAppellantFamilyNames";
+    private static final String APPELLANT_GIVEN_NAMES = "appellantGivenNames";
+    private static final String APPELLANT_FAMILY_NAMES = "appellantFamilyNames";
     private static final String SOME_LEGAL_REP_REF_NUMBER = "someLegalRepRefNumber";
     private static final String CUSTOMER_SERVICES_PROVIDER_PHONE = "555 555 555";
     private static final String CUSTOMER_SERVICES_PROVIDER_EMAIL = "customer.services@example.com";
@@ -127,14 +127,14 @@ public class LegalRepresentativeRequestCaseEditPersonalisationTest {
             .put("appealReferenceNumber", scenario.appealReferenceNumber)
             .put("appellantGivenNames", scenario.appellantGivenNames)
             .put("appellantFamilyName", scenario.appellantFamilyName)
-            .put("directionExplanation", DIRECTION_EXPLANATION)
-            .put("expectedDirectionDueDate", DIRECTION_DUE_DATE)
-            .put("iaExUiFrontendUrl", IA_EX_UI_FRONTEND_URL)
-            .put("legalRepRefNumber", scenario.legalRepRefNumber)
+            .put("explanation", DIRECTION_EXPLANATION)
+            .put("dueDate", "3 May 2020")
+            .put("linkToOnlineService", IA_EX_UI_FRONTEND_URL)
+            .put("legalRepReferenceNumber", scenario.legalRepRefNumber)
             .put("subjectPrefix", "Immigration and Asylum appeal")
             .build();
 
-        assertThat(actualPersonalisation).isEqualToComparingOnlyGivenFields(expectedPersonalisation);
+        assertThat(actualPersonalisation).containsAllEntriesOf(expectedPersonalisation);
         assertEquals(CUSTOMER_SERVICES_PROVIDER_PHONE, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(CUSTOMER_SERVICES_PROVIDER_EMAIL, customerServicesProvider.getCustomerServicesEmail());
     }
@@ -151,17 +151,17 @@ public class LegalRepresentativeRequestCaseEditPersonalisationTest {
     public void should_throw_exception_when_cannot_find_email_address_for_legal_rep() {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> personalisation.getRecipientsList(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("legalRepresentativeEmailAddress is not present");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> personalisation.getRecipientsList(asylumCase));
+        assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(() -> personalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> personalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -169,9 +169,9 @@ public class LegalRepresentativeRequestCaseEditPersonalisationTest {
 
         when(directionFinder.findFirst(asylumCase, DirectionTag.CASE_EDIT)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> personalisation.getPersonalisation(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("legal representative request case edit direction is not present");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> personalisation.getPersonalisation(asylumCase));
+        assertEquals("legal representative request case edit direction is not present", exception.getMessage());
     }
 
     @Value

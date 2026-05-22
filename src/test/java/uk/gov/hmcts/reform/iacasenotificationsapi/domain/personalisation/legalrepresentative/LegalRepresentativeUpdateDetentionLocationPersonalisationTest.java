@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
@@ -36,12 +36,10 @@ public class LegalRepresentativeUpdateDetentionLocationPersonalisationTest {
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String ariaListingReference = "someAriaListingReference";
     private final String legalRefNumber = "someLegalRefNumber";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String appellantGivenNames = "appellantGivenNames";
+    private final String appellantFamilyName = "appellantFamilyName";
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "cust.services@example.com";
-    private final String adaPrefix = "Accelerated detained appeal";
-    private final String nonAdaPrefix = "Immigration and Asylum appeal";
 
     @Mock
     AsylumCase asylumCase;
@@ -71,12 +69,12 @@ public class LegalRepresentativeUpdateDetentionLocationPersonalisationTest {
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         legalRepresentativeUpdateDetentionLocationPersonalisation = new LegalRepresentativeUpdateDetentionLocationPersonalisation(
-                beforeListingTemplateId,
-                afterListingTemplateId,
-                iaExUiFrontendUrl,
-                customerServicesProvider,
-                personalisationProvider,
-                detentionFacilityNameFinder
+            beforeListingTemplateId,
+            afterListingTemplateId,
+            iaExUiFrontendUrl,
+            customerServicesProvider,
+            personalisationProvider,
+            detentionFacilityNameFinder
         );
         when(personalisationProvider.getLegalRepHeaderPersonalisation(asylumCase)).thenReturn(getPersonalisationForLegalRep());
     }
@@ -84,59 +82,62 @@ public class LegalRepresentativeUpdateDetentionLocationPersonalisationTest {
     @Test
     public void should_return_given_template_id() {
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class))
-                .thenReturn(Optional.of(HearingCentre.TAYLOR_HOUSE));
+            .thenReturn(Optional.of(HearingCentre.TAYLOR_HOUSE));
         assertEquals(afterListingTemplateId,
-                legalRepresentativeUpdateDetentionLocationPersonalisation.getTemplateId(asylumCase));
+            legalRepresentativeUpdateDetentionLocationPersonalisation.getTemplateId(asylumCase));
 
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
         assertEquals(beforeListingTemplateId,
-                legalRepresentativeUpdateDetentionLocationPersonalisation.getTemplateId(asylumCase));
+            legalRepresentativeUpdateDetentionLocationPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
     public void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_UPDATE_DETENTION_LOCATION_LEGAL_REP",
-                legalRepresentativeUpdateDetentionLocationPersonalisation.getReferenceId(caseId));
+            legalRepresentativeUpdateDetentionLocationPersonalisation.getReferenceId(caseId));
     }
 
     @Test
     public void should_return_given_email_address() {
         assertTrue(
-                legalRepresentativeUpdateDetentionLocationPersonalisation.getRecipientsList(asylumCase).contains(emailAddress));
+            legalRepresentativeUpdateDetentionLocationPersonalisation.getRecipientsList(asylumCase).contains(emailAddress));
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
-                () -> legalRepresentativeUpdateDetentionLocationPersonalisation.getPersonalisation((AsylumCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> legalRepresentativeUpdateDetentionLocationPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
         initializePrefixes(legalRepresentativeUpdateDetentionLocationPersonalisation);
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
 
         Map<String, String> personalisation =
-                legalRepresentativeUpdateDetentionLocationPersonalisation.getPersonalisation(asylumCase);
+            legalRepresentativeUpdateDetentionLocationPersonalisation.getPersonalisation(asylumCase);
 
         String a = personalisation.get("subjectPrefix");
 
+        String nonAdaPrefix = "Immigration and Asylum appeal";
+        String adaPrefix = "Accelerated detained appeal";
         assertEquals(isAda.equals(YesOrNo.YES)
-                ? adaPrefix
-                : nonAdaPrefix, personalisation.get("subjectPrefix"));
+            ? adaPrefix
+            : nonAdaPrefix, personalisation.get("subjectPrefix"));
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
-        assertEquals(legalRefNumber, personalisation.get("legalRepReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("ariaListingReference", ariaListingReference)
+            .containsEntry("legalRepReferenceNumber", legalRefNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
         assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
@@ -144,14 +145,14 @@ public class LegalRepresentativeUpdateDetentionLocationPersonalisationTest {
 
     private Map<String, String> getPersonalisationForLegalRep() {
         return ImmutableMap
-                .<String, String>builder()
-                .put("appealReferenceNumber", appealReferenceNumber)
-                .put("ariaListingReference", ariaListingReference)
-                .put("appellantGivenNames", appellantGivenNames)
-                .put("appellantFamilyName", appellantFamilyName)
-                .put("legalRepReferenceNumber", legalRefNumber)
-                .put("customerServicesTelephone", customerServicesTelephone)
-                .put("customerServicesEmail", customerServicesEmail)
-                .build();
+            .<String, String>builder()
+            .put("appealReferenceNumber", appealReferenceNumber)
+            .put("ariaListingReference", ariaListingReference)
+            .put("appellantGivenNames", appellantGivenNames)
+            .put("appellantFamilyName", appellantFamilyName)
+            .put("legalRepReferenceNumber", legalRefNumber)
+            .put("customerServicesTelephone", customerServicesTelephone)
+            .put("customerServicesEmail", customerServicesEmail)
+            .build();
     }
 }

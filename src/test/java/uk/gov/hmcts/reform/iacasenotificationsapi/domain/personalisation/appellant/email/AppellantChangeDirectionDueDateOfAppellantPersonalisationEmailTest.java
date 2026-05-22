@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -31,6 +32,13 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantChangeDirectionDueDateOfAppellantPersonalisationEmailTest {
 
+    private final String emailTemplateId = "emailTemplateId";
+    private final String mockedAppealReferenceNumber = "someReferenceNumber";
+    private final String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
+    private final String mockedAppellantGivenNames = "someAppellantGivenNames";
+    private final String mockedAppellantFamilyName = "someAppellantFamilyName";
+    private final String ariaListingRef = "someAriaListingRef";
+    private final String iaAipFrontendUrl = "iaAipFrontendUrl";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -43,30 +51,16 @@ public class AppellantChangeDirectionDueDateOfAppellantPersonalisationEmailTest 
     CustomerServicesProvider customerServicesProvider;
     @Mock
     PersonalisationProvider personalisationProvider;
-
-    private Long caseId = 12345L;
-    private String emailTemplateId = "emailTemplateId";
-
-    private String mockedAppealReferenceNumber = "someReferenceNumber";
-    private String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
-    private String mockedAppellantGivenNames = "someAppellantGivenNames";
-    private String mockedAppellantFamilyName = "someAppellantFamilyName";
-    private String mockedAppellantEmailAddress = "appelant@example.net";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "cust.services@example.com";
-    private String ariaListingRef = "someAriaListingRef";
-
     private AppellantChangeDirectionDueDateOfAppellantPersonalisationEmail appellantChangeDirectionDueDateOfAppellantPersonalisationEmail;
-    private String directionExplanation = "Some HO change direction due date content";
-    private String dueDate = "2020-10-08";
-    private String iaAipFrontendUrl = "iaAipFrontendUrl";
 
     @BeforeEach
     public void setup() {
 
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
+        String customerServicesTelephone = "555 555 555";
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
+        String customerServicesEmail = "cust.services@example.com";
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         appellantChangeDirectionDueDateOfAppellantPersonalisationEmail =
@@ -86,6 +80,7 @@ public class AppellantChangeDirectionDueDateOfAppellantPersonalisationEmailTest 
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_APPELLANT_CHANGE_DIRECTION_DUE_DATE_OF_APPELLANT_EMAIL",
             appellantChangeDirectionDueDateOfAppellantPersonalisationEmail.getReferenceId(caseId));
     }
@@ -93,6 +88,7 @@ public class AppellantChangeDirectionDueDateOfAppellantPersonalisationEmailTest 
     @Test
     public void should_return_given_email_address_list_from_subscribers_in_asylum_case() {
 
+        String mockedAppellantEmailAddress = "appelant@example.net";
         when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL))
             .thenReturn(Collections.singleton(mockedAppellantEmailAddress));
 
@@ -106,9 +102,9 @@ public class AppellantChangeDirectionDueDateOfAppellantPersonalisationEmailTest 
         when(recipientsFinder.findAll(null, NotificationType.EMAIL))
             .thenThrow(new NullPointerException("asylumCase must not be null"));
 
-        assertThatThrownBy(() -> appellantChangeDirectionDueDateOfAppellantPersonalisationEmail.getRecipientsList(null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> appellantChangeDirectionDueDateOfAppellantPersonalisationEmail.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -121,11 +117,12 @@ public class AppellantChangeDirectionDueDateOfAppellantPersonalisationEmailTest 
         Map<String, String> personalisation =
             appellantChangeDirectionDueDateOfAppellantPersonalisationEmail.getPersonalisation(callback);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(mockedAppealHomeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(mockedAppellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(mockedAppellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("linkToOnlineService"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", mockedAppealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", mockedAppealHomeOfficeReferenceNumber)
+            .containsEntry("appellantGivenNames", mockedAppellantGivenNames)
+            .containsEntry("appellantFamilyName", mockedAppellantFamilyName)
+            .containsEntry("linkToOnlineService", iaAipFrontendUrl);
     }
 
     @Test
@@ -138,12 +135,13 @@ public class AppellantChangeDirectionDueDateOfAppellantPersonalisationEmailTest 
         Map<String, String> personalisation =
             appellantChangeDirectionDueDateOfAppellantPersonalisationEmail.getPersonalisation(callback);
 
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(mockedAppealHomeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(mockedAppellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(mockedAppellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("linkToOnlineService"));
-        assertEquals("\nListing reference: " + ariaListingRef, personalisation.get("listingReferenceLine"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", mockedAppealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", mockedAppealHomeOfficeReferenceNumber)
+            .containsEntry("appellantGivenNames", mockedAppellantGivenNames)
+            .containsEntry("appellantFamilyName", mockedAppellantFamilyName)
+            .containsEntry("linkToOnlineService", iaAipFrontendUrl)
+            .containsEntry("listingReferenceLine", "\nListing reference: " + ariaListingRef);
     }
 
     @Test
@@ -154,17 +152,20 @@ public class AppellantChangeDirectionDueDateOfAppellantPersonalisationEmailTest 
         Map<String, String> personalisation =
             appellantChangeDirectionDueDateOfAppellantPersonalisationEmail.getPersonalisation(callback);
 
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("linkToOnlineService"));
-        assertEquals("", personalisation.get("listingReferenceLine"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("homeOfficeReferenceNumber", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "")
+            .containsEntry("linkToOnlineService", iaAipFrontendUrl)
+            .containsEntry("listingReferenceLine", "");
 
     }
 
     private Map<String, String> getPersonalisationForAppellant(String mockedAppealReferenceNumber, String mockedAppealHomeOfficeReferenceNumber,
                                                                String mockedAppellantGivenNames, String mockedAppellantFamilyName) {
+        String dueDate = "2020-10-08";
+        String directionExplanation = "Some HO change direction due date content";
         return ImmutableMap
             .<String, String>builder()
             .put("appealReferenceNumber", mockedAppealReferenceNumber)

@@ -4,9 +4,10 @@ import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
+
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
@@ -31,6 +32,15 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class RespondentTurnOnNotificationsPersonalisationTest {
+    private final String beforeListingTemplateId = "beforeListingTemplateId";
+    private final String afterListingTemplateId = "afterListingTemplateId";
+    private final String iaExUiFrontendUrl = "http://localhost";
+    private final String appealReferenceNumber = "appealReferenceNumber";
+    private final String respondentReferenceNumber = "respondentReferenceNumber";
+    private final String upperTribunalReferenceNumber = "upperTribunalReferenceNumber";
+    private final String ariaListingReference = "someAriaListingReference";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -43,20 +53,6 @@ public class RespondentTurnOnNotificationsPersonalisationTest {
     PersonalisationProvider personalisationProvider;
     @Mock
     HomeOfficeEmailFinder hoEmailAddressFinder;
-    private final String beforeListingTemplateId = "beforeListingTemplateId";
-    private final String afterListingTemplateId = "afterListingTemplateId";
-    private final Long caseId = 12345L;
-    private String iaExUiFrontendUrl = "http://localhost";
-    private final String appealReferenceNumber = "appealReferenceNumber";
-    private final String respondentReferenceNumber = "respondentReferenceNumber";
-    private final String upperTribunalReferenceNumber = "upperTribunalReferenceNumber";
-    private final String ariaListingReference = "someAriaListingReference";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-    private String customerServicesTelephone = "555 555 555";
-    private String customerServicesEmail = "customer.services@example.com";
-    private String homeOfficeEmailAddress = "homeOffice@example.com";
-    private String cuurentStateHO = "appealSubmitted";
     private RespondentTurnOnNotificationsPersonalisation respondentTurnOnNotificationsPersonalisation;
 
     @BeforeEach
@@ -71,55 +67,59 @@ public class RespondentTurnOnNotificationsPersonalisationTest {
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(UPPER_TRIBUNAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(upperTribunalReferenceNumber));
+        String cuurentStateHO = "appealSubmitted";
         when(asylumCase.read(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, String.class)).thenReturn(Optional.of(cuurentStateHO));
+        String customerServicesTelephone = "555 555 555";
         when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
+        String customerServicesEmail = "customer.services@example.com";
         when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         respondentTurnOnNotificationsPersonalisation = new RespondentTurnOnNotificationsPersonalisation(
-                beforeListingTemplateId,
-                afterListingTemplateId,
-                iaExUiFrontendUrl,
-                personalisationProvider,
-                customerServicesProvider,
-                hoEmailAddressFinder
+            beforeListingTemplateId,
+            afterListingTemplateId,
+            iaExUiFrontendUrl,
+            personalisationProvider,
+            customerServicesProvider,
+            hoEmailAddressFinder
         );
     }
 
     @Test
     public void should_return_given_template_id() {
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class))
-                .thenReturn(Optional.of(HearingCentre.TAYLOR_HOUSE));
+            .thenReturn(Optional.of(HearingCentre.TAYLOR_HOUSE));
         assertEquals(afterListingTemplateId,
-                respondentTurnOnNotificationsPersonalisation.getTemplateId(asylumCase));
+            respondentTurnOnNotificationsPersonalisation.getTemplateId(asylumCase));
 
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
         assertEquals(beforeListingTemplateId,
-                respondentTurnOnNotificationsPersonalisation.getTemplateId(asylumCase));
+            respondentTurnOnNotificationsPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
     public void should_return_given_reference_id() {
 
-        assertThat(respondentTurnOnNotificationsPersonalisation.getReferenceId(caseId))
-                .isEqualTo(caseId + "_TURN_ON_NOTIFICATIONS_RESPONDENT");
+        Long caseId = 12345L;
+        assertEquals(caseId + "_TURN_ON_NOTIFICATIONS_RESPONDENT", respondentTurnOnNotificationsPersonalisation.getReferenceId(caseId));
     }
 
     @Test
     public void should_return_given_email_address() {
+        String homeOfficeEmailAddress = "homeOffice@example.com";
         when(respondentTurnOnNotificationsPersonalisation.getRecipientsList(asylumCase)).thenReturn(Collections.singleton(homeOfficeEmailAddress));
         assertTrue(
-                respondentTurnOnNotificationsPersonalisation.getRecipientsList(asylumCase).contains(homeOfficeEmailAddress));
+            respondentTurnOnNotificationsPersonalisation.getRecipientsList(asylumCase).contains(homeOfficeEmailAddress));
     }
 
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
-                () -> respondentTurnOnNotificationsPersonalisation.getPersonalisation((Callback<AsylumCase>) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("callback must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> respondentTurnOnNotificationsPersonalisation.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     @Test
@@ -128,20 +128,24 @@ public class RespondentTurnOnNotificationsPersonalisationTest {
         when(respondentTurnOnNotificationsPersonalisation.getPersonalisation(callback)).thenReturn(getPersonalisationMapWithGivenValues());
 
         Map<String, String> personalisation =
-                respondentTurnOnNotificationsPersonalisation.getPersonalisation(callback);
+            respondentTurnOnNotificationsPersonalisation.getPersonalisation(callback);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(personalisation)
+            .containsEntry("subjectPrefix", "Immigration and Asylum appeal")
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("upperTribunalReferenceNumber", upperTribunalReferenceNumber)
+            .containsAllEntriesOf(getPersonalisationMapWithGivenValues());
     }
 
     private Map<String, String> getPersonalisationMapWithGivenValues() {
         return ImmutableMap
-                .<String, String>builder()
-                .put("appealReferenceNumber", appealReferenceNumber)
-                .put("ariaListingReference", ariaListingReference)
-                .put("appellantGivenNames", appellantGivenNames)
-                .put("appellantFamilyName", appellantFamilyName)
-                .put("respondentReferenceNumber", respondentReferenceNumber)
-                .build();
+            .<String, String>builder()
+            .put("appealReferenceNumber", appealReferenceNumber)
+            .put("ariaListingReference", ariaListingReference)
+            .put("appellantGivenNames", appellantGivenNames)
+            .put("appellantFamilyName", appellantFamilyName)
+            .put("respondentReferenceNumber", respondentReferenceNumber)
+            .build();
     }
 
 }

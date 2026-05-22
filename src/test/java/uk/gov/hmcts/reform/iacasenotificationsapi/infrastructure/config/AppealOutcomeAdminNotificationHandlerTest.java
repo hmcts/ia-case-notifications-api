@@ -18,7 +18,8 @@ import java.util.List;
 
 import static java.util.Collections.emptyList;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.BDDMockito.given;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.SEND_DECISION_AND_REASONS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PreSubmitCallbackStage.ABOUT_TO_START;
@@ -37,7 +38,7 @@ class AppealOutcomeAdminNotificationHandlerTest {
         NotificationHandlerConfiguration notificationHandlerConfiguration = new NotificationHandlerConfiguration();
         List<NotificationGenerator> notificationGenerators = emptyList();
         asylumCasePreSubmitCallbackHandler =
-                notificationHandlerConfiguration.appealOutcomeAdminNotificationHandler(notificationGenerators);
+            notificationHandlerConfiguration.appealOutcomeAdminNotificationHandler(notificationGenerators);
     }
 
     @ParameterizedTest
@@ -50,7 +51,7 @@ class AppealOutcomeAdminNotificationHandlerTest {
         boolean res = asylumCasePreSubmitCallbackHandler.canHandle(ABOUT_TO_START, callback);
 
         // then
-        assertThat(res).isFalse();
+        assertFalse(res);
     }
 
     @ParameterizedTest
@@ -63,7 +64,6 @@ class AppealOutcomeAdminNotificationHandlerTest {
         boolean res = asylumCasePreSubmitCallbackHandler.canHandle(ABOUT_TO_SUBMIT, callback);
 
         // then
-        assertThat(res)
-                .isEqualTo(event == SEND_DECISION_AND_REASONS);
+        assertEquals(event == SEND_DECISION_AND_REASONS, res);
     }
 }

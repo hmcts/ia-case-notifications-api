@@ -1,9 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.controllers;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -20,9 +19,7 @@ public class WelcomeControllerTest {
 
         assertNotNull(responseEntity);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertThat(
-            responseEntity.getBody(),
-            containsString("Welcome to Immigration & Asylum case notifications API")
-        );
+        assertNotNull(responseEntity.getBody());
+        assertTrue(responseEntity.getBody().contains("Welcome to Immigration & Asylum case notifications API"));
     }
 }

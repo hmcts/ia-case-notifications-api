@@ -31,7 +31,7 @@ import java.util.Optional;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -39,9 +39,13 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-@SuppressWarnings("unchecked")
 public class DetentionEngagementTeamInternalNonStandardDirectionPersonalisationTest {
 
+    final DocumentWithMetadata sendDirectionLetter = TestUtils.getDocumentWithMetadata(
+        "id", "internal_appeal_submission", "some other desc", DocumentTag.INTERNAL_NON_STANDARD_DIRECTION_TO_APPELLANT_LETTER);
+    final IdValue<DocumentWithMetadata> document = new IdValue<>("1", sendDirectionLetter);
+    private final String templateId = "templateId";
+    private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
     @Mock
     PersonalisationProvider personalisationProvider;
     @Mock
@@ -50,33 +54,21 @@ public class DetentionEngagementTeamInternalNonStandardDirectionPersonalisationT
     CaseDetails<AsylumCase> caseDetails;
     @Mock
     AsylumCase asylumCase;
-    private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
-    @Mock
-    private DetentionEmailService detEmailService;
     @Mock
     HomeOfficeEmailFinder homeOfficeEmailFinder;
-
-    private Long caseId = 12345L;
-    private String templateId = "templateId";
-    private String detEmailAddress = "detEmail@example.com";
-    private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
-    DocumentWithMetadata sendDirectionLetter = TestUtils.getDocumentWithMetadata(
-            "id", "internal_appeal_submission", "some other desc", DocumentTag.INTERNAL_NON_STANDARD_DIRECTION_TO_APPELLANT_LETTER);
-    IdValue<DocumentWithMetadata> document = new IdValue<>("1", sendDirectionLetter);
-
     @Mock
     DocumentDownloadClient documentDownloadClient;
-
-
+    @Mock
+    private DetentionEmailService detEmailService;
     private DetentionEngagementTeamNonStandardDirectionPersonalisation detentionEngagementTeamNonStandardDirectionPersonalisation;
 
     @BeforeEach
     public void setup() throws NotificationClientException, IOException {
         detentionEngagementTeamNonStandardDirectionPersonalisation = new DetentionEngagementTeamNonStandardDirectionPersonalisation(
-                templateId,
-                detEmailService,
-                documentDownloadClient,
-                personalisationProvider
+            templateId,
+            detEmailService,
+            documentDownloadClient,
+            personalisationProvider
         );
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
@@ -86,8 +78,9 @@ public class DetentionEngagementTeamInternalNonStandardDirectionPersonalisationT
 
     @Test
     public void should_return_give_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_INTERNAL_NON_STANDARD_DIRECTION_DET",
-                detentionEngagementTeamNonStandardDirectionPersonalisation.getReferenceId(caseId));
+            detentionEngagementTeamNonStandardDirectionPersonalisation.getReferenceId(caseId));
     }
 
     @Test
@@ -97,6 +90,7 @@ public class DetentionEngagementTeamInternalNonStandardDirectionPersonalisationT
 
     @Test
     public void should_return_given_recipient_email_id() {
+        String detEmailAddress = "detEmail@example.com";
         when(detEmailService.getDetentionEmailAddress(asylumCase)).thenReturn(detEmailAddress);
         // Mock the appellant to be in detention
         when(asylumCase.read(uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_IN_DETENTION, uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.class))
@@ -115,35 +109,37 @@ public class DetentionEngagementTeamInternalNonStandardDirectionPersonalisationT
 
     @Test
     public void should_return_given_personalisation() {
+        String nonAdaPrefix = "IAFT - SERVE IN PERSON";
         ReflectionTestUtils.setField(detentionEngagementTeamNonStandardDirectionPersonalisation, "nonAdaPrefix", nonAdaPrefix);
-        
+
         when(personalisationProvider.getAppellantPersonalisation(asylumCase)).thenReturn(getPersonalisation());
 
         Map<String, Object> personalisation =
-                detentionEngagementTeamNonStandardDirectionPersonalisation.getPersonalisationForLink(callback);
+            detentionEngagementTeamNonStandardDirectionPersonalisation.getPersonalisationForLink(callback);
         //assert the personalisation map values
         assertThat(personalisation).containsAllEntriesOf(getPersonalisation());
-        assertEquals(jsonObject, personalisation.get("documentLink"));
-        assertEquals(nonAdaPrefix, personalisation.get("subjectPrefix"));
+        assertThat(personalisation)
+            .containsEntry("documentLink", jsonObject)
+            .containsEntry("subjectPrefix", nonAdaPrefix);
     }
 
     @Test
     public void should_throw_exception_when_personalisation_when_callback_is_null() {
 
-        assertThatThrownBy(() -> detentionEngagementTeamNonStandardDirectionPersonalisation.getPersonalisationForLink((AsylumCase) null))
-                .hasMessage("asylumCase must not be null")
-                .isExactlyInstanceOf(NullPointerException.class);
+        NullPointerException exception = assertThrows(NullPointerException.class,
+            () -> detentionEngagementTeamNonStandardDirectionPersonalisation.getPersonalisationForLink((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
 
     }
 
     private Map<String, String> getPersonalisation() {
 
         return ImmutableMap
-                .<String, String>builder()
-                .put("appealReferenceNumber", "PA/12345/001")
-                .put("homeOfficeReference", "A1234567")
-                .put("appellantGivenNames", "Talha")
-                .put("appellantFamilyName", "Awan")
-                .build();
+            .<String, String>builder()
+            .put("appealReferenceNumber", "PA/12345/001")
+            .put("homeOfficeReference", "A1234567")
+            .put("appellantGivenNames", "Talha")
+            .put("appellantFamilyName", "Awan")
+            .build();
     }
 }

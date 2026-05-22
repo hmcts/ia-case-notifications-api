@@ -9,7 +9,7 @@ public class IdValueTest {
     private final String id = "1";
     private final Integer value = 1234;
 
-    private IdValue<Integer> addressUk = new IdValue<>(
+    private final IdValue<Integer> addressUk = new IdValue<>(
         id,
         value
     );

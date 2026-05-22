@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -34,6 +35,9 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.Personalisation
 @MockitoSettings(strictness = Strictness.LENIENT)
 class CaseOfficerEditListingPersonalisationTest {
 
+    private final String templateId = "someTemplateId";
+    private final String listCaseHearingCentreEmailAddress = "listCaseHearingCentre@example.com";
+    private final String hearingCentreAddress = "hearingCentreAddress";
     @Mock
     Callback<AsylumCase> callback;
     @Mock
@@ -46,22 +50,6 @@ class CaseOfficerEditListingPersonalisationTest {
     PersonalisationProvider personalisationProvider;
     @Mock
     HearingDetailsFinder hearingDetailsFinder;
-
-    private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
-    private String listAssistHearingTemplateId = "listAssistHearingTemplateId";
-    private String iaExUiFrontendUrl = "http://somefrontendurl";
-    private String hearingCentreEmailAddress = "hearingCentre@example.com";
-    private String listCaseHearingCentreEmailAddress = "listCaseHearingCentre@example.com";
-    private final String listCaseCaseOfficerEmailAddress = "co-list-case@example.com";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String ariaListingReference = "someAriaListingReference";
-    private String appellantGivenNames = "appellantGivenNames";
-    private String appellantFamilyName = "appellantFamilyName";
-    private String homeOfficeRefNumber = "homeOfficeRefNumber";
-    private String hearingCentreName = "The Hearing Centre";
-    private String hearingCentreAddress = "hearingCentreAddress";
-
     private CaseOfficerEditListingPersonalisation caseOfficerEditListingPersonalisation;
 
     @BeforeEach
@@ -69,8 +57,10 @@ class CaseOfficerEditListingPersonalisationTest {
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
         when(emailAddressFinder.getListCaseCaseOfficerHearingCentreEmailAddress(asylumCase)).thenReturn(listCaseHearingCentreEmailAddress);
+        String hearingCentreEmailAddress = "hearingCentre@example.com";
         when(emailAddressFinder.getHearingCentreEmailAddress(asylumCase)).thenReturn(hearingCentreEmailAddress);
 
+        String listAssistHearingTemplateId = "listAssistHearingTemplateId";
         caseOfficerEditListingPersonalisation = new CaseOfficerEditListingPersonalisation(
             templateId,
             listAssistHearingTemplateId,
@@ -86,6 +76,7 @@ class CaseOfficerEditListingPersonalisationTest {
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_CASE_RE_LISTED_CASE_OFFICER",
             caseOfficerEditListingPersonalisation.getReferenceId(caseId));
     }
@@ -97,6 +88,7 @@ class CaseOfficerEditListingPersonalisationTest {
         assertTrue(caseOfficerEditListingPersonalisation.getRecipientsList(asylumCase).contains(listCaseHearingCentreEmailAddress));
 
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(HearingCentre.REMOTE_HEARING));
+        String listCaseCaseOfficerEmailAddress = "co-list-case@example.com";
         when(emailAddressFinder.getListCaseCaseOfficerHearingCentreEmailAddress(asylumCase)).thenReturn(listCaseCaseOfficerEmailAddress);
 
         assertTrue(caseOfficerEditListingPersonalisation.getRecipientsList(asylumCase).contains(listCaseCaseOfficerEmailAddress));
@@ -104,13 +96,13 @@ class CaseOfficerEditListingPersonalisationTest {
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
-        assertThatThrownBy(() -> caseOfficerEditListingPersonalisation.getPersonalisation((Callback<AsylumCase>) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("callback must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> caseOfficerEditListingPersonalisation.getPersonalisation((Callback<AsylumCase>) null));
+        assertEquals("callback must not be null", exception.getMessage());
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
         initializePrefixes(caseOfficerEditListingPersonalisation);
         when(callback.getCaseDetails()).thenReturn(caseDetails);
@@ -118,16 +110,20 @@ class CaseOfficerEditListingPersonalisationTest {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisationMapWithBlankValues());
         when(hearingDetailsFinder.getHearingCentreLocation(callback.getCaseDetails().getCaseData()))
-                .thenReturn(hearingCentreAddress);
+            .thenReturn(hearingCentreAddress);
 
         Map<String, String> personalisation = caseOfficerEditListingPersonalisation.getPersonalisation(callback);
 
-        assertThat(personalisation).isNotEmpty();
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertFalse(personalisation.isEmpty());
+        assertThat(personalisation)
+            .containsAllEntriesOf(getPersonalisationMapWithBlankValues())
+            .containsEntry("hearingCentreAddress", hearingCentreAddress)
+            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal"
+                : "Immigration and Asylum appeal");
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
         initializePrefixes(caseOfficerEditListingPersonalisation);
         when(callback.getCaseDetails()).thenReturn(caseDetails);
@@ -135,15 +131,26 @@ class CaseOfficerEditListingPersonalisationTest {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisationMapWithGivenValues());
         when(hearingDetailsFinder.getHearingCentreLocation(callback.getCaseDetails().getCaseData()))
-                .thenReturn(hearingCentreAddress);
+            .thenReturn(hearingCentreAddress);
 
         Map<String, String> personalisation = caseOfficerEditListingPersonalisation.getPersonalisation(callback);
 
-        assertThat(personalisation).isNotEmpty();
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertFalse(personalisation.isEmpty());
+        assertThat(personalisation)
+            .containsAllEntriesOf(getPersonalisationMapWithGivenValues())
+            .containsEntry("hearingCentreAddress", hearingCentreAddress)
+            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal"
+                : "Immigration and Asylum appeal");
     }
 
     private Map<String, String> getPersonalisationMapWithGivenValues() {
+        String hearingCentreName = "The Hearing Centre";
+        String homeOfficeRefNumber = "homeOfficeRefNumber";
+        String appellantFamilyName = "appellantFamilyName";
+        String appellantGivenNames = "appellantGivenNames";
+        String ariaListingReference = "someAriaListingReference";
+        String appealReferenceNumber = "someReferenceNumber";
+        String iaExUiFrontendUrl = "http://somefrontendurl";
         return ImmutableMap
             .<String, String>builder()
             .put("appealReferenceNumber", appealReferenceNumber)

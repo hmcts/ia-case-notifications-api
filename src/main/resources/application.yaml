@@ -329,6 +329,9 @@ govnotify:
       appellant:
         email: 50f1b88e-51d5-446c-b2da-1188feb7e26c
         sms: a7056fd8-6de7-408e-881b-c6f9984fe5cf
+        paPayLater:
+          email: d85f7601-5129-4b53-9c14-2e4e33cc2500
+          sms: da116491-7668-445e-86c4-192528fe7c18
     submitReasonsForAppeal:
       appellant:
         email: cd10866a-094d-43aa-bdf5-1e20fda9b10d
@@ -1411,6 +1414,18 @@ govnotify:
         email: 390843b2-0cab-4860-8e12-be98b9db2ca4
       legalRep:
         email: ec2e4278-9638-499c-b2cb-0ac6307e6071
+    caseBuilding:
+      paPayLater:
+        email: d85f7601-5129-4b53-9c14-2e4e33cc2500
+        sms: da116491-7668-445e-86c4-192528fe7c18
+    listing:
+      paPayLater:
+        email: f2f9ddb7-e063-472e-b67d-a5a7882a464a
+        sms: b36db177-96b0-49aa-a234-42b3049f5c0a
+    decision:
+      paPayLater:
+        email: d72c84b8-b92d-4ce3-9938-fd86818576a5
+        sms: 75400401-ed1b-4cf6-93ec-8d77c5b12c1b
     turnOnNotifications:
       homeOffice:
         beforeListing:
@@ -1532,6 +1547,13 @@ govnotify:
       appellant:
         email: 12bf5ed3-2d4f-4de8-b7d9-6a3d29caf1a3
         letter: 69820c60-76b6-4707-ba8b-06c21dfaa272
+    completeCaseReviewStatutoryTimeframe24Weeks:
+      homeOffice:
+        email: 778af412-31bb-40b8-9cd7-39471eeb5dbd
+      legalRep:
+        email: 068fa543-6167-4494-a532-74291b931d59
+      appellant:
+        email: d2a75610-004c-4fd8-8724-5fb7700cc27d
     revokeCitizenAccess:
       email: 8ea82724-5ddf-4f2d-9577-66bc565747e7
     nlr:
@@ -1548,6 +1570,7 @@ govnotify:
         email: 1f917848-0dd7-4f2e-987a-e574658415b1
       nlrDetailsUpdated:
         email: 989c80f9-df20-4c15-876d-911c3beec88a
+
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
     timeout: 5000
@@ -1815,6 +1838,7 @@ security:
       - "updateTribunalDecision"
       - "recordRemissionReminder"
       - "removeStatutoryTimeframe24Weeks"
+      - "completeCaseReview"
       - "revokeCitizenAccess"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
@@ -1952,6 +1976,7 @@ security:
       - "updateTribunalDecision"
       - "recordRemissionReminder"
       - "removeStatutoryTimeframe24Weeks"
+      - "completeCaseReview"
       - "revokeCitizenAccess"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
@@ -1978,6 +2003,7 @@ security:
       - "createBailCaseLink"
       - "markAppealAsRemitted"
       - "removeStatutoryTimeframe24Weeks"
+      - "completeCaseReview"
     hearing-centre-admin:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2349,6 +2375,7 @@ security:
       - "sendBailDirection"
       - "editBailDocuments"
       - "removeStatutoryTimeframe24Weeks"
+      - "completeCaseReview"
     judge:
       - "adaSuitabilityReview"
       - "sendDirection"
@@ -2587,6 +2614,7 @@ security:
       - "changeHearingCentre"
       - "hearingCancelled"
       - "removeStatutoryTimeframe24Weeks"
+      - "completeCaseReview"
       - "revokeCitizenAccess"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
@@ -2707,6 +2735,7 @@ homeOfficeFtpaEmailAddresses:
   belfast: ${IA_HOME_OFFICE_GLASGOW_EMAIL:ho-glasgow@example.com}
   harmondsworth: ${IA_FTPA_HOME_OFFICE_HARMONDSWORTH_EMAIL:ho-ftpa-harmondsworth@example.com}
   yarlswood: ${IA_FTPA_HOME_OFFICE_YARLSWOOD_EMAIL:ho-ftpa-yarlswood@example.com}
+  iacNationalVirtual: ${IA_HOME_OFFICE_MANCHESTER_EMAIL:ho-manchester@example.com}
 
 
 hearingCentreTelephoneNumber:

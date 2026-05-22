@@ -1,8 +1,9 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.controllers;
 
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -86,8 +87,8 @@ class BailPostSubmitCallbackControllerTest {
     @Test
     void should_not_allow_null_constructor_arguments() {
 
-        assertThatThrownBy(() -> new PostSubmitCallbackController<>(null))
-            .hasMessage("callbackDispatcher must not be null")
-            .isExactlyInstanceOf(NullPointerException.class);
+        NullPointerException exception = assertThrows(NullPointerException.class,
+            () -> new PostSubmitCallbackController<>(null));
+        assertEquals("callbackDispatcher must not be null", exception.getMessage());
     }
 }

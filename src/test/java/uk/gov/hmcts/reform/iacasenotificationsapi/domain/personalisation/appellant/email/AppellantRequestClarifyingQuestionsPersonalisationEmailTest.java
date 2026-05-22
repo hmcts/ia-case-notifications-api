@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -38,33 +39,31 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppellantRequestClarifyingQuestionsPersonalisationEmailTest {
 
-    @Mock AsylumCase asylumCase;
-    @Mock CustomerServicesProvider customerServicesProvider;
-    @Mock RecipientsFinder recipientsFinder;
-    @Mock DirectionFinder directionFinder;
-    @Mock Direction direction;
-
-    private final Long caseId = 12345L;
     private final String emailTemplateId = "someEmailTemplateId";
     private final String iaAipFrontendUrl = "http://localhost";
-
-    private final String directionDueDate = "2019-08-27";
     private final String expectedDirectionDueDate = "27 Aug 2019";
-
     private final String mockedAppealReferenceNumber = "someReferenceNumber";
     private final String mockedAppealHomeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
     private final String mockedAppellantGivenNames = "someAppellantGivenNames";
     private final String mockedAppellantFamilyName = "someAppellantFamilyName";
-    private final String mockedAppellantEmailAddress = "appelant@example.net";
-
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "cust.services@example.com";
-
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    CustomerServicesProvider customerServicesProvider;
+    @Mock
+    RecipientsFinder recipientsFinder;
+    @Mock
+    DirectionFinder directionFinder;
+    @Mock
+    Direction direction;
     private AppellantRequestClarifyingQuestionsPersonalisationEmail appellantRequestClarifyingQuestionsSubmissionPersonalisationEmail;
 
     @BeforeEach
     public void setup() {
 
+        String directionDueDate = "2019-08-27";
         when((direction.getDateDue())).thenReturn(directionDueDate);
         when(directionFinder.findFirst(asylumCase, DirectionTag.REQUEST_CLARIFYING_QUESTIONS)).thenReturn(Optional.of(direction));
 
@@ -94,11 +93,13 @@ class AppellantRequestClarifyingQuestionsPersonalisationEmailTest {
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_REQUEST_CLARIFYING_QUESTIONS_APPELLANT_AIP_EMAIL", appellantRequestClarifyingQuestionsSubmissionPersonalisationEmail.getReferenceId(caseId));
     }
 
     @Test
     void should_return_given_email_address_list_from_subscribers_in_asylum_case() {
+        String mockedAppellantEmailAddress = "appelant@example.net";
         when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL)).thenReturn(Collections.singleton(mockedAppellantEmailAddress));
 
         assertTrue(appellantRequestClarifyingQuestionsSubmissionPersonalisationEmail.getRecipientsList(asylumCase).contains(mockedAppellantEmailAddress));
@@ -110,9 +111,9 @@ class AppellantRequestClarifyingQuestionsPersonalisationEmailTest {
         when(recipientsFinder.findAll(null, NotificationType.EMAIL))
             .thenThrow(new NullPointerException("asylumCase must not be null"));
 
-        assertThatThrownBy(() -> appellantRequestClarifyingQuestionsSubmissionPersonalisationEmail.getRecipientsList(null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> appellantRequestClarifyingQuestionsSubmissionPersonalisationEmail.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -120,14 +121,14 @@ class AppellantRequestClarifyingQuestionsPersonalisationEmailTest {
 
         when(directionFinder.findFirst(asylumCase, DirectionTag.REQUEST_CLARIFYING_QUESTIONS)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> appellantRequestClarifyingQuestionsSubmissionPersonalisationEmail.getPersonalisation(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("direction 'requestClarifyingQuestions' is not present");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> appellantRequestClarifyingQuestionsSubmissionPersonalisationEmail.getPersonalisation(asylumCase));
+        assertEquals("direction 'requestClarifyingQuestions' is not present", exception.getMessage());
     }
 
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         initializePrefixes(appellantRequestClarifyingQuestionsSubmissionPersonalisationEmail);
@@ -138,18 +139,19 @@ class AppellantRequestClarifyingQuestionsPersonalisationEmailTest {
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-        assertEquals(mockedAppealReferenceNumber, personalisation.get("Appeal Ref Number"));
-        assertEquals(mockedAppealHomeOfficeReferenceNumber, personalisation.get("HO Ref Number"));
-        assertEquals(mockedAppellantGivenNames, personalisation.get("Given names"));
-        assertEquals(mockedAppellantFamilyName, personalisation.get("Family name"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
-        assertEquals(expectedDirectionDueDate, personalisation.get("direction due date"));
-        assertEquals(customerServicesTelephone, personalisation.get("customerServicesTelephone"));
-        assertEquals(customerServicesEmail, personalisation.get("customerServicesEmail"));
+        assertThat(personalisation)
+            .containsEntry("Appeal Ref Number", mockedAppealReferenceNumber)
+            .containsEntry("HO Ref Number", mockedAppealHomeOfficeReferenceNumber)
+            .containsEntry("Given names", mockedAppellantGivenNames)
+            .containsEntry("Family name", mockedAppellantFamilyName)
+            .containsEntry("Hyperlink to service", iaAipFrontendUrl)
+            .containsEntry("direction due date", expectedDirectionDueDate)
+            .containsEntry("customerServicesTelephone", customerServicesTelephone)
+            .containsEntry("customerServicesEmail", customerServicesEmail);
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_only_mandatory_information_given(YesOrNo isAda) {
 
         initializePrefixes(appellantRequestClarifyingQuestionsSubmissionPersonalisationEmail);
@@ -164,13 +166,14 @@ class AppellantRequestClarifyingQuestionsPersonalisationEmailTest {
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-        assertEquals("", personalisation.get("Appeal Ref Number"));
-        assertEquals("", personalisation.get("HO Ref Number"));
-        assertEquals("", personalisation.get("Given names"));
-        assertEquals("", personalisation.get("Family name"));
-        assertEquals(customerServicesTelephone, personalisation.get("customerServicesTelephone"));
-        assertEquals(customerServicesEmail, personalisation.get("customerServicesEmail"));
-        assertEquals(iaAipFrontendUrl, personalisation.get("Hyperlink to service"));
-        assertEquals(expectedDirectionDueDate, personalisation.get("direction due date"));
+        assertThat(personalisation)
+            .containsEntry("Appeal Ref Number", "")
+            .containsEntry("HO Ref Number", "")
+            .containsEntry("Given names", "")
+            .containsEntry("Family name", "")
+            .containsEntry("customerServicesTelephone", customerServicesTelephone)
+            .containsEntry("customerServicesEmail", customerServicesEmail)
+            .containsEntry("Hyperlink to service", iaAipFrontendUrl)
+            .containsEntry("direction due date", expectedDirectionDueDate);
     }
 }
