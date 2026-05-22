@@ -28,16 +28,15 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 public class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationLetter implements LetterNotificationPersonalisation {
 
     private static final String REFERENCE_ID_SUFFIX = "_STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER";
-
     private static final String APPEAL_REFERENCE_NUMBER_KEY = "appealReferenceNumber";
     private static final String APPELLANT_GIVEN_NAMES_KEY = "appellantGivenNames";
     private static final String APPELLANT_FAMILY_NAME_KEY = "appellantFamilyName";
     private static final String LINK_TO_SERVICE_KEY = "linkToService";
     private static final String EMPTY_STRING = "";
+
     private final String removeStatutoryTimeframe24WeeksAppellantLetterId;
     private final CustomerServicesProvider customerServicesProvider;
     private final String iaAipFrontendUrl;
-
 
     public AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationLetter(
             @Value("${govnotify.template.completeCaseReviewStatutoryTimeframe24Weeks.appellant.letter}") String removeStatutoryTimeframe24WeeksAppellantLetterId,
@@ -56,9 +55,9 @@ public class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        Set<String> appellantAddressInCountryOrOoc = getAppellantAddressInCountryOrOoc(asylumCase);
-        log.info("Appellant Address {}", appellantAddressInCountryOrOoc);
-        return appellantAddressInCountryOrOoc;
+        Set<String> addresses = getAppellantAddressInCountryOrOoc(asylumCase);
+        log.info("Appellant Address {}", addresses);
+        return addresses;
     }
 
     @Override
@@ -69,32 +68,32 @@ public class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
+
         LocalDate now = LocalDate.now();
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern(D_MMM_YYYY);
+
         String familyName = asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(EMPTY_STRING);
         String givenNames = asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(EMPTY_STRING);
+        String appealRef = asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING);
 
         ImmutableMap.Builder<String, String> builder = ImmutableMap.<String, String>builder()
-
-                .put(APPEAL_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING))
+                .put(APPEAL_REFERENCE_NUMBER_KEY, appealRef)
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
                 .put(APPELLANT_GIVEN_NAMES_KEY, givenNames)
                 .put(APPELLANT_FAMILY_NAME_KEY, familyName)
-                .put("appellantFullName", givenNames + " " + familyName)
+                .put("appellantFullName", (givenNames + " " + familyName).trim())
                 .put("appealReceivedDate", AsylumCaseUtils.getAppealReceivedDate(asylumCase))
                 .put("decisionSentDate", AsylumCaseUtils.getHomeOfficeDecisionDate(asylumCase))
                 .put("24WeeksDeadline", AsylumCaseUtils.populateStatutoryTimeFrame24wDate(asylumCase))
-                .put("practiceDirection", now.format(DateTimeFormatter.ofPattern(D_MMM_YYYY)))
-                .put("14DaysFromDateOfDirection", now.plusDays(DAYS_14).format(DateTimeFormatter.ofPattern(D_MMM_YYYY)))
-                .put("42DaysFromDateOfDirection", now.plusDays(DAYS_42).format(DateTimeFormatter.ofPattern(D_MMM_YYYY)))
-                .put("56DaysFromDateOfDirection", now.plusDays(DAYS_56).format(DateTimeFormatter.ofPattern(D_MMM_YYYY)))
+                .put("practiceDirection", now.format(dtf))
+                .put("14DaysFromDateOfDirection", now.plusDays(DAYS_14).format(dtf))
+                .put("42DaysFromDateOfDirection", now.plusDays(DAYS_42).format(dtf))
+                .put("56DaysFromDateOfDirection", now.plusDays(DAYS_56).format(dtf))
                 .put(LINK_TO_SERVICE_KEY, iaAipFrontendUrl);
 
+        // populate address fields used for the 24 weeks letter
         buildAddressFor24WeeksLetter(asylumCase, builder);
 
         return builder.build();
     }
-
-
-
-
 }
