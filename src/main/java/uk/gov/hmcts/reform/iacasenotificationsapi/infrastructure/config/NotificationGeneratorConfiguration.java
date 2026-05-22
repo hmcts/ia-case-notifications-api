@@ -5054,7 +5054,7 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("completeCaseReview24WeeksAppellantLetterNotificationGenerator")
     public List<NotificationGenerator> completeCaseReview24WeeksAppellantLetterNotificationGenerator(
-            AppellantCompleteCaseReview24WeeksLetterPersonalisation appellantCompleteCaseReview24WeeksLetterPersonalisation,
+            AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationLetter appellantCompleteCaseReview24WeeksLetterPersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
