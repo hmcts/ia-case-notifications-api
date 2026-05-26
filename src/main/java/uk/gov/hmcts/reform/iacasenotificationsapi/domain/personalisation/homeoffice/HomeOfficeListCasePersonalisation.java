@@ -104,7 +104,7 @@ public class HomeOfficeListCasePersonalisation implements EmailNotificationPerso
                         .format(DateTimeFormatter.ofPattern("dd MMMM yyyy")));
         }
 
-        PersonalisationProvider.buildHearingRequirementsFields(asylumCase, listCaseFields);
+        listCaseFields.putAll(PersonalisationProvider.getHearingRequirementsFields(asylumCase));
 
         return listCaseFields.build();
     }

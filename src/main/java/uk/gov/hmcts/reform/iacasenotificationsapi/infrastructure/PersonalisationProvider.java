@@ -107,18 +107,16 @@ public class PersonalisationProvider {
             .put("hearingCentreName", hearingDetailsFinder.getHearingCentreName(asylumCase))
             .put(HEARING_CENTRE_ADDRESS_CONST, hearingDetailsFinder.getHearingCentreLocation(asylumCase));
 
-        buildHearingRequirementsFields(asylumCase, caseListingValues);
+        caseListingValues.putAll(getHearingRequirementsFields(asylumCase));
 
         return caseListingValues.build();
     }
 
-    public static void buildHearingRequirementsFields(AsylumCase asylumCase, Builder<String, String> caseListingValues) {
-
+    public static Map<String, String> getHearingRequirementsFields(AsylumCase asylumCase) {
         final Optional<YesOrNo> isSubmitRequirementsAvailable = asylumCase.read(SUBMIT_HEARING_REQUIREMENTS_AVAILABLE);
 
         if (isSubmitRequirementsAvailable.isPresent() && isSubmitRequirementsAvailable.get() == YesOrNo.YES) {
-
-            caseListingValues
+            return ImmutableMap.<String, String>builder()
                 .put("hearingRequirementVulnerabilities", generateAdjustmentOutput(asylumCase,
                     VULNERABILITIES_DECISION_FOR_DISPLAY,
                     VULNERABILITIES_TRIBUNAL_RESPONSE,
@@ -140,24 +138,23 @@ public class PersonalisationProvider {
                     ADDITIONAL_TRIBUNAL_RESPONSE,
                     "No other adjustments are being made"))
                 .put("remoteVideoCallTribunalResponse", readStringCaseField(asylumCase, REMOTE_VIDEO_CALL_TRIBUNAL_RESPONSE,
-                    ""));
-
+                    ""))
+                .build();
         } else {
-
-            caseListingValues
-                    .put("hearingRequirementVulnerabilities", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_VULNERABILITIES,
-                        "No special adjustments are being made to accommodate vulnerabilities"))
-                    .put("hearingRequirementMultimedia", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_MULTIMEDIA,
-                        "No multimedia equipment is being provided"))
-                    .put("hearingRequirementSingleSexCourt", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_SINGLE_SEX_COURT,
-                        "The court will not be single sex"))
-                    .put("hearingRequirementInCameraCourt", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_IN_CAMERA_COURT,
-                        "The hearing will be held in public court"))
-                    .put("hearingRequirementOther", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_OTHER,
-                        "No other adjustments are being made"))
-                    .put("remoteVideoCallTribunalResponse", readStringCaseField(asylumCase, REMOTE_VIDEO_CALL_TRIBUNAL_RESPONSE,
-                        ""));
-
+            return ImmutableMap.<String, String>builder()
+                .put("hearingRequirementVulnerabilities", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_VULNERABILITIES,
+                    "No special adjustments are being made to accommodate vulnerabilities"))
+                .put("hearingRequirementMultimedia", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_MULTIMEDIA,
+                    "No multimedia equipment is being provided"))
+                .put("hearingRequirementSingleSexCourt", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_SINGLE_SEX_COURT,
+                    "The court will not be single sex"))
+                .put("hearingRequirementInCameraCourt", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_IN_CAMERA_COURT,
+                    "The hearing will be held in public court"))
+                .put("hearingRequirementOther", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_OTHER,
+                    "No other adjustments are being made"))
+                .put("remoteVideoCallTribunalResponse", readStringCaseField(asylumCase, REMOTE_VIDEO_CALL_TRIBUNAL_RESPONSE,
+                    ""))
+                .build();
         }
     }
 
