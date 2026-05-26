@@ -1,6 +1,5 @@
 {
   "description": "RIA-3366 Notification of admin officer uploaded addendum evidence",
-  "launchDarklyKey": "tcw-application-notifications-feature:true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",

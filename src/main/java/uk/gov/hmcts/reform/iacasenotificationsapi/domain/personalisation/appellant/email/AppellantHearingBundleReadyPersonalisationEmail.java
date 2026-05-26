@@ -5,7 +5,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
 import com.google.common.collect.ImmutableMap;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,7 +13,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
@@ -25,7 +23,6 @@ public class AppellantHearingBundleReadyPersonalisationEmail implements EmailNot
     private final RecipientsFinder recipientsFinder;
     private final CustomerServicesProvider customerServicesProvider;
     private final String iaAipFrontendUrl;
-    private final FeatureToggler featureToggler;
 
     @Value("${govnotify.emailPrefix.ada}")
     private String adaPrefix;
@@ -36,14 +33,12 @@ public class AppellantHearingBundleReadyPersonalisationEmail implements EmailNot
         @Value("${govnotify.template.hearingBundleReady.appellant.email}") String appellantHearingBundleReadyTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         CustomerServicesProvider customerServicesProvider,
-        RecipientsFinder recipientsFinder,
-        FeatureToggler featureToggler
+        RecipientsFinder recipientsFinder
     ) {
         this.appellantHearingBundleReadyTemplateId = appellantHearingBundleReadyTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.customerServicesProvider = customerServicesProvider;
         this.recipientsFinder = recipientsFinder;
-        this.featureToggler = featureToggler;
     }
 
     @Override
@@ -53,9 +48,7 @@ public class AppellantHearingBundleReadyPersonalisationEmail implements EmailNot
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        return featureToggler.getValue("aip-hearing-bundle-feature", false)
-            ? recipientsFinder.findAll(asylumCase, NotificationType.EMAIL)
-            : Collections.emptySet();
+        return recipientsFinder.findAll(asylumCase, NotificationType.EMAIL);
     }
 
     @Override
