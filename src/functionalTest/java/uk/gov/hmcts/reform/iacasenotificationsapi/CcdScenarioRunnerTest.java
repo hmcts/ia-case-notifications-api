@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.RetryableException;
@@ -200,48 +201,42 @@ public class CcdScenarioRunnerTest {
                                                      int expectedStatus,
                                                      long testCaseId,
                                                      Map<String, Object> expectedResponse) throws IOException {
-        int maxRetries = 3;
         assumeFalse(filename.startsWith("Disabled:"), "Test marked as disabled");
-        for (int i = 0; i < maxRetries; i++) {
-            try {
-                actualResponse = null;
-                String actualResponseBody =
-                    SerenityRest
-                        .given()
-                        .headers(authorizationHeaders)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .body(requestBody)
-                        .when()
-                        .post(requestUri)
-                        .then()
-                        .log().ifError()
-                        .log().ifValidationFails()
-                        .statusCode(expectedStatus)
-                        .and()
-                        .extract()
-                        .body()
-                        .asString();
+        try {
+            actualResponse = null;
+            String actualResponseBody =
+                SerenityRest
+                    .given()
+                    .headers(authorizationHeaders)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(requestBody)
+                    .when()
+                    .post(requestUri)
+                    .then()
+                    .log().ifError()
+                    .log().ifValidationFails()
+                    .statusCode(expectedStatus)
+                    .and()
+                    .extract()
+                    .body()
+                    .asString();
 
-                actualResponse = MapSerializer.deserialize(actualResponseBody);
-                verifiers.forEach(verifier -> verifier.verify(
-                        filename,
-                        testCaseId,
-                        scenario,
-                        expectedResponse,
-                        actualResponse
-                    )
-                );
-                break;
-            } catch (Error | RetryableException | NullPointerException e) {
-                System.out.println("Scenario failed with error " + e.getMessage());
-                if (actualResponse != null) {
-                    System.out.println("actualResponse: " + objectMapper.writeValueAsString(actualResponse));
-                    System.out.println("expectedResponse: " + objectMapper.writeValueAsString(expectedResponse));
-                }
-                if (i == maxRetries - 1) {
-                    throw e;
-                }
+            actualResponse = MapSerializer.deserialize(actualResponseBody);
+            verifiers.forEach(verifier -> verifier.verify(
+                    filename,
+                    testCaseId,
+                    scenario,
+                    expectedResponse,
+                    actualResponse
+                )
+            );
+        } catch (Error | RetryableException | NullPointerException e) {
+            System.out.println("Scenario failed with error " + e.getMessage());
+            if (actualResponse != null) {
+                System.out.println("actualResponse: " + objectMapper.writeValueAsString(actualResponse));
+                System.out.println("expectedResponse: " + objectMapper.writeValueAsString(expectedResponse));
             }
+            throw e;
         }
     }
 
