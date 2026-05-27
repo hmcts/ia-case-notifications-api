@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import java.io.IOException;
@@ -74,7 +75,6 @@ public class CcdScenarioRunnerTest {
     @Autowired
     private LaunchDarklyFunctionalTestClient launchDarklyFunctionalTestClient;
 
-    private Map<String, Object> actualResponse = null;
     private final Map<String, Headers> authHeaders = new HashMap<>();
     private final Map<String, String> scenarioSources = new HashMap<>();
 
@@ -202,8 +202,8 @@ public class CcdScenarioRunnerTest {
                                                      long testCaseId,
                                                      Map<String, Object> expectedResponse) throws IOException {
         assumeFalse(filename.startsWith("Disabled:"), "Test marked as disabled");
+        Map<String, Object> responseForError = null;
         try {
-            actualResponse = null;
             String actualResponseBody =
                 SerenityRest
                     .given()
@@ -221,7 +221,9 @@ public class CcdScenarioRunnerTest {
                     .body()
                     .asString();
 
-            actualResponse = MapSerializer.deserialize(actualResponseBody);
+            Map<String, Object> actualResponse = MapSerializer.deserialize(actualResponseBody);
+            responseForError = actualResponse;
+            assertNotNull(actualResponse);
             verifiers.forEach(verifier -> verifier.verify(
                     filename,
                     testCaseId,
@@ -232,8 +234,8 @@ public class CcdScenarioRunnerTest {
             );
         } catch (Error | RetryableException | NullPointerException e) {
             System.out.println("Scenario failed with error " + e.getMessage());
-            if (actualResponse != null) {
-                System.out.println("actualResponse: " + objectMapper.writeValueAsString(actualResponse));
+            if (responseForError != null) {
+                System.out.println("actualResponse: " + objectMapper.writeValueAsString(responseForError));
                 System.out.println("expectedResponse: " + objectMapper.writeValueAsString(expectedResponse));
             }
             throw e;

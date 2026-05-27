@@ -41,7 +41,6 @@
       "replacements": {
         "listCaseHearingCentre": "taylorHouse",
         "ariaListingReference": "LP/12345/2019",
-        "currentCaseStateVisibleToHomeOfficeAll": "preHearing",
         "directions": [
           {
             "id": "1",
