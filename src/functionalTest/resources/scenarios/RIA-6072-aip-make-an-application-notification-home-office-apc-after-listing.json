@@ -1,6 +1,5 @@
 {
   "description": "RIA-6072 Send make an application notification home office APC after listing (AIP)",
-  "launchDarklyKey": "tcw-application-notifications-feature:true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "HomeOfficePOU",

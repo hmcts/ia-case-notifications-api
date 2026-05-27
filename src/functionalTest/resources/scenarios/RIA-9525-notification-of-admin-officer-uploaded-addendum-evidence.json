@@ -1,6 +1,5 @@
 {
   "description": "RIA-9525 Notification of admin officer uploaded addendum evidence for admin and represented cases",
-  "launchDarklyKey": "tcw-application-notifications-feature:true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",

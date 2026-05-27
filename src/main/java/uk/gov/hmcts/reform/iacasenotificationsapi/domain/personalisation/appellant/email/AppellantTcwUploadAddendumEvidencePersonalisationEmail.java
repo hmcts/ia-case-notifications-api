@@ -5,7 +5,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
 import com.google.common.collect.ImmutableMap;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,7 +13,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
@@ -23,7 +21,6 @@ public class AppellantTcwUploadAddendumEvidencePersonalisationEmail implements E
 
     private final String templateId;
     private final String directLinkToNewEvidencePage;
-    private FeatureToggler featureToggler;
     private final RecipientsFinder recipientsFinder;
     private final CustomerServicesProvider customerServicesProvider;
 
@@ -36,14 +33,12 @@ public class AppellantTcwUploadAddendumEvidencePersonalisationEmail implements E
             @Value("${govnotify.template.hoOrTcwUploadedAddendumEvidence.appellant.email}") String templateId,
             @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
             RecipientsFinder recipientsFinder,
-            CustomerServicesProvider customerServicesProvider,
-            FeatureToggler featureToggler
+            CustomerServicesProvider customerServicesProvider
     ) {
         this.templateId = templateId;
         this.directLinkToNewEvidencePage = iaAipFrontendUrl + "new-evidence";
         this.recipientsFinder = recipientsFinder;
         this.customerServicesProvider = customerServicesProvider;
-        this.featureToggler = featureToggler;
     }
 
     @Override
@@ -55,9 +50,7 @@ public class AppellantTcwUploadAddendumEvidencePersonalisationEmail implements E
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
 
-        return featureToggler.getValue("aip-upload-addendum-evidence-feature", false)
-                ? recipientsFinder.findAll(asylumCase, NotificationType.EMAIL)
-                : Collections.emptySet();
+        return recipientsFinder.findAll(asylumCase, NotificationType.EMAIL);
     }
 
     @Override

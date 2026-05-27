@@ -1,6 +1,5 @@
 {
   "description": "RIA-5808 AIP Home Office Upload Addendum Evidence notification",
-  "launchDarklyKey": "aip-upload-addendum-evidence-feature:true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "HomeOfficeLart",
