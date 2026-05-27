@@ -165,8 +165,6 @@ def secrets = [
         secret('ia-redis-connection-string', 'IA_REDIS_CONNECTION_STRING'),
         secret('ia-redis-encryption-key', 'IA_REDIS_ENCRYPTION_KEY'),
 
-        secret('temp-sonar-token', 'SONAR_TOKEN'),
-
         secret('det-irc-brookhouse-email', 'IA_DET_IRC_BROOKHOUSE_EMAIL'),
         secret('det-irc-campsfieldhouse-email', 'IA_DET_IRC_CAMPSFIELDHOUSE_EMAIL'),
         secret('det-irc-colnbrook-email', 'IA_DET_IRC_COLNBROOK_EMAIL'),
