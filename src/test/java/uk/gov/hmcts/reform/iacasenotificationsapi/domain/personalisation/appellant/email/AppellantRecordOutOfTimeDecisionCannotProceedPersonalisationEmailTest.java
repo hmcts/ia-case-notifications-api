@@ -74,8 +74,6 @@ class AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationEmailTest {
 
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         Map<String, String> personalisation =
             appellantRecordOutOfTimeDecisionCannotProceedPersonalisationEmail.getPersonalisation(asylumCase);
@@ -87,8 +85,6 @@ class AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationEmailTest {
             .containsEntry("appellantFamilyName", appellantFamilyName)
             .containsEntry("Hyperlink to service", iaAipFrontendUrl)
             .containsEntry("direct link to judges’ review page", directLinkToJudgesReviewPage);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
@@ -107,8 +103,6 @@ class AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationEmailTest {
 
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         Map<String, String> personalisation =
             appellantRecordOutOfTimeDecisionCannotProceedPersonalisationEmail.getPersonalisation(asylumCase);
@@ -120,8 +114,6 @@ class AppellantRecordOutOfTimeDecisionCannotProceedPersonalisationEmailTest {
             .containsEntry("appellantFamilyName", appellantFamilyName)
             .containsEntry("Hyperlink to service", iaAipFrontendUrl)
             .containsEntry("direct link to judges’ review page", directLinkToJudgesReviewPage);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));

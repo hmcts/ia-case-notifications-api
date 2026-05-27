@@ -72,7 +72,7 @@ public class HomeOfficeRemoveDetentionStatusPersonalisation implements EmailNoti
                 .orElse("");
         return ImmutableMap
                 .<String, String>builder()
-                .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+                .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
                 .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("homeOfficeReferenceNumber", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))

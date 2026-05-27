@@ -75,7 +75,7 @@ public class LegalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPerso
         LocalDate now = LocalDate.now();
         return ImmutableMap.<String, String>builder()
                 .put(SUBJECT_PREFIX_KEY, nonAdaPrefix)
-                .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+                .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
                 .put(HOME_OFFICE_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
                 .put(APPEAL_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING))
                 .put(LEGAL_REP_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING))

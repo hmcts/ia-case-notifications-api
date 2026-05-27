@@ -60,7 +60,7 @@ public class LegalRepresentativeAppealSubmittedPersonalisation implements LegalR
 
         return ImmutableMap
             .<String, String>builder()
-            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
             .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .put("legalRepReferenceNumber", asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))

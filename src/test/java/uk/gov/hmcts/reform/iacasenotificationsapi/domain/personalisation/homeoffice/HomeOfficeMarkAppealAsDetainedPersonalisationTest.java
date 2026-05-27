@@ -57,8 +57,6 @@ public class HomeOfficeMarkAppealAsDetainedPersonalisationTest {
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeRefNumber));
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         homeOfficeMarkAppealAsDetainedPersonalisation = new HomeOfficeMarkAppealAsDetainedPersonalisation(
             markAppealAsDetainedTemplateId,
@@ -162,8 +160,6 @@ public class HomeOfficeMarkAppealAsDetainedPersonalisationTest {
             .containsEntry("appellantGivenNames", appellantGivenNames)
             .containsEntry("appellantFamilyName", appellantFamilyName)
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
     }
 
@@ -186,7 +182,5 @@ public class HomeOfficeMarkAppealAsDetainedPersonalisationTest {
             .containsEntry("appellantGivenNames", "")
             .containsEntry("appellantFamilyName", "")
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 }

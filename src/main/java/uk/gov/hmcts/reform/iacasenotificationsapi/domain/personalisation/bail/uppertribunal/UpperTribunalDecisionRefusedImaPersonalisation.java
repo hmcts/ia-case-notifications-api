@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.uppertribunal;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ApplicationDecision.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.RECORD_DECISION_TYPE;
 
 import com.google.common.collect.ImmutableMap;
@@ -14,25 +13,21 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.RequiredFieldMissingException;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.BailEmailNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 @Service
 public class UpperTribunalDecisionRefusedImaPersonalisation implements BailEmailNotificationPersonalisation {
 
     private final String upperTribunalDecisionRefusedImaTemplateId;
-    private final CustomerServicesProvider customerServicesProvider;
     private final String bailUpperTribunalEmailAddress;
 
     public UpperTribunalDecisionRefusedImaPersonalisation(
         @NotNull(message = "homeOfficeBailApplicationSubmittedPersonalisationTemplateId cannot be null")
         @Value("${govnotify.bail.template.decisionRefusedIma.email}") String upperTribunalDecisionRefusedImaTemplateId,
-        @Value("${bailUpperTribunalEmailAddress}") String bailUpperTribunalEmailAddress,
-        CustomerServicesProvider customerServicesProvider
+        @Value("${bailUpperTribunalEmailAddress}") String bailUpperTribunalEmailAddress
 
     ) {
         this.upperTribunalDecisionRefusedImaTemplateId = upperTribunalDecisionRefusedImaTemplateId;
         this.bailUpperTribunalEmailAddress = bailUpperTribunalEmailAddress;
-        this.customerServicesProvider =  customerServicesProvider;
     }
 
     @Override
@@ -73,7 +68,6 @@ public class UpperTribunalDecisionRefusedImaPersonalisation implements BailEmail
             .put("applicantGivenNames", bailCase.read(BailCaseFieldDefinition.APPLICANT_GIVEN_NAMES, String.class).orElse(""))
             .put("applicantFamilyName", bailCase.read(BailCaseFieldDefinition.APPLICANT_FAMILY_NAME, String.class).orElse(""))
             .put("homeOfficeReferenceNumber", bailCase.read(BailCaseFieldDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
-            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
             .build();
     }
 }

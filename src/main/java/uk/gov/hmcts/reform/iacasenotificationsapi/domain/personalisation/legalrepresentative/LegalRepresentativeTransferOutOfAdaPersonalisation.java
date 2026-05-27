@@ -53,7 +53,7 @@ public class LegalRepresentativeTransferOutOfAdaPersonalisation implements Legal
 
         return ImmutableMap
                 .<String, String>builder()
-                .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+                .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
                 .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("ariaListingReference", asylumCase.read(AsylumCaseDefinition.ARIA_LISTING_REFERENCE, String.class).orElse(""))
                 .put("legalRepReferenceNumber", asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))

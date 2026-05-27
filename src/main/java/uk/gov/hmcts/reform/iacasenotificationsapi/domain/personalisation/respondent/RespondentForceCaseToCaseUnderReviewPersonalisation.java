@@ -63,7 +63,7 @@ public class RespondentForceCaseToCaseUnderReviewPersonalisation implements Emai
             .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
             .put("linkToOnlineService", iaExUiFrontendUrl)
-            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .build();
     }
 }

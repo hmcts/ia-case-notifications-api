@@ -89,7 +89,7 @@ public class LegalRepresentativeUpdateDetentionLocationPersonalisation implement
 
         return ImmutableMap
                 .<String, String>builder()
-                .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+                .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
                 .putAll(personalisationProvider.getLegalRepHeaderPersonalisation(asylumCase))
                 .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
                 .put("oldDetentionLocation", oldDetentionLocation)

@@ -62,7 +62,7 @@ public class LegalRepresentativeMarkAsReadyForUtTransferPersonalisation implemen
             .<String, String>builder()
             .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
             .putAll(personalisationProvider.getLegalRepHeaderPersonalisation(asylumCase))
-            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .put("utAppealReferenceNumber", asylumCase.read(AsylumCaseDefinition.UT_APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .put("linkToOnlineService", iaExUiFrontendUrl)
             .build();

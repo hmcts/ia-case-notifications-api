@@ -95,7 +95,7 @@ public class HomeOfficeMarkAppealReadyForUtTransferPersonalisation implements Em
                 .<String, String>builder()
                 .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
                 .put("utAppealReferenceNumber", asylumCase.read(AsylumCaseDefinition.UT_APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-                .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+                .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
                 .putAll(personalisationProvider.getRespondentHeaderPersonalisation(asylumCase))
                 .put("linkToOnlineService", iaExUiFrontendUrl)
                 .build();

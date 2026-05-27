@@ -72,9 +72,7 @@ public class LegalRepresentativeRequestCaseBuildingPersonalisationTest {
             .thenReturn(Optional.of(legalRepEmailAddress));
 
         String customerServicesTelephone = "555 555 555";
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         String customerServicesEmail = "customer.services@example.com";
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         legalRepresentativeRequestCaseBuildingPersonalisation =
             new LegalRepresentativeRequestCaseBuildingPersonalisation(
@@ -133,7 +131,7 @@ public class LegalRepresentativeRequestCaseBuildingPersonalisationTest {
             legalRepresentativeRequestCaseBuildingPersonalisation.getPersonalisation(asylumCase);
 
         assertThat(personalisation)
-            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation())
+            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .containsEntry("legalRepReferenceNumber", legalRepRefNumber)
             .containsEntry("dueDate", "10 Sep 2019")
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl)

@@ -81,9 +81,6 @@ class AdditionalEvidenceSubmittedOtherPartyNotificationPersonalisationTest {
         additionalEvidenceSubmittedHoPersonalisationTemplate.put("appellantGivenNames", appellantGivenNames);
         additionalEvidenceSubmittedHoPersonalisationTemplate.put("appellantFamilyName", appellantFamilyName);
         additionalEvidenceSubmittedHoPersonalisationTemplate.put("appealReferenceNumber", appealReferenceNumber);
-
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
         when(personalisationProvider.getApplyForCostsPersonalisation(asylumCase)).thenReturn(additionalEvidenceSubmittedHoPersonalisationTemplate);
         when(emailAddressFinder.getLegalRepEmailAddress(asylumCase)).thenReturn(legalRepEmailAddress);
         String homeOfficeReferenceNumber = "A1234567/001";
@@ -144,8 +141,6 @@ class AdditionalEvidenceSubmittedOtherPartyNotificationPersonalisationTest {
             .containsEntry("appellantGivenNames", appellantGivenNames)
             .containsEntry("appellantFamilyName", appellantFamilyName)
             .containsEntry("applicationId", applyForCostsList.getFirst().getId());
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
         if (applyForCostsList.getFirst().getValue().getLoggedUserRole().equals("Home office")) {
             String expectedAriaReferenceNumber = "\nListing reference: ariaReferenceNumber";

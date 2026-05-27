@@ -111,7 +111,7 @@ public class HomeOfficeEditListingNoChangePersonalisationTest {
 
         assertFalse(personalisation.isEmpty());
         assertThat(personalisation)
-            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation())
+            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .containsAllEntriesOf(personalisationProvider.getPersonalisation(callback))
             .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal"
                 : "Immigration and Asylum appeal");

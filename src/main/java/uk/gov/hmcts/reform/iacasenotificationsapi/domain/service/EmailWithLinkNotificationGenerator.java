@@ -4,11 +4,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.ApplicationContextProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailWithLinkNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.GovNotifyNotificationSender;
 
 public class EmailWithLinkNotificationGenerator implements NotificationGenerator {
@@ -31,9 +29,6 @@ public class EmailWithLinkNotificationGenerator implements NotificationGenerator
     public void generate(Callback<AsylumCase> callback) {
 
         final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-        ApplicationContextProvider.getApplicationContext().getBean(CustomerServicesProvider.class)
-            .setCorrectEmail(asylumCase);
 
         personalisationList.forEach(personalisation -> {
             String referenceId = personalisation.getReferenceId(callback.getCaseDetails().getId());

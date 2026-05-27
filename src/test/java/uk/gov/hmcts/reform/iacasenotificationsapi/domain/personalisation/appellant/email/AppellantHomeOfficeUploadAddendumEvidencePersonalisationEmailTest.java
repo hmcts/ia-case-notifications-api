@@ -64,9 +64,6 @@ class AppellantHomeOfficeUploadAddendumEvidencePersonalisationEmailTest {
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(ariaListingReference));
 
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
-
         appellantHomeOfficeUploadAddendumEvidencePersonalisationEmail =
                 new AppellantHomeOfficeUploadAddendumEvidencePersonalisationEmail(
                         templateId,
@@ -160,8 +157,6 @@ class AppellantHomeOfficeUploadAddendumEvidencePersonalisationEmailTest {
             .containsEntry("ariaListingReference", "")
             .containsEntry("appellantGivenNames", "")
             .containsEntry("appellantFamilyName", "");
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));

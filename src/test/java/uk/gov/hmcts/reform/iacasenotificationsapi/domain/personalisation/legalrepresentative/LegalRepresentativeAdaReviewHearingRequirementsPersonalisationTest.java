@@ -111,9 +111,6 @@ public class LegalRepresentativeAdaReviewHearingRequirementsPersonalisationTest 
         when(stringProvider.get("hearingCentreAddress", hearingCentre.toString()))
             .thenReturn(Optional.of(hearingCentreAddress));
         when(dateTimeExtractor.extractHearingDate(hearingDateTime)).thenReturn(hearingDate);
-
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
         when(hearingDetailsFinder.getHearingCentreLocation(asylumCase)).thenReturn(hearingCentreAddress);
 
         legalRepresentativeAdaReviewHearingRequirementsPersonalisation = new LegalRepresentativeAdaReviewHearingRequirementsPersonalisation(
@@ -200,8 +197,6 @@ public class LegalRepresentativeAdaReviewHearingRequirementsPersonalisationTest 
             .containsEntry("hearingRequirementOther", caseOfficerReviewedOther)
             .containsEntry("hearingDate", hearingDate)
             .containsEntry("hearingCentreAddress", hearingCentreAddress);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
@@ -245,8 +240,6 @@ public class LegalRepresentativeAdaReviewHearingRequirementsPersonalisationTest 
             .containsEntry("hearingRequirementOther", "No other adjustments are being made")
             .containsEntry("hearingDate", hearingDate)
             .containsEntry("hearingCentreAddress", hearingCentreAddress);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));

@@ -53,9 +53,7 @@ public class LegalRepresentativeFtpaApplicationDecidedRule31Rule32Personalisatio
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class))
             .thenReturn(Optional.of(legalRepEmailAddress));
         String customerServicesTelephone = "555 555 555";
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         String customerServicesEmail = "cust.services@example.com";
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         legalRepPersonalisation = new LegalRepresentativeFtpaApplicationDecidedRule31Rule32Personalisation(
             templateId,
@@ -110,7 +108,7 @@ public class LegalRepresentativeFtpaApplicationDecidedRule31Rule32Personalisatio
 
         assertFalse(personalisation.isEmpty());
         assertThat(personalisation)
-            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation())
+            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .containsEntry("homeOfficeReferenceNumber", "someHomeOfficeReferenceNumber")
             .containsEntry("appealReferenceNumber", appealReferenceNumber)
             .containsEntry("appellantGivenNames", appellantGivenNames)
@@ -136,7 +134,7 @@ public class LegalRepresentativeFtpaApplicationDecidedRule31Rule32Personalisatio
             }
         });
         assertThat(personalisation)
-            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation())
+            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
     }
 }

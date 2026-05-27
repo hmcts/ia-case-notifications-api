@@ -82,9 +82,6 @@ class RespondToCostsRespondentPersonalisationTest {
         respondToCostsRespondentPersonalisationTemplate.put("appellantFamilyName", appellantFamilyName);
         respondToCostsRespondentPersonalisationTemplate.put("appealReferenceNumber", appealReferenceNumber);
         respondToCostsRespondentPersonalisationTemplate.put("linkToOnlineService", iaExUiFrontendUrl);
-
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
         when(personalisationProvider.getApplyForCostsPersonalisation(asylumCase)).thenReturn(respondToCostsRespondentPersonalisationTemplate);
         when(emailAddressFinder.getLegalRepEmailAddress(asylumCase)).thenReturn(legalRepEmailAddress);
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
@@ -150,8 +147,6 @@ class RespondToCostsRespondentPersonalisationTest {
             .containsEntry("appellantGivenNames", appellantGivenNames)
             .containsEntry("appellantFamilyName", appellantFamilyName)
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
         if (applyForCostsList.getFirst().getValue().getApplyForCostsApplicantType().equals("Home office")) {
             assertThat(personalisation)

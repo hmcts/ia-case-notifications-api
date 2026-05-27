@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
@@ -80,7 +81,7 @@ class AppellantRequestClarifyingQuestionsPersonalisationEmailTest {
             customerServicesProvider
         );
 
-        when(customerServicesProvider.getCustomerServicesPersonalisation()).thenReturn(ImmutableMap
+        when(customerServicesProvider.getCustomerServicesPersonalisation(any(AsylumCase.class))).thenReturn(ImmutableMap
             .<String, String>builder()
             .put("customerServicesTelephone", customerServicesTelephone)
             .put("customerServicesEmail", customerServicesEmail).build());

@@ -72,7 +72,7 @@ public class RespondentTurnOnNotificationsPersonalisation implements EmailNotifi
 
         final ImmutableMap.Builder<String, String> listCaseFields = ImmutableMap
             .<String, String>builder()
-            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation(callback))
             .put("subjectPrefix", "Immigration and Asylum appeal")
             .put("linkToOnlineService", iaExUiFrontendUrl)
             .put("upperTribunalReferenceNumber", callback.getCaseDetails().getCaseData().read(AsylumCaseDefinition.UPPER_TRIBUNAL_REFERENCE_NUMBER, String.class).orElse(""))

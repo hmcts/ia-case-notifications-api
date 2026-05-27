@@ -81,9 +81,6 @@ class DecideCostsLegalRepPersonalisationTest {
         decideCostsRespondentAndApplicantPersonalisationTemplate.put("appellantGivenNames", appellantGivenNames);
         decideCostsRespondentAndApplicantPersonalisationTemplate.put("appellantFamilyName", appellantFamilyName);
         decideCostsRespondentAndApplicantPersonalisationTemplate.put("appealReferenceNumber", appealReferenceNumber);
-
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
         when(personalisationProvider.getApplyForCostsPersonalisation(asylumCase)).thenReturn(decideCostsRespondentAndApplicantPersonalisationTemplate);
         when(emailAddressFinder.getLegalRepEmailAddress(asylumCase)).thenReturn(legalRepEmailAddress);
         String homeOfficeReferenceNumber = "A1234567/001";
@@ -135,8 +132,6 @@ class DecideCostsLegalRepPersonalisationTest {
             .containsEntry("appellantGivenNames", appellantGivenNames)
             .containsEntry("appellantFamilyName", appellantFamilyName)
             .containsEntry("applicationId", applyForCostsList.getFirst().getId());
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         String expectedAriaReferenceNumber = "\nListing reference: ariaRefNumber";
         assertThat(personalisation)
             .containsEntry("costsDecisionType", "someCostsDecisionType")

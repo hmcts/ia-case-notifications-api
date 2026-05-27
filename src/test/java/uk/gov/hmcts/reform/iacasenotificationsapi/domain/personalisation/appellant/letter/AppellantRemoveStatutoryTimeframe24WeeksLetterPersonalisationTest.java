@@ -22,6 +22,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -64,7 +65,7 @@ class AppellantRemoveStatutoryTimeframe24WeeksLetterPersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.COMPLETE_CASE_REVIEW_DATE, String.class))
             .thenReturn(Optional.of(LocalDate.of(1990, 5, 15).toString()));
 
-        when(customerServicesProvider.getCustomerServicesPersonalisation())
+        when(customerServicesProvider.getCustomerServicesPersonalisation(any(AsylumCase.class)))
             .thenReturn(ImmutableMap.of("customerServices", "value"));
 
     }

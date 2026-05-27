@@ -78,9 +78,6 @@ class DecideCostsHomeOfficePersonalisationTest {
         Map<String, String> appellantCredentialsMap = new HashMap<>();
         appellantCredentialsMap.put("appellantGivenNames", appellantGivenNames);
         appellantCredentialsMap.put("appellantFamilyName", appellantFamilyName);
-
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
         when(personalisationProvider.getAppellantCredentials(asylumCase)).thenReturn(appellantCredentialsMap);
         String legalRepEmailAddress = "legalRepEmailAddress@gmail.com";
         when(emailAddressFinder.getLegalRepEmailAddress(asylumCase)).thenReturn(legalRepEmailAddress);
@@ -133,8 +130,6 @@ class DecideCostsHomeOfficePersonalisationTest {
             .containsEntry("appellantGivenNames", appellantGivenNames)
             .containsEntry("appellantFamilyName", appellantFamilyName)
             .containsEntry("applicationId", applyForCostsList.getFirst().getId());
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals("someCostsDecisionType", personalisation.get("costsDecisionType"));
 
     }

@@ -24,6 +24,7 @@ import java.util.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -57,7 +58,7 @@ class LegalRepresentativeRemoveDetentionStatusLetterPersonalisationTest {
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
 
-        when(customerServicesProvider.getCustomerServicesPersonalisation())
+        when(customerServicesProvider.getCustomerServicesPersonalisation(any(AsylumCase.class)))
             .thenReturn(ImmutableMap.of("customerServices", "value"));
     }
 
