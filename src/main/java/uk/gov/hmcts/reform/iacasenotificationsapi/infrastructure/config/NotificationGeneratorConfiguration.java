@@ -5075,6 +5075,22 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("completeCaseReview24WeeksAppellantSmsNotificationGenerator")
+    public List<NotificationGenerator> completeCaseReview24WeeksAppellantSmsNotificationGenerator(
+            Appellant24WeeksReviewSms appellantEndAppealPersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new SmsNotificationGenerator(
+                        newArrayList(appellantEndAppealPersonalisationSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+
+        );
+    }
+
     @Bean("removeStatutoryTimeframe24WeeksAppellantNotificationGenerator")
     public List<NotificationGenerator> removeStatutoryTimeframe24WeeksAppellantNotificationGenerator(
             AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail appellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail,

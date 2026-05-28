@@ -937,35 +937,6 @@ public class AsylumCaseUtilsTest {
         assertTrue(AsylumCaseUtils.isHearingDetailsUpdated(asylumCase, Optional.of(caseDetailsBefore)));
     }
 
-
-    @Test
-    @SuppressWarnings("unchecked")
-    @MockitoSettings(strictness = Strictness.LENIENT)
-    void has_stf_24_weeks() {
-        AsylumCase asylumCase = mock(AsylumCase.class);
-        Mockito.when(asylumCase.read(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class))
-                .thenReturn(Optional.of(YES));
-        assertTrue(AsylumCaseUtils.hasStf24WeeksStatus(asylumCase));
-    }
-
-    @Test
-    @SuppressWarnings("unchecked")
-    @MockitoSettings(strictness = Strictness.LENIENT)
-    void stf_24_weeks_false() {
-        AsylumCase asylumCase = mock(AsylumCase.class);
-        Mockito.when(asylumCase.read(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class))
-                .thenReturn(Optional.of(NO));
-        assertFalse(AsylumCaseUtils.hasStf24WeeksStatus(asylumCase));
-    }
-
-    @Test
-    @SuppressWarnings("unchecked")
-    @MockitoSettings(strictness = Strictness.LENIENT)
-    void stf_24_weeks_false_if_no_yes_or_no() {
-        AsylumCase asylumCase = mock(AsylumCase.class);
-        assertFalse(AsylumCaseUtils.hasStf24WeeksStatus(asylumCase));
-    }
-
     void setupHearingDataNotUpdated(AsylumCase asylumCase, AsylumCase asylumCaseBefore) {
 
         Mockito.when(asylumCase.read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class))

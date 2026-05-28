@@ -69,6 +69,8 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
     public static final String LR_EMAIL = "legalrep@domain.com";
     public static final String STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL = "STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL";
     public static final String STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER = "STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER";
+    public static final String STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_SMS = "STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_SMS";
+
     public static final String STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL = "STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL";
     public static final String STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL = "STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL";
     private static final String someNotificationId = UUID.randomUUID().toString();
@@ -77,6 +79,10 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
     private static final String REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER = "REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER";
     private static final String REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL = "REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL";
 
+    private static final YesOrNo WANTS_EMAIL = YesOrNo.YES;
+    private static final YesOrNo WANTS_SMS = YesOrNo.YES;
+    private static final YesOrNo DONT_WANTS_SMS = YesOrNo.NO;
+    private static final YesOrNo DONT_WANTS_EMAIL = YesOrNo.NO;
     @MockBean
     private GovNotifyNotificationSender notificationSender;
 
@@ -111,6 +117,28 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
         return Optional.of(Collections.singletonList(new IdValue<>("foo", subscriber)));
     }
 
+    // --- Notification assertion helpers to eliminate duplication ---
+    private static Optional<List<IdValue<String>>> readNotifications(PreSubmitCallbackResponseForTest response) {
+        return response.getData().read(NOTIFICATIONS_SENT);
+    }
+
+    private static void assertNoNotifications(PreSubmitCallbackResponseForTest response) {
+        Optional<List<IdValue<String>>> maybe = readNotifications(response);
+        assertFalse(maybe.isPresent());
+    }
+
+    private static void assertNotificationsContain(PreSubmitCallbackResponseForTest response, int expectedSize, String... expectedIds) {
+        Optional<List<IdValue<String>>> maybe = readNotifications(response);
+        assertTrue(maybe.isPresent());
+        List<IdValue<String>> notifications = maybe.get();
+        assertThat(notifications.size()).isEqualTo(expectedSize);
+
+        String idsString = String.join(",", notifications.stream().map(IdValue::getId).toList());
+        for (String id : expectedIds) {
+            assertThat(idsString).contains(id);
+        }
+    }
+
     private PreSubmitCallbackResponseForTest mockResponse(AsylumCaseForTest caseData, Event event) {
         addServiceAuthStub(server);
         addNotificationEmailStub(server);
@@ -119,6 +147,9 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
                 .thenReturn(someNotificationId);
 
         when(notificationSender.sendLetter(anyString(), anyString(), anyMap(), anyString(), any(Callback.class)))
+                .thenReturn(someNotificationId);
+
+        when(notificationSender.sendSms(anyString(), anyString(), anyMap(), anyString(), any(Callback.class)))
                 .thenReturn(someNotificationId);
 
         return aboutToSubmit(callback()
@@ -148,28 +179,6 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
         }
     }
 
-    // --- Notification assertion helpers to eliminate duplication ---
-    private static Optional<List<IdValue<String>>> readNotifications(PreSubmitCallbackResponseForTest response) {
-        return response.getData().read(NOTIFICATIONS_SENT);
-    }
-
-    private static void assertNoNotifications(PreSubmitCallbackResponseForTest response) {
-        Optional<List<IdValue<String>>> maybe = readNotifications(response);
-        assertFalse(maybe.isPresent());
-    }
-
-    private static void assertNotificationsContain(PreSubmitCallbackResponseForTest response, int expectedSize, String... expectedIds) {
-        Optional<List<IdValue<String>>> maybe = readNotifications(response);
-        assertTrue(maybe.isPresent());
-        List<IdValue<String>> notifications = maybe.get();
-        assertThat(notifications.size()).isEqualTo(expectedSize);
-
-        String idsString = String.join(",", notifications.stream().map(IdValue::getId).toList());
-        for (String id : expectedIds) {
-            assertThat(idsString).contains(id);
-        }
-    }
-
     // --- Tests ---
     @Nested
     @DisplayName("REMOVE_STATUTORY_TIMEFRAME_24_WEEKS")
@@ -178,49 +187,49 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
         void should_send_24weeks_remove_email_to_all_three_users() {
-            var response = mockResponse(mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES, YesOrNo.YES, YesOrNo.NO), REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
+            var response = mockResponse(mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES, WANTS_EMAIL, YesOrNo.NO), REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
             assertNotificationsContain(response, 3, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL);
         }
 
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
         void should_send_24weeks_remove_letter_to_appellant_and_legal_rep_and_home_office_when_appellant_emails_are_empty() {
-            var response = mockResponse(mockCaseData(LR_EMAIL, "", "", YesOrNo.YES, YesOrNo.YES, YesOrNo.NO), REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
+            var response = mockResponse(mockCaseData(LR_EMAIL, "", "", YesOrNo.YES, WANTS_EMAIL, YesOrNo.NO), REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
             assertNotificationsContain(response, 3, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER);
         }
 
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
         void should_send_24weeks_remove_email_to_appellant_and_ho_office() {
-            var response = mockResponse(mockCaseData(null, APPELLANT_MAIL, null, YesOrNo.YES, YesOrNo.YES, YesOrNo.NO), REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
+            var response = mockResponse(mockCaseData(null, APPELLANT_MAIL, null, YesOrNo.YES, WANTS_EMAIL, YesOrNo.NO), REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
             assertNotificationsContain(response, 2, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL);
         }
 
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
         void should_send_24weeks_remove_email_to_appellant_with_internal_email_and_ho_office() {
-            var response = mockResponse(mockCaseData(null, null, APPELLANT_MAIL, YesOrNo.YES, YesOrNo.YES, YesOrNo.NO), REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
+            var response = mockResponse(mockCaseData(null, null, APPELLANT_MAIL, YesOrNo.YES, WANTS_EMAIL, YesOrNo.NO), REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
             assertNotificationsContain(response, 2, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL);
         }
 
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
         void should_send_24weeks_remove_letter_to_appellant_and_email_to_ho_office() {
-            var response = mockResponse(mockCaseData(null, null, null, YesOrNo.YES, YesOrNo.YES, YesOrNo.NO), REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
+            var response = mockResponse(mockCaseData(null, null, null, YesOrNo.YES, WANTS_EMAIL, YesOrNo.NO), REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
             assertNotificationsContain(response, 2, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER);
         }
 
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
         void should_not_send_24weeks_remove_letter_to_appellant_if_application_is_ooc() {
-            var response = mockResponse(mockCaseData(null, null, null, YesOrNo.NO, YesOrNo.YES, YesOrNo.NO), REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
+            var response = mockResponse(mockCaseData(null, null, null, YesOrNo.NO, WANTS_EMAIL, YesOrNo.NO), REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
             assertNotificationsContain(response, 1, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL);
         }
 
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
         void should_send_24weeks_remove_letter_to_appellant_and_email_to_legal_rep_and_home_office() {
-            var response = mockResponse(mockCaseData(LR_EMAIL, null, null, YesOrNo.YES, YesOrNo.YES, YesOrNo.NO), REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
+            var response = mockResponse(mockCaseData(LR_EMAIL, null, null, YesOrNo.YES, WANTS_EMAIL, YesOrNo.NO), REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
             assertNotificationsContain(response, 3, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER);
         }
     }
@@ -228,11 +237,29 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
     @Nested
     @DisplayName("COMPLETE_REVIEW_STATUTORY_TIMEFRAME_24_WEEKS")
     class CompleteReviewStatutoryTimeframe24WeeksNotificationsTest {
+        private void createdByAdmin(AsylumCaseForTest caseData) {
+            caseData.with(IS_ADMIN, YesOrNo.YES);
+        }
+
+        private void notCreatedByAdmin(AsylumCaseForTest caseData) {
+            caseData.with(IS_ADMIN, YesOrNo.NO);
+        }
+
 
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
-        void should_not_send_24weeks_case_review_email_for_non_bau_case() {
-            var caseData = mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES, YesOrNo.YES, YesOrNo.NO);
+        void should_not_send_24weeks_case_review_email_for_bau_case() {
+            var caseData = mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES, WANTS_EMAIL, YesOrNo.NO);
+            createdByAdmin(caseData);
+            var response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
+            assertNoNotifications(response);
+        }
+
+        @Test
+        @WithMockUser(authorities = {"caseworker-ia-system"})
+        void should_not_send_24weeks_case_review_email_for_bau_case_not_created_by_admin() {
+            var caseData = mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES, WANTS_EMAIL, YesOrNo.NO);
+            notCreatedByAdmin(caseData);
             var response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
             assertNoNotifications(response);
         }
@@ -240,16 +267,28 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
         void should_not_send_24weeks_case_review_email_or_letter_to_all_three_if_statutory_time_frame_is_not_present() {
-            var caseData = mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES, YesOrNo.YES, YesOrNo.NO);
+            var caseData = mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES, WANTS_EMAIL, DONT_WANTS_SMS);
             caseData.with(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.NO);
+            notCreatedByAdmin(caseData);
             var response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
             assertNoNotifications(response);
         }
 
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
+        void should_not_send_24weeks_case_review_email_or_letter_to_all_three_if_statutory_time_frame_is_not_present_created_by_admin() {
+            var caseData = mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES, WANTS_EMAIL, DONT_WANTS_SMS);
+            caseData.with(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.NO);
+            createdByAdmin(caseData);
+            var response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
+            assertNoNotifications(response);
+        }
+
+
+        @Test
+        @WithMockUser(authorities = {"caseworker-ia-system"})
         void should_not_send_24weeks_case_review_email_for_stf_24Weeks_is_no() {
-            var caseData = mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES, YesOrNo.YES, YesOrNo.NO);
+            var caseData = mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES, WANTS_EMAIL, DONT_WANTS_SMS);
             caseData.with(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.NO);
             var response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
             assertNoNotifications(response);
@@ -258,18 +297,19 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
         void should_send_24weeks_case_review_email_to_all_three() {
-            var caseData = mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES, YesOrNo.YES, YesOrNo.NO);
+            var caseData = mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES, WANTS_EMAIL, DONT_WANTS_SMS);
             caseData.with(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.YES);
+
             var response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
             assertNotificationsContain(response, 3, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL);
         }
 
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
-        void should_send_24weeks_review_letter_to_appellant_and_email_to_ho_office_and_lr() {
-            var caseData = mockCaseData(LR_EMAIL, null, null, YesOrNo.YES, YesOrNo.NO, YesOrNo.NO);
+        void should_send_24weeks_review_letter_to_appellant_and_email_to_ho_office_and_lr_created_by_admin() {
+            var caseData = mockCaseData(LR_EMAIL, null, null, YesOrNo.YES, DONT_WANTS_EMAIL, DONT_WANTS_SMS);
             caseData.with(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.YES);
-            caseData.with(IS_ADMIN, YesOrNo.YES);
+            createdByAdmin(caseData);
             caseData.with(SUBSCRIPTIONS, Optional.of(new ArrayList<>()));
 
             var response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
@@ -279,24 +319,65 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
         void should_not_send_24weeks_review_letter_to_appellant_if_case_is_not_internal() {
-            var caseData = mockCaseData(LR_EMAIL, null, null, YesOrNo.YES, YesOrNo.YES, YesOrNo.NO);
+            var caseData = mockCaseData(LR_EMAIL, null, null, YesOrNo.YES, YesOrNo.YES, DONT_WANTS_SMS);
             caseData.with(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.YES);
-            caseData.with(IS_ADMIN, YesOrNo.NO);
+            notCreatedByAdmin(caseData);
             caseData.with(SUBSCRIPTIONS, Optional.of(new ArrayList<>()));
 
             var response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
             assertNotificationsContain(response, 2, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL);
         }
 
+
+        @Test
+        @WithMockUser(authorities = {"caseworker-ia-system"})
+        void should_not_send_24weeks_review_one_sms_and_three_emails_to_all() {
+            var caseData = mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES, DONT_WANTS_EMAIL, WANTS_SMS);
+            caseData.with(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.YES);
+            createdByAdmin(caseData);
+            var response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
+            assertNotificationsContain(response, 3, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL);
+        }
+
+        @Test
+        @WithMockUser(authorities = {"caseworker-ia-system"})
+        void should_send_24weeks_review_one_sms_and_three_emails_to_all_not_created_by_admin() {
+            var caseData = mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES, DONT_WANTS_EMAIL, WANTS_SMS);
+            caseData.with(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.YES);
+            notCreatedByAdmin(caseData);
+            var response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
+            assertNotificationsContain(response, 4, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_SMS, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL);
+        }
+
+        @Test
+        @WithMockUser(authorities = {"caseworker-ia-system"})
+        void should_not_send_24weeks_review_one_sms_and_three_emails_to_all_not_created_by_admin() {
+            var caseData = mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES, DONT_WANTS_EMAIL, WANTS_SMS);
+            caseData.with(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.NO);
+            notCreatedByAdmin(caseData);
+            var response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
+            assertNoNotifications(response);
+        }
+
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
         void should_not_send_24weeks_review_letter_to_appellant_if_has_subscription() {
-            var caseData = mockCaseData(LR_EMAIL, null, null, YesOrNo.YES, YesOrNo.YES, YesOrNo.NO);
+            var caseData = mockCaseData(LR_EMAIL, null, null, YesOrNo.YES, WANTS_EMAIL, DONT_WANTS_SMS);
             caseData.with(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.YES);
-            caseData.with(IS_ADMIN, YesOrNo.YES);
+            createdByAdmin(caseData);
+            var response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
+            assertNotificationsContain(response, 2, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL);
+        }
 
+        @Test
+        @WithMockUser(authorities = {"caseworker-ia-system"})
+        void should_not_send_24weeks_review_sms_to_appellant_if_has_subscription_and_not_created_by_admin() {
+            var caseData = mockCaseData(LR_EMAIL, null, null, YesOrNo.YES, DONT_WANTS_EMAIL, WANTS_SMS);
+            caseData.with(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.YES);
+            createdByAdmin(caseData);
             var response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
             assertNotificationsContain(response, 2, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL);
         }
     }
+
 }

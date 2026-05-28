@@ -1555,6 +1555,8 @@ govnotify:
       appellant:
         email: d2a75610-004c-4fd8-8724-5fb7700cc27d
         letter: bd089be2-4b5d-4e09-8e91-ddc2f4968573
+        smsWithLink: 2caf61de-d839-4d78-9f4d-c8b7183ea0c1
+        sms: 2084d900-c583-45a1-ba0d-3395ab4e4867
     revokeCitizenAccess:
       email: 8ea82724-5ddf-4f2d-9577-66bc565747e7
 
