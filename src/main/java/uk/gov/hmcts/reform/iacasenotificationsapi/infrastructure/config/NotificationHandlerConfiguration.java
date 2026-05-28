@@ -5726,7 +5726,7 @@ public class NotificationHandlerConfiguration {
                     boolean canSendReviewSms = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && isCaseReviewFor24WeeksCase(callback.getEvent(), asylumCase)
                             && !isInternalCase(asylumCase)
-                            && AsylumCaseUtils.isSmsPreferred(asylumCase);
+                            && AsylumCaseUtils.hasSmsContactPreference(asylumCase);
                     log.info("canSend review SMS  Notification {}", canSendReviewSms);
                     return canSendReviewSms;
                 },

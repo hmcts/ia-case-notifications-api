@@ -1,11 +1,14 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ContactPreference;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Subscriber;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.SubscriberType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
@@ -22,8 +25,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_SUBMISSION_DATE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CONTACT_PREFERENCE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.EMAIL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.INTERNAL_APPELLANT_EMAIL;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.MOBILE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.SUBSCRIPTIONS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.TRIBUNAL_RECEIVED_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
@@ -50,7 +55,6 @@ public class AsylumCaseUtils24WeeksTest {
         writeSubscribers(asylumCase, subscriber(SubscriberType.APPELLANT, "", YesOrNo.NO, "07700000000", YesOrNo.NO));
 
         Assertions.assertFalse(AsylumCaseUtils.isSmsPreferred(asylumCase));
-        Assertions.assertFalse(AsylumCaseUtils.hasEmailPreferred(asylumCase));
         Assertions.assertTrue(AsylumCaseUtils.isLetterOnlyPreferredCommunication(asylumCase));
     }
 
@@ -60,7 +64,6 @@ public class AsylumCaseUtils24WeeksTest {
         writeSubscribers(asylumCase, subscriber(SubscriberType.APPELLANT, "", YesOrNo.NO, "07700000000", YesOrNo.YES));
 
         Assertions.assertTrue(AsylumCaseUtils.isSmsPreferred(asylumCase));
-        Assertions.assertFalse(AsylumCaseUtils.hasEmailPreferred(asylumCase));
         Assertions.assertFalse(AsylumCaseUtils.isLetterOnlyPreferredCommunication(asylumCase));
     }
 
@@ -71,7 +74,6 @@ public class AsylumCaseUtils24WeeksTest {
         writeSubscribers(asylumCase, subscriber(SubscriberType.APPELLANT, "", YesOrNo.NO, "07700000000", YesOrNo.YES));
 
         Assertions.assertTrue(AsylumCaseUtils.isSmsPreferred(asylumCase));
-        Assertions.assertTrue(AsylumCaseUtils.hasEmailPreferred(asylumCase));
         Assertions.assertFalse(AsylumCaseUtils.isLetterOnlyPreferredCommunication(asylumCase));
     }
 
@@ -81,7 +83,6 @@ public class AsylumCaseUtils24WeeksTest {
         writeSubscribers(asylumCase, subscriber(SubscriberType.APPELLANT, "appellant@example.com", YesOrNo.YES, "07700000000", YesOrNo.YES));
 
         Assertions.assertTrue(AsylumCaseUtils.isSmsPreferred(asylumCase));
-        Assertions.assertTrue(AsylumCaseUtils.hasEmailPreferred(asylumCase));
         Assertions.assertFalse(AsylumCaseUtils.isLetterOnlyPreferredCommunication(asylumCase));
     }
 
@@ -92,7 +93,6 @@ public class AsylumCaseUtils24WeeksTest {
         writeSubscribers(asylumCase, subscriber(SubscriberType.APPELLANT, "appellant@example.com", YesOrNo.YES, "", YesOrNo.NO));
 
         Assertions.assertFalse(AsylumCaseUtils.isSmsPreferred(asylumCase));
-        Assertions.assertTrue(AsylumCaseUtils.hasEmailPreferred(asylumCase));
         Assertions.assertFalse(AsylumCaseUtils.isLetterOnlyPreferredCommunication(asylumCase));
     }
 
@@ -102,7 +102,6 @@ public class AsylumCaseUtils24WeeksTest {
         asylumCase.write(EMAIL, "appellant@example.com");
 
         Assertions.assertFalse(AsylumCaseUtils.isSmsPreferred(asylumCase));
-        Assertions.assertTrue(AsylumCaseUtils.hasEmailPreferred(asylumCase));
         Assertions.assertFalse(AsylumCaseUtils.isLetterOnlyPreferredCommunication(asylumCase));
     }
 
@@ -112,7 +111,6 @@ public class AsylumCaseUtils24WeeksTest {
         asylumCase.write(SUBSCRIPTIONS, Optional.of(new ArrayList<>()));
 
         Assertions.assertFalse(AsylumCaseUtils.isSmsPreferred(asylumCase));
-        Assertions.assertFalse(AsylumCaseUtils.hasEmailPreferred(asylumCase));
         Assertions.assertTrue(AsylumCaseUtils.isLetterOnlyPreferredCommunication(asylumCase));
     }
 
@@ -122,7 +120,6 @@ public class AsylumCaseUtils24WeeksTest {
         writeSubscribers(asylumCase, subscriber(SubscriberType.APPELLANT, "", YesOrNo.NO, "07700000000", YesOrNo.NO));
 
         Assertions.assertFalse(AsylumCaseUtils.isSmsPreferred(asylumCase));
-        Assertions.assertFalse(AsylumCaseUtils.hasEmailPreferred(asylumCase));
         Assertions.assertTrue(AsylumCaseUtils.isLetterOnlyPreferredCommunication(asylumCase));
     }
 
@@ -132,7 +129,6 @@ public class AsylumCaseUtils24WeeksTest {
         writeSubscribers(asylumCase, subscriber(SubscriberType.APPELLANT, "", YesOrNo.NO, "", YesOrNo.YES));
 
         Assertions.assertTrue(AsylumCaseUtils.isSmsPreferred(asylumCase));
-        Assertions.assertFalse(AsylumCaseUtils.hasEmailPreferred(asylumCase));
         Assertions.assertFalse(AsylumCaseUtils.isLetterOnlyPreferredCommunication(asylumCase));
     }
 
@@ -143,7 +139,6 @@ public class AsylumCaseUtils24WeeksTest {
         writeSubscribers(asylumCase, subscriber(SubscriberType.APPELLANT, "", YesOrNo.NO, "07700000000", YesOrNo.YES));
 
         Assertions.assertTrue(AsylumCaseUtils.isSmsPreferred(asylumCase));
-        Assertions.assertTrue(AsylumCaseUtils.hasEmailPreferred(asylumCase));
         Assertions.assertFalse(AsylumCaseUtils.isLetterOnlyPreferredCommunication(asylumCase));
     }
 
@@ -155,7 +150,6 @@ public class AsylumCaseUtils24WeeksTest {
         writeSubscribers(asylumCase, s1, s2);
 
         Assertions.assertTrue(AsylumCaseUtils.isSmsPreferred(asylumCase));
-        Assertions.assertTrue(AsylumCaseUtils.hasEmailPreferred(asylumCase));
         Assertions.assertFalse(AsylumCaseUtils.isLetterOnlyPreferredCommunication(asylumCase));
     }
 
@@ -167,7 +161,6 @@ public class AsylumCaseUtils24WeeksTest {
         writeSubscribers(asylumCase, s1, s2);
 
         Assertions.assertTrue(AsylumCaseUtils.isSmsPreferred(asylumCase));
-        Assertions.assertFalse(AsylumCaseUtils.hasEmailPreferred(asylumCase));
         Assertions.assertFalse(AsylumCaseUtils.isLetterOnlyPreferredCommunication(asylumCase));
     }
 
@@ -308,4 +301,70 @@ public class AsylumCaseUtils24WeeksTest {
         assertEquals("5 Mar 2024", result);
     }
 
+    @Nested
+    @DisplayName("CONTACT_PREFERENCE")
+    class ContactPreferenceMobileTests {
+        AsylumCase asylumCase = mock(AsylumCase.class);
+
+        @Test
+        void should_return_true_when_sms_contact_preference_is_set_and_mobile_number_exists() {
+            when(asylumCase.read(CONTACT_PREFERENCE, ContactPreference.class))
+                    .thenReturn(Optional.of(ContactPreference.WANTS_SMS));
+            when(asylumCase.read(MOBILE_NUMBER, String.class))
+                    .thenReturn(Optional.of("07700900123"));
+
+            boolean result = AsylumCaseUtils.hasSmsContactPreference(asylumCase);
+
+            assertTrue(result);
+        }
+
+        @Test
+        void should_return_false_when_sms_contact_preference_is_not_set() {
+            when(asylumCase.read(CONTACT_PREFERENCE, ContactPreference.class))
+                    .thenReturn(Optional.empty());
+            when(asylumCase.read(MOBILE_NUMBER, String.class))
+                    .thenReturn(Optional.of("07700900123"));
+
+            boolean result = AsylumCaseUtils.hasSmsContactPreference(asylumCase);
+
+            assertFalse(result);
+        }
+
+        @Test
+        void should_return_false_when_contact_preference_is_not_sms() {
+            when(asylumCase.read(CONTACT_PREFERENCE, ContactPreference.class))
+                    .thenReturn(Optional.of(ContactPreference.WANTS_EMAIL));
+            when(asylumCase.read(MOBILE_NUMBER, String.class))
+                    .thenReturn(Optional.of("07700900123"));
+
+            boolean result = AsylumCaseUtils.hasSmsContactPreference(asylumCase);
+
+            assertFalse(result);
+        }
+
+        @Test
+        void should_return_false_when_mobile_number_is_not_present() {
+            when(asylumCase.read(CONTACT_PREFERENCE, ContactPreference.class))
+                    .thenReturn(Optional.of(ContactPreference.WANTS_SMS));
+            when(asylumCase.read(MOBILE_NUMBER, String.class))
+                    .thenReturn(Optional.empty());
+
+            boolean result = AsylumCaseUtils.hasSmsContactPreference(asylumCase);
+
+            assertFalse(result);
+        }
+
+
+        @Test
+        void should_return_false_when_both_contact_preference_and_mobile_number_are_missing() {
+            when(asylumCase.read(CONTACT_PREFERENCE, ContactPreference.class))
+                    .thenReturn(Optional.empty());
+            when(asylumCase.read(MOBILE_NUMBER, String.class))
+                    .thenReturn(Optional.empty());
+
+            boolean result = AsylumCaseUtils.hasSmsContactPreference(asylumCase);
+
+            assertFalse(result);
+        }
+    }
 }

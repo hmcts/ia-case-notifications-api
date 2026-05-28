@@ -684,19 +684,20 @@ public class AsylumCaseUtils {
                 subscriberIdValue.getValue().getMobileNumber()).isPresent();
     }
 
+    public static boolean hasSmsContactPreference(AsylumCase asylumCase) {
+        boolean smsPreferred = asylumCase.read(CONTACT_PREFERENCE, ContactPreference.class)
+                .map(contactPreference -> ContactPreference.WANTS_SMS == contactPreference)
+                .orElse(false);
+
+        return smsPreferred && asylumCase.read(MOBILE_NUMBER, String.class).isPresent();
+    }
+
     public static boolean isCaseReviewFor24WeeksCase(Event event, AsylumCase asylumCase) {
         boolean inCountryAppeal = inCountryAppeal(asylumCase);
         boolean hasStf24W = AsylumCaseUtils.hasStf24WeeksStatus(asylumCase);
         return event == COMPLETE_CASE_REVIEW
                 && inCountryAppeal
                 && hasStf24W;
-    }
-
-    public static boolean hasEmailPreferred(AsylumCase asylumCase) {
-        boolean hasApplicantEmail = !getApplicantEmail(asylumCase).isEmpty();
-        boolean emailPreferred = isEmailPreferred(asylumCase);
-        return hasApplicantEmail || emailPreferred;
-
     }
 
     private static String getCaseDateDate(AsylumCase asylumCase, AsylumCaseDefinition asylumCaseDefinition) {
