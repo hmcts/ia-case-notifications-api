@@ -90,7 +90,7 @@ class Appellant24WeeksCompleteCaseReviewSmsTest {
     @Test
     public void should_return_recipients_from_finder() {
         String mobilePhone = "07123456789";
-        when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
+        when(recipientsFinder.findReppedAppellant(asylumCase, NotificationType.SMS))
                 .thenReturn(Collections.singleton(mobilePhone));
 
         assertTrue(appellant24WeeksReviewSms.getRecipientsList(asylumCase).contains(mobilePhone));
@@ -98,7 +98,7 @@ class Appellant24WeeksCompleteCaseReviewSmsTest {
 
     @Test
     public void should_throw_exception_on_recipients_when_case_is_null() {
-        when(recipientsFinder.findAll(null, NotificationType.SMS))
+        when(recipientsFinder.findReppedAppellant(null, NotificationType.SMS))
                 .thenThrow(new NullPointerException("asylumCase must not be null"));
 
         NullPointerException exception = assertThrows(NullPointerException.class,

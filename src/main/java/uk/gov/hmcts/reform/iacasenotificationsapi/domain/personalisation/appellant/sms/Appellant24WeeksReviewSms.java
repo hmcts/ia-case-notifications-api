@@ -61,7 +61,7 @@ public class Appellant24WeeksReviewSms implements SmsNotificationPersonalisation
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return recipientsFinder.findAll(asylumCase, NotificationType.SMS);
+        return recipientsFinder.findReppedAppellant(asylumCase, NotificationType.SMS);
     }
 
     @Override
