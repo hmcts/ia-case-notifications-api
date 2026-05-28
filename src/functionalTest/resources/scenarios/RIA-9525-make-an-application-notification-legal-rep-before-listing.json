@@ -1,6 +1,5 @@
 {
   "description": "RIA-9525 Send make an application notification Legal Rep before listing for admin and represented cases",
-  "launchDarklyKey": "tcw-application-notifications-feature:true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "LegalRepresentative",

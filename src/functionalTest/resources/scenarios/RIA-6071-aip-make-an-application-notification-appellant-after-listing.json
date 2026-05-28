@@ -1,6 +1,5 @@
 {
   "description": "RIA-6071 notifications when an appellant makes an application after listing (AIP)",
-  "launchDarklyKey": "tcw-application-notifications-feature:true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Citizen",
