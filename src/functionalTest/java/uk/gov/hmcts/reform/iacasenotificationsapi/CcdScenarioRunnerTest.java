@@ -200,7 +200,7 @@ public class CcdScenarioRunnerTest {
                                                      String requestUri,
                                                      int expectedStatus,
                                                      long testCaseId,
-                                                     Map<String, Object> expectedResponse) throws IOException {
+                                                     Map<String, Object> expectedResponse) throws IOException, InterruptedException {
         int maxRetries = 3;
         assumeFalse(filename.startsWith("Disabled:"), "Test marked as disabled");
         for (int i = 0; i < maxRetries; i++) {
@@ -240,6 +240,7 @@ public class CcdScenarioRunnerTest {
                 if (responseForError != null) {
                     System.out.println("actualResponse: " + objectMapper.writeValueAsString(responseForError));
                     System.out.println("expectedResponse: " + objectMapper.writeValueAsString(expectedResponse));
+                    Thread.sleep(2000);
                 }
                 if (i == maxRetries - 1) {
                     throw e;
