@@ -108,7 +108,7 @@ class AppellantGeneratePinInPostPersonalisationEmailTest {
 
     @Test
     void getPersonalisation_with_no_details() {
-        when(customerServicesProvider.getCustomerServicesPersonalisation()).thenReturn(Map.of(
+        when(customerServicesProvider.getCustomerServicesPersonalisation(callback)).thenReturn(Map.of(
             "customerServicesTelephone", "someCustomerServicesTelephone",
             "customerServicesEmail", "someCustomerServicesEmail"));
         initializePrefixes(appellantGeneratePinInPostPersonalisationEmail);
