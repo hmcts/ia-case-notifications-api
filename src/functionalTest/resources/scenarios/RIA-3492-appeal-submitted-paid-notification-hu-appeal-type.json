@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 3492,
+      "id": 1717,
       "eventId": "markAppealPaid",
       "state": "appealSubmitted",
       "caseData": {
@@ -27,11 +27,11 @@
         "paymentStatus": "Paid",
         "notificationsSent": [
           {
-            "id": "3492_PENDING_PAYMENT_PAID_LEGAL_REPRESENTATIVE",
+            "id": "1717_PENDING_PAYMENT_PAID_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "3492_PENDING_PAYMENT_PAID_CASE_OFFICER",
+            "id": "1717_PENDING_PAYMENT_PAID_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -39,7 +39,7 @@
     },
     "notifications": [
       {
-        "reference": "3492_PENDING_PAYMENT_PAID_LEGAL_REPRESENTATIVE",
+        "reference": "1717_PENDING_PAYMENT_PAID_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: Your fee has been paid",
         "body": [
@@ -52,7 +52,7 @@
         ]
       },
       {
-        "reference": "3492_PENDING_PAYMENT_PAID_CASE_OFFICER",
+        "reference": "1717_PENDING_PAYMENT_PAID_CASE_OFFICER",
         "recipient": "{$hearingCentreEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: A fee has been paid",
         "body": [

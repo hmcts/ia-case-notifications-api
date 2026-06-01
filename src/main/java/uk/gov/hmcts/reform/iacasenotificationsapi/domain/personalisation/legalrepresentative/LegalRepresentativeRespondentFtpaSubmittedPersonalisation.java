@@ -56,7 +56,7 @@ public class LegalRepresentativeRespondentFtpaSubmittedPersonalisation implement
             .put("subjectPrefix", isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData())
                 ? adaPrefix
                 : nonAdaPrefix)
-            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation(callback))
             .put("linkToOnlineService", iaExUiFrontendUrl)
             .putAll(personalisationProvider.getPersonalisation(callback));
 

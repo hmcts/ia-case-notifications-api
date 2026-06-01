@@ -16,7 +16,6 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RecordDecisionType;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -29,13 +28,10 @@ class UpperTribunalDecisionRefusedImaPersonalisationTest {
     private final String bailReferenceNumber = "someBailReferenceNumber";
     private final String appellantGivenNames = "appellantGivenNames";
     private final String appellantFamilyName = "appellantFamilyName";
-    private final String customerServicesTelephone = "555 555 555";
-    private final String customerServicesEmail = "cust.services@example.com";
     private final String decisionGranted = " Granted";
     @Mock
     BailCase bailCase;
     @Mock
-    CustomerServicesProvider customerServicesProvider;
     private UpperTribunalDecisionRefusedImaPersonalisation upperTribunalDecisionRefusedImaPersonalisation;
 
     @BeforeEach
@@ -46,13 +42,10 @@ class UpperTribunalDecisionRefusedImaPersonalisationTest {
         when(bailCase.read(APPLICANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(bailCase.read(APPLICANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(bailCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         upperTribunalDecisionRefusedImaPersonalisation = new UpperTribunalDecisionRefusedImaPersonalisation(
             templateId,
-            upperTribunalEmailAddress,
-            customerServicesProvider);
+            upperTribunalEmailAddress);
     }
 
     @Test
@@ -128,8 +121,6 @@ class UpperTribunalDecisionRefusedImaPersonalisationTest {
             .containsEntry("applicantGivenNames", appellantGivenNames)
             .containsEntry("applicantFamilyName", appellantFamilyName)
             .containsEntry("decision", decisionGranted);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @Test
@@ -140,8 +131,6 @@ class UpperTribunalDecisionRefusedImaPersonalisationTest {
         when(bailCase.read(APPLICANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
         when(bailCase.read(APPLICANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
         when(bailCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         Map<String, String> personalisation =
             upperTribunalDecisionRefusedImaPersonalisation.getPersonalisation(bailCase);

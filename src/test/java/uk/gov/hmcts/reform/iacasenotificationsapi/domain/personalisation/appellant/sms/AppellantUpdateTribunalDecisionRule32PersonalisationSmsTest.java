@@ -56,8 +56,6 @@ class AppellantUpdateTribunalDecisionRule32PersonalisationSmsTest {
 
         String appealReferenceNumber = "someReferenceNumber";
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         appellantUpdateTribunalDecisionRule32PersonalisationSms = new AppellantUpdateTribunalDecisionRule32PersonalisationSms(
             appellanttUpdateTribunalDecisionRule32SmsTemplateId,
@@ -105,8 +103,6 @@ class AppellantUpdateTribunalDecisionRule32PersonalisationSmsTest {
         assertThat(personalisation)
             .containsEntry("appealReferenceNumber", mockedAppealReferenceNumber)
             .containsEntry("linkAipTimeline", iaAipFrontendUrl);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
     }
 

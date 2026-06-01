@@ -66,8 +66,6 @@ class AppellantRecordRefundDecisionPersonalisationEmailTest {
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         String amountRemitted = "4000";
         when(asylumCase.read(AMOUNT_REMITTED, String.class)).thenReturn(Optional.of(amountRemitted));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         appellantRecordRefundDecisionPersonalisationEmail = new AppellantRecordRefundDecisionPersonalisationEmail(
             appellantRefundApprovedTemplateId,
@@ -146,8 +144,5 @@ class AppellantRecordRefundDecisionPersonalisationEmailTest {
             .containsEntry("linkToService", iaAipFrontendUrl)
             .containsEntry("14DaysAfterRefundDecision", systemDateProvider.dueDate(daysAfterRefundDecision))
             .containsEntry("refundAmount", "40.00");
-
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 }

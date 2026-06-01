@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 7432,
+      "id": 1331,
       "eventId": "changeHearingCentre",
       "state": "prepareForHearing",
       "caseData": {
@@ -50,7 +50,7 @@
         "listCaseHearingCentre": "harmondsworth",
         "notificationsSent": [
           {
-            "id": "7432_INTERNAL_DET_CHANGE_HEARING_CENTRE_EMAIL",
+            "id": "1331_INTERNAL_DET_CHANGE_HEARING_CENTRE_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -58,7 +58,7 @@
     },
     "notifications": [
       {
-        "reference": "7432_INTERNAL_DET_CHANGE_HEARING_CENTRE_EMAIL",
+        "reference": "1331_INTERNAL_DET_CHANGE_HEARING_CENTRE_EMAIL",
         "recipient": "det-irc-brookhouse@example.com",
         "subject": "ADA – SERVE BY POST: Hearing centre changed",
         "body": [

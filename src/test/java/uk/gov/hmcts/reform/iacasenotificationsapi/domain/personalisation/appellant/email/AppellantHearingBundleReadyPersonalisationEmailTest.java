@@ -61,9 +61,7 @@ class AppellantHearingBundleReadyPersonalisationEmailTest {
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
 
         String customerServicesTelephone = "555 555 555";
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         String customerServicesEmail = "customer.services@example.com";
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
 
         String iaAipFrontendUrl = "http://localhost";
@@ -114,7 +112,7 @@ class AppellantHearingBundleReadyPersonalisationEmailTest {
         Map<String, String> personalisation =
             appellantHearingBundleReadyPersonalisationEmail.getPersonalisation(asylumCase);
         assertThat(personalisation)
-            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation())
+            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .containsEntry("appealReferenceNumber", appealReferenceNumber)
             .containsEntry("ccdReferenceNumber", ccdReferenceNumber)
             .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
@@ -141,7 +139,7 @@ class AppellantHearingBundleReadyPersonalisationEmailTest {
             appellantHearingBundleReadyPersonalisationEmail.getPersonalisation(asylumCase);
 
         assertThat(personalisation)
-            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation())
+            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .containsEntry("appealReferenceNumber", "")
             .containsEntry("ccdReferenceNumber", "")
             .containsEntry("homeOfficeReferenceNumber", "")

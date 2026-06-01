@@ -163,7 +163,7 @@ public class AppellantEditListingPersonalisationEmailTest {
             appellantEditListingPersonalisationEmail.getPersonalisation(callback);
         assertFalse(personalisation.isEmpty());
         assertThat(personalisation)
-            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation())
+            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .containsAllEntriesOf(getPersonalisationMapWithGivenValues())
             .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal" : "Immigration and Asylum appeal")
             .containsEntry("tribunalCentre", tribunalCentre.getValue())
@@ -184,7 +184,7 @@ public class AppellantEditListingPersonalisationEmailTest {
 
         assertFalse(personalisation.isEmpty());
         assertThat(personalisation)
-            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation())
+            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .containsAllEntriesOf(getPersonalisationMapWithBlankValues())
             .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal" : "Immigration and Asylum appeal")
             .containsEntry("tribunalCentre", tribunalCentre.getValue())

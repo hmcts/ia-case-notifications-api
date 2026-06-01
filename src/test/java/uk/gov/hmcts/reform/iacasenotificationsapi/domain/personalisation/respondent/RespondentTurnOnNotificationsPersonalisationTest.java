@@ -70,9 +70,7 @@ public class RespondentTurnOnNotificationsPersonalisationTest {
         String cuurentStateHO = "appealSubmitted";
         when(asylumCase.read(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, String.class)).thenReturn(Optional.of(cuurentStateHO));
         String customerServicesTelephone = "555 555 555";
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         String customerServicesEmail = "customer.services@example.com";
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         respondentTurnOnNotificationsPersonalisation = new RespondentTurnOnNotificationsPersonalisation(
             beforeListingTemplateId,

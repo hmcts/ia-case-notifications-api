@@ -81,9 +81,7 @@ public class LegalRepresentativeMakeAnApplicationPersonalisationTest {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class))
             .thenReturn(Optional.of(legalRepEmailAddress));
         String customerServicesTelephone = "555 555 555";
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         String customerServicesEmail = "cust.services@example.com";
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
         when(makeAnApplicationService.getMakeAnApplication(asylumCase, false)).thenReturn(Optional.of(makeAnApplication));
         when(makeAnApplication.getType()).thenReturn(applicationType);
         when(userDetailsProvider.getUserDetails()).thenReturn(userDetails);
@@ -184,7 +182,7 @@ public class LegalRepresentativeMakeAnApplicationPersonalisationTest {
 
         assertFalse(personalisation.isEmpty());
         assertThat(personalisation)
-            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation())
+            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .containsEntry("ariaListingReference", ariaListingReference)
             .containsEntry("applicationType", applicationType)
             .containsEntry("legalRepReferenceNumber", legalRepRefNumber)
@@ -214,7 +212,7 @@ public class LegalRepresentativeMakeAnApplicationPersonalisationTest {
 
         assertFalse(personalisation.isEmpty());
         assertThat(personalisation)
-            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation())
+            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
             .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal"
                 : "Immigration and Asylum appeal");

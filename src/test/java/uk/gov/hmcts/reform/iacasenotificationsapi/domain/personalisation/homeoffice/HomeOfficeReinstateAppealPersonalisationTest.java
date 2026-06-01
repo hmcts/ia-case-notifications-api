@@ -89,9 +89,6 @@ public class HomeOfficeReinstateAppealPersonalisationTest {
         when(asylumCase.read(REINSTATE_APPEAL_REASON, String.class)).thenReturn(Optional.of(reinstateAppealReason));
         when(asylumCase.read(REINSTATED_DECISION_MAKER, String.class)).thenReturn(Optional.of(reinstatedDecisionMaker));
 
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
-
         when((emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase)))
             .thenReturn(homeOfficeHearingCentreEmail);
 
@@ -216,8 +213,6 @@ public class HomeOfficeReinstateAppealPersonalisationTest {
             .containsEntry("reinstateAppealReason", reinstateAppealReason)
             .containsEntry("reinstatedDecisionMaker", reinstatedDecisionMaker)
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
@@ -251,8 +246,6 @@ public class HomeOfficeReinstateAppealPersonalisationTest {
             .containsEntry("reinstateAppealReason", "No reason given")
             .containsEntry("reinstatedDecisionMaker", "")
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));

@@ -74,9 +74,7 @@ public class LegalRepresentativeReinstateAppealPersonalisationTest {
         when(asylumCase.read(REINSTATED_DECISION_MAKER, String.class)).thenReturn(Optional.of(reinstatedDecisionMaker));
 
         String customerServicesTelephone = "555 555 555";
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         String customerServicesEmail = "cust.services@example.com";
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         legalRepresentativeReinstateAppealPersonalisation = new LegalRepresentativeReinstateAppealPersonalisation(
             legalRepReinstateAppealBeforeListingTemplateId,

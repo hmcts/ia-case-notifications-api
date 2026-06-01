@@ -6,7 +6,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 7031,
+      "id": 1413,
       "eventId": "submitAppeal",
       "state": "pendingPayment",
       "caseData": {

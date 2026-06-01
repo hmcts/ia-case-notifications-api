@@ -61,8 +61,6 @@ class AppellantAppealDecisionWithoutHearingPersonalisationEmailTest {
             .thenReturn(Optional.of(mockedAppealHomeOfficeReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(mockedAppellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(mockedAppellantFamilyName));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         appellantAppealDecisionWithoutHearingPersonalisationEmail = new AppellantAppealDecisionWithoutHearingPersonalisationEmail(
             emailTemplateId,
@@ -114,8 +112,6 @@ class AppellantAppealDecisionWithoutHearingPersonalisationEmailTest {
             .containsEntry("Given names", mockedAppellantGivenNames)
             .containsEntry("Family name", mockedAppellantFamilyName)
             .containsEntry("Hyperlink to service", iaAipFrontendUrl);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
     }
 }

@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 4646,
+      "id": 1569,
       "eventId": "requestResponseReview",
       "state": "respondentReview",
       "caseData": {
@@ -36,8 +36,7 @@
               }
             }
           ],
-          "appealReviewOutcome": "decisionWithdrawn",
-          "notificationsSent": []
+          "appealReviewOutcome": "decisionWithdrawn"
         }
       }
     }
@@ -77,11 +76,11 @@
         "appealReviewOutcome": "decisionWithdrawn",
         "notificationsSent": [
           {
-            "id": "4646_REQUEST_RESPONSE_REVIEW_AIP_EMAIL",
+            "id": "1569_REQUEST_RESPONSE_REVIEW_AIP_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "4646_REQUEST_RESPONSE_REVIEW_AIP_SMS",
+            "id": "1569_REQUEST_RESPONSE_REVIEW_AIP_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -89,7 +88,7 @@
     },
     "notifications": [
       {
-        "reference": "4646_REQUEST_RESPONSE_REVIEW_AIP_EMAIL",
+        "reference": "1569_REQUEST_RESPONSE_REVIEW_AIP_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
         "subject": "Immigration and Asylum appeal: The Home Office has reviewed your appeal",
         "body": [
@@ -103,7 +102,7 @@
         ]
       },
       {
-        "reference": "4646_REQUEST_RESPONSE_REVIEW_AIP_SMS",
+        "reference": "1569_REQUEST_RESPONSE_REVIEW_AIP_SMS",
         "recipient": "{$TEST_CITIZEN_MOBILE}",
         "subject": "",
         "body": [

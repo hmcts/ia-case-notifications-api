@@ -71,8 +71,6 @@ class AppellantInternalReinstateAppealLetterPersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.of(address));
         when(asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeRefNumber));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
         when(address.getAddressLine1()).thenReturn(Optional.of(addressLine1));
         when(address.getAddressLine2()).thenReturn(Optional.of(addressLine2));
         when(address.getAddressLine3()).thenReturn(Optional.of(addressLine3));
@@ -178,8 +176,6 @@ class AppellantInternalReinstateAppealLetterPersonalisationTest {
             .containsEntry("reinstateAppealDate", LocalDate.parse(reinstateAppealDate).format(DateTimeFormatter.ofPattern("d MMM yyyy")))
             .containsEntry("decisionMaker", decisionMaker)
             .containsEntry("reinstateReason", reinstateReason);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @Test
@@ -206,8 +202,6 @@ class AppellantInternalReinstateAppealLetterPersonalisationTest {
             .containsEntry("reinstateAppealDate", LocalDate.parse(reinstateAppealDate).format(DateTimeFormatter.ofPattern("d MMM yyyy")))
             .containsEntry("decisionMaker", decisionMaker)
             .containsEntry("reinstateReason", reinstateReason);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @Test
@@ -231,8 +225,6 @@ class AppellantInternalReinstateAppealLetterPersonalisationTest {
             .containsEntry("reinstateAppealDate", LocalDate.parse(reinstateAppealDate).format(DateTimeFormatter.ofPattern("d MMM yyyy")))
             .containsEntry("decisionMaker", decisionMaker)
             .containsEntry("reinstateReason", reinstateReason);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @Test
@@ -256,8 +248,6 @@ class AppellantInternalReinstateAppealLetterPersonalisationTest {
             .containsEntry("reinstateAppealDate", LocalDate.parse(reinstateAppealDate).format(DateTimeFormatter.ofPattern("d MMM yyyy")))
             .containsEntry("decisionMaker", decisionMaker)
             .containsEntry("reinstateReason", reinstateReason);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     private void legalRepOutOfCountryDataSetup() {

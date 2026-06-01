@@ -54,8 +54,6 @@ class HomeOfficeAdjournHearingWithoutDateNonDetainedPersonalisationTest {
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeRefNumber));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
         when(emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase)).thenReturn(homeOfficeEmailAddress);
 
         homeOfficeAdjournHearingWithoutDateNonDetainedPersonalisation = new HomeOfficeAdjournHearingWithoutDateNonDetainedPersonalisation(
@@ -102,8 +100,6 @@ class HomeOfficeAdjournHearingWithoutDateNonDetainedPersonalisationTest {
             .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
             .containsEntry("appellantGivenNames", appellantGivenNames)
             .containsEntry("appellantFamilyName", appellantFamilyName);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
     }
 
@@ -123,7 +119,5 @@ class HomeOfficeAdjournHearingWithoutDateNonDetainedPersonalisationTest {
             .containsEntry("homeOfficeReferenceNumber", "")
             .containsEntry("appellantGivenNames", "")
             .containsEntry("appellantFamilyName", "");
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 }

@@ -14,7 +14,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 import static java.util.Objects.requireNonNull;
 
@@ -63,7 +63,7 @@ public class LegalRepresentativeAppealStartedDisposalPersonalisation implements 
 
         ImmutableMap<String, String> res = ImmutableMap
             .<String, String>builder()
-            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .put("homeOfficeReferenceNumber", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put("legalRepReferenceNumber", asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
             .put("legalRepName", asylumCase.read(AsylumCaseDefinition.LEGAL_REP_NAME, String.class).orElse(""))

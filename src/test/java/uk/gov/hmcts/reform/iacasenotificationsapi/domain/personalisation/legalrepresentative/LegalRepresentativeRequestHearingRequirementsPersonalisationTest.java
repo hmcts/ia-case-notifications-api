@@ -67,9 +67,7 @@ public class LegalRepresentativeRequestHearingRequirementsPersonalisationTest {
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepRefNumber));
         String customerServicesTelephone = "555 555 555";
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         String customerServicesEmail = "customer.services@example.com";
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         legalRepresentativeRequestHearingRequirementsPersonalisation =
             new LegalRepresentativeRequestHearingRequirementsPersonalisation(
@@ -112,7 +110,7 @@ public class LegalRepresentativeRequestHearingRequirementsPersonalisationTest {
 
         assertFalse(personalisation.isEmpty());
         assertThat(personalisation)
-            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation())
+            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .containsEntry("legalRepReferenceNumber", legalRepRefNumber)
             .containsEntry("explanation", direction.getExplanation())
             .containsEntry("dueDate", "27 Aug 2019")

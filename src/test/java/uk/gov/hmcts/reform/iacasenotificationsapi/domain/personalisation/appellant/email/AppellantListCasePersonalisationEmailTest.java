@@ -91,9 +91,6 @@ public class AppellantListCasePersonalisationEmailTest {
         when(dateTimeExtractor.extractHearingDate(hearingDateTime)).thenReturn(hearingDate);
         when(dateTimeExtractor.extractHearingTime(hearingDateTime)).thenReturn(hearingTime);
 
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
-
         appellantListCasePersonalisationEmail = new AppellantListCasePersonalisationEmail(
             templateId,
             listAssistHearingTemplateId,
@@ -185,8 +182,6 @@ public class AppellantListCasePersonalisationEmailTest {
             .containsEntry("hearingTime", hearingTime)
             .containsEntry("hearingCentreAddress", hearingCentreAddress)
             .containsEntry("tribunalCentre", hearingCentre.getValue());
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
@@ -212,8 +207,6 @@ public class AppellantListCasePersonalisationEmailTest {
             .containsEntry("hearingTime", hearingTime)
             .containsEntry("hearingCentreAddress", hearingCentreAddress)
             .containsEntry("tribunalCentre", hearingCentre.getValue());
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
@@ -243,8 +236,6 @@ public class AppellantListCasePersonalisationEmailTest {
             .containsEntry("hearingTime", hearingTime)
             .containsEntry("hearingCentreAddress", hearingCentreAddress)
             .containsEntry("tribunalCentre", hearingCentre.getValue());
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));

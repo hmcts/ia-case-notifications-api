@@ -70,9 +70,7 @@ class AppellantRecordOutOfTimeDecisionCanProceedPersonalisationEmailTest {
         String appellantFamilyName = "someAppellantFamilyName";
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         String customerServicesTelephone = "555 555 555";
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         String customerServicesEmail = "cust.services@example.com";
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         Map<String, String> personalisation =
             appellantRecordOutOfTimeDecisionCanProceedPersonalisationEmail.getPersonalisation(asylumCase);
@@ -86,8 +84,6 @@ class AppellantRecordOutOfTimeDecisionCanProceedPersonalisationEmailTest {
             .containsEntry("appellantGivenNames", appellantGivenNames)
             .containsEntry("appellantFamilyName", appellantFamilyName)
             .containsEntry("Hyperlink to service", iaAipFrontendUrl);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @Test

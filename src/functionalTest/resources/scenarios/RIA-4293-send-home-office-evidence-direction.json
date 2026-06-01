@@ -1,11 +1,11 @@
 {
   "description": "RIA-4293 Send Home Office evidence direction - updated company and legal rep details",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 1003,
+      "id": 1613,
       "eventId": "requestRespondentEvidence",
       "state": "awaitingRespondentEvidence",
       "caseData": {
@@ -27,8 +27,7 @@
                 "tag": "respondentEvidence"
               }
             }
-          ],
-          "notificationsSent": []
+          ]
         }
       }
     }
@@ -56,7 +55,11 @@
         ],
         "notificationsSent": [
           {
-            "id": "1003_RESPONDENT_EVIDENCE_DIRECTION",
+            "id": "1613_RESPONDENT_EVIDENCE_DIRECTION",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "1613_EVIDENCE_DIRECTION_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -64,7 +67,7 @@
     },
     "notifications": [
       {
-        "reference": "1003_RESPONDENT_EVIDENCE_DIRECTION",
+        "reference": "1613_RESPONDENT_EVIDENCE_DIRECTION",
         "recipient": "{$respondentEmailAddresses.respondentEvidenceDirection}",
         "subject": "Immigration and Asylum appeal: submit bundle direction",
         "body": [

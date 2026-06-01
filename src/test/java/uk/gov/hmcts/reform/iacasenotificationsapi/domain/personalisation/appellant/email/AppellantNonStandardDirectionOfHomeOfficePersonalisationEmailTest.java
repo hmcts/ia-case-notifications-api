@@ -68,8 +68,6 @@ class AppellantNonStandardDirectionOfHomeOfficePersonalisationEmailTest {
             .thenReturn(Optional.of(mockedAppealHomeOfficeReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(mockedAppellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(mockedAppellantFamilyName));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         String toAppellantAndRespondentBeforeTemplateId = "someEmailTemplateId";
         String toAppellantAndRespondentAfterTemplateId = "someEmailTemplateId";
@@ -153,9 +151,6 @@ class AppellantNonStandardDirectionOfHomeOfficePersonalisationEmailTest {
             .thenReturn(getPersonalisationMapWithGivenValues());
 
         Map<String, String> personalisation = appellantNonStandardDirectionPersonalisationEmail.getPersonalisation(callback);
-
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(iaAipFrontendUrl, personalisation.get("linkToOnlineService"));
 
     }

@@ -91,8 +91,6 @@ public class AppellantInternalCaseNonStandardDirectionPersonalisationTest {
         String mockedAriaListingReference = "someAriaListingReference";
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(mockedAriaListingReference));
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(NO));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
         when(address.getAddressLine1()).thenReturn(Optional.of(addressLine1));
         when(address.getAddressLine2()).thenReturn(Optional.of(addressLine2));
         when(address.getAddressLine3()).thenReturn(Optional.of(addressLine3));
@@ -171,8 +169,6 @@ public class AppellantInternalCaseNonStandardDirectionPersonalisationTest {
             .containsEntry("address_line_4", addressLine3)
             .containsEntry("address_line_5", postTown)
             .containsEntry("address_line_6", postCode);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(expectedDirectionDueDate, personalisation.get("directionDueDate"));
     }
 
@@ -193,8 +189,6 @@ public class AppellantInternalCaseNonStandardDirectionPersonalisationTest {
             .containsEntry("address_line_3", oocAddressLine2)
             .containsEntry("address_line_4", oocAddressLine3)
             .containsEntry("address_line_5", Nationality.ES.toString());
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(expectedDirectionDueDate, personalisation.get("directionDueDate"));
     }
 
@@ -214,8 +208,6 @@ public class AppellantInternalCaseNonStandardDirectionPersonalisationTest {
             .containsEntry("address_line_3", addressLine3)
             .containsEntry("address_line_4", postTown)
             .containsEntry("address_line_5", postCode);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(expectedDirectionDueDate, personalisation.get("directionDueDate"));
     }
 
@@ -236,8 +228,6 @@ public class AppellantInternalCaseNonStandardDirectionPersonalisationTest {
             .containsEntry("address_line_3", oocAddressLine3)
             .containsEntry("address_line_4", postTown)
             .containsEntry("address_line_5", Nationality.ES.toString());
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(expectedDirectionDueDate, personalisation.get("directionDueDate"));
     }
 

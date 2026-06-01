@@ -100,7 +100,7 @@ public class AdditionalEvidenceSubmittedOtherPartyNotificationPersonalisation im
             .<String, String>builder()
             .putAll(personalisationProvider.getApplyForCostsPersonalisation(asylumCase))
             .putAll(personalisationProvider.getTypeForSelectedApplyForCosts(asylumCase, ADD_EVIDENCE_FOR_COSTS_LIST))
-            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .putAll(personalisationProvider.retrieveSelectedApplicationId(asylumCase, ADD_EVIDENCE_FOR_COSTS_LIST))
             .put("ariaListingReference", listingReferenceLine)
             .put("legalRepReferenceNumber", legalRepReferenceLine)

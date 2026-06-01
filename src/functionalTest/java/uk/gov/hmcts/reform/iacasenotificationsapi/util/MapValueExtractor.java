@@ -14,6 +14,18 @@ public final class MapValueExtractor {
         // noop
     }
 
+    private static final List<String> allowedCaseOfficerNotificationReferences = List.of(
+        "_CASE_LISTED_CASE_OFFICER",
+        "_CHANGE_HEARING_CENTRE_CASE_OFFICER",
+        "_UPLOADED_ADDENDUM_EVIDENCE_CASE_OFFICER",
+        "_CASE_RE_LISTED_CASE_OFFICER"
+    );
+
+    private static boolean isCaseOfficerNotification(String value) {
+        return value.contains("_CASE_OFFICER") &&
+            allowedCaseOfficerNotificationReferences.stream().noneMatch(value::contains);
+    }
+
     public static <T> T extract(Map<String, Object> map, String path, Boolean featureFlag) {
 
         if (path.equals("expectation")) {
@@ -31,13 +43,11 @@ public final class MapValueExtractor {
 
             Object value = currentMap.get(pathParts[i]);
 
-            if (!(value instanceof Map)) {
+            if (!(value instanceof Map expectationMap)) {
                 return null;
             }
 
-            Map expectationMap = (Map) value;
-
-            if (featureFlag == false) {
+            if (!featureFlag) {
 
                 if (expectationMap.containsKey("confirmation")) {
                     Map<String, Object> confirmation = (Map<String, Object>) expectationMap.get("confirmation");
@@ -83,16 +93,13 @@ public final class MapValueExtractor {
                             List<Map<String, Object>> notificationsSent = (List<Map<String, Object>>) replacement.get("notificationsSent");
                             List<Map<String, Object>> updatedNotificationsSent = new ArrayList<>(notificationsSent);
 
-                            for (Map<String, Object> notificationSent : notificationsSent) {
+                            notificationsSent.stream().filter(notificationSent -> {
                                 String notificationValue = (String) notificationSent.get("id");
-
-                                if (notificationValue.contains("_CASE_OFFICER")) {
-                                    updatedNotificationsSent.remove(notificationSent);
-                                }
-                            }
+                                return isCaseOfficerNotification(notificationValue);
+                            }).forEach(updatedNotificationsSent::remove);
 
                             replacement.remove("notificationsSent");
-                            if (updatedNotificationsSent.size() > 0) {
+                            if (!updatedNotificationsSent.isEmpty()) {
                                 replacement.put("notificationsSent", updatedNotificationsSent);
                             }
 
@@ -117,7 +124,7 @@ public final class MapValueExtractor {
                         }
                     }
                     ((Map<String, Object>) value).remove("notifications");
-                    if (updatedNotifications.size() > 0) {
+                    if (!updatedNotifications.isEmpty()) {
                         ((Map<String, Object>) value).put("notifications", updatedNotifications);
                     }
                 }
@@ -153,8 +160,11 @@ public final class MapValueExtractor {
     }
 
     public static <T> T extractOrDefault(Map<String, Object> map, String path, T defaultValue, Boolean featureFlag) {
+        if (featureFlag) {
+            return extractOrDefault(map, path, defaultValue);
+        }
 
-        T value = extract(map, path, featureFlag);
+        T value = extract(map, path, false);
 
         if (value == null) {
             return defaultValue;
