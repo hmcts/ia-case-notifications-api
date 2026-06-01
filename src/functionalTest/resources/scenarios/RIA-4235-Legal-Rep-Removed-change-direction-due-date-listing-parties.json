@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 3105,
+      "id": 1615,
       "eventId": "changeDirectionDueDate",
       "state": "listing",
       "caseData": {
@@ -37,7 +37,7 @@
         "directionEditParties": "both",
         "notificationsSent": [
           {
-            "id": "3105_RESPONDENT_CHANGE_DIRECTION_DUE_DATE",
+            "id": "1615_RESPONDENT_CHANGE_DIRECTION_DUE_DATE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ],
@@ -46,7 +46,7 @@
     },
     "notifications": [
       {
-        "reference": "3105_RESPONDENT_CHANGE_DIRECTION_DUE_DATE",
+        "reference": "1615_RESPONDENT_CHANGE_DIRECTION_DUE_DATE",
         "recipient": "{$homeOfficeEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: change to direction due date",
         "body": [

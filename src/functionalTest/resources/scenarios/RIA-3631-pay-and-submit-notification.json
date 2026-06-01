@@ -1,12 +1,12 @@
 {
   "description": "RIA-3631 Send appeal submitted notification to Case Officer and exclude Home Office after successful pay and submit",
   "launchDarklyKey": "tcw-notifications-feature:true",
-  "disabled": true,
+  "disabled": "true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "LegalRepresentative",
     "input": {
-      "id": 3082,
+      "id": 1702,
       "eventId": "payAndSubmitAppeal",
       "state": "appealSubmitted",
       "caseData": {
@@ -27,7 +27,7 @@
         "hearingCentre": "manchester",
         "notificationsSent": [
           {
-            "id": "3082_APPEAL_SUBMITTED_CASE_OFFICER",
+            "id": "1702_APPEAL_SUBMITTED_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -35,7 +35,7 @@
     },
     "notifications": [
       {
-        "reference": "3082_APPEAL_SUBMITTED_CASE_OFFICER",
+        "reference": "1702_APPEAL_SUBMITTED_CASE_OFFICER",
         "recipient": "{$hearingCentreEmailAddresses.manchester}",
         "subject": "Immigration and Asylum appeal: appeal submitted",
         "body": [

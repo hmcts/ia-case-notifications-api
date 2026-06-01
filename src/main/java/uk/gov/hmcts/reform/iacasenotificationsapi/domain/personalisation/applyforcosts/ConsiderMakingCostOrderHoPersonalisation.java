@@ -55,7 +55,7 @@ public class ConsiderMakingCostOrderHoPersonalisation implements EmailNotificati
         return ImmutableMap
             .<String, String>builder()
             .putAll(personalisationProvider.getApplyForCostsPersonalisation(asylumCase))
-            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .build();
     }

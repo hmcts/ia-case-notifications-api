@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
-      "id": 703319,
+      "id": 1386,
       "eventId": "decideAnApplication",
       "state": "appealSubmitted",
       "caseData": {
@@ -44,7 +44,7 @@
         "isAdmin": "Yes",
         "notificationsSent": [
           {
-            "id": "703319_DECIDE_AN_APPLICATION_HOME_OFFICE",
+            "id": "1386_DECIDE_AN_APPLICATION_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -52,7 +52,7 @@
     },
     "notifications": [
       {
-        "reference": "703319_DECIDE_AN_APPLICATION_HOME_OFFICE",
+        "reference": "1386_DECIDE_AN_APPLICATION_HOME_OFFICE",
         "recipient": "{$apcHomeOfficeEmailAddress}",
         "subject": "Immigration and Asylum appeal: application for Other refused",
         "body": [

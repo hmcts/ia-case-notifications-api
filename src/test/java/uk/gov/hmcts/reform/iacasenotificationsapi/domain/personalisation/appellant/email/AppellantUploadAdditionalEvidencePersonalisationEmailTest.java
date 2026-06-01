@@ -58,9 +58,6 @@ class AppellantUploadAdditionalEvidencePersonalisationEmailTest {
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(ariaListingReference));
 
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
-
         appellantUploadAdditionalEvidencePersonalisationEmail =
             new AppellantUploadAdditionalEvidencePersonalisationEmail(
                 beforeListingTemplateId,
@@ -129,7 +126,5 @@ class AppellantUploadAdditionalEvidencePersonalisationEmailTest {
                 assertThat(value).isEmpty();
             }
         });
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 }

@@ -88,8 +88,6 @@ class AppellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisationT
         when(asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeRefNumber));
         when(asylumCase.read(AsylumCaseDefinition.REMISSION_DECISION_REASON, String.class)).thenReturn(Optional.of(remissionReasons));
         when(asylumCase.read(AsylumCaseDefinition.CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class)).thenReturn(Optional.of(onlineCaseReferenceNumber));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
         when(address.getAddressLine1()).thenReturn(Optional.of(addressLine1));
         when(address.getAddressLine2()).thenReturn(Optional.of(addressLine2));
         when(address.getAddressLine3()).thenReturn(Optional.of(addressLine3));
@@ -203,8 +201,6 @@ class AppellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisationT
             .containsEntry("address_line_4", addressLine3)
             .containsEntry("address_line_5", postTown)
             .containsEntry("address_line_6", postCode);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(systemDateProvider.dueDate(daysAfterRemissionDecision), personalisation.get("payByDeadline"));
         if (remissionDecision == RemissionDecision.PARTIALLY_APPROVED) {
             assertEquals(amountLeftToPayInGbp, personalisation.get("feeAmount"));
@@ -238,8 +234,6 @@ class AppellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisationT
             .containsEntry("address_line_3", oocAddressLine2)
             .containsEntry("address_line_4", oocAddressLine3)
             .containsEntry("address_line_5", Nationality.ES.toString());
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(systemDateProvider.dueDate(daysAfterRemissionDecision), personalisation.get("payByDeadline"));
         if (remissionDecision == RemissionDecision.PARTIALLY_APPROVED) {
             assertEquals(amountLeftToPayInGbp, personalisation.get("feeAmount"));
@@ -272,8 +266,6 @@ class AppellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisationT
             .containsEntry("address_line_3", addressLine3)
             .containsEntry("address_line_4", postTown)
             .containsEntry("address_line_5", postCode);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(systemDateProvider.dueDate(daysAfterRemissionDecision), personalisation.get("payByDeadline"));
         if (remissionDecision == RemissionDecision.PARTIALLY_APPROVED) {
             assertEquals(amountLeftToPayInGbp, personalisation.get("feeAmount"));
@@ -307,8 +299,6 @@ class AppellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisationT
             .containsEntry("address_line_3", oocAddressLine3)
             .containsEntry("address_line_4", postTown)
             .containsEntry("address_line_5", Nationality.ES.toString());
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(systemDateProvider.dueDate(daysAfterRemissionDecision), personalisation.get("payByDeadline"));
         if (remissionDecision == RemissionDecision.PARTIALLY_APPROVED) {
             assertEquals(amountLeftToPayInGbp, personalisation.get("feeAmount"));

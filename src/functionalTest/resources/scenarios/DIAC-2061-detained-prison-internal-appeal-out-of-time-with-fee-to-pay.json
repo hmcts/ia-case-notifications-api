@@ -1,30 +1,47 @@
 {
-  "description": "DIAC-2061 Send letter notification to for Submit Appeal out of time fee to pay - non detained",
+  "description": "DIAC-2061 Send letter notification for Submit Appeal out of time fee to pay - detained in prison type of detention facility",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 2061,
+      "id": 2023,
       "eventId": "submitAppeal",
       "state": "appealSubmitted",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "isAdmin": "Yes",
+          "appellantsRepresentation": "Yes",
           "appellantInUk": "Yes",
-          "appellantsRepresentation": "No",
-          "appellantInDetention": "No",
+          "appellantInDetention": "Yes",
+          "detentionFacility": "prison",
+          "prisonName": "Albany",
           "submissionOutOfTime": "Yes",
           "paymentStatus": "Payment pending",
-          "legalRepHasAddress": "Yes",
-          "legalRepAddressUK": {
+          "appellantAddress": {
             "County": "",
             "Country": "United Kingdom",
             "PostCode": "NE21JX",
             "PostTown": "Example Town",
             "AddressLine1": "5",
             "AddressLine2": "Example Street"
-          }
+          },
+          "notificationAttachmentDocuments": [
+            {
+              "id": "1",
+              "value": {
+                "tag": "internalDetainedAppealSubmittedOutOfTimeWithFeeLetter",
+                "document": {
+                  "document_url": "{$FIXTURE_DOC1_PDF_URL}",
+                  "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
+                  "document_filename": "{$FIXTURE_DOC1_PDF_FILENAME}"
+                },
+                "suppliedBy": "",
+                "description": "",
+                "dateUploaded": "{$TODAY}"
+              }
+            }
+          ]
         }
       }
     }
@@ -36,13 +53,14 @@
       "template": "minimal-appeal-submitted.json",
       "replacements": {
         "isAdmin": "Yes",
+        "appellantsRepresentation": "Yes",
         "appellantInUk": "Yes",
-        "appellantsRepresentation": "No",
-        "appellantInDetention": "No",
+        "appellantInDetention": "Yes",
+        "detentionFacility": "prison",
+        "prisonName": "Albany",
         "submissionOutOfTime": "Yes",
         "paymentStatus": "Payment pending",
-        "legalRepHasAddress": "Yes",
-        "legalRepAddressUK": {
+        "appellantAddress": {
           "County": "",
           "Country": "United Kingdom",
           "PostCode": "NE21JX",
@@ -52,7 +70,7 @@
         },
         "notificationsSent": [
           {
-            "id": "2061_INTERNAL_SUBMIT_APPEAL_WITH_FEE_OUT_OF_TIME_APPELLANT_LETTER",
+            "id": "2023_INTERNAL_NON_ADA_APPEAL_SUBMITTED_LATE_WITH_FEE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

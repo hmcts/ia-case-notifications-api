@@ -116,8 +116,6 @@ public class HomeOfficeListCasePersonalisationTest {
             .thenReturn(Optional.of(hearingCentreAddress));
         when(dateTimeExtractor.extractHearingDate(hearingDateTime)).thenReturn(hearingDate);
         when(dateTimeExtractor.extractHearingTime(hearingDateTime)).thenReturn(hearingTime);
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
         when(hearingDetailsFinder.getHearingCentreLocation(asylumCase)).thenReturn(hearingCentreAddress);
 
         String listAssistHearingTemplateId = "listAssistHearingTemplateId";
@@ -178,8 +176,6 @@ public class HomeOfficeListCasePersonalisationTest {
             .containsEntry("hearingDate", hearingDate)
             .containsEntry("hearingTime", hearingTime)
             .containsEntry("hearingCentreAddress", hearingCentreAddress);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
         if (isAda.equals(YesOrNo.YES)) {
             String appealArgumentDeadlineDate = LocalDate.now().plusDays(appellantProvidingAppealArgumentDeadline)
@@ -232,8 +228,6 @@ public class HomeOfficeListCasePersonalisationTest {
             .containsEntry("hearingDate", hearingDate)
             .containsEntry("hearingTime", hearingTime)
             .containsEntry("hearingCentreAddress", hearingCentreAddress);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @Test
@@ -296,7 +290,5 @@ public class HomeOfficeListCasePersonalisationTest {
             .containsEntry("hearingDate", hearingDate)
             .containsEntry("hearingTime", hearingTime)
             .containsEntry("hearingCentreAddress", hearingCentreAddress);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 }

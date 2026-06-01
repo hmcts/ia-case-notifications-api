@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 83291,
+      "id": 1190,
       "eventId": "editCaseListing",
       "state": "finalBundling",
       "caseData": {
@@ -128,11 +128,11 @@
     },
     "notificationsSent": [
       {
-        "id": "83291_CASE_RE_LISTED_HOME_OFFICE",
+        "id": "1190_CASE_RE_LISTED_HOME_OFFICE",
         "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
       },
       {
-        "id": "83291_INTERNAL_EDIT_CASE_LISTING_LETTER_BUNDLE",
+        "id": "1190_INTERNAL_EDIT_CASE_LISTING_LETTER_BUNDLE",
         "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
       }
     ]

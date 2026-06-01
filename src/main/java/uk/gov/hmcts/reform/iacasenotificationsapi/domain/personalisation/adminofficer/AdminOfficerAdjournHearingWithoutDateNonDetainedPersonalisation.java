@@ -2,7 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.admino
 
 import static java.util.Objects.requireNonNull;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;

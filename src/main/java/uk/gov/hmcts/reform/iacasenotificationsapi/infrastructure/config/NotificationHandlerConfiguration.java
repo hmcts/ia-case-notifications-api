@@ -1926,7 +1926,7 @@ public class NotificationHandlerConfiguration {
             .map(IdValue::getValue)
             .collect(Collectors.toList())).orElse(Collections.emptyList());
 
-        return caseBundles.isEmpty() ? "" : caseBundles.get(0).getStitchStatus().orElse("");
+        return caseBundles.isEmpty() ? "" : caseBundles.getFirst().getStitchStatus().orElse("");
     }
 
     @Bean

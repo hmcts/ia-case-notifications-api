@@ -33,7 +33,7 @@ public class TimeExtensionFinder {
                 && status == timeExtensionIdValue.getValue().getStatus())
             .findFirst();
 
-        if (!maybeTargetTimeExtension.isPresent()) {
+        if (maybeTargetTimeExtension.isEmpty()) {
             throw new IllegalStateException("No time extension found with state: '" + currentState + "' and status: '" + status + "'");
         }
 

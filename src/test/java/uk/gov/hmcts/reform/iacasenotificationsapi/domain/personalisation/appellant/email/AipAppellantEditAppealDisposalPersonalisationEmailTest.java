@@ -67,8 +67,6 @@ class AipAppellantEditAppealDisposalPersonalisationEmailTest {
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of("someAppellantFamilyName"));
 
         when(asylumCase.read(EMAIL, String.class)).thenReturn(Optional.of(mockedAppellantEmailAddress));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn("555 555 555");
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn("cust.services@example.com");
 
         when(userDetailsProvider.getUserDetails()).thenReturn(userDetails);
         when(userDetails.getEmailAddress()).thenReturn(mockedAppellantEmailAddress);

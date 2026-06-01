@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 9233,
+      "id": 1090,
       "eventId": "markAppealAsRemitted",
       "state": "ftpaDecided",
       "caseData": {
@@ -49,11 +49,11 @@
         },
         "notificationsSent": [
           {
-            "id": "9233_HOME_OFFICE_MARK_APPEAL_AS_REMITTED",
+            "id": "1090_HOME_OFFICE_MARK_APPEAL_AS_REMITTED",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "9233_INTERNAL_APPEAL_REMITTED_APPELLANT_LETTER",
+            "id": "1090_INTERNAL_APPEAL_REMITTED_APPELLANT_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

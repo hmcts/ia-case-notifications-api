@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 7707,
+      "id": 1286,
       "eventId": "editAppealAfterSubmit",
       "state": "*",
       "caseData": {
@@ -51,7 +51,7 @@
         "isAcceleratedDetainedAppeal": "No",
         "notificationsSent":[
           {
-            "id":"7707_EDIT_APPEAL_AFTER_SUBMIT_RESPONDENT",
+            "id":"1286_EDIT_APPEAL_AFTER_SUBMIT_RESPONDENT",
             "value":"$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ],

@@ -79,8 +79,6 @@ class AppellantInternalRefundConfirmationLetterPersonalisationTest {
         String newFeeTotal = "8000";
         when(asylumCase.read(AsylumCaseDefinition.NEW_FEE_AMOUNT, String.class)).thenReturn(Optional.of(newFeeTotal));
         when(asylumCase.read(AsylumCaseDefinition.CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class)).thenReturn(Optional.of(referenceNumber));
-        when(customerServicesProvider.getCustomerServicesTelephone()).thenReturn(customerServicesTelephone);
-        when(customerServicesProvider.getCustomerServicesEmail()).thenReturn(customerServicesEmail);
 
         int afterManageFeeEvent = 14;
         letterNotificationPersonalisation = new AppellantInternalRefundConfirmationLetterPersonalisation(
@@ -182,8 +180,6 @@ class AppellantInternalRefundConfirmationLetterPersonalisationTest {
             .containsEntry("address_line_4", addressLine3)
             .containsEntry("address_line_5", postTown)
             .containsEntry("address_line_6", postCode);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
     }
 
@@ -209,8 +205,6 @@ class AppellantInternalRefundConfirmationLetterPersonalisationTest {
             .containsEntry("address_line_4", addressLine3)
             .containsEntry("address_line_5", postTown)
             .containsEntry("address_line_6", Nationality.ES.toString());
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @Test
@@ -234,8 +228,6 @@ class AppellantInternalRefundConfirmationLetterPersonalisationTest {
             .containsEntry("address_line_3", addressLine3)
             .containsEntry("address_line_4", postTown)
             .containsEntry("address_line_5", postCode);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @Test
@@ -259,8 +251,6 @@ class AppellantInternalRefundConfirmationLetterPersonalisationTest {
             .containsEntry("address_line_3", addressLine3)
             .containsEntry("address_line_4", postTown)
             .containsEntry("address_line_5", Nationality.ES.toString());
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     private void appellantOutOfCountryDataSetup() {

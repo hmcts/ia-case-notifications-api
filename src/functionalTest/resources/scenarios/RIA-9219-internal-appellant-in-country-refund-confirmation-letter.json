@@ -1,11 +1,11 @@
 {
   "description": "RIA-9219 Internal appellant Refund confirmation letter - In country",
-  "enabled": "{$featureFlag.dlrmTelephonyFeatureFlag}",
+  "disabled": "!{$featureFlag.dlrmTelephonyFeatureFlag}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 92191,
+      "id": 1097,
       "eventId": "refundConfirmation",
       "state": "*",
       "caseData": {
@@ -59,7 +59,7 @@
         },
         "notificationsSent": [
           {
-            "id": "92191_INTERNAL_REFUND_CONFIRMATION_APPELLANT_LETTER",
+            "id": "1097_INTERNAL_REFUND_CONFIRMATION_APPELLANT_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

@@ -117,7 +117,7 @@ class HomeOfficeEditListingPersonalisationTest {
 
         assertFalse(personalisation.isEmpty());
         assertThat(personalisation)
-            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation())
+            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .containsAllEntriesOf(personalisationProvider.getPersonalisation(callback))
             .containsEntry("hearingCentreAddress", hearingCentreAddress);
     }

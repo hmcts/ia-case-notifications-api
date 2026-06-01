@@ -97,7 +97,7 @@ public class AppellantEditListingPersonalisationEmail implements EmailNotificati
                 () -> new IllegalArgumentException("No hearing centre present"));
         return ImmutableMap
             .<String, String>builder()
-            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation(callback))
             .putAll(personalisationProvider.getPersonalisation(callback))
             .put("subjectPrefix", isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData()) ? adaPrefix : nonAdaPrefix)
             .put("tribunalCentre", hearingDetailsFinder.getHearingCentreName(callback.getCaseDetails().getCaseData()))

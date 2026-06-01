@@ -6,12 +6,10 @@ import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.ApplicationContextProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.BaseNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.GovNotifyNotificationSender;
 
 import static uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder.NO_EMAIL_ADDRESS_DECISION_WITHOUT_HEARING;
@@ -37,9 +35,6 @@ public class EmailNotificationGenerator implements NotificationGenerator {
     public void generate(Callback<AsylumCase> callback) {
 
         final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-        ApplicationContextProvider.getApplicationContext().getBean(CustomerServicesProvider.class)
-            .setCorrectEmail(asylumCase);
 
         personalisationList.forEach(personalisation -> {
 

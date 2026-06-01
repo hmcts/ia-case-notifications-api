@@ -80,8 +80,6 @@ class AipAppellantManageFeeUpdatePersonalisationEmailTest {
         String manageFeeRequestedAmount = "2000";
         when(asylumCase.read(MANAGE_FEE_REQUESTED_AMOUNT, String.class)).thenReturn(Optional.of(manageFeeRequestedAmount));
         when(asylumCase.read(FEE_UPDATE_REASON, FeeUpdateReason.class)).thenReturn(Optional.of(FeeUpdateReason.FEE_REMISSION_CHANGED));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         aipAppellantManageFeeUpdatePersonalisationEmail = new AipAppellantManageFeeUpdatePersonalisationEmail(
             aipAppellantManageFeeUpdateTemplateId,
@@ -155,8 +153,5 @@ class AipAppellantManageFeeUpdatePersonalisationEmailTest {
             .containsEntry("newTotalFee", "20.00")
             .containsEntry("paymentAmount", "20.00")
             .containsEntry("feeUpdateReason", "Fee remission changed");
-
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 }

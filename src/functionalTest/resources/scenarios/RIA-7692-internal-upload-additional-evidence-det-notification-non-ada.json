@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 7692,
+      "id": 1294,
       "eventId": "uploadAdditionalEvidence",
       "state": "respondentReview",
       "caseData": {
@@ -43,7 +43,7 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "7692_UPLOADED_ADDITIONAL_EVIDENCE_HOME_OFFICE",
+            "id": "1294_UPLOADED_ADDITIONAL_EVIDENCE_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
