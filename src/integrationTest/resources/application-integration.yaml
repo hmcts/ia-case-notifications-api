@@ -18,3 +18,7 @@ ctscEmailAddress: not-used-in-integration
 idam:
   s2s-authorised:
     services: ia
+
+app:
+  cache:
+    enabled: false
