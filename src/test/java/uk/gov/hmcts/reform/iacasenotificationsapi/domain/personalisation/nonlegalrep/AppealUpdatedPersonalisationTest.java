@@ -102,7 +102,7 @@ public class AppealUpdatedPersonalisationTest {
             "customerServicesEmail", customerServicesEmail
         );
         when(asylumCase.read(NLR_DETAILS, NonLegalRepDetails.class)).thenReturn(Optional.of(nlrDetails));
-        when(customerServicesProvider.getCustomerServicesPersonalisation()).thenReturn(customerServicesPersonalisation);
+        when(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase)).thenReturn(customerServicesPersonalisation);
 
         Map<String, String> personalisation =
             appealUpdatedPersonalisation.getPersonalisation(callback);
@@ -133,7 +133,7 @@ public class AppealUpdatedPersonalisationTest {
             "customerServicesEmail", customerServicesEmail
         );
         when(asylumCase.read(NLR_DETAILS, NonLegalRepDetails.class)).thenReturn(Optional.empty());
-        when(customerServicesProvider.getCustomerServicesPersonalisation()).thenReturn(customerServicesPersonalisation);
+        when(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase)).thenReturn(customerServicesPersonalisation);
 
         Map<String, String> personalisation =
             appealUpdatedPersonalisation.getPersonalisation(callback);

@@ -106,7 +106,7 @@ public class SendPipToNonLegalRepPersonalisationTest {
             "customerServicesTelephone", customerServicesTelephone,
             "customerServicesEmail", customerServicesEmail
         );
-        when(customerServicesProvider.getCustomerServicesPersonalisation()).thenReturn(customerServicesPersonalisation);
+        when(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase)).thenReturn(customerServicesPersonalisation);
         PinInPostDetails pipDetails = new PinInPostDetails(pipCode, pipExpiry, YesOrNo.NO);
         when(asylumCase.read(JOIN_APPEAL_PIN, PinInPostDetails.class)).thenReturn(Optional.of(pipDetails));
         Map<String, String> personalisation =
@@ -135,7 +135,7 @@ public class SendPipToNonLegalRepPersonalisationTest {
             "customerServicesTelephone", customerServicesTelephone,
             "customerServicesEmail", customerServicesEmail
         );
-        when(customerServicesProvider.getCustomerServicesPersonalisation()).thenReturn(customerServicesPersonalisation);
+        when(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase)).thenReturn(customerServicesPersonalisation);
         PinInPostDetails pipDetails = new PinInPostDetails(pipCode, pipExpiry, YesOrNo.NO);
         when(asylumCase.read(JOIN_APPEAL_PIN, PinInPostDetails.class)).thenReturn(Optional.of(pipDetails));
         Map<String, String> personalisation =

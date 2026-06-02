@@ -103,7 +103,7 @@ public class JoinAppealConfirmationAppellantPersonalisationSmsTest {
             "customerServicesEmail", customerServicesEmail
         );
         when(asylumCase.read(NLR_DETAILS, NonLegalRepDetails.class)).thenReturn(Optional.of(nlrDetails));
-        when(customerServicesProvider.getCustomerServicesPersonalisation()).thenReturn(customerServicesPersonalisation);
+        when(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase)).thenReturn(customerServicesPersonalisation);
         when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
             .thenReturn(Collections.singleton(nlrDetails.getEmailAddress()));
         Map<String, String> personalisation =
@@ -129,7 +129,7 @@ public class JoinAppealConfirmationAppellantPersonalisationSmsTest {
             "customerServicesEmail", customerServicesEmail
         );
         when(asylumCase.read(NLR_DETAILS, NonLegalRepDetails.class)).thenReturn(Optional.empty());
-        when(customerServicesProvider.getCustomerServicesPersonalisation()).thenReturn(customerServicesPersonalisation);
+        when(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase)).thenReturn(customerServicesPersonalisation);
         when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
             .thenReturn(Collections.singleton(nlrDetails.getEmailAddress()));
         Map<String, String> personalisation =

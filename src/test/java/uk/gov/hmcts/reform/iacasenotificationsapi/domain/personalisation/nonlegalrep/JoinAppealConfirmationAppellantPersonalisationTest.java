@@ -104,7 +104,7 @@ public class JoinAppealConfirmationAppellantPersonalisationTest {
             "customerServicesEmail", customerServicesEmail
         );
         when(asylumCase.read(NLR_DETAILS, NonLegalRepDetails.class)).thenReturn(Optional.of(nlrDetails));
-        when(customerServicesProvider.getCustomerServicesPersonalisation()).thenReturn(customerServicesPersonalisation);
+        when(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase)).thenReturn(customerServicesPersonalisation);
         when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL))
             .thenReturn(Collections.singleton(nlrDetails.getEmailAddress()));
         Map<String, String> personalisation =
@@ -135,7 +135,7 @@ public class JoinAppealConfirmationAppellantPersonalisationTest {
             "customerServicesEmail", customerServicesEmail
         );
         when(asylumCase.read(NLR_DETAILS, NonLegalRepDetails.class)).thenReturn(Optional.empty());
-        when(customerServicesProvider.getCustomerServicesPersonalisation()).thenReturn(customerServicesPersonalisation);
+        when(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase)).thenReturn(customerServicesPersonalisation);
         when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL))
             .thenReturn(Collections.singleton(nlrDetails.getEmailAddress()));
         Map<String, String> personalisation =

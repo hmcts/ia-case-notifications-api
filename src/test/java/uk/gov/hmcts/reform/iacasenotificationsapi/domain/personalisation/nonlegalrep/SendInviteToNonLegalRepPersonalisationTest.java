@@ -101,7 +101,7 @@ public class SendInviteToNonLegalRepPersonalisationTest {
             "customerServicesTelephone", customerServicesTelephone,
             "customerServicesEmail", customerServicesEmail
         );
-        when(customerServicesProvider.getCustomerServicesPersonalisation()).thenReturn(customerServicesPersonalisation);
+        when(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase)).thenReturn(customerServicesPersonalisation);
 
         Map<String, String> personalisation =
             sendInviteToNonLegalRepPersonalisation.getPersonalisation(callback);
@@ -138,7 +138,7 @@ public class SendInviteToNonLegalRepPersonalisationTest {
             "customerServicesTelephone", customerServicesTelephone,
             "customerServicesEmail", customerServicesEmail
         );
-        when(customerServicesProvider.getCustomerServicesPersonalisation()).thenReturn(customerServicesPersonalisation);
+        when(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase)).thenReturn(customerServicesPersonalisation);
 
         Map<String, String> personalisation =
             sendInviteToNonLegalRepPersonalisation.getPersonalisation(callback);
