@@ -126,6 +126,8 @@ public class AsylumCaseUtilsTest {
         )
     );
 
+    private final String generatedCode = "12345";
+
     @AfterEach
     void tearDown() {
         generatorMockedStatic.close();
@@ -421,7 +423,6 @@ public class AsylumCaseUtilsTest {
 
     @Test
     void generateAppellantPin_generate_new_pin_if_not_present() {
-        String generatedCode = "12345";
         generatorMockedStatic.when(AccessCodeGenerator::generateAccessCode)
             .thenReturn(generatedCode);
 
@@ -470,7 +471,7 @@ public class AsylumCaseUtilsTest {
         when(asylumCase.read(AsylumCaseDefinition.JOIN_APPEAL_PIN, PinInPostDetails.class))
             .thenReturn(Optional.of(existingPin));
 
-        generatorMockedStatic.when(() -> AccessCodeGenerator.generateAccessCode())
+        generatorMockedStatic.when(AccessCodeGenerator::generateAccessCode)
             .thenReturn(generatedCode);
 
         PinInPostDetails generatedPinDetails = generateJoinAppealPinIfNotPresentOrUsed(asylumCaseSpy);
