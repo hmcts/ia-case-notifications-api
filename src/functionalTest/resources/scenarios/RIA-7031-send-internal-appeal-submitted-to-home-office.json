@@ -1,12 +1,12 @@
 {
   "description": "RIA-7031 Send appeal submitted notification to Home Office Unrepped",
   "launchDarklyKey": "tcw-notifications-feature:true",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 7031,
+      "id": 1408,
       "eventId": "submitAppeal",
       "state": "appealSubmitted",
       "caseData": {
@@ -29,11 +29,11 @@
         "paAppealTypePaymentOption": "payLater",
         "notificationsSent": [
           {
-            "id": "7031_APPEAL_SUBMITTED_CASE_OFFICER",
+            "id": "1408_APPEAL_SUBMITTED_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "7031_APPEAL_SUBMITTED_HOME_OFFICE",
+            "id": "1408_APPEAL_SUBMITTED_PAY_OFFLINE_ADMIN_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -41,7 +41,7 @@
     },
     "notifications": [
       {
-        "reference": "7031_APPEAL_SUBMITTED_CASE_OFFICER",
+        "reference": "1408_APPEAL_SUBMITTED_CASE_OFFICER",
         "recipient": "{$hearingCentreEmailAddresses.manchester}",
         "subject": "Immigration and Asylum appeal: appeal submitted",
         "body": [
@@ -51,7 +51,7 @@
         ]
       },
       {
-        "reference": "7031_APPEAL_SUBMITTED_HOME_OFFICE",
+        "reference": "1408_APPEAL_SUBMITTED_HOME_OFFICE",
         "recipient": "{$apcPrivateHomeOfficeEmailAddress}",
         "subject": "Immigration and Asylum appeal: appeal submitted",
         "body": [

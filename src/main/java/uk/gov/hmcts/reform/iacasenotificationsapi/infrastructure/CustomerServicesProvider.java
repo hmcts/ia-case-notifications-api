@@ -10,6 +10,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 
 
 @Service
@@ -18,9 +19,7 @@ public class CustomerServicesProvider {
     private final String customerServicesTelephone;
     private final String standardCustomerServicesEmail;
     private final String internalCaseCustomerServicesEmail;
-
-    private String customerServicesEmail;
-    private String appealIaCustomerServicesEmail;
+    private final String appealIaCustomerServicesEmail;
 
     public CustomerServicesProvider(
         @Value("${customerServices.telephoneNumber}") String customerServicesTelephone,
@@ -36,34 +35,27 @@ public class CustomerServicesProvider {
         this.customerServicesTelephone = customerServicesTelephone;
         this.standardCustomerServicesEmail = standardCustomerServicesEmail;
         this.internalCaseCustomerServicesEmail = internalCaseCustomerServicesEmail;
-        this.customerServicesEmail = standardCustomerServicesEmail;
         this.appealIaCustomerServicesEmail = appealIaCustomerServicesEmail;
     }
 
-    public void setCorrectEmail(AsylumCase asylumCase) {
-        this.customerServicesEmail = isInternalCase(asylumCase) && isAcceleratedDetainedAppeal(asylumCase)
+    private String getCorrectEmail(AsylumCase asylumCase) {
+        return isInternalCase(asylumCase) && isAcceleratedDetainedAppeal(asylumCase)
             ? internalCaseCustomerServicesEmail
             : standardCustomerServicesEmail;
     }
 
-    public Map<String, String> getCustomerServicesPersonalisation() {
+    public Map<String, String> getCustomerServicesPersonalisation(AsylumCase asylumCase) {
 
         final Builder<String, String> customerServicesValues = ImmutableMap
             .<String, String>builder()
             .put("customerServicesTelephone", customerServicesTelephone)
-            .put("customerServicesEmail", customerServicesEmail)
+            .put("customerServicesEmail", getCorrectEmail(asylumCase))
             .put("AppealIAEmail", appealIaCustomerServicesEmail);
 
         return customerServicesValues.build();
     }
 
-    public String getCustomerServicesTelephone() {
-        requireNonNull(customerServicesTelephone);
-        return customerServicesTelephone;
-    }
-
-    public String getCustomerServicesEmail() {
-        requireNonNull(customerServicesEmail);
-        return customerServicesEmail;
+    public Map<String, String> getCustomerServicesPersonalisation(Callback<AsylumCase> callback) {
+        return getCustomerServicesPersonalisation(callback.getCaseDetails().getCaseData());
     }
 }

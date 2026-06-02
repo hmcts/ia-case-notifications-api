@@ -83,7 +83,7 @@ public class AppellantFtpaApplicationDecisionPersonalisationEmailTest {
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(mockedAriaListingReferenceNumber));
         String customerServicesEmail = "cust.services@example.com";
         String customerServicesTelephone = "555 555 555";
-        when((customerServicesProvider.getCustomerServicesPersonalisation())).thenReturn(
+        when((customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))).thenReturn(
             Map.of(
                 "customerServicesTelephone", customerServicesTelephone,
                 "customerServicesEmail", customerServicesEmail

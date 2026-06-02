@@ -81,7 +81,7 @@ public class AipAppellantManageFeeUpdatePersonalisationEmail implements EmailNot
 
         return ImmutableMap
             .<String, String>builder()
-            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
             .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))

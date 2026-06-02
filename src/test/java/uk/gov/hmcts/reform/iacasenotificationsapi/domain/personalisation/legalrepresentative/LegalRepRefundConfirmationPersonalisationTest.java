@@ -63,8 +63,6 @@ class LegalRepRefundConfirmationPersonalisationTest {
         when(asylumCase.read(PREVIOUS_DECISION_HEARING_FEE_OPTION, String.class)).thenReturn(Optional.of(withHearing));
         String withoutHearing = "decisionWithoutHearing";
         when(asylumCase.read(DECISION_HEARING_FEE_OPTION, String.class)).thenReturn(Optional.of(withoutHearing));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         String iaExUiFrontendUrl = "http://localhost";
         legalRepRefundConfirmationPersonalisation = new LegalRepRefundConfirmationPersonalisation(
@@ -114,7 +112,5 @@ class LegalRepRefundConfirmationPersonalisationTest {
             .containsEntry("updatedDecisionHearingFeeOption", "Decision without hearing")
             .containsEntry("newFee", "80.00")
             .containsEntry("dueDate", systemDateProvider.dueDate(daysAfterRemissionDecision));
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 }

@@ -78,8 +78,6 @@ public class HomeOfficeEndAppealPersonalisationTest {
         String endAppealDate = "2019-08-27";
         when(asylumCase.read(END_APPEAL_DATE, String.class)).thenReturn(Optional.of(endAppealDate));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeRefNumber));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
         when(emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase)).thenReturn(afterListingEmailAddress);
 
         homeOfficeEndAppealPersonalisation = new HomeOfficeEndAppealPersonalisation(
@@ -149,8 +147,6 @@ public class HomeOfficeEndAppealPersonalisationTest {
             .containsEntry("reasonsOfOutcome", endAppealOutcomeReason)
             .containsEntry("endAppealApprover", endAppealApproverType)
             .containsEntry("endAppealDate", expectedEndAppealDate);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @ParameterizedTest
@@ -184,8 +180,6 @@ public class HomeOfficeEndAppealPersonalisationTest {
             .containsEntry("endAppealApprover", "")
             .containsEntry("endAppealDate", "")
             .containsEntry("homeOfficeReferenceNumber", "");
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @Test

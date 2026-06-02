@@ -58,7 +58,7 @@ public class DecideCostsHomeOfficePersonalisation implements EmailNotificationPe
         ImmutableMap.Builder<String, String> personalisationBuilder = ImmutableMap
             .<String, String>builder()
             .putAll(personalisationProvider.getDecideCostsPersonalisation(asylumCase))
-            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .putAll(personalisationProvider.getTypeForSelectedApplyForCosts(asylumCase, DECIDE_COSTS_APPLICATION_LIST))
             .putAll(personalisationProvider.retrieveSelectedApplicationId(asylumCase, DECIDE_COSTS_APPLICATION_LIST))
             .putAll(personalisationProvider.getAppellantCredentials(asylumCase))

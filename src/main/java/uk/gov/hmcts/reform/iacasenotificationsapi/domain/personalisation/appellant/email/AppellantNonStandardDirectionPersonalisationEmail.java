@@ -61,7 +61,7 @@ public class AppellantNonStandardDirectionPersonalisationEmail implements EmailN
 
         return ImmutableMap
                 .<String, String>builder()
-            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .put("listingReferenceLine", listingReferenceLine)
             .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))

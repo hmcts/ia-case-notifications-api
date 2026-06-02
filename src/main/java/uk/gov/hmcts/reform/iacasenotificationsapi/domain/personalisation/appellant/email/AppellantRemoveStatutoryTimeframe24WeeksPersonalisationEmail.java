@@ -66,7 +66,7 @@ public class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail implem
         requireNonNull(asylumCase, "asylumCase must not be null");
         return ImmutableMap.<String, String>builder()
                 .put(SUBJECT_PREFIX_KEY, nonAdaPrefix)
-                .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+                .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
                 .put(APPEAL_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING))
                 .put(APPELLANT_GIVEN_NAMES_KEY, asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(EMPTY_STRING))
                 .put(APPELLANT_FAMILY_NAME_KEY, asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(EMPTY_STRING))

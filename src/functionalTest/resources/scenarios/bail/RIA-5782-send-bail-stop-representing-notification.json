@@ -1,18 +1,25 @@
 {
   "description": "RIA-5782 NOC - Stop Representing a client notification",
-  "launchDarklyKey": "tcw-notifications-feature:true",
   "request": {
-    "uri": "/bail/ccdAboutToSubmit",
+    "uri": "/bail/ccdSubmitted",
     "credentials": "LegalRepresentative",
     "input": {
-      "id": 5782,
+      "id": 2104,
       "eventId": "stopLegalRepresenting",
       "state": "applicationSubmitted",
       "caseData": {
         "template": "minimal-bail-application-submitted.json",
         "replacements": {
-          "bailHearingCentre": "newport",
-          "isLegallyRepresentedForFlag": "Yes"
+          "applicantHasMobile": "Yes",
+          "applicantMobileNumber1": "{$IA_TEST_APPLICANT_MOBILE}",
+          "legalRepCompanyAddress": {
+            "AddressLine1": "line1",
+            "AddressLine2": "",
+            "PostTown": "town",
+            "County": "county",
+            "PostCode": "NE 2AB",
+            "Country": "UK"
+          }
         }
       }
     }
@@ -22,65 +29,54 @@
     "errors": [],
     "confirmation": {
       "header": "success",
-      "body": "contains([_BAIL_STOP_LEGAL_REPRESENTING_APPLICANT_SMS])"
-    },
-    "caseData": {
-      "template": "minimal-bail-application-submitted.json",
-      "replacements": {
-        "bailHearingCentre": "newport",
-        "notificationsSent": [
-          {
-            "id": "5782_BAIL_STOP_LEGAL_REPRESENTING_ADMIN_OFFICER",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          },
-          {
-            "id": "5782_BAIL_STOP_LEGAL_REPRESENTING_LEGAL_REP",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          },
-          {
-            "id": "5782_BAIL_STOP_LEGAL_REPRESENTING_HOME_OFFICE",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          },
-          {
-            "id": "5782_BAIL_STOP_LEGAL_REPRESENTING_APPLICANT_SMS",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          }
-        ]
-      }
+      "body": "contains([2104_BAIL_STOP_LEGAL_REPRESENTING_ADMIN_OFFICER,2104_BAIL_STOP_LEGAL_REPRESENTING_LEGAL_REP,2104_BAIL_STOP_LEGAL_REPRESENTING_HOME_OFFICE,2104_BAIL_STOP_LEGAL_REPRESENTING_APPLICANT_SMS])"
     },
     "notifications": [
       {
-        "reference": "5782_BAIL_STOP_LEGAL_REPRESENTING_ADMIN_OFFICER",
-        "recipient": "{bailHearingCentreEmailAddresses.newport}",
+        "reference": "2104_BAIL_STOP_LEGAL_REPRESENTING_ADMIN_OFFICER",
+        "recipient": "{$bailHearingCentreEmailAddresses.newport}",
         "subject": "Bail application: Applicant no longer represented",
         "body": [
           "1650-6221-2061-5101",
           "John Smith",
-          "{$iaExUiFrontendUrl}",
-          "The applicant in this case no longer has a legal representative."
+          "A12345",
+          "123654LR"
         ]
       },
       {
-        "reference": "5782_BAIL_STOP_LEGAL_REPRESENTING_LEGAL_REP",
+        "reference": "2104_BAIL_STOP_LEGAL_REPRESENTING_LEGAL_REP",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Bail application: You have stopped representing a client",
         "body": [
           "1650-6221-2061-5101",
           "John Smith",
-          "{$iaExUiFrontendUrl}",
-          "You are no longer representing the client in this case.",
-          "The online case reference number for this case is: 1650-6221-2061-5101"
+          "A12345",
+          "123654LR"
         ]
       },
       {
-        "reference": "5782_BAIL_STOP_LEGAL_REPRESENTING_HOME_OFFICE",
+        "reference": "2104_BAIL_STOP_LEGAL_REPRESENTING_HOME_OFFICE",
         "recipient": "{$bailHomeOfficeEmailAddress}",
         "subject": "Bail application: Applicant no longer represented",
         "body": [
           "1650-6221-2061-5101",
           "John Smith",
-          "{$iaExUiFrontendUrl}",
-          "The legal representative is no longer representing the applicant in this case and they no longer have access to this case."
+          "A12345",
+          "123654LR",
+          "Legal Rep",
+          "{$TEST_LAW_FIRM_A_USERNAME}",
+          "line1, town, county, NE 2AB, UK"
+        ]
+      },
+      {
+        "reference": "2104_BAIL_STOP_LEGAL_REPRESENTING_APPLICANT_SMS",
+        "recipient": "{$IA_TEST_APPLICANT_MOBILE}",
+        "subject": "",
+        "body": [
+          "1650-6221-2061-5101",
+          "John Smith",
+          "123654LR",
+          "2 Feb 2000"
         ]
       }
     ]

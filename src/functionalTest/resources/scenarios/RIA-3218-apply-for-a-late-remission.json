@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "LegalRepresentative",
     "input": {
-      "id": 3218,
+      "id": 1809,
       "eventId": "requestFeeRemission",
       "state": "appealSubmitted",
       "caseData": {
@@ -32,7 +32,7 @@
         "legalAidAccountNumber": "1A234B",
         "notificationsSent": [
           {
-            "id": "3218_LEGAL_REPRESENTATIVE_APPLY_FOR_LATE_REMISSION",
+            "id": "1809_LEGAL_REPRESENTATIVE_APPLY_FOR_LATE_REMISSION",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -40,7 +40,7 @@
     },
     "notifications": [
       {
-        "reference": "3218_LEGAL_REPRESENTATIVE_APPLY_FOR_LATE_REMISSION",
+        "reference": "1809_LEGAL_REPRESENTATIVE_APPLY_FOR_LATE_REMISSION",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: Fee remission requested",
         "body": [

@@ -1,11 +1,11 @@
 {
   "description": "RIA-6115 Notification of respondent ftpa application submitted for AIP journey",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "HomeOfficePOU",
     "input": {
-      "id": 6115,
+      "id": 1517,
       "eventId": "applyForFTPARespondent",
       "state": "ftpaSubmitted",
       "caseData": {
@@ -38,15 +38,15 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "6115_FTPA_SUBMITTED_RESPONDENT",
+            "id": "1517_FTPA_SUBMITTED_RESPONDENT",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "6115_RESPONDENT_FTPA_SUBMITTED_TO_APPELLANT_EMAIL",
+            "id": "1517_RESPONDENT_FTPA_SUBMITTED_TO_APPELLANT_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "6115_RESPONDENT_FTPA_SUBMITTED_TO_APPELLANT_SMS",
+            "id": "1517_RESPONDENT_FTPA_SUBMITTED_TO_APPELLANT_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -54,7 +54,7 @@
     },
     "notifications": [
       {
-        "reference": "6115_FTPA_SUBMITTED_RESPONDENT",
+        "reference": "1517_FTPA_SUBMITTED_RESPONDENT",
         "recipient": "{$homeOfficeFtpaEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
         "body": [
@@ -68,7 +68,7 @@
         ]
       },
       {
-        "reference": "6115_RESPONDENT_FTPA_SUBMITTED_TO_APPELLANT_EMAIL",
+        "reference": "1517_RESPONDENT_FTPA_SUBMITTED_TO_APPELLANT_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
         "subject": "Immigration and Asylum appeal: The Home Office has applied for permission to appeal to the Upper Tribunal",
         "body": [
@@ -81,7 +81,7 @@
         ]
       },
       {
-        "reference": "6115_RESPONDENT_FTPA_SUBMITTED_TO_APPELLANT_SMS",
+        "reference": "1517_RESPONDENT_FTPA_SUBMITTED_TO_APPELLANT_SMS",
         "recipient": "{$TEST_CITIZEN_MOBILE}",
         "subject": "",
         "body": [

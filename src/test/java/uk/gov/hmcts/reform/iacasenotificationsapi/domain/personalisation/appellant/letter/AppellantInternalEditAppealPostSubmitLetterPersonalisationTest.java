@@ -70,8 +70,6 @@ class AppellantInternalEditAppealPostSubmitLetterPersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.of(address));
         when(asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeRefNumber));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
         when(address.getAddressLine1()).thenReturn(Optional.of(addressLine1));
         when(address.getAddressLine2()).thenReturn(Optional.of(addressLine2));
         when(address.getAddressLine3()).thenReturn(Optional.of(addressLine3));
@@ -170,8 +168,6 @@ class AppellantInternalEditAppealPostSubmitLetterPersonalisationTest {
             .containsEntry("address_line_4", addressLine3)
             .containsEntry("address_line_5", postTown)
             .containsEntry("address_line_6", postCode);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @Test
@@ -192,8 +188,6 @@ class AppellantInternalEditAppealPostSubmitLetterPersonalisationTest {
             .containsEntry("address_line_3", oocAddressLine2)
             .containsEntry("address_line_4", oocAddressLine3)
             .containsEntry("address_line_5", Nationality.ES.toString());
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @Test
@@ -212,8 +206,6 @@ class AppellantInternalEditAppealPostSubmitLetterPersonalisationTest {
             .containsEntry("address_line_3", addressLine3)
             .containsEntry("address_line_4", postTown)
             .containsEntry("address_line_5", postCode);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @Test
@@ -232,8 +224,6 @@ class AppellantInternalEditAppealPostSubmitLetterPersonalisationTest {
             .containsEntry("address_line_3", oocAddressLine3)
             .containsEntry("address_line_4", postTown)
             .containsEntry("address_line_5", Nationality.ES.toString());
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     private void legalRepOutOfCountryDataSetup() {

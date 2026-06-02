@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 9233,
+      "id": 1094,
       "eventId": "decideAnApplication",
       "state": "appealSubmitted",
       "caseData": {
@@ -106,11 +106,11 @@
         ],
         "notificationsSent": [
           {
-            "id": "9233_DECIDE_AN_APPLICATION_HOME_OFFICE",
+            "id": "1094_DECIDE_AN_APPLICATION_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "9233_INTERNAL_RESPONDENT_APPLICATION_DECIDED_APPELLANT_LETTER",
+            "id": "1094_INTERNAL_RESPONDENT_APPLICATION_DECIDED_APPELLANT_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

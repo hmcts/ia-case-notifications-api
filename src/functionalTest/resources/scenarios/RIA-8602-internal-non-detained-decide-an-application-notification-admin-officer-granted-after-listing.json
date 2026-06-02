@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
-      "id": 70331,
+      "id": 1155,
       "eventId": "decideAnApplication",
       "state": "prepareForHearing",
       "caseData": {
@@ -82,7 +82,7 @@
         ],
         "notificationsSent": [
           {
-            "id": "70331_DECIDE_AN_APPLICATION_HOME_OFFICE",
+            "id": "1155_DECIDE_AN_APPLICATION_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

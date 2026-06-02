@@ -1,11 +1,11 @@
 {
   "description": "RIA-6533 ADA case listed direction notification",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 1003,
+      "id": 1495,
       "eventId": "listCase",
       "state": "awaitingRespondentEvidence",
       "caseData": {
@@ -45,7 +45,15 @@
         "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
         "notificationsSent": [
           {
-            "id": "1003_CASE_LISTED_SEND_DIRECTION_LEGAL_REPRESENTATIVE",
+            "id": "1495_CASE_LISTED_SEND_DIRECTION_LEGAL_REPRESENTATIVE",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "1495_CASE_LISTED_LEGAL_REPRESENTATIVE",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "1495_CASE_LISTED_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ],
@@ -65,7 +73,7 @@
     },
     "notifications": [
       {
-        "reference": "1003_CASE_LISTED_SEND_DIRECTION_LEGAL_REPRESENTATIVE",
+        "reference": "1495_CASE_LISTED_SEND_DIRECTION_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Accelerated detained appeal: submit hearing requirements direction",
         "body": [

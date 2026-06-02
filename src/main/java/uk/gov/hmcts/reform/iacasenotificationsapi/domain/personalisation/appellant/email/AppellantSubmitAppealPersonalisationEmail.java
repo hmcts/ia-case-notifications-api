@@ -117,7 +117,7 @@ public class AppellantSubmitAppealPersonalisationEmail implements EmailNotificat
         return
             ImmutableMap
                 .<String, String>builder()
-                .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+                .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
                 .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
                 .put("Ref Number", String.valueOf(callback.getCaseDetails().getId()))
                 .put("Appeal Ref Number", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))

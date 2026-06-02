@@ -18,6 +18,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ARIA_LISTING_REFERENCE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.COMPLETE_CASE_REVIEW_DATE;
@@ -142,7 +143,7 @@ class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmailTest {
         Map<String, String> customerServicesMap = new HashMap<>();
         customerServicesMap.put(CUSTOMER_SERVICES_TELEPHONE_KEY, CUSTOMER_SERVICE_PHONE);
         customerServicesMap.put(CUSTOMER_SERVICES_EMAIL_KEY, CUSTOMER_SERVICE_EMAIL);
-        when(customerServicesProvider.getCustomerServicesPersonalisation())
+        when(customerServicesProvider.getCustomerServicesPersonalisation(any(AsylumCase.class)))
             .thenReturn(customerServicesMap);
     }
 

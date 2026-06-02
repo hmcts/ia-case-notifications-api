@@ -70,9 +70,7 @@ public class AppellantChangeDirectionDueDateOfHomeOfficePersonalisationEmailTest
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
         String customerServicesTelephone = "555 555 555";
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         String customerServicesEmail = "cust.services@example.com";
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         appellantChangeDirectionDueDateOfHomeOfficePersonalisationEmail =
             new AppellantChangeDirectionDueDateOfHomeOfficePersonalisationEmail(

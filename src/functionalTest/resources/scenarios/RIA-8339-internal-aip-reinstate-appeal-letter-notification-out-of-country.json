@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 8339,
+      "id": 1170,
       "eventId": "reinstateAppeal",
       "state": "appealSubmitted",
       "caseData": {
@@ -48,11 +48,11 @@
         "countryGovUkOocAdminJ": "ES",
         "notificationsSent": [
           {
-            "id": "8339_REINSTATE_APPEAL_HOME_OFFICE",
+            "id": "1170_REINSTATE_APPEAL_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "8339_INTERNAL_REINSTATE_APPEAL_APPELLANT_LETTER",
+            "id": "1170_INTERNAL_REINSTATE_APPEAL_APPELLANT_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

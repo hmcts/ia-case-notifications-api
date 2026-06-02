@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.component;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
@@ -26,8 +26,8 @@ import java.util.UUID;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MvcResult;
 import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.SpringBootIntegrationTest;
 import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.WithNotificationEmailStub;
@@ -51,7 +51,7 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
     private static final String UUID_PATTERN =
         "[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}";
 
-    @MockBean
+    @MockitoBean
     private GovNotifyNotificationSender notificationSender;
 
     @Test
@@ -94,9 +94,9 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
         assertTrue(notificationsSent.isPresent());
         List<IdValue<String>> notifications = notificationsSent.get();
 
-        assertThat(notifications.size()).isEqualTo(2);
-        assertThat(notifications.get(0).getId()).contains("_RESPONDENT_NON_STANDARD_DIRECTION");
-        assertThat(notifications.get(0).getValue()).matches(UUID_PATTERN);
+        assertEquals(2, notifications.size());
+        assertTrue(notifications.getFirst().getId().contains("_RESPONDENT_NON_STANDARD_DIRECTION"));
+        assertTrue(notifications.getFirst().getValue().matches(UUID_PATTERN));
     }
 
     private PreSubmitCallbackResponseForTest aboutToSubmit(CallbackForTest.CallbackForTestBuilder callback) {
@@ -120,5 +120,4 @@ class SendsDirectionTest extends SpringBootIntegrationTest implements WithServic
             throw new RuntimeException(e);
         }
     }
-
 }

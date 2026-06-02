@@ -50,8 +50,6 @@ public class UpperTribunalMarkAsReadyForUtTransferPersonalisationTest {
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(UT_APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(utAppealReferenceNumber));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         upperTribunalMarkAsReadyForUtTransferPersonalisation = new UpperTribunalMarkAsReadyForUtTransferPersonalisation(
             beforeListingTemplateId,
@@ -110,8 +108,6 @@ public class UpperTribunalMarkAsReadyForUtTransferPersonalisationTest {
             .containsEntry("appellantFamilyName", appellantFamilyName)
             .containsEntry("utAppealReferenceNumber", utAppealReferenceNumber)
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
     }
 
@@ -136,8 +132,6 @@ public class UpperTribunalMarkAsReadyForUtTransferPersonalisationTest {
             .containsEntry("appellantFamilyName", "")
             .containsEntry("utAppealReferenceNumber", "")
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @Test

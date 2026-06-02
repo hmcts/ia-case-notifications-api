@@ -64,7 +64,7 @@ public class AppellantMarkAppealAsRemittedNonDetainedPersonalisationEmail implem
         PinInPostDetails pip = AsylumCaseUtils.generateAppellantPinIfNotPresent(asylumCase);
         final ImmutableMap.Builder<String, String> listCaseFields = ImmutableMap
             .<String, String>builder()
-            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))

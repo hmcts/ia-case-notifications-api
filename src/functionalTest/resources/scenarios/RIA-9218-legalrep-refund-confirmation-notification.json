@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 9218,
+      "id": 1098,
       "eventId": "refundConfirmation",
       "state": "*",
       "caseData": {
@@ -36,7 +36,7 @@
         "newFeeAmount": "8000",
         "notificationsSent": [
           {
-            "id": "9218_REFUND_CONFIRMATION_LEGAL_REPRESENTATIVE",
+            "id": "1098_REFUND_CONFIRMATION_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -44,7 +44,7 @@
     },
     "notifications": [
       {
-        "reference": "9218_REFUND_CONFIRMATION_LEGAL_REPRESENTATIVE",
+        "reference": "1098_REFUND_CONFIRMATION_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: Your appeal has changed – new fee required",
         "body": [

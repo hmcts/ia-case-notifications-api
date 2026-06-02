@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "SystemUser",
     "input": {
-      "id": 8345,
+      "id": 1164,
       "eventId": "endAppealAutomatically",
       "state": "appealSubmitted",
       "caseData": {
@@ -51,7 +51,7 @@
       },
       "notificationsSent": [
         {
-          "id": "8345_INTERNAL_END_APPEAL_AUTOMATICALLY_APPELLANT_LETTER",
+          "id": "1164_INTERNAL_END_APPEAL_AUTOMATICALLY_APPELLANT_LETTER",
           "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
         }
       ]

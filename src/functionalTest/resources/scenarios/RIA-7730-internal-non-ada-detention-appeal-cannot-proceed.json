@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 7730,
+      "id": 1281,
       "eventId": "recordOutOfTimeDecision",
       "state": "appealSubmitted",
       "caseData": {

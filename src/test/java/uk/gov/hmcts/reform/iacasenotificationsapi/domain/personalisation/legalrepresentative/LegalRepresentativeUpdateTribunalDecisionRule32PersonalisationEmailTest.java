@@ -56,8 +56,6 @@ class LegalRepresentativeUpdateTribunalDecisionRule32PersonalisationEmailTest {
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(BIRMINGHAM));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         legalRepresentativeUpdateTribunalDecisionRule32PersonalisationEmail = new LegalRepresentativeUpdateTribunalDecisionRule32PersonalisationEmail(
             legalRepresentativeUpdateTribunalDecisionRule32EmailTemplateId,
@@ -98,8 +96,6 @@ class LegalRepresentativeUpdateTribunalDecisionRule32PersonalisationEmailTest {
             .containsEntry("appellantGivenNames", appellantGivenNames)
             .containsEntry("appellantFamilyName", appellantFamilyName)
             .containsEntry("linkToService", exUiFrontendUrl);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
     }
 

@@ -6,7 +6,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 7031,
+      "id": 1424,
       "eventId": "submitAppeal",
       "state": "appealSubmitted",
       "caseData": {
@@ -27,7 +27,7 @@
         "hearingCentre": "manchester",
         "notificationsSent": [
           {
-            "id": "7031_APPEAL_SUBMITTED_CASE_OFFICER",
+            "id": "1424_APPEAL_SUBMITTED_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -35,7 +35,7 @@
     },
     "notifications": [
       {
-        "reference": "7031_APPEAL_SUBMITTED_CASE_OFFICER",
+        "reference": "1424_APPEAL_SUBMITTED_CASE_OFFICER",
         "recipient": "{$hearingCentreEmailAddresses.manchester}",
         "subject": "Immigration and Asylum appeal: appeal submitted",
         "body": [
