@@ -78,7 +78,7 @@ public class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation
 
         ImmutableMap.Builder<String, String> builder = ImmutableMap.<String, String>builder()
                 .put(APPEAL_REFERENCE_NUMBER_KEY, appealRef)
-                .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+                .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
                 .put(APPELLANT_GIVEN_NAMES_KEY, givenNames)
                 .put(APPELLANT_FAMILY_NAME_KEY, familyName)
                 .put("appellantFullName", (givenNames + " " + familyName).trim())

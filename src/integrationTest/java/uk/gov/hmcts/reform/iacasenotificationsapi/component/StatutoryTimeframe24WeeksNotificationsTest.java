@@ -5,8 +5,8 @@ import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MvcResult;
 import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.SpringBootIntegrationTest;
 import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.WithNotificationEmailStub;
@@ -65,6 +65,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Eve
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State.APPEAL_SUBMITTED;
 
 @Slf4j
+@SuppressWarnings("unchecked")
 public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegrationTest implements WithServiceAuthStub,
         WithNotificationEmailStub {
 
@@ -86,7 +87,8 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
     private static final YesOrNo WANTS_SMS = YesOrNo.YES;
     private static final YesOrNo DONT_WANTS_SMS = YesOrNo.NO;
     private static final YesOrNo DONT_WANTS_EMAIL = YesOrNo.NO;
-    @MockBean
+
+    @MockitoBean
     private GovNotifyNotificationSender notificationSender;
 
     // --- Test data builders / helpers ---
@@ -180,6 +182,11 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
+    }
+
+    private void setSmsContactPreference(AsylumCaseForTest caseData) {
+        caseData.with(CONTACT_PREFERENCE, ContactPreference.WANTS_SMS);
+        caseData.with(MOBILE_NUMBER, "07123456789");
     }
 
     // --- Tests ---
@@ -382,11 +389,6 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
             var response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
             assertNotificationsContain(response, 2, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL);
         }
-    }
-
-    private void setSmsContactPreference(AsylumCaseForTest caseData) {
-        caseData.with(CONTACT_PREFERENCE, ContactPreference.WANTS_SMS);
-        caseData.with(MOBILE_NUMBER, "07123456789");
     }
 
 }

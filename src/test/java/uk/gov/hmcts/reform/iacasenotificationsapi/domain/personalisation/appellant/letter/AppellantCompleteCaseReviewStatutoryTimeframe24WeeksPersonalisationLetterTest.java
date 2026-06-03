@@ -160,7 +160,7 @@ class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationLetterT
         Map<String, String> customerServicesMap = new HashMap<>();
         customerServicesMap.put(CUSTOMER_SERVICES_TELEPHONE_KEY, CUSTOMER_SERVICE_PHONE);
         customerServicesMap.put(CUSTOMER_SERVICES_EMAIL_KEY, CUSTOMER_SERVICE_EMAIL);
-        when(customerServicesProvider.getCustomerServicesPersonalisation())
+        when(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
                 .thenReturn(customerServicesMap);
     }
 

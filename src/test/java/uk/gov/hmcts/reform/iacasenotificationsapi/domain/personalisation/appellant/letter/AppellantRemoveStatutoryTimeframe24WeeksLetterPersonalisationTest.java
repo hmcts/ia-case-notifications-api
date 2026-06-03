@@ -64,7 +64,7 @@ class AppellantRemoveStatutoryTimeframe24WeeksLetterPersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.COMPLETE_CASE_REVIEW_DATE, String.class))
                 .thenReturn(Optional.of(LocalDate.of(1990, 5, 15).toString()));
 
-        when(customerServicesProvider.getCustomerServicesPersonalisation())
+        when(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
                 .thenReturn(ImmutableMap.of("customerServices", "value"));
 
     }
