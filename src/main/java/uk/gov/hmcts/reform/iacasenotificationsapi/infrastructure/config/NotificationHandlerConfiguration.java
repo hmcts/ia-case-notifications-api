@@ -5642,6 +5642,66 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> stf24WeeksCompleteCaseReviewAppellantNotificationHandler(
+            @Qualifier("stf24WeeksCompleteCaseReviewAppellantNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase =
+                            callback
+                                    .getCaseDetails()
+                                    .getCaseData();
+                    Set<String> appellantEmails = AsylumCaseUtils.getApplicantEmail(asylumCase);
+                    String emails = String.join(",", appellantEmails);
+                    boolean canSendAppellant = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == COMPLETE_CASE_REVIEW
+                            && AsylumCaseUtils.hasStf24WeeksStatus(asylumCase) && !emails.isEmpty();
+                    log.info("case_Review  canSendAppellant {}", canSendAppellant);
+                    return canSendAppellant;
+                },
+                notificationGenerators,  getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> stf24WeeksCompleteCaseReviewLegalRepresentativeNotificationHandler(
+            @Qualifier("stf24WeeksCompleteCaseReviewLegalRepresentativeNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase =
+                            callback
+                                    .getCaseDetails()
+                                    .getCaseData();
+                    Set<String> legalRepEmails = Collections.singleton(getLegalRepEmailInternalOrLegalRepJourneyNonMandatory(asylumCase));
+                    String emails = String.join(",", legalRepEmails);
+                    boolean canSendLegalRep = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == COMPLETE_CASE_REVIEW && AsylumCaseUtils.hasStf24WeeksStatus(asylumCase) && !emails.isEmpty();
+                    log.info("case_Review canSendLegalRep {}", canSendLegalRep);
+                    return canSendLegalRep;
+                },
+                notificationGenerators,  getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> stf24WeeksCompleteCaseReviewHomeOfficeNotificationHandler(
+            @Qualifier("stf24WeeksCompleteCaseReviewHomeOfficeNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase =
+                            callback
+                                    .getCaseDetails()
+                                    .getCaseData();
+
+                    boolean canSendHomeOfficeNotification = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == COMPLETE_CASE_REVIEW && AsylumCaseUtils.hasStf24WeeksStatus(asylumCase);
+                    log.info("case_Review canSendHomeOfficeNotification1 {}", canSendHomeOfficeNotification);
+                    return canSendHomeOfficeNotification;
+                },
+                notificationGenerators,  getErrorHandler()
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> removeStatutoryTimeframe24WeeksAppellantLetterNotificationHandler(
             @Qualifier("removeStatutoryTimeframe24WeeksAppellantLetterNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
         return new NotificationHandler(
@@ -5670,8 +5730,10 @@ public class NotificationHandlerConfiguration {
                                     .getCaseData();
                     Set<String> appellantEmails = AsylumCaseUtils.getApplicantEmail(asylumCase);
                     String emails = String.join(",", appellantEmails);
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    boolean canSendRemoveAppellant = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == REMOVE_STATUTORY_TIMEFRAME_24_WEEKS && !emails.isEmpty();
+                    log.info("Remove STF canSendRemoveAppellant {}", canSendRemoveAppellant);
+                    return canSendRemoveAppellant;
                 },
                 notificationGenerators,  getErrorHandler()
         );
@@ -7789,6 +7851,198 @@ public class NotificationHandlerConfiguration {
                     && isHearingChannel(asylumCase, "INTER");
 
             }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> aipPaPayLaterRequestReasonsForAppealNotificationHandler(
+            @Qualifier("aipPaPayLaterRequestReasonsForAppealNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    boolean isCorrectAppealType = asylumCase
+                            .read(APPEAL_TYPE, AppealType.class)
+                            .map(type -> type == PA).orElse(false);
+
+                    String paAipPaymentOption = asylumCase
+                            .read(AsylumCaseDefinition.PA_APPEAL_TYPE_AIP_PAYMENT_OPTION, String.class).orElse("");
+
+                    boolean paymentPaid = asylumCase
+                            .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
+                            .map(paymentStatus -> paymentStatus == PAID).orElse(false);
+
+                    return callback.getEvent() == REQUEST_REASONS_FOR_APPEAL
+                            && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && isCorrectAppealType
+                            && !isInternalCase(asylumCase)
+                            && !paymentPaid
+                            && isAipJourney(asylumCase)
+                            && paAipPaymentOption.equals("payLater");
+
+                }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> aipPaPayListingNotificationHandler(
+            @Qualifier("aipPaPayLaterListingNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    boolean isCorrectAppealType = asylumCase
+                            .read(APPEAL_TYPE, AppealType.class)
+                            .map(type -> type == PA).orElse(false);
+
+                    String paAipPaymentOption = asylumCase
+                            .read(AsylumCaseDefinition.PA_APPEAL_TYPE_AIP_PAYMENT_OPTION, String.class).orElse("");
+
+                    boolean paymentPaid = asylumCase
+                            .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
+                            .map(paymentStatus -> paymentStatus == PAID).orElse(false);
+
+                    return callback.getEvent() == LIST_CASE
+                            && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && isCorrectAppealType
+                            && !isInternalCase(asylumCase)
+                            && !paymentPaid
+                            && isAipJourney(asylumCase)
+                            && paAipPaymentOption.equals("payLater");
+
+                }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> aipPaPayLaterDecisionNotificationHandler(
+            @Qualifier("aipPaPayLaterDecisionNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    boolean isCorrectAppealType = asylumCase
+                            .read(APPEAL_TYPE, AppealType.class)
+                            .map(type -> type == PA).orElse(false);
+
+                    String paAipPaymentOption = asylumCase
+                            .read(AsylumCaseDefinition.PA_APPEAL_TYPE_AIP_PAYMENT_OPTION, String.class).orElse("");
+
+                    boolean paymentPaid = asylumCase
+                            .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
+                            .map(paymentStatus -> paymentStatus == PAID).orElse(false);
+
+                    return callback.getEvent() == SEND_DECISION_AND_REASONS
+                            && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && isCorrectAppealType
+                            && !isInternalCase(asylumCase)
+                            && !paymentPaid
+                            && isAipJourney(asylumCase)
+                            && paAipPaymentOption.equals("payLater");
+
+                }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> legalRepPaPayLaterCaseBuildingNotificationHandler(
+            @Qualifier("legalRepPaPayLaterCaseBuildingNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    boolean isCorrectAppealType = asylumCase
+                            .read(APPEAL_TYPE, AppealType.class)
+                            .map(type -> type == PA).orElse(false);
+
+                    String paPaymentOption = asylumCase
+                            .read(AsylumCaseDefinition.PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
+
+                    boolean paymentPaid = asylumCase
+                            .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
+                            .map(paymentStatus -> paymentStatus == PAID).orElse(false);
+
+                    return callback.getEvent() == BUILD_CASE
+                            && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && isCorrectAppealType
+                            && !isInternalCase(asylumCase)
+                            && !paymentPaid
+                            && isRepJourney(asylumCase)
+                            && paPaymentOption.equals("payLater");
+
+                }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> legalRepPaPayLaterListingNotificationHandler(
+            @Qualifier("legalRepPaPayLaterListingNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    boolean isCorrectAppealType = asylumCase
+                            .read(APPEAL_TYPE, AppealType.class)
+                            .map(type -> type == PA).orElse(false);
+
+                    String paPaymentOption = asylumCase
+                            .read(AsylumCaseDefinition.PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
+
+                    boolean paymentPaid = asylumCase
+                            .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
+                            .map(paymentStatus -> paymentStatus == PAID).orElse(false);
+
+                    return callback.getEvent() == LIST_CASE
+                            && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && isCorrectAppealType
+                            && !isInternalCase(asylumCase)
+                            && !paymentPaid
+                            && isRepJourney(asylumCase)
+                            && paPaymentOption.equals("payLater");
+
+                }, notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> legalRepPaPayLaterDecisionNotificationHandler(
+            @Qualifier("legalRepPaPayLaterDecisionNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                    boolean isCorrectAppealType = asylumCase
+                            .read(APPEAL_TYPE, AppealType.class)
+                            .map(type -> type == PA).orElse(false);
+
+                    String paPaymentOption = asylumCase
+                            .read(AsylumCaseDefinition.PA_APPEAL_TYPE_PAYMENT_OPTION, String.class).orElse("");
+
+                    boolean paymentPaid = asylumCase
+                            .read(AsylumCaseDefinition.PAYMENT_STATUS, PaymentStatus.class)
+                            .map(paymentStatus -> paymentStatus == PAID).orElse(false);
+
+                    return callback.getEvent() == SEND_DECISION_AND_REASONS
+                            && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && isCorrectAppealType
+                            && !isInternalCase(asylumCase)
+                            && !paymentPaid
+                            && isRepJourney(asylumCase)
+                            && paPaymentOption.equals("payLater");
+
+                }, notificationGenerators
         );
     }
 
