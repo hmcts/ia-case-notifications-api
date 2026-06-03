@@ -80,8 +80,6 @@ class LegalRepresentativeLetterUpdateDetentionLocationPersonalisationTest {
         String previousDetentionLocation = "Addiewell";
         when(asylumCase.read(PREVIOUS_DETENTION_LOCATION, String.class)).thenReturn(Optional.of(previousDetentionLocation));
         when(detentionFacilityNameFinder.getDetentionFacility(previousDetentionLocation)).thenReturn(previousDetentionLocationFull);
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
         when(address.getAddressLine1()).thenReturn(Optional.of(addressLine1));
         when(address.getAddressLine2()).thenReturn(Optional.of(addressLine2));
         when(address.getAddressLine3()).thenReturn(Optional.of(addressLine3));
@@ -156,8 +154,6 @@ class LegalRepresentativeLetterUpdateDetentionLocationPersonalisationTest {
             .containsEntry("address_line_4", addressLine3)
             .containsEntry("address_line_5", postTown)
             .containsEntry("address_line_6", postCode);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertThat(personalisation)
             .containsEntry("oldDetentionLocation", previousDetentionLocationFull)
             .containsEntry("newDetentionLocation", ircName);
@@ -180,8 +176,6 @@ class LegalRepresentativeLetterUpdateDetentionLocationPersonalisationTest {
             .containsEntry("address_line_4", addressLine3)
             .containsEntry("address_line_5", postTown)
             .containsEntry("address_line_6", Nationality.ES.toString());
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @Test
@@ -200,8 +194,6 @@ class LegalRepresentativeLetterUpdateDetentionLocationPersonalisationTest {
             .containsEntry("address_line_3", addressLine3)
             .containsEntry("address_line_4", postTown)
             .containsEntry("address_line_5", postCode);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertThat(personalisation)
             .containsEntry("oldDetentionLocation", previousDetentionLocationFull)
             .containsEntry("newDetentionLocation", ircName);
@@ -223,8 +215,6 @@ class LegalRepresentativeLetterUpdateDetentionLocationPersonalisationTest {
             .containsEntry("address_line_3", addressLine3)
             .containsEntry("address_line_4", postTown)
             .containsEntry("address_line_5", Nationality.ES.toString());
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertThat(personalisation)
             .containsEntry("oldDetentionLocation", previousDetentionLocationFull)
             .containsEntry("newDetentionLocation", ircName);

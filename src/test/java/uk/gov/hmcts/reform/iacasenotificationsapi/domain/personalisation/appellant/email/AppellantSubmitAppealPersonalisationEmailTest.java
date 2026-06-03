@@ -95,8 +95,6 @@ class AppellantSubmitAppealPersonalisationEmailTest {
 
         when(asylumCase.read(APPELLANT_DATE_OF_BIRTH, String.class)).thenReturn(Optional.of(dateOfBirth));
         when(asylumCase.read(EMAIL, String.class)).thenReturn(Optional.of(mockedAppellantEmailAddress));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         appellantSubmitAppealPersonalisationEmail = new AppellantSubmitAppealPersonalisationEmail(
             emailTemplateId,
@@ -208,8 +206,6 @@ class AppellantSubmitAppealPersonalisationEmailTest {
             .containsEntry("Date Of Birth", expectedDateOfBirth)
             .containsEntry("due date", dueDate)
             .containsEntry("Hyperlink to service", iaAipFrontendUrl);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));

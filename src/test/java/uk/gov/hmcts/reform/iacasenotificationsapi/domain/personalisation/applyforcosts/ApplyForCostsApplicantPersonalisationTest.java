@@ -81,9 +81,6 @@ class ApplyForCostsApplicantPersonalisationTest {
         applyForCostsApplicantPersonalisationTemplate.put("appealReferenceNumber", appealReferenceNumber);
         applyForCostsApplicantPersonalisationTemplate.put("linkToOnlineService", iaExUiFrontendUrl);
         applyForCostsApplicantPersonalisationTemplate.put("appliedCostsType", "Wasted");
-
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
         when(personalisationProvider.getApplyForCostsPersonalisation(asylumCase)).thenReturn(applyForCostsApplicantPersonalisationTemplate);
         when(emailAddressFinder.getLegalRepEmailAddress(asylumCase)).thenReturn(legalRepEmailAddress);
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
@@ -118,7 +115,7 @@ class ApplyForCostsApplicantPersonalisationTest {
     void should_return_given_email_address(List<IdValue<ApplyForCosts>> applyForCostsList) {
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
 
-        if (applyForCostsList.get(0).getValue().getApplyForCostsApplicantType().equals(homeOffice)) {
+        if (applyForCostsList.getFirst().getValue().getApplyForCostsApplicantType().equals(homeOffice)) {
             assertTrue(applyForCostsApplicantPersonalisation.getRecipientsList(asylumCase).contains(homeOfficeEmailAddress));
         } else {
             assertTrue(applyForCostsApplicantPersonalisation.getRecipientsList(asylumCase).contains(legalRepEmailAddress));
@@ -149,13 +146,11 @@ class ApplyForCostsApplicantPersonalisationTest {
             .containsEntry("appellantGivenNames", appellantGivenNames)
             .containsEntry("appellantFamilyName", appellantFamilyName)
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertThat(personalisation)
             .containsEntry("appliedCostsType", "Wasted")
             .containsEntry("creationDate", "24 Nov 2023");
 
-        if (applyForCostsList.get(0).getValue().getApplyForCostsApplicantType().equals("Home office")) {
+        if (applyForCostsList.getFirst().getValue().getApplyForCostsApplicantType().equals("Home office")) {
             assertThat(personalisation)
                 .containsEntry("recipient", "Home office")
                 .containsEntry("recipientReferenceNumber", homeOfficeReferenceNumber);

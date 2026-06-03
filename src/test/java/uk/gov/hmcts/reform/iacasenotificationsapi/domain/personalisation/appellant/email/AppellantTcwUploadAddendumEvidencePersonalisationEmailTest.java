@@ -29,7 +29,6 @@ import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
@@ -54,8 +53,6 @@ class AppellantTcwUploadAddendumEvidencePersonalisationEmailTest {
     RecipientsFinder recipientsFinder;
     @Mock
     CustomerServicesProvider customerServicesProvider;
-    @Mock
-    FeatureToggler featureToggler;
 
     private AppellantTcwUploadAddendumEvidencePersonalisationEmail appellantTcwUploadAddendumEvidencePersonalisationEmail;
 
@@ -68,17 +65,13 @@ class AppellantTcwUploadAddendumEvidencePersonalisationEmailTest {
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(ariaListingReference));
 
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
-
         appellantTcwUploadAddendumEvidencePersonalisationEmail =
-            new AppellantTcwUploadAddendumEvidencePersonalisationEmail(
-                templateId,
-                iaAipFrontendUrl,
-                recipientsFinder,
-                customerServicesProvider,
-                featureToggler
-            );
+                new AppellantTcwUploadAddendumEvidencePersonalisationEmail(
+                        templateId,
+                        iaAipFrontendUrl,
+                        recipientsFinder,
+                        customerServicesProvider
+                );
     }
 
     @Test
@@ -114,8 +107,9 @@ class AppellantTcwUploadAddendumEvidencePersonalisationEmailTest {
 
     @Test
     public void should_return_appellant_email_address_from_asylum_case() {
-        when(featureToggler.getValue("aip-upload-addendum-evidence-feature", false)).thenReturn(true);
+
         String appellantEmailAddress = "appellant@example.com";
+
         when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL))
             .thenReturn(Collections.singleton(appellantEmailAddress));
 
@@ -171,7 +165,5 @@ class AppellantTcwUploadAddendumEvidencePersonalisationEmailTest {
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 }

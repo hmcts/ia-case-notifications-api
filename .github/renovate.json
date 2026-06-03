@@ -7,16 +7,8 @@
     "dependencies"
   ],
   "ignoreDeps": [
-    "ch.qos.logback:logback-core",
-    "ch.qos.logback:logback-classic",
-    "org.apache.logging.log4j:log4j-to-slf4j",
-    "org.apache.logging.log4j:log4j-api",
     "checkstyle",
-    "io.rest-assured:rest-assured",
-    "io.rest-assured:rest-assured-all",
     "hashicorp/terraform",
-    "io.freefair.lombok",
-    "launchdarkly",
     "info.solidsoft.pitest"
   ],
   "timezone": "Europe/London",
@@ -50,7 +42,15 @@
       "automerge": true
     },
     {
-      "matchUpdateTypes": ["major"],
+      "matchPackageNames": [
+        "org.owasp.dependencycheck"
+      ],
+      "enabled": false
+    },
+    {
+      "matchUpdateTypes": [
+        "major"
+      ],
       "enabled": false
     }
   ],

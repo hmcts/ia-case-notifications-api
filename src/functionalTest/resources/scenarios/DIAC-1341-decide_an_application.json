@@ -1,12 +1,12 @@
 {
   "description": "DIAC-1341 Decide an application - Cancellation of Production Notice - Detained ",
   "launchDarklyKey": "tcw-notifications-feature:true",
-  "disabled": true,
+  "disabled": "true",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 2959123,
+      "id": 2074,
       "eventId": "decideAnApplication",
       "state": "preHearing",
       "caseData": {
@@ -50,15 +50,15 @@
         "listCaseHearingCentre": "taylorHouse",
         "notificationsSent": [
           {
-            "id": "2959123_DECIDE_AN_APPLICATION_LEGAL_REPRESENTATIVE",
+            "id": "2074_DECIDE_AN_APPLICATION_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "2959123_DECIDE_AN_APPLICATION_HOME_OFFICE",
+            "id": "2074_DECIDE_AN_APPLICATION_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "2959123_DETAINED_APPLICATION_DECIDED_PRODUCTION_DET",
+            "id": "2074_DETAINED_APPLICATION_DECIDED_PRODUCTION_DET",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -66,7 +66,7 @@
     },
     "notifications": [
       {
-        "reference": "2959123_DECIDE_AN_APPLICATION_LEGAL_REPRESENTATIVE",
+        "reference": "2074_DECIDE_AN_APPLICATION_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: A respondent application has been granted",
         "body": [
@@ -77,7 +77,7 @@
         ]
       },
       {
-        "reference": "2959123_DECIDE_AN_APPLICATION_HOME_OFFICE",
+        "reference": "2074_DECIDE_AN_APPLICATION_HOME_OFFICE",
         "recipient": "ho-email-apc-aat@example.com",
         "subject": "Immigration and Asylum appeal: Your application has been granted",
         "body": [
@@ -88,7 +88,7 @@
         ]
       },
       {
-        "reference": "2959123_DETAINED_APPLICATION_DECIDED_PRODUCTION_DET",
+        "reference": "2074_DETAINED_APPLICATION_DECIDED_PRODUCTION_DET",
         "recipient": "det-prison-albany@example.com",
         "subject": "IAFT – Production Notice",
         "body": [

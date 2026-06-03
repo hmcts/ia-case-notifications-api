@@ -68,7 +68,7 @@ public class ApplyForCostsApplicantPersonalisation implements EmailNotificationP
             .<String, String>builder()
             .putAll(personalisationProvider.getApplyForCostsPersonalisation(asylumCase))
             .putAll(personalisationProvider.getTypeForLatestCreatedApplyForCosts(asylumCase))
-            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .putAll(personalisationProvider.getApplyToCostsCreationDate(asylumCase));
 
         if (applicantAndRespondent.getLeft().equals(HOME_OFFICE)) {

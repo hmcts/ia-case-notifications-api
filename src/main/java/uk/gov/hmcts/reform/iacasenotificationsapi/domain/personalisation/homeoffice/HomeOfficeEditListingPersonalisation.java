@@ -82,7 +82,7 @@ public class HomeOfficeEditListingPersonalisation implements EmailNotificationPe
         requireNonNull(callback, "callback must not be null");
 
         final Map<String, String> listCaseFields = new HashMap<>();
-        listCaseFields.putAll(customerServicesProvider.getCustomerServicesPersonalisation());
+        listCaseFields.putAll(customerServicesProvider.getCustomerServicesPersonalisation(callback));
         listCaseFields.putAll(personalisationProvider.getPersonalisation(callback));
         listCaseFields.put("hearingCentreAddress", hearingDetailsFinder
                 .getHearingCentreLocation(callback.getCaseDetails().getCaseData()));

@@ -1,11 +1,11 @@
 {
   "description": "RIA-6784 Detention engagement team Notification of appellant's ftpa application submitted + RIA-7325",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 6784,
+      "id": 1350,
       "eventId": "applyForFTPAAppellant",
       "state": "ftpaSubmitted",
       "caseData": {
@@ -49,7 +49,7 @@
         "ircName": "Brookhouse",
         "notificationsSent": [
           {
-            "id": "6784_RESPONDENT_APPELLANT_FTPA_SUBMITTED",
+            "id": "1350_RESPONDENT_APPELLANT_FTPA_SUBMITTED",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

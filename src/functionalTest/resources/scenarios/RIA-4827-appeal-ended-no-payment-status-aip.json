@@ -1,11 +1,11 @@
 {
   "description": "RIA-4827 Payment outstanding notification to HO & CTSC (AIP journey) after appeal ended (no payment status) - Judge",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
-      "id": 4827,
+      "id": 1556,
       "eventId": "endAppeal",
       "state": "appealSubmitted",
       "caseData": {
@@ -27,8 +27,7 @@
           "endAppealApproverType": "Judge",
           "endAppealDate": "2019-08-13",
           "endAppealOutcomeReason": "some outcome reason",
-          "hearingCentre": "taylorHouse",
-          "notificationsSent": []
+          "hearingCentre": "taylorHouse"
         }
       }
     }
@@ -58,19 +57,19 @@
         "hearingCentre": "taylorHouse",
         "notificationsSent": [
           {
-            "id": "4827_END_APPEAL_AIP_APPELLANT_SMS",
+            "id": "1556_END_APPEAL_AIP_APPELLANT_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "4827_END_APPEAL_AIP_APPELLANT_EMAIL",
+            "id": "1556_END_APPEAL_AIP_APPELLANT_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "4827_END_APPEAL_HOME_OFFICE",
+            "id": "1556_END_APPEAL_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "4827_APPEAL_PENDING_PAYMENT_ADMIN_OFFICER",
+            "id": "1556_APPEAL_PENDING_PAYMENT_ADMIN_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -78,7 +77,7 @@
     },
     "notifications": [
       {
-        "reference": "4827_END_APPEAL_HOME_OFFICE",
+        "reference": "1556_END_APPEAL_HOME_OFFICE",
         "recipient": "{$endAppealHomeOfficeEmailAddress}",
         "subject": "Immigration and Asylum appeal: appeal ended – Withdrawn",
         "body": [
@@ -95,7 +94,7 @@
         ]
       },
       {
-        "reference": "4827_END_APPEAL_AIP_APPELLANT_EMAIL",
+        "reference": "1556_END_APPEAL_AIP_APPELLANT_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
         "subject": "Immigration and Asylum appeal: Your appeal has ended",
         "body": [
@@ -112,7 +111,7 @@
         ]
       },
       {
-        "reference": "4827_END_APPEAL_AIP_APPELLANT_SMS",
+        "reference": "1556_END_APPEAL_AIP_APPELLANT_SMS",
         "recipient": "{$TEST_CITIZEN_MOBILE}",
         "subject": "",
         "body": [
@@ -122,7 +121,7 @@
         ]
       },
       {
-        "reference": "4827_APPEAL_PENDING_PAYMENT_ADMIN_OFFICER",
+        "reference": "1556_APPEAL_PENDING_PAYMENT_ADMIN_OFFICER",
         "recipient": "{$ctscAdminPendingPaymentEmailAddress}",
         "subject": "Immigration and Asylum appeal: An unpaid appeal has been decided or ended",
         "body": [

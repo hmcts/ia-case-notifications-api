@@ -51,8 +51,6 @@ public class LegalRepresentativeTransferOutOfAdaPersonalisationTest {
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRefNumber));
         when(asylumCase.read(TRANSFER_OUT_OF_ADA_REASON, String.class)).thenReturn(Optional.of(transferOutOfAdaReason));
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.of(emailAddress));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         legalRepresentativeTransferOutOfAdaPersonalisation = new LegalRepresentativeTransferOutOfAdaPersonalisation(
             beforeListingTemplateId,
@@ -110,8 +108,6 @@ public class LegalRepresentativeTransferOutOfAdaPersonalisationTest {
             .containsEntry("appellantFamilyName", appellantFamilyName)
             .containsEntry("transferOutOfAdaReason", transferOutOfAdaReason)
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
     }
 
@@ -136,8 +132,6 @@ public class LegalRepresentativeTransferOutOfAdaPersonalisationTest {
             .containsEntry("appellantFamilyName", "")
             .containsEntry("transferOutOfAdaReason", "")
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @Test

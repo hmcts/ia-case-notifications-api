@@ -75,7 +75,7 @@ public class AipAppellantStartAppealDisposalPersonalisationEmail implements Emai
         return
             ImmutableMap
                 .<String, String>builder()
-                .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+                .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
                 .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("appellantFullName", appellantFullName)
                 .put("linkToOnlineService", iaAipFrontendUrl)

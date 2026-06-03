@@ -23,7 +23,6 @@ import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.FeatureToggler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
@@ -49,9 +48,6 @@ class AppellantHearingBundleReadyPersonalisationEmailTest {
     private AppellantHearingBundleReadyPersonalisationEmail
         appellantHearingBundleReadyPersonalisationEmail;
 
-    @Mock
-    private FeatureToggler featureToggler;
-
     @BeforeEach
     public void setup() {
 
@@ -65,9 +61,7 @@ class AppellantHearingBundleReadyPersonalisationEmailTest {
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
 
         String customerServicesTelephone = "555 555 555";
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         String customerServicesEmail = "customer.services@example.com";
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
 
         String iaAipFrontendUrl = "http://localhost";
@@ -76,8 +70,7 @@ class AppellantHearingBundleReadyPersonalisationEmailTest {
                 templateId,
                 iaAipFrontendUrl,
                 customerServicesProvider,
-                recipientsFinder,
-                featureToggler
+                recipientsFinder
             );
     }
 
@@ -95,19 +88,11 @@ class AppellantHearingBundleReadyPersonalisationEmailTest {
     @Test
     void should_return_appellant_email_address_from_asylum_case() {
         String appellantEmailAddress = "appelant@example.net";
-        when(featureToggler.getValue("aip-hearing-bundle-feature", false)).thenReturn(true);
         when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL))
             .thenReturn(Collections.singleton(appellantEmailAddress));
 
         assertTrue(appellantHearingBundleReadyPersonalisationEmail.getRecipientsList(asylumCase)
             .contains(appellantEmailAddress));
-    }
-
-    @Test
-    void should_return_empty_mobile_list_when_featureflag_is_not_enabled() {
-        when(featureToggler.getValue("aip-hearing-bundle-feature", false)).thenReturn(false);
-        assertTrue(appellantHearingBundleReadyPersonalisationEmail.getRecipientsList(asylumCase)
-            .isEmpty());
     }
 
     @Test
@@ -127,7 +112,7 @@ class AppellantHearingBundleReadyPersonalisationEmailTest {
         Map<String, String> personalisation =
             appellantHearingBundleReadyPersonalisationEmail.getPersonalisation(asylumCase);
         assertThat(personalisation)
-            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation())
+            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .containsEntry("appealReferenceNumber", appealReferenceNumber)
             .containsEntry("ccdReferenceNumber", ccdReferenceNumber)
             .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
@@ -154,7 +139,7 @@ class AppellantHearingBundleReadyPersonalisationEmailTest {
             appellantHearingBundleReadyPersonalisationEmail.getPersonalisation(asylumCase);
 
         assertThat(personalisation)
-            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation())
+            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .containsEntry("appealReferenceNumber", "")
             .containsEntry("ccdReferenceNumber", "")
             .containsEntry("homeOfficeReferenceNumber", "")

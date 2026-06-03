@@ -94,8 +94,6 @@ class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisationTest {
         assertEquals(APPELLANT_GIVEN_NAMES_VALUE, result.get(APPELLANT_GIVEN_NAMES_KEY));
         assertEquals(APPELLANT_FAMILY_NAME_VALUE, result.get(APPELLANT_FAMILY_NAME_KEY));
         assertEquals(IA_EX_UI_FRONTEND_URL, result.get(LINK_TO_ONLINE_SERVICE_KEY));
-        assertEquals(CUSTOMER_SERVICES_TELEPHONE, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(CUSTOMER_SERVICES_EMAIL, customerServicesProvider.getCustomerServicesEmail());
         assertEquals("2 Feb 2002", result.get(COMPLETE_CASE_REVIEW_DATE_KEY));
     }
 
@@ -107,8 +105,6 @@ class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisationTest {
         assertEquals("", result.get(APPELLANT_GIVEN_NAMES_KEY));
         assertEquals("", result.get(APPELLANT_FAMILY_NAME_KEY));
         assertEquals(IA_EX_UI_FRONTEND_URL, result.get(LINK_TO_ONLINE_SERVICE_KEY));
-        assertEquals(CUSTOMER_SERVICES_TELEPHONE, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(CUSTOMER_SERVICES_EMAIL, customerServicesProvider.getCustomerServicesEmail());
     }
 
     private void setupAsylumCaseMocks() {
@@ -130,8 +126,6 @@ class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisationTest {
     }
 
     private void setupCustomerServicesMocks() {
-        when(customerServicesProvider.getCustomerServicesTelephone()).thenReturn(CUSTOMER_SERVICES_TELEPHONE);
-        when(customerServicesProvider.getCustomerServicesEmail()).thenReturn(CUSTOMER_SERVICES_EMAIL);
     }
 
 }

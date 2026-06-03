@@ -78,9 +78,6 @@ class DecideCostsHomeOfficePersonalisationTest {
         Map<String, String> appellantCredentialsMap = new HashMap<>();
         appellantCredentialsMap.put("appellantGivenNames", appellantGivenNames);
         appellantCredentialsMap.put("appellantFamilyName", appellantFamilyName);
-
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
         when(personalisationProvider.getAppellantCredentials(asylumCase)).thenReturn(appellantCredentialsMap);
         String legalRepEmailAddress = "legalRepEmailAddress@gmail.com";
         when(emailAddressFinder.getLegalRepEmailAddress(asylumCase)).thenReturn(legalRepEmailAddress);
@@ -119,8 +116,8 @@ class DecideCostsHomeOfficePersonalisationTest {
     @ParameterizedTest
     @MethodSource("appliesForCostsProvider")
     public void should_return_personalisation_when_all_information_given(List<IdValue<ApplyForCosts>> applyForCostsList) {
-        when(personalisationProvider.getTypeForSelectedApplyForCosts(any(), any())).thenReturn(Map.of("appliedCostsType", applyForCostsList.get(0).getValue().getAppliedCostsType().replaceAll("costs", "").trim()));
-        when(personalisationProvider.retrieveSelectedApplicationId(any(), any())).thenReturn(Map.of("applicationId", applyForCostsList.get(0).getId()));
+        when(personalisationProvider.getTypeForSelectedApplyForCosts(any(), any())).thenReturn(Map.of("appliedCostsType", applyForCostsList.getFirst().getValue().getAppliedCostsType().replaceAll("costs", "").trim()));
+        when(personalisationProvider.retrieveSelectedApplicationId(any(), any())).thenReturn(Map.of("applicationId", applyForCostsList.getFirst().getId()));
         Map<String, String> decideCostsResult = new HashMap<>();
         decideCostsResult.put("costsDecisionType", "someCostsDecisionType");
         when(personalisationProvider.getDecideCostsPersonalisation(asylumCase)).thenReturn(decideCostsResult);
@@ -132,9 +129,7 @@ class DecideCostsHomeOfficePersonalisationTest {
             .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
             .containsEntry("appellantGivenNames", appellantGivenNames)
             .containsEntry("appellantFamilyName", appellantFamilyName)
-            .containsEntry("applicationId", applyForCostsList.get(0).getId());
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
+            .containsEntry("applicationId", applyForCostsList.getFirst().getId());
         assertEquals("someCostsDecisionType", personalisation.get("costsDecisionType"));
 
     }

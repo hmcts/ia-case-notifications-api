@@ -94,7 +94,7 @@ public class DetentionEngagementTeamHearingBundleReadyPersonalisation implements
         if (documents.size() == 0) {
             throw new RequiredFieldMissingException("Hearing Bundle ready letter is not available");
         }
-        DocumentWithMetadata document = documents.get(0);
+        DocumentWithMetadata document = documents.getFirst();
         try {
             return documentDownloadClient.getJsonObjectFromDocument(document);
         } catch (IOException | NotificationClientException e) {

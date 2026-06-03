@@ -6,7 +6,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "LegalRepresentative",
     "input": {
-      "id": 923420,
+      "id": 1051,
       "eventId": "submitAppeal",
       "state": "appealSubmitted",
       "caseData": {
@@ -42,11 +42,11 @@
         "appealType":"protection",
         "notificationsSent": [
           {
-            "id": "923420_APPEAL_SUBMITTED_PAY_LATER_LEGAL_REP",
+            "id": "1051_APPEAL_SUBMITTED_PAY_LATER_LEGAL_REP",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "923420_APPEAL_SUBMITTED_CASE_OFFICER",
+            "id": "1051_APPEAL_SUBMITTED_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -54,7 +54,7 @@
     },
     "notifications": [
       {
-        "reference": "923420_APPEAL_SUBMITTED_PAY_LATER_LEGAL_REP",
+        "reference": "1051_APPEAL_SUBMITTED_PAY_LATER_LEGAL_REP",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: Your appeal has been submitted",
         "body": [
@@ -67,7 +67,7 @@
         ]
       },
       {
-        "reference": "923420_APPEAL_SUBMITTED_CASE_OFFICER",
+        "reference": "1051_APPEAL_SUBMITTED_CASE_OFFICER",
         "recipient": "{$hearingCentreEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: appeal submitted",
         "body": [

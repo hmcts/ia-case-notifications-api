@@ -1,11 +1,10 @@
 {
   "description": "RIA-4104-RIA-4467 Send apply notice of change notification to legal rep",
-  "disabled": false,
   "request": {
     "uri": "/asylum/ccdSubmitted",
     "credentials": "LegalRepresentative",
     "input": {
-      "id": 4104,
+      "id": 1620,
       "eventId": "nocRequest",
       "state": "appealSubmitted",
       "caseData": {

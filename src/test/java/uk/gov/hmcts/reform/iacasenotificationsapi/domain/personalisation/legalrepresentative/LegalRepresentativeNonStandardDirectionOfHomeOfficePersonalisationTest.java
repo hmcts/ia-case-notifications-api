@@ -56,9 +56,7 @@ public class LegalRepresentativeNonStandardDirectionOfHomeOfficePersonalisationT
     public void setUp() {
 
         String customerServicesTelephone = "555 555 555";
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         String customerServicesEmail = "customer.services@example.com";
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         legalRepresentativeNonStandardDirectionOfHomeOfficePersonalisation =
             new LegalRepresentativeNonStandardDirectionOfHomeOfficePersonalisation(

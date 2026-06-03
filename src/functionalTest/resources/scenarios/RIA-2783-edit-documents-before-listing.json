@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 1234,
+      "id": 1894,
       "eventId": "editDocuments",
       "state": "awaitingRespondentEvidence",
       "caseData": {
@@ -83,7 +83,7 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "1234_APPEAL_DOCUMENT_DELETED_CASE_OFFICER",
+            "id": "1894_APPEAL_DOCUMENT_DELETED_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -91,7 +91,7 @@
     },
     "notifications": [
       {
-        "reference": "1234_APPEAL_DOCUMENT_DELETED_CASE_OFFICER",
+        "reference": "1894_APPEAL_DOCUMENT_DELETED_CASE_OFFICER",
         "recipient": "{$hearingCentreEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: document deleted",
         "body": [

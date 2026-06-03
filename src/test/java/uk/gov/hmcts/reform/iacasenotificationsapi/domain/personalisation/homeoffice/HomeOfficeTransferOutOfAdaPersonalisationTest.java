@@ -55,8 +55,6 @@ public class HomeOfficeTransferOutOfAdaPersonalisationTest {
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeRefNumber));
         when(asylumCase.read(TRANSFER_OUT_OF_ADA_REASON, String.class)).thenReturn(Optional.of(transferOutOfAdaReason));
         when(emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase)).thenReturn(afterListingEmailAddress);
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         homeOfficeTransferOutOfAdaPersonalisation = new HomeOfficeTransferOutOfAdaPersonalisation(
             beforeListingTemplateId,
@@ -119,8 +117,6 @@ public class HomeOfficeTransferOutOfAdaPersonalisationTest {
             .containsEntry("appellantFamilyName", appellantFamilyName)
             .containsEntry("transferOutOfAdaReason", transferOutOfAdaReason)
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
     }
 
@@ -145,8 +141,6 @@ public class HomeOfficeTransferOutOfAdaPersonalisationTest {
             .containsEntry("appellantFamilyName", "")
             .containsEntry("transferOutOfAdaReason", "")
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @Test

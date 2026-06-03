@@ -86,8 +86,6 @@ class AppellantInternalCaseDisposeUnderRule31Or32PersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeRefNumber));
         String onlineCaseReferenceNumber = "1234 5678 9101 1121";
         when(asylumCase.read(AsylumCaseDefinition.CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class)).thenReturn(Optional.of(onlineCaseReferenceNumber));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
         when(address.getAddressLine1()).thenReturn(Optional.of(addressLine1));
         when(address.getAddressLine2()).thenReturn(Optional.of(addressLine2));
         when(address.getAddressLine3()).thenReturn(Optional.of(addressLine3));
@@ -208,8 +206,6 @@ class AppellantInternalCaseDisposeUnderRule31Or32PersonalisationTest {
             .containsEntry("appellantFamilyName", appellantFamilyName)
             .containsEntry("appealReferenceNumber", appealReferenceNumber)
             .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
         if (appellantType == APPELLANT) {
             assertThat(personalisation)
@@ -268,8 +264,6 @@ class AppellantInternalCaseDisposeUnderRule31Or32PersonalisationTest {
             .containsEntry("appellantFamilyName", appellantFamilyName)
             .containsEntry("appealReferenceNumber", appealReferenceNumber)
             .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
         if (appellantType == APPELLANT) {
             assertThat(personalisation)

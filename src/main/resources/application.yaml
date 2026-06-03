@@ -17,9 +17,7 @@ management:
 
   health:
     redis:
-      enabled: false  # don't let Redis affect pod health
-    probes:
-      enabled: true
+      enabled: false
     group:
       readiness:
         include: ping
@@ -32,6 +30,8 @@ management:
     documentManagement:
       uri: ${DM_URL:http://localhost:4506}/health
       response: '"status":"UP"'
+
+  endpoint.health.probes.enabled: true
 
 spring:
   application:

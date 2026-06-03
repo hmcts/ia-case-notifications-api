@@ -207,7 +207,7 @@ public class AsylumCaseUtils {
 
         if (applyForCosts.isPresent()) {
             List<IdValue<ApplyForCosts>> applyForCostsList = applyForCosts.get();
-            return applyForCostsList.get(0).getValue();
+            return applyForCostsList.getFirst().getValue();
         } else {
             throw new IllegalStateException("Applies for costs are not present");
         }
