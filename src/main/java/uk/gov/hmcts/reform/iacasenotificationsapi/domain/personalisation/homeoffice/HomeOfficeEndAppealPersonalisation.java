@@ -41,7 +41,7 @@ public class HomeOfficeEndAppealPersonalisation implements EmailNotificationPers
     public HomeOfficeEndAppealPersonalisation(
             @NotNull(message = "endAppealHomeOfficeTemplateId cannot be null") @Value("${govnotify.template.endAppealBeforeListing.homeOffice.email}") String endAppealHomeOfficeBeforeListingTemplateId,
             @NotNull(message = "endAppealHomeOfficeTemplateId cannot be null") @Value("${govnotify.template.endAppealAfterListing.homeOffice.email}") String endAppealHomeOfficeAfterListingTemplateId,
-            @Value("${endAppealHomeOfficeEmailAddress}") String endAppealEmailAddresses,
+            @Value("${apcHomeOfficeEmailAddress}") String endAppealEmailAddresses,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
             CustomerServicesProvider customerServicesProvider,
             EmailAddressFinder emailAddressFinder

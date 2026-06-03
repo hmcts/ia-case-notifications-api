@@ -31,7 +31,7 @@ public class HomeOfficeEndAppealAutomaticallyPersonalisation implements EmailNot
     private String nonAdaPrefix;
 
     public HomeOfficeEndAppealAutomaticallyPersonalisation(
-        @Value("${endAppealHomeOfficeEmailAddress}") String endAppealHomeOfficeEmailAddress,
+        @Value("${apcHomeOfficeEmailAddress}") String endAppealHomeOfficeEmailAddress,
         @NotNull(message = "appealEndedAutomaticallyHomeOfficeTemplateId cannot be null") @Value("${govnotify.template.endAppealAutomatically.homeOffice.email}") String endAppealAutomaticallyHomeOfficeTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         CustomerServicesProvider customerServicesProvider
