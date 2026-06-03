@@ -78,7 +78,7 @@
     "notifications": [
       {
         "reference": "1556_END_APPEAL_HOME_OFFICE",
-        "recipient": "{$endAppealHomeOfficeEmailAddress}",
+        "recipient": "{apcHomeOfficeEmailAddress}",
         "subject": "Immigration and Asylum appeal: appeal ended – Withdrawn",
         "body": [
           "PA/12345/2019",
