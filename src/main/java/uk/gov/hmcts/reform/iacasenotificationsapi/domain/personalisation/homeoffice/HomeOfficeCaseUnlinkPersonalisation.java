@@ -39,7 +39,7 @@ public class HomeOfficeCaseUnlinkPersonalisation implements EmailNotificationPer
         @NotNull(message = "maintainCaseLinksHomeOfficeAfterListingTemplateId cannot be null")
         @Value("${govnotify.template.maintainCaseLinks.homeOffice.afterListing.email}")
             String maintainCaseLinksHomeOfficeAfterListingTemplateId,
-        @Value("${apcHomeOfficeEmailAddress}") String unlinkAppealEmailAddress,
+        @Value("${apcPrivateHomeOfficeEmailAddress}") String unlinkAppealEmailAddress,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         CustomerServicesProvider customerServicesProvider,
         AppealService appealService) {

@@ -35,7 +35,7 @@
     "notifications": [
       {
         "reference": "1262_APPEAL_EXITED_ONLINE_HOME_OFFICE",
-        "recipient": "{$apcHomeOfficeEmailAddress}",
+        "recipient": "{$apcPrivateHomeOfficeEmailAddress}",
         "subject": "Immigration and Asylum appeal: case removed from online service",
         "body": [
           "PA/12345/2019",
