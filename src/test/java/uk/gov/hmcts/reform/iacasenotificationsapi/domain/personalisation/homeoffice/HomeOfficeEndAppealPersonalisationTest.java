@@ -18,6 +18,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ACCELERATED_DETAINED_APPEAL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.WITHDRAWN;
 
 import java.util.Map;
 import java.util.Optional;
@@ -45,7 +46,8 @@ public class HomeOfficeEndAppealPersonalisationTest {
     private final String afterListingTemplateId = "afterListingTemplateId";
     private final String iaExUiFrontendUrl = "http://somefrontendurl";
     private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
-    private final String beforeListingEmailAddress = "homeoffice@example.com";
+    private final String apcListingEmailAddress = "homeofficeAPC@example.com";
+    private final String lartListingEmailAddress = "homeofficeLART@example.com";
     private final String afterListingEmailAddress = "hearinge@example.com";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String ariaListingReference = "someAriaListingReference";
@@ -83,7 +85,8 @@ public class HomeOfficeEndAppealPersonalisationTest {
         homeOfficeEndAppealPersonalisation = new HomeOfficeEndAppealPersonalisation(
             beforeListingTemplateId,
             afterListingTemplateId,
-            beforeListingEmailAddress,
+            apcListingEmailAddress,
+            lartListingEmailAddress,
             iaExUiFrontendUrl,
             customerServicesProvider,
             emailAddressFinder
@@ -108,7 +111,12 @@ public class HomeOfficeEndAppealPersonalisationTest {
     @Test
     public void should_return_given_email_address() {
         assertTrue(
-            homeOfficeEndAppealPersonalisation.getRecipientsList(asylumCase).contains(beforeListingEmailAddress));
+            homeOfficeEndAppealPersonalisation.getRecipientsList(asylumCase).contains(apcListingEmailAddress));
+
+        when(asylumCase.read(END_APPEAL_OUTCOME, String.class)).thenReturn(Optional.of(WITHDRAWN));
+
+        assertTrue(
+            homeOfficeEndAppealPersonalisation.getRecipientsList(asylumCase).contains(lartListingEmailAddress));
 
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
 
