@@ -44,8 +44,8 @@ public class TestUtils {
         for (String key : expected.keySet()) {
             Object expectedObj = expected.get(key);
             Object actualObj = actual.get(key);
-            String expectedValue = expectedObj instanceof String ? (String) expectedObj : expectedObj.toString();
-            String actualValue = actualObj instanceof String ? (String) actualObj : actualObj.toString();
+            String expectedValue = expectedObj instanceof String s ? s : expectedObj.toString();
+            String actualValue = actualObj instanceof String s ? s : actualObj.toString();
             result &= Objects.equals(actualValue, expectedValue);
         }
 

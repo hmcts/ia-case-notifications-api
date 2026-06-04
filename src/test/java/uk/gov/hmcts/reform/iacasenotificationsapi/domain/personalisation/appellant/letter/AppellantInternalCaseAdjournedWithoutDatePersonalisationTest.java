@@ -72,7 +72,7 @@ class AppellantInternalCaseAdjournedWithoutDatePersonalisationTest {
     public void setUp() {
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
-        when((customerServicesProvider.getCustomerServicesPersonalisation())).thenReturn(
+        when((customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))).thenReturn(
             Map.of(
                 "customerServicesTelephone", customerServicesTelephone,
                 "customerServicesEmail", customerServicesEmail

@@ -1,11 +1,11 @@
 {
   "description": "RIA-7147 Send appellant notification of change direction due date - AIP",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 71471,
+      "id": 1368,
       "eventId": "changeDirectionDueDate",
       "state": "awaitingReasonsForAppeal",
       "caseData": {
@@ -27,7 +27,6 @@
           "directionEditExplanation": "Upload additional evidence",
           "directionEditDateDue": "{$TODAY+14}",
           "directionEditParties": "appellant",
-          "notificationsSent": [],
           "ariaListingReference": "ARIA-LISTING-REFERENCE"
         }
       }
@@ -57,15 +56,15 @@
         "ariaListingReference": "ARIA-LISTING-REFERENCE",
         "notificationsSent": [
           {
-            "id": "71471_APPELLANT_CHANGE_DIRECTION_DUE_DATE_OF_APPELLANT_EMAIL",
+            "id": "1368_APPELLANT_CHANGE_DIRECTION_DUE_DATE_OF_APPELLANT_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "71471_RESPONDENT_CHANGE_DIRECTION_DUE_DATE",
+            "id": "1368_RESPONDENT_CHANGE_DIRECTION_DUE_DATE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "71471_APPELLANT_CHANGE_DIRECTION_DUE_DATE_OF_APPELLANT_SMS",
+            "id": "1368_APPELLANT_CHANGE_DIRECTION_DUE_DATE_OF_APPELLANT_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ],
@@ -74,7 +73,7 @@
     },
     "notifications": [
       {
-        "reference": "71471_APPELLANT_CHANGE_DIRECTION_DUE_DATE_OF_APPELLANT_EMAIL",
+        "reference": "1368_APPELLANT_CHANGE_DIRECTION_DUE_DATE_OF_APPELLANT_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
         "subject": "Immigration and Asylum appeal: The Tribunal has sent you a message",
         "body": [
@@ -88,7 +87,7 @@
         ]
       },
       {
-        "reference": "71471_RESPONDENT_CHANGE_DIRECTION_DUE_DATE",
+        "reference": "1368_RESPONDENT_CHANGE_DIRECTION_DUE_DATE",
         "recipient": "{$apcHomeOfficeEmailAddress}",
         "subject": "Immigration and Asylum appeal: change to direction due date",
         "body": [
@@ -103,7 +102,7 @@
         ]
       },
       {
-        "reference": "71471_APPELLANT_CHANGE_DIRECTION_DUE_DATE_OF_APPELLANT_SMS",
+        "reference": "1368_APPELLANT_CHANGE_DIRECTION_DUE_DATE_OF_APPELLANT_SMS",
         "recipient": "{$TEST_CITIZEN_MOBILE}",
         "subject": "",
         "body": [

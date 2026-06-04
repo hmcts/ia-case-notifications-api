@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
-      "id": 92344,
+      "id": 1065,
       "eventId": "decideFtpaApplication",
       "state": "ftpaSubmitted",
       "caseData": {
@@ -18,8 +18,7 @@
           "ftpaAppellantRjDecisionOutcomeType": "reheardRule35",
           "listCaseHearingCentre": "glasgow",
           "ftpaApplicantType": "appellant",
-          "isDlrmSetAsideEnabled": "Yes",
-          "notificationsSent": []
+          "isDlrmSetAsideEnabled": "Yes"
         }
       }
     }
@@ -32,7 +31,7 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "92344_RESPONDENT_REHEARD_UNDER_RULE_35_EMAIL",
+            "id": "1065_RESPONDENT_REHEARD_UNDER_RULE_35_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -40,7 +39,7 @@
     },
     "notifications": [
       {
-        "reference": "92344_RESPONDENT_REHEARD_UNDER_RULE_35_EMAIL",
+        "reference": "1065_RESPONDENT_REHEARD_UNDER_RULE_35_EMAIL",
         "recipient": "{$homeOfficeFtpaEmailAddresses.glasgow}",
         "subject": "Immigration and Asylum appeal: Application decided",
         "body": [

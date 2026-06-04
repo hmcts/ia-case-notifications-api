@@ -71,8 +71,6 @@ public class LegalRepresentativeManageFeeUpdateAdditionalPaymentPersonalisationT
         Mockito.when(asylumCase.read(FEE_UPDATE_REASON, FeeUpdateReason.class)).thenReturn(Optional.of(feeUpdateReason));
         Mockito.when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class))
             .thenReturn(Optional.of(legalRepEmail));
-        Mockito.when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        Mockito.when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         legalRepresentativeManageFeeUpdateAdditionalPaymentPersonalisation = new LegalRepresentativeManageFeeUpdateAdditionalPaymentPersonalisation(
             templateId,
@@ -154,7 +152,5 @@ public class LegalRepresentativeManageFeeUpdateAdditionalPaymentPersonalisationT
             .containsEntry("additionalFee", "60.00")
             .containsEntry("dueDate", systemDateProvider.dueDate(daysAfterManageFeeUpdate))
             .containsEntry("feeUpdateReason", feeUpdateReasonString);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 }

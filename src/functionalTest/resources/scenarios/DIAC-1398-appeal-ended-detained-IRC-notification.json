@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 1398,
+      "id": 2038,
       "eventId": "endAppeal",
       "state": "appealSubmitted",
       "caseData": {
@@ -50,11 +50,11 @@
         "appellantsRepresentation": "Yes",
         "notificationsSent": [
           {
-            "id": "1398_END_APPEAL_HOME_OFFICE",
+            "id": "2038_END_APPEAL_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1398_INTERNAL_DET_END_APPEAL_EMAIL",
+            "id": "2038_INTERNAL_DET_END_APPEAL_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

@@ -49,8 +49,6 @@ public class LegalRepresentativeMarkAppealAsDetainedPersonalisationTest {
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeRefNumber));
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepReferenceNumber));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.of(emailAddress));
 
         legalRepresentativeMarkAppealAsDetainedPersonalisation = new LegalRepresentativeMarkAppealAsDetainedPersonalisation(
@@ -101,8 +99,6 @@ public class LegalRepresentativeMarkAppealAsDetainedPersonalisationTest {
             .containsEntry("appellantFamilyName", appellantFamilyName)
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
             .containsEntry("legalRepReferenceNumber", legalRepReferenceNumber);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
     }
 
@@ -127,7 +123,5 @@ public class LegalRepresentativeMarkAppealAsDetainedPersonalisationTest {
             .containsEntry("appellantFamilyName", "")
             .containsEntry("legalRepReferenceNumber", "")
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 }

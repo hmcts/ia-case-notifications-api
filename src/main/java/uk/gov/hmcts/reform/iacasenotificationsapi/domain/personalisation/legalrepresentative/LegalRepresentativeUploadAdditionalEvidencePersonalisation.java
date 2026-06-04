@@ -82,7 +82,7 @@ public class LegalRepresentativeUploadAdditionalEvidencePersonalisation implemen
 
         final ImmutableMap.Builder<String, String> listCaseFields = ImmutableMap
             .<String, String>builder();
-        listCaseFields.putAll(customerServicesProvider.getCustomerServicesPersonalisation());
+        listCaseFields.putAll(customerServicesProvider.getCustomerServicesPersonalisation(callback));
         listCaseFields.put("subjectPrefix", isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData())
             ? adaPrefix
             : nonAdaPrefix);

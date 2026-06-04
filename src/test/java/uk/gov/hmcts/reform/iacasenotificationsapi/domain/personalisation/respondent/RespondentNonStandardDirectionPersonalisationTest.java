@@ -80,8 +80,6 @@ class RespondentNonStandardDirectionPersonalisationTest {
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeRefNumber));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         when(directionFinder.findFirst(asylumCase, DirectionTag.NONE)).thenReturn(Optional.of(direction));
         when(direction.getParties()).thenReturn(Parties.RESPONDENT);
@@ -272,8 +270,6 @@ class RespondentNonStandardDirectionPersonalisationTest {
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
             .containsEntry("explanation", directionExplanation)
             .containsEntry("dueDate", expectedDirectionDueDate);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
@@ -304,8 +300,6 @@ class RespondentNonStandardDirectionPersonalisationTest {
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
             .containsEntry("explanation", directionExplanation)
             .containsEntry("dueDate", expectedDirectionDueDate);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));

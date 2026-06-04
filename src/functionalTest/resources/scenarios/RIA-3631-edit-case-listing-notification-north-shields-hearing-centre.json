@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 2005,
+      "id": 1708,
       "eventId": "editCaseListing",
       "state": "prepareForHearing",
       "caseData": {
@@ -39,11 +39,11 @@
         "legalRepresentativeEmailAddress": "ia-law-firm-a@fake.hmcts.net",
         "notificationsSent": [
           {
-            "id": "2005_CASE_RE_LISTED_LEGAL_REPRESENTATIVE",
+            "id": "1708_CASE_RE_LISTED_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "2005_CASE_RE_LISTED_CASE_OFFICER",
+            "id": "1708_CASE_RE_LISTED_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -51,7 +51,7 @@
     },
     "notifications": [
       {
-        "reference": "2005_CASE_RE_LISTED_LEGAL_REPRESENTATIVE",
+        "reference": "1708_CASE_RE_LISTED_LEGAL_REPRESENTATIVE",
         "recipient": "ia-law-firm-a@fake.hmcts.net",
         "subject": "Immigration and Asylum appeal: case re-listed",
         "body": [
@@ -75,7 +75,7 @@
         ]
       },
       {
-        "reference": "2005_CASE_RE_LISTED_CASE_OFFICER",
+        "reference": "1708_CASE_RE_LISTED_CASE_OFFICER",
         "recipient": "{$hearingCentreEmailAddresses.northShields}",
         "subject": "Immigration and Asylum appeal: case re-listed",
         "body": [

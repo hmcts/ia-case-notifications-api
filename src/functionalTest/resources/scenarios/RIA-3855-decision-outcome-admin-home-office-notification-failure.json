@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 3855,
+      "id": 1647,
       "eventId": "sendDecisionAndReasons",
       "state": "decided",
       "caseData": {
@@ -28,15 +28,15 @@
         "isDecisionAllowed": "allowed",
         "notificationsSent": [
           {
-            "id": "3855_APPEAL_OUTCOME_HOME_OFFICE",
+            "id": "1647_APPEAL_OUTCOME_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "3855_APPEAL_OUTCOME_ADMIN",
+            "id": "1647_APPEAL_OUTCOME_ADMIN",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "3855_APPEAL_OUTCOME_LEGAL_REPRESENTATIVE",
+            "id": "1647_APPEAL_OUTCOME_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -44,7 +44,7 @@
     },
     "notifications": [
       {
-        "reference": "3855_APPEAL_OUTCOME_HOME_OFFICE",
+        "reference": "1647_APPEAL_OUTCOME_HOME_OFFICE",
         "recipient": "{$allowedAppealHomeOfficeEmailAddress}",
         "subject": "Immigration and Asylum appeal: decision and reasons",
         "body": [
@@ -58,7 +58,7 @@
         ]
       },
       {
-        "reference": "3855_APPEAL_OUTCOME_ADMIN",
+        "reference": "1647_APPEAL_OUTCOME_ADMIN",
         "recipient": "{$adminEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: decision and reasons",
         "body": [
@@ -68,7 +68,7 @@
         ]
       },
       {
-        "reference": "3855_APPEAL_OUTCOME_LEGAL_REPRESENTATIVE",
+        "reference": "1647_APPEAL_OUTCOME_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: decision and reasons",
         "body": [
@@ -82,7 +82,7 @@
         ]
       },
       {
-        "reference": "3855_APPEAL_OUTCOME_HO_NOTIFICATION_FAILED_CASE_OFFICER",
+        "reference": "1647_APPEAL_OUTCOME_HO_NOTIFICATION_FAILED_CASE_OFFICER",
         "recipient": "{$hearingCentreEmailAddresses.bradford}",
         "subject": "Immigration and Asylum appeal: A notification to the respondent has failed",
         "body": [
