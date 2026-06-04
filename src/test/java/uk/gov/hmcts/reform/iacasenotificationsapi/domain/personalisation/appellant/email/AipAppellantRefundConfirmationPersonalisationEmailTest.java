@@ -61,8 +61,6 @@ class AipAppellantRefundConfirmationPersonalisationEmailTest {
         when(asylumCase.read(PREVIOUS_DECISION_HEARING_FEE_OPTION, String.class)).thenReturn(Optional.of(withHearing));
         String withoutHearing = "decisionWithoutHearing";
         when(asylumCase.read(DECISION_HEARING_FEE_OPTION, String.class)).thenReturn(Optional.of(withoutHearing));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         String iaAipFrontendUrl = "http://localhost";
         aipAppellantRefundConfirmationPersonalisationEmail = new AipAppellantRefundConfirmationPersonalisationEmail(
@@ -129,8 +127,6 @@ class AipAppellantRefundConfirmationPersonalisationEmailTest {
             .containsEntry("updatedDecisionHearingFeeOption", "Decision without hearing")
             .containsEntry("newFee", "80.00")
             .containsEntry("dueDate", systemDateProvider.dueDate(daysAfterRemissionDecision));
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
 }

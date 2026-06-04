@@ -62,8 +62,6 @@ class AppellantRemoveRepresentationPersonalisationEmailTest {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_DATE_OF_BIRTH, String.class)).thenReturn(Optional.of(appellantDateOfBirth));
         String legalRepRefNumber = "somelegalRepRefNumber";
         when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepRefNumber));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_PIN_IN_POST, PinInPostDetails.class)).thenReturn(Optional.of(pinInPostDetails));
         when(pinInPostDetails.getAccessCode()).thenReturn(securityCode);
         String validDate = "2022-12-31";
@@ -130,8 +128,6 @@ class AppellantRemoveRepresentationPersonalisationEmailTest {
             .containsEntry("linkToPiPStartPage", linkToPiPStartPage)
             .containsEntry("securityCode", securityCode)
             .containsEntry("validDate", validDateFormatted);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @ParameterizedTest
@@ -160,7 +156,5 @@ class AppellantRemoveRepresentationPersonalisationEmailTest {
             .containsEntry("validDate", "")
             .containsEntry("ccdCaseId", String.valueOf(ccdCaseId))
             .containsEntry("linkToPiPStartPage", linkToPiPStartPage);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 }

@@ -93,7 +93,7 @@ public class DetentionEngagementTeamRequestCaseBuildingPersonalisation implement
         if (documents.size() == 0) {
             throw new RequiredFieldMissingException("Request case building document is not present");
         }
-        DocumentWithMetadata document = documents.get(0);
+        DocumentWithMetadata document = documents.getFirst();
         try {
             return documentDownloadClient.getJsonObjectFromDocument(document);
         } catch (IOException | NotificationClientException e) {

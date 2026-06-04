@@ -94,8 +94,6 @@ public class HomeOfficeAdaReviewHearingRequirementsPersonalisationTest {
         when(stringProvider.get("hearingCentreAddress", hearingCentre.toString()))
             .thenReturn(Optional.of(hearingCentreAddress));
         when(dateTimeExtractor.extractHearingDate(hearingDateTime)).thenReturn(hearingDate);
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
         when(hearingDetailsFinder.getHearingCentreLocation(asylumCase)).thenReturn(hearingCentreAddress);
 
         homeOfficeAdaReviewHearingRequirementsPersonalisation = new HomeOfficeAdaReviewHearingRequirementsPersonalisation(
@@ -158,8 +156,6 @@ public class HomeOfficeAdaReviewHearingRequirementsPersonalisationTest {
             .containsEntry("hearingRequirementOther", caseOfficerReviewedOther)
             .containsEntry("hearingDate", hearingDate)
             .containsEntry("hearingCentreAddress", hearingCentreAddress);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @Test
@@ -197,7 +193,5 @@ public class HomeOfficeAdaReviewHearingRequirementsPersonalisationTest {
             .containsEntry("hearingRequirementOther", "No other adjustments are being made")
             .containsEntry("hearingDate", hearingDate)
             .containsEntry("hearingCentreAddress", hearingCentreAddress);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 }

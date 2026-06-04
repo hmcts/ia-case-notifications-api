@@ -66,9 +66,7 @@ class LegalRepresentativeRequestNewHearingRequirementsPersonalisationTest {
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepRefNumber));
         String customerServicesTelephone = "555 555 555";
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         String customerServicesEmail = "customer.services@example.com";
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         legalRepresentativeRequestNewHearingRequirementsPersonalisation = new LegalRepresentativeRequestNewHearingRequirementsPersonalisation(
             templateId,
@@ -109,7 +107,7 @@ class LegalRepresentativeRequestNewHearingRequirementsPersonalisationTest {
         assertFalse(personalisation.isEmpty());
 
         assertThat(personalisation)
-            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation())
+            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal"
                 : "Immigration and Asylum appeal")
             .containsEntry("legalRepReferenceNumber", legalRepRefNumber)

@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.restassured.RestAssured;
 import net.serenitybdd.rest.SerenityRest;
@@ -35,7 +35,6 @@ public class WelcomeTest {
                 .and()
                 .extract().body().asString();
 
-        assertThat(response)
-            .contains("Welcome to Immigration & Asylum case notifications API");
+        assertTrue(response.contains("Welcome to Immigration & Asylum case notifications API"));
     }
 }

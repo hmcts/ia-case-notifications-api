@@ -71,8 +71,6 @@ public class LegalRepresentativeRequestRespondentAmendDirectionPersonalisationTe
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepRefNumber));
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class))
             .thenReturn(Optional.of(legalRepEmailAddress));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         legalRepresentativeRequestRespondentAmendDirectionPersonalisation =
             new LegalRepresentativeRequestRespondentAmendDirectionPersonalisation(
@@ -142,8 +140,6 @@ public class LegalRepresentativeRequestRespondentAmendDirectionPersonalisationTe
             legalRepresentativeRequestRespondentAmendDirectionPersonalisation.getPersonalisation(asylumCase);
 
         assertThat(actualPersonalisation).containsAllEntriesOf(expectedPersonalisation);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @ParameterizedTest

@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
-      "id": 923430,
+      "id": 1041,
       "eventId": "updateTribunalDecision",
       "state": "ftpaDecided",
       "caseData": {
@@ -92,11 +92,11 @@
         },
         "notificationsSent": [
           {
-            "id": "923430_RESPONDENT_UPDATE_TRIBUNAL_DECISION_RULE_31_EMAIL",
+            "id": "1041_RESPONDENT_UPDATE_TRIBUNAL_DECISION_RULE_31_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "923430_INTERNAL_UPDATE_TRIBUNAL_DECISION_RULE31_LETTER",
+            "id": "1041_INTERNAL_UPDATE_TRIBUNAL_DECISION_RULE31_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

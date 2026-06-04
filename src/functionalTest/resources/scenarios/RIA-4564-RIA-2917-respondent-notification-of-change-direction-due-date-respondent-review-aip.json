@@ -1,11 +1,11 @@
 {
   "description": "RIA-4564-RIA-2917 Send respondent notification of change direction due date (respondent review) - AIP",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 4564,
+      "id": 1572,
       "eventId": "changeDirectionDueDate",
       "state": "respondentReview",
       "caseData": {
@@ -28,7 +28,6 @@
           "directionEditExplanation": "Upload additional evidence",
           "directionEditDateDue": "{$TODAY+14}",
           "directionEditParties": "respondent",
-          "notificationsSent": [],
           "listCaseHearingCentre": "birmingham"
         }
       }
@@ -57,15 +56,15 @@
         "directionEditParties": "respondent",
         "notificationsSent": [
           {
-            "id": "4564_RESPONDENT_CHANGE_DIRECTION_DUE_DATE",
+            "id": "1572_RESPONDENT_CHANGE_DIRECTION_DUE_DATE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "4564_APPELLANT_CHANGE_DIRECTION_DUE_DATE_OF_HOME_OFFICE_EMAIL",
+            "id": "1572_APPELLANT_CHANGE_DIRECTION_DUE_DATE_OF_HOME_OFFICE_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "4564_APPELLANT_CHANGE_DIRECTION_DUE_DATE_OF_HOME_OFFICE_SMS",
+            "id": "1572_APPELLANT_CHANGE_DIRECTION_DUE_DATE_OF_HOME_OFFICE_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ],
@@ -75,7 +74,7 @@
     },
     "notifications": [
       {
-        "reference": "4564_RESPONDENT_CHANGE_DIRECTION_DUE_DATE",
+        "reference": "1572_RESPONDENT_CHANGE_DIRECTION_DUE_DATE",
         "recipient": "{$lartHomeOfficeEmailAddress}",
         "subject": "Immigration and Asylum appeal: change to direction due date",
         "body": [
@@ -89,7 +88,7 @@
         ]
       },
       {
-        "reference": "4564_APPELLANT_CHANGE_DIRECTION_DUE_DATE_OF_HOME_OFFICE_EMAIL",
+        "reference": "1572_APPELLANT_CHANGE_DIRECTION_DUE_DATE_OF_HOME_OFFICE_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
         "subject": "Immigration and Asylum appeal: The Tribunal has changed a date for the Home Office to do something",
         "body": [
@@ -103,7 +102,7 @@
         ]
       },
       {
-        "reference": "4564_APPELLANT_CHANGE_DIRECTION_DUE_DATE_OF_HOME_OFFICE_SMS",
+        "reference": "1572_APPELLANT_CHANGE_DIRECTION_DUE_DATE_OF_HOME_OFFICE_SMS",
         "recipient": "{$TEST_CITIZEN_MOBILE}",
         "subject": "",
         "body": [

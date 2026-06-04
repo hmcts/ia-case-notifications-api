@@ -1,12 +1,12 @@
 {
   "description": "RIA-2999-RIA-3003-RIA-3754 Respondent FTPA Application is reheard after the appellant application already refused (Taylor House hearing centre)",
   "launchDarklyKey": "tcw-notifications-feature:true",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
-      "id": 9010,
+      "id": 1840,
       "eventId": "residentJudgeFtpaDecision",
       "state": "ftpaSubmitted",
       "caseData": {
@@ -20,7 +20,7 @@
           "ariaListingReference": "987654321",
           "notificationsSent": [
             {
-              "id": "9010_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_APPELLANT",
+              "id": "1840_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_APPELLANT",
               "value": "34e146c9-6050-4894-a64e-acd461a5f934"
             }
           ]
@@ -39,7 +39,7 @@
     },
     "notifications": [
       {
-        "reference": "9010_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT",
+        "reference": "1840_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT",
         "recipient": "{$upperTribunalNoticesEmailAddress}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
         "body": [
@@ -50,7 +50,7 @@
         ]
       },
       {
-        "reference": "9010_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_RESPONDENT",
+        "reference": "1840_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_RESPONDENT",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
         "body": [
@@ -61,7 +61,7 @@
         ]
       },
       {
-        "reference": "9010_FTPA_APPLICATION_DECISION_CASE_OFFICER",
+        "reference": "1840_FTPA_APPLICATION_DECISION_CASE_OFFICER",
         "recipient": "{$hearingCentreEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
         "body": [

@@ -112,8 +112,6 @@ class HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationTest {
         assertEquals(APPELLANT_GIVEN_NAMES_VALUE, result.get(APPELLANT_GIVEN_NAMES_KEY));
         assertEquals(APPELLANT_FAMILY_NAME_VALUE, result.get(APPELLANT_FAMILY_NAME_KEY));
         assertEquals(IA_EX_UI_FRONTEND_URL, result.get(LINK_TO_ONLINE_SERVICE_KEY));
-        assertEquals(CUSTOMER_SERVICES_TELEPHONE, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(CUSTOMER_SERVICES_EMAIL, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(FEB_2002, result.get(DECISION_SENT_DATE_KEY));
         assertEquals(JUL_2002, result.get(WEEKS_DEADLINE_KEY));
         assertEquals(FEB_2002, result.get(APPEAL_RECEIVED_DATE_KEY));
@@ -138,8 +136,6 @@ class HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationTest {
     }
 
     private void setupCustomerServicesMocks() {
-        when(customerServicesProvider.getCustomerServicesTelephone()).thenReturn(CUSTOMER_SERVICES_TELEPHONE);
-        when(customerServicesProvider.getCustomerServicesEmail()).thenReturn(CUSTOMER_SERVICES_EMAIL);
     }
 
 }

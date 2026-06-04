@@ -70,9 +70,7 @@ public class LegalRepresentativeAddAppealPersonalisationTest {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class))
             .thenReturn(Optional.of(legalRepEmailAddress));
         String customerServicesTelephone = "555 555 555";
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         String customerServicesEmail = "customer.services@example.com";
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         legalRepresentativeAddAppealPersonalisation = new LegalRepresentativeAddAppealPersonalisation(
             templateId,
@@ -128,7 +126,7 @@ public class LegalRepresentativeAddAppealPersonalisationTest {
             legalRepresentativeAddAppealPersonalisation.getPersonalisation(asylumCase);
         assertFalse(personalisation.isEmpty());
         assertThat(personalisation)
-            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation())
+            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .containsEntry("legalRepReferenceNumber", legalRepRefNumber)
             .containsEntry("explanation", direction.getExplanation())
             .containsEntry("dueDate", "27 Aug 2019")

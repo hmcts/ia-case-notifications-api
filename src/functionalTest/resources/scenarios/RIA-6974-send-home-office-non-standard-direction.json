@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 1003,
+      "id": 1439,
       "eventId": "sendDirection",
       "state": "prepareForHearing",
       "caseData": {
@@ -37,8 +37,7 @@
                 "tag": ""
               }
             }
-          ],
-          "notificationsSent": []
+          ]
         }
       }
     }
@@ -78,11 +77,11 @@
         ],
         "notificationsSent": [
           {
-            "id": "1003_RESPONDENT_NON_STANDARD_DIRECTION",
+            "id": "1439_RESPONDENT_NON_STANDARD_DIRECTION",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1003_APPELLANT_NON_STANDARD_DIRECTION_OF_HOME_OFFICE_EMAIL",
+            "id": "1439_APPELLANT_NON_STANDARD_DIRECTION_OF_HOME_OFFICE_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

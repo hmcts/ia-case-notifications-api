@@ -85,7 +85,7 @@ class LegalRepresentativeRequestFeeRemissionPersonalisationTest {
 
         assertFalse(personalisation.isEmpty());
         assertThat(personalisation)
-            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation())
+            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .containsEntry("legalRepReferenceNumber", legalRepRefNumber)
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
             .containsEntry("appealReferenceNumber", appealReferenceNumber)
@@ -107,7 +107,7 @@ class LegalRepresentativeRequestFeeRemissionPersonalisationTest {
 
         assertFalse(personalisation.isEmpty());
         assertThat(personalisation)
-            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation())
+            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
             .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal"
                 : "Immigration and Asylum appeal");

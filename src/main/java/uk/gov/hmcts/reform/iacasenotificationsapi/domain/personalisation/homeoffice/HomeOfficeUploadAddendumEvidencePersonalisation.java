@@ -65,7 +65,7 @@ public class HomeOfficeUploadAddendumEvidencePersonalisation implements EmailNot
 
         final ImmutableMap.Builder<String, String> listCaseFields = ImmutableMap
             .<String, String>builder()
-            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation(callback))
             .put("linkToOnlineService", iaExUiFrontendUrl)
             .put("subjectPrefix", isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData())
                 ? adaPrefix

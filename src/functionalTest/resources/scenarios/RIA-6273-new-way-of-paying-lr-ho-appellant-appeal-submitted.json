@@ -1,11 +1,11 @@
 {
   "description": "RIA-6273 New way of paying LR, HO notification appeal submitted PA pay now",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "LegalRepresentative",
     "input": {
-      "id": 12344321,
+      "id": 1498,
       "eventId": "submitAppeal",
       "state": "appealSubmitted",
       "caseData": {
@@ -26,11 +26,11 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "12344321_APPEAL_SUBMITTED_LEGAL_REP",
+            "id": "1498_APPEAL_SUBMITTED_LEGAL_REP",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "12344321_APPEAL_SUBMITTED_HOME_OFFICE",
+            "id": "1498_APPEAL_SUBMITTED_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

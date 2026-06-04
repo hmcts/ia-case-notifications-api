@@ -65,7 +65,7 @@ public class AppellantChangeDirectionDueDateOfAppellantPersonalisationEmail impl
 
         final ImmutableMap.Builder<String, String> listCaseFields = ImmutableMap
             .<String, String>builder()
-            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .putAll(personalisationProvider.getPersonalisation(callback))
             .put("linkToOnlineService", iaAipFrontendUrl)
             .put("listingReferenceLine", listingReferenceLine);

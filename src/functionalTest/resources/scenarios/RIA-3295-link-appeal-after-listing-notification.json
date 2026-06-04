@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 1234,
+      "id": 1799,
       "eventId": "linkAppeal",
       "state": "prepareForHearing",
       "caseData": {
@@ -13,8 +13,7 @@
           "reasonForLinkAppeal": "Familial",
           "listCaseHearingCentre": "taylorHouse",
           "ariaListingReference": "LP/12345/2019"
-        },
-        "notificationsSent": []
+        }
       }
     }
   },
@@ -28,7 +27,11 @@
         "ariaListingReference": "LP/12345/2019",
         "notificationsSent": [
           {
-            "id": "1234_LEGAL_REPRESENTATIVE_LINK_APPEAL",
+            "id": "1799_LEGAL_REPRESENTATIVE_LINK_APPEAL",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "1799_LINK_APPEAL_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -36,7 +39,7 @@
     },
     "notifications": [
       {
-        "reference": "1234_LEGAL_REPRESENTATIVE_LINK_APPEAL",
+        "reference": "1799_LEGAL_REPRESENTATIVE_LINK_APPEAL",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: appeal linked",
         "body": [

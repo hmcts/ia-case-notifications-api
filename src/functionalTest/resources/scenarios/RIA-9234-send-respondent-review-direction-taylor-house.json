@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 923425,
+      "id": 1046,
       "eventId": "requestRespondentReview",
       "state": "caseUnderReview",
       "caseData": {
@@ -26,7 +26,6 @@
               }
             }
           ],
-          "notificationsSent": [],
           "hearingCentre": "taylorHouse",
           "legalRepresentativeEmailAddress": "RIA-3631-test-case-1@example.com"
         }
@@ -57,7 +56,7 @@
         ],
         "notificationsSent": [
           {
-            "id": "923425_LEGAL_REPRESENTATIVE_RESPONDENT_REVIEW_CASE",
+            "id": "1046_LEGAL_REPRESENTATIVE_RESPONDENT_REVIEW_CASE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ],
@@ -66,7 +65,7 @@
     },
     "notifications": [
       {
-        "reference": "923425_LEGAL_REPRESENTATIVE_RESPONDENT_REVIEW_CASE",
+        "reference": "1046_LEGAL_REPRESENTATIVE_RESPONDENT_REVIEW_CASE",
         "recipient": "RIA-3631-test-case-1@example.com",
         "subject": "Immigration and Asylum appeal: direction sent to the Home Office",
         "body": [

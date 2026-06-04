@@ -34,7 +34,7 @@ public class BailCaseTest {
     public void should_read_complex_type_with_target_parameter_type() {
         Optional<List<IdValue<NationalityFieldValue>>> mayBeNationalities = bailCase.read(APPLICANT_NATIONALITIES);
         List<IdValue<NationalityFieldValue>> nationalityList = mayBeNationalities.get();
-        NationalityFieldValue nationality = nationalityList.get(0).getValue();
+        NationalityFieldValue nationality = nationalityList.getFirst().getValue();
         assertEquals(1, nationalityList.size());
         assertEquals("Algerian", nationality.getCode());
     }
@@ -59,7 +59,7 @@ public class BailCaseTest {
                 "some-description"));
         bailCase.write(UPLOAD_THE_BAIL_EVIDENCE_DOCS, List.of(idValue));
         Optional<List<IdValue<DocumentWithDescription>>> maybeEvidence = bailCase.read(UPLOAD_THE_BAIL_EVIDENCE_DOCS);
-        IdValue<DocumentWithDescription> documentWithDescriptionIdValue = maybeEvidence.get().get(0);
+        IdValue<DocumentWithDescription> documentWithDescriptionIdValue = maybeEvidence.get().getFirst();
 
         Assertions.assertEquals(1, maybeEvidence.get().size());
         Assertions.assertEquals("some-id", documentWithDescriptionIdValue.getId());

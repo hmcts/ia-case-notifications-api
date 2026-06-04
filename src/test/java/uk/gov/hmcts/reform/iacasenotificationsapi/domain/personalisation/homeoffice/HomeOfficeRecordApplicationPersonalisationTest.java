@@ -82,8 +82,6 @@ public class HomeOfficeRecordApplicationPersonalisationTest {
         when(asylumCase.read(APPLICATION_SUPPLIER, String.class)).thenReturn(Optional.of(applicationSupplier));
         String homeOfficeEmailAddress = "homeoffice@example.com";
         when(homeOfficeEmailAddressMap.get(hearingCentre)).thenReturn(homeOfficeEmailAddress);
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         String respondentReviewEmailAddress = "respondentReview@example.com";
         String defaultHomeOfficeEmailAddress = "defaulthomeoffice@example.com";
@@ -151,8 +149,6 @@ public class HomeOfficeRecordApplicationPersonalisationTest {
             .containsEntry("applicationType", expectedApplicationType)
             .containsEntry("applicationDecisionReason", applicationDecisionReason)
             .containsEntry("applicationSupplier", expectedApplicationSupplier);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @ParameterizedTest
@@ -185,8 +181,6 @@ public class HomeOfficeRecordApplicationPersonalisationTest {
             .containsEntry("applicationDecisionReason", "No reason given")
             .containsEntry("applicationSupplier", "")
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @Test
