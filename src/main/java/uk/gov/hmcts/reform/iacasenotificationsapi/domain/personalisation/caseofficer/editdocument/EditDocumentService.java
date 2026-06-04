@@ -22,24 +22,22 @@ public class EditDocumentService {
             Optional<List<IdValue<HasDocument>>> fieldOptional = asylumCase.read(fieldDefinition);
             if (fieldOptional.isPresent()) {
                 List<IdValue<HasDocument>> docs = fieldOptional.get();
-                docs.forEach(doc -> addToListIfMatch(docNamesFromCaseNote, formattedDocList, doc.getValue()));
+                docs.forEach(doc -> getFormattedDocumentIfMatch(docNamesFromCaseNote, doc.getValue())
+                    .ifPresent(formattedDocList::add));
             }
         });
         return new FormattedDocumentList(formattedDocList);
     }
 
 
-    private void addToListIfMatch(List<String> docNamesFromCaseNote,
-                                  List<FormattedDocument> formattedDocList,
-                                  HasDocument doc) {
-
+    private Optional<FormattedDocument> getFormattedDocumentIfMatch(List<String> docNamesFromCaseNote, HasDocument doc) {
         if (docNamesFromCaseNote.contains(doc.getDocument().getDocumentFilename())) {
-            formattedDocList.add(
-                new FormattedDocument(
-                    doc.getDocument().getDocumentFilename(),
-                    doc.getDescription()
-                ));
+            return Optional.of(new FormattedDocument(
+                doc.getDocument().getDocumentFilename(),
+                doc.getDescription()
+            ));
         }
+        return Optional.empty();
     }
 
     private List<AsylumCaseDefinition> getListOfDocumentFields() {
