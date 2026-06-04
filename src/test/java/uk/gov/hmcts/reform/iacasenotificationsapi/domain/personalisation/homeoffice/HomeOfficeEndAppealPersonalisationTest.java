@@ -35,7 +35,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -48,7 +47,6 @@ public class HomeOfficeEndAppealPersonalisationTest {
     private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
     private final String apcListingEmailAddress = "homeofficeAPC@example.com";
     private final String lartListingEmailAddress = "homeofficeLART@example.com";
-    private final String afterListingEmailAddress = "hearinge@example.com";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String ariaListingReference = "someAriaListingReference";
     private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
@@ -63,8 +61,6 @@ public class HomeOfficeEndAppealPersonalisationTest {
     AsylumCase asylumCase;
     @Mock
     CustomerServicesProvider customerServicesProvider;
-    @Mock
-    EmailAddressFinder emailAddressFinder;
     private HomeOfficeEndAppealPersonalisation homeOfficeEndAppealPersonalisation;
 
     @BeforeEach
@@ -80,7 +76,6 @@ public class HomeOfficeEndAppealPersonalisationTest {
         String endAppealDate = "2019-08-27";
         when(asylumCase.read(END_APPEAL_DATE, String.class)).thenReturn(Optional.of(endAppealDate));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeRefNumber));
-        when(emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase)).thenReturn(afterListingEmailAddress);
 
         homeOfficeEndAppealPersonalisation = new HomeOfficeEndAppealPersonalisation(
             beforeListingTemplateId,
@@ -88,8 +83,7 @@ public class HomeOfficeEndAppealPersonalisationTest {
             apcListingEmailAddress,
             lartListingEmailAddress,
             iaExUiFrontendUrl,
-            customerServicesProvider,
-            emailAddressFinder
+            customerServicesProvider
         );
     }
 
@@ -117,10 +111,6 @@ public class HomeOfficeEndAppealPersonalisationTest {
 
         assertTrue(
             homeOfficeEndAppealPersonalisation.getRecipientsList(asylumCase).contains(lartListingEmailAddress));
-
-        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
-
-        assertTrue(homeOfficeEndAppealPersonalisation.getRecipientsList(asylumCase).contains(afterListingEmailAddress));
     }
 
     @Test

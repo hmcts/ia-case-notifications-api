@@ -25,7 +25,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNo
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
-
 @Service
 public class HomeOfficeEndAppealPersonalisation implements EmailNotificationPersonalisation {
 
@@ -35,7 +34,6 @@ public class HomeOfficeEndAppealPersonalisation implements EmailNotificationPers
     private final String lartAppealEmailAddresses;
     private final String iaExUiFrontendUrl;
     private final CustomerServicesProvider customerServicesProvider;
-    private EmailAddressFinder emailAddressFinder;
 
     @Value("${govnotify.emailPrefix.ada}")
     private String adaPrefix;
@@ -48,8 +46,7 @@ public class HomeOfficeEndAppealPersonalisation implements EmailNotificationPers
         @Value("${apcPrivateHomeOfficeEmailAddress}") String apcAppealEmailAddresses,
         @Value("${lartHomeOfficeEmailAddress}") String lartAppealEmailAddresses,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
-        CustomerServicesProvider customerServicesProvider,
-        EmailAddressFinder emailAddressFinder
+        CustomerServicesProvider customerServicesProvider
     ) {
         this.endAppealHomeOfficeBeforeListingTemplateId = endAppealHomeOfficeBeforeListingTemplateId;
         this.endAppealHomeOfficeAfterListingTemplateId = endAppealHomeOfficeAfterListingTemplateId;
@@ -57,7 +54,6 @@ public class HomeOfficeEndAppealPersonalisation implements EmailNotificationPers
         this.lartAppealEmailAddresses = lartAppealEmailAddresses;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.customerServicesProvider = customerServicesProvider;
-        this.emailAddressFinder = emailAddressFinder;
     }
 
     @Override
@@ -68,9 +64,6 @@ public class HomeOfficeEndAppealPersonalisation implements EmailNotificationPers
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        if (isAppealListed(asylumCase)) {
-            return Collections.singleton(emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase));
-        }
         String outcome = asylumCase.read(AsylumCaseDefinition.END_APPEAL_OUTCOME, String.class).orElse("");
         return outcome.equals(WITHDRAWN)
             ? Collections.singleton(lartAppealEmailAddresses)
