@@ -72,11 +72,10 @@ public class Appellant24WeeksReviewSms implements SmsNotificationPersonalisation
                 .put("14DaysFromDateOfDirection", now.plusDays(DAYS_14).format(dtf))
                 .put("42DaysFromDateOfDirection", now.plusDays(DAYS_42).format(dtf))
                 .put("56DaysFromDateOfDirection", now.plusDays(DAYS_56).format(dtf));
-        boolean hasLegalRepresentation = AsylumCaseUtils.hasLegalRepresentation(asylumCase);
-        log.info("Has legal representation? {}", hasLegalRepresentation);
-        if (!hasLegalRepresentation) {
+        boolean noLegalRepresentation = AsylumCaseUtils.noLegalRepresentation(asylumCase);
+        log.info("no legal representation? {}", noLegalRepresentation);
+        if (noLegalRepresentation) {
             builder.put(LINK_TO_SERVICE_TEXT_AND_URL, "Sign into your account to see appeal: " + iaAipFrontendUrl);
-
         } else {
             builder.put(LINK_TO_SERVICE_TEXT_AND_URL, "");
         }

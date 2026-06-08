@@ -23,8 +23,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_SUBMISSION_DATE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANTS_REPRESENTATION;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ADMIN;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.TRIBUNAL_RECEIVED_DATE;
 
 @ExtendWith(MockitoExtension.class)
@@ -32,7 +32,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 class Appellant24WeeksCompleteCaseReviewSmsTest {
 
 
-    private final String smsTemplateId = "template_without_link";
+    private final String smsTemplateId = "template";
     private final String iaAipFrontendUrl = "http://localhost:3000";
 
     @Mock
@@ -51,11 +51,13 @@ class Appellant24WeeksCompleteCaseReviewSmsTest {
         );
     }
 
-    private void setupDefaultMocks(YesOrNo isAdmin, YesOrNo appRepresentation) {
+    private void setupDefaultMocks(YesOrNo isAdmin, String legalRepRefNo) {
         when(asylumCase.read(IS_ADMIN, YesOrNo.class))
                 .thenReturn(Optional.of(isAdmin));
-        when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class))
-                .thenReturn(Optional.of(appRepresentation));
+
+        when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class))
+                .thenReturn(Optional.of(legalRepRefNo));
+
         String appealReferenceNumber = "PA/50002/2019";
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class))
                 .thenReturn(Optional.of(appealReferenceNumber));
@@ -69,13 +71,13 @@ class Appellant24WeeksCompleteCaseReviewSmsTest {
 
     @Test
     public void should_return_template_id_with_link_when_not_appellant_internal_case() {
-        setupDefaultMocks(YesOrNo.NO, YesOrNo.NO);
+        setupDefaultMocks(YesOrNo.NO, "");
         assertEquals(smsTemplateId, appellant24WeeksReviewSms.getTemplateId(asylumCase));
     }
 
     @Test
     public void should_return_template_id_without_link_when_case_is_appellant_internal_case() {
-        setupDefaultMocks(YesOrNo.YES, YesOrNo.YES);
+        setupDefaultMocks(YesOrNo.YES, "legalRepRefNo");
         assertEquals(smsTemplateId, appellant24WeeksReviewSms.getTemplateId(asylumCase));
     }
 
@@ -107,7 +109,7 @@ class Appellant24WeeksCompleteCaseReviewSmsTest {
 
     @Test
     public void should_return_personalisation_with_all_required_fields() {
-        setupDefaultMocks(YesOrNo.NO, YesOrNo.NO);
+        setupDefaultMocks(YesOrNo.NO, "");
         Map<String, String> personalisation = appellant24WeeksReviewSms.getPersonalisation(asylumCase);
 
         assertThat(personalisation)
@@ -119,7 +121,7 @@ class Appellant24WeeksCompleteCaseReviewSmsTest {
 
     @Test
     public void should_exclude_service_link_when_not_appellant_internal_case() {
-        setupDefaultMocks(YesOrNo.NO, YesOrNo.YES);
+        setupDefaultMocks(YesOrNo.NO, "legalRepRefNo");
         Map<String, String> personalisation = appellant24WeeksReviewSms.getPersonalisation(asylumCase);
 
         assertEquals("", personalisation.get("linkToServiceTextAndUrl"));
@@ -127,7 +129,7 @@ class Appellant24WeeksCompleteCaseReviewSmsTest {
 
     @Test
     public void should_include_service_link_when_appellant_internal_case() {
-        setupDefaultMocks(YesOrNo.YES, YesOrNo.NO);
+        setupDefaultMocks(YesOrNo.YES, "");
         Map<String, String> personalisation = appellant24WeeksReviewSms.getPersonalisation(asylumCase);
 
         assertThat(personalisation).containsKey("linkToServiceTextAndUrl");
@@ -136,7 +138,7 @@ class Appellant24WeeksCompleteCaseReviewSmsTest {
 
     @Test
     public void should_calculate_future_dates_correctly() {
-        setupDefaultMocks(YesOrNo.NO, YesOrNo.YES);
+        setupDefaultMocks(YesOrNo.NO, "legalRepRefNo");
         Map<String, String> personalisation = appellant24WeeksReviewSms.getPersonalisation(asylumCase);
 
         assertThat(personalisation)

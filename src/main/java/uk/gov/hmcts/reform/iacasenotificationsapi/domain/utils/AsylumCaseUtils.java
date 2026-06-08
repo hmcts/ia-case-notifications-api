@@ -593,9 +593,9 @@ public class AsylumCaseUtils {
         return read.map(value -> value.equals(YES)).orElse(false);
     }
 
-    public static boolean hasLegalRepresentation(AsylumCase asylumCase) {
-        Optional<YesOrNo> read = asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class);
-        return read.map(value -> value.equals(YES)).orElse(false);
+    public static boolean noLegalRepresentation(AsylumCase asylumCase) {
+        String legalRepRefNo = asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse("");
+        return legalRepRefNo.isEmpty();
     }
 
     public static @NonNull Set<String> getApplicantEmail(AsylumCase asylumCase) {
