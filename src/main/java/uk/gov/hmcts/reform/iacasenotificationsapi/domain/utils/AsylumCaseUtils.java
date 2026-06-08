@@ -689,7 +689,7 @@ public class AsylumCaseUtils {
                 .map(contactPreference -> ContactPreference.WANTS_SMS == contactPreference)
                 .orElse(false);
 
-        return smsPreferred && asylumCase.read(MOBILE_NUMBER, String.class).isPresent();
+        return (smsPreferred && asylumCase.read(MOBILE_NUMBER, String.class).isPresent()) || isSmsPreferred(asylumCase);
     }
 
     public static boolean isCaseReviewFor24WeeksCase(Event event, AsylumCase asylumCase) {

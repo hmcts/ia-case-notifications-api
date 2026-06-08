@@ -366,5 +366,16 @@ public class AsylumCaseUtils24WeeksTest {
 
             assertFalse(result);
         }
+
+        @Test
+        void should_return_true_when_no_contact_preference_but_has_subscriptions() {
+
+            AsylumCase asylumCase = new AsylumCase();
+            writeSubscribers(asylumCase, subscriber(SubscriberType.APPELLANT, "", YesOrNo.NO, "07700000000", YesOrNo.YES));
+
+            boolean result = AsylumCaseUtils.hasSmsContactPreference(asylumCase);
+
+            assertTrue(result);
+        }
     }
 }

@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.SmsNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
@@ -17,6 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType.SMS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation.DAYS_14;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation.DAYS_42;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation.DAYS_56;
@@ -26,22 +26,19 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 @Service
 public class Appellant24WeeksReviewSms implements SmsNotificationPersonalisation {
     private static final String REFERENCE_ID_SUFFIX = "_STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_SMS";
-    private static final String DATE_FORMAT = "d MMM yyyy";
     private static final String APPEAL_REFERENCE_NUMBER_KEY = "appealReferenceNumber";
-    private static final String LINK_TO_SERVICE_KEY = "linkToService";
+
+    private static final String LINK_TO_SERVICE_TEXT_AND_URL = "linkToServiceTextAndUrl";
     private static final String EMPTY_STRING = "";
-    private final String smsTemplateIdWithLink;
     private final String smsTemplateId;
     private final String iaAipFrontendUrl;
     private final RecipientsFinder recipientsFinder;
 
     public Appellant24WeeksReviewSms(
-            @Value("${govnotify.template.completeCaseReviewStatutoryTimeframe24Weeks.appellant.smsWithLink}") String smsTemplateIdWithLink,
             @Value("${govnotify.template.completeCaseReviewStatutoryTimeframe24Weeks.appellant.sms}") String smsTemplateId,
             @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
             RecipientsFinder recipientsFinder
     ) {
-        this.smsTemplateIdWithLink = smsTemplateIdWithLink;
         this.smsTemplateId = smsTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.recipientsFinder = recipientsFinder;
@@ -49,19 +46,13 @@ public class Appellant24WeeksReviewSms implements SmsNotificationPersonalisation
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        String template;
-        boolean hasLegalRepresentation = AsylumCaseUtils.hasLegalRepresentation(asylumCase);
-        if (!hasLegalRepresentation) {
-            template = smsTemplateIdWithLink;
-        } else {
-            template = smsTemplateId;
-        }
-        return template;
+        return smsTemplateId;
     }
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return recipientsFinder.findReppedAppellant(asylumCase, NotificationType.SMS);
+        Set<String> contactSmsSet = recipientsFinder.findReppedAppellant(asylumCase, SMS);
+        return contactSmsSet.isEmpty() ? recipientsFinder.findAll(asylumCase, SMS) : contactSmsSet;
     }
 
     @Override
@@ -84,7 +75,10 @@ public class Appellant24WeeksReviewSms implements SmsNotificationPersonalisation
         boolean hasLegalRepresentation = AsylumCaseUtils.hasLegalRepresentation(asylumCase);
         log.info("Has legal representation? {}", hasLegalRepresentation);
         if (!hasLegalRepresentation) {
-            builder.put(LINK_TO_SERVICE_KEY, iaAipFrontendUrl);
+            builder.put(LINK_TO_SERVICE_TEXT_AND_URL, "Sign into your account to see appeal: " + iaAipFrontendUrl);
+
+        } else {
+            builder.put(LINK_TO_SERVICE_TEXT_AND_URL, "");
         }
 
         return builder.build();

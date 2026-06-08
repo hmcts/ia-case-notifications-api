@@ -31,12 +31,9 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 @MockitoSettings(strictness = Strictness.LENIENT)
 class Appellant24WeeksCompleteCaseReviewSmsTest {
 
-    private final String smsTemplateIdWithLink = "template_with_link";
+
     private final String smsTemplateId = "template_without_link";
     private final String iaAipFrontendUrl = "http://localhost:3000";
-    private final String appealReferenceNumber = "PA/50002/2019";
-    private final String tribunalReceivedDate = "2024-05-27";
-    private final String appealSubmissionDate = "2024-05-20";
 
     @Mock
     private AsylumCase asylumCase;
@@ -48,7 +45,6 @@ class Appellant24WeeksCompleteCaseReviewSmsTest {
     @BeforeEach
     public void setup() {
         appellant24WeeksReviewSms = new Appellant24WeeksReviewSms(
-                smsTemplateIdWithLink,
                 smsTemplateId,
                 iaAipFrontendUrl,
                 recipientsFinder
@@ -60,10 +56,13 @@ class Appellant24WeeksCompleteCaseReviewSmsTest {
                 .thenReturn(Optional.of(isAdmin));
         when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class))
                 .thenReturn(Optional.of(appRepresentation));
+        String appealReferenceNumber = "PA/50002/2019";
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class))
                 .thenReturn(Optional.of(appealReferenceNumber));
+        String tribunalReceivedDate = "2024-05-27";
         when(asylumCase.read(TRIBUNAL_RECEIVED_DATE, String.class))
                 .thenReturn(Optional.of(tribunalReceivedDate));
+        String appealSubmissionDate = "2024-05-20";
         when(asylumCase.read(APPEAL_SUBMISSION_DATE, String.class))
                 .thenReturn(Optional.of(appealSubmissionDate));
     }
@@ -71,7 +70,7 @@ class Appellant24WeeksCompleteCaseReviewSmsTest {
     @Test
     public void should_return_template_id_with_link_when_not_appellant_internal_case() {
         setupDefaultMocks(YesOrNo.NO, YesOrNo.NO);
-        assertEquals(smsTemplateIdWithLink, appellant24WeeksReviewSms.getTemplateId(asylumCase));
+        assertEquals(smsTemplateId, appellant24WeeksReviewSms.getTemplateId(asylumCase));
     }
 
     @Test
@@ -113,17 +112,9 @@ class Appellant24WeeksCompleteCaseReviewSmsTest {
 
         assertThat(personalisation)
                 .containsKeys("appealReferenceNumber", "appealReceivedDate", "14DaysFromDateOfDirection",
-                        "42DaysFromDateOfDirection", "56DaysFromDateOfDirection", "linkToService");
-    }
+                        "42DaysFromDateOfDirection", "56DaysFromDateOfDirection", "linkToServiceTextAndUrl");
+        assertEquals("Sign into your account to see appeal: " + iaAipFrontendUrl, personalisation.get("linkToServiceTextAndUrl"));
 
-    @Test
-    public void should_return_empty_appeal_reference_when_missing() {
-        setupDefaultMocks(YesOrNo.NO, YesOrNo.YES);
-        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class))
-                .thenReturn(Optional.empty());
-
-        Map<String, String> personalisation = appellant24WeeksReviewSms.getPersonalisation(asylumCase);
-        assertThat(personalisation).containsEntry("appealReferenceNumber", "");
     }
 
     @Test
@@ -131,7 +122,7 @@ class Appellant24WeeksCompleteCaseReviewSmsTest {
         setupDefaultMocks(YesOrNo.NO, YesOrNo.YES);
         Map<String, String> personalisation = appellant24WeeksReviewSms.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).doesNotContainKey("linkToService");
+        assertEquals("", personalisation.get("linkToServiceTextAndUrl"));
     }
 
     @Test
@@ -139,7 +130,8 @@ class Appellant24WeeksCompleteCaseReviewSmsTest {
         setupDefaultMocks(YesOrNo.YES, YesOrNo.NO);
         Map<String, String> personalisation = appellant24WeeksReviewSms.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).containsKey("linkToService");
+        assertThat(personalisation).containsKey("linkToServiceTextAndUrl");
+        assertEquals("Sign into your account to see appeal: " + iaAipFrontendUrl, personalisation.get("linkToServiceTextAndUrl"));
     }
 
     @Test
