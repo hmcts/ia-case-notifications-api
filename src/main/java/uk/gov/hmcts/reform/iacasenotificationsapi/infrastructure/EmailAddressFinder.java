@@ -97,8 +97,8 @@ public class EmailAddressFinder {
         if (isRemoteHearing(asylumCase) || isDecisionWithoutHearing(asylumCase)) {
             return getHomeOfficeFtpaEmailAddress(asylumCase);
         } else {
-           HearingCentre hearingCentre = asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)
-                    .orElseThrow(() -> new IllegalStateException(LIST_CASE_HEARING_CENTRE.value() + " is not present"));
+            HearingCentre hearingCentre = asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)
+                .orElseThrow(() -> new IllegalStateException(LIST_CASE_HEARING_CENTRE.value() + " is not present"));
 
             if (isASharedHearingCentre(hearingCentre)) {
                 hearingCentre = asylumCase.read(HEARING_CENTRE, HearingCentre.class)
