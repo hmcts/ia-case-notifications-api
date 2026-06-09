@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config;
 
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType.EA;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType.EU;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType.HU;
@@ -85,6 +86,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.FtpaDecisionOu
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.MakeAnApplication;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NonLegalRepDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.OutOfTimeDecisionType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Parties;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision;
@@ -3987,10 +3989,10 @@ public class NotificationHandlerConfiguration {
                     .orElse(false);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                       && callback.getEvent() == Event.RECORD_REMISSION_DECISION
-                       && !isInternalCase(asylumCase)
-                       && isPartiallyApproved
-                       && isPaAppeal(asylumCase);
+                    && callback.getEvent() == Event.RECORD_REMISSION_DECISION
+                    && !isInternalCase(asylumCase)
+                    && isPartiallyApproved
+                    && isPaAppeal(asylumCase);
             },
             notificationGenerators
         );
@@ -5903,29 +5905,29 @@ public class NotificationHandlerConfiguration {
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> internalSubmitAppealOutOfTimeWithFeeAppellantLetterNotificationHandler(
-            @Qualifier("internalSubmitAppealWithFeeOutOfTimeAppellantLetterNotificationGenerator")
-            List<NotificationGenerator> notificationGenerators) {
+        @Qualifier("internalSubmitAppealWithFeeOutOfTimeAppellantLetterNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
-                (callbackStage, callback) -> {
+            (callbackStage, callback) -> {
 
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-                    boolean isPaymentPending = asylumCase.read(PAYMENT_STATUS, PaymentStatus.class).map(status -> status == PAYMENT_PENDING).orElse(false);
+                boolean isPaymentPending = asylumCase.read(PAYMENT_STATUS, PaymentStatus.class).map(status -> status == PAYMENT_PENDING).orElse(false);
 
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == Event.SUBMIT_APPEAL
-                            && isInternalCase(asylumCase)
-                            && (!isAppellantInDetention(asylumCase)
-                            || (hasBeenSubmittedByAppellantInternalCase(asylumCase)
-                            && isDetainedInFacilityType(asylumCase, OTHER))
-                            || (hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)))
-                            && isSubmissionOutOfTime(asylumCase)
-                            && isPaymentPending;
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.SUBMIT_APPEAL
+                    && isInternalCase(asylumCase)
+                    && (!isAppellantInDetention(asylumCase)
+                    || (hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                    && isDetainedInFacilityType(asylumCase, OTHER))
+                    || (hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)))
+                    && isSubmissionOutOfTime(asylumCase)
+                    && isPaymentPending;
 
-                },
-                notificationGenerators,
-                getErrorHandler()
+            },
+            notificationGenerators,
+            getErrorHandler()
         );
     }
 
@@ -8203,6 +8205,69 @@ public class NotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> generateSendInviteToNonLegalRepNotificationHandler(
+        @Qualifier("generateSendInviteToNonLegalRepNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                List<Event> validNlrEvents = List.of(SEND_INVITE_TO_NON_LEGAL_REP, SUBMIT_APPEAL);
+                if (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT) {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    boolean shouldSend = asylumCase.read(SHOULD_INVITE_NLR_TO_IDAM, YesOrNo.class)
+                        .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
+                    String nlrEmail =
+                        asylumCase.read(NLR_DETAILS, NonLegalRepDetails.class)
+                            .map(NonLegalRepDetails::getEmailAddress)
+                            .orElse(null);
+                    return validNlrEvents.contains(callback.getEvent())
+                        && isAipJourney(asylumCase) && isNotEmpty(nlrEmail) && shouldSend;
+                }
+                return false;
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> generateSendPipToNonLegalRepNotificationHandler(
+        @Qualifier("generateSendPipToNonLegalRepNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+            (callbackStage, callback) -> callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                && callback.getEvent() == SEND_PIP_TO_NON_LEGAL_REP,
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> generateJoinAppealConfirmationNotificationHandler(
+        @Qualifier("generateJoinAppealConfirmationNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+            (callbackStage, callback) -> callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                && callback.getEvent() == JOIN_APPEAL_CONFIRMATION,
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> generateNlrPhoneNumberSubmittedNotificationHandler(
+        @Qualifier("generateNlrPhoneNumberSubmittedNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                if (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT) {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    String nlrEmail =
+                        asylumCase.read(NLR_DETAILS, NonLegalRepDetails.class)
+                            .map(NonLegalRepDetails::getEmailAddress)
+                            .orElse(null);
+                    return callback.getEvent().equals(NLR_DETAILS_UPDATED)
+                        && isAipJourney(asylumCase) && isNotEmpty(nlrEmail);
+                }
+                return false;
+            },
+            notificationGenerators
+        );
+    }
+
     private boolean isDlrmSetAsideEnabled(AsylumCase asylumCase) {
         return asylumCase.read(IS_DLRM_SET_ASIDE_ENABLED, YesOrNo.class)
             .map(flag -> flag.equals(YesOrNo.YES)).orElse(false);
@@ -8313,4 +8378,53 @@ public class NotificationHandlerConfiguration {
                 == caseDataBefore.read(AsylumCaseDefinition.IS_REMOTE_HEARING, YesOrNo.class).orElse(null);
 
     }
+
+    private List<Event> validNlrEvents = List.of(
+        Event.UNLINK_APPEAL,
+        Event.LINK_APPEAL,
+        Event.END_APPEAL,
+        Event.SEND_DECISION_AND_REASONS,
+        Event.REQUEST_RESPONDENT_EVIDENCE,
+        Event.PAYMENT_APPEAL,
+        Event.REMOVE_APPEAL_FROM_ONLINE,
+        Event.CHANGE_HEARING_CENTRE,
+        Event.MAKE_AN_APPLICATION,
+        Event.REVIEW_TIME_EXTENSION,
+        Event.SEND_DIRECTION_WITH_QUESTIONS,
+        Event.SUBMIT_CLARIFYING_QUESTION_ANSWERS,
+        Event.DECIDE_FTPA_APPLICATION,
+        Event.RESIDENT_JUDGE_FTPA_DECISION,
+        Event.LEADERSHIP_JUDGE_FTPA_DECISION,
+        Event.RECORD_OUT_OF_TIME_DECISION,
+        Event.END_APPEAL_AUTOMATICALLY,
+        Event.REQUEST_FEE_REMISSION,
+        Event.UPDATE_TRIBUNAL_DECISION,
+        Event.RECORD_REMISSION_DECISION,
+        Event.MARK_APPEAL_PAID,
+        Event.MANAGE_FEE_UPDATE,
+        Event.REFUND_CONFIRMATION,
+        Event.DRAFT_HEARING_REQUIREMENTS,
+        Event.ASYNC_STITCHING_COMPLETE,
+        Event.UPLOAD_ADDITIONAL_EVIDENCE,
+        Event.UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE,
+        Event.SUBMIT_REASONS_FOR_APPEAL,
+        Event.BUILD_CASE,
+        Event.REQUEST_RESPONDENT_REVIEW,
+        Event.REQUEST_RESPONSE_REVIEW,
+        Event.SUBMIT_CMA_REQUIREMENTS,
+        Event.LIST_CMA,
+        Event.REQUEST_HEARING_REQUIREMENTS_FEATURE,
+        Event.MARK_AS_READY_FOR_UT_TRANSFER,
+        Event.MARK_APPEAL_AS_REMITTED,
+        Event.APPLY_FOR_FTPA_APPELLANT,
+        Event.APPLY_FOR_FTPA_RESPONDENT,
+        Event.SUBMIT_APPEAL,
+        Event.PAY_AND_SUBMIT_APPEAL,
+        Event.LIST_CASE,
+        Event.RECORD_ADJOURNMENT_DETAILS,
+        Event.UPLOAD_ADDENDUM_EVIDENCE_LEGAL_REP,
+        Event.UPLOAD_ADDENDUM_EVIDENCE_HOME_OFFICE,
+        Event.UPLOAD_ADDENDUM_EVIDENCE,
+        Event.UPLOAD_ADDENDUM_EVIDENCE_ADMIN_OFFICER
+    );
 }
