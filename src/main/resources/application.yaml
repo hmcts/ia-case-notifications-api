@@ -1566,8 +1566,6 @@ govnotify:
         appellant:
           email: c56dcb93-7c07-4fcc-9d48-c7e9814b3643
           sms: 1a86539c-e685-4ece-9c07-ade4b22ab97c
-      appealUpdated:
-        email: 1f917848-0dd7-4f2e-987a-e574658415b1
       nlrDetailsUpdated:
         email: 989c80f9-df20-4c15-876d-911c3beec88a
 

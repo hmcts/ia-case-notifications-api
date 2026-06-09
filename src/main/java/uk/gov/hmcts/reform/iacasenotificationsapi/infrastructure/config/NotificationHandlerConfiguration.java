@@ -8249,41 +8249,6 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> generateAppealUpdatedNonLegalRepNotificationHandler(
-        @Qualifier("generateAppealUpdatedNonLegalRepNotificationGenerator") List<NotificationGenerator> notificationGenerators,
-        DirectionFinder directionFinder) {
-        return new NotificationHandler(
-            (callbackStage, callback) -> {
-                if (callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT) {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    Event event = callback.getEvent();
-                    boolean changeDirectionDueDateValid = event.equals(Event.CHANGE_DIRECTION_DUE_DATE)
-                        && asylumCase.read(DIRECTION_EDIT_PARTIES, Parties.class)
-                        .map(parties -> parties.equals(Parties.APPELLANT) || parties.equals(Parties.APPELLANT_AND_RESPONDENT))
-                        .orElse(false);
-                    boolean sendDirectionValid = event.equals(Event.SEND_DIRECTION)
-                        && (isValidUserDirection(directionFinder, asylumCase, DirectionTag.NONE, Parties.RESPONDENT)
-                        || isValidUserDirection(directionFinder, asylumCase, DirectionTag.NONE, Parties.APPELLANT)
-                        || isValidUserDirection(directionFinder, asylumCase, DirectionTag.NONE, Parties.APPELLANT_AND_RESPONDENT));
-                    boolean recordRemissionReminderValid = event.equals(Event.RECORD_REMISSION_REMINDER)
-                        && isRemissionRejectedOrPartiallyApproved(asylumCase);
-                    boolean shouldNlrNotificationBeSent = validNlrEvents.contains(event) || changeDirectionDueDateValid
-                        || sendDirectionValid || recordRemissionReminderValid;
-                    NonLegalRepDetails nlrEmail = asylumCase.read(NLR_DETAILS, NonLegalRepDetails.class)
-                        .orElse(null);
-                    return shouldNlrNotificationBeSent
-                        && isAipJourney(asylumCase)
-                        && nlrEmail != null
-                        && isNotEmpty(nlrEmail.getEmailAddress())
-                        && isNotEmpty(nlrEmail.getIdamId());
-                }
-                return false;
-            },
-            notificationGenerators
-        );
-    }
-
-    @Bean
     public PreSubmitCallbackHandler<AsylumCase> generateNlrPhoneNumberSubmittedNotificationHandler(
         @Qualifier("generateNlrPhoneNumberSubmittedNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
         return new NotificationHandler(
