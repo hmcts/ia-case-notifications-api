@@ -147,6 +147,7 @@ public class EventTest {
                 Arguments.of("refundConfirmation", Event.REFUND_CONFIRMATION.toString()),
                 Arguments.of("hearingCancelled", HEARING_CANCELLED.toString()),
                 Arguments.of("revokeCitizenAccess", REVOKE_CITIZEN_ACCESS.toString()),
+                Arguments.of("generatePinInPost", GENERATE_PIN_IN_POST.toString()),
                 Arguments.of("unknown", Event.UNKNOWN.toString()));
     }
 
