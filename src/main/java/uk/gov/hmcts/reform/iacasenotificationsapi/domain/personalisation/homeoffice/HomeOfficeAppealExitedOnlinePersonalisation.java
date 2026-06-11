@@ -88,7 +88,7 @@ public class HomeOfficeAppealExitedOnlinePersonalisation implements EmailNotific
             .put("linkToOnlineService", iaExUiFrontendUrl);
 
 
-        PersonalisationProvider.buildHearingRequirementsFields(asylumCase, listCaseFields);
+        listCaseFields.putAll(PersonalisationProvider.getHearingRequirementsFields(asylumCase));
 
         return listCaseFields.build();
     }
