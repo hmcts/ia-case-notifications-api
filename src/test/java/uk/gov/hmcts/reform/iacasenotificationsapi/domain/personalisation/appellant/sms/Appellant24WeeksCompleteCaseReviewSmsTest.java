@@ -113,7 +113,7 @@ class Appellant24WeeksCompleteCaseReviewSmsTest {
         Map<String, String> personalisation = appellant24WeeksReviewSms.getPersonalisation(asylumCase);
 
         assertThat(personalisation)
-                .containsKeys("appealReferenceNumber", "appealReceivedDate", "14DaysFromDateOfDirection",
+                .containsKeys("appealReferenceNumber", "24WeeksDeadline", "14DaysFromDateOfDirection",
                         "42DaysFromDateOfDirection", "56DaysFromDateOfDirection", "linkToServiceTextAndUrl");
         assertEquals("Sign into your account to see appeal: " + iaAipFrontendUrl, personalisation.get("linkToServiceTextAndUrl"));
 

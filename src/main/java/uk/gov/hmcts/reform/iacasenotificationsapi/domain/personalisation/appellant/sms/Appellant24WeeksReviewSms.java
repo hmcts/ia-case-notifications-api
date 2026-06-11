@@ -68,7 +68,7 @@ public class Appellant24WeeksReviewSms implements SmsNotificationPersonalisation
         String appealRef = asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING);
         ImmutableMap.Builder<String, String> builder = ImmutableMap.<String, String>builder()
                 .put(APPEAL_REFERENCE_NUMBER_KEY, appealRef)
-                .put("appealReceivedDate", AsylumCaseUtils.getAppealReceivedDate(asylumCase))
+                .put("24WeeksDeadline", AsylumCaseUtils.populateStatutoryTimeFrame24wDate(asylumCase))
                 .put("14DaysFromDateOfDirection", now.plusDays(DAYS_14).format(dtf))
                 .put("42DaysFromDateOfDirection", now.plusDays(DAYS_42).format(dtf))
                 .put("56DaysFromDateOfDirection", now.plusDays(DAYS_56).format(dtf));
