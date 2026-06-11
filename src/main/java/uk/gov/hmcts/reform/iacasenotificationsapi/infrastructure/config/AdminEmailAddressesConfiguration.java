@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config;
 
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -19,8 +20,7 @@ public class AdminEmailAddressesConfiguration {
 
     @Bean
     public Map<HearingCentre, String> adminEmailAddresses() {
-
-        return adminEmailAddresses;
+        return Collections.unmodifiableMap(adminEmailAddresses);
     }
 
 }
