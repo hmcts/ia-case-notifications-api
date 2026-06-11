@@ -1,11 +1,14 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils;
 
+import com.google.common.collect.ImmutableMap;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.RequiredFieldMissingException;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.NationalityGovUk;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.AddressUk;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
@@ -19,6 +22,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static java.time.LocalDate.parse;
 import static java.lang.Math.min;
@@ -33,9 +37,11 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Journey
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision.APPROVED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision.PARTIALLY_APPROVED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision.REJECTED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.COMPLETE_CASE_REVIEW;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 
+@Slf4j
 public class AsylumCaseUtils {
 
     public static final String HOME_OFFICE = "Home office";
@@ -583,10 +589,13 @@ public class AsylumCaseUtils {
     }
 
     public static boolean hasStf24WeeksStatus(AsylumCase asylumCase) {
-        return asylumCase
-                .read(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)
-                .map(value -> value.equals(YesOrNo.YES))
-                .orElse(false);
+        Optional<YesOrNo> read = asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class);
+        return read.map(value -> value.equals(YES)).orElse(false);
+    }
+
+    public static boolean noLegalRepresentation(AsylumCase asylumCase) {
+        String legalRepRefNo = asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse("");
+        return legalRepRefNo.isEmpty();
     }
 
     public static @NonNull Set<String> getApplicantEmail(AsylumCase asylumCase) {
@@ -632,6 +641,63 @@ public class AsylumCaseUtils {
             stf24WeeksAddedToDate = add24WeeksToDate(tribunalReceivedDate);
         }
         return stf24WeeksAddedToDate;
+    }
+
+    public static void buildAddressFor24WeeksLetter(AsylumCase asylumCase, ImmutableMap.Builder<String, String> builder) {
+        List<String> address = getAppellantAddressAsList(asylumCase);
+
+        for (int i = 0; i < address.size(); i++) {
+            builder.put("address_line_" + (i + 1), address.get(i));
+        }
+    }
+
+    public static boolean isLetterOnlyPreferredCommunication(AsylumCase asylumCase) {
+        boolean hasApplicantEmail = !getApplicantEmail(asylumCase).isEmpty();
+        boolean emailPreferred = isEmailPreferred(asylumCase);
+        boolean smsPreferred = isSmsPreferred(asylumCase);
+        return !smsPreferred && (!hasApplicantEmail && !emailPreferred);
+    }
+
+    private static boolean isEmailPreferred(AsylumCase asylumCase) {
+
+        final Optional<List<IdValue<Subscriber>>> maybeSubscribers = asylumCase.read(SUBSCRIPTIONS);
+
+        Set<IdValue<Subscriber>> smsPreferred = maybeSubscribers
+                .orElse(Collections.emptyList()).stream()
+                .filter(subscriber -> YES.equals(subscriber.getValue().getWantsEmail()))
+                .collect(Collectors.toSet());
+
+        return !smsPreferred.isEmpty() && smsPreferred.stream().findFirst().map(subscriberIdValue ->
+                subscriberIdValue.getValue().getEmail()).isPresent();
+    }
+
+    public static boolean isSmsPreferred(AsylumCase asylumCase) {
+
+        final Optional<List<IdValue<Subscriber>>> maybeSubscribers = asylumCase.read(SUBSCRIPTIONS);
+
+        Set<IdValue<Subscriber>> smsPreferred = maybeSubscribers
+                .orElse(Collections.emptyList()).stream()
+                .filter(subscriber -> YES.equals(subscriber.getValue().getWantsSms()))
+                .collect(Collectors.toSet());
+
+        return !smsPreferred.isEmpty() && smsPreferred.stream().findFirst().map(subscriberIdValue ->
+                subscriberIdValue.getValue().getMobileNumber()).isPresent();
+    }
+
+    public static boolean hasSmsContactPreference(AsylumCase asylumCase) {
+        boolean smsPreferred = asylumCase.read(CONTACT_PREFERENCE, ContactPreference.class)
+                .map(contactPreference -> ContactPreference.WANTS_SMS == contactPreference)
+                .orElse(false);
+
+        return (smsPreferred && asylumCase.read(MOBILE_NUMBER, String.class).isPresent()) || isSmsPreferred(asylumCase);
+    }
+
+    public static boolean isCaseReviewFor24WeeksCase(Event event, AsylumCase asylumCase) {
+        boolean inCountryAppeal = inCountryAppeal(asylumCase);
+        boolean hasStf24W = AsylumCaseUtils.hasStf24WeeksStatus(asylumCase);
+        return event == COMPLETE_CASE_REVIEW
+                && inCountryAppeal
+                && hasStf24W;
     }
 
     private static String getCaseDateDate(AsylumCase asylumCase, AsylumCaseDefinition asylumCaseDefinition) {

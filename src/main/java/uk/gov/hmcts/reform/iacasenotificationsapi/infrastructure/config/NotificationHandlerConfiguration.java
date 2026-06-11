@@ -40,6 +40,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasBeenSubmittedAsLegalRepresentedInternalCase;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasBeenSubmittedByAppellantInternalCase;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.internalNonDetainedWithAddressAvailable;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isCaseReviewFor24WeeksCase;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isHearingChannel;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.inCountryAppeal;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
@@ -52,6 +53,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isHearingDetailsUpdated;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isInternalCase;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isLegalRepEjp;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isLetterOnlyPreferredCommunication;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isRemissionApproved;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isSubmissionOutOfTime;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.remissionDecisionGranted;
@@ -5664,9 +5666,7 @@ public class NotificationHandlerConfiguration {
                     Set<String> appellantEmails = AsylumCaseUtils.getApplicantEmail(asylumCase);
                     String emails = String.join(",", appellantEmails);
                     boolean canSendAppellant = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == COMPLETE_CASE_REVIEW
-                            && AsylumCaseUtils.hasStf24WeeksStatus(asylumCase) && !emails.isEmpty();
-                    log.info("case_Review  canSendAppellant {}", canSendAppellant);
+                            && isCaseReviewFor24WeeksCase(callback.getEvent(), asylumCase) && !emails.isEmpty();
                     return canSendAppellant;
                 },
                 notificationGenerators,  getErrorHandler()
@@ -5685,8 +5685,7 @@ public class NotificationHandlerConfiguration {
                     Set<String> legalRepEmails = Collections.singleton(getLegalRepEmailInternalOrLegalRepJourneyNonMandatory(asylumCase));
                     String emails = String.join(",", legalRepEmails);
                     boolean canSendLegalRep = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == COMPLETE_CASE_REVIEW && AsylumCaseUtils.hasStf24WeeksStatus(asylumCase) && !emails.isEmpty();
-                    log.info("case_Review canSendLegalRep {}", canSendLegalRep);
+                            && isCaseReviewFor24WeeksCase(callback.getEvent(), asylumCase) && !emails.isEmpty();
                     return canSendLegalRep;
                 },
                 notificationGenerators,  getErrorHandler()
@@ -5702,13 +5701,49 @@ public class NotificationHandlerConfiguration {
                             callback
                                     .getCaseDetails()
                                     .getCaseData();
-
                     boolean canSendHomeOfficeNotification = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == COMPLETE_CASE_REVIEW && AsylumCaseUtils.hasStf24WeeksStatus(asylumCase);
-                    log.info("case_Review canSendHomeOfficeNotification1 {}", canSendHomeOfficeNotification);
+                            && isCaseReviewFor24WeeksCase(callback.getEvent(), asylumCase);
                     return canSendHomeOfficeNotification;
                 },
                 notificationGenerators,  getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> completeCaseReview24WeeksAppellantLetterNotificationHandler(
+            @Qualifier("completeCaseReview24WeeksAppellantLetterNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase =
+                            callback
+                                    .getCaseDetails()
+                                    .getCaseData();
+                    boolean canSendNotifications = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && isCaseReviewFor24WeeksCase(callback.getEvent(), asylumCase)
+                            && isInternalCase(asylumCase)
+                            && isLetterOnlyPreferredCommunication(asylumCase);
+                    log.info("canSend review letter Notification {}", canSendNotifications);
+                    return canSendNotifications;
+                },
+                notificationGenerators, getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> completeCaseReview24WeeksAppellantSmsNotificationHandler(
+            @Qualifier("completeCaseReview24WeeksAppellantSmsNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    boolean canSendReviewSms = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && isCaseReviewFor24WeeksCase(callback.getEvent(), asylumCase)
+                            && !isInternalCase(asylumCase)
+                            && AsylumCaseUtils.hasSmsContactPreference(asylumCase);
+                    log.info("canSend review SMS  Notification {}", canSendReviewSms);
+                    return canSendReviewSms;
+                },
+                notificationGenerators
         );
     }
 
