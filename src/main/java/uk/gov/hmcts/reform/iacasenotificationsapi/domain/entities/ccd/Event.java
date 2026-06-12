@@ -136,6 +136,7 @@ public enum Event {
     QUERY_MANAGEMENT_RAISE_QUERY("queryManagementRaiseQuery"),
     QUERY_MANAGEMENT_RESPOND_QUERY("queryManagementRespondQuery"),
     REVOKE_CITIZEN_ACCESS("revokeCitizenAccess"),
+    GENERATE_PIN_IN_POST("generatePinInPost"),
 
     START_APPLICATION("startApplication"),
     EDIT_BAIL_APPLICATION("editBailApplication"),

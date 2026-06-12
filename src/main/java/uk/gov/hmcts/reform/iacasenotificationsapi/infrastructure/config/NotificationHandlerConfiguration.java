@@ -1926,7 +1926,7 @@ public class NotificationHandlerConfiguration {
             .map(IdValue::getValue)
             .collect(Collectors.toList())).orElse(Collections.emptyList());
 
-        return caseBundles.isEmpty() ? "" : caseBundles.get(0).getStitchStatus().orElse("");
+        return caseBundles.isEmpty() ? "" : caseBundles.getFirst().getStitchStatus().orElse("");
     }
 
     @Bean
@@ -4234,6 +4234,19 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> generatePinInPostNotificationHandler(
+        @Qualifier("generatePinInPostNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) ->
+                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == GENERATE_PIN_IN_POST,
+            notificationGenerators
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> requestFeeRemissionNotificationHandler(
         @Qualifier("requestFeeRemissionNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
@@ -6139,10 +6152,14 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
+                boolean isAppealPaid = asylumCase.read(PAYMENT_STATUS, PaymentStatus.class)
+                        .orElse(null) == PaymentStatus.PAID;
+
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.RECORD_REMISSION_REMINDER
                     && isRemissionRejectedOrPartiallyApproved(asylumCase)
-                    && isAipJourney(asylumCase);
+                    && isAipJourney(asylumCase)
+                    && !isAppealPaid;
             },
             notificationGenerators,
             getErrorHandler()
@@ -8129,10 +8146,13 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                boolean isAppealPaid = asylumCase.read(PAYMENT_STATUS, PaymentStatus.class)
+                        .orElse(null) == PaymentStatus.PAID;
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.RECORD_REMISSION_REMINDER
-                    && isRemissionRejectedOrPartiallyApproved(asylumCase);
+                    && isRemissionRejectedOrPartiallyApproved(asylumCase)
+                    && !isAppealPaid;
             },
             notificationGenerators,
             getErrorHandler()

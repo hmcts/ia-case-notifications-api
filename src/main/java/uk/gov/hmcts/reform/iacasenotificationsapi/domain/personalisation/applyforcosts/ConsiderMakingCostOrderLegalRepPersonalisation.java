@@ -55,7 +55,7 @@ public class ConsiderMakingCostOrderLegalRepPersonalisation implements EmailNoti
 
         return ImmutableMap.<String, String>builder()
             .putAll(personalisationProvider.getApplyForCostsPersonalisation(asylumCase))
-            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .put("legalRepReferenceNumber", asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
             .build();
     }

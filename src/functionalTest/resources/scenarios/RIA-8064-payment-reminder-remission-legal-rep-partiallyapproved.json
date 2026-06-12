@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "SystemUser",
     "input": {
-      "id": 8064,
+      "id": 1247,
       "eventId": "recordRemissionReminder",
       "state": "appealSubmitted",
       "caseData": {
@@ -30,7 +30,7 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "8064_REMISSION_REMINDER_DECISION_LEGAL_REPRESENTATIVE",
+            "id": "1247_REMISSION_REMINDER_DECISION_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

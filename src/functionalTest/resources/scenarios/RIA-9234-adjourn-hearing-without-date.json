@@ -6,7 +6,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 92341,
+      "id": 1068,
       "eventId": "adjournHearingWithoutDate",
       "state": "preHearing",
       "caseData": {
@@ -34,15 +34,15 @@
         "listCaseHearingCentre": "taylorHouse",
         "notificationsSent": [
           {
-            "id": "92341_INTERNAL_CASE_ADJOURN_WITHOUT_DATE_APPELLANT_LETTER",
+            "id": "1068_INTERNAL_CASE_ADJOURN_WITHOUT_DATE_APPELLANT_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "92341_CASE_OFFICER_ADJOURN_HEARING_WITHOUT_DATE",
+            "id": "1068_CASE_OFFICER_ADJOURN_HEARING_WITHOUT_DATE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "92341_ADJOURN_HEARING_WITHOUT_DATE_ADMIN_OFFICER",
+            "id": "1068_ADJOURN_HEARING_WITHOUT_DATE_ADMIN_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -50,7 +50,7 @@
     },
     "notifications": [
       {
-        "reference": "92341_CASE_OFFICER_ADJOURN_HEARING_WITHOUT_DATE",
+        "reference": "1068_CASE_OFFICER_ADJOURN_HEARING_WITHOUT_DATE",
         "recipient": "{$hearingCentreEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: Hearing adjourned",
         "body": [
@@ -60,7 +60,7 @@
         ]
       },
       {
-        "reference": "92341_ADJOURN_HEARING_WITHOUT_DATE_ADMIN_OFFICER",
+        "reference": "1068_ADJOURN_HEARING_WITHOUT_DATE_ADMIN_OFFICER",
         "recipient": "{$reviewHearingRequirementsAdminOfficerEmailAddress}",
         "subject": "Immigration and Asylum appeal: Hearing adjourned",
         "body": [

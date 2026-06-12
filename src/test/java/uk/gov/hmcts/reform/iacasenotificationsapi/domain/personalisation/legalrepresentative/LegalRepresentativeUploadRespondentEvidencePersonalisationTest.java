@@ -68,9 +68,6 @@ public class LegalRepresentativeUploadRespondentEvidencePersonalisationTest {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class))
             .thenReturn(Optional.of(legalRepEmailAddress));
 
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
-
         legalRepresentativeUploadRespondentEvidencePersonalisation =
             new LegalRepresentativeUploadRespondentEvidencePersonalisation(
                 templateId,
@@ -152,8 +149,6 @@ public class LegalRepresentativeUploadRespondentEvidencePersonalisationTest {
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
             .containsEntry("explanation", directionExplanation)
             .containsEntry("dueDate", expectedDirectionDueDate);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
@@ -181,8 +176,6 @@ public class LegalRepresentativeUploadRespondentEvidencePersonalisationTest {
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
             .containsEntry("explanation", directionExplanation)
             .containsEntry("dueDate", expectedDirectionDueDate);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @Test

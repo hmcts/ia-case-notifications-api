@@ -102,8 +102,6 @@ public class HomeOfficeLinkAppealPersonalisationTest {
             .thenReturn(Optional.of(ReasonForLinkAppealOptions.FAMILIAL));
         String ariaListingReference = "LP/12345/2019";
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(ariaListingReference));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         Map<String, String> personalisation = this.personalisation.getPersonalisation(asylumCase);
 
@@ -118,8 +116,6 @@ public class HomeOfficeLinkAppealPersonalisationTest {
             .containsEntry("appellantFamilyName", appellantFamilyName)
             .containsEntry("ariaListingReference", ariaListingReference)
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @ParameterizedTest
@@ -133,8 +129,6 @@ public class HomeOfficeLinkAppealPersonalisationTest {
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(REASON_FOR_LINK_APPEAL, ReasonForLinkAppealOptions.class)).thenReturn(Optional.empty());
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.empty());
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         Map<String, String> personalisation = this.personalisation.getPersonalisation(asylumCase);
 
@@ -149,8 +143,6 @@ public class HomeOfficeLinkAppealPersonalisationTest {
             .containsEntry("appellantFamilyName", "")
             .containsEntry("ariaListingReference", "")
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
 }

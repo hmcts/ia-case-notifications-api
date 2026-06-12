@@ -64,9 +64,7 @@ public class AppellantRespondentReviewPersonalisationEmailTest {
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         String customerServicesTelephone = "555 555 555";
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         String customerServicesEmail = "cust.services@example.com";
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         appellantRespondentReviewPersonalisationEmail = new AppellantRespondentReviewPersonalisationEmail(
             emailTemplateId,

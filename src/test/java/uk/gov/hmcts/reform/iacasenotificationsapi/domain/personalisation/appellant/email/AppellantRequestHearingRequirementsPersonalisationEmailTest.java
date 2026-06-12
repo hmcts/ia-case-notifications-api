@@ -72,9 +72,6 @@ public class AppellantRequestHearingRequirementsPersonalisationEmailTest {
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeRefeNumber));
 
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
-
         appellantRequestHearingRequirementsPersonalisation =
             new AppellantRequestHearingRequirementsPersonalisationEmail(
                 templateId,
@@ -152,9 +149,6 @@ public class AppellantRequestHearingRequirementsPersonalisationEmailTest {
 
         Map<String, String> personalisation =
             appellantRequestHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
-
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertThat(personalisation)
             .containsEntry("appealReferenceNumber", "")
             .containsEntry("homeOfficeReferenceNumber", "")

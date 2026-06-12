@@ -65,8 +65,6 @@ class AppellantNocRequestDecisionPersonalisationEmailTest {
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(mockedAppellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(mockedAppellantFamilyName));
         when(asylumCase.read(EMAIL, String.class)).thenReturn(Optional.of(mockedAppellantEmailAddress));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         appellantNocRequestDecisionPersonalisationEmail = new AppellantNocRequestDecisionPersonalisationEmail(
             emailTemplateId, customerServicesProvider);
@@ -125,8 +123,6 @@ class AppellantNocRequestDecisionPersonalisationEmailTest {
             .containsEntry("Given names", mockedAppellantGivenNames)
             .containsEntry("Family name", mockedAppellantFamilyName)
             .containsEntry("Date Of Birth", expectedDateOfBirth);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
@@ -149,8 +145,6 @@ class AppellantNocRequestDecisionPersonalisationEmailTest {
             .containsEntry("Given names", "")
             .containsEntry("Family name", "")
             .containsEntry("Date Of Birth", expectedDateOfBirth);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));

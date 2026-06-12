@@ -70,8 +70,6 @@ class AipAppellantRecordRemissionDecisionPersonalisationEmailTest {
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         String amountLeftToPay = "4000";
         when(asylumCase.read(AMOUNT_LEFT_TO_PAY, String.class)).thenReturn(Optional.of(amountLeftToPay));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         aipAppellantRecordRemissionDecisionPersonalisationEmail = new AipAppellantRecordRemissionDecisionPersonalisationEmail(
             aipAppellantRemissionApprovedTemplateId,
@@ -153,8 +151,5 @@ class AipAppellantRecordRemissionDecisionPersonalisationEmailTest {
             .containsEntry("linkToService", iaAipFrontendUrl)
             .containsEntry("payByDeadline", systemDateProvider.dueDate(daysAfterRemissionDecision))
             .containsEntry("remainingFee", amountLeftToPayInGbp);
-
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 }

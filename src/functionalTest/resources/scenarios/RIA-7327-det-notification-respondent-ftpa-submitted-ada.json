@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "HomeOfficePOU",
     "input": {
-      "id": 7327,
+      "id": 1348,
       "eventId": "applyForFTPARespondent",
       "state": "ftpaSubmitted",
       "caseData": {
@@ -49,7 +49,7 @@
         "ircName": "Brookhouse",
         "notificationsSent": [
           {
-            "id": "7327_INTERNAL_DETAINED_APPLY_FOR_FTPA_RESPONDENT",
+            "id": "1348_INTERNAL_DETAINED_APPLY_FOR_FTPA_RESPONDENT",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -57,7 +57,7 @@
     },
     "notifications": [
       {
-        "reference": "7327_INTERNAL_DETAINED_APPLY_FOR_FTPA_RESPONDENT",
+        "reference": "1348_INTERNAL_DETAINED_APPLY_FOR_FTPA_RESPONDENT",
         "recipient": "det-irc-brookhouse@example.com",
         "subject": "ADA – SERVE IN PERSON",
         "body": [

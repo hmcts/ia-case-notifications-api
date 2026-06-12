@@ -59,7 +59,7 @@ public class LegalRepresentativeSubmittedHearingRequirementsPersonalisation impl
 
         final ImmutableMap.Builder<String, String> listCaseFields = ImmutableMap
             .<String, String>builder()
-            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation(callback))
             .put("subjectPrefix", isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData()) ? adaPrefix : nonAdaPrefix)
             .put("linkToOnlineService", iaExUiFrontendUrl)
             .putAll(personalisationProvider.getPersonalisation(callback));

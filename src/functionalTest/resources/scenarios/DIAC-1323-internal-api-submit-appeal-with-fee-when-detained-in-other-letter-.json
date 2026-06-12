@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "LegalRepresentative",
     "input": {
-      "id": 1323,
+      "id": 2084,
       "eventId": "submitAppeal",
       "state": "appealSubmitted",
       "caseData": {
@@ -52,7 +52,7 @@
         },
         "notificationsSent": [
           {
-            "id": "1323_INTERNAL_SUBMIT_APPEAL_WITH_FEE_APPELLANT_LETTER",
+            "id": "2084_INTERNAL_SUBMIT_APPEAL_WITH_FEE_APPELLANT_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

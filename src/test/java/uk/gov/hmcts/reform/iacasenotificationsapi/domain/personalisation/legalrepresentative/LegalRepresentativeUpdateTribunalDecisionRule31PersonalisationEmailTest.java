@@ -61,8 +61,6 @@ class LegalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmailTest {
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(BIRMINGHAM));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         legalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmail = new LegalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmail(
             legalRepresentativeUpdateTribunalDecisionRule31EmailTemplateId,
@@ -112,8 +110,6 @@ class LegalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmailTest {
             .containsEntry("linkToService", exUiFrontendUrl)
             .containsEntry("firstBulletPoint", "the appeal decision has been changed")
             .containsEntry("bothChanges", "no");
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
     }
 
@@ -138,8 +134,6 @@ class LegalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmailTest {
             .containsEntry("linkToService", exUiFrontendUrl)
             .containsEntry("firstBulletPoint", "a new Decision and Reasons document is available to view in the documents tab")
             .containsEntry("bothChanges", "no");
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
     }
 
@@ -164,8 +158,6 @@ class LegalRepresentativeUpdateTribunalDecisionRule31PersonalisationEmailTest {
             .containsEntry("linkToService", exUiFrontendUrl)
             .containsEntry("firstBulletPoint", "the appeal decision has been changed")
             .containsEntry("bothChanges", "yes");
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
     }
 

@@ -61,8 +61,6 @@ public class HomeOfficeAppealOutcomePersonalisationTest {
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(IS_DECISION_ALLOWED, AppealDecision.class))
             .thenReturn(Optional.of(AppealDecision.ALLOWED));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         String templateDismissedId = "someTemplateDismissedId";
         homeOfficeAppealOutcomePersonalisation = new HomeOfficeAppealOutcomePersonalisation(
@@ -156,8 +154,6 @@ public class HomeOfficeAppealOutcomePersonalisationTest {
             .containsEntry("appellantGivenNames", appellantGivenNames)
             .containsEntry("appellantFamilyName", appellantFamilyName)
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @ParameterizedTest
@@ -184,7 +180,5 @@ public class HomeOfficeAppealOutcomePersonalisationTest {
             .containsEntry("appellantGivenNames", "")
             .containsEntry("appellantFamilyName", "")
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 }

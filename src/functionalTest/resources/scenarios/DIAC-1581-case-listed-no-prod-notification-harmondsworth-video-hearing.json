@@ -1,11 +1,11 @@
 {
   "description": "DIAC-1581 Case listed NO production notification Video hearing",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 15811,
+      "id": 2027,
       "eventId": "listCase",
       "state": "prepareForHearing",
       "caseData": {
@@ -75,15 +75,19 @@
         "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
         "notificationsSent": [
           {
-            "id": "15811_CASE_LISTED_LEGAL_REPRESENTATIVE",
+            "id": "2027_CASE_LISTED_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "15811_CASE_LISTED_HOME_OFFICE",
+            "id": "2027_CASE_LISTED_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "15811_CASE_LISTED_CASE_OFFICER",
+            "id": "2027_CASE_LISTED_CASE_OFFICER",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "2027_INTERNAL_DETAINED_CASE_LISTED_DET",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -91,7 +95,7 @@
     },
     "notifications": [
       {
-        "reference": "15811_CASE_LISTED_LEGAL_REPRESENTATIVE",
+        "reference": "2027_CASE_LISTED_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: check the details of your hearing",
         "body": [
@@ -103,7 +107,7 @@
         ]
       },
       {
-        "reference": "15811_CASE_LISTED_HOME_OFFICE",
+        "reference": "2027_CASE_LISTED_HOME_OFFICE",
         "recipient": "ho-harmondsworth@example.com",
         "subject": "Immigration and Asylum appeal: case listed",
         "body": [

@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 9176,
+      "id": 1110,
       "eventId": "generateHearingBundle",
       "state": "finalBundling",
       "caseData": {
@@ -32,7 +32,7 @@
         "appellantInUk": "Yes",
         "notificationsSent": [
           {
-            "id": "9176_GENERATE_HEARING_BUNDLE_HOME_OFFICE",
+            "id": "1110_GENERATE_HEARING_BUNDLE_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

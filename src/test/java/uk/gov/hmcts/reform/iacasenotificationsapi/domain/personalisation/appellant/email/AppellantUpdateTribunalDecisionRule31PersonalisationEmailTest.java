@@ -83,8 +83,6 @@ class AppellantUpdateTribunalDecisionRule31PersonalisationEmailTest {
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         appellantUpdateTribunalDecisionRule31PersonalisationEmail = new AppellantUpdateTribunalDecisionRule31PersonalisationEmail(
             updateTribunalDecisionRule31DecisionTemplateId,
@@ -159,8 +157,6 @@ class AppellantUpdateTribunalDecisionRule31PersonalisationEmailTest {
             .containsEntry("appellantGivenNames", appellantGivenNames)
             .containsEntry("appellantFamilyName", appellantFamilyName)
             .containsEntry("linkToService", iaAipFrontendUrl);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         String dismissed = "Dismissed";
         String allowed = "Allowed";
         assertThat(personalisation)
@@ -191,8 +187,6 @@ class AppellantUpdateTribunalDecisionRule31PersonalisationEmailTest {
             .containsEntry("appellantGivenNames", appellantGivenNames)
             .containsEntry("appellantFamilyName", appellantFamilyName)
             .containsEntry("linkToService", iaAipFrontendUrl);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertNull(personalisation.get("oldDecision"));
         assertNull(personalisation.get("newDecision"));
         assertNull(personalisation.get("period"));

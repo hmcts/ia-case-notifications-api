@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 69392,
+      "id": 1460,
       "eventId": "removeDetainedStatus",
       "state": "respondentReview",
       "caseData": {
@@ -32,7 +32,7 @@
         "listCaseHearingDate": "2023-05-01T13:30:15.000",
         "notificationsSent":[
           {
-            "id":"69392_REMOVE_DETENTION_STATUS_HOME_OFFICE",
+            "id":"1460_REMOVE_DETENTION_STATUS_HOME_OFFICE",
             "value":"$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

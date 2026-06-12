@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 4546,
+      "id": 1581,
       "eventId": "linkAppeal",
       "state": "appealSubmitted",
       "caseData": {
@@ -25,8 +25,7 @@
               }
             }
           ],
-          "reasonForLinkAppeal": "Familial",
-          "notificationsSent": []
+          "reasonForLinkAppeal": "Familial"
         }
       }
     }
@@ -55,15 +54,15 @@
         "reasonForLinkAppeal": "Familial",
         "notificationsSent": [
           {
-            "id": "4546_LINK_APPEAL_HOME_OFFICE",
+            "id": "1581_LINK_APPEAL_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "4546_LINK_APPEAL_AIP_APPELLANT_EMAIL",
+            "id": "1581_LINK_APPEAL_AIP_APPELLANT_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "4546_LINK_APPEAL_AIP_APPELLANT_SMS",
+            "id": "1581_LINK_APPEAL_AIP_APPELLANT_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -71,7 +70,7 @@
     },
     "notifications": [
       {
-        "reference": "4546_LINK_APPEAL_HOME_OFFICE",
+        "reference": "1581_LINK_APPEAL_HOME_OFFICE",
         "recipient": "{$endAppealHomeOfficeEmailAddress}",
         "subject": "Immigration and Asylum appeal: appeal linked",
         "body": [
@@ -85,7 +84,7 @@
         ]
       },
       {
-        "reference": "4546_LINK_APPEAL_AIP_APPELLANT_EMAIL",
+        "reference": "1581_LINK_APPEAL_AIP_APPELLANT_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
         "subject": "Immigration and Asylum appeal: Your appeal is now linked to another appeal",
         "body": [
@@ -97,7 +96,7 @@
         ]
       },
       {
-        "reference": "4546_LINK_APPEAL_AIP_APPELLANT_SMS",
+        "reference": "1581_LINK_APPEAL_AIP_APPELLANT_SMS",
         "recipient": "{$TEST_CITIZEN_MOBILE}",
         "subject": "",
         "body": [

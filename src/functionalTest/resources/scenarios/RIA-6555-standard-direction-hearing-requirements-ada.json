@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 6555,
+      "id": 1494,
       "eventId": "requestRespondentEvidence",
       "state": "appealSubmitted",
       "caseData": {
@@ -49,11 +49,11 @@
         ],
         "notificationsSent": [
           {
-            "id": "6555_RESPONDENT_EVIDENCE_DIRECTION",
+            "id": "1494_RESPONDENT_EVIDENCE_DIRECTION",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "6555_EVIDENCE_DIRECTION_LEGAL_REPRESENTATIVE",
+            "id": "1494_EVIDENCE_DIRECTION_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ],
@@ -62,7 +62,7 @@
     },
     "notifications": [
       {
-        "reference": "6555_RESPONDENT_EVIDENCE_DIRECTION",
+        "reference": "1494_RESPONDENT_EVIDENCE_DIRECTION",
         "recipient": "{$respondentEmailAddresses.respondentEvidenceDirection}",
         "subject": "Accelerated detained appeal: submit bundle direction",
         "body": [
@@ -77,7 +77,7 @@
         ]
       },
       {
-        "reference": "6555_EVIDENCE_DIRECTION_LEGAL_REPRESENTATIVE",
+        "reference": "1494_EVIDENCE_DIRECTION_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Accelerated detained appeal: direction sent to the Home Office",
         "body": [

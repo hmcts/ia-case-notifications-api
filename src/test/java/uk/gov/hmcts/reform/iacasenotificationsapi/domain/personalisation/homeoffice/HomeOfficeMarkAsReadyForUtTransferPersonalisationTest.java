@@ -74,8 +74,6 @@ public class HomeOfficeMarkAsReadyForUtTransferPersonalisationTest {
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(UT_APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(utAppealReferenceNumber));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
         homeOfficeMarkAppealReadyForUtTransferPersonalisation = new HomeOfficeMarkAppealReadyForUtTransferPersonalisation(
             beforeListingTemplateId,
             afterListingTemplateId,
@@ -179,8 +177,6 @@ public class HomeOfficeMarkAsReadyForUtTransferPersonalisationTest {
             .containsEntry("appellantFamilyName", appellantFamilyName)
             .containsEntry("utAppealReferenceNumber", utAppealReferenceNumber)
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
     }
 
@@ -201,7 +197,7 @@ public class HomeOfficeMarkAsReadyForUtTransferPersonalisationTest {
             .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal"
                 : "Immigration and Asylum appeal")
             .containsEntry("utAppealReferenceNumber", "")
-            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation())
+            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .containsAllEntriesOf(getPersonalisationForHomeOffice())
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
     }

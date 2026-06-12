@@ -1,12 +1,11 @@
 {
   "description": "DIAC-1746 Send case listed to LR Manual Letter",
-  "disabled": "true",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 1746,
+      "id": 2025,
       "eventId": "listCase",
       "state": "prepareForHearing",
       "caseData": {
@@ -98,23 +97,23 @@
         "legalRepEmail": "{$TEST_LAW_FIRM_A_USERNAME}",
         "notificationsSent": [
           {
-            "id": "1746_CASE_LISTED_HOME_OFFICE",
+            "id": "2025_CASE_LISTED_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1746_CASE_LISTED_CASE_OFFICER",
+            "id": "2025_CASE_LISTED_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1746_INTERNAL_DETAINED_CASE_LISTED_DET",
+            "id": "2025_INTERNAL_DETAINED_CASE_LISTED_DET",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1746_DETAINED_CASE_LISTED_PRODUCTION_DET",
+            "id": "2025_DETAINED_CASE_LISTED_PRODUCTION_DET",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1746_INTERNAL_CASE_LISTED_LR_LETTER_BUNDLE",
+            "id": "2025_INTERNAL_CASE_LISTED_LR_LETTER_BUNDLE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -122,7 +121,7 @@
     },
     "notifications": [
       {
-        "reference": "1746_CASE_LISTED_HOME_OFFICE",
+        "reference": "2025_CASE_LISTED_HOME_OFFICE",
         "recipient": "ho-harmondsworth@example.com",
         "subject": "Immigration and Asylum appeal: case listed",
         "body": [
@@ -134,7 +133,7 @@
         ]
       },
       {
-        "reference": "1746_DETAINED_CASE_LISTED_PRODUCTION_DET",
+        "reference": "2025_DETAINED_CASE_LISTED_PRODUCTION_DET",
         "recipient": "det-prison-albany@example.com",
         "subject": "IAFT – Production Notice",
         "body": [

@@ -64,8 +64,6 @@ public class LegalRepresentativeEditAppealAfterSubmitPersonalisationTest {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class))
             .thenReturn(Optional.of(legalRepEmailAddress));
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(ariaListingReference));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         String iaExUiFrontendUrl = "http://someFrontEndUrl";
         personalisation = new LegalRepresentativeEditAppealAfterSubmitPersonalisation(templateIdBeforeListing,
@@ -124,8 +122,6 @@ public class LegalRepresentativeEditAppealAfterSubmitPersonalisationTest {
             .containsEntry("appellantGivenNames", appellantGivenNames)
             .containsEntry("appellantFamilyName", appellantFamilyName)
             .containsEntry("ariaListingReference", ariaListingReference);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @ParameterizedTest
@@ -151,8 +147,6 @@ public class LegalRepresentativeEditAppealAfterSubmitPersonalisationTest {
             .containsEntry("appellantGivenNames", "")
             .containsEntry("appellantFamilyName", "")
             .containsEntry("ariaListingReference", "");
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @Test
