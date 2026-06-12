@@ -22,7 +22,7 @@ public class DynamicList {
     }
 
     public List<Value> getListItems() {
-        return listItems == null ? List.of() : List.copyOf(listItems);
+        return listItems == null ? null : List.copyOf(listItems);
     }
 
     public DynamicList(Value value, List<Value> listItems) {
