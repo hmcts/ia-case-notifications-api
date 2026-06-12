@@ -67,6 +67,6 @@ public class BailDirection {
     }
 
     public List<IdValue<PreviousDates>> getPreviousDates() {
-        return previousDates;
+        return previousDates == null ? List.of() : List.copyOf(previousDates);
     }
 }

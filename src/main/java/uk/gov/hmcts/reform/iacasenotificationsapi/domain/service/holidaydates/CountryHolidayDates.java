@@ -19,7 +19,7 @@ public class CountryHolidayDates {
     }
 
     public List<HolidayDate> getEvents() {
-        return events;
+        return events == null ? List.of() : List.copyOf(events);
     }
 
 }
