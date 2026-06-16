@@ -374,6 +374,9 @@ public enum AsylumCaseDefinition {
     INTERNAL_APPELLANT_EMAIL(
         "internalAppellantEmail", new TypeReference<String>(){}),
 
+    GENERATE_PIP_EMAIL(
+        "generatePipEmail", new TypeReference<String>(){}),
+
     MOBILE_NUMBER(
         "mobileNumber", new TypeReference<String>(){}),
 

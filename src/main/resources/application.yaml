@@ -1568,6 +1568,12 @@ govnotify:
           sms: 1a86539c-e685-4ece-9c07-ade4b22ab97c
       nlrDetailsUpdated:
         email: 989c80f9-df20-4c15-876d-911c3beec88a
+    generatePinInPost:
+      appellant:
+        email: 698ec21d-a160-4b2d-a028-7fbb6fb91565
+        sms: 8469e394-ce1e-4352-b6cc-a1c1658aab73
+      hearingCentre:
+        email: 6c2d530d-c909-4792-abfd-01ae3426c1c2
 
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
@@ -2618,8 +2624,10 @@ security:
       - "sendPipToNonLegalRep"
       - "joinAppealConfirmation"
       - "nlrDetailsUpdated"
+      - "generatePinInPost"
     caseworker-ia-internal:
       - "revokeCitizenAccess"
+      - "generatePinInPost"
     caseworker-ia-homeofficebail:
       - "startApplication"
       - "editBailApplication"

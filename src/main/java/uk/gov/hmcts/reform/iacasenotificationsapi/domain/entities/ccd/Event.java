@@ -138,6 +138,7 @@ public enum Event {
     SEND_PIP_TO_NON_LEGAL_REP("sendPipToNonLegalRep"),
     JOIN_APPEAL_CONFIRMATION("joinAppealConfirmation"),
     NLR_DETAILS_UPDATED("nlrDetailsUpdated"),
+    GENERATE_PIN_IN_POST("generatePinInPost"),
 
     START_APPLICATION("startApplication"),
     EDIT_BAIL_APPLICATION("editBailApplication"),

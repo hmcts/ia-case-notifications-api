@@ -4047,6 +4047,32 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("generatePinInPostNotificationGenerator")
+    public List<NotificationGenerator> generatePinInPostNotificationGenerator(
+        AppellantGeneratePinInPostPersonalisationEmail appellantGeneratePinInPostPersonalisationEmail,
+        AppellantAdditionalGeneratePinInPostPersonalisationEmail appellantAdditionalGeneratePinInPostPersonalisationEmail,
+        AppellantGeneratePinInPostPersonalisationSms appellantGeneratePinInPostPersonalisationSms,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                List.of(
+                    appellantGeneratePinInPostPersonalisationEmail,
+                    appellantAdditionalGeneratePinInPostPersonalisationEmail
+                ),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                List.of(appellantGeneratePinInPostPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("requestFeeRemissionNotificationGenerator")
     public List<NotificationGenerator> requestFeeRemissionNotificationHandler(
         LegalRepresentativeRequestFeeRemissionPersonalisation legalRepresentativeRequestFeeRemissionPersonalisation,
