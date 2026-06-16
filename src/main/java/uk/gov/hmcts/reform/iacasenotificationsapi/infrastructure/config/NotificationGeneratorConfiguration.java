@@ -5103,13 +5103,13 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("completeCaseReview24WeeksAppellantSmsNotificationGenerator")
     public List<NotificationGenerator> completeCaseReview24WeeksAppellantSmsNotificationGenerator(
-            Appellant24WeeksReviewSms appellantEndAppealPersonalisationSms,
+            Appellant24WeeksReviewSms appellant24WeeksReviewSms,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender) {
 
         return Arrays.asList(
                 new SmsNotificationGenerator(
-                        newArrayList(appellantEndAppealPersonalisationSms),
+                        newArrayList(appellant24WeeksReviewSms),
                         notificationSender,
                         notificationIdAppender
                 )
@@ -5135,6 +5135,23 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("removeStatutoryTimeframe24WeeksAppellantSmsNotificationGenerator")
+    public List<NotificationGenerator> removeStatutoryTimeframe24WeeksAppellantSmsNotificationGenerator(
+            Appellant24WeeksRemoveSms appellant24WeeksRemoveSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+                new SmsNotificationGenerator(
+                        newArrayList(
+                                appellant24WeeksRemoveSms
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
 
     @Bean("removeStatutoryTimeframe24WeeksLegalRepNotificationGenerator")
     public List<NotificationGenerator> removeStatutoryTimeframe24WeeksLegalRepNotificationGenerator(

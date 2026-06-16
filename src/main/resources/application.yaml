@@ -1547,6 +1547,7 @@ govnotify:
       appellant:
         email: 12bf5ed3-2d4f-4de8-b7d9-6a3d29caf1a3
         letter: 69820c60-76b6-4707-ba8b-06c21dfaa272
+        sms: 2084d900-c583-45a1-ba0d-3395ab4e4867
     completeCaseReviewStatutoryTimeframe24Weeks:
       homeOffice:
         email: 778af412-31bb-40b8-9cd7-39471eeb5dbd

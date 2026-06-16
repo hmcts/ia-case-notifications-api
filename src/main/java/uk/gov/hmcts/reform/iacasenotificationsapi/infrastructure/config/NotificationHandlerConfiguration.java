@@ -5748,6 +5748,24 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> removeStatutoryTimeframe24WeeksAppellantSmsNotificationHandler(
+            @Qualifier("removeStatutoryTimeframe24WeeksAppellantSmsNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    boolean canSendReviewSms = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == REMOVE_STATUTORY_TIMEFRAME_24_WEEKS
+                            && !isInternalCase(asylumCase)
+                            && AsylumCaseUtils.hasSmsContactPreference(asylumCase);
+                    log.info("canSend remove stf SMS  Notification {}", canSendReviewSms);
+                    return canSendReviewSms;
+                },
+                notificationGenerators
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> removeStatutoryTimeframe24WeeksAppellantLetterNotificationHandler(
             @Qualifier("removeStatutoryTimeframe24WeeksAppellantLetterNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
         return new NotificationHandler(
@@ -5759,7 +5777,7 @@ public class NotificationHandlerConfiguration {
                     Set<String> appellantEmails = AsylumCaseUtils.getApplicantEmail(asylumCase);
                     String emails = String.join(",", appellantEmails);
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == REMOVE_STATUTORY_TIMEFRAME_24_WEEKS && emails.isEmpty() && AsylumCaseUtils.inCountryAppeal(asylumCase);
+                            && callback.getEvent() == REMOVE_STATUTORY_TIMEFRAME_24_WEEKS && emails.isEmpty() && AsylumCaseUtils.inCountryAppeal(asylumCase) && isInternalCase(asylumCase);
                 },
                 notificationGenerators, getErrorHandler()
         );

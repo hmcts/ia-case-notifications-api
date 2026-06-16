@@ -71,18 +71,7 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
 
     public static final String APPELLANT_MAIL = "appellant@domain.com";
     public static final String LR_EMAIL = "legalrep@domain.com";
-    public static final String STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL = "STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL";
-    public static final String STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER = "STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER";
-    public static final String STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_SMS = "STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_SMS";
-
-    public static final String STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL = "STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL";
-    public static final String STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL = "STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL";
     private static final String someNotificationId = UUID.randomUUID().toString();
-    private static final String REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL = "REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL";
-    private static final String REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL = "REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL";
-    private static final String REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER = "REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER";
-    private static final String REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL = "REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL";
-
     private static final YesOrNo WANTS_EMAIL = YesOrNo.YES;
     private static final YesOrNo WANTS_SMS = YesOrNo.YES;
     private static final YesOrNo DONT_WANTS_SMS = YesOrNo.NO;
@@ -136,9 +125,11 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
         Optional<List<IdValue<String>>> maybe = readNotifications(response);
         assertTrue(maybe.isPresent());
         List<IdValue<String>> notifications = maybe.get();
+        String idsString = String.join(",", notifications.stream().map(IdValue::getId).toList());
+        log.info("Notifications sent: {}", idsString);
         assertThat(notifications.size()).isEqualTo(expectedSize);
 
-        String idsString = String.join(",", notifications.stream().map(IdValue::getId).toList());
+
         for (String id : expectedIds) {
             assertThat(idsString).contains(id);
         }
@@ -189,10 +180,24 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
         caseData.with(MOBILE_NUMBER, "07123456789");
     }
 
+    private void createdByAdmin(AsylumCaseForTest caseData) {
+        caseData.with(IS_ADMIN, YesOrNo.YES);
+    }
+
+    private void notCreatedByAdmin(AsylumCaseForTest caseData) {
+        caseData.with(IS_ADMIN, YesOrNo.NO);
+    }
+
     // --- Tests ---
     @Nested
     @DisplayName("REMOVE_STATUTORY_TIMEFRAME_24_WEEKS")
     class RemoveStatutoryTimeframe24WeeksNotificationsTest {
+
+        private static final String REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_APPELLANT_SMS = "REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_SMS";
+        private static final String REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL = "REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL";
+        private static final String REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL = "REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL";
+        private static final String REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER = "REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER";
+        private static final String REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL = "REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL";
 
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
@@ -204,7 +209,10 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
         void should_send_24weeks_remove_letter_to_appellant_and_legal_rep_and_home_office_when_appellant_emails_are_empty() {
-            var response = mockResponse(mockCaseData(LR_EMAIL, "", "", YesOrNo.YES, WANTS_EMAIL, YesOrNo.NO), REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
+            AsylumCaseForTest caseData = mockCaseData(LR_EMAIL, "", "", YesOrNo.YES, WANTS_EMAIL, YesOrNo.NO);
+            createdByAdmin(caseData);
+            var response = mockResponse(caseData, REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
+
             assertNotificationsContain(response, 3, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER);
         }
 
@@ -225,7 +233,9 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
         void should_send_24weeks_remove_letter_to_appellant_and_email_to_ho_office() {
-            var response = mockResponse(mockCaseData(null, null, null, YesOrNo.YES, WANTS_EMAIL, YesOrNo.NO), REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
+            AsylumCaseForTest caseData = mockCaseData(null, null, null, YesOrNo.YES, WANTS_EMAIL, YesOrNo.NO);
+            createdByAdmin(caseData);
+            var response = mockResponse(caseData, REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
             assertNotificationsContain(response, 2, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER);
         }
 
@@ -239,22 +249,31 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
         void should_send_24weeks_remove_letter_to_appellant_and_email_to_legal_rep_and_home_office() {
-            var response = mockResponse(mockCaseData(LR_EMAIL, null, null, YesOrNo.YES, WANTS_EMAIL, YesOrNo.NO), REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
+            AsylumCaseForTest caseData = mockCaseData(LR_EMAIL, null, null, YesOrNo.YES, WANTS_EMAIL, YesOrNo.NO);
+            createdByAdmin(caseData);
+            var response = mockResponse(caseData, REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
             assertNotificationsContain(response, 3, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER);
         }
+
+        @Test
+        @WithMockUser(authorities = {"caseworker-ia-system"})
+        void should_send_24weeks_remove_sms_to_appellant() {
+            AsylumCaseForTest caseData = mockCaseData(null, null, null, YesOrNo.YES, DONT_WANTS_EMAIL, WANTS_SMS);
+            notCreatedByAdmin(caseData);
+            var response = mockResponse(caseData, REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
+            assertNotificationsContain(response, 2, REMOVE_STATUTORY_TIMEFRAME_24_WEEKS_APPELLANT_SMS, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL);
+        }
+
     }
 
     @Nested
     @DisplayName("COMPLETE_REVIEW_STATUTORY_TIMEFRAME_24_WEEKS")
     class CompleteReviewStatutoryTimeframe24WeeksNotificationsTest {
-        private void createdByAdmin(AsylumCaseForTest caseData) {
-            caseData.with(IS_ADMIN, YesOrNo.YES);
-        }
-
-        private void notCreatedByAdmin(AsylumCaseForTest caseData) {
-            caseData.with(IS_ADMIN, YesOrNo.NO);
-        }
-
+        private static final String STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL = "STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL";
+        private static final String STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_SMS = "STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_SMS";
+        private static final String STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER = "STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER";
+        private static final String STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL = "STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL";
+        private static final String STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL = "STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL";
 
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
