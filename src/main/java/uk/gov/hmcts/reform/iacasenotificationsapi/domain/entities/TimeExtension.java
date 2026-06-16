@@ -51,7 +51,7 @@ public class TimeExtension {
     }
 
     public List<IdValue<Document>> getEvidence() {
-        return evidence;
+        return evidence == null ? List.of() : List.copyOf(evidence);
     }
 
     public TimeExtensionDecision getDecision() {
