@@ -7,26 +7,7 @@
     "dependencies"
   ],
   "ignoreDeps": [
-    "checkstyle",
-    "hashicorp/terraform",
-    "info.solidsoft.pitest"
-  ],
-  "timezone": "Europe/London",
-  "schedule": [
-    "before 3am every weekday"
-  ],
-  "helmv3": {
-    "bumpVersion": "patch"
-  },
-  "regexManagers": [
-    {
-      "fileMatch": [
-        "^Dockerfile$"
-      ],
-      "matchStrings": [
-        "datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\sARG .*?_VERSION=(?<currentValue>.*)\\s"
-      ]
-    }
+    "org.owasp.dependencycheck"
   ],
   "packageRules": [
     {
@@ -34,25 +15,22 @@
         "*"
       ],
       "matchUpdateTypes": [
-        "minor",
         "patch"
       ],
-      "groupName": "all non-major dependencies",
-      "groupSlug": "all-minor-patch",
+      "groupName": "all patches",
+      "groupSlug": "all-patch",
       "automerge": true
     },
     {
-      "matchPackageNames": [
-        "org.owasp.dependencycheck"
-      ],
-      "enabled": false
-    },
-    {
       "matchUpdateTypes": [
-        "major"
+        "major",
+        "minor"
       ],
       "enabled": false
     }
   ],
-  "prConcurrentLimit": 3
+  "timezone": "Europe/London",
+  "schedule": [
+    "before 3am every weekday"
+  ]
 }
