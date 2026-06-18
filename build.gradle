@@ -12,7 +12,7 @@ plugins {
     id 'uk.gov.hmcts.java' version '0.12.70'
     id 'io.freefair.lombok' version '9.2.0'
     id 'au.com.dius.pact' version '4.6.20'
-    id 'org.gradle.test-retry' version '1.6.4'
+    id 'org.gradle.test-retry' version '1.6.5'
     id 'net.serenity-bdd.serenity-gradle-plugin' version '5.3.9'
 }
 
@@ -186,7 +186,7 @@ tasks.register('fortifyScan', JavaExec) {
 }
 
 jacoco {
-    toolVersion = "0.8.13"
+    toolVersion = "0.8.15"
 }
 
 jacocoTestReport {
@@ -398,7 +398,7 @@ dependencies {
     implementation group: 'com.github.hmcts', name: 'document-management-client', version: '7.0.1'
 
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: '8.0.0'
-    implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '5.3.3'
+    implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '5.3.4'
 
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.20.0'
 
