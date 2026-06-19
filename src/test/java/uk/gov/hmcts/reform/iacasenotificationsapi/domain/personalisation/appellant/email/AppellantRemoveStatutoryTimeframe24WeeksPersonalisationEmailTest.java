@@ -26,6 +26,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_DECISION_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.TRIBUNAL_RECEIVED_DATE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -50,7 +51,7 @@ class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmailTest {
     private static final String CUSTOMER_SERVICE_EMAIL = "dummy@email.com";
     private static final Long CASE_ID = 12345L;
     private static final String EXPECTED_REFERENCE_ID =
-        CASE_ID + "_REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL";
+        CASE_ID + REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL;
     private static final String COMPLETE_CASE_REVIEW_DATE_KEY = "completeCaseReviewDate";
     @Mock
     private AsylumCase asylumCase;

@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL;
 
 
 @Service
@@ -24,7 +25,6 @@ public class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation
         implements EmailNotificationPersonalisation {
 
     public static final String HOME_OFFICE_REFERENCE_NUMBER_KEY = "homeOfficeReferenceNumber";
-    private static final String REFERENCE_ID_SUFFIX = "_REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL";
     private static final String SUBJECT_PREFIX_KEY = "subjectPrefix";
     private static final String APPEAL_REFERENCE_NUMBER_KEY = "appealReferenceNumber";
     private static final String APPELLANT_GIVEN_NAMES_KEY = "appellantGivenNames";
@@ -67,7 +67,7 @@ public class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + REFERENCE_ID_SUFFIX;
+        return caseId + REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL;
     }
 
     @Override

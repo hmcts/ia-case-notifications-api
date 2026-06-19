@@ -20,12 +20,12 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation.DAYS_42;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation.DAYS_56;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.D_MMM_YYYY;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL;
 
 @Service
 @Slf4j
 public class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationEmail implements EmailNotificationPersonalisation {
 
-    private static final String REFERENCE_ID_SUFFIX = "_STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL";
     private static final String SUBJECT_PREFIX_KEY = "subjectPrefix";
     private static final String APPEAL_REFERENCE_NUMBER_KEY = "appealReferenceNumber";
     private static final String APPELLANT_GIVEN_NAMES_KEY = "appellantGivenNames";
@@ -64,7 +64,7 @@ public class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + REFERENCE_ID_SUFFIX;
+        return caseId + STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL;
     }
 
     @Override

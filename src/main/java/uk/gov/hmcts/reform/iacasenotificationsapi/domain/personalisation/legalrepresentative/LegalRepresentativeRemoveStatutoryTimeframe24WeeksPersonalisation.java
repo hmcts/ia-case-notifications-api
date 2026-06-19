@@ -17,12 +17,13 @@ import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLegalRepEmailInternalOrLegalRepJourneyNonMandatory;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL;
 
 @Service
 @Slf4j
 public class LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation implements EmailNotificationPersonalisation {
 
-    private static final String REFERENCE_ID_SUFFIX = "_REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL";
+
     private static final String SUBJECT_PREFIX_KEY = "subjectPrefix";
     private static final String APPEAL_REFERENCE_NUMBER_KEY = "appealReferenceNumber";
     private static final String LEGAL_REP_REFERENCE_NUMBER_KEY = "legalRepReferenceNumber";
@@ -61,7 +62,7 @@ public class LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation i
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + REFERENCE_ID_SUFFIX;
+        return caseId + REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL;
     }
 
     @Override

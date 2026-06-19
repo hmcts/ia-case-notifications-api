@@ -17,11 +17,13 @@ import java.util.Set;
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.buildAddressFor24WeeksLetter;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressInCountryOrOoc;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER;
 
 @Slf4j
 @Service
 public class AppellantRemoveStatutoryTimeframe24WeeksLetterPersonalisation implements LetterNotificationPersonalisation {
     private static final String COMPLETE_CASE_REVIEW_DATE_KEY = "completeCaseReviewDate";
+
     private final String appellantInternalCaseSubmitAppealWithRemissionLetterTemplateId;
     private final CustomerServicesProvider customerServicesProvider;
 
@@ -47,7 +49,7 @@ public class AppellantRemoveStatutoryTimeframe24WeeksLetterPersonalisation imple
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER";
+        return caseId + REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER;
     }
 
     @Override

@@ -23,6 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -77,7 +78,7 @@ class AppellantRemoveStatutoryTimeframe24WeeksLetterPersonalisationTest {
     @Test
     void should_return_reference_id() {
         String reference = personalisation.getReferenceId(CASE_ID);
-        assertEquals(CASE_ID + "_REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER", reference);
+        assertEquals(CASE_ID + REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER, reference);
     }
 
     @Test

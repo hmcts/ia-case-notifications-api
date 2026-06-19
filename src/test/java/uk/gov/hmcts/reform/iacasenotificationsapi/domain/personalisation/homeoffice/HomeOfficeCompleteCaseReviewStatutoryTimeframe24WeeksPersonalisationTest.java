@@ -33,6 +33,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation.DAYS_42;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation.DAYS_56;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.D_MMM_YYYY;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -65,11 +66,9 @@ class HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationTest {
     private static final String HOME_OFFICE_REF_NUMBER_VALUE = "someHomeOfficeRefNumber";
     private static final String APPELLANT_GIVEN_NAMES_VALUE = "someAppellantGivenNames";
     private static final String APPELLANT_FAMILY_NAME_VALUE = "someAppellantFamilyName";
-    private static final String CUSTOMER_SERVICES_TELEPHONE = "555 555 555";
-    private static final String CUSTOMER_SERVICES_EMAIL = "cust.services@example.com";
     private static final String MOCK_PREFIX = "mox prefix";
     private static final Long CASE_ID = 12345L;
-    private static final String EXPECTED_REFERENCE_ID = CASE_ID + "_STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL";
+    private static final String EXPECTED_REFERENCE_ID = CASE_ID + STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL;
     @Mock
     private AsylumCase asylumCase;
 
