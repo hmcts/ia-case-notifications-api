@@ -1,8 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.controllers.advice;
 
 import java.lang.reflect.Type;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -16,9 +15,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.C
 
 @ControllerAdvice
 @SuppressWarnings("unchecked")
-public class AsylumCaseRequestAdapter extends RequestBodyAdviceAdapter {
-
-    private Logger log = LoggerFactory.getLogger(AsylumCaseRequestAdapter.class);
+public class CallbackRequestAdapter extends RequestBodyAdviceAdapter {
 
     @Override
     public boolean supports(MethodParameter methodParameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
@@ -31,7 +28,9 @@ public class AsylumCaseRequestAdapter extends RequestBodyAdviceAdapter {
         Callback<AsylumCase> callback = (Callback<AsylumCase>) body;
         CaseDetails<AsylumCase> caseDetails = callback.getCaseDetails();
 
-        RequestContextHolder.currentRequestAttributes().setAttribute("CCDCaseId", caseDetails.getId(), RequestAttributes.SCOPE_REQUEST);
+        String ccdCaseId = String.valueOf(caseDetails.getId());
+        RequestContextHolder.currentRequestAttributes().setAttribute("CCDCaseId", ccdCaseId, RequestAttributes.SCOPE_REQUEST);
+        MDC.put(CorrelationIdFilter.CCD_CASE_ID_MDC_KEY, ccdCaseId);
 
         return body;
     }
