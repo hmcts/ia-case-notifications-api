@@ -26,7 +26,11 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ADMIN;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.TRIBUNAL_RECEIVED_DATE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.DAYS_14_FROM_DATE_OF_DIRECTION_KEY;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.DAYS_42_FROM_DATE_OF_DIRECTION_KEY;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.DAYS_56_FROM_DATE_OF_DIRECTION;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_SMS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.WEEKS_DEADLINE;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -114,8 +118,8 @@ class Appellant24WeeksCompleteCaseReviewSmsTest {
         Map<String, String> personalisation = appellant24WeeksReviewSms.getPersonalisation(asylumCase);
 
         assertThat(personalisation)
-                .containsKeys("appealReferenceNumber", "24WeeksDeadline", "14DaysFromDateOfDirection",
-                        "42DaysFromDateOfDirection", "56DaysFromDateOfDirection", "linkToServiceTextAndUrl");
+                .containsKeys("appealReferenceNumber", WEEKS_DEADLINE, DAYS_14_FROM_DATE_OF_DIRECTION_KEY,
+                        DAYS_42_FROM_DATE_OF_DIRECTION_KEY, DAYS_56_FROM_DATE_OF_DIRECTION, "linkToServiceTextAndUrl");
         assertEquals("Sign into your account to see appeal: " + iaAipFrontendUrl, personalisation.get("linkToServiceTextAndUrl"));
 
     }
@@ -143,6 +147,6 @@ class Appellant24WeeksCompleteCaseReviewSmsTest {
         Map<String, String> personalisation = appellant24WeeksReviewSms.getPersonalisation(asylumCase);
 
         assertThat(personalisation)
-                .containsKeys("14DaysFromDateOfDirection", "42DaysFromDateOfDirection", "56DaysFromDateOfDirection");
+                .containsKeys(DAYS_14_FROM_DATE_OF_DIRECTION_KEY, DAYS_42_FROM_DATE_OF_DIRECTION_KEY, DAYS_56_FROM_DATE_OF_DIRECTION);
     }
 }

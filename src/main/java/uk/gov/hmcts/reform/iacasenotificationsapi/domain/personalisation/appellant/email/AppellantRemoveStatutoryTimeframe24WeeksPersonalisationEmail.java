@@ -9,10 +9,12 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefi
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
+
 import java.util.Map;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.EMPTY_STRING;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL;
 
 @Service
@@ -26,7 +28,7 @@ public class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail implem
     private static final String APPELLANT_FAMILY_NAME_KEY = "appellantFamilyName";
     private static final String COMPLETE_CASE_REVIEW_DATE_KEY = "completeCaseReviewDate";
     private static final String LINK_TO_SERVICE_KEY = "linkToService";
-    private static final String EMPTY_STRING = "";
+
 
     private final String templateId;
     private final String iaAipFrontendUrl;
