@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.controllers.advice;
 
-import java.lang.reflect.Type;
 import org.slf4j.MDC;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpInputMessage;
@@ -9,28 +8,32 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.servlet.mvc.method.annotation.RequestBodyAdviceAdapter;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 
+import java.lang.reflect.Type;
+
 @ControllerAdvice
-@SuppressWarnings("unchecked")
 public class CallbackRequestAdapter extends RequestBodyAdviceAdapter {
 
     @Override
-    public boolean supports(MethodParameter methodParameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
+    public boolean supports(MethodParameter methodParameter, Type targetType,
+                            Class<? extends HttpMessageConverter<?>> converterType) {
         return true;
     }
 
     @Override
-    public Object afterBodyRead(Object body, HttpInputMessage inputMessage, MethodParameter parameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
+    public Object afterBodyRead(Object body, HttpInputMessage inputMessage, MethodParameter parameter,
+                                Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
 
-        Callback<AsylumCase> callback = (Callback<AsylumCase>) body;
-        CaseDetails<AsylumCase> caseDetails = callback.getCaseDetails();
+        if (body instanceof Callback<?> callback) {
+            String caseId = String.valueOf(callback.getCaseDetails().getId());
 
-        String ccdCaseId = String.valueOf(caseDetails.getId());
-        RequestContextHolder.currentRequestAttributes().setAttribute("CCDCaseId", ccdCaseId, RequestAttributes.SCOPE_REQUEST);
-        MDC.put(CorrelationIdFilter.CCD_CASE_ID_MDC_KEY, ccdCaseId);
+            RequestContextHolder.currentRequestAttributes()
+                    .setAttribute("CCDCaseId", caseId, RequestAttributes.SCOPE_REQUEST);
+
+            // Set in MDC for logging pattern
+            MDC.put(CorrelationIdFilter.CCD_CASE_ID_MDC_KEY, caseId);
+        }
 
         return body;
     }
