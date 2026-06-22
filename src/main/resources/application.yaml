@@ -2787,6 +2787,7 @@ appellantDaysToWait:
   letter:
     afterSubmitAppeal: 10
     afterSubmitAppealWithFee: 14
+    afterSubmitAppealWithFeeDetained: 28
     afterManageFeeEvent: 14
     toReinstateAppeal: 14
     afterRespondentApplicationDecided:

@@ -26,7 +26,7 @@ public class AppellantInternalCaseSubmittedOnTimeWithFeePersonalisation implemen
 
     public AppellantInternalCaseSubmittedOnTimeWithFeePersonalisation(
         @Value("${govnotify.template.appealSubmitted.appellant.letter.inTime.withFee}") String appellantInternalCaseSubmitAppealWithFeeLetterTemplateId,
-        @Value("${appellantDaysToWait.letter.afterSubmitAppealWithFee}") int daysAfterSubmitAppeal,
+        @Value("${appellantDaysToWait.letter.afterSubmitAppealWithFeeDetained}") int daysAfterSubmitAppeal,
         CustomerServicesProvider customerServicesProvider,
         SystemDateProvider systemDateProvider
     ) {

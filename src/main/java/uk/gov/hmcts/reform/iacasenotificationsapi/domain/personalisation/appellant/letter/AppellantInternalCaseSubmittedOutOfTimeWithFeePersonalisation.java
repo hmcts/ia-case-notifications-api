@@ -26,7 +26,7 @@ public class AppellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation imple
 
     public AppellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation(
         @Value("${govnotify.template.appealSubmitted.appellant.letter.outOfTime.withFee}") String appellantInternalCaseSubmitAppealWithFeeoutOfTimeLetterTemplateId,
-        @Value("${appellantDaysToWait.letter.afterSubmitAppealWithFee}") int daysAfterSubmitAppeal,
+        @Value("${appellantDaysToWait.letter.afterSubmitAppealWithFeeDetained}") int daysAfterSubmitAppeal,
         CustomerServicesProvider customerServicesProvider,
         SystemDateProvider systemDateProvider
     ) {
