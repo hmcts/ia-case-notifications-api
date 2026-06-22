@@ -1,16 +1,16 @@
 {
-  "description": "DIAC-2298 Send cmr listed notification to case officer, legal rep, appellant, home office in a remote hearing",
+  "description": "DIAC-2298 Send cmr listed email notification to case officer, legal rep, appellant, home office in a remote hearing",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "SystemUser",
     "input": {
       "id": 30201,
-      "eventId": "cmrRelisting",
+      "eventId": "cmrListing",
       "state": "prepareForHearing",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
-          "contactPreference": "wantsEmail",
+          "contactPreference": "wantsSms",
           "email": "{$TEST_CITIZEN_USERNAME}",
           "appellantInDetention": "No",
           "appellantsRepresentation": "Yes",
@@ -30,8 +30,8 @@
               "value": {
                 "subscriber": "appellant",
                 "email": "{$TEST_CITIZEN_USERNAME}",
-                "wantsEmail": "Yes",
-                "wantsSms": "No",
+                "wantsEmail": "No",
+                "wantsSms": "Yes",
                 "mobileNumber": "+447123456789"
               }
             }
@@ -46,7 +46,7 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
-        "contactPreference": "wantsEmail",
+        "contactPreference": "wantsSms",
         "appellantInDetention": "No",
         "email": "{$TEST_CITIZEN_USERNAME}",
         "appellantsRepresentation": "Yes",
@@ -66,7 +66,8 @@
             "value": {
               "subscriber": "appellant",
               "email": "{$TEST_CITIZEN_USERNAME}",
-              "wantsEmail": "Yes",
+              "wantsEmail": "No",
+              "wantsSms": "Yes",
               "mobileNumber": "{$TEST_CITIZEN_MOBILE}"
             }
           }

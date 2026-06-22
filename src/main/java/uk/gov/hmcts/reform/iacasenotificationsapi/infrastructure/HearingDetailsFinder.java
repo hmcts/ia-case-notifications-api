@@ -88,6 +88,20 @@ public class HearingDetailsFinder {
             .orElseThrow(() -> new IllegalStateException("listCaseHearingCentreName is not present"));
     }
 
+    public String getOldCmrHearingCentreName(AsylumCase asylumCaseBefore) {
+        if (isCaseUsingLocationRefData(asylumCaseBefore)) {
+            return getRefDataLocationName(asylumCaseBefore);
+        }
+
+        final HearingCentre hearingCentre =
+                asylumCaseBefore
+                        .read(CMR_HEARING_CENTRE, HearingCentre.class)
+                        .orElseThrow(() -> new IllegalStateException("listCaseHearingCentre is not present"));
+
+        return stringProvider.get("hearingCentreName", hearingCentre.toString())
+                .orElseThrow(() -> new IllegalStateException("listCaseHearingCentreName is not present"));
+    }
+
     public String getHearingDateTime(AsylumCase asylumCase) {
         return asylumCase
                 .read(AsylumCaseDefinition.LIST_CASE_HEARING_DATE, String.class)

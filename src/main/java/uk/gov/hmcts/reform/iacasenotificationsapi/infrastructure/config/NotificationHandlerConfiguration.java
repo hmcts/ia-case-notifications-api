@@ -7241,11 +7241,9 @@ public class NotificationHandlerConfiguration {
                 (callbackStage, callback) -> {
 
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
                     return callback.getEvent() == CMR_RELISTING
                             && isRepJourney(asylumCase)
-                            && !isInternalCase(asylumCase)
-                            && !isAppellantInDetention(asylumCase);
+                            && isNotInternalOrIsInternalWithLegalRepresentation(asylumCase);
                 },
                 notificationGenerators,
                 getErrorHandler()

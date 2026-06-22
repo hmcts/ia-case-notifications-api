@@ -59,7 +59,7 @@ public class CaseOfficerCmrRelistingPersonalisation implements EmailNotification
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_CMR_LISTED_CASE_OFFICER";
+        return caseId + "_CMR_RE_LISTED_CASE_OFFICER";
     }
 
     //    need to confirm placeholders here
@@ -70,7 +70,7 @@ public class CaseOfficerCmrRelistingPersonalisation implements EmailNotification
         final Map<String, String> listCaseFields = new HashMap<>();
         listCaseFields.putAll(personalisationProvider.getPersonalisation(callback));
         listCaseFields.put("hearingCentreAddress", hearingDetailsFinder
-                .getHearingCentreLocation(callback.getCaseDetails().getCaseData()));
+                .getCmrHearingCentreLocation(callback.getCaseDetails().getCaseData()));
 
         return ImmutableMap.copyOf(listCaseFields);
     }

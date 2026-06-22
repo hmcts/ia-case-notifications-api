@@ -144,10 +144,10 @@ public class PersonalisationProvider {
             AsylumCase asylumCaseBefore = caseDetailsBefore.get().getCaseData();
 
             hearingCentreNameBefore =
-                    hearingDetailsFinder.getOldHearingCentreName(asylumCaseBefore);
+                    hearingDetailsFinder.getOldCmrHearingCentreName(asylumCaseBefore);
 
             oldHearingDate =
-                    asylumCaseBefore.read(LIST_CASE_HEARING_DATE, String.class).orElse("");
+                    asylumCaseBefore.read(CMR_HEARING_CENTRE, String.class).orElse("");
         }
 
         final Builder<String, String> caseListingValues = ImmutableMap

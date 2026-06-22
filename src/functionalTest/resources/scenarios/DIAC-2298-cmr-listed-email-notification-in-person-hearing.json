@@ -1,11 +1,11 @@
 {
-  "description": "DIAC-2298 Send cmr listed notification to case officer, legal rep, appellant, home office in a remote hearing",
+  "description": "DIAC-2298 Send cmr listed email notification to case officer, legal rep, appellant, home office in a remote hearing",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "SystemUser",
     "input": {
       "id": 30201,
-      "eventId": "cmrRelisting",
+      "eventId": "cmrListing",
       "state": "prepareForHearing",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
@@ -20,10 +20,10 @@
           "listCaseHearingCentre": "birmingham",
           "listCaseHearingDate": "2021-02-19T14:25:15.000",
           "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
-          "cmrHearingCentre": "remoteHearing",
+          "cmrHearingCentre": "taylorHouse",
           "cmrHearingDate": "2021-03-19T10:00:00.000",
           "cmrHearingCentreAddress": "Remote hearing",
-          "cmrIsRemoteHearing": "Yes",
+          "cmrIsRemoteHearing": "No",
           "subscriptions": [
             {
               "id": "1",
@@ -56,10 +56,10 @@
         "listCaseHearingCentre": "birmingham",
         "listCaseHearingDate": "2021-02-19T14:25:15.000",
         "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "cmrHearingCentre": "remoteHearing",
+        "cmrHearingCentre": "taylorHouse",
         "cmrHearingDate": "2021-03-19T10:00:00.000",
         "cmrHearingCentreAddress": "Remote hearing",
-        "cmrIsRemoteHearing": "Yes",
+        "cmrIsRemoteHearing": "No",
         "subscriptions": [
           {
             "id": "1",

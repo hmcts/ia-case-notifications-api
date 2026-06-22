@@ -26,7 +26,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 @Service
 public class AppellantLegallyReppedCmrListingPersonalisationEmail implements EmailNotificationPersonalisation {
 
-    private static final Logger log = LoggerFactory.getLogger(AppellantLegallyReppedCmrListingPersonalisationEmail.class);
     private final String appellantLrCmrListingEmailTemplateId;
     private final String appellantLrCmrListingRemoteEmailTemplateId;
     private final String iaExUiFrontendUrl;
@@ -89,7 +88,6 @@ public class AppellantLegallyReppedCmrListingPersonalisationEmail implements Ema
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
-        log.info("AppellantLegallyReppedCmrListingPersonalisationEmail.getPersonalisation called for case");
         final ImmutableMap.Builder<String, String> listCaseFields = ImmutableMap
                 .<String, String>builder()
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation())

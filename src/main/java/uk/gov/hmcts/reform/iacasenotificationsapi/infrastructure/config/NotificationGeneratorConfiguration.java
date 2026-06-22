@@ -6415,7 +6415,7 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("legalRepCmrRelistingGenerator")
     public List<NotificationGenerator> legalRepCmrRelistingGenerator(
-            LegalRepCmrListingPersonalisation legalRepCmrRelistingPersonalisation,
+            LegalRepCmrRelistingPersonalisation legalRepCmrRelistingPersonalisation,
             CaseOfficerCmrRelistingPersonalisation caseOfficerCmrRelistingPersonalisation,
             HomeOfficeCmrRelistingPersonalisation homeOfficeCmrRelistingPersonalisation,
             GovNotifyNotificationSender notificationSender,
