@@ -8,7 +8,6 @@ public enum Event {
     EDIT_APPEAL("editAppeal"),
     SUBMIT_APPEAL("submitAppeal"),
     PAY_AND_SUBMIT_APPEAL("payAndSubmitAppeal"),
-    PAY_FOR_APPEAL("payForAppeal"),
     SEND_DIRECTION("sendDirection"),
     REQUEST_RESPONDENT_EVIDENCE("requestRespondentEvidence"),
     UPLOAD_RESPONDENT_EVIDENCE("uploadRespondentEvidence"),
@@ -108,6 +107,8 @@ public enum Event {
 
     ADA_SUITABILITY_REVIEW("adaSuitabilityReview"),
     TRANSFER_OUT_OF_ADA("transferOutOfAda"),
+    REMOVE_STATUTORY_TIMEFRAME_24_WEEKS("removeStatutoryTimeframe24Weeks"),
+    COMPLETE_CASE_REVIEW("completeCaseReview"),
     MARK_APPEAL_AS_ADA("markAppealAsAda"),
     REMOVE_DETAINED_STATUS("removeDetainedStatus"),
     MARK_APPEAL_AS_DETAINED("markAppealAsDetained"),
@@ -132,6 +133,8 @@ public enum Event {
     SEND_PAYMENT_REMINDER_NOTIFICATION("sendPaymentReminderNotification"),
     PROGRESS_MIGRATED_CASE("progressMigratedCase"),
     REFUND_CONFIRMATION("refundConfirmation"),
+    REVOKE_CITIZEN_ACCESS("revokeCitizenAccess"),
+    GENERATE_PIN_IN_POST("generatePinInPost"),
 
     START_APPLICATION("startApplication"),
     EDIT_BAIL_APPLICATION("editBailApplication"),

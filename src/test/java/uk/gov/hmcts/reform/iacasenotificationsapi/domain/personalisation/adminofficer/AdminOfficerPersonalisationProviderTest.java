@@ -1,10 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_DECISION_ALLOWED;
 
 import java.util.Map;
 import java.util.Optional;
@@ -23,18 +21,13 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AdminOfficerPersonalisationProviderTest {
 
+    private final String iaExUiFrontendUrl = "http://somefrontendurl";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String ariaListingReference = "someAriaListingReference";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
     @Mock
     AsylumCase asylumCase;
-
-    private String iaExUiFrontendUrl = "http://somefrontendurl";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String ariaListingReference = "someAriaListingReference";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
-
-    private String hearingCentre = "GLASGOW";
-
-    private String applicationDecision = "ALLOWED";
     private AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
 
     @BeforeEach
@@ -45,7 +38,7 @@ public class AdminOfficerPersonalisationProviderTest {
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(HearingCentre.GLASGOW));
         when(asylumCase.read(IS_DECISION_ALLOWED, AppealDecision.class))
-                .thenReturn(Optional.of(AppealDecision.ALLOWED));
+            .thenReturn(Optional.of(AppealDecision.ALLOWED));
 
         adminOfficerPersonalisationProvider = new AdminOfficerPersonalisationProvider(
             iaExUiFrontendUrl
@@ -57,7 +50,11 @@ public class AdminOfficerPersonalisationProviderTest {
 
         Map<String, String> personalisation = adminOfficerPersonalisationProvider.getDefaultPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
     }
 
     @Test
@@ -65,21 +62,27 @@ public class AdminOfficerPersonalisationProviderTest {
 
         Map<String, String> personalisation = adminOfficerPersonalisationProvider.getAdminPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(ariaListingReference, personalisation.get("ariaListingReference"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(hearingCentre, personalisation.get("hearingCentre"));
-        assertEquals(applicationDecision, personalisation.get("applicationDecision"));
+        String applicationDecision = "ALLOWED";
+        String hearingCentre = "GLASGOW";
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("ariaListingReference", ariaListingReference)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("hearingCentre", hearingCentre)
+            .containsEntry("applicationDecision", applicationDecision);
     }
 
     @Test
     public void should_return_reviewed_hearing_requirements_personalisation() {
-
         Map<String, String> personalisation =
             adminOfficerPersonalisationProvider.getReviewedHearingRequirementsPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
     }
 
     @Test
@@ -88,6 +91,11 @@ public class AdminOfficerPersonalisationProviderTest {
         Map<String, String> personalisation =
             adminOfficerPersonalisationProvider.getChangeToHearingRequirementsPersonalisation(asylumCase);
 
-        assertThat(asylumCase).isEqualToComparingOnlyGivenFields(personalisation);
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("ariaListingReference", ariaListingReference);
     }
 }

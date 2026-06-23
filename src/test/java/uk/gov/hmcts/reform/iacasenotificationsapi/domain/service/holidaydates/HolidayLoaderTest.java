@@ -1,8 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.holidaydates;
 
 import static java.util.Collections.singletonList;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -21,6 +20,6 @@ class HolidayLoaderTest {
         );
         List<LocalDate> holidays = new HolidayLoader(govUkHolidayDatesClient).loadHolidays();
 
-        assertThat(holidays, is(singletonList(holiday)));
+        assertEquals(singletonList(holiday), holidays);
     }
 }

@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "HomeOfficeGeneric",
     "input": {
-      "id": 1357,
+      "id": 2059,
       "eventId": "applyForFTPARespondent",
       "state": "decided",
       "caseData": {
@@ -74,7 +74,7 @@
       },
       "notificationsSent": [
         {
-          "id": "1357_INTERNAL_HO_APPLY_FOR_FTPA_NON_DETAINED_OR_OOC_OR_DETAINED_OTHER_APPELLANT_LETTER",
+          "id": "2059_INTERNAL_HO_APPLY_FOR_FTPA_NON_DETAINED_OR_OOC_OR_DETAINED_OTHER_APPELLANT_LETTER",
           "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
         }
       ]

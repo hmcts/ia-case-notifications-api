@@ -247,3 +247,9 @@ java:
           alias: IA_DET_IRC_TINSLEYHOUSE_EMAIL
         - name: det-irc-yarlswood-email
           alias: IA_DET_IRC_YARLSWOOD_EMAIL
+        - name: ia-redis-connection-string
+          alias: IA_REDIS_CONNECTION_STRING
+        - name: ia-redis-access-key
+          alias: IA_REDIS_ACCESS_KEY
+        - name: ia-redis-encryption-key
+          alias: IA_REDIS_ENCRYPTION_KEY

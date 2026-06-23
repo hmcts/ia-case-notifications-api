@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.editdocument;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,12 +16,11 @@ public class FormattedDocumentListTest {
         FormattedDocumentList formattedDocumentList = new FormattedDocumentList(formattedDocuments);
 
         String actual = formattedDocumentList.toString();
-        String expected = new StringBuilder().append("Document: \nsome name\nDescription: \nsome desc")
-            .append(System.getProperty("line.separator"))
-            .append(System.getProperty("line.separator"))
-            .append("Document: \nsome other name\nDescription: \nsome other desc")
-            .toString();
+        String expected = "Document: \nsome name\nDescription: \nsome desc" +
+            System.getProperty("line.separator") +
+            System.getProperty("line.separator") +
+            "Document: \nsome other name\nDescription: \nsome other desc";
 
-        assertThat(actual).isEqualTo(expected);
+        assertEquals(expected, actual);
     }
 }

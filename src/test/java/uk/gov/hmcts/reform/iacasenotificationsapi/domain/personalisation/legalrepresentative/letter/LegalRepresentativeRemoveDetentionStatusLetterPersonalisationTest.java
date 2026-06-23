@@ -22,8 +22,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -32,11 +34,16 @@ class LegalRepresentativeRemoveDetentionStatusLetterPersonalisationTest {
     private static final String TEMPLATE_ID = "template-123";
     private static final long CASE_ID = 98765L;
 
-    @Mock private CustomerServicesProvider customerServicesProvider;
-    @Mock private Callback<AsylumCase> callback;
-    @Mock private CaseDetails<AsylumCase> caseDetails;
-    @Mock private AsylumCase asylumCase;
-    @Mock private SystemDateProvider systemDateProvider;
+    @Mock
+    private CustomerServicesProvider customerServicesProvider;
+    @Mock
+    private Callback<AsylumCase> callback;
+    @Mock
+    private CaseDetails<AsylumCase> caseDetails;
+    @Mock
+    private AsylumCase asylumCase;
+    @Mock
+    private SystemDateProvider systemDateProvider;
 
     private LegalRepresentativeRemoveDetentionStatusLetterPersonalisation personalisation;
 
@@ -51,19 +58,19 @@ class LegalRepresentativeRemoveDetentionStatusLetterPersonalisationTest {
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
 
-        when(customerServicesProvider.getCustomerServicesPersonalisation())
+        when(customerServicesProvider.getCustomerServicesPersonalisation(any(AsylumCase.class)))
             .thenReturn(ImmutableMap.of("customerServices", "value"));
     }
 
     @Test
     void should_return_template_id() {
-        assertThat(personalisation.getTemplateId()).isEqualTo(TEMPLATE_ID);
+        assertEquals(TEMPLATE_ID, personalisation.getTemplateId());
     }
 
     @Test
     void should_return_reference_id() {
         String referenceId = personalisation.getReferenceId(CASE_ID);
-        assertThat(referenceId).isEqualTo(CASE_ID + "_REMOVE_DETENTION_STATUS_LEGAL_REP_LETTER");
+        assertEquals(CASE_ID + "_REMOVE_DETENTION_STATUS_LEGAL_REP_LETTER", referenceId);
     }
 
     @Test

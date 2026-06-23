@@ -10,7 +10,7 @@ public class CheckValuesTest {
 
     private final List<String> values = new ArrayList<>();
 
-    private CheckValues<String> checkValues = new CheckValues<>(values);
+    private final CheckValues<String> checkValues = new CheckValues<>(values);
 
     @Test
     public void should_hold_onto_values() {

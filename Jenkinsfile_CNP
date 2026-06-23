@@ -161,6 +161,9 @@ def secrets = [
 
         secret('system-username', 'IA_SYSTEM_USERNAME'),
         secret('system-password', 'IA_SYSTEM_PASSWORD'),
+        secret('ia-redis-access-key', 'IA_REDIS_ACCESS_KEY'),
+        secret('ia-redis-connection-string', 'IA_REDIS_CONNECTION_STRING'),
+        secret('ia-redis-encryption-key', 'IA_REDIS_ENCRYPTION_KEY'),
 
         secret('det-irc-brookhouse-email', 'IA_DET_IRC_BROOKHOUSE_EMAIL'),
         secret('det-irc-campsfieldhouse-email', 'IA_DET_IRC_CAMPSFIELDHOUSE_EMAIL'),
@@ -215,7 +218,15 @@ withPipeline(type, product, component) {
         ]
     }
 
-    afterSuccess('functionalTest:preview') {
+    afterAlways('functionalTest:preview') {
+        publishHTML([
+                allowMissing         : true,
+                alwaysLinkToLastBuild: true,
+                keepAll              : true,
+                reportDir            : "build/reports/tests/functional",
+                reportFiles          : 'index.html',
+                reportName           : 'Functional Test Report'
+        ])
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
     }
 

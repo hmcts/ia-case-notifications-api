@@ -12,7 +12,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HomeOfficeEmailFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -72,7 +72,7 @@ public class RespondentTurnOnNotificationsPersonalisation implements EmailNotifi
 
         final ImmutableMap.Builder<String, String> listCaseFields = ImmutableMap
             .<String, String>builder()
-            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation(callback))
             .put("subjectPrefix", "Immigration and Asylum appeal")
             .put("linkToOnlineService", iaExUiFrontendUrl)
             .put("upperTribunalReferenceNumber", callback.getCaseDetails().getCaseData().read(AsylumCaseDefinition.UPPER_TRIBUNAL_REFERENCE_NUMBER, String.class).orElse(""))

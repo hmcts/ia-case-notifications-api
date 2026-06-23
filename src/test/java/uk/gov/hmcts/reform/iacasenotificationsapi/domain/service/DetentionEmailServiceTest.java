@@ -11,7 +11,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -56,7 +57,7 @@ class DetentionEmailServiceTest {
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.empty());
 
         IllegalStateException ex = assertThrows(IllegalStateException.class,
-                () -> detentionEmailService.getDetentionEmailAddress(asylumCase));
+            () -> detentionEmailService.getDetentionEmailAddress(asylumCase));
 
         assertEquals("Detention facility is not present", ex.getMessage());
     }
@@ -66,7 +67,7 @@ class DetentionEmailServiceTest {
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("other"));
 
         IllegalStateException ex = assertThrows(IllegalStateException.class,
-                () -> detentionEmailService.getDetentionEmailAddress(asylumCase));
+            () -> detentionEmailService.getDetentionEmailAddress(asylumCase));
 
         assertEquals("Detention facility is not valid", ex.getMessage());
     }

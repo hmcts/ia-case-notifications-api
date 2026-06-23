@@ -1,11 +1,9 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.bail.uppertribunal;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.HOME_OFFICE_REFERENCE_NUMBER;
 
 import java.util.Map;
 import java.util.Optional;
@@ -18,28 +16,22 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RecordDecisionType;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class UpperTribunalDecisionRefusedImaPersonalisationTest {
-
-    @Mock
-    BailCase bailCase;
-    @Mock
-    CustomerServicesProvider customerServicesProvider;
 
     private final String templateId = "someTemplateId";
     private final String upperTribunalEmailAddress = "upperTribunal@example.com";
     private final String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
     private final String legalRepReference = "someLegalRepReferenceNumber";
     private final String bailReferenceNumber = "someBailReferenceNumber";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-    private final String customerServicesTelephone = "555 555 555";
-    private final String customerServicesEmail = "cust.services@example.com";
-    private String decisionGranted = " Granted";
-
+    private final String appellantGivenNames = "appellantGivenNames";
+    private final String appellantFamilyName = "appellantFamilyName";
+    private final String decisionGranted = " Granted";
+    @Mock
+    BailCase bailCase;
+    @Mock
     private UpperTribunalDecisionRefusedImaPersonalisation upperTribunalDecisionRefusedImaPersonalisation;
 
     @BeforeEach
@@ -50,17 +42,14 @@ class UpperTribunalDecisionRefusedImaPersonalisationTest {
         when(bailCase.read(APPLICANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(bailCase.read(APPLICANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(bailCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         upperTribunalDecisionRefusedImaPersonalisation = new UpperTribunalDecisionRefusedImaPersonalisation(
             templateId,
-            upperTribunalEmailAddress,
-            customerServicesProvider);
+            upperTribunalEmailAddress);
     }
 
     @Test
-    public void should_return_given_template_id()  {
+    public void should_return_given_template_id() {
         assertEquals(templateId, upperTribunalDecisionRefusedImaPersonalisation.getTemplateId());
     }
 
@@ -81,10 +70,10 @@ class UpperTribunalDecisionRefusedImaPersonalisationTest {
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
-        assertThatThrownBy(
-            () -> upperTribunalDecisionRefusedImaPersonalisation.getPersonalisation((BailCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("bailCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> upperTribunalDecisionRefusedImaPersonalisation.getPersonalisation((BailCase) null));
+        assertEquals("bailCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -125,14 +114,13 @@ class UpperTribunalDecisionRefusedImaPersonalisationTest {
         Map<String, String> personalisation =
             upperTribunalDecisionRefusedImaPersonalisation.getPersonalisation(bailCase);
 
-        assertEquals(bailReferenceNumber, personalisation.get("bailReferenceNumber"));
-        assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(legalRepReference, personalisation.get("legalRepReference"));
-        assertEquals(appellantGivenNames, personalisation.get("applicantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("applicantFamilyName"));
-        assertEquals(decisionGranted, personalisation.get("decision"));
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
+        assertThat(personalisation)
+            .containsEntry("bailReferenceNumber", bailReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
+            .containsEntry("legalRepReference", legalRepReference)
+            .containsEntry("applicantGivenNames", appellantGivenNames)
+            .containsEntry("applicantFamilyName", appellantFamilyName)
+            .containsEntry("decision", decisionGranted);
     }
 
     @Test
@@ -143,12 +131,16 @@ class UpperTribunalDecisionRefusedImaPersonalisationTest {
         when(bailCase.read(APPLICANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
         when(bailCase.read(APPLICANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
         when(bailCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         Map<String, String> personalisation =
             upperTribunalDecisionRefusedImaPersonalisation.getPersonalisation(bailCase);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(bailCase);
+        assertThat(personalisation)
+            .containsEntry("bailReferenceNumber", "")
+            .containsEntry("homeOfficeReferenceNumber", "")
+            .containsEntry("legalRepReference", "")
+            .containsEntry("applicantGivenNames", "")
+            .containsEntry("applicantFamilyName", "")
+            .containsEntry("decision", decisionGranted);
     }
 }

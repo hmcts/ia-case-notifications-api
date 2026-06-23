@@ -1,12 +1,12 @@
 {
   "description": "RIA-2999-RIA-3003-RIA-3754  Appellant FTPA Application is reheard after the respondent application already granted (Bradford hearing centre)",
   "launchDarklyKey": "tcw-notifications-feature:true",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
-      "id": 1020,
+      "id": 1849,
       "eventId": "residentJudgeFtpaDecision",
       "state": "ftpaSubmitted",
       "caseData": {
@@ -16,12 +16,11 @@
           "ftpaAppellantRjDecisionOutcomeType": "reheardRule32",
           "ftpaRespondentRjDecisionOutcomeType": "granted",
           "ftpaApplicantType": "appellant",
-          "ftpaApplicantType": "respondent",
           "listCaseHearingCentre": "bradford",
           "ariaListingReference": "987654321",
           "notificationsSent": [
             {
-              "id": "1020_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT",
+              "id": "1849_FTPA_APPLICATION_DECISION_HOME_OFFICE_RESPONDENT",
               "value": "34e146c9-6050-4894-a64e-acd461a5f934"
             }
           ]
@@ -40,7 +39,7 @@
     },
     "notifications": [
       {
-        "reference": "1020_FTPA_APPLICATION_DECISION_HOME_OFFICE_APPELLANT",
+        "reference": "1849_FTPA_APPLICATION_DECISION_HOME_OFFICE_APPELLANT",
         "recipient": "{$upperTribunalNoticesEmailAddress}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
         "body": [
@@ -51,7 +50,7 @@
         ]
       },
       {
-        "reference": "1020_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_APPELLANT",
+        "reference": "1849_FTPA_APPLICATION_DECISION_LEGAL_REPRESENTATIVE_APPELLANT",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
         "body": [
@@ -62,7 +61,7 @@
         ]
       },
       {
-        "reference": "1020_FTPA_APPLICATION_DECISION_CASE_OFFICER",
+        "reference": "1849_FTPA_APPLICATION_DECISION_CASE_OFFICER",
         "recipient": "{$hearingCentreEmailAddresses.bradford}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
         "body": [

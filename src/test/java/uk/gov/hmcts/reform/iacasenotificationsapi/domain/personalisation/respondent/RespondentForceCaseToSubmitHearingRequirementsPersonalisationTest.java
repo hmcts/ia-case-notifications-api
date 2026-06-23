@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
@@ -25,21 +26,17 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesO
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class RespondentForceCaseToSubmitHearingRequirementsPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-
-    private final Long caseId = 12345L;
     private final String templateId = "someTemplateId";
     private final String detentionTemplateId = "detentionTemplateId";
     private final String homeOfficeLartEmailAddress = "homeOfficeLART@example.com";
-
     private final String hmctsReference = "hmctsReference";
     private final String homeOfficeReference = "homeOfficeReference";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-
+    @Mock
+    AsylumCase asylumCase;
     private RespondentForceCaseToSubmitHearingRequirementsPersonalisation
-         respondentForceCaseToSubmitHearingRequirementsPersonalisation;
+        respondentForceCaseToSubmitHearingRequirementsPersonalisation;
 
     @BeforeEach
     public void setUp() {
@@ -84,12 +81,13 @@ public class RespondentForceCaseToSubmitHearingRequirementsPersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_FORCE_CASE_TO_SUBMIT_HEARING_REQUIREMENTS_RESPONDENT",
             respondentForceCaseToSubmitHearingRequirementsPersonalisation.getReferenceId(caseId));
     }
 
     @ParameterizedTest
-    @EnumSource(value = YesOrNo.class, names = { "YES", "NO" })
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
@@ -97,10 +95,11 @@ public class RespondentForceCaseToSubmitHearingRequirementsPersonalisationTest {
         Map<String, String> personalisation =
             respondentForceCaseToSubmitHearingRequirementsPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals(hmctsReference, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeReference, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", hmctsReference)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReference)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName);
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
@@ -108,9 +107,9 @@ public class RespondentForceCaseToSubmitHearingRequirementsPersonalisationTest {
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
-        assertThatThrownBy(
-            () -> respondentForceCaseToSubmitHearingRequirementsPersonalisation.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> respondentForceCaseToSubmitHearingRequirementsPersonalisation.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 }

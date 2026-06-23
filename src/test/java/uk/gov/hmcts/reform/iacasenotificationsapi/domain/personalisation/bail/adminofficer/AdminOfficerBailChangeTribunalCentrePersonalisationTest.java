@@ -17,8 +17,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.IS_LEGALLY_REPRESENTED_FOR_FLAG;
@@ -27,10 +27,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCas
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AdminOfficerBailChangeTribunalCentrePersonalisationTest {
 
-    @Mock
-    BailCase bailCase;
-
-    private final Long caseId = 12345L;
     private final String templateId = "someTemplateId";
     private final String templateIdWithoutLegalRep = "someTemplateIdWithoutLegalRep";
     private final String bailReferenceNumber = "someReferenceNumber";
@@ -38,7 +34,8 @@ public class AdminOfficerBailChangeTribunalCentrePersonalisationTest {
     private final String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
     private final String applicantGivenNames = "someApplicantGivenNames";
     private final String applicantFamilyName = "someApplicantFamilyName";
-
+    @Mock
+    BailCase bailCase;
     @Mock
     private EmailAddressFinder emailAddressFinder;
     private AdminOfficerBailChangeTribunalCentrePersonalisation adminOfficerBailChangeTribunalCentrePersonalisation;
@@ -53,9 +50,9 @@ public class AdminOfficerBailChangeTribunalCentrePersonalisationTest {
         when(bailCase.read(BailCaseFieldDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
 
         adminOfficerBailChangeTribunalCentrePersonalisation = new AdminOfficerBailChangeTribunalCentrePersonalisation(
-                templateId,
-                templateIdWithoutLegalRep,
-                emailAddressFinder
+            templateId,
+            templateIdWithoutLegalRep,
+            emailAddressFinder
         );
     }
 
@@ -69,6 +66,7 @@ public class AdminOfficerBailChangeTribunalCentrePersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_CHANGE_TRIBUNAL_CENTRE_ADMIN_OFFICER",
             adminOfficerBailChangeTribunalCentrePersonalisation.getReferenceId(caseId));
     }
@@ -78,15 +76,14 @@ public class AdminOfficerBailChangeTribunalCentrePersonalisationTest {
         String hearingCentreEmail = "someHearingCentre@example.com";
         when(emailAddressFinder.getBailHearingCentreEmailAddress(bailCase)).thenReturn(hearingCentreEmail);
         assertTrue(adminOfficerBailChangeTribunalCentrePersonalisation.getRecipientsList(bailCase)
-                .contains(hearingCentreEmail));
+            .contains(hearingCentreEmail));
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
-        assertThatThrownBy(
-                () -> adminOfficerBailChangeTribunalCentrePersonalisation.getPersonalisation((BailCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("bailCase must not be null");
+        NullPointerException exception = assertThrows(NullPointerException.class,
+            () -> adminOfficerBailChangeTribunalCentrePersonalisation.getPersonalisation((BailCase) null));
+        assertEquals("bailCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -95,7 +92,13 @@ public class AdminOfficerBailChangeTribunalCentrePersonalisationTest {
         Map<String, String> personalisation =
             adminOfficerBailChangeTribunalCentrePersonalisation.getPersonalisation(bailCase);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(bailCase);
+        assertEquals(5, personalisation.size());
+        assertThat(personalisation)
+            .containsEntry("bailReferenceNumber", bailReferenceNumber)
+            .containsEntry("applicantGivenNames", applicantGivenNames)
+            .containsEntry("applicantFamilyName", applicantFamilyName)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
+            .containsEntry("legalRepReference", legalRepReference);
     }
 
     @Test
@@ -104,7 +107,12 @@ public class AdminOfficerBailChangeTribunalCentrePersonalisationTest {
         Map<String, String> personalisation =
             adminOfficerBailChangeTribunalCentrePersonalisation.getPersonalisation(bailCase);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(bailCase);
+        assertEquals(4, personalisation.size());
+        assertThat(personalisation)
+            .containsEntry("bailReferenceNumber", bailReferenceNumber)
+            .containsEntry("applicantGivenNames", applicantGivenNames)
+            .containsEntry("applicantFamilyName", applicantFamilyName)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber);
     }
 
     @Test
@@ -119,7 +127,13 @@ public class AdminOfficerBailChangeTribunalCentrePersonalisationTest {
         Map<String, String> personalisation =
             adminOfficerBailChangeTribunalCentrePersonalisation.getPersonalisation(bailCase);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(bailCase);
+        assertEquals(5, personalisation.size());
+        assertThat(personalisation)
+            .containsEntry("bailReferenceNumber", "")
+            .containsEntry("applicantGivenNames", "")
+            .containsEntry("applicantFamilyName", "")
+            .containsEntry("homeOfficeReferenceNumber", "")
+            .containsEntry("legalRepReference", "");
     }
 
     @Test
@@ -134,6 +148,11 @@ public class AdminOfficerBailChangeTribunalCentrePersonalisationTest {
         Map<String, String> personalisation =
             adminOfficerBailChangeTribunalCentrePersonalisation.getPersonalisation(bailCase);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(bailCase);
+        assertEquals(4, personalisation.size());
+        assertThat(personalisation)
+            .containsEntry("bailReferenceNumber", "")
+            .containsEntry("applicantGivenNames", "")
+            .containsEntry("applicantFamilyName", "")
+            .containsEntry("homeOfficeReferenceNumber", "");
     }
 }

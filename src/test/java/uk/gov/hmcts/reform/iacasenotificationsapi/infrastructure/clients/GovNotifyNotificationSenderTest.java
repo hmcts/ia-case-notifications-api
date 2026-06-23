@@ -16,7 +16,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.helper.NotificationSenderHelper;
-import uk.gov.service.notify.NotificationClientException;
 
 @ExtendWith(MockitoExtension.class)
 @SuppressWarnings("unchecked")
@@ -24,25 +23,20 @@ public class GovNotifyNotificationSenderTest {
 
     private static final org.slf4j.Logger LOG = getLogger(GovNotifyNotificationSender.class);
 
-    private int deduplicateSendsWithinSeconds = 1;
+    private final int deduplicateSendsWithinSeconds = 1;
+    private final String templateId = "a-b-c-d-e-f";
+    private final String emailAddress = "recipient@example.com";
+    private final Map<String, String> personalisation = mock(Map.class);
+    private final Map<String, Object> personalisationWithLink = mock(Map.class);
+    private final String reference = "our-reference";
     @Mock
     private RetryableNotificationClient notificationClient;
-
     @Mock
     private NotificationSenderHelper<AsylumCase> senderHelper;
     @Mock
     private InputStream stream;
-
     @Mock
     private Callback<AsylumCase> callback;
-    private String templateId = "a-b-c-d-e-f";
-    private String emailAddress = "recipient@example.com";
-    private String phoneNumber = "07123456789";
-    private String address = "20_realstreet_London";
-    private Map<String, String> personalisation = mock(Map.class);
-    private Map<String, Object> personalisationWithLink = mock(Map.class);
-    private String reference = "our-reference";
-
     private GovNotifyNotificationSender govNotifyNotificationSender;
 
     @BeforeEach
@@ -56,7 +50,7 @@ public class GovNotifyNotificationSenderTest {
     }
 
     @Test
-    public void should_send_email_using_appeal_gov_notify() throws NotificationClientException {
+    public void should_send_email_using_appeal_gov_notify() {
 
         final UUID expectedNotificationId = UUID.randomUUID();
 
@@ -95,10 +89,11 @@ public class GovNotifyNotificationSenderTest {
     }
 
     @Test
-    public void should_send_sms_using_appeal_gov_notify() throws NotificationClientException {
+    public void should_send_sms_using_appeal_gov_notify() {
 
         final UUID expectedNotificationId = UUID.randomUUID();
 
+        String phoneNumber = "07123456789";
         when(senderHelper.sendSms(
             templateId,
             phoneNumber,
@@ -134,7 +129,7 @@ public class GovNotifyNotificationSenderTest {
     }
 
     @Test
-    public void should_send_email_using_appeal_gov_notify_with_link() throws NotificationClientException {
+    public void should_send_email_using_appeal_gov_notify_with_link() {
 
         final UUID expectedNotificationId = UUID.randomUUID();
 
@@ -170,10 +165,11 @@ public class GovNotifyNotificationSenderTest {
     }
 
     @Test
-    public void should_send_letter_using_gov_notify() throws NotificationClientException {
+    public void should_send_letter_using_gov_notify() {
 
         final UUID expectedNotificationId = UUID.randomUUID();
 
+        String address = "20_realstreet_London";
         when(senderHelper.sendLetter(
             templateId,
             address,
@@ -206,7 +202,7 @@ public class GovNotifyNotificationSenderTest {
     }
 
     @Test
-    public void should_send_precompiled_letter_using_gov_notify() throws NotificationClientException {
+    public void should_send_precompiled_letter_using_gov_notify() {
 
         final UUID expectedNotificationId = UUID.randomUUID();
 

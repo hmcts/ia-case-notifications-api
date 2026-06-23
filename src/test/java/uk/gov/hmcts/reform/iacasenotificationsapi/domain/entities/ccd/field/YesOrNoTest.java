@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
@@ -15,8 +14,8 @@ public class YesOrNoTest {
 
     @Test
     public void has_correct_subscriber_types() {
-        assertThat(YesOrNo.from("Yes").get()).isEqualByComparingTo(YesOrNo.YES);
-        assertThat(YesOrNo.from("No").get()).isEqualByComparingTo(YesOrNo.NO);
+        assertEquals(YesOrNo.YES, YesOrNo.from("Yes").get());
+        assertEquals(YesOrNo.NO, YesOrNo.from("No").get());
     }
 
     @Test

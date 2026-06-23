@@ -1,0 +1,77 @@
+{
+  "description": "RIA-5584 RIA-5454 send bail application submitted notification to newport hearing centre, HO and LR",
+  "request": {
+    "uri": "/bail/ccdAboutToSubmit",
+    "credentials": "LegalRepresentative",
+    "input": {
+      "id": 2109,
+      "eventId": "submitApplication",
+      "state": "applicationSubmitted",
+      "caseData": {
+        "template": "minimal-bail-application-submitted.json",
+        "replacements": {
+          "hearingCentre": "manchester"
+        }
+      }
+    }
+  },
+  "expectation": {
+    "status": 200,
+    "errors": [],
+    "caseData": {
+      "template": "minimal-bail-application-submitted.json",
+      "replacements": {
+        "hearingCentre": "manchester",
+        "notificationsSent": [
+          {
+            "id": "2109_BAIL_APPLICATION_SUBMITTED_HEARING_CENTRE",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "2109_BAIL_APPLICATION_SUBMITTED_HOME_OFFICE",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "2109_BAIL_APPLICATION_SUBMITTED_LEGAL_REP",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }
+        ]
+      }
+    },
+    "notifications": [
+      {
+        "reference": "2109_BAIL_APPLICATION_SUBMITTED_HEARING_CENTRE",
+        "recipient": "{$bailHearingCentreEmailAddresses.manchester}",
+        "subject": "Bail application: Application submitted",
+        "body": [
+          "1650-6221-2061-5101",
+          "John Smith",
+          "A12345",
+          "123654LR"
+        ]
+      },
+      {
+        "reference": "2109_BAIL_APPLICATION_SUBMITTED_HOME_OFFICE",
+        "recipient": "{$bailHomeOfficeEmailAddress}",
+        "subject": "Bail application: Application submitted",
+        "body": [
+          "1650-6221-2061-5101",
+          "John Smith",
+          "A12345",
+          "123654LR"
+        ]
+      },
+      {
+        "reference": "2109_BAIL_APPLICATION_SUBMITTED_LEGAL_REP",
+        "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "subject": "Bail application: Application submitted",
+        "body": [
+          "1650-6221-2061-5101",
+          "John Smith",
+          "A12345",
+          "123654LR"
+        ]
+      }
+    ]
+  }
+}

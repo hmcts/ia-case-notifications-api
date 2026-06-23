@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 37201,
+      "id": 1668,
       "eventId": "listCase",
       "state": "prepareForHearing",
       "caseData": {
@@ -35,15 +35,15 @@
         "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
         "notificationsSent": [
           {
-            "id": "37201_CASE_LISTED_LEGAL_REPRESENTATIVE",
+            "id": "1668_CASE_LISTED_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "37201_CASE_LISTED_HOME_OFFICE",
+            "id": "1668_CASE_LISTED_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "37201_CASE_LISTED_CASE_OFFICER",
+            "id": "1668_CASE_LISTED_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -51,7 +51,7 @@
     },
     "notifications": [
       {
-        "reference": "37201_CASE_LISTED_LEGAL_REPRESENTATIVE",
+        "reference": "1668_CASE_LISTED_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: check the details of your hearing",
         "body": [
@@ -74,7 +74,7 @@
         ]
       },
       {
-        "reference": "37201_CASE_LISTED_HOME_OFFICE",
+        "reference": "1668_CASE_LISTED_HOME_OFFICE",
         "recipient": "{$homeOfficeEmailAddresses.birmingham}",
         "subject": "Immigration and Asylum appeal: case listed",
         "body": [
@@ -98,7 +98,7 @@
         ]
       },
       {
-        "reference": "37201_CASE_LISTED_CASE_OFFICER",
+        "reference": "1668_CASE_LISTED_CASE_OFFICER",
         "recipient": "{$hearingCentreEmailAddresses.birmingham}",
         "subject": "Immigration and Asylum appeal: case listed",
         "body": [

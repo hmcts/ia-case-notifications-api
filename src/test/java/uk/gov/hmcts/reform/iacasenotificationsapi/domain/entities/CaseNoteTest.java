@@ -1,17 +1,17 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities;
 
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
 public class CaseNoteTest {
 
-    private static String TEST_VALUE = "some-value";
+    private static final String TEST_VALUE = "some-value";
 
-    private CaseNote caseNote = new CaseNote(
+    private final CaseNote caseNote = new CaseNote(
         TEST_VALUE,
         TEST_VALUE,
         TEST_VALUE,
@@ -32,8 +32,8 @@ public class CaseNoteTest {
     @Test
     public void should_not_allow_null_arguments() {
 
-        assertThatThrownBy(() -> new CaseNote(null, null, null, null))
-            .isExactlyInstanceOf(NullPointerException.class);
+        assertThrows(NullPointerException.class,
+            () -> new CaseNote(null, null, null, null));
 
     }
 }

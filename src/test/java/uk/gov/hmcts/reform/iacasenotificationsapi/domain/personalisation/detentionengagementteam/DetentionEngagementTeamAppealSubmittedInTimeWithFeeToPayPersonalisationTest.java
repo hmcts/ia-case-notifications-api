@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -32,26 +33,22 @@ import uk.gov.service.notify.NotificationClientException;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class DetentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisationTest {
 
-    @Mock
-    AsylumCase asylumCase;
-    @Mock
-    DetentionEmailService detentionEmailService;
-    @Mock
-    DocumentDownloadClient documentDownloadClient;
-    
-    private final Long caseId = 12345L;
+    final DocumentWithMetadata appealSubmittedInTimeWithFeeToPayLetter = getDocumentWithMetadata(
+        "1", "internal-detained-appeal-submitted-in-time-with-fee-to-pay-letter", "Internal detained appeal submitted in time with fee to pay letter", DocumentTag.INTERNAL_DETAINED_APPEAL_SUBMITTED_IN_TIME_WITH_FEE_TO_PAY_LETTER);
+    final IdValue<DocumentWithMetadata> appealSubmittedInTimeWithFeeToPayLetterId = new IdValue<>("1", appealSubmittedInTimeWithFeeToPayLetter);
     private final String templateId = "someTemplateId";
     private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
-
-    DocumentWithMetadata appealSubmittedInTimeWithFeeToPayLetter = getDocumentWithMetadata(
-            "1", "internal-detained-appeal-submitted-in-time-with-fee-to-pay-letter", "Internal detained appeal submitted in time with fee to pay letter", DocumentTag.INTERNAL_DETAINED_APPEAL_SUBMITTED_IN_TIME_WITH_FEE_TO_PAY_LETTER);
-    IdValue<DocumentWithMetadata> appealSubmittedInTimeWithFeeToPayLetterId = new IdValue<>("1", appealSubmittedInTimeWithFeeToPayLetter);
     private final JSONObject jsonObject = new JSONObject("{\"title\": \"JsonDocument\"}");
-    
+    @Mock
+    AsylumCase asylumCase;
+    @Mock
+    DetentionEmailService detentionEmailService;
+    @Mock
+    DocumentDownloadClient documentDownloadClient;
     private DetentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation detentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation;
 
     DetentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisationTest() {
@@ -60,12 +57,12 @@ class DetentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisationTes
     @BeforeEach
     void setup() throws NotificationClientException, IOException {
         detentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation = new DetentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation(
-                templateId,
-                nonAdaPrefix,
-                detentionEmailService,
-                documentDownloadClient
+            templateId,
+            nonAdaPrefix,
+            detentionEmailService,
+            documentDownloadClient
         );
-        
+
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
@@ -76,8 +73,9 @@ class DetentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisationTes
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_INTERNAL_NON_ADA_APPEAL_SUBMITTED_IN_TIME_WITH_FEE_TO_PAY",
-                detentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation.getReferenceId(caseId));
+            detentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation.getReferenceId(caseId));
     }
 
     @Test
@@ -92,29 +90,30 @@ class DetentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisationTes
         when(detentionEmailService.getDetentionEmailAddress(asylumCase)).thenReturn(detentionEngagementTeamEmail);
 
         assertTrue(
-                detentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
+            detentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
     }
 
     @Test
     public void should_throw_exception_when_no_detention_facility() {
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.empty());
         when(detentionEmailService.getDetentionEmailAddress(asylumCase)).thenThrow(new IllegalStateException("Detention facility is not present"));
-        
-        assertThatThrownBy(() -> detentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation.getRecipientsList(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("Detention facility is not present");
+
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation.getRecipientsList(asylumCase));
+        assertEquals("Detention facility is not present", exception.getMessage());
     }
 
     @Test
     void should_return_personalisation_of_all_information() throws NotificationClientException, IOException {
         Map<String, Object> personalisation = detentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation.getPersonalisationForLink(asylumCase);
 
-        assertEquals(nonAdaPrefix, personalisation.get("subjectPrefix"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeReferenceNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(jsonObject, personalisation.get("documentLink"));
+        assertThat(personalisation)
+            .containsEntry("subjectPrefix", nonAdaPrefix)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("documentLink", jsonObject);
     }
 
     @Test
@@ -126,42 +125,43 @@ class DetentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisationTes
 
         Map<String, Object> personalisation = detentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation.getPersonalisationForLink(asylumCase);
 
-        assertEquals(nonAdaPrefix, personalisation.get("subjectPrefix"));
-        assertEquals("", personalisation.get("appealReferenceNumber"));
-        assertEquals("", personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals("", personalisation.get("appellantGivenNames"));
-        assertEquals("", personalisation.get("appellantFamilyName"));
-        assertEquals(jsonObject, personalisation.get("documentLink"));
+        assertThat(personalisation)
+            .containsEntry("subjectPrefix", nonAdaPrefix)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("homeOfficeReferenceNumber", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "")
+            .containsEntry("documentLink", jsonObject);
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
-        assertThatThrownBy(() -> detentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation.getPersonalisationForLink((AsylumCase) null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> detentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation.getPersonalisationForLink((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_appeal_submitted_in_time_with_fee_to_pay_document_is_empty() {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> detentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation.getPersonalisationForLink(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("internalDetainedAppealSubmittedInTimeWithFeeToPayLetter document not available");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("internalDetainedAppealSubmittedInTimeWithFeeToPayLetter document not available", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_notification_client_throws_Exception() throws NotificationClientException, IOException {
         when(documentDownloadClient.getJsonObjectFromDocument(appealSubmittedInTimeWithFeeToPayLetter)).thenThrow(new NotificationClientException("File size is more than 2MB"));
-        assertThatThrownBy(() -> detentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation.getPersonalisationForLink(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("Failed to get Internal 'Appeal submitted in time with fee to pay' Letter in compatible format");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("Failed to get Internal 'Appeal submitted in time with fee to pay' Letter in compatible format", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_when_io_exception_occurs() throws NotificationClientException, IOException {
         when(documentDownloadClient.getJsonObjectFromDocument(appealSubmittedInTimeWithFeeToPayLetter)).thenThrow(new IOException("IO Exception occurred"));
-        assertThatThrownBy(() -> detentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation.getPersonalisationForLink(asylumCase))
-                .isExactlyInstanceOf(IllegalStateException.class)
-                .hasMessage("Failed to get Internal 'Appeal submitted in time with fee to pay' Letter in compatible format");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamAppealSubmittedInTimeWithFeeToPayPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("Failed to get Internal 'Appeal submitted in time with fee to pay' Letter in compatible format", exception.getMessage());
     }
 }

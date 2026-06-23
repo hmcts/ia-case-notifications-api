@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
@@ -25,6 +26,18 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvi
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppellantSendPaymentReminderPersonalisationEmailTest {
 
+    private final int daysAfterNotification = 7;
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String templateId = "templateId";
+    private final String customerServicesPhone = "0100000000";
+    private final String customerServicesEmail = "services@email.com";
+    private final String homeOfficeRefNumber = "someHomeOfficeRefNumber";
+    private final String appellantEmail = "test@test.com";
+    private final String ccdReferenceNumber = "1111 2222 3333 4444";
+    private final Map<String, String> customerServices = Map.of("customerServicesTelephone", customerServicesPhone,
+        "customerServicesEmail", customerServicesEmail);
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -32,20 +45,6 @@ class AppellantSendPaymentReminderPersonalisationEmailTest {
     @Mock
     SystemDateProvider systemDateProvider;
     private AppellantSendPaymentReminderPersonalisationEmail appellantSendPaymentReminderPersonalisationEmail;
-    private Long caseId = 12345L;
-    private int daysAfterNotification = 7;
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
-    private String templateId = "templateId";
-    private String customerServicesPhone = "0100000000";
-    private String customerServicesEmail = "services@email.com";
-    private String homeOfficeRefNumber = "someHomeOfficeRefNumber";
-    private String appellantEmail = "test@test.com";
-    private final String feeAmount = "14000";
-    private String ccdReferenceNumber = "1111 2222 3333 4444";
-    private Map<String, String> customerServices = Map.of("customerServicesTelephone", customerServicesPhone,
-        "customerServicesEmail", customerServicesEmail);
 
     @BeforeEach
     public void setUp() {
@@ -53,9 +52,10 @@ class AppellantSendPaymentReminderPersonalisationEmailTest {
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
-        when(customerServicesProvider.getCustomerServicesPersonalisation()).thenReturn(customerServices);
+        when(customerServicesProvider.getCustomerServicesPersonalisation(any(AsylumCase.class))).thenReturn(customerServices);
         when(asylumCase.read(INTERNAL_APPELLANT_EMAIL, String.class)).thenReturn(Optional.ofNullable(appellantEmail));
         when(asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class)).thenReturn(Optional.of(ccdReferenceNumber));
+        String feeAmount = "14000";
         when(asylumCase.read(AsylumCaseDefinition.FEE_AMOUNT_GBP, String.class)).thenReturn(Optional.of(feeAmount));
 
         appellantSendPaymentReminderPersonalisationEmail = new AppellantSendPaymentReminderPersonalisationEmail(
@@ -80,6 +80,7 @@ class AppellantSendPaymentReminderPersonalisationEmailTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_INTERNAL_PAYMENT_REMINDER_APPELLANT_EMAIL",
             appellantSendPaymentReminderPersonalisationEmail.getReferenceId(caseId));
     }
@@ -93,23 +94,24 @@ class AppellantSendPaymentReminderPersonalisationEmailTest {
         Map<String, String> personalisation =
             appellantSendPaymentReminderPersonalisationEmail.getPersonalisation(asylumCase);
 
-        assertEquals(homeOfficeRefNumber, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(customerServicesPhone, personalisation.get("customerServicesTelephone"));
-        assertEquals(customerServicesEmail, personalisation.get("customerServicesEmail"));
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(ccdReferenceNumber, personalisation.get("onlineCaseReferenceNumber"));
-        assertEquals("140.00", personalisation.get("feeAmount"));
-        assertEquals(dueDate, personalisation.get("dueDate"));
+        assertThat(personalisation)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
+            .containsEntry("customerServicesTelephone", customerServicesPhone)
+            .containsEntry("customerServicesEmail", customerServicesEmail)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("onlineCaseReferenceNumber", ccdReferenceNumber)
+            .containsEntry("feeAmount", "140.00")
+            .containsEntry("dueDate", dueDate);
     }
 
     @Test
     public void should_throw_exception_when_callback_is_null() {
 
-        assertThatThrownBy(
-            () -> appellantSendPaymentReminderPersonalisationEmail.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> appellantSendPaymentReminderPersonalisationEmail.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 }

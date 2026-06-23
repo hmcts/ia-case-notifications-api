@@ -1,10 +1,11 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
 import java.util.Collections;
@@ -28,19 +29,17 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmailTest {
 
+    private final String templateId = "someTemplateId";
+    private final String appellantEmailAddress = "appellantp@example.com";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String homeOfficeReferenceNumber = "someHomeOfficeReferenceNumber";
+    private final String iaExUiFrontendUrl = "https://immigration-appeal.demo.platform.hmcts.net/start-appeal";
     @Mock
     AsylumCase asylumCase;
     @Mock
     RecipientsFinder recipientsFinder;
-
-    private Long caseId = 12345L;
-    private String templateId = "someTemplateId";
-    private String appellantEmailAddress = "appellantp@example.com";
-    private String appealReferenceNumber = "someReferenceNumber";
-    private String appellantGivenNames = "someAppellantGivenNames";
-    private String appellantFamilyName = "someAppellantFamilyName";
-    private final String iaExUiFrontendUrl = "https://immigration-appeal.demo.platform.hmcts.net/start-appeal";
-
     private AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail
         forceCaseProgressionToCaseUnderReviewPersonalisation;
 
@@ -50,6 +49,7 @@ class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmailTest {
         when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL)).thenReturn(Collections.singleton(appellantEmailAddress));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
+        when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
 
         forceCaseProgressionToCaseUnderReviewPersonalisation =
             new AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmail(templateId, iaExUiFrontendUrl, recipientsFinder);
@@ -62,6 +62,7 @@ class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmailTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_FORCE_CASE_TO_CASE_UNDER_REVIEW_AIP_EMAIL",
             forceCaseProgressionToCaseUnderReviewPersonalisation.getReferenceId(caseId));
     }
@@ -71,7 +72,7 @@ class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmailTest {
         when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
         Set<String> recipientsList = forceCaseProgressionToCaseUnderReviewPersonalisation.getRecipientsList(asylumCase);
         assertNotNull(recipientsList);
-        assertThat(recipientsList).contains(appellantEmailAddress);
+        assertTrue(recipientsList.contains(appellantEmailAddress));
     }
 
 
@@ -79,9 +80,14 @@ class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmailTest {
     public void should_return_personalisation_when_all_information_given() {
 
         Map<String, String> personalisation =
-                forceCaseProgressionToCaseUnderReviewPersonalisation.getPersonalisation(asylumCase);
+            forceCaseProgressionToCaseUnderReviewPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertThat(personalisation)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName);
     }
 
     @Test
@@ -90,20 +96,26 @@ class AppellantForceCaseProgressionToCaseUnderReviewPersonalisationEmailTest {
         Mockito.when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         Mockito.when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
         Mockito.when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
+        Mockito.when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
-                forceCaseProgressionToCaseUnderReviewPersonalisation.getPersonalisation(asylumCase);
+            forceCaseProgressionToCaseUnderReviewPersonalisation.getPersonalisation(asylumCase);
 
-        assertThat(personalisation).isEqualToComparingOnlyGivenFields(asylumCase);
+        assertThat(personalisation)
+            .containsEntry("homeOfficeReferenceNumber", "")
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("appealReferenceNumber", "")
+            .containsEntry("appellantGivenNames", "")
+            .containsEntry("appellantFamilyName", "");
     }
 
     @Test
     public void asylumCase_null_returns_error() {
         Mockito.when(recipientsFinder.findAll(null, NotificationType.EMAIL))
-                .thenThrow(new NullPointerException("asylumCase must not be null"));
+            .thenThrow(new NullPointerException("asylumCase must not be null"));
 
-        assertThatThrownBy(() -> forceCaseProgressionToCaseUnderReviewPersonalisation.getRecipientsList(null))
-                .isExactlyInstanceOf(NullPointerException.class)
-                .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class, () -> forceCaseProgressionToCaseUnderReviewPersonalisation.getRecipientsList(null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 }

@@ -12,10 +12,17 @@ management:
   endpoints:
     web:
       base-path: "/"
+      exposure:
+        include: health, info, prometheus
 
   health:
-    probes:
-      enabled: true
+    redis:
+      enabled: false
+    group:
+      readiness:
+        include: ping
+      liveness:
+        include: ping
   services:
     notificationService:
       uri: "https://status.notifications.service.gov.uk"
@@ -23,6 +30,8 @@ management:
     documentManagement:
       uri: ${DM_URL:http://localhost:4506}/health
       response: '"status":"UP"'
+
+  endpoint.health.probes.enabled: true
 
 spring:
   application:
@@ -45,10 +54,15 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: ${OPEN_ID_IDAM_URL:http://127.0.0.1:5000}/o/jwks
-  cache:
-    cache-names: userInfoCache, systemUserTokenCache
-    caffeine:
-      spec: expireAfterAccess=3600s
+  data:
+    redis:
+      url: ${IA_REDIS_CONNECTION_STRING:}
+      secret: ${IA_REDIS_ACCESS_KEY:}
+      encryption:
+        key: ${IA_REDIS_ENCRYPTION_KEY:}
+      ssl:
+        enabled: true
+
 featureFlag:
   homeOfficeGovNotifyEnabled: ${IA_HOME_OFFICE_GOV_NOTIFY_ENABLED:true}
   appealsLocationReferenceData: ${APPEALS_LOCATION_REFERENCE_DATA_ENABLED:true}
@@ -315,6 +329,9 @@ govnotify:
       appellant:
         email: 50f1b88e-51d5-446c-b2da-1188feb7e26c
         sms: a7056fd8-6de7-408e-881b-c6f9984fe5cf
+        paPayLater:
+          email: d85f7601-5129-4b53-9c14-2e4e33cc2500
+          sms: da116491-7668-445e-86c4-192528fe7c18
     submitReasonsForAppeal:
       appellant:
         email: cd10866a-094d-43aa-bdf5-1e20fda9b10d
@@ -1397,6 +1414,18 @@ govnotify:
         email: 390843b2-0cab-4860-8e12-be98b9db2ca4
       legalRep:
         email: ec2e4278-9638-499c-b2cb-0ac6307e6071
+    caseBuilding:
+      paPayLater:
+        email: d85f7601-5129-4b53-9c14-2e4e33cc2500
+        sms: da116491-7668-445e-86c4-192528fe7c18
+    listing:
+      paPayLater:
+        email: f2f9ddb7-e063-472e-b67d-a5a7882a464a
+        sms: b36db177-96b0-49aa-a234-42b3049f5c0a
+    decision:
+      paPayLater:
+        email: d72c84b8-b92d-4ce3-9938-fd86818576a5
+        sms: 75400401-ed1b-4cf6-93ec-8d77c5b12c1b
     turnOnNotifications:
       homeOffice:
         beforeListing:
@@ -1510,6 +1539,29 @@ govnotify:
     editAppealPostSubmit:
       appellant:
         letter: e68faac4-cf30-4e0b-b746-a7baf036dc65
+    removeStatutoryTimeframe24Weeks:
+      homeOffice:
+        email: 2d0c35b4-5bb5-49e2-ad87-856d5682ea0f
+      legalRep:
+        email: c2a95d8a-56b9-4c7a-9ed4-3678ae7e88f1
+      appellant:
+        email: 12bf5ed3-2d4f-4de8-b7d9-6a3d29caf1a3
+        letter: 69820c60-76b6-4707-ba8b-06c21dfaa272
+    completeCaseReviewStatutoryTimeframe24Weeks:
+      homeOffice:
+        email: 778af412-31bb-40b8-9cd7-39471eeb5dbd
+      legalRep:
+        email: 068fa543-6167-4494-a532-74291b931d59
+      appellant:
+        email: d2a75610-004c-4fd8-8724-5fb7700cc27d
+    revokeCitizenAccess:
+      email: 8ea82724-5ddf-4f2d-9577-66bc565747e7
+    generatePinInPost:
+      appellant:
+        email: 698ec21d-a160-4b2d-a028-7fbb6fb91565
+        sms: 8469e394-ce1e-4352-b6cc-a1c1658aab73
+      hearingCentre:
+        email: 6c2d530d-c909-4792-abfd-01ae3426c1c2
 
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
@@ -1696,7 +1748,6 @@ security:
       - "applyForFTPAAppellant"
       - "payAndSubmitAppeal"
       - "paymentAppeal"
-      - "payForAppeal"
       - "makeAnApplication"
       - "removeRepresentation"
       - "requestFeeRemission"
@@ -1774,6 +1825,9 @@ security:
       - "turnOnNotifications"
       - "updateTribunalDecision"
       - "recordRemissionReminder"
+      - "removeStatutoryTimeframe24Weeks"
+      - "completeCaseReview"
+      - "revokeCitizenAccess"
     challenged-access-legal-operations:
       - "sendDirection"
       - "changeDirectionDueDate"
@@ -1838,6 +1892,7 @@ security:
       - "turnOnNotifications"
       - "updateTribunalDecision"
       - "recordRemissionReminder"
+      - "revokeCitizenAccess"
     senior-tribunal-caseworker:
       - "sendDirection"
       - "changeDirectionDueDate"
@@ -1902,6 +1957,9 @@ security:
       - "turnOnNotifications"
       - "updateTribunalDecision"
       - "recordRemissionReminder"
+      - "removeStatutoryTimeframe24Weeks"
+      - "completeCaseReview"
+      - "revokeCitizenAccess"
     # These events are used by the bails service, they will need to be migrated to the admin access management roles - see DIAC-855
     caseworker-ia-admofficer:
       - "editBailApplication"
@@ -1923,6 +1981,8 @@ security:
       - "sendBailDirection"
       - "createBailCaseLink"
       - "markAppealAsRemitted"
+      - "removeStatutoryTimeframe24Weeks"
+      - "completeCaseReview"
     hearing-centre-admin:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -1967,6 +2027,7 @@ security:
       - "startAppeal"
       - "refundConfirmation"
       - "hearingCancelled"
+      - "revokeCitizenAccess"
     ctsc:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2011,6 +2072,7 @@ security:
       - "startAppeal"
       - "refundConfirmation"
       - "hearingCancelled"
+      - "revokeCitizenAccess"
     ctsc-team-leader:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2055,6 +2117,7 @@ security:
       - "refundConfirmation"
       - "editDocuments"
       - "hearingCancelled"
+      - "revokeCitizenAccess"
     national-business-centre:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2099,6 +2162,7 @@ security:
       - "startAppeal"
       - "refundConfirmation"
       - "hearingCancelled"
+      - "revokeCitizenAccess"
     challenged-access-ctsc:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2143,6 +2207,7 @@ security:
       - "startAppeal"
       - "refundConfirmation"
       - "hearingCancelled"
+      - "revokeCitizenAccess"
     challenged-access-admin:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2187,6 +2252,7 @@ security:
       - "startAppeal"
       - "refundConfirmation"
       - "hearingCancelled"
+      - "revokeCitizenAccess"
     caseworker-ia-homeofficeapc:
       - "startApplication"
       - "editBailApplication"
@@ -2269,6 +2335,8 @@ security:
       - "endApplication"
       - "sendBailDirection"
       - "editBailDocuments"
+      - "removeStatutoryTimeframe24Weeks"
+      - "completeCaseReview"
     judge:
       - "adaSuitabilityReview"
       - "sendDirection"
@@ -2506,6 +2574,13 @@ security:
       - "recordRemissionReminder"
       - "changeHearingCentre"
       - "hearingCancelled"
+      - "removeStatutoryTimeframe24Weeks"
+      - "completeCaseReview"
+      - "revokeCitizenAccess"
+      - "generatePinInPost"
+    caseworker-ia-internal:
+      - "revokeCitizenAccess"
+      - "generatePinInPost"
     caseworker-ia-homeofficebail:
       - "startApplication"
       - "editBailApplication"
@@ -2619,6 +2694,7 @@ homeOfficeFtpaEmailAddresses:
   belfast: ${IA_HOME_OFFICE_GLASGOW_EMAIL:ho-glasgow@example.com}
   harmondsworth: ${IA_FTPA_HOME_OFFICE_HARMONDSWORTH_EMAIL:ho-ftpa-harmondsworth@example.com}
   yarlswood: ${IA_FTPA_HOME_OFFICE_YARLSWOOD_EMAIL:ho-ftpa-yarlswood@example.com}
+  iacNationalVirtual: ${IA_HOME_OFFICE_MANCHESTER_EMAIL:ho-manchester@example.com}
 
 
 hearingCentreTelephoneNumber:

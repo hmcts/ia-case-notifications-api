@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -36,6 +36,16 @@ import uk.gov.service.notify.NotificationClientException;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AipmDetainedInPrisonOrIrcReinstateAppealPersonalisationTest {
 
+    final DocumentWithMetadata reinstateAppealDoc = getDocumentWithMetadata(
+        "1", "aipm-detained-in-prison-irc-reinstate-appeal-letter", "some other desc", DocumentTag.AIPM_DETAINED_IN_PRISON_IRC_REINSTATE_APPEAL_LETTER);
+    final IdValue<DocumentWithMetadata> reinstateAppealDocId = new IdValue<>("1", reinstateAppealDoc);
+    private final String detentionEngagementTeamTemplateId = "detentionEngagementTeamTemplateId";
+    private final String appealReferenceNumber = "someReferenceNumber";
+    private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
+    private final String detEmailAddress = "some@example.com";
+    private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -44,21 +54,7 @@ class AipmDetainedInPrisonOrIrcReinstateAppealPersonalisationTest {
     JSONObject jsonDocument;
     @Mock
     DocumentDownloadClient documentDownloadClient;
-
-    private String detentionEngagementTeamTemplateId = "detentionEngagementTeamTemplateId";
-    private final String uploadAdditionalEvidencePersonalisationReferenceId = "_AIPM_DETAINED_IN_PRISON_IRC_REINSTATE_APPEAL_LETTER";
-    private final String appealReferenceNumber = "someReferenceNumber";
-    private final String homeOfficeReferenceNumber = "1234-1234-1234-1234";
-    private final String appellantGivenNames = "someAppellantGivenNames";
-    private final String appellantFamilyName = "someAppellantFamilyName";
-    private final String detEmailAddress = "some@example.com";
-    private final String nonAdaPrefix = "IAFT - SERVE IN PERSON";
-    private final Long caseId = 12345L;
-
     private AipmDetainedInPrisonOrIrcReinstateAppealPersonalisation aipmDetainedInPrisonOrIrcReinstateAppealPersonalisation;
-    DocumentWithMetadata reinstateAppealDoc = getDocumentWithMetadata(
-        "1", "aipm-detained-in-prison-irc-reinstate-appeal-letter", "some other desc", DocumentTag.AIPM_DETAINED_IN_PRISON_IRC_REINSTATE_APPEAL_LETTER);
-    IdValue<DocumentWithMetadata> reinstateAppealDocId = new IdValue<>("1", reinstateAppealDoc);
 
     AipmDetainedInPrisonOrIrcReinstateAppealPersonalisationTest() {
     }
@@ -90,6 +86,8 @@ class AipmDetainedInPrisonOrIrcReinstateAppealPersonalisationTest {
 
     @Test
     public void should_return_given_reference_id() {
+        Long caseId = 12345L;
+        String uploadAdditionalEvidencePersonalisationReferenceId = "_AIPM_DETAINED_IN_PRISON_IRC_REINSTATE_APPEAL_LETTER";
         assertEquals(caseId + uploadAdditionalEvidencePersonalisationReferenceId,
             aipmDetainedInPrisonOrIrcReinstateAppealPersonalisation.getReferenceId(caseId));
     }
@@ -136,20 +134,20 @@ class AipmDetainedInPrisonOrIrcReinstateAppealPersonalisationTest {
 
     @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
-        assertThatThrownBy(
-            () -> aipmDetainedInPrisonOrIrcReinstateAppealPersonalisation.getPersonalisationForLink((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> aipmDetainedInPrisonOrIrcReinstateAppealPersonalisation.getPersonalisationForLink((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     public void should_throw_exception_on_personalisation_when_document_is_missing() {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(
-            () -> aipmDetainedInPrisonOrIrcReinstateAppealPersonalisation.getPersonalisationForLink(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("aipmDetainedInPrisonOrIrcReinstateAppealLetter document not available");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class,
+                () -> aipmDetainedInPrisonOrIrcReinstateAppealPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("aipmDetainedInPrisonOrIrcReinstateAppealLetter document not available", exception.getMessage());
     }
 
     @Test
@@ -174,8 +172,8 @@ class AipmDetainedInPrisonOrIrcReinstateAppealPersonalisationTest {
     @Test
     public void should_throw_exception_when_notification_client_throws_Exception() throws NotificationClientException, IOException {
         when(documentDownloadClient.getJsonObjectFromDocument(reinstateAppealDoc)).thenThrow(new NotificationClientException("File size is more than 2MB"));
-        assertThatThrownBy(() -> aipmDetainedInPrisonOrIrcReinstateAppealPersonalisation.getPersonalisationForLink(asylumCase))
-            .isExactlyInstanceOf(IllegalStateException.class)
-            .hasMessage("Failed to get Internal 'Appeal can proceed' Letter in compatible format");
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> aipmDetainedInPrisonOrIrcReinstateAppealPersonalisation.getPersonalisationForLink(asylumCase));
+        assertEquals("Failed to get Internal 'Appeal can proceed' Letter in compatible format", exception.getMessage());
     }
 }

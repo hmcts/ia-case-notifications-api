@@ -1,13 +1,16 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.format.DateTimeParseException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+@ExtendWith(MockitoExtension.class)
 public class DateTimeExtractorTest {
 
     final String listCaseHearingDate = "2019-05-03T14:25:15.000";
@@ -25,15 +28,15 @@ public class DateTimeExtractorTest {
     @Test
     public void should_throw_when_invalid_iso_8610_date() {
 
-        assertThatThrownBy(() -> dateTimeExtractor.extractHearingDate(invalidIso8601HearingDate))
-            .isExactlyInstanceOf(DateTimeParseException.class);
+        assertThrows(DateTimeParseException.class,
+            () -> dateTimeExtractor.extractHearingDate(invalidIso8601HearingDate));
     }
 
     @Test
     public void should_throw_when_invalid_iso_8610_time() {
 
-        assertThatThrownBy(() -> dateTimeExtractor.extractHearingTime(invalidIso8601HearingDate))
-            .isExactlyInstanceOf(DateTimeParseException.class);
+        assertThrows(DateTimeParseException.class,
+            () -> dateTimeExtractor.extractHearingTime(invalidIso8601HearingDate));
     }
 
     @Test

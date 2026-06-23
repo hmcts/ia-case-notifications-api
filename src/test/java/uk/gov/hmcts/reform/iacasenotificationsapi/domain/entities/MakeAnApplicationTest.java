@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Collections;
@@ -24,7 +24,7 @@ public class MakeAnApplicationTest {
     private final String state = "LISTING";
     private final String applicantRole = UserRole.LEGAL_REPRESENTATIVE.toString();
 
-    public MakeAnApplication makeAnApplication =
+    public final MakeAnApplication makeAnApplication =
         new MakeAnApplication(
             applicant,
             type,
@@ -51,45 +51,45 @@ public class MakeAnApplicationTest {
     @Test
     public void should_not_allow_null_arguments() {
 
-        assertThatThrownBy(() -> new MakeAnApplication(
-            null, type, details, evidence,
-            date, decision, state, applicantRole))
-            .isExactlyInstanceOf(NullPointerException.class);
+        assertThrows(NullPointerException.class,
+            () -> new MakeAnApplication(
+                null, type, details, evidence,
+                date, decision, state, applicantRole));
 
-        assertThatThrownBy(() -> new MakeAnApplication(
-            applicant, null, details, evidence,
-            date, decision, state, applicantRole))
-            .isExactlyInstanceOf(NullPointerException.class);
+        assertThrows(NullPointerException.class,
+            () -> new MakeAnApplication(
+                applicant, null, details, evidence,
+                date, decision, state, applicantRole));
 
-        assertThatThrownBy(() -> new MakeAnApplication(
-            applicant, type, null, evidence,
-            date, decision, state, applicantRole))
-            .isExactlyInstanceOf(NullPointerException.class);
+        assertThrows(NullPointerException.class,
+            () -> new MakeAnApplication(
+                applicant, type, null, evidence,
+                date, decision, state, applicantRole));
 
-        assertThatThrownBy(() -> new MakeAnApplication(
-            applicant, type, details, null,
-            date, decision, state, applicantRole))
-            .isExactlyInstanceOf(NullPointerException.class);
+        assertThrows(NullPointerException.class,
+            () -> new MakeAnApplication(
+                applicant, type, details, null,
+                date, decision, state, applicantRole));
 
-        assertThatThrownBy(() -> new MakeAnApplication(
-            applicant, type, details, evidence,
-            null, decision, state, applicantRole))
-            .isExactlyInstanceOf(NullPointerException.class);
+        assertThrows(NullPointerException.class,
+            () -> new MakeAnApplication(
+                applicant, type, details, evidence,
+                null, decision, state, applicantRole));
 
-        assertThatThrownBy(() -> new MakeAnApplication(
-            applicant, type, details, evidence,
-            date, null, state, applicantRole))
-            .isExactlyInstanceOf(NullPointerException.class);
+        assertThrows(NullPointerException.class,
+            () -> new MakeAnApplication(
+                applicant, type, details, evidence,
+                date, null, state, applicantRole));
 
-        assertThatThrownBy(() -> new MakeAnApplication(
-            applicant, type, details, evidence,
-            date, decision, null, applicantRole))
-            .isExactlyInstanceOf(NullPointerException.class);
+        assertThrows(NullPointerException.class,
+            () -> new MakeAnApplication(
+                applicant, type, details, evidence,
+                date, decision, null, applicantRole));
 
-        assertThatThrownBy(() -> new MakeAnApplication(
-            applicant, type, details, evidence,
-            date, decision, state, null))
-            .isExactlyInstanceOf(NullPointerException.class);
+        assertThrows(NullPointerException.class,
+            () -> new MakeAnApplication(
+                applicant, type, details, evidence,
+                date, decision, state, null));
 
     }
 }

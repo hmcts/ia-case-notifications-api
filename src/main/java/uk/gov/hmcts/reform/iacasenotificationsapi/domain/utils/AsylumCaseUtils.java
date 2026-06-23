@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.RequiredFieldMissingException;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
@@ -15,11 +16,15 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AccessCodeGener
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Function;
 
+import static java.time.LocalDate.parse;
+import static java.lang.Math.min;
 import static java.util.Collections.*;
 import static java.util.stream.Collectors.*;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType.DC;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType.RP;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
@@ -38,7 +43,8 @@ public class AsylumCaseUtils {
     public static final String JUDGE = "Tribunal";
     private static final String INCORRECT_APPLICANT_TYPE_ERROR_MESSAGE = "Correct applicant type is not present";
     private static final String INCORRECT_RESPONDENT_TYPE_ERROR_MESSAGE = "Correct respondent type is not present";
-
+    public static final String D_MMM_YYYY = "d MMM yyyy";
+    public static final String WITHDRAWN = "Withdrawn";
 
     private AsylumCaseUtils() {
         // prevent public constructor for Sonar
@@ -110,17 +116,13 @@ public class AsylumCaseUtils {
     public static String getDetentionFacilityName(AsylumCase asylumCase) {
         String detentionFacility = asylumCase.read(DETENTION_FACILITY, String.class)
                 .orElse("");
-        switch (detentionFacility) {
-            case "immigrationRemovalCentre":
-                return getFacilityName(IRC_NAME, asylumCase);
-            case "prison":
-                return getFacilityName(PRISON_NAME, asylumCase);
-            case "other":
-                return asylumCase.read(OTHER_DETENTION_FACILITY_NAME, OtherDetentionFacilityName.class)
-                        .orElseThrow(() -> new RequiredFieldMissingException("Other detention facility name is missing")).getOther();
-            default:
-                throw new RequiredFieldMissingException("Detention Facility is missing");
-        }
+        return switch (detentionFacility) {
+            case "immigrationRemovalCentre" -> getFacilityName(IRC_NAME, asylumCase);
+            case "prison" -> getFacilityName(PRISON_NAME, asylumCase);
+            case "other" -> asylumCase.read(OTHER_DETENTION_FACILITY_NAME, OtherDetentionFacilityName.class)
+                    .orElseThrow(() -> new RequiredFieldMissingException("Other detention facility name is missing")).getOther();
+            default -> throw new RequiredFieldMissingException("Detention Facility is missing");
+        };
     }
 
     public static DocumentWithMetadata getLetterForNotification(AsylumCase asylumCase, DocumentTag documentTag) {
@@ -158,11 +160,8 @@ public class AsylumCaseUtils {
     public static List<IdValue<DocumentWithMetadata>> getAddendumEvidenceDocuments(AsylumCase asylumCase) {
         Optional<List<IdValue<DocumentWithMetadata>>> maybeExistingAdditionalEvidenceDocuments =
                 asylumCase.read(ADDENDUM_EVIDENCE_DOCUMENTS);
-        if (maybeExistingAdditionalEvidenceDocuments.isEmpty()) {
-            return emptyList();
-        }
+        return maybeExistingAdditionalEvidenceDocuments.orElse(emptyList());
 
-        return maybeExistingAdditionalEvidenceDocuments.get();
     }
 
     public static Optional<IdValue<DocumentWithMetadata>> getLatestAddendumEvidenceDocument(AsylumCase asylumCase) {
@@ -172,9 +171,7 @@ public class AsylumCaseUtils {
             return Optional.empty();
         }
 
-        Optional<IdValue<DocumentWithMetadata>> optionalLatestAddendum = addendums.stream().findFirst();
-
-        return optionalLatestAddendum.isEmpty() ? Optional.empty() : Optional.of(optionalLatestAddendum.get());
+        return addendums.stream().findFirst();
     }
 
     // This method uses the isEjp field which is set yes for EJP when a case is saved or no if paper form
@@ -205,7 +202,7 @@ public class AsylumCaseUtils {
 
         if (applyForCosts.isPresent()) {
             List<IdValue<ApplyForCosts>> applyForCostsList = applyForCosts.get();
-            return applyForCostsList.get(0).getValue();
+            return applyForCostsList.getFirst().getValue();
         } else {
             throw new IllegalStateException("Applies for costs are not present");
         }
@@ -240,7 +237,7 @@ public class AsylumCaseUtils {
     }
 
     public static PinInPostDetails generateAppellantPinIfNotPresent(AsylumCase asylumCase) {
-        if (!asylumCase.read(APPELLANT_PIN_IN_POST, PinInPostDetails.class).isPresent()) {
+        if (asylumCase.read(APPELLANT_PIN_IN_POST, PinInPostDetails.class).isEmpty()) {
             asylumCase.write(APPELLANT_PIN_IN_POST, PinInPostDetails.builder()
                     .accessCode(AccessCodeGenerator.generateAccessCode())
                     .expiryDate(LocalDate.now().plusDays(30).toString())
@@ -256,16 +253,14 @@ public class AsylumCaseUtils {
         return asylumCase.read(SUBMISSION_OUT_OF_TIME, YesOrNo.class).orElse(NO).equals(YES);
     }
 
-    public static YesOrNo isAppellantInUK(AsylumCase asylumCase) {
-        return asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_UK, YesOrNo.class).orElse(YesOrNo.NO);
-    }
-
     public static List<String> getAppellantAddressAsList(final AsylumCase asylumCase) {
         AddressUk address = asylumCase
                 .read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)
                 .orElseThrow(() -> new IllegalStateException("appellantAddress is not present"));
 
         List<String> appellantAddressAsList = new ArrayList<>();
+
+        addAppellantName(asylumCase, appellantAddressAsList);
 
         appellantAddressAsList.add(address.getAddressLine1().orElseThrow(() -> new IllegalStateException("appellantAddress line 1 is not present")));
         String addressLine2 = address.getAddressLine2().orElse(null);
@@ -279,44 +274,6 @@ public class AsylumCaseUtils {
         }
         appellantAddressAsList.add(address.getPostTown().orElseThrow(() -> new IllegalStateException("appellantAddress postTown is not present")));
         appellantAddressAsList.add(address.getPostCode().orElseThrow(() -> new IllegalStateException("appellantAddress postCode is not present")));
-
-        return appellantAddressAsList;
-    }
-
-    public static List<String> getAppellantAddressAsListOoc(final AsylumCase asylumCase) {
-
-        String oocAddressLine1 = asylumCase
-                .read(ADDRESS_LINE_1_ADMIN_J, String.class)
-                .orElseThrow(() -> new IllegalStateException("OOC Address line 1 is not present"));
-
-        String oocAddressLine2 = asylumCase
-                .read(ADDRESS_LINE_2_ADMIN_J, String.class)
-                .orElseThrow(() -> new IllegalStateException("OOC Address line 2 is not present"));
-
-        List<String> appellantAddressAsList = new ArrayList<>();
-
-        appellantAddressAsList.add(oocAddressLine1);
-        appellantAddressAsList.add(oocAddressLine2);
-
-        String oocAddressLine3 = asylumCase
-                .read(ADDRESS_LINE_3_ADMIN_J, String.class)
-                .orElse(null);
-
-        String oocAddressLine4 = asylumCase
-                .read(ADDRESS_LINE_4_ADMIN_J, String.class)
-                .orElse(null);
-
-        NationalityGovUk oocAddressCountry = NationalityGovUk.valueOf(asylumCase
-                .read(COUNTRY_GOV_UK_OOC_ADMIN_J, NationalityFieldValue.class)
-                .orElseThrow(() -> new IllegalStateException("OOC Address country is not present")).getCode());
-
-        if (oocAddressLine3 != null) {
-            appellantAddressAsList.add(oocAddressLine3);
-        }
-        if (oocAddressLine4 != null) {
-            appellantAddressAsList.add(oocAddressLine4);
-        }
-        appellantAddressAsList.add(oocAddressCountry.toString());
 
         return appellantAddressAsList;
     }
@@ -572,4 +529,121 @@ public class AsylumCaseUtils {
         return result;
     }
 
+    private static List<String> getAppellantAddressAsListOoc(final AsylumCase asylumCase) {
+
+        String oocAddressLine1 = asylumCase
+                .read(ADDRESS_LINE_1_ADMIN_J, String.class)
+                .orElseThrow(() -> new IllegalStateException("OOC Address line 1 is not present"));
+
+        String oocAddressLine2 = asylumCase
+                .read(ADDRESS_LINE_2_ADMIN_J, String.class)
+                .orElseThrow(() -> new IllegalStateException("OOC Address line 2 is not present"));
+
+        List<String> appellantAddressAsList = new ArrayList<>();
+
+        addAppellantName(asylumCase, appellantAddressAsList);
+
+        appellantAddressAsList.add(oocAddressLine1);
+        appellantAddressAsList.add(oocAddressLine2);
+
+        String oocAddressLine3 = asylumCase
+                .read(ADDRESS_LINE_3_ADMIN_J, String.class)
+                .orElse(null);
+
+        String oocAddressLine4 = asylumCase
+                .read(ADDRESS_LINE_4_ADMIN_J, String.class)
+                .orElse(null);
+
+        NationalityGovUk oocAddressCountry = NationalityGovUk.valueOf(asylumCase
+                .read(COUNTRY_GOV_UK_OOC_ADMIN_J, NationalityFieldValue.class)
+                .orElseThrow(() -> new IllegalStateException("OOC Address country is not present")).getCode());
+
+        if (oocAddressLine3 != null) {
+            appellantAddressAsList.add(oocAddressLine3);
+        }
+        if (oocAddressLine4 != null) {
+            appellantAddressAsList.add(oocAddressLine4);
+        }
+        appellantAddressAsList.add(oocAddressCountry.toString());
+
+        return appellantAddressAsList;
+    }
+
+    private static void addAppellantName(AsylumCase asylumCase, List<String> appellantAddressAsList) {
+        String appellantGivenNames = asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse("");
+        String appellantFamilyName = asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse("");
+        String fullName = appellantGivenNames + " " + appellantFamilyName;
+        appellantAddressAsList.add(fullName.substring(0, min(fullName.length(), 42)));
+    }
+
+    public static @NonNull String getCompleteCasedReviewDate(AsylumCase asylumCase) {
+        final String reviewDate = asylumCase
+                .read(AsylumCaseDefinition.COMPLETE_CASE_REVIEW_DATE, String.class)
+                .orElseThrow(() -> new IllegalStateException("Complete CaseReview Date is not present"));
+        return LocalDate.parse(reviewDate).format(DateTimeFormatter.ofPattern(D_MMM_YYYY));
+    }
+
+    public static boolean hasStf24WeeksStatus(AsylumCase asylumCase) {
+        return asylumCase
+                .read(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)
+                .map(value -> value.equals(YesOrNo.YES))
+                .orElse(false);
+    }
+
+    public static @NonNull Set<String> getApplicantEmail(AsylumCase asylumCase) {
+
+        Set<String> emails = asylumCase.read(EMAIL, String.class)
+                .map(Collections::singleton)
+                .orElse(Collections.emptySet());
+        if (emails.isEmpty()) {
+            emails = asylumCase.read(INTERNAL_APPELLANT_EMAIL, String.class)
+                    .map(Collections::singleton)
+                    .orElse(Collections.emptySet());
+        }
+        return emails;
+    }
+
+    public static String getAppealReceivedDate(AsylumCase asylumCase) {
+        String tribunalReceivedDate = getCaseDateDate(asylumCase, TRIBUNAL_RECEIVED_DATE);
+        String appealReceivedDate;
+        if (isEmpty(tribunalReceivedDate)) {
+            appealReceivedDate = getCaseDateDate(asylumCase, APPEAL_SUBMISSION_DATE);
+        } else {
+            appealReceivedDate = tribunalReceivedDate;
+        }
+
+        if (isEmpty(appealReceivedDate)) {
+            throw new IllegalStateException("Received date  is not present");
+        }
+        return LocalDate.parse(appealReceivedDate).format(DateTimeFormatter.ofPattern(D_MMM_YYYY));
+    }
+
+    public static String getHomeOfficeDecisionDate(AsylumCase asylumCase) {
+        final String homeOfficeDecisionDate = getCaseDateDate(asylumCase, HOME_OFFICE_DECISION_DATE);
+        return LocalDate.parse(homeOfficeDecisionDate).format(DateTimeFormatter.ofPattern(D_MMM_YYYY));
+    }
+
+    public static String populateStatutoryTimeFrame24wDate(AsylumCase asylumCase) {
+        String tribunalReceivedDate = getCaseDateDate(asylumCase, TRIBUNAL_RECEIVED_DATE);
+        String stf24WeeksAddedToDate;
+        if (isEmpty(tribunalReceivedDate)) {
+            String appealSubmissionDate = getCaseDateDate(asylumCase, APPEAL_SUBMISSION_DATE);
+            stf24WeeksAddedToDate = add24WeeksToDate(appealSubmissionDate);
+        } else {
+            stf24WeeksAddedToDate = add24WeeksToDate(tribunalReceivedDate);
+        }
+        return stf24WeeksAddedToDate;
+    }
+
+    private static String getCaseDateDate(AsylumCase asylumCase, AsylumCaseDefinition asylumCaseDefinition) {
+        return asylumCase
+                .read(asylumCaseDefinition, String.class)
+                .orElse("");
+    }
+
+    private static String add24WeeksToDate(String date) {
+        LocalDate appealDate = parse(date);
+        LocalDate stf24WeeksDate = appealDate.plusWeeks(24);
+        return stf24WeeksDate.format(DateTimeFormatter.ofPattern(D_MMM_YYYY));
+    }
 }

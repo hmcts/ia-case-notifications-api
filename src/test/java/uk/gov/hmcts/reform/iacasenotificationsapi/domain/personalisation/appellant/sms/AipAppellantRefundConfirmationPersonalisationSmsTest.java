@@ -1,8 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
 import java.time.LocalDate;
@@ -27,15 +27,9 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvi
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AipAppellantRefundConfirmationPersonalisationSmsTest {
 
-    private Long caseId = 12345L;
-    private String refundConfirmationTemplateId = "refundConfirmationTemplateId";
-    private String iaAipFrontendUrl = "http://localhost";
-    private String appealReferenceNumber = "appealReferenceNumber";
-    private int daysAfterRemissionDecision = 14;
-    private String newFeeAmount = "8000";
-    private String withHearing = "decisionWithHearing";
-    private String withoutHearing = "decisionWithoutHearing";
-    private String appellantMobileNumber = "07781122334";
+    private final String refundConfirmationTemplateId = "refundConfirmationTemplateId";
+    private final String appealReferenceNumber = "appealReferenceNumber";
+    private final int daysAfterRemissionDecision = 14;
 
     @Mock
     AsylumCase asylumCase;
@@ -50,10 +44,14 @@ class AipAppellantRefundConfirmationPersonalisationSmsTest {
     public void setup() {
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
+        String newFeeAmount = "8000";
         when(asylumCase.read(NEW_FEE_AMOUNT, String.class)).thenReturn(Optional.of(newFeeAmount));
+        String withHearing = "decisionWithHearing";
         when(asylumCase.read(PREVIOUS_DECISION_HEARING_FEE_OPTION, String.class)).thenReturn(Optional.of(withHearing));
+        String withoutHearing = "decisionWithoutHearing";
         when(asylumCase.read(DECISION_HEARING_FEE_OPTION, String.class)).thenReturn(Optional.of(withoutHearing));
 
+        String iaAipFrontendUrl = "http://localhost";
         aipAppellantRefundConfirmationPersonalisationSms = new AipAppellantRefundConfirmationPersonalisationSms(
             refundConfirmationTemplateId,
             iaAipFrontendUrl,
@@ -70,12 +68,14 @@ class AipAppellantRefundConfirmationPersonalisationSmsTest {
 
     @Test
     void should_return_given_reference_id() {
+        Long caseId = 12345L;
         assertEquals(caseId + "_REFUND_CONFIRMATION_AIP_APPELLANT_SMS",
             aipAppellantRefundConfirmationPersonalisationSms.getReferenceId(12345L));
     }
 
     @Test
     void should_return_appellant_email_address_from_asylum_case() {
+        String appellantMobileNumber = "07781122334";
         Mockito.when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
             .thenReturn(Collections.singleton(appellantMobileNumber));
 
@@ -85,10 +85,10 @@ class AipAppellantRefundConfirmationPersonalisationSmsTest {
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
-        assertThatThrownBy(
-            () -> aipAppellantRefundConfirmationPersonalisationSms.getPersonalisation((AsylumCase) null))
-            .isExactlyInstanceOf(NullPointerException.class)
-            .hasMessage("asylumCase must not be null");
+        NullPointerException exception =
+            assertThrows(NullPointerException.class,
+                () -> aipAppellantRefundConfirmationPersonalisationSms.getPersonalisation((AsylumCase) null));
+        assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
@@ -101,11 +101,12 @@ class AipAppellantRefundConfirmationPersonalisationSmsTest {
         Map<String, String> personalisation =
             aipAppellantRefundConfirmationPersonalisationSms.getPersonalisation(asylumCase);
 
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals("Decision with hearing", personalisation.get("previousDecisionHearingFeeOption"));
-        assertEquals("Decision without hearing", personalisation.get("updatedDecisionHearingFeeOption"));
-        assertEquals("80.00", personalisation.get("newFee"));
-        assertEquals(systemDateProvider.dueDate(daysAfterRemissionDecision), personalisation.get("dueDate"));
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("previousDecisionHearingFeeOption", "Decision with hearing")
+            .containsEntry("updatedDecisionHearingFeeOption", "Decision without hearing")
+            .containsEntry("newFee", "80.00")
+            .containsEntry("dueDate", systemDateProvider.dueDate(daysAfterRemissionDecision));
     }
 
 }

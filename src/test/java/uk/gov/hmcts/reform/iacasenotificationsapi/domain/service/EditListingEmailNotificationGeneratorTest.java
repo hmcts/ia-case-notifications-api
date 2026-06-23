@@ -49,10 +49,24 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.GovNoti
 public class EditListingEmailNotificationGeneratorTest {
 
     @Mock
+    static ApplicationContext applicationContext;
+    @Mock
+    static CustomerServicesProvider customerServicesProvider;
+    private final String templateId1 = "templateId1";
+    private final String templateId2 = "templateId1";
+    private final String refId1 = "refId1";
+    private final String refId2 = "refId2";
+    private final String emailAddress1 = "email1@example.com";
+    private final String emailAddress2 = "email2@example.com";
+    private final Map<String, String> personalizationMap1 = emptyMap();
+    private final Map<String, String> personalizationMap2 = emptyMap();
+    private final List<IdValue<String>> notificationsSent = newArrayList();
+    private final String notificationId1 = "notificationId1";
+    private final String notificationId2 = "notificationId2";
+    @Mock
     LegalRepresentativeEditListingNoChangePersonalisation editListingNoChangeEmailNotificationPersonalisation;
     @Mock
     LegalRepresentativeEditListingPersonalisation editListingChangeEmailNotificationPersonalisation1;
-
     @Mock
     GovNotifyNotificationSender notificationSender;
     @Spy
@@ -68,33 +82,8 @@ public class EditListingEmailNotificationGeneratorTest {
     @Mock
     AsylumCase asylumCaseBefore;
     MockedStatic<ApplicationContextProvider> mocked;
-    @Mock
-    static ApplicationContext applicationContext;
-    @Mock
-    static CustomerServicesProvider customerServicesProvider;
-
     private List<EmailNotificationPersonalisation> repEmailNotificationPersonalisationList;
-
     private NotificationGenerator notificationGenerator;
-
-    private Long caseId = 12345L;
-
-    private String templateId1 = "templateId1";
-    private String templateId2 = "templateId1";
-
-    private String refId1 = "refId1";
-    private String refId2 = "refId2";
-
-    private String emailAddress1 = "email1@example.com";
-    private String emailAddress2 = "email2@example.com";
-
-    private Map<String, String> personalizationMap1 = emptyMap();
-    private Map<String, String> personalizationMap2 = emptyMap();
-
-    private List<IdValue<String>> notificationsSent = newArrayList();
-
-    private String notificationId1 = "notificationId1";
-    private String notificationId2 = "notificationId2";
 
     @BeforeEach
     public void setup() {
@@ -107,6 +96,7 @@ public class EditListingEmailNotificationGeneratorTest {
 
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
         when(caseDetailsBefore.getCaseData()).thenReturn(asylumCaseBefore);
+        Long caseId = 12345L;
         when(caseDetails.getId()).thenReturn(caseId);
 
         when(asylumCase.read(AsylumCaseDefinition.NOTIFICATIONS_SENT)).thenReturn(Optional.of(notificationsSent));
@@ -282,22 +272,22 @@ public class EditListingEmailNotificationGeneratorTest {
     @Test
     public void should_not_send_notification_when_invalid_email_address() {
         notificationGenerator =
-                new EditListingEmailNotificationGenerator(repEmailNotificationPersonalisationList, notificationSender,
-                        notificationIdAppender);
+            new EditListingEmailNotificationGenerator(repEmailNotificationPersonalisationList, notificationSender,
+                notificationIdAppender);
 
         when(editListingNoChangeEmailNotificationPersonalisation.getRecipientsList(asylumCase))
-                .thenReturn(singleton(NO_EMAIL_ADDRESS_DECISION_WITHOUT_HEARING));
+            .thenReturn(singleton(NO_EMAIL_ADDRESS_DECISION_WITHOUT_HEARING));
 
         when(asylumCase.read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class))
-                .thenReturn(Optional.of(HearingCentre.TAYLOR_HOUSE));
+            .thenReturn(Optional.of(HearingCentre.TAYLOR_HOUSE));
         when(asylumCaseBefore.read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class))
-                .thenReturn(Optional.of(HearingCentre.TAYLOR_HOUSE));
+            .thenReturn(Optional.of(HearingCentre.TAYLOR_HOUSE));
 
         final String listingDateTime = "2020-02-06T13:51:29.369";
         when(asylumCase.read(AsylumCaseDefinition.LIST_CASE_HEARING_DATE, String.class))
-                .thenReturn(Optional.of(listingDateTime));
+            .thenReturn(Optional.of(listingDateTime));
         when(asylumCaseBefore.read(AsylumCaseDefinition.LIST_CASE_HEARING_DATE, String.class))
-                .thenReturn(Optional.of(listingDateTime));
+            .thenReturn(Optional.of(listingDateTime));
 
         notificationGenerator.generate(callback);
 

@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
@@ -15,8 +14,8 @@ public class JourneyTypeTest {
 
     @Test
     public void has_correct_journey_types() {
-        assertThat(JourneyType.from("rep").get()).isEqualByComparingTo(JourneyType.REP);
-        assertThat(JourneyType.from("aip").get()).isEqualByComparingTo(JourneyType.AIP);
+        assertEquals(JourneyType.REP, JourneyType.from("rep").get());
+        assertEquals(JourneyType.AIP, JourneyType.from("aip").get());
     }
 
     @Test

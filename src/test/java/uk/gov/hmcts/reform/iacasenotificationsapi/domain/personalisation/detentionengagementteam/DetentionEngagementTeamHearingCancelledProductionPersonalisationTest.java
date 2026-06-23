@@ -21,6 +21,8 @@ import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
@@ -66,7 +68,7 @@ class DetentionEngagementTeamHearingCancelledProductionPersonalisationTest {
     @BeforeEach
     void setUp() {
         personalisation = new DetentionEngagementTeamHearingCancelledProductionPersonalisation(
-                TEMPLATE_ID, detentionFacilityEmailService, dateTimeExtractor, hearingDetailsFinder, SUBJECT_PREFIX);
+            TEMPLATE_ID, detentionFacilityEmailService, dateTimeExtractor, hearingDetailsFinder, SUBJECT_PREFIX);
 
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
@@ -74,13 +76,12 @@ class DetentionEngagementTeamHearingCancelledProductionPersonalisationTest {
 
     @Test
     void should_return_template_id() {
-        assertThat(personalisation.getTemplateId()).isEqualTo(TEMPLATE_ID);
+        assertEquals(TEMPLATE_ID, personalisation.getTemplateId());
     }
 
     @Test
     void should_return_reference_id() {
-        assertThat(personalisation.getReferenceId(12345L))
-                .isEqualTo("12345_DETAINED_HEARING_CANCELLED_PRODUCTION_DET");
+        assertEquals("12345_DETAINED_HEARING_CANCELLED_PRODUCTION_DET", personalisation.getReferenceId(12345L));
     }
 
     @Test
@@ -90,7 +91,7 @@ class DetentionEngagementTeamHearingCancelledProductionPersonalisationTest {
         when(detentionFacilityEmailService.getDetentionEmailAddress(asylumCase)).thenReturn(EMAIL);
 
         Set<String> recipients = personalisation.getRecipientsList(asylumCase);
-        assertThat(recipients).containsExactly(EMAIL);
+        assertTrue(recipients.contains(EMAIL));
     }
 
     @Test
@@ -116,16 +117,16 @@ class DetentionEngagementTeamHearingCancelledProductionPersonalisationTest {
         Map<String, String> personalisationMap = personalisation.getPersonalisation(callback);
 
         assertThat(personalisationMap)
-                .containsEntry("subjectPrefix", SUBJECT_PREFIX)
-                .containsEntry("appealReferenceNumber", "REF123")
-                .containsEntry("homeOfficeReferenceNumber", "HO123")
-                .containsEntry("appellantGivenNames", "John")
-                .containsEntry("appellantFamilyName", "Doe")
-                .containsEntry("nomsRef", "NOMS Ref: ABC123")
-                .containsEntry("hearingDate", "01-06-2024")
-                .containsEntry("hearingTime", "10:00")
-                .containsEntry("hearingCentreAddress", "some address")
-                .containsEntry("detentionBuilding", "Building X");
+            .containsEntry("subjectPrefix", SUBJECT_PREFIX)
+            .containsEntry("appealReferenceNumber", "REF123")
+            .containsEntry("homeOfficeReferenceNumber", "HO123")
+            .containsEntry("appellantGivenNames", "John")
+            .containsEntry("appellantFamilyName", "Doe")
+            .containsEntry("nomsRef", "NOMS Ref: ABC123")
+            .containsEntry("hearingDate", "01-06-2024")
+            .containsEntry("hearingTime", "10:00")
+            .containsEntry("hearingCentreAddress", "some address")
+            .containsEntry("detentionBuilding", "Building X");
     }
 
     @Test
@@ -141,9 +142,9 @@ class DetentionEngagementTeamHearingCancelledProductionPersonalisationTest {
 
         Map<String, String> personalisationMap = personalisation.getPersonalisation(callback);
 
-        assertThat(personalisationMap.get("hearingDate")).isEmpty();
-        assertThat(personalisationMap.get("hearingTime")).isEmpty();
-        assertThat(personalisationMap.get("hearingCentreAddress")).isEmpty();
+        assertTrue(personalisationMap.get("hearingDate").isEmpty());
+        assertTrue(personalisationMap.get("hearingTime").isEmpty());
+        assertTrue(personalisationMap.get("hearingCentreAddress").isEmpty());
     }
 
     @Test

@@ -34,6 +34,10 @@ class IdamServiceTest {
 
     private IdamService idamService;
 
+    private static Stream<String> amOnboardedRolesProvider() {
+        return IdamService.amOnboardedRoles.stream();
+    }
+
     @BeforeEach
     void setUp() {
         idamService = new IdamService(idamApi, roleAssignmentService);
@@ -138,10 +142,6 @@ class IdamServiceTest {
         assertEquals(expectedSurname, actualUserInfo.getFamilyName());
     }
 
-    private static Stream<String> amOnboardedRolesProvider() {
-        return IdamService.amOnboardedRoles.stream();
-    }
-
     @ParameterizedTest
     @MethodSource("amOnboardedRolesProvider")
     void getUserDetails_logs_exception_when_role_assignment_service_fails_for_onboarded_roles(String role) {
@@ -173,7 +173,7 @@ class IdamServiceTest {
         idamService.getUserInfo(expectedAccessToken);
         List<ILoggingEvent> logEvents = listAppender.list;
         assertEquals(1, logEvents.size());
-        assertEquals("Error fetching AM roles for user: 1234", logEvents.get(0).getFormattedMessage());
+        assertEquals("Error fetching AM roles for user: 1234", logEvents.getFirst().getFormattedMessage());
 
         verify(idamApi).userInfo(expectedAccessToken);
     }

@@ -8,8 +8,7 @@ import org.junit.jupiter.api.Test;
 
 class DynamicListTest {
 
-    private String testValue = "test";
-    private String testLabel = "label";
+    private final String testValue = "test";
 
     @Test
     public void should_hold_onto_values_1() {
@@ -22,6 +21,7 @@ class DynamicListTest {
 
     @Test
     public void should_hold_onto_values_2() {
+        String testLabel = "label";
         List<Value> items = newArrayList(new Value(testValue, testLabel));
         DynamicList dynamicList2 = new DynamicList(new Value(testValue, testLabel), items);
 
