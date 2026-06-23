@@ -48,7 +48,7 @@
     "notifications": [
       {
         "reference": "2073_END_APPEAL_HOME_OFFICE",
-        "recipient": "{$homeOfficeEmailAddresses.taylorHouse}",
+        "recipient": "{$apcPrivateHomeOfficeEmailAddress}",
         "subject": "Immigration and Asylum appeal: appeal ended –",
         "body": [
           "PA/12345/2019",
