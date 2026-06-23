@@ -68,8 +68,8 @@ public class AppellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation imple
                 .getCaseData();
 
         final String dueDate = isAppellantInDetention(asylumCase)
-                ? systemDateProvider.dueDate(daysAfterSubmitAppeal)
-                : systemDateProvider.dueDate(daysAfterSubmitAppealDetained);
+                ? systemDateProvider.dueDate(daysAfterSubmitAppealDetained)
+                : systemDateProvider.dueDate(daysAfterSubmitAppeal);
 
         ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap
             .<String, String>builder()
