@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
@@ -40,7 +40,7 @@ public class HomeOfficeAppealExitedOnlinePersonalisation implements EmailNotific
         @NotNull(message = "appealExitedOnlineBeforeListingHomeOfficeTemplateId cannot be null") @Value("${govnotify.template.removeAppealFromOnlineBeforeListing.homeOffice.email}") String appealExitedOnlineBeforeListingTemplateId,
         @NotNull(message = "appealExitedOnlineAfterListingHomeOfficeTemplateId cannot be null") @Value("${govnotify.template.removeAppealFromOnlineAfterListing.homeOffice.email}") String appealExitedOnlineAfterListingTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
-        @NotNull(message = "home_office email cannot be null") @Value("${endAppealHomeOfficeEmailAddress}") String homeOfficeEmailAddresses,
+        @NotNull(message = "home_office email cannot be null") @Value("${apcPrivateHomeOfficeEmailAddress}") String homeOfficeEmailAddresses,
         EmailAddressFinder emailAddressFinder,
         CustomerServicesProvider customerServicesProvider
     ) {
@@ -78,7 +78,7 @@ public class HomeOfficeAppealExitedOnlinePersonalisation implements EmailNotific
 
         final ImmutableMap.Builder<String, String> listCaseFields = ImmutableMap
             .<String, String>builder()
-            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
             .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .put("ariaListingReference", asylumCase.read(ARIA_LISTING_REFERENCE, String.class).orElse(""))

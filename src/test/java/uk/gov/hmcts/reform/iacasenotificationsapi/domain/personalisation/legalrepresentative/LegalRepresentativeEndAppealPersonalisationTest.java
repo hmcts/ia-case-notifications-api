@@ -76,8 +76,6 @@ public class LegalRepresentativeEndAppealPersonalisationTest {
         String legalRepEmailAddress = "legalrep@example.com";
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class))
             .thenReturn(Optional.of(legalRepEmailAddress));
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         legalRepresentativeEndAppealPersonalisation = new LegalRepresentativeEndAppealPersonalisation(
             beforeListingTemplateId,
@@ -142,8 +140,6 @@ public class LegalRepresentativeEndAppealPersonalisationTest {
             .containsEntry("reasonsOfOutcome", endAppealOutcomeReason)
             .containsEntry("endAppealApprover", endAppealApproverType)
             .containsEntry("endAppealDate", expectedEndAppealDate);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @ParameterizedTest
@@ -178,8 +174,6 @@ public class LegalRepresentativeEndAppealPersonalisationTest {
             .containsEntry("reasonsOfOutcome", "No reason")
             .containsEntry("endAppealApprover", "")
             .containsEntry("endAppealDate", "");
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @Test

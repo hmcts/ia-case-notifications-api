@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 40832,
+      "id": 1626,
       "eventId": "asyncStitchingComplete",
       "state": "preHearing",
       "caseData": {
@@ -37,11 +37,11 @@
         "legalRepReferenceNumber": "REF54321",
         "notificationsSent": [
           {
-            "id": "40832_HEARING_BUNDLE_IS_READY_HOME_OFFICE",
+            "id": "1626_HEARING_BUNDLE_IS_READY_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "40832_HEARING_BUNDLE_IS_READY_LEGAL_REP",
+            "id": "1626_HEARING_BUNDLE_IS_READY_LEGAL_REP",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -49,7 +49,7 @@
     },
     "notifications": [
       {
-        "reference": "40832_HEARING_BUNDLE_IS_READY_HOME_OFFICE",
+        "reference": "1626_HEARING_BUNDLE_IS_READY_HOME_OFFICE",
         "recipient": "{$homeOfficeEmailAddresses.northShields}",
         "subject": "Immigration and Asylum appeal: hearing bundle is ready",
         "body": [
@@ -63,7 +63,7 @@
         ]
       },
       {
-        "reference": "40832_HEARING_BUNDLE_IS_READY_LEGAL_REP",
+        "reference": "1626_HEARING_BUNDLE_IS_READY_LEGAL_REP",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: hearing bundle is ready",
         "body": [

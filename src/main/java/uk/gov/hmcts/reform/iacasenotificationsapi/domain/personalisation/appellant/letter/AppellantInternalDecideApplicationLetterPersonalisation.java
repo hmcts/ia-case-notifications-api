@@ -73,7 +73,7 @@ public class AppellantInternalDecideApplicationLetterPersonalisation implements 
         String decisionStr = isRefused ? "refuse" : "grant";
         ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap
             .<String, String>builder()
-            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .put("decisionMaker", application.getDecisionMaker())
             .put("decision", decisionStr)
             .put("applicationType", application.getType())

@@ -7,7 +7,7 @@ import com.google.common.collect.ImmutableMap;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
@@ -47,7 +47,7 @@ public class HomeOfficeReinstateAppealPersonalisation implements EmailNotificati
             @Value("${govnotify.template.reinstateAppeal.homeOffice.afterListing.email}") String homeOfficeReinstateAppealAfterListingTemplateId,
             @Value("${apcHomeOfficeEmailAddress}") String apcHomeOfficeEmailAddress,
             @Value("${lartHomeOfficeEmailAddress}") String lartHomeOfficeEmailAddress,
-            @Value("${endAppealHomeOfficeEmailAddress}") String endAppealEmailAddresses,
+            @Value("${apcPrivateHomeOfficeEmailAddress}") String endAppealEmailAddresses,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
             CustomerServicesProvider customerServicesProvider,
             AppealService appealService,
@@ -119,7 +119,7 @@ public class HomeOfficeReinstateAppealPersonalisation implements EmailNotificati
 
         return ImmutableMap
                 .<String, String>builder()
-                .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+                .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
                 .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
                 .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("ariaListingReference", asylumCase.read(AsylumCaseDefinition.ARIA_LISTING_REFERENCE, String.class).orElse(""))

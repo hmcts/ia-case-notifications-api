@@ -59,7 +59,7 @@ public class AppellantUpdateTribunalDecisionRule32PersonalisationSms implements 
         return
             ImmutableMap
                 .<String, String>builder()
-                .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+                .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
                 .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("linkAipTimeline", iaAipFrontendUrl)
                 .build();

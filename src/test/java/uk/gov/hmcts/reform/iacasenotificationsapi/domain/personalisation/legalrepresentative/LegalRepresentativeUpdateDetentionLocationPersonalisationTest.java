@@ -65,8 +65,6 @@ public class LegalRepresentativeUpdateDetentionLocationPersonalisationTest {
         when(detentionFacilityNameFinder.getDetentionFacility("Colnbrook")).thenReturn("Colnbrook");
         when(asylumCase.read(PREVIOUS_DETENTION_LOCATION, String.class)).thenReturn(Optional.of("Harmondsworth"));
         when(detentionFacilityNameFinder.getDetentionFacility("Harmondsworth")).thenReturn("Harmondsworth");
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         legalRepresentativeUpdateDetentionLocationPersonalisation = new LegalRepresentativeUpdateDetentionLocationPersonalisation(
             beforeListingTemplateId,
@@ -123,7 +121,7 @@ public class LegalRepresentativeUpdateDetentionLocationPersonalisationTest {
         Map<String, String> personalisation =
             legalRepresentativeUpdateDetentionLocationPersonalisation.getPersonalisation(asylumCase);
 
-        String a = personalisation.get("subjectPrefix");
+        personalisation.get("subjectPrefix");
 
         String nonAdaPrefix = "Immigration and Asylum appeal";
         String adaPrefix = "Accelerated detained appeal";
@@ -138,8 +136,6 @@ public class LegalRepresentativeUpdateDetentionLocationPersonalisationTest {
             .containsEntry("appellantGivenNames", appellantGivenNames)
             .containsEntry("appellantFamilyName", appellantFamilyName)
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
     }
 

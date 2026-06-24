@@ -95,9 +95,6 @@ public class RespondentEvidenceDirectionPersonalisationTest {
         when(asylumCase.read(LEGAL_REP_COMPANY, String.class)).thenReturn(Optional.of(companyName));
         when(asylumCase.read(LEGAL_REP_COMPANY_ADDRESS, AddressUk.class)).thenReturn(Optional.of(legalRepCompanyAddress));
 
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
-
         String iaExUiFrontendUrl = "http://somefrontendurl";
         respondentEvidenceDirectionPersonalisation = new RespondentEvidenceDirectionPersonalisation(
             templateId,
@@ -187,8 +184,6 @@ public class RespondentEvidenceDirectionPersonalisationTest {
             .containsEntry("legalRepEmail", legalRepEmail)
             .containsEntry("legalRepReference", legalRepReference)
             .containsEntry("dueDate", expectedDirectionDueDate);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
@@ -237,8 +232,6 @@ public class RespondentEvidenceDirectionPersonalisationTest {
             .containsEntry("legalRepEmail", legalRepEmail)
             .containsEntry("legalRepReference", legalRepReference)
             .containsEntry("dueDate", expectedDirectionDueDate);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
@@ -286,8 +279,6 @@ public class RespondentEvidenceDirectionPersonalisationTest {
             .containsEntry("legalRepEmail", legalRepEmail)
             .containsEntry("legalRepReference", legalRepReference)
             .containsEntry("dueDate", expectedDirectionDueDate);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
@@ -316,8 +307,6 @@ public class RespondentEvidenceDirectionPersonalisationTest {
             .containsEntry("legalRepEmail", legalRepEmail)
             .containsEntry("legalRepReference", legalRepReference)
             .containsEntry("dueDate", expectedDirectionDueDate);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals("Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
@@ -348,8 +337,6 @@ public class RespondentEvidenceDirectionPersonalisationTest {
             .containsEntry("legalRepEmail", "")
             .containsEntry("legalRepReference", "")
             .containsEntry("dueDate", expectedDirectionDueDate);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
@@ -386,8 +373,6 @@ public class RespondentEvidenceDirectionPersonalisationTest {
             .containsEntry("legalRepEmail", legalRepEmail)
             .containsEntry("legalRepReference", legalRepReference)
             .containsEntry("dueDate", expectedDirectionDueDate);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
@@ -422,8 +407,6 @@ public class RespondentEvidenceDirectionPersonalisationTest {
             .containsEntry("legalRepName", legalRepEjpGivenName + " " + legalRepEjpFamilyName);
 
         assertEquals(expectedDirectionDueDate, personalisation.get("dueDate"));
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals("Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
 
     }

@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 1324,
+      "id": 2083,
       "eventId": "submitAppeal",
       "state": "appealSubmitted",
       "caseData": {
@@ -52,11 +52,11 @@
         },
         "notificationsSent": [
           {
-            "id": "1324_APPEAL_SUBMITTED_HOME_OFFICE",
+            "id": "2083_APPEAL_SUBMITTED_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1324_INTERNAL_SUBMIT_APPEAL_WITH_EXEMPTION_APPELLANT_LETTER",
+            "id": "2083_INTERNAL_SUBMIT_APPEAL_WITH_EXEMPTION_APPELLANT_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

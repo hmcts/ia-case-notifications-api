@@ -75,8 +75,6 @@ class AppellantInternalManageFeeUpdateLetterPersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.NEW_FEE_AMOUNT, String.class)).thenReturn(Optional.of(newFeeTotal));
         when(asylumCase.read(AsylumCaseDefinition.FEE_UPDATE_REASON, FeeUpdateReason.class)).thenReturn(Optional.of(FeeUpdateReason.DECISION_TYPE_CHANGED));
         when(asylumCase.read(AsylumCaseDefinition.CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class)).thenReturn(Optional.of(referenceNumber));
-        when(customerServicesProvider.getCustomerServicesTelephone()).thenReturn(customerServicesTelephone);
-        when(customerServicesProvider.getCustomerServicesEmail()).thenReturn(customerServicesEmail);
 
         int afterManageFeeEvent = 14;
         appellantInternalManageFeeUpdateLetterPersonalisation = new AppellantInternalManageFeeUpdateLetterPersonalisation(
@@ -179,8 +177,6 @@ class AppellantInternalManageFeeUpdateLetterPersonalisationTest {
             .containsEntry("address_line_4", addressLine3)
             .containsEntry("address_line_5", postTown)
             .containsEntry("address_line_6", postCode);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
 
     }
 
@@ -207,8 +203,6 @@ class AppellantInternalManageFeeUpdateLetterPersonalisationTest {
             .containsEntry("address_line_4", addressLine3)
             .containsEntry("address_line_5", postTown)
             .containsEntry("address_line_6", Nationality.ES.toString());
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @Test
@@ -233,8 +227,6 @@ class AppellantInternalManageFeeUpdateLetterPersonalisationTest {
             .containsEntry("address_line_3", addressLine3)
             .containsEntry("address_line_4", postTown)
             .containsEntry("address_line_5", postCode);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @Test
@@ -259,8 +251,6 @@ class AppellantInternalManageFeeUpdateLetterPersonalisationTest {
             .containsEntry("address_line_3", addressLine3)
             .containsEntry("address_line_4", postTown)
             .containsEntry("address_line_5", Nationality.ES.toString());
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     private void appellantOutOfCountryDataSetup() {

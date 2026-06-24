@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 14002,
+      "id": 2035,
       "eventId": "markAppealAsRemitted",
       "state": "ftpaDecided",
       "caseData": {
@@ -34,7 +34,7 @@
         "sourceOfRemittal": "Upper Tribunal",
         "notificationsSent": [
           {
-            "id": "14002_INTERNAL_DETAINED_APPEAL_REMITTED_AIP_IRC_PRISON_LETTER",
+            "id": "2035_INTERNAL_DETAINED_APPEAL_REMITTED_AIP_IRC_PRISON_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

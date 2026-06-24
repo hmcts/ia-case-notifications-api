@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
@@ -80,7 +81,7 @@ class AdminOfficerRequestFeeRemissionPersonalisationTest {
     @Test
     void should_return_personalisation_when_all_information_given() {
 
-        when(customerServicesProvider.getCustomerServicesPersonalisation()).thenReturn(Map.of());
+        when(customerServicesProvider.getCustomerServicesPersonalisation(any(AsylumCase.class))).thenReturn(Map.of());
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of("someAppellantGivenNames"));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of("someAppellantFamilyName"));
@@ -91,7 +92,7 @@ class AdminOfficerRequestFeeRemissionPersonalisationTest {
             adminOfficerRequestFeeRemissionPersonalisation.getPersonalisation(asylumCase);
 
         assertThat(personalisation)
-            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation())
+            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .containsEntry("subjectPrefix", nonAdaPrefix)
             .containsEntry("appealReferenceNumber", "someReferenceNumber")
             .containsEntry("legalRepReferenceNumber", "someLegalReferenceNumber")
@@ -112,7 +113,7 @@ class AdminOfficerRequestFeeRemissionPersonalisationTest {
 
         String adaPrefix = "Accelerated detained appeal";
         assertThat(personalisation)
-            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation())
+            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? adaPrefix : nonAdaPrefix)
             .containsEntry("appealReferenceNumber", "")
             .containsEntry("legalRepReferenceNumber", "")

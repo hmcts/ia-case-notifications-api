@@ -1,11 +1,11 @@
 {
   "description": "RIA-9233 Send letter notification to LR for record remission decision (partially approved) - In country (internal case creation - represented)",
-  "enabled": "{$featureFlag.dlrmTelephonyFeatureFlag}",
+  "disabled": "!{$featureFlag.dlrmTelephonyFeatureFlag}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 9233,
+      "id": 1089,
       "eventId": "recordRemissionDecision",
       "state": "pendingPayment",
       "caseData": {
@@ -61,11 +61,11 @@
         "ccdReferenceNumberForDisplay": "1111222233334444",
         "notificationsSent": [
           {
-            "id": "9233_INTERNAL_REMISSION_PARTIALLY_GRANTED_REFUSED_APPELLANT_LETTER",
+            "id": "1089_INTERNAL_REMISSION_PARTIALLY_GRANTED_REFUSED_APPELLANT_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "9233_REMISSION_DECISION_PARTIALLY_APPROVED_LEGAL_REPRESENTATIVE",
+            "id": "1089_REMISSION_DECISION_PARTIALLY_APPROVED_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

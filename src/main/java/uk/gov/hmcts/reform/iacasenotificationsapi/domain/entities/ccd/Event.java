@@ -136,6 +136,7 @@ public enum Event {
     PROGRESS_MIGRATED_CASE("progressMigratedCase"),
     REFUND_CONFIRMATION("refundConfirmation"),
     REVOKE_CITIZEN_ACCESS("revokeCitizenAccess"),
+    GENERATE_PIN_IN_POST("generatePinInPost"),
 
     START_APPLICATION("startApplication"),
     EDIT_BAIL_APPLICATION("editBailApplication"),

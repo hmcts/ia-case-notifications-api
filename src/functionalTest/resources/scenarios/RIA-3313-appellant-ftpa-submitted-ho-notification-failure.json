@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "LegalRepresentative",
     "input": {
-      "id": 3313,
+      "id": 1794,
       "eventId": "applyForFTPAAppellant",
 
       "state": "ftpaSubmitted",
@@ -28,15 +28,15 @@
         "listCaseHearingCentre": "bradford",
         "notificationsSent": [
           {
-            "id": "3313_FTPA_SUBMITTED_LEGAL_REP",
+            "id": "1794_FTPA_SUBMITTED_LEGAL_REP",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "3313_RESPONDENT_APPELLANT_FTPA_SUBMITTED",
+            "id": "1794_RESPONDENT_APPELLANT_FTPA_SUBMITTED",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "3313_FTPA_SUBMITTED_HO_NOTIFICATION_FAILED_CASE_OFFICER",
+            "id": "1794_FTPA_SUBMITTED_HO_NOTIFICATION_FAILED_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -44,7 +44,7 @@
     },
     "notifications": [
       {
-        "reference": "3313_FTPA_SUBMITTED_LEGAL_REP",
+        "reference": "1794_FTPA_SUBMITTED_LEGAL_REP",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
         "body": [
@@ -58,7 +58,7 @@
         ]
       },
       {
-        "reference": "3313_RESPONDENT_APPELLANT_FTPA_SUBMITTED",
+        "reference": "1794_RESPONDENT_APPELLANT_FTPA_SUBMITTED",
         "recipient": "{$homeOfficeFtpaEmailAddresses.bradford}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal",
         "body": [
@@ -72,7 +72,7 @@
         ]
       },
       {
-        "reference": "3313_FTPA_SUBMITTED_HO_NOTIFICATION_FAILED_CASE_OFFICER",
+        "reference": "1794_FTPA_SUBMITTED_HO_NOTIFICATION_FAILED_CASE_OFFICER",
         "recipient": "{$hearingCentreEmailAddresses.bradford}",
         "subject": "Immigration and Asylum appeal: A notification to the respondent has failed",
         "body": [

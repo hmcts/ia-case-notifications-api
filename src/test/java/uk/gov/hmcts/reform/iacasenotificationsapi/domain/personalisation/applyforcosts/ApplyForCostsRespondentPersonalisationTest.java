@@ -82,9 +82,6 @@ class ApplyForCostsRespondentPersonalisationTest {
         applyForCostsRespondentPersonalisationTemplate.put("appealReferenceNumber", appealReferenceNumber);
         applyForCostsRespondentPersonalisationTemplate.put("linkToOnlineService", iaExUiFrontendUrl);
         applyForCostsRespondentPersonalisationTemplate.put("appliedCostsType", "Wasted");
-
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
         when(personalisationProvider.getApplyForCostsPersonalisation(asylumCase)).thenReturn(applyForCostsRespondentPersonalisationTemplate);
         when(emailAddressFinder.getLegalRepEmailAddress(asylumCase)).thenReturn(legalRepEmailAddress);
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
@@ -120,7 +117,7 @@ class ApplyForCostsRespondentPersonalisationTest {
     void should_return_given_email_address(List<IdValue<ApplyForCosts>> applyForCostsList) {
         when(asylumCase.read(APPLIES_FOR_COSTS)).thenReturn(Optional.of(applyForCostsList));
 
-        if (applyForCostsList.get(0).getValue().getApplyForCostsApplicantType().equals(homeOffice)) {
+        if (applyForCostsList.getFirst().getValue().getApplyForCostsApplicantType().equals(homeOffice)) {
             assertTrue(applyForCostsRespondentPersonalisation.getRecipientsList(asylumCase).contains(legalRepEmailAddress));
         } else {
             assertTrue(applyForCostsRespondentPersonalisation.getRecipientsList(asylumCase).contains(homeOfficeEmailAddress));
@@ -150,19 +147,17 @@ class ApplyForCostsRespondentPersonalisationTest {
             .containsEntry("appellantGivenNames", appellantGivenNames)
             .containsEntry("appellantFamilyName", appellantFamilyName)
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertThat(personalisation)
             .containsEntry("appliedCostsType", "Wasted")
             .containsEntry("creationDate", "24 Nov 2023");
 
-        if (applyForCostsList.get(0).getValue().getApplyForCostsApplicantType().equals("Home office")) {
+        if (applyForCostsList.getFirst().getValue().getApplyForCostsApplicantType().equals("Home office")) {
             assertThat(personalisation)
                 .containsEntry("recipient", "Your")
                 .containsEntry("recipientReferenceNumber", legalRepRefNumber);
         } else {
             assertThat(personalisation)
-                .containsEntry("recipient", applyForCostsList.get(0).getValue().getApplyForCostsRespondentRole())
+                .containsEntry("recipient", applyForCostsList.getFirst().getValue().getApplyForCostsRespondentRole())
                 .containsEntry("recipientReferenceNumber", homeOfficeReferenceNumber);
         }
     }

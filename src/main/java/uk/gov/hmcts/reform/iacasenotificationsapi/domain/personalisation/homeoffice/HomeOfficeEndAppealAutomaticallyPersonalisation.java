@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
@@ -32,7 +32,7 @@ public class HomeOfficeEndAppealAutomaticallyPersonalisation implements EmailNot
     private String nonAdaPrefix;
 
     public HomeOfficeEndAppealAutomaticallyPersonalisation(
-        @Value("${endAppealHomeOfficeEmailAddress}") String endAppealHomeOfficeEmailAddress,
+        @Value("${apcPrivateHomeOfficeEmailAddress}") String endAppealHomeOfficeEmailAddress,
         @NotNull(message = "appealEndedAutomaticallyHomeOfficeTemplateId cannot be null") @Value("${govnotify.template.endAppealAutomatically.homeOffice.email}") String endAppealAutomaticallyHomeOfficeTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         CustomerServicesProvider customerServicesProvider
@@ -64,7 +64,7 @@ public class HomeOfficeEndAppealAutomaticallyPersonalisation implements EmailNot
 
         return ImmutableMap
             .<String, String>builder()
-            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
             .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))

@@ -44,6 +44,7 @@ public class AsylumCaseUtils {
     private static final String INCORRECT_APPLICANT_TYPE_ERROR_MESSAGE = "Correct applicant type is not present";
     private static final String INCORRECT_RESPONDENT_TYPE_ERROR_MESSAGE = "Correct respondent type is not present";
     public static final String D_MMM_YYYY = "d MMM yyyy";
+    public static final String WITHDRAWN = "Withdrawn";
 
     private AsylumCaseUtils() {
         // prevent public constructor for Sonar
@@ -201,7 +202,7 @@ public class AsylumCaseUtils {
 
         if (applyForCosts.isPresent()) {
             List<IdValue<ApplyForCosts>> applyForCostsList = applyForCosts.get();
-            return applyForCostsList.get(0).getValue();
+            return applyForCostsList.getFirst().getValue();
         } else {
             throw new IllegalStateException("Applies for costs are not present");
         }

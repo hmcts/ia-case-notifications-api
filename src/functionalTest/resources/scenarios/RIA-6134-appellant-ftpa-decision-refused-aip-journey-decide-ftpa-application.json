@@ -5,7 +5,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
-      "id": 61344,
+      "id": 1507,
       "eventId": "decideFtpaApplication",
       "state": "ftpaSubmitted",
       "caseData": {
@@ -27,8 +27,7 @@
           "currentCaseStateVisibleToJudge": "ftpaSubmitted",
           "ftpaAppellantRjDecisionOutcomeType": "refused",
           "ftpaApplicantType": "appellant",
-          "ariaListingReference": "987654321",
-          "notificationsSent": []
+          "ariaListingReference": "987654321"
         }
       }
     }
@@ -41,15 +40,15 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "61344_FTPA_APPLICATION_DECISION_HOME_OFFICE_APPELLANT",
+            "id": "1507_FTPA_APPLICATION_DECISION_HOME_OFFICE_APPELLANT",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "61344_FTPA_APPLICATION_DECISION_TO_APPELLANT_EMAIL",
+            "id": "1507_FTPA_APPLICATION_DECISION_TO_APPELLANT_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "61344_FTPA_APPLICATION_DECISION_TO_APPELLANT_SMS",
+            "id": "1507_FTPA_APPLICATION_DECISION_TO_APPELLANT_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -57,7 +56,7 @@
     },
     "notifications": [
       {
-        "reference": "61344_FTPA_APPLICATION_DECISION_HOME_OFFICE_APPELLANT",
+        "reference": "1507_FTPA_APPLICATION_DECISION_HOME_OFFICE_APPELLANT",
         "recipient": "{$upperTribunalNoticesEmailAddress}",
         "subject": "Immigration and Asylum appeal: application to appeal to Upper Tribunal refused",
         "body": [
@@ -68,7 +67,7 @@
         ]
       },
       {
-        "reference": "61344_FTPA_APPLICATION_DECISION_TO_APPELLANT_EMAIL",
+        "reference": "1507_FTPA_APPLICATION_DECISION_TO_APPELLANT_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
         "subject": "Immigration and Asylum appeal: Your application was refused",
         "body": [
@@ -79,7 +78,7 @@
         ]
       },
       {
-        "reference": "61344_FTPA_APPLICATION_DECISION_TO_APPELLANT_SMS",
+        "reference": "1507_FTPA_APPLICATION_DECISION_TO_APPELLANT_SMS",
         "recipient": "{$TEST_CITIZEN_MOBILE}",
         "subject": "",
         "body": [

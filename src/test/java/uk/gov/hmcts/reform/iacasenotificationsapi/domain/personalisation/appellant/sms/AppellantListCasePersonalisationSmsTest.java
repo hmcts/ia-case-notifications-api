@@ -77,9 +77,6 @@ public class AppellantListCasePersonalisationSmsTest {
         when(dateTimeExtractor.extractHearingDate(hearingDateTime)).thenReturn(hearingDate);
         when(dateTimeExtractor.extractHearingTime(hearingDateTime)).thenReturn(hearingTime);
 
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
-
         appellantListCasePersonalisationSms = new AppellantListCasePersonalisationSms(
             templateId,
             legallyReppedTemplateId,
@@ -154,8 +151,6 @@ public class AppellantListCasePersonalisationSmsTest {
             .containsEntry("hearingTime", hearingTime)
             .containsEntry("hearingCentreAddress", hearingCentreAddress)
             .containsEntry("tribunalCentre", hearingCentre.getValue());
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @Test
@@ -171,8 +166,6 @@ public class AppellantListCasePersonalisationSmsTest {
             .containsEntry("hearingTime", hearingTime)
             .containsEntry("hearingCentreAddress", hearingCentreAddress)
             .containsEntry("tribunalCentre", hearingCentre.getValue());
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @Test
@@ -189,8 +182,6 @@ public class AppellantListCasePersonalisationSmsTest {
             .containsEntry("hearingTime", hearingTime)
             .containsEntry("hearingCentreAddress", hearingCentreAddress)
             .containsEntry("tribunalCentre", hearingCentre.getValue());
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 
 

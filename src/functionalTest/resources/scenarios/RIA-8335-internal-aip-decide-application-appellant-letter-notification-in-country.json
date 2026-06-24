@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Judge",
     "input": {
-      "id": 83351,
+      "id": 1178,
       "eventId": "decideAnApplication",
       "state": "appealSubmitted",
       "caseData": {
@@ -85,11 +85,11 @@
         },
         "notificationsSent": [
           {
-            "id": "83351_DECIDE_AN_APPLICATION_HOME_OFFICE",
+            "id": "1178_DECIDE_AN_APPLICATION_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "83351_INTERNAL_DECIDE_APPLICATION_LETTER",
+            "id": "1178_INTERNAL_DECIDE_APPLICATION_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

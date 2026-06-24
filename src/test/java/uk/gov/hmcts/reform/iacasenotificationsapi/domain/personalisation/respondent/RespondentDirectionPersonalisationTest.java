@@ -66,9 +66,6 @@ public class RespondentDirectionPersonalisationTest {
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeRefNumber));
 
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
-
         respondentDirectionPersonalisation = new RespondentDirectionPersonalisation(
             templateId,
             detentionAipTemplateId,
@@ -153,8 +150,6 @@ public class RespondentDirectionPersonalisationTest {
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
             .containsEntry("explanation", directionExplanation)
             .containsEntry("dueDate", expectedDirectionDueDate);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
@@ -181,8 +176,6 @@ public class RespondentDirectionPersonalisationTest {
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
             .containsEntry("explanation", directionExplanation)
             .containsEntry("dueDate", expectedDirectionDueDate);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));

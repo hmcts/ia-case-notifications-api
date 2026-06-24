@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_DATE_OF_BIRTH;
@@ -129,7 +130,7 @@ class AppellantNotificationsTurnedOnPersonalisationEmailTest {
 
     @Test
     public void should_return_personalisation_when_all_information_given() {
-        when(customerServicesProvider.getCustomerServicesPersonalisation()).thenReturn(getPersonalisationMapWithGivenValues());
+        when(customerServicesProvider.getCustomerServicesPersonalisation(any(AsylumCase.class))).thenReturn(getPersonalisationMapWithGivenValues());
 
         Map<String, String> personalisation =
             appellantNotificationsTurnedOnPersonalisationEmail.getPersonalisation(asylumCase);
