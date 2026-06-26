@@ -2781,6 +2781,7 @@ appellantDaysToWait:
   afterCmaRequirements: 14
   afterHearingRequirementsSubmitted: 14
   afterRemissionDecision: 14
+  afterRemissionDecisionDetained: 28
   afterSubmittingAppealRemission: 14
   afterNotificationSent: 14
   afterPaymentReminder: 7
