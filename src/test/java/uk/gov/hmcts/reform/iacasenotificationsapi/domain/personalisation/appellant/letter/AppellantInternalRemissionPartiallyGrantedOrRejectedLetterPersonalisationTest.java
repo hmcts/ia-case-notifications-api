@@ -153,6 +153,7 @@ class AppellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisationT
 
         assertEquals(detainedDueDate, personalisation.get("payByDeadline"));
     }
+
     @Test
     void should_return_legalRep_address_in_correct_format() {
         legalRepInCountryDataSetup();

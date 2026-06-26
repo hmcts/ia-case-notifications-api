@@ -8,7 +8,7 @@ properties([
         ])
 ])
 
-@Library("Infrastructure@2.0.0")
+@Library("Infrastructure")
 
 import uk.gov.hmcts.contino.AppPipelineDsl
 
