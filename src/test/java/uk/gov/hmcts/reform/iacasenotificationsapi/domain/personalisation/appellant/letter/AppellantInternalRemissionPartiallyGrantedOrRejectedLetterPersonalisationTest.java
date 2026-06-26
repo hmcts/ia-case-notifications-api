@@ -58,6 +58,7 @@ class AppellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisationT
     private final String oocAddressLine3 = "28003";
     private final NationalityFieldValue oocAddressCountry = mock(NationalityFieldValue.class);
     private final int daysAfterRemissionDecision = 14;
+    private final int daysAfterRemissionDecisionDetained = 28;
     private final String amountLeftToPayInGbp = "40.00";
     private final String originalFeeAmountInGbp = "180.00";
     private final String onlineCaseReferenceNumber = "1234 5678 9101 1121";
@@ -110,6 +111,7 @@ class AppellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisationT
         appellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisation = new AppellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisation(
             letterTemplateId,
             daysAfterRemissionDecision,
+            daysAfterRemissionDecisionDetained,
             customerServicesProvider,
             systemDateProvider
         );
@@ -138,6 +140,19 @@ class AppellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisationT
                 .contains("someAppellantGivenNamessomeAppellantFamil_CalleToledo32_Madrid_28003_Spain"));
     }
 
+    @Test
+    void should_return_28_days_due_date_when_appellant_is_detained() {
+        legalRepInCountryDataSetup();
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        final String detainedDueDate = LocalDate.now().plusDays(daysAfterRemissionDecisionDetained)
+            .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+        when(systemDateProvider.dueDate(daysAfterRemissionDecisionDetained)).thenReturn(detainedDueDate);
+
+        Map<String, String> personalisation =
+                appellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisation.getPersonalisation(callback);
+
+        assertEquals(detainedDueDate, personalisation.get("payByDeadline"));
+    }
     @Test
     void should_return_legalRep_address_in_correct_format() {
         legalRepInCountryDataSetup();
