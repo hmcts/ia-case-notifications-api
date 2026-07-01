@@ -79,9 +79,11 @@ class AppellantInternalCaseSubmittedOnTimeWithFeePersonalisationTest {
 
 
         int daysAfterSubmitAppeal = 14;
+        int daysAfterSubmitAppealDetained = 28;
         appellantInternalCaseSubmittedOnTimeWithFeePersonalisation = new AppellantInternalCaseSubmittedOnTimeWithFeePersonalisation(
             letterTemplateId,
             daysAfterSubmitAppeal,
+            daysAfterSubmitAppealDetained,
             customerServicesProvider,
             systemDateProvider);
     }
@@ -177,6 +179,18 @@ class AppellantInternalCaseSubmittedOnTimeWithFeePersonalisationTest {
             .containsEntry("address_line_5", postTown)
             .containsEntry("address_line_6", postCode);
         assertEquals(amountLeftToPayInGbp, personalisation.get("feeAmount"));
+    }
+
+    @Test
+    void should_return_28_days_due_date_when_appellant_is_detained() {
+        appellantInCountryDataSetup();
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+
+        Map<String, String> personalisation =
+            appellantInternalCaseSubmittedOnTimeWithFeePersonalisation.getPersonalisation(callback);
+
+        assertThat(personalisation)
+            .containsEntry("fourteenDaysAfterSubmitDate", systemDateProvider.dueDate(28));
     }
 
     @Test
