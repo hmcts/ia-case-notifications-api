@@ -47,7 +47,7 @@ public class HomeOfficeReinstateAppealPersonalisation implements EmailNotificati
             @Value("${govnotify.template.reinstateAppeal.homeOffice.afterListing.email}") String homeOfficeReinstateAppealAfterListingTemplateId,
             @Value("${apcHomeOfficeEmailAddress}") String apcHomeOfficeEmailAddress,
             @Value("${lartHomeOfficeEmailAddress}") String lartHomeOfficeEmailAddress,
-            @Value("${endAppealHomeOfficeEmailAddress}") String endAppealEmailAddresses,
+            @Value("${apcPrivateHomeOfficeEmailAddress}") String endAppealEmailAddresses,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
             CustomerServicesProvider customerServicesProvider,
             AppealService appealService,
