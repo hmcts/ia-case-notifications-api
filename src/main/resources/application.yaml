@@ -2784,12 +2784,14 @@ appellantDaysToWait:
   afterCmaRequirements: 14
   afterHearingRequirementsSubmitted: 14
   afterRemissionDecision: 14
+  afterRemissionDecisionDetained: 28
   afterSubmittingAppealRemission: 14
   afterNotificationSent: 14
   afterPaymentReminder: 7
   letter:
     afterSubmitAppeal: 10
     afterSubmitAppealWithFee: 14
+    afterSubmitAppealWithFeeDetained: 28
     afterManageFeeEvent: 14
     toReinstateAppeal: 14
     afterRespondentApplicationDecided:
