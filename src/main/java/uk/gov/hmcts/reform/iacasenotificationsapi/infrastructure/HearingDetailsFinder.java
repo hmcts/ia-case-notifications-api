@@ -50,7 +50,10 @@ public class HearingDetailsFinder {
     }
 
     public String getCmrHearingCentreAddress(AsylumCase asylumCase) {
-        return asylumCase.read(AsylumCaseDefinition.CMR_HEARING_CENTRE_ADDRESS, String.class).orElse("");
+        DynamicList cmrHearingCentreAddress = asylumCase.read(AsylumCaseDefinition.CMR_HEARING_CENTRE_ADDRESS, DynamicList.class)
+                .orElseThrow(() -> new IllegalStateException("cmrHearingCentreAddress is not present"));
+
+        return cmrHearingCentreAddress.getValue().getLabel();
     }
 
     public String getHearingCentreName(AsylumCase asylumCase) {

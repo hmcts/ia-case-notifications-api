@@ -13,6 +13,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationGen
 
 import java.util.List;
 
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DetentionFacility.IRC;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DetentionFacility.PRISON;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
@@ -49,6 +50,8 @@ public class CmrNotificationHandlerConfiguration {
                             "isRepJourney(callback.getCaseDetails().getCaseData()): {}",
                             isRepJourney(callback.getCaseDetails().getCaseData())
                     );
+                    log.info("case reference: {}", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""));
+                    log.info("callback.getEvent(): {}", callback.getEvent());
                     log.info("!isInternalCase(asylumCase): {}", !isInternalCase(asylumCase));
                     log.info("-----------------------------------------");
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT

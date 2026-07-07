@@ -367,17 +367,19 @@ class HearingDetailsFinderTest {
     @Test
     void should_return_given_cmr_hearing_centre_address() {
         String cmrHearingCentreAddress = "some cmr hearing centre address";
-        when(asylumCase.read(CMR_HEARING_CENTRE_ADDRESS, String.class))
-            .thenReturn(Optional.of(cmrHearingCentreAddress));
+        when(asylumCase.read(CMR_HEARING_CENTRE_ADDRESS, DynamicList.class))
+            .thenReturn(Optional.of(new DynamicList(cmrHearingCentreAddress)));
 
         assertEquals(cmrHearingCentreAddress, hearingDetailsFinder.getCmrHearingCentreAddress(asylumCase));
     }
 
     @Test
-    void should_return_empty_string_when_cmr_hearing_centre_address_is_empty() {
-        when(asylumCase.read(CMR_HEARING_CENTRE_ADDRESS, String.class)).thenReturn(Optional.empty());
+    void should_throw_exception_when_cmr_hearing_centre_address_is_empty() {
+        when(asylumCase.read(CMR_HEARING_CENTRE_ADDRESS, DynamicList.class)).thenReturn(Optional.empty());
 
-        assertEquals("", hearingDetailsFinder.getCmrHearingCentreAddress(asylumCase));
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> hearingDetailsFinder.getCmrHearingCentreAddress(asylumCase));
+        assertEquals("cmrHearingCentreAddress is not present", exception.getMessage());
     }
 
     @Test
@@ -408,8 +410,8 @@ class HearingDetailsFinderTest {
     void getCmrHearingCentreLocation_should_return_address_when_cmr_is_not_remote() {
         String cmrHearingCentreAddress = "some cmr hearing centre address";
         when(asylumCase.read(CMR_IS_REMOTE_HEARING, YesOrNo.class)).thenReturn(Optional.of(NO));
-        when(asylumCase.read(CMR_HEARING_CENTRE_ADDRESS, String.class))
-            .thenReturn(Optional.of(cmrHearingCentreAddress));
+        when(asylumCase.read(CMR_HEARING_CENTRE_ADDRESS, DynamicList.class))
+            .thenReturn(Optional.of(new DynamicList(cmrHearingCentreAddress)));
 
         assertEquals(cmrHearingCentreAddress, hearingDetailsFinder.getCmrHearingCentreLocation(asylumCase));
     }
@@ -418,8 +420,8 @@ class HearingDetailsFinderTest {
     void getCmrHearingCentreLocation_should_return_address_when_cmr_remote_field_is_absent() {
         String cmrHearingCentreAddress = "some cmr hearing centre address";
         when(asylumCase.read(CMR_IS_REMOTE_HEARING, YesOrNo.class)).thenReturn(Optional.empty());
-        when(asylumCase.read(CMR_HEARING_CENTRE_ADDRESS, String.class))
-            .thenReturn(Optional.of(cmrHearingCentreAddress));
+        when(asylumCase.read(CMR_HEARING_CENTRE_ADDRESS, DynamicList.class))
+            .thenReturn(Optional.of(new DynamicList(cmrHearingCentreAddress)));
 
         assertEquals(cmrHearingCentreAddress, hearingDetailsFinder.getCmrHearingCentreLocation(asylumCase));
     }
