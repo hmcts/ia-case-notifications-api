@@ -4236,6 +4236,19 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> generatePinInPostNotificationHandler(
+        @Qualifier("generatePinInPostNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) ->
+                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == GENERATE_PIN_IN_POST,
+            notificationGenerators
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> requestFeeRemissionNotificationHandler(
         @Qualifier("requestFeeRemissionNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
@@ -7229,8 +7242,8 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.SEND_DIRECTION
-                    && isInternalNonStdDirectionWithParty(asylumCase, Parties.APPELLANT, directionFinder)
-                    && isInternalCase(asylumCase)
+                    && (isInternalNonStdDirectionWithParty(asylumCase, Parties.APPELLANT, directionFinder) ||
+                        isInternalNonStdDirectionWithParty(asylumCase, Parties.LEGAL_REPRESENTATIVE, directionFinder))
                     && (!isAppellantInDetention(asylumCase)
                     || (hasBeenSubmittedByAppellantInternalCase(asylumCase)
                     && isDetainedInFacilityType(asylumCase, OTHER))

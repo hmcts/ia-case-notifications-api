@@ -1558,6 +1558,12 @@ govnotify:
         sms: 2caf61de-d839-4d78-9f4d-c8b7183ea0c1
     revokeCitizenAccess:
       email: 8ea82724-5ddf-4f2d-9577-66bc565747e7
+    generatePinInPost:
+      appellant:
+        email: 698ec21d-a160-4b2d-a028-7fbb6fb91565
+        sms: 8469e394-ce1e-4352-b6cc-a1c1658aab73
+      hearingCentre:
+        email: 6c2d530d-c909-4792-abfd-01ae3426c1c2
 
   bail:
     key: ${IA_BAIL_GOV_NOTIFY_KEY}
@@ -2573,8 +2579,10 @@ security:
       - "removeStatutoryTimeframe24Weeks"
       - "completeCaseReview"
       - "revokeCitizenAccess"
+      - "generatePinInPost"
     caseworker-ia-internal:
       - "revokeCitizenAccess"
+      - "generatePinInPost"
     caseworker-ia-homeofficebail:
       - "startApplication"
       - "editBailApplication"
@@ -2775,12 +2783,14 @@ appellantDaysToWait:
   afterCmaRequirements: 14
   afterHearingRequirementsSubmitted: 14
   afterRemissionDecision: 14
+  afterRemissionDecisionDetained: 28
   afterSubmittingAppealRemission: 14
   afterNotificationSent: 14
   afterPaymentReminder: 7
   letter:
     afterSubmitAppeal: 10
     afterSubmitAppealWithFee: 14
+    afterSubmitAppealWithFeeDetained: 28
     afterManageFeeEvent: 14
     toReinstateAppeal: 14
     afterRespondentApplicationDecided:

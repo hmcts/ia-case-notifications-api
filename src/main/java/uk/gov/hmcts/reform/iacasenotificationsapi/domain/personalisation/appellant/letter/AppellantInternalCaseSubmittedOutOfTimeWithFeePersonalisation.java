@@ -23,10 +23,13 @@ public class AppellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation imple
     private final CustomerServicesProvider customerServicesProvider;
     private final SystemDateProvider systemDateProvider;
     private final int daysAfterSubmitAppeal;
+    private final int daysAfterSubmitAppealDetained;
+
 
     public AppellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation(
         @Value("${govnotify.template.appealSubmitted.appellant.letter.outOfTime.withFee}") String appellantInternalCaseSubmitAppealWithFeeoutOfTimeLetterTemplateId,
         @Value("${appellantDaysToWait.letter.afterSubmitAppealWithFee}") int daysAfterSubmitAppeal,
+        @Value("${appellantDaysToWait.letter.afterSubmitAppealWithFeeDetained}") int daysAfterSubmitAppealDetained,
         CustomerServicesProvider customerServicesProvider,
         SystemDateProvider systemDateProvider
     ) {
@@ -34,6 +37,9 @@ public class AppellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation imple
         this.customerServicesProvider = customerServicesProvider;
         this.systemDateProvider = systemDateProvider;
         this.daysAfterSubmitAppeal = daysAfterSubmitAppeal;
+        this.daysAfterSubmitAppealDetained = daysAfterSubmitAppealDetained;
+
+
     }
 
     @Override
@@ -61,7 +67,9 @@ public class AppellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation imple
                 .getCaseDetails()
                 .getCaseData();
 
-        final String dueDate = systemDateProvider.dueDate(daysAfterSubmitAppeal);
+        final String dueDate = isAppellantInDetention(asylumCase)
+                ? systemDateProvider.dueDate(daysAfterSubmitAppealDetained)
+                : systemDateProvider.dueDate(daysAfterSubmitAppeal);
 
         ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap
             .<String, String>builder()
