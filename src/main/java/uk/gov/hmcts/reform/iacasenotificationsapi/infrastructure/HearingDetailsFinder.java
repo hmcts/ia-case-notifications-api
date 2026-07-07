@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure;
 
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CMR_IS_REMOTE_HEARING;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_VIRTUAL_HEARING;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.IS_BAILS_LOCATION_REFERENCE_DATA_ENABLED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.IS_REMOTE_HEARING;
@@ -48,6 +49,10 @@ public class HearingDetailsFinder {
                 .orElseThrow(() -> new IllegalStateException("hearingCentreAddress is not present"));
     }
 
+    public String getCmrHearingCentreAddress(AsylumCase asylumCase) {
+        return asylumCase.read(AsylumCaseDefinition.CMR_HEARING_CENTRE_ADDRESS, String.class).orElse("");
+    }
+
     public String getHearingCentreName(AsylumCase asylumCase) {
         if (isCaseUsingLocationRefData(asylumCase)) {
             return getRefDataLocationAddress(asylumCase);
@@ -80,6 +85,12 @@ public class HearingDetailsFinder {
         return asylumCase
                 .read(AsylumCaseDefinition.LIST_CASE_HEARING_DATE, String.class)
                 .orElseThrow(() -> new IllegalStateException("listCaseHearingDate is not present"));
+    }
+
+    public String getCmrHearingDateTime(AsylumCase asylumCase) {
+        return asylumCase
+                .read(AsylumCaseDefinition.CMR_HEARING_DATE, String.class)
+                .orElseThrow(() -> new IllegalStateException("cmrListCaseHearingDate is not present"));
     }
 
     public String getBailHearingDateTime(BailCase bailCase) {
@@ -122,6 +133,14 @@ public class HearingDetailsFinder {
         }
     }
 
+    public String getCmrHearingCentreLocation(AsylumCase asylumCase) {
+        if (isCmrRemoteHearing(asylumCase)) {
+            return "Remote hearing";
+        } else {
+            return getCmrHearingCentreAddress(asylumCase);
+        }
+    }
+
     private String getRefDataLocationAddress(AsylumCase asylumCase) {
         boolean isVirtualHearing = isVirtualHearing(asylumCase);
         YesOrNo isRemoteHearing = asylumCase.read(AsylumCaseDefinition.IS_REMOTE_HEARING, YesOrNo.class)
@@ -156,6 +175,12 @@ public class HearingDetailsFinder {
 
     private static Boolean isVirtualHearing(AsylumCase asylumCase) {
         return asylumCase.read(IS_VIRTUAL_HEARING, YesOrNo.class)
+                .map(virtual -> virtual == YesOrNo.YES)
+                .orElse(false);
+    }
+
+    private static Boolean isCmrRemoteHearing(AsylumCase asylumCase) {
+        return asylumCase.read(CMR_IS_REMOTE_HEARING, YesOrNo.class)
                 .map(virtual -> virtual == YesOrNo.YES)
                 .orElse(false);
     }
