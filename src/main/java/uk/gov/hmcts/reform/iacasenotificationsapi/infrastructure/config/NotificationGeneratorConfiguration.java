@@ -7408,4 +7408,19 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
+
+    @Bean("detainedLegalRepInPersonCmrListingNotificationGenerator")
+    public List<NotificationGenerator> detainedLegalRepInPersonCmrListingNotificationGenerator(
+            LegalRepresentativeInPersonCmrListCasePersonalisation legalRepresentativeInPersonCmrListCasePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(legalRepresentativeInPersonCmrListCasePersonalisation),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
 }

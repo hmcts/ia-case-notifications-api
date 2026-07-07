@@ -17,7 +17,7 @@ import static java.util.Collections.singletonList;
 @Slf4j
 @Configuration
 public class CmrNotificationGeneratorConfiguration {
-    @Bean("detainedLegalRepInPersonCmrListingNotificationGenerator")
+    @Bean("detainedLegalRepInPersonCmrListingNotificationGenerator1")
     public List<NotificationGenerator> detainedLegalRepInPersonCmrListingNotificationGenerator(
         LegalRepresentativeInPersonCmrListCasePersonalisation legalRepresentativeInPersonCmrListCasePersonalisation,
         GovNotifyNotificationSender notificationSender,
