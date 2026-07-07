@@ -28,6 +28,29 @@ public class CmrNotificationHandlerConfiguration {
         return new NotificationHandler(
                 (callbackStage, callback) -> {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    log.info("-----------------------------------------");
+                    log.info(
+                            "callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT: {}",
+                            callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    );
+                    log.info(
+                            "Event.CMR_LISTING.equals(callback.getEvent()): {}",
+                            Event.CMR_LISTING.equals(callback.getEvent())
+                    );
+                    log.info(
+                            "isCmrHearingChannel(asylumCase, \"INTER\"): {}",
+                            isCmrHearingChannel(asylumCase, "INTER")
+                    );
+                    log.info(
+                            "isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON): {}",
+                            isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
+                    );
+                    log.info(
+                            "isRepJourney(callback.getCaseDetails().getCaseData()): {}",
+                            isRepJourney(callback.getCaseDetails().getCaseData())
+                    );
+                    log.info("!isInternalCase(asylumCase): {}", !isInternalCase(asylumCase));
+                    log.info("-----------------------------------------");
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && Event.CMR_LISTING.equals(callback.getEvent())
                             && isCmrHearingChannel(asylumCase, "INTER")
