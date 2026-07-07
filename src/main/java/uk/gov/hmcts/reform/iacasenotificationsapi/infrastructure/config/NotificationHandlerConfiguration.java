@@ -7260,8 +7260,8 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.SEND_DIRECTION
-                    && isInternalNonStdDirectionWithParty(asylumCase, Parties.APPELLANT, directionFinder)
-                    && isInternalCase(asylumCase)
+                    && (isInternalNonStdDirectionWithParty(asylumCase, Parties.APPELLANT, directionFinder) ||
+                        isInternalNonStdDirectionWithParty(asylumCase, Parties.LEGAL_REPRESENTATIVE, directionFinder))
                     && (!isAppellantInDetention(asylumCase)
                     || (hasBeenSubmittedByAppellantInternalCase(asylumCase)
                     && isDetainedInFacilityType(asylumCase, OTHER))
