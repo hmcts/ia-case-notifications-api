@@ -68,7 +68,7 @@ public class MakeAnApplication {
 
     public List<IdValue<Document>> getEvidence() {
         requireNonNull(evidence);
-        return evidence;
+        return List.copyOf(evidence);
     }
 
     public String getApplicant() {

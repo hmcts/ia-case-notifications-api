@@ -131,7 +131,7 @@ public class PrisonEmailMappingService {
      * @return Set of prison names that have email mappings
      */
     public Set<String> getSupportedPrisons() {
-        return prisonEmailCache.keySet();
+        return Set.copyOf(prisonEmailCache.keySet());
     }
 
 } 
