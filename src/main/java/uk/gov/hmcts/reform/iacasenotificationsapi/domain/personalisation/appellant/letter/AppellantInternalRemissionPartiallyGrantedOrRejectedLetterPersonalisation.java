@@ -24,17 +24,20 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvi
 public class AppellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisation implements LetterNotificationPersonalisation {
     private final String appellantInternalRemissionDecisionLetterTemplateId;
     private final int daysAfterRemissionDecision;
+    private final int daysAfterRemissionDecisionDetained;
     private final CustomerServicesProvider customerServicesProvider;
     private final SystemDateProvider systemDateProvider;
 
     public AppellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonalisation(
             @Value("${govnotify.template.remissionDecision.appellant.partiallyApproved.letter}") String appellantInternalRemissionDecisionLetterTemplateId,
             @Value("${appellantDaysToWait.afterRemissionDecision}") int daysAfterRemissionDecision,
+            @Value("${appellantDaysToWait.afterRemissionDecisionDetained}") int daysAfterRemissionDecisionDetained,
             CustomerServicesProvider customerServicesProvider,
             SystemDateProvider systemDateProvider
     ) {
         this.appellantInternalRemissionDecisionLetterTemplateId = appellantInternalRemissionDecisionLetterTemplateId;
         this.daysAfterRemissionDecision = daysAfterRemissionDecision;
+        this.daysAfterRemissionDecisionDetained = daysAfterRemissionDecisionDetained;
         this.customerServicesProvider = customerServicesProvider;
         this.systemDateProvider = systemDateProvider;
     }
@@ -66,13 +69,15 @@ public class AppellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonali
 
         List<String> address =  getAppellantOrLegalRepAddressLetterPersonalisation(asylumCase);
 
-        final String dueDate = systemDateProvider.dueDate(daysAfterRemissionDecision);
+        final String dueDate = isAppellantInDetention(asylumCase)
+                ? systemDateProvider.dueDate(daysAfterRemissionDecisionDetained)
+                : systemDateProvider.dueDate(daysAfterRemissionDecision);
 
         String feeAmount = retrieveFeeAmount(asylumCase);
 
         ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap
             .<String, String>builder()
-            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))

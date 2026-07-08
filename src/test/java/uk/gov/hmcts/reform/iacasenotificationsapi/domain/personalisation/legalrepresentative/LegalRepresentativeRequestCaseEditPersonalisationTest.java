@@ -116,9 +116,6 @@ public class LegalRepresentativeRequestCaseEditPersonalisationTest {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class))
             .thenReturn(getExpectedValue(LEGAL_REP_EMAIL_ADDRESS));
 
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(CUSTOMER_SERVICES_PROVIDER_PHONE);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(CUSTOMER_SERVICES_PROVIDER_EMAIL);
-
 
         Map<String, String> actualPersonalisation = personalisation.getPersonalisation(asylumCase);
 
@@ -135,8 +132,6 @@ public class LegalRepresentativeRequestCaseEditPersonalisationTest {
             .build();
 
         assertThat(actualPersonalisation).containsAllEntriesOf(expectedPersonalisation);
-        assertEquals(CUSTOMER_SERVICES_PROVIDER_PHONE, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(CUSTOMER_SERVICES_PROVIDER_EMAIL, customerServicesProvider.getCustomerServicesEmail());
     }
 
     @NotNull

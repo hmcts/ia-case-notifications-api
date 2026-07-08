@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.*;
 
 @Service
@@ -59,11 +58,13 @@ public class HomeOfficeListCasePersonalisation implements EmailNotificationPerso
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-
-        return AsylumCaseUtils.isAcceleratedDetainedAppeal(asylumCase)
-            ? homeOfficeCaseListedAdaTemplateId
-            : asylumCase.read(IS_INTEGRATED, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES
-            ? listAssistHearingHomeOfficeCaseListedTemplateId : homeOfficeCaseListedNonAdaTemplateId;
+        if (isAcceleratedDetainedAppeal(asylumCase)) {
+            return homeOfficeCaseListedAdaTemplateId;
+        }
+        if (asylumCase.read(IS_INTEGRATED, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES) {
+            return listAssistHearingHomeOfficeCaseListedTemplateId;
+        }
+        return homeOfficeCaseListedNonAdaTemplateId;
     }
 
     @Override
@@ -82,7 +83,7 @@ public class HomeOfficeListCasePersonalisation implements EmailNotificationPerso
 
         final Builder<String, String> listCaseFields = ImmutableMap
             .<String, String>builder()
-            .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .put("ariaListingReference", asylumCase.read(ARIA_LISTING_REFERENCE, String.class).orElse(""))
             .put("homeOfficeReferenceNumber", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
@@ -103,7 +104,7 @@ public class HomeOfficeListCasePersonalisation implements EmailNotificationPerso
                         .format(DateTimeFormatter.ofPattern("dd MMMM yyyy")));
         }
 
-        PersonalisationProvider.buildHearingRequirementsFields(asylumCase, listCaseFields);
+        listCaseFields.putAll(PersonalisationProvider.getHearingRequirementsFields(asylumCase));
 
         return listCaseFields.build();
     }

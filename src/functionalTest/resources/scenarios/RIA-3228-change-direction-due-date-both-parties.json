@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 3228,
+      "id": 1804,
       "eventId": "changeDirectionDueDate",
       "state": "submitHearingRequirements",
       "caseData": {
@@ -34,11 +34,11 @@
         "directionEditParties": "both",
         "notificationsSent": [
           {
-            "id": "3228_LEGAL_REP_CHANGE_DIRECTION_DUE_DATE",
+            "id": "1804_LEGAL_REP_CHANGE_DIRECTION_DUE_DATE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "3228_RESPONDENT_CHANGE_DIRECTION_DUE_DATE",
+            "id": "1804_RESPONDENT_CHANGE_DIRECTION_DUE_DATE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ],
@@ -47,7 +47,7 @@
     },
     "notifications": [
       {
-        "reference": "3228_LEGAL_REP_CHANGE_DIRECTION_DUE_DATE",
+        "reference": "1804_LEGAL_REP_CHANGE_DIRECTION_DUE_DATE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: change to direction due date",
         "body": [
@@ -62,7 +62,7 @@
         ]
       },
       {
-        "reference": "3228_RESPONDENT_CHANGE_DIRECTION_DUE_DATE",
+        "reference": "1804_RESPONDENT_CHANGE_DIRECTION_DUE_DATE",
         "recipient": "{$homeOfficeEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: change to direction due date",
         "body": [

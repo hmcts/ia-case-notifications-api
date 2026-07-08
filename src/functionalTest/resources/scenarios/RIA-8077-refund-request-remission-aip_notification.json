@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "Citizen",
     "input": {
-      "id": 8077,
+      "id": 1245,
       "eventId": "requestFeeRemission",
       "state": "appealSubmitted",
       "caseData": {

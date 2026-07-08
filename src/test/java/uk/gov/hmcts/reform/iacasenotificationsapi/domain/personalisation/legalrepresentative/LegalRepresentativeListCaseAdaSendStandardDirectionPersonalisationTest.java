@@ -113,9 +113,6 @@ public class LegalRepresentativeListCaseAdaSendStandardDirectionPersonalisationT
         when(asylumCase.read(SUBMIT_HEARING_REQUIREMENTS_AVAILABLE)).thenReturn(Optional.of(YesOrNo.NO));
 
         when(hearingDetailsFinder.getHearingCentreAddress(asylumCase)).thenReturn(hearingCentreAddress);
-
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
         when(hearingDetailsFinder.getHearingCentreLocation(asylumCase)).thenReturn(hearingCentreAddress);
 
         legalRepresentativeListCaseAdaSendStandardDirectionPersonalisation = new LegalRepresentativeListCaseAdaSendStandardDirectionPersonalisation(
@@ -192,8 +189,6 @@ public class LegalRepresentativeListCaseAdaSendStandardDirectionPersonalisationT
             .containsEntry("hearingRequirementOther", requirementsOther)
             .containsEntry("hearingCentreAddress", hearingCentreAddress)
             .containsEntry("hearingCentreAddress", hearingCentreAddress);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
         String expectedNotificationBody = "direction body\n\nYou must complete this direction by: 30 December 2022";
         assertEquals(expectedNotificationBody, personalisation.get("explanation"));
     }
@@ -243,7 +238,5 @@ public class LegalRepresentativeListCaseAdaSendStandardDirectionPersonalisationT
         assertThat(personalisation)
             .containsEntry("hearingRequirementOther", "No other adjustments are being made")
             .containsEntry("hearingCentreAddress", hearingCentreAddress);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 }

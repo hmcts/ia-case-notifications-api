@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 1332,
+      "id": 2078,
       "eventId": "recordRemissionDecision",
       "state": "pendingPayment",
       "caseData": {
@@ -70,7 +70,7 @@
         },
         "notificationsSent": [
           {
-            "id": "1332_INTERNAL_REMISSION_GRANTED_OOT_APPELLANT_LETTER",
+            "id": "2078_INTERNAL_REMISSION_GRANTED_OOT_APPELLANT_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

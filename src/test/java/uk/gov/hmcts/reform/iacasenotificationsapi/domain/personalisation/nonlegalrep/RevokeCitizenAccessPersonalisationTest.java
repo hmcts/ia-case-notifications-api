@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -121,7 +122,7 @@ public class RevokeCitizenAccessPersonalisationTest {
             "customerServicesTelephone", customerServicesTelephone,
             "customerServicesEmail", customerServicesEmail
         );
-        when(customerServicesProvider.getCustomerServicesPersonalisation()).thenReturn(customerServicesPersonalisation);
+        when(customerServicesProvider.getCustomerServicesPersonalisation(any(AsylumCase.class))).thenReturn(customerServicesPersonalisation);
 
         Map<String, String> personalisation =
             revokeCitizenAccessPersonalisation.getPersonalisation(callback);
@@ -133,7 +134,7 @@ public class RevokeCitizenAccessPersonalisationTest {
         assertEquals(personalisation.get("appellantFamilyName"), appellantFamilyName);
         assertEquals(personalisation.get("customerServicesTelephone"), customerServicesTelephone);
         assertEquals(personalisation.get("customerServicesEmail"), customerServicesEmail);
-        verify(asylumCase, times(1)).write(REVOKE_ACCESS_DL, null);
+        verify(asylumCase, times(1)).clear(REVOKE_ACCESS_DL);
     }
 
 

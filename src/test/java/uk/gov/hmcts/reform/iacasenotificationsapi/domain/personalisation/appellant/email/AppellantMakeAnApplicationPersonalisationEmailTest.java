@@ -192,9 +192,8 @@ public class AppellantMakeAnApplicationPersonalisationEmailTest {
         initializePrefixes(appellantMakeAnApplicationPersonalisationEmail);
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
 
-        final String dueDate =
-            LocalDate.now().plusDays(28)
-                .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+        LocalDate.now().plusDays(28)
+            .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());

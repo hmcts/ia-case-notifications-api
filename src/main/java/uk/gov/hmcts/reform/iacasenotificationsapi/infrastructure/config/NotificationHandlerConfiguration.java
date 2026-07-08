@@ -1925,7 +1925,7 @@ public class NotificationHandlerConfiguration {
             .map(IdValue::getValue)
             .collect(Collectors.toList())).orElse(Collections.emptyList());
 
-        return caseBundles.isEmpty() ? "" : caseBundles.get(0).getStitchStatus().orElse("");
+        return caseBundles.isEmpty() ? "" : caseBundles.getFirst().getStitchStatus().orElse("");
     }
 
     @Bean
@@ -4233,6 +4233,19 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> generatePinInPostNotificationHandler(
+        @Qualifier("generatePinInPostNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) ->
+                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == GENERATE_PIN_IN_POST,
+            notificationGenerators
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> requestFeeRemissionNotificationHandler(
         @Qualifier("requestFeeRemissionNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
@@ -5639,6 +5652,66 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> stf24WeeksCompleteCaseReviewAppellantNotificationHandler(
+            @Qualifier("stf24WeeksCompleteCaseReviewAppellantNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase =
+                            callback
+                                    .getCaseDetails()
+                                    .getCaseData();
+                    Set<String> appellantEmails = AsylumCaseUtils.getApplicantEmail(asylumCase);
+                    String emails = String.join(",", appellantEmails);
+                    boolean canSendAppellant = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == COMPLETE_CASE_REVIEW
+                            && AsylumCaseUtils.hasStf24WeeksStatus(asylumCase) && !emails.isEmpty();
+                    log.info("case_Review  canSendAppellant {}", canSendAppellant);
+                    return canSendAppellant;
+                },
+                notificationGenerators,  getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> stf24WeeksCompleteCaseReviewLegalRepresentativeNotificationHandler(
+            @Qualifier("stf24WeeksCompleteCaseReviewLegalRepresentativeNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase =
+                            callback
+                                    .getCaseDetails()
+                                    .getCaseData();
+                    Set<String> legalRepEmails = Collections.singleton(getLegalRepEmailInternalOrLegalRepJourneyNonMandatory(asylumCase));
+                    String emails = String.join(",", legalRepEmails);
+                    boolean canSendLegalRep = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == COMPLETE_CASE_REVIEW && AsylumCaseUtils.hasStf24WeeksStatus(asylumCase) && !emails.isEmpty();
+                    log.info("case_Review canSendLegalRep {}", canSendLegalRep);
+                    return canSendLegalRep;
+                },
+                notificationGenerators,  getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> stf24WeeksCompleteCaseReviewHomeOfficeNotificationHandler(
+            @Qualifier("stf24WeeksCompleteCaseReviewHomeOfficeNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase =
+                            callback
+                                    .getCaseDetails()
+                                    .getCaseData();
+
+                    boolean canSendHomeOfficeNotification = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == COMPLETE_CASE_REVIEW && AsylumCaseUtils.hasStf24WeeksStatus(asylumCase);
+                    log.info("case_Review canSendHomeOfficeNotification1 {}", canSendHomeOfficeNotification);
+                    return canSendHomeOfficeNotification;
+                },
+                notificationGenerators,  getErrorHandler()
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> removeStatutoryTimeframe24WeeksAppellantLetterNotificationHandler(
             @Qualifier("removeStatutoryTimeframe24WeeksAppellantLetterNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
         return new NotificationHandler(
@@ -5667,8 +5740,10 @@ public class NotificationHandlerConfiguration {
                                     .getCaseData();
                     Set<String> appellantEmails = AsylumCaseUtils.getApplicantEmail(asylumCase);
                     String emails = String.join(",", appellantEmails);
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    boolean canSendRemoveAppellant = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && callback.getEvent() == REMOVE_STATUTORY_TIMEFRAME_24_WEEKS && !emails.isEmpty();
+                    log.info("Remove STF canSendRemoveAppellant {}", canSendRemoveAppellant);
+                    return canSendRemoveAppellant;
                 },
                 notificationGenerators,  getErrorHandler()
         );
@@ -6076,10 +6151,14 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
+                boolean isAppealPaid = asylumCase.read(PAYMENT_STATUS, PaymentStatus.class)
+                        .orElse(null) == PaymentStatus.PAID;
+
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.RECORD_REMISSION_REMINDER
                     && isRemissionRejectedOrPartiallyApproved(asylumCase)
-                    && isAipJourney(asylumCase);
+                    && isAipJourney(asylumCase)
+                    && !isAppealPaid;
             },
             notificationGenerators,
             getErrorHandler()
@@ -7127,8 +7206,8 @@ public class NotificationHandlerConfiguration {
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.SEND_DIRECTION
-                    && isInternalNonStdDirectionWithParty(asylumCase, Parties.APPELLANT, directionFinder)
-                    && isInternalCase(asylumCase)
+                    && (isInternalNonStdDirectionWithParty(asylumCase, Parties.APPELLANT, directionFinder) ||
+                        isInternalNonStdDirectionWithParty(asylumCase, Parties.LEGAL_REPRESENTATIVE, directionFinder))
                     && (!isAppellantInDetention(asylumCase)
                     || (hasBeenSubmittedByAppellantInternalCase(asylumCase)
                     && isDetainedInFacilityType(asylumCase, OTHER))
@@ -8036,10 +8115,13 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                boolean isAppealPaid = asylumCase.read(PAYMENT_STATUS, PaymentStatus.class)
+                        .orElse(null) == PaymentStatus.PAID;
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.RECORD_REMISSION_REMINDER
-                    && isRemissionRejectedOrPartiallyApproved(asylumCase);
+                    && isRemissionRejectedOrPartiallyApproved(asylumCase)
+                    && !isAppealPaid;
             },
             notificationGenerators,
             getErrorHandler()

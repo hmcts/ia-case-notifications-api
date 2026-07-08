@@ -70,7 +70,7 @@ public class ApplyForCostsRespondentPersonalisation implements EmailNotification
             .putAll(personalisationProvider.getApplyToCostsCreationDate(asylumCase))
             .putAll(personalisationProvider.getTypeForLatestCreatedApplyForCosts(asylumCase))
             .putAll(personalisationProvider.getApplyForCostsPersonalisation(asylumCase))
-            .putAll(customerServicesProvider.getCustomerServicesPersonalisation());
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase));
 
         if (applicantAndRespondent.getRight().equals(LEGAL_REPRESENTATIVE)) {
             personalisationBuilder.putAll(personalisationProvider.getLegalRepRecipientHeader(asylumCase));

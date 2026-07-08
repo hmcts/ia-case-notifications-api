@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 952535,
+      "id": 1001,
       "eventId": "sendDirection",
       "state": "caseUnderReview",
       "caseData": {
@@ -27,7 +27,6 @@
               }
             }
           ],
-          "notificationsSent": [],
           "legalRepresentativeEmailAddress": "RIA-952535-test-case-1@example.com"
         }
       }
@@ -57,7 +56,7 @@
         ],
         "notificationsSent": [
           {
-            "id": "952535_RESPONDENT_NON_STANDARD_DIRECTION",
+            "id": "1001_RESPONDENT_NON_STANDARD_DIRECTION",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ],
@@ -66,7 +65,7 @@
     },
     "notifications": [
       {
-        "reference": "952535_RESPONDENT_NON_STANDARD_DIRECTION",
+        "reference": "1001_RESPONDENT_NON_STANDARD_DIRECTION",
         "recipient": "{$lartHomeOfficeEmailAddress}",
         "subject": "Immigration and Asylum appeal: direction",
         "body": [

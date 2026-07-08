@@ -5,6 +5,7 @@ import java.util.Map;
 public interface Verifier {
 
     void verify(
+        String fineName,
         long testCaseId,
         Map<String, Object> scenario,
         Map<String, Object> expectedResponse,

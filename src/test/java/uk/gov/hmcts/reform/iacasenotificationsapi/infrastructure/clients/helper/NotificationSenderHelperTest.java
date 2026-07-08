@@ -38,7 +38,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -741,7 +742,7 @@ public class NotificationSenderHelperTest {
 
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals("Not a UK mobile number", result.get(0));
+        assertEquals("Not a UK mobile number", result.getFirst());
     }
 
     @Test
@@ -753,7 +754,7 @@ public class NotificationSenderHelperTest {
 
         assertNotNull(result);
         assertEquals(2, result.size());
-        assertEquals("Not a UK mobile number", result.get(0));
+        assertEquals("Not a UK mobile number", result.getFirst());
         assertEquals("Not a valid email address", result.get(1));
     }
 
@@ -805,7 +806,7 @@ public class NotificationSenderHelperTest {
 
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals("", result.get(0));
+        assertEquals("", result.getFirst());
     }
 
     @Test
@@ -831,7 +832,7 @@ public class NotificationSenderHelperTest {
         verify(asylumCase).write(eq(AsylumCaseDefinition.NOTIFICATIONS), captor.capture());
         List<IdValue<StoredNotification>> notifications = captor.getValue();
         assertEquals(1, notifications.size());
-        StoredNotification storedNotification = notifications.get(0).getValue();
+        StoredNotification storedNotification = notifications.getFirst().getValue();
         assertEquals("N/A", storedNotification.getNotificationId());
         assertEquals(emailAddress, storedNotification.getNotificationSentTo());
         assertEquals("N/A", storedNotification.getNotificationBody());
@@ -865,7 +866,7 @@ public class NotificationSenderHelperTest {
         verify(bailCase).write(eq(BailCaseFieldDefinition.NOTIFICATIONS), captor.capture());
         List<IdValue<StoredNotification>> notifications = captor.getValue();
         assertEquals(1, notifications.size());
-        StoredNotification storedNotification = notifications.get(0).getValue();
+        StoredNotification storedNotification = notifications.getFirst().getValue();
         assertEquals("N/A", storedNotification.getNotificationId());
         assertEquals(emailAddress, storedNotification.getNotificationSentTo());
         assertEquals("N/A", storedNotification.getNotificationBody());
@@ -899,7 +900,7 @@ public class NotificationSenderHelperTest {
         List<ILoggingEvent> logEvents = listAppender.list;
         assertEquals(3, logEvents.size());
         assertEquals("Attempting to send email notification to GovNotify: our-reference",
-            logEvents.get(0).getFormattedMessage());
+            logEvents.getFirst().getFormattedMessage());
         assertEquals("Failed to send email using GovNotify for case reference our-reference",
             logEvents.get(1).getFormattedMessage());
         assertEquals("Unsupported case data type for storing failed notification: " +
@@ -952,7 +953,7 @@ public class NotificationSenderHelperTest {
         verify(asylumCase).write(eq(AsylumCaseDefinition.NOTIFICATIONS), captor.capture());
         List<IdValue<StoredNotification>> notifications = captor.getValue();
         assertEquals(3, notifications.size());
-        assertEquals("future-ref", notifications.get(0).getValue().getNotificationReference());
+        assertEquals("future-ref", notifications.getFirst().getValue().getNotificationReference());
         assertEquals(reference, notifications.get(1).getValue().getNotificationReference());
         assertEquals("past-ref", notifications.get(2).getValue().getNotificationReference());
     }

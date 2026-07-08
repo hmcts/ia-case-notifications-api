@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 1370,
+      "id": 2050,
       "eventId": "reinstateAppeal",
       "state": "appealSubmitted",
       "caseData": {
@@ -55,11 +55,11 @@
         },
         "notificationsSent": [
           {
-            "id": "1370_REINSTATE_APPEAL_HOME_OFFICE",
+            "id": "2050_REINSTATE_APPEAL_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1370_INTERNAL_REINSTATE_APPEAL_APPELLANT_LETTER",
+            "id": "2050_INTERNAL_REINSTATE_APPEAL_APPELLANT_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

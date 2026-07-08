@@ -80,6 +80,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoff
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeAppealSubmittedPendingPaymentPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeCaseLinkPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeCaseUnlinkPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeDecideAnApplicationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeDecisionWithoutHearingPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeEditListingNoChangePersonalisation;
@@ -4040,6 +4041,32 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("generatePinInPostNotificationGenerator")
+    public List<NotificationGenerator> generatePinInPostNotificationGenerator(
+        AppellantGeneratePinInPostPersonalisationEmail appellantGeneratePinInPostPersonalisationEmail,
+        AppellantAdditionalGeneratePinInPostPersonalisationEmail appellantAdditionalGeneratePinInPostPersonalisationEmail,
+        AppellantGeneratePinInPostPersonalisationSms appellantGeneratePinInPostPersonalisationSms,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                List.of(
+                    appellantGeneratePinInPostPersonalisationEmail,
+                    appellantAdditionalGeneratePinInPostPersonalisationEmail
+                ),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                List.of(appellantGeneratePinInPostPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("requestFeeRemissionNotificationGenerator")
     public List<NotificationGenerator> requestFeeRemissionNotificationHandler(
         LegalRepresentativeRequestFeeRemissionPersonalisation legalRepresentativeRequestFeeRemissionPersonalisation,
@@ -4971,6 +4998,60 @@ public class NotificationGeneratorConfiguration {
                 notificationSender,
                 notificationIdAppender
             )
+        );
+    }
+
+    @Bean("stf24WeeksCompleteCaseReviewAppellantNotificationGenerator")
+    public List<NotificationGenerator> stf24WeeksCompleteCaseReviewAppellantNotificationGenerator(
+            AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationEmail appellantStf24WeeksCompleteCaseReviewPersonalisationEmail,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                appellantStf24WeeksCompleteCaseReviewPersonalisationEmail
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("stf24WeeksCompleteCaseReviewLegalRepresentativeNotificationGenerator")
+    public List<NotificationGenerator> stf24WeeksCompleteCaseReviewLegalRepresentativeNotificationGenerator(
+            LegalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation legalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("stf24WeeksCompleteCaseReviewHomeOfficeNotificationGenerator")
+    public List<NotificationGenerator> stf24WeeksCompleteCaseReviewHomeOfficeNotificationGenerator(
+            HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation homeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                homeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
@@ -6377,7 +6458,7 @@ public class NotificationGeneratorConfiguration {
     }
 
     @Bean("internalSubmitAppealWithFeeAppellantLetterNotificationGenerator")
-    public List<NotificationGenerator> internalSubmitAppealOutOfTimeWithFeeAppellantLetterNotificationGenerator(
+    public List<NotificationGenerator> internalSubmitAppealWithFeeAppellantLetterNotificationGenerator(
         AppellantInternalCaseSubmittedOnTimeWithFeePersonalisation appellantInternalCaseSubmittedOnTimeWithFeePersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
@@ -6400,7 +6481,7 @@ public class NotificationGeneratorConfiguration {
     }
 
     @Bean("internalHomeOfficeDirectedToReviewAppealAipNotificationGenerator")
-    public List<NotificationGenerator> internalSubmitAppealOutOfTimeWithFeeAppellantLetterNotificationGenerator(
+    public List<NotificationGenerator> internalHomeOfficeDirectedToReviewAppealAipNotificationGenerator(
         AppellantInternalHomeOfficeDirectedToReviewAppealPersonalisation appellantInternalHomeOfficeDirectedToReviewAppealPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
@@ -6423,7 +6504,7 @@ public class NotificationGeneratorConfiguration {
     }
 
     @Bean("internalHomeOfficeUploadBundleAipNotificationGenerator")
-    public List<NotificationGenerator> internalSubmitAppealOutOfTimeWithFeeAppellantLetterNotificationGenerator(
+    public List<NotificationGenerator> internalHomeOfficeUploadBundleAipNotificationGenerator(
         AppellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisation appellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
@@ -6446,7 +6527,7 @@ public class NotificationGeneratorConfiguration {
     }
 
     @Bean("internalSubmitAppealWithFeeOutOfTimeAppellantLetterNotificationGenerator")
-    public List<NotificationGenerator> internalSubmitAppealOutOfTimeWithFeeAppellantLetterNotificationGenerator(
+    public List<NotificationGenerator> internalSubmitAppealWithFeeOutOfTimeAppellantLetterNotificationGenerator(
             AppellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation appellantInternalCaseSubmittedOutOfTimeWithFeePersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
@@ -7212,7 +7293,7 @@ public class NotificationGeneratorConfiguration {
     }
 
     @Bean("appellantInPersonRemissionPaymentReminderEmailNotificationGenerator")
-    public List<NotificationGenerator> legalRepRemissionPaymentReminderEmailNotificationGenerator(
+    public List<NotificationGenerator> appellantInPersonRemissionPaymentReminderEmailNotificationGenerator(
         AipRemissionRequestAutomaticReminderEmail aipRemissionRequestAutomaticReminderEmail,
         AipRemissionRequestAutomaticReminderSms aipRemissionRequestAutomaticReminderSms,
         GovNotifyNotificationSender notificationSender,

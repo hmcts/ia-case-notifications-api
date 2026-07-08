@@ -74,26 +74,22 @@ public class AppellantFtpaApplicationDecisionPersonalisationEmail implements Ema
         String applicantType = asylumCase
             .read(FTPA_APPLICANT_TYPE, ApplicantType.class)
             .map(ApplicantType::getValue)
-            .orElseThrow(() -> new IllegalStateException("ftpaApplicantType is not present"));;
+            .orElseThrow(() -> new IllegalStateException("ftpaApplicantType is not present"));
 
-        switch (getDecisionOutcomeType(asylumCase)) {
-            case FTPA_GRANTED:
-                return applicantType.equals(APPELLANT_APPLICANT)
+        return switch (getDecisionOutcomeType(asylumCase)) {
+            case FTPA_GRANTED -> applicantType.equals(APPELLANT_APPLICANT)
                     ? ftpaAppellantDecisionGrantedToAppellantEmailTemplateId
                     : ftpaRespondentDecisionGrantedPartiallyGrantedToAppellantEmailTemplateId;
-            case FTPA_PARTIALLY_GRANTED:
-                return applicantType.equals(APPELLANT_APPLICANT)
+            case FTPA_PARTIALLY_GRANTED -> applicantType.equals(APPELLANT_APPLICANT)
                     ? ftpaAppellantDecisionPartiallyGrantedToAppellantEmailTemplateId
                     : ftpaRespondentDecisionGrantedPartiallyGrantedToAppellantEmailTemplateId;
-            case FTPA_REFUSED:
-                return applicantType.equals(APPELLANT_APPLICANT)
+            case FTPA_REFUSED -> applicantType.equals(APPELLANT_APPLICANT)
                     ? ftpaAppellantDecisionRefusedToAppellantEmailTemplateId
                     : ftpaRespondentDecisionRefusedToAppellantEmailTemplateId;
-            default:
-                return applicantType.equals(APPELLANT_APPLICANT)
+            default -> applicantType.equals(APPELLANT_APPLICANT)
                     ? ftpaAppellantDecisionNotAdmittedToAppellantEmailTemplateId
                     : ftpaRespondentDecisionNotAdmittedToAppellantEmailTemplateId;
-        }
+        };
     }
 
     @Override
@@ -117,7 +113,7 @@ public class AppellantFtpaApplicationDecisionPersonalisationEmail implements Ema
         return
             ImmutableMap
                 .<String, String>builder()
-                .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+                .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
                 .put("listingReferenceLine", listingReferenceLine)
                 .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("homeOfficeReferenceNumber", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))

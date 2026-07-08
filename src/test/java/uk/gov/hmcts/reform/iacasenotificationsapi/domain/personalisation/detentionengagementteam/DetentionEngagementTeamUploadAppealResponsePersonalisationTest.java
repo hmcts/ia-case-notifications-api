@@ -78,8 +78,6 @@ public class DetentionEngagementTeamUploadAppealResponsePersonalisationTest {
 
         String customerServicesTelephone = "555 555 555";
         String customerServicesEmail = "customer.services@example.com";
-        when(customerServicesProvider.getCustomerServicesTelephone()).thenReturn(customerServicesTelephone);
-        when(customerServicesProvider.getCustomerServicesEmail()).thenReturn(customerServicesEmail);
 
         String hearingDate = "2023-03-15T10:13:38.410992";
         when(asylumCase.read(LIST_CASE_HEARING_DATE, String.class)).thenReturn(Optional.of(hearingDate));
@@ -178,7 +176,7 @@ public class DetentionEngagementTeamUploadAppealResponsePersonalisationTest {
         final Map<String, Object> expectedPersonalisation =
             ImmutableMap
                 .<String, Object>builder()
-                .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+                .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
                 .put("subjectPrefix", adaPrefix)
                 .put("appealReferenceNumber", appealReferenceNumber)
                 .put("homeOfficeReferenceNumber", homeOfficeReferenceNumber)
@@ -203,7 +201,7 @@ public class DetentionEngagementTeamUploadAppealResponsePersonalisationTest {
         final Map<String, Object> expectedPersonalisation =
             ImmutableMap
                 .<String, Object>builder()
-                .putAll(customerServicesProvider.getCustomerServicesPersonalisation())
+                .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
                 .put("subjectPrefix", adaPrefix)
                 .put("appealReferenceNumber", appealReferenceNumber)
                 .put("homeOfficeReferenceNumber", homeOfficeReferenceNumber)

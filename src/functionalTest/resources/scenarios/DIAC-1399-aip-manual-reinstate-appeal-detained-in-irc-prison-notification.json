@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 1399,
+      "id": 2037,
       "eventId": "reinstateAppeal",
       "state": "appealSubmitted",
       "caseData": {
@@ -56,11 +56,11 @@
         "appellantInUk": "Yes",
         "notificationsSent": [
           {
-            "id": "1399_REINSTATE_APPEAL_HOME_OFFICE",
+            "id": "2037_REINSTATE_APPEAL_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1399_AIPM_DETAINED_IN_PRISON_IRC_REINSTATE_APPEAL_LETTER",
+            "id": "2037_AIPM_DETAINED_IN_PRISON_IRC_REINSTATE_APPEAL_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

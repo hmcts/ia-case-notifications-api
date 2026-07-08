@@ -49,11 +49,11 @@ public class Direction {
     }
 
     public List<IdValue<PreviousDates>> getPreviousDates() {
-        return previousDates;
+        return previousDates == null ? List.of() : List.copyOf(previousDates);
     }
 
     public List<IdValue<ClarifyingQuestion>> getClarifyingQuestions() {
-        return clarifyingQuestions;
+        return clarifyingQuestions == null ? List.of() : List.copyOf(clarifyingQuestions);
     }
 
     public String getUniqueId() {

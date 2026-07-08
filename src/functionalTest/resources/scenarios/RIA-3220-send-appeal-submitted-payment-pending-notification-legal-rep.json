@@ -1,12 +1,12 @@
 {
   "description": "RIA-3220 Send appeal submitted and payment pending notification to legal representative",
   "launchDarklyKey": "tcw-notifications-feature:true",
-  "enabled": "{$featureFlag.homeOfficeGovNotifyEnabled}",
+  "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "LegalRepresentative",
     "input": {
-      "id": 3220,
+      "id": 1806,
       "eventId": "submitAppeal",
       "state": "appealSubmitted",
       "caseData": {
@@ -33,15 +33,15 @@
         "appealType": "protection",
         "notificationsSent": [
           {
-            "id": "3220_APPEAL_SUBMITTED_CASE_OFFICER",
+            "id": "1806_APPEAL_SUBMITTED_PAY_OFFLINE_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "3220_APPEAL_SUBMITTED_PAY_OFFLINE_HOME_OFFICE",
+            "id": "1806_APPEAL_SUBMITTED_PAY_OFFLINE_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "3220_APPEAL_SUBMITTED_PAY_OFFLINE_LEGAL_REPRESENTATIVE",
+            "id": "1806_APPEAL_SUBMITTED_PAY_OFFLINE_ADMIN_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -49,7 +49,7 @@
     },
     "notifications": [
       {
-        "reference": "3220_APPEAL_SUBMITTED_CASE_OFFICER",
+        "reference": "1806_APPEAL_SUBMITTED_CASE_OFFICER",
         "recipient": "{$hearingCentreEmailAddresses.taylorHouse}",
         "subject": "Immigration and Asylum appeal: appeal submitted",
         "body": [
@@ -59,7 +59,7 @@
         ]
       },
       {
-        "reference": "3220_APPEAL_SUBMITTED_PAY_OFFLINE_HOME_OFFICE",
+        "reference": "1806_APPEAL_SUBMITTED_PAY_OFFLINE_HOME_OFFICE",
         "recipient": "{$apcPrivateHomeOfficeEmailAddress}",
         "subject": "Immigration and Asylum appeal: appeal submitted",
         "body": [
@@ -71,7 +71,7 @@
         ]
       },
       {
-        "reference": "3220_APPEAL_SUBMITTED_PAY_OFFLINE_LEGAL_REPRESENTATIVE",
+        "reference": "1806_APPEAL_SUBMITTED_PAY_OFFLINE_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: appeal submitted with remission application",
         "body": [

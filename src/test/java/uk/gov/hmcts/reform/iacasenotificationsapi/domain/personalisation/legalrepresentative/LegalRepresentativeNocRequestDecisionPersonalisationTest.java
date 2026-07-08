@@ -68,9 +68,7 @@ class LegalRepresentativeNocRequestDecisionPersonalisationTest {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class))
             .thenReturn(Optional.of(legalRepEmailAddress));
         String customerServicesTelephone = "555 555 555";
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         String customerServicesEmail = "cust.services@example.com";
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         legalRepresentativeNocRequestDecisionPersonalisation = new LegalRepresentativeNocRequestDecisionPersonalisation(
             templateId,
@@ -131,7 +129,7 @@ class LegalRepresentativeNocRequestDecisionPersonalisationTest {
 
         assertFalse(personalisation.isEmpty());
         assertThat(personalisation)
-            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation())
+            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .containsEntry("legalRepReferenceNumber", legalRepRefNumber)
             .containsEntry("ccdCaseId", "0")
             .containsEntry("ariaListingReference", "")
@@ -158,7 +156,7 @@ class LegalRepresentativeNocRequestDecisionPersonalisationTest {
             legalRepresentativeNocRequestDecisionPersonalisation.getPersonalisation(callback);
 
         assertThat(personalisation)
-            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation())
+            .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
             .containsEntry("ccdCaseId", "0")
             .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal"

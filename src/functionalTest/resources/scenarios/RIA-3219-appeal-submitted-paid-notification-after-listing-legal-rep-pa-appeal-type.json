@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 3219,
+      "id": 1808,
       "eventId": "markAppealPaid",
       "state": "decided",
       "caseData": {
@@ -30,7 +30,7 @@
         "ariaListingReference": "LP/12345/2019",
         "notificationsSent": [
           {
-            "id": "3219_PENDING_PAYMENT_PAID_LEGAL_REPRESENTATIVE",
+            "id": "1808_PENDING_PAYMENT_PAID_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -38,7 +38,7 @@
     },
     "notifications": [
       {
-        "reference": "3219_PENDING_PAYMENT_PAID_LEGAL_REPRESENTATIVE",
+        "reference": "1808_PENDING_PAYMENT_PAID_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
         "subject": "Immigration and Asylum appeal: Your fee has been paid",
         "body": [

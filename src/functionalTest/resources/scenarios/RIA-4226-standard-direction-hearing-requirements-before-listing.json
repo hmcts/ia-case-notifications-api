@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 4226,
+      "id": 1616,
       "eventId": "requestRespondentEvidence",
       "state": "appealSubmitted",
       "caseData": {
@@ -23,7 +23,6 @@
               }
             }
           ],
-          "notificationsSent": [],
           "legalRepresentativeEmailAddress": "RIA-4226-test-case-1@example.com"
         }
       }
@@ -50,11 +49,11 @@
         ],
         "notificationsSent": [
           {
-            "id": "4226_RESPONDENT_EVIDENCE_DIRECTION",
+            "id": "1616_RESPONDENT_EVIDENCE_DIRECTION",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "4226_EVIDENCE_DIRECTION_LEGAL_REPRESENTATIVE",
+            "id": "1616_EVIDENCE_DIRECTION_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ],
@@ -63,7 +62,7 @@
     },
     "notifications": [
       {
-        "reference": "4226_RESPONDENT_EVIDENCE_DIRECTION",
+        "reference": "1616_RESPONDENT_EVIDENCE_DIRECTION",
         "recipient": "{$respondentEmailAddresses.respondentEvidenceDirection}",
         "subject": "Immigration and Asylum appeal: submit bundle direction",
         "body": [
@@ -78,7 +77,7 @@
         ]
       },
       {
-        "reference": "4226_EVIDENCE_DIRECTION_LEGAL_REPRESENTATIVE",
+        "reference": "1616_EVIDENCE_DIRECTION_LEGAL_REPRESENTATIVE",
         "recipient": "RIA-4226-test-case-1@example.com",
         "subject": "Immigration and Asylum appeal: direction sent to the Home Office",
         "body": [

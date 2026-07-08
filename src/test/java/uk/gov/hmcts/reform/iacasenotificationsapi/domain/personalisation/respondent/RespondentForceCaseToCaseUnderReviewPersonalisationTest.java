@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
@@ -48,7 +49,7 @@ class RespondentForceCaseToCaseUnderReviewPersonalisationTest {
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
-        when(customerServicesProvider.getCustomerServicesPersonalisation()).thenReturn(customerServiceMap);
+        when(customerServicesProvider.getCustomerServicesPersonalisation(any(AsylumCase.class))).thenReturn(customerServiceMap);
         sut = new RespondentForceCaseToCaseUnderReviewPersonalisation(templateId, respondentEmail, frontendUrl, customerServicesProvider);
     }
 

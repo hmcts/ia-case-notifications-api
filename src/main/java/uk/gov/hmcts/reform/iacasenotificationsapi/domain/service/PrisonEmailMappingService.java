@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.Set;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 /**
  * Service for mapping prison names to email addresses.
@@ -131,7 +131,7 @@ public class PrisonEmailMappingService {
      * @return Set of prison names that have email mappings
      */
     public Set<String> getSupportedPrisons() {
-        return prisonEmailCache.keySet();
+        return Set.copyOf(prisonEmailCache.keySet());
     }
 
 } 

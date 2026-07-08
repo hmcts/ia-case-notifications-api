@@ -86,9 +86,7 @@ class LegalRepresentativeRemissionDecisionPaPartiallyApprovedPersonalisationTest
         String someTestDateEmail = "14/14/2024";
         when(asylumCase.read(REMISSION_REJECTED_DATE_PLUS_14DAYS, String.class)).thenReturn(Optional.of(someTestDateEmail));
         String customerServicesTelephone = "555 555 555";
-        when((customerServicesProvider.getCustomerServicesTelephone())).thenReturn(customerServicesTelephone);
         String customerServicesEmail = "cust.services@example.com";
-        when((customerServicesProvider.getCustomerServicesEmail())).thenReturn(customerServicesEmail);
 
         Map<String, String> personalisation =
             legalRepresentativeRemissionDecisionPartiallyApprovedPersonalisation.getPersonalisation(asylumCase);
@@ -103,7 +101,5 @@ class LegalRepresentativeRemissionDecisionPaPartiallyApprovedPersonalisationTest
             .containsEntry("feeAmount", amountLeftToPayInGbp)
             .containsEntry("14 days after remission decision", someTestDateEmail)
             .containsEntry("onlineCaseReferenceNumber", onlineCaseReferenceNumber);
-        assertEquals(customerServicesTelephone, customerServicesProvider.getCustomerServicesTelephone());
-        assertEquals(customerServicesEmail, customerServicesProvider.getCustomerServicesEmail());
     }
 }

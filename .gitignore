@@ -33,3 +33,4 @@ bin/
 !bin/*.sh
 settings.json
 .mirrord/
+/reports/pmd/*

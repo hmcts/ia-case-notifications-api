@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "CaseOfficer",
     "input": {
-      "id": 7695,
+      "id": 1291,
       "eventId": "maintainCaseLinks",
       "state": "*",
       "caseData": {
@@ -44,7 +44,7 @@
       "replacements": {
         "notificationsSent": [
           {
-            "id": "7695_CASE_UNLINK_APPEAL_HOME_OFFICE",
+            "id": "1291_CASE_UNLINK_APPEAL_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

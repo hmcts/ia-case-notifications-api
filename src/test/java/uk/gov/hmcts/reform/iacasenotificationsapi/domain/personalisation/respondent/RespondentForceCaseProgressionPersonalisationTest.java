@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respon
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
@@ -67,7 +68,7 @@ public class RespondentForceCaseProgressionPersonalisationTest {
             .<String, String>builder()
             .put("customerServicesTelephone", "555 555 555")
             .put("customerServicesEmail", "cust.services@example.com").build();
-        when(customerServicesProvider.getCustomerServicesPersonalisation()).thenReturn(customerServicesValues);
+        when(customerServicesProvider.getCustomerServicesPersonalisation(any(AsylumCase.class))).thenReturn(customerServicesValues);
 
         AsylumCase asylumCase = writeTestAsylumCase(isAda);
 

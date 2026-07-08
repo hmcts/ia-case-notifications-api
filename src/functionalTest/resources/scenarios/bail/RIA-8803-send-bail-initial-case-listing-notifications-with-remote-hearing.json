@@ -1,21 +1,16 @@
 {
-  "description": "RIA-8803 Send bail initial case listing notification to HO, LR and Applicant with remote hearing",
-  "launchDarklyKey": "tcw-notifications-feature:true",
+  "description": "RIA-8803 Send bail initial case listing notification to HO with remote hearing",
   "request": {
     "uri": "/bail/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 8350,
+      "id": 2095,
       "eventId": "caseListing",
       "state": "applicationSubmitted",
       "caseData": {
-        "template": "minimal-bail-application-submitted.json",
+        "template": "bail-application-case-listing.json",
         "replacements": {
-          "applicantHasMobile": "Yes",
-          "applicantMobileNumber1": "{$TEST_CITIZEN_MOBILE}",
           "listingEvent": "initialListing",
-          "listingHearingDate": "2024-04-25T10:29:00.000",
-          "listingLocation": "glasgowTribunalsCentre",
           "isBailsLocationReferenceDataEnabled": "Yes",
           "isRemoteHearing": "Yes"
         }
@@ -26,76 +21,42 @@
     "status": 200,
     "errors": [],
     "caseData": {
-      "template": "minimal-bail-application-submitted.json",
+      "template": "bail-application-case-listing.json",
       "replacements": {
-        "applicantHasMobile": "Yes",
-        "applicantMobileNumber1": "{$TEST_CITIZEN_MOBILE}",
         "listingEvent": "initialListing",
-        "listingHearingDate": "2024-04-25T10:29:00.000",
-        "listingLocation": "glasgowTribunalsCentre",
+        "isBailsLocationReferenceDataEnabled": "Yes",
+        "isRemoteHearing": "Yes",
         "notificationsSent": [
           {
-            "id": "8350_BAIL_UPLOAD_BAIL_SUMMARY_DIRECTION_HOME_OFFICE",
+            "id": "2095_BAIL_UPLOAD_BAIL_SUMMARY_DIRECTION_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "8350_BAIL_APPLICATION_CASE_LISTING_HOME_OFFICE",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          },
-          {
-            "id": "8350_BAIL_APPLICATION_CASE_LISTING_LEGAL_REPRESENTATIVE",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          },
-          {
-            "id": "8350_BAIL_APPLICATION_CASE_LISTING_APPLICANT_SMS",
+            "id": "2095_BAIL_APPLICATION_CASE_LISTING_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
-      },
-      "notifications": [
-        {
-          "reference": "8350_BAIL_UPLOAD_BAIL_SUMMARY_DIRECTION_HOME_OFFICE",
-          "recipient": "{$bailHomeOfficeEmailAddress}",
-          "subject": "Bail application: Upload the Bail Summary direction",
-          "body": [
-            "1650-6221-2061-5101",
-            "John Smith",
-            "{$iaExUiFrontendUrl}"
-          ]
-        },
-        {
-          "reference": "8350_BAIL_APPLICATION_CASE_LISTING_HOME_OFFICE",
-          "recipient": "{$bailHomeOfficeEmailAddress}",
-          "subject": "Bail application: Bail hearing listed",
-          "body": [
-            "1650-6221-2061-5101",
-            "John Smith",
-            "{$iaExUiFrontendUrl}",
-            "Cloud Video Platform (CVP)"
-          ]
-        },
-        {
-          "reference": "8350_BAIL_APPLICATION_CASE_LISTING_LEGAL_REPRESENTATIVE",
-          "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-          "subject": "Bail application: Bail hearing listed",
-          "body": [
-            "1650-6221-2061-5101",
-            "John Smith",
-            "{$iaExUiFrontendUrl}",
-            "Cloud Video Platform (CVP)"
-          ]
-        },
-        {
-          "reference": "8350_BAIL_UPLOAD_BAIL_SUMMARY_DIRECTION_HOME_OFFICE",
-          "recipient": "{$TEST_CITIZEN_MOBILE}",
-          "subject": "Bail application: Bail hearing listed",
-          "body": [
-            "1650-6221-2061-5101",
-            "John Smith",
-            "Cloud Video Platform (CVP)"
-          ]
-        }
-      ]
-    }
+      }
+    },
+    "notifications": [
+      {
+        "reference": "2095_BAIL_APPLICATION_CASE_LISTING_HOME_OFFICE",
+        "recipient": "{$bailHomeOfficeEmailAddress}",
+        "subject": "Bail application: Bail hearing listed",
+        "body": [
+          "1650-6221-2061-5101",
+          "John Smith",
+          "A12345",
+          "1 Jan 2024",
+          "Cloud Video Platform (CVP)",
+          "10:29"
+        ],
+        "bodyExclusions": [
+          "Newport Tribunal Centre - Columbus House COURT NAME, Langstone Business Park, Newport COURT ADDRESS, NP18 2LX POSTCODE",
+          "123654LR",
+          "IAC Newport, Columbus House, Langstone Business Park, Chepstow Road, Newport, NP18 2LX"
+        ]
+      }
+    ]
   }
 }
