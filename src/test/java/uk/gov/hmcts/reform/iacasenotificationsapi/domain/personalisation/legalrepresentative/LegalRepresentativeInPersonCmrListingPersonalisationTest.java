@@ -128,7 +128,7 @@ public class LegalRepresentativeInPersonCmrListingPersonalisationTest {
     @Test
     void should_return_given_reference_id() {
         Long caseId = 12345L;
-        assertEquals(caseId + "_CMR_CASE_LISTED_LEGAL_REPRESENTATIVE",
+        assertEquals(caseId + "_CMR_LISTING_LEGAL_REPRESENTATIVE",
             legalRepresentativeInPersonCmrListingPersonalisation.getReferenceId(caseId));
     }
 
