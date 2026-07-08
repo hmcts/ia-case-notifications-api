@@ -91,7 +91,7 @@ public class Bundle implements CaseData {
     }
 
     public List<IdValue<BundleDocument>> getDocuments() {
-        return documents;
+        return documents == null ? List.of() : List.copyOf(documents);
     }
 
     public Optional<String> getStitchStatus() {

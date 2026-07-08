@@ -73,7 +73,7 @@ public class LegalRepresentativeAdaReviewHearingRequirementsPersonalisation impl
             .put("hearingDate", dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getHearingDateTime(asylumCase)))
             .put("hearingCentreAddress", hearingDetailsFinder.getHearingCentreLocation(asylumCase));
 
-        PersonalisationProvider.buildHearingRequirementsFields(asylumCase, hearingRequirementFields);
+        hearingRequirementFields.putAll(PersonalisationProvider.getHearingRequirementsFields(asylumCase));
 
         return hearingRequirementFields.build();
     }

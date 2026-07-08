@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config;
 
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -19,6 +20,6 @@ public class BailHearingCentreEmailAddressesConfiguration {
 
     @Bean
     public Map<BailHearingCentre, String> bailHearingCentreEmailAddresses() {
-        return bailHearingCentreEmailAddresses;
+        return Collections.unmodifiableMap(bailHearingCentreEmailAddresses);
     }
 }
