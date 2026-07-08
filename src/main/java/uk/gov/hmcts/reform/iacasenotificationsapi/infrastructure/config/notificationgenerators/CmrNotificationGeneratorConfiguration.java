@@ -3,8 +3,13 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config.notific
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantDetainedInIrcCmrListCaseLetterPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantDetainedInPrisonCmrListCaseLetterPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerCmrListingPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeInPersonCmrListingCasePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.EmailNotificationGenerator;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.LetterNotificationGenerator;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationGenerator;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationIdAppender;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.GovNotifyNotificationSender;
@@ -17,15 +22,54 @@ import static java.util.Collections.singletonList;
 @Slf4j
 @Configuration
 public class CmrNotificationGeneratorConfiguration {
-    @Bean("detainedLegalRepInPersonCmrListingNotificationGenerator")
+    @Bean("detainedInPrisonIrcLegalRepInPersonCmrListingNotificationGenerator")
     public List<NotificationGenerator> detainedLegalRepInPersonCmrListingNotificationGenerator(
-        LegalRepresentativeInPersonCmrListCasePersonalisation legalRepresentativeInPersonCmrListCasePersonalisation,
+        LegalRepresentativeInPersonCmrListingPersonalisation legalRepresentativeInPersonCmrListingPersonalisation,
+        CaseOfficerCmrListingPersonalisation caseOfficerCmrListingPersonalisation,
+        HomeOfficeInPersonCmrListingCasePersonalisation homeOfficeInPersonCmrListingCasePersonalisation,
         GovNotifyNotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender) {
+        NotificationIdAppender notificationIdAppender
+    ) {
 
         return singletonList(
             new EmailNotificationGenerator(
-                newArrayList(legalRepresentativeInPersonCmrListCasePersonalisation),
+                newArrayList(
+                    legalRepresentativeInPersonCmrListingPersonalisation,
+                    caseOfficerCmrListingPersonalisation,
+                    homeOfficeInPersonCmrListingCasePersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("detainedInPrisonAppellantRepInPersonCmrListingNotificationGenerator")
+    public List<NotificationGenerator> detainedInPrisonAppellantRepInPersonCmrListingNotificationGenerator(
+        AppellantDetainedInPrisonCmrListCaseLetterPersonalisation appellantDetainedInPrisonCmrListCaseLetterPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+            new LetterNotificationGenerator(
+                newArrayList(appellantDetainedInPrisonCmrListCaseLetterPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("detainedInIrcLegalRepInPersonCmrListingNotificationGenerator")
+    public List<NotificationGenerator> detainedInIrcLegalRepInPersonCmrListingNotificationGenerator(
+        AppellantDetainedInIrcCmrListCaseLetterPersonalisation appellantDetainedInIrcCmrListCaseLetterPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+            new LetterNotificationGenerator(
+                newArrayList(appellantDetainedInIrcCmrListCaseLetterPersonalisation),
                 notificationSender,
                 notificationIdAppender
             )

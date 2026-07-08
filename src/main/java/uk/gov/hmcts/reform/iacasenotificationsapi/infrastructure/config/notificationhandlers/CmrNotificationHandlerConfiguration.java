@@ -21,8 +21,8 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 @Configuration
 public class CmrNotificationHandlerConfiguration {
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> cmrInPersonLintedNotificationHandler(
-        @Qualifier("detainedLegalRepInPersonCmrListingNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    public PreSubmitCallbackHandler<AsylumCase> cmrInPersonDetainedInPrisonIrcListedNotificationHandler(
+        @Qualifier("detainedInPrisonIrcLegalRepInPersonCmrListingNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
 
         return new NotificationHandler(
@@ -32,6 +32,44 @@ public class CmrNotificationHandlerConfiguration {
                             && Event.CMR_LISTING.equals(callback.getEvent())
                             && isCmrHearingChannel(asylumCase, "INTER")
                             && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
+                            && isRepJourney(callback.getCaseDetails().getCaseData())
+                            && !isInternalCase(asylumCase);
+                },
+                notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> cmrInPersonDetainedInPrisonListedNotificationHandler(
+            @Qualifier("detainedInPrisonAppellantRepInPersonCmrListingNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && Event.CMR_LISTING.equals(callback.getEvent())
+                            && isCmrHearingChannel(asylumCase, "INTER")
+                            && isDetainedInOneOfFacilityTypes(asylumCase, PRISON)
+                            && isRepJourney(callback.getCaseDetails().getCaseData())
+                            && !isInternalCase(asylumCase);
+                },
+                notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> cmrInPersonDetainedInIrcListedNotificationHandler(
+            @Qualifier("detainedInIrcLegalRepInPersonCmrListingNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && Event.CMR_LISTING.equals(callback.getEvent())
+                            && isCmrHearingChannel(asylumCase, "INTER")
+                            && isDetainedInOneOfFacilityTypes(asylumCase, IRC)
                             && isRepJourney(callback.getCaseDetails().getCaseData())
                             && !isInternalCase(asylumCase);
                 },

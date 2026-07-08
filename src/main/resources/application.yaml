@@ -483,6 +483,20 @@ govnotify:
       legalRep:
         email: 74825ed3-240e-4b2a-afe9-9167c0ae29f5
     listAssistHearing:
+      cmrListing:
+        detained:
+          prison:
+            appellant:
+              letter: 398c92a5-10db-43d9-980b-2de2981d22f7
+          irc:
+            appellant:
+              letter: 398c92a5-10db-43d9-980b-2de2981d22f7
+        caseOfficer:
+          email: e30f3490-4649-4138-9711-749ecea07f8d
+        homeOffice:
+          email: becd75f2-613e-482c-9df8-3ebc76251f9e
+        legalRep:
+          email: f7bea6a0-2173-4c0a-b0dd-543e5a8b6b23
       caseListed:
         caseOfficer:
           email: ddb88c55-c97e-45df-a6b1-dc92fd0433b3
