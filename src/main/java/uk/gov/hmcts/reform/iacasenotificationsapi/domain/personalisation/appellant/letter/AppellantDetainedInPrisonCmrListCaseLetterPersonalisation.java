@@ -37,7 +37,7 @@ public class AppellantDetainedInPrisonCmrListCaseLetterPersonalisation implement
     private String nonAdaPrefix;
 
     public AppellantDetainedInPrisonCmrListCaseLetterPersonalisation(
-        @Value("${listAssistHearing.cmrListed.prison.appellant.letter}") String listAssistHearingAppellantCaseListedTemplateId,
+        @Value("${govnotify.template.listAssistHearing.cmrListing.appellant.detained.prison.letter}") String listAssistHearingAppellantCaseListedTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         DateTimeExtractor dateTimeExtractor,
         CustomerServicesProvider customerServicesProvider,

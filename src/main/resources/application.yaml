@@ -484,12 +484,11 @@ govnotify:
         email: 74825ed3-240e-4b2a-afe9-9167c0ae29f5
     listAssistHearing:
       cmrListing:
-        detained:
-          prison:
-            appellant:
+        appellant:
+          detained:
+            prison:
               letter: 398c92a5-10db-43d9-980b-2de2981d22f7
-          irc:
-            appellant:
+            irc:
               letter: 398c92a5-10db-43d9-980b-2de2981d22f7
         caseOfficer:
           email: e30f3490-4649-4138-9711-749ecea07f8d

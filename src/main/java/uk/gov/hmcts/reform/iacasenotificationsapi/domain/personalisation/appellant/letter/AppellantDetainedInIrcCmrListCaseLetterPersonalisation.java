@@ -7,7 +7,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.LetterNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
@@ -25,10 +24,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 @Service
 public class AppellantDetainedInIrcCmrListCaseLetterPersonalisation implements LetterNotificationPersonalisation {
 
-    private final String appellantCaseListedTemplateId;
     private final String listAssistHearingAppellantCaseListedTemplateId;
-    private final String legallyReppedAppellantCaseListedTemplateId;
-    private final String listAssistHearingLegallyReppedAppellantCaseListedTemplateId;
     private final DateTimeExtractor dateTimeExtractor;
     private final CustomerServicesProvider customerServicesProvider;
     private final HearingDetailsFinder hearingDetailsFinder;
@@ -41,20 +37,14 @@ public class AppellantDetainedInIrcCmrListCaseLetterPersonalisation implements L
     private String nonAdaPrefix;
 
     public AppellantDetainedInIrcCmrListCaseLetterPersonalisation(
-        @Value("${govnotify.template.caseListed.appellant.email}") String appellantCaseListedEmailTemplateId,
-        @Value("${govnotify.template.listAssistHearing.caseListed.appellant.email}") String listAssistHearingAppellantCaseListedTemplateId,
-        @Value("${govnotify.template.caseListed.legallyReppedAppellant.email}") String legallyReppedAppellantCaseListedTemplateId,
-        @Value("${govnotify.template.listAssistHearing.caseListed.legallyReppedAppellant.email}") String listAssistHearingLegallyReppedAppellantCaseListedTemplateId,
+        @Value("${govnotify.template.listAssistHearing.cmrListing.appellant.detained.irc.letter}") String listAssistHearingAppellantCaseListedTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         DateTimeExtractor dateTimeExtractor,
         CustomerServicesProvider customerServicesProvider,
         HearingDetailsFinder hearingDetailsFinder,
         RecipientsFinder recipientsFinder
     ) {
-        this.appellantCaseListedTemplateId = appellantCaseListedEmailTemplateId;
         this.listAssistHearingAppellantCaseListedTemplateId = listAssistHearingAppellantCaseListedTemplateId;
-        this.legallyReppedAppellantCaseListedTemplateId = legallyReppedAppellantCaseListedTemplateId;
-        this.listAssistHearingLegallyReppedAppellantCaseListedTemplateId = listAssistHearingLegallyReppedAppellantCaseListedTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.dateTimeExtractor = dateTimeExtractor;
         this.customerServicesProvider = customerServicesProvider;
@@ -64,14 +54,7 @@ public class AppellantDetainedInIrcCmrListCaseLetterPersonalisation implements L
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        if (asylumCase.read(IS_INTEGRATED, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES) {
-            return isAipJourney(asylumCase) ?
-                listAssistHearingAppellantCaseListedTemplateId :
-                listAssistHearingLegallyReppedAppellantCaseListedTemplateId;
-        } else {
-            return isAipJourney(asylumCase) ?
-                appellantCaseListedTemplateId : legallyReppedAppellantCaseListedTemplateId;
-        }
+        return listAssistHearingAppellantCaseListedTemplateId;
     }
 
     @Override
@@ -102,9 +85,9 @@ public class AppellantDetainedInIrcCmrListCaseLetterPersonalisation implements L
             .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
             .put("Hyperlink to service", iaAipFrontendUrl)
-            .put("hearingDate", dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getHearingDateTime(asylumCase)))
-            .put("hearingTime", dateTimeExtractor.extractHearingTime(hearingDetailsFinder.getHearingDateTime(asylumCase)))
-            .put("hearingCentreAddress", hearingDetailsFinder.getHearingCentreLocation(asylumCase))
+            .put("hearingDate", dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getCmrHearingDateTime(asylumCase)))
+            .put("hearingTime", dateTimeExtractor.extractHearingTime(hearingDetailsFinder.getCmrHearingDateTime(asylumCase)))
+            .put("hearingCentreAddress", hearingDetailsFinder.getCmrHearingCentreLocation(asylumCase))
             .put("tribunalCentre", hearingCentre.getValue())
             .build();
     }

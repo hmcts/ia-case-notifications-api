@@ -34,10 +34,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsF
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantDetainedInIrcCmrListCaseLetterPersonalisationTest {
 
-    private final String appellantCaseListedTemplateId = "appellantCaseListedTemplateId";
     private final String listAssistHearingTemplateId = "listAssistHearingTemplateId";
-    private final String legallyReppedTemplateId = "legallyReppedTemplateId";
-    private final String listAssistHearingLegallyReppedTemplateId = "listAssistHearingLegallyReppedTemplateId";
     private final String iaAipFrontendUrl = "http://somefrontendurl";
     private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
     private final String hearingCentreAddress = "some hearing centre address";
@@ -73,16 +70,13 @@ public class AppellantDetainedInIrcCmrListCaseLetterPersonalisationTest {
         when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
         when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
 
-        when(hearingDetailsFinder.getHearingDateTime(asylumCase)).thenReturn(hearingDateTime);
-        when(hearingDetailsFinder.getHearingCentreLocation(asylumCase)).thenReturn(hearingCentreAddress);
+        when(hearingDetailsFinder.getCmrHearingDateTime(asylumCase)).thenReturn(hearingDateTime);
+        when(hearingDetailsFinder.getCmrHearingCentreLocation(asylumCase)).thenReturn(hearingCentreAddress);
         when(dateTimeExtractor.extractHearingDate(hearingDateTime)).thenReturn(hearingDate);
         when(dateTimeExtractor.extractHearingTime(hearingDateTime)).thenReturn(hearingTime);
 
         appellantDetainedInIrcCmrListCaseLetterPersonalisation = new AppellantDetainedInIrcCmrListCaseLetterPersonalisation(
-            appellantCaseListedTemplateId,
             listAssistHearingTemplateId,
-            legallyReppedTemplateId,
-            listAssistHearingLegallyReppedTemplateId,
             iaAipFrontendUrl,
             dateTimeExtractor,
             customerServicesProvider,
@@ -99,20 +93,9 @@ public class AppellantDetainedInIrcCmrListCaseLetterPersonalisationTest {
     }
 
     @Test
-    public void should_return_correct_template_id() {
-        when(asylumCase.read(IS_INTEGRATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
-        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
-        assertEquals(appellantCaseListedTemplateId, appellantDetainedInIrcCmrListCaseLetterPersonalisation.getTemplateId(asylumCase));
-
-        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.REP));
-        assertEquals(legallyReppedTemplateId, appellantDetainedInIrcCmrListCaseLetterPersonalisation.getTemplateId(asylumCase));
-
-        when(asylumCase.read(IS_INTEGRATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
-        assertEquals(listAssistHearingTemplateId, appellantDetainedInIrcCmrListCaseLetterPersonalisation.getTemplateId(asylumCase));
-
-        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.REP));
-        assertEquals(listAssistHearingLegallyReppedTemplateId, appellantDetainedInIrcCmrListCaseLetterPersonalisation.getTemplateId(asylumCase));
+    public void should_return_given_template_id() {
+        assertEquals(listAssistHearingTemplateId,
+            appellantDetainedInIrcCmrListCaseLetterPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
