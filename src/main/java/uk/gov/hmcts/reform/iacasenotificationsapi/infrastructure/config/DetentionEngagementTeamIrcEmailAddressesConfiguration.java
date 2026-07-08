@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -18,6 +19,6 @@ public class DetentionEngagementTeamIrcEmailAddressesConfiguration {
 
     @Bean
     public Map<String, String> detentionEngagementTeamIrcEmailAddresses() {
-        return detentionEngagementTeamIrcEmailAddresses;
+        return Collections.unmodifiableMap(detentionEngagementTeamIrcEmailAddresses);
     }
 }
