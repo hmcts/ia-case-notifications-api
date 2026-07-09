@@ -7205,18 +7205,9 @@ public class NotificationHandlerConfiguration {
 
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-                log.info("{} isInternalNonStdDirectionWithParty for APPELLANT", isInternalNonStdDirectionWithParty(asylumCase, Parties.APPELLANT, directionFinder));
-                log.info("{} isInternalNonStdDirectionWithParty for LEGAL_REPRESENTATIVE", isInternalNonStdDirectionWithParty(asylumCase, Parties.LEGAL_REPRESENTATIVE, directionFinder));
-                log.info("{} isInternalNonStdDirectionWithParty for APPELLANT_AND_RESPONDENT", isInternalNonStdDirectionWithParty(asylumCase, Parties.APPELLANT_AND_RESPONDENT, directionFinder));
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.SEND_DIRECTION
-                    && (isInternalNonStdDirectionWithParty(asylumCase, Parties.APPELLANT, directionFinder) ||
-                        isInternalNonStdDirectionWithParty(asylumCase, Parties.LEGAL_REPRESENTATIVE, directionFinder) ||
-                        isInternalNonStdDirectionWithParty(asylumCase, Parties.APPELLANT_AND_RESPONDENT, directionFinder))
-                    && (!isAppellantInDetention(asylumCase)
-                    || (hasBeenSubmittedByAppellantInternalCase(asylumCase)
-                    && isDetainedInFacilityType(asylumCase, OTHER))
-                    || hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase));
+                    && isValidUserDirection(directionFinder, asylumCase, DirectionTag.NONE, Parties.APPELLANT_AND_RESPONDENT);
             },
             notificationGenerators,
             getErrorHandler()
