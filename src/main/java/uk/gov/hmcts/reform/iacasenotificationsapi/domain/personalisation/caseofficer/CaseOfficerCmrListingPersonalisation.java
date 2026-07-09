@@ -33,11 +33,12 @@ public class CaseOfficerCmrListingPersonalisation implements EmailNotificationPe
     private String nonAdaPrefix;
 
     public CaseOfficerCmrListingPersonalisation(
-            @Value("${govnotify.template.listAssistHearing.caseListed.caseOfficer.email}") String listAssistHearingCaseOfficerCaseListedTemplateId,
-            @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
-            DateTimeExtractor dateTimeExtractor,
-            EmailAddressFinder emailAddressFinder,
-            HearingDetailsFinder hearingDetailsFinder) {
+        @Value("${govnotify.template.listAssistHearing.caseListed.caseOfficer.email}") String listAssistHearingCaseOfficerCaseListedTemplateId,
+        @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
+        DateTimeExtractor dateTimeExtractor,
+        EmailAddressFinder emailAddressFinder,
+        HearingDetailsFinder hearingDetailsFinder
+    ) {
         this.listAssistHearingCaseOfficerCaseListedTemplateId = listAssistHearingCaseOfficerCaseListedTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.dateTimeExtractor = dateTimeExtractor;
