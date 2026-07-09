@@ -52,7 +52,7 @@ public class CaseOfficerCmrListingPersonalisation implements EmailNotificationPe
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return Collections.singleton(emailAddressFinder.getListCaseCaseOfficerHearingCentreEmailAddress(asylumCase));
+        return Collections.singleton(emailAddressFinder.getCmrListingCaseOfficerHearingCentreEmailAddress(asylumCase));
     }
 
     @Override

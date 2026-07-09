@@ -65,7 +65,7 @@ public class CaseOfficerCmrListingPersonalisationTest {
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
 
-        when(emailAddressFinder.getListCaseCaseOfficerHearingCentreEmailAddress(asylumCase)).thenReturn(hearingCentreEmailAddress);
+        when(emailAddressFinder.getCmrListingCaseOfficerHearingCentreEmailAddress(asylumCase)).thenReturn(hearingCentreEmailAddress);
         when(hearingDetailsFinder.getCmrHearingDateTime(asylumCase)).thenReturn(hearingDateTime);
         when(hearingDetailsFinder.getCmrHearingCentreLocation(asylumCase)).thenReturn(hearingCentreAddress);
         when(dateTimeExtractor.extractHearingDate(hearingDateTime)).thenReturn(hearingDate);

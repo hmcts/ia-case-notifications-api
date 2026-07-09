@@ -233,8 +233,6 @@ public class EmailAddressFinder {
                    .orElse(false);
     }
 
-
-
     public String getListCaseCaseOfficerHearingCentreEmailAddress(AsylumCase asylumCase) {
         if (isRemoteHearing(asylumCase)) {
             final HearingCentre hearingCentre = getHearingCentre(asylumCase, HEARING_CENTRE);
@@ -258,6 +256,26 @@ public class EmailAddressFinder {
                 return getEmailAddress(hearingCentreEmailAddresses, hearingCentre);
             }
 
+        }
+    }
+
+    public String getCmrListingCaseOfficerHearingCentreEmailAddress(AsylumCase asylumCase) {
+        if (isRemoteHearing(asylumCase)) {
+            final HearingCentre hearingCentre = getHearingCentre(asylumCase, CMR_HEARING_CENTRE);
+            if (asList(HearingCentre.GLASGOW, HearingCentre.BELFAST).contains(hearingCentre)) {
+                return listCaseCaseOfficerEmailAddress;
+            } else {
+                return getHearingCentreEmailAddress(asylumCase);
+            }
+        } else {
+            HearingCentre hearingCentre = asylumCase.read(CMR_HEARING_CENTRE, HearingCentre.class)
+                .orElseThrow(() -> new IllegalStateException("cmrHearingCentre is not present"));
+
+            if (asList(HearingCentre.GLASGOW, HearingCentre.BELFAST).contains(hearingCentre)) {
+                return listCaseCaseOfficerEmailAddress;
+            } else {
+                return getEmailAddress(hearingCentreEmailAddresses, hearingCentre);
+            }
         }
     }
 

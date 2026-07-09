@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CMR_HEARING_CENTRE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HEARING_CENTRE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
@@ -389,5 +390,57 @@ public class EmailAddressFinderTest {
         when(hearingCentreEmailAddresses.get(BRADFORD)).thenReturn("ho-bradford@example.com");
         assertEquals("ho-bradford@example.com",
             emailAddressFinder.getListCaseCaseOfficerHearingCentreEmailAddress(asylumCase));
+    }
+
+    @Test
+    public void should_return_cmr_listing_case_officer_email_from_lookup_map_when_not_remote() {
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(BRADFORD));
+        when(asylumCase.read(CMR_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(NORTH_SHIELDS));
+        when(hearingCentreEmailAddresses.get(NORTH_SHIELDS)).thenReturn("co-north-shields@example.com");
+
+        assertEquals("co-north-shields@example.com",
+            emailAddressFinder.getCmrListingCaseOfficerHearingCentreEmailAddress(asylumCase));
+    }
+
+    @Test
+    public void should_return_list_case_case_officer_email_for_cmr_listing_when_cmr_centre_is_glasgow_or_belfast() {
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(BRADFORD));
+
+        when(asylumCase.read(CMR_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(GLASGOW));
+        assertEquals(listCaseCaseOfficerEmailAddress,
+            emailAddressFinder.getCmrListingCaseOfficerHearingCentreEmailAddress(asylumCase));
+
+        when(asylumCase.read(CMR_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(BELFAST));
+        assertEquals(listCaseCaseOfficerEmailAddress,
+            emailAddressFinder.getCmrListingCaseOfficerHearingCentreEmailAddress(asylumCase));
+    }
+
+    @Test
+    public void should_throw_when_cmr_hearing_centre_is_empty_for_cmr_listing_case_officer_email() {
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(BRADFORD));
+        when(asylumCase.read(CMR_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> emailAddressFinder.getCmrListingCaseOfficerHearingCentreEmailAddress(asylumCase))
+            .isExactlyInstanceOf(IllegalStateException.class)
+            .hasMessage("cmrHearingCentre is not present");
+    }
+
+    @Test
+    public void should_return_list_case_case_officer_email_for_cmr_listing_remote_hearing_when_cmr_centre_is_glasgow() {
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(REMOTE_HEARING));
+        when(asylumCase.read(CMR_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(GLASGOW));
+
+        assertEquals(listCaseCaseOfficerEmailAddress,
+            emailAddressFinder.getCmrListingCaseOfficerHearingCentreEmailAddress(asylumCase));
+    }
+
+    @Test
+    public void should_return_hearing_centre_email_for_cmr_listing_remote_hearing_when_cmr_centre_is_not_glasgow_or_belfast() {
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(REMOTE_HEARING));
+        when(asylumCase.read(CMR_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(TAYLOR_HOUSE));
+        when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(TAYLOR_HOUSE));
+
+        assertEquals(hearingCentreEmailAddress,
+            emailAddressFinder.getCmrListingCaseOfficerHearingCentreEmailAddress(asylumCase));
     }
 }
