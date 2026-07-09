@@ -1464,20 +1464,6 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> requestCaseBuildingLegalRepInternalDetainedNotificationHandler(
-        @Qualifier("requestCaseBuildingLegalRepInternalDetainedNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
-
-        return new NotificationHandler(
-            (callbackStage, callback) ->
-                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.REQUEST_CASE_BUILDING
-                    && isInternalCase(callback.getCaseDetails().getCaseData())                    
-                    && !hasBeenSubmittedByAppellantInternalCase(callback.getCaseDetails().getCaseData()),
-            notificationGenerators
-        );
-    }
-
-    @Bean
     public PreSubmitCallbackHandler<AsylumCase> respondentDirectionNotificationHandler(
         @Qualifier("respondentDirectionNotificationGenerator") List<NotificationGenerator> notificationGenerators,
         DirectionFinder directionFinder) {
