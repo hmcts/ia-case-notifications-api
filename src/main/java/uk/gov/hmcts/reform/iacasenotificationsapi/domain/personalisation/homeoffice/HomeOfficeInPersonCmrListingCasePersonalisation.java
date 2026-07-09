@@ -10,10 +10,10 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
+import static java.util.Collections.singleton;
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
@@ -57,7 +57,7 @@ public class HomeOfficeInPersonCmrListingCasePersonalisation implements EmailNot
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return Collections.singleton(emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase));
+        return singleton(emailAddressFinder.getCmrListingHomeOfficeEmailAddress(asylumCase));
     }
 
     @Override

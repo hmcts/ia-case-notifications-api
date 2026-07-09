@@ -99,7 +99,7 @@ public class HomeOfficeInPersonCmrListingCasePersonalisationTest {
             .thenReturn(Optional.of(caseOfficerReviewedOther));
         when(asylumCase.read(SUBMIT_HEARING_REQUIREMENTS_AVAILABLE)).thenReturn(Optional.of(YesOrNo.NO));
 
-        when(emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase)).thenReturn(homeOfficeEmailAddress);
+        when(emailAddressFinder.getCmrListingHomeOfficeEmailAddress(asylumCase)).thenReturn(homeOfficeEmailAddress);
 
         when(hearingDetailsFinder.getCmrHearingDateTime(asylumCase)).thenReturn(hearingDateTime);
         when(hearingDetailsFinder.getCmrHearingCentreLocation(asylumCase)).thenReturn(hearingCentreAddress);

@@ -93,6 +93,21 @@ public class EmailAddressFinder {
         }
     }
 
+    public String getCmrListingHomeOfficeEmailAddress(AsylumCase asylumCase) {
+        if (isRemoteHearing(asylumCase) || isDecisionWithoutHearing(asylumCase)) {
+            return getHomeOfficeEmailAddress(asylumCase);
+        } else {
+            HearingCentre hearingCentre = asylumCase.read(CMR_HEARING_CENTRE, HearingCentre.class)
+                .orElseThrow(() -> new IllegalStateException(CMR_HEARING_CENTRE.value() + " is not present"));
+
+            String emailAddress = getEmailAddress(homeOfficeEmailAddresses, hearingCentre);
+            if (emailAddress == null) {
+                throw new IllegalStateException("List case hearing centre email address not found: " + hearingCentre.getValue());
+            }
+            return emailAddress;
+        }
+    }
+
     public String getListCaseFtpaHomeOfficeEmailAddress(AsylumCase asylumCase) {
         if (isRemoteHearing(asylumCase) || isDecisionWithoutHearing(asylumCase)) {
             return getHomeOfficeFtpaEmailAddress(asylumCase);

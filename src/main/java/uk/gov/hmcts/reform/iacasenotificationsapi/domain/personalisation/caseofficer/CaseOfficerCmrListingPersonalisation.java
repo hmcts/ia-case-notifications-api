@@ -10,10 +10,10 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtract
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
+import static java.util.Collections.singleton;
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
@@ -52,7 +52,7 @@ public class CaseOfficerCmrListingPersonalisation implements EmailNotificationPe
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return Collections.singleton(emailAddressFinder.getCmrListingCaseOfficerHearingCentreEmailAddress(asylumCase));
+        return singleton(emailAddressFinder.getCmrListingCaseOfficerHearingCentreEmailAddress(asylumCase));
     }
 
     @Override
