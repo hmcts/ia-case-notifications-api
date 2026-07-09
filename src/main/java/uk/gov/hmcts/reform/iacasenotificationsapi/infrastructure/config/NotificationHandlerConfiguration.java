@@ -7205,6 +7205,9 @@ public class NotificationHandlerConfiguration {
 
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
+                log.info(isInternalNonStdDirectionWithParty(asylumCase, Parties.APPELLANT, directionFinder) + " isInternalNonStdDirectionWithParty for APPELLANT");
+                log.info(isInternalNonStdDirectionWithParty(asylumCase, Parties.LEGAL_REPRESENTATIVE, directionFinder) + " isInternalNonStdDirectionWithParty for LEGAL_REPRESENTATIVE");
+                log.info(isInternalNonStdDirectionWithParty(asylumCase, Parties.APPELLANT_AND_RESPONDENT, directionFinder) + " isInternalNonStdDirectionWithParty for APPELLANT_AND_RESPONDENT");
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.SEND_DIRECTION
                     && (isInternalNonStdDirectionWithParty(asylumCase, Parties.APPELLANT, directionFinder) ||
