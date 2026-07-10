@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerCmrListingPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamCmrListingPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamCmrListingProductionPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeInPersonCmrListingCasePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.EmailNotificationGenerator;
@@ -26,6 +27,7 @@ public class CmrNotificationGeneratorConfiguration {
         CaseOfficerCmrListingPersonalisation caseOfficerCmrListingPersonalisation,
         HomeOfficeInPersonCmrListingCasePersonalisation homeOfficeInPersonCmrListingCasePersonalisation,
         DetentionEngagementTeamCmrListingPersonalisation detentionEngagementTeamCmrListingPersonalisation,
+        DetentionEngagementTeamCmrListingProductionPersonalisation detentionEngagementTeamCmrListingProductionPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
@@ -35,7 +37,8 @@ public class CmrNotificationGeneratorConfiguration {
                 newArrayList(
                     legalRepresentativeInPersonCmrListingPersonalisation,
                     caseOfficerCmrListingPersonalisation,
-                    homeOfficeInPersonCmrListingCasePersonalisation
+                    homeOfficeInPersonCmrListingCasePersonalisation,
+                    detentionEngagementTeamCmrListingProductionPersonalisation
                 ),
                 notificationSender,
                 notificationIdAppender

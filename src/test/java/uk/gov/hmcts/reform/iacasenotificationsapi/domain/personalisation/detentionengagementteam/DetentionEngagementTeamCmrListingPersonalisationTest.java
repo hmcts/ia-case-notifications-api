@@ -93,7 +93,7 @@ class DetentionEngagementTeamCmrListingPersonalisationTest {
     @Test
     void should_return_given_reference_id() {
         Long caseId = 12345L;
-        assertEquals(caseId + "_INTERNAL_DETAINED_CMR_LISTING_DET",
+        assertEquals(caseId + "_INTERNAL_DETAINED_CASE_LISTED_DET",
             detentionEngagementTeamCmrListingPersonalisation.getReferenceId(caseId));
     }
 
@@ -169,6 +169,6 @@ class DetentionEngagementTeamCmrListingPersonalisationTest {
         when(documentDownloadClient.getJsonObjectFromDocument(caseListedDoc)).thenThrow(new NotificationClientException("File size is more than 2MB"));
         IllegalStateException exception =
             assertThrows(IllegalStateException.class, () -> detentionEngagementTeamCmrListingPersonalisation.getPersonalisationForLink(asylumCase));
-        assertEquals("Failed to get Internal detained case CMR listing letter in compatible format", exception.getMessage());
+        assertEquals("Failed to get Internal detained case listed letter in compatible format", exception.getMessage());
     }
 }

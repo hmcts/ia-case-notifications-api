@@ -27,11 +27,13 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 @Slf4j
 @Service
 public class DetentionEngagementTeamCmrListingPersonalisation implements EmailWithLinkNotificationPersonalisation {
+
     private final String internalDetainedCaseListedTemplateId;
     private final DocumentDownloadClient documentDownloadClient;
     private final DetentionEmailService detentionEmailService;
     private final PersonalisationProvider personalisationProvider;
     private String subjectPrefix;
+
 
     public DetentionEngagementTeamCmrListingPersonalisation(
             @Value("${govnotify.template.appealSubmitted.detentionEngagementTeam.email}") String internalDetainedCaseListedTemplateId,
@@ -68,7 +70,7 @@ public class DetentionEngagementTeamCmrListingPersonalisation implements EmailWi
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_INTERNAL_DETAINED_CMR_LISTING_DET";
+        return caseId + "_INTERNAL_DETAINED_CASE_LISTED_DET";
     }
 
     @Override
@@ -87,8 +89,8 @@ public class DetentionEngagementTeamCmrListingPersonalisation implements EmailWi
         try {
             return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, INTERNAL_CASE_LISTED_LETTER_BUNDLE));
         } catch (IOException | NotificationClientException e) {
-            log.error("Failed to get Internal detained case CMR listing letter in compatible format", e);
-            throw new IllegalStateException("Failed to get Internal detained case CMR listing letter in compatible format");
+            log.error("Failed to get Internal detained case listed letter in compatible format", e);
+            throw new IllegalStateException("Failed to get Internal detained case listed letter in compatible format");
         }
     }
 }
