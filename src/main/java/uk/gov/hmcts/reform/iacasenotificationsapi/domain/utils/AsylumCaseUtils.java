@@ -585,7 +585,7 @@ public class AsylumCaseUtils {
 
     public static boolean hasStf24WeeksStatus(AsylumCase asylumCase) {
         return asylumCase
-                .read(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)
+                .read(AsylumCaseDefinition.STF_24W_PREVIOUS_STATUS_WAS_YES_AUTO_GENERATED, YesOrNo.class)
                 .map(value -> value.equals(YesOrNo.YES))
                 .orElse(false);
     }
