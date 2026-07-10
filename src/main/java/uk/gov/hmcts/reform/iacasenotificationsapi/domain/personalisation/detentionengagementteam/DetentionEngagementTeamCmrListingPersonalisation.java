@@ -20,7 +20,7 @@ import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DETENTION_FACILITY;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.INTERNAL_CASE_LISTED_LETTER_BUNDLE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.INTERNAL_CMR_LISTING_LETTER_BUNDLE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLetterForNotification;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
 
@@ -28,21 +28,21 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 @Service
 public class DetentionEngagementTeamCmrListingPersonalisation implements EmailWithLinkNotificationPersonalisation {
 
-    private final String internalDetainedCaseListedTemplateId;
+    private final String internalDetainedCmrListingTemplateId;
     private final DocumentDownloadClient documentDownloadClient;
     private final DetentionEmailService detentionEmailService;
     private final PersonalisationProvider personalisationProvider;
-    private String subjectPrefix;
+    private final String subjectPrefix;
 
 
     public DetentionEngagementTeamCmrListingPersonalisation(
-            @Value("${govnotify.template.appealSubmitted.detentionEngagementTeam.email}") String internalDetainedCaseListedTemplateId,
-            DetentionEmailService detentionEmailService,
-            DocumentDownloadClient documentDownloadClient,
-            @Value("${govnotify.emailPrefix.nonAdaInPerson}") String subjectPrefix,
-            PersonalisationProvider personalisationProvider
+        @Value("${govnotify.template.listAssistHearing.cmrListing.detentionEngagementTeam.email}") String internalDetainedCmrListingTemplateId,
+        DetentionEmailService detentionEmailService,
+        DocumentDownloadClient documentDownloadClient,
+        @Value("${govnotify.emailPrefix.nonAdaInPerson}") String subjectPrefix,
+        PersonalisationProvider personalisationProvider
     ) {
-        this.internalDetainedCaseListedTemplateId = internalDetainedCaseListedTemplateId;
+        this.internalDetainedCmrListingTemplateId = internalDetainedCmrListingTemplateId;
         this.detentionEmailService = detentionEmailService;
         this.documentDownloadClient = documentDownloadClient;
         this.subjectPrefix = subjectPrefix;
@@ -51,7 +51,7 @@ public class DetentionEngagementTeamCmrListingPersonalisation implements EmailWi
 
     @Override
     public String getTemplateId() {
-        return internalDetainedCaseListedTemplateId;
+        return internalDetainedCmrListingTemplateId;
     }
 
     @Override
@@ -70,7 +70,7 @@ public class DetentionEngagementTeamCmrListingPersonalisation implements EmailWi
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_INTERNAL_DETAINED_CASE_LISTED_DET";
+        return caseId + "_INTERNAL_DETAINED_CMR_LISTING_DET";
     }
 
     @Override
@@ -87,10 +87,10 @@ public class DetentionEngagementTeamCmrListingPersonalisation implements EmailWi
 
     private JSONObject getInternalDetainedCaseListedLetterInJsonObject(AsylumCase asylumCase) {
         try {
-            return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, INTERNAL_CASE_LISTED_LETTER_BUNDLE));
+            return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, INTERNAL_CMR_LISTING_LETTER_BUNDLE));
         } catch (IOException | NotificationClientException e) {
-            log.error("Failed to get Internal detained case listed letter in compatible format", e);
-            throw new IllegalStateException("Failed to get Internal detained case listed letter in compatible format");
+            log.error("Failed to get Internal detained CMR listing letter in compatible format", e);
+            throw new IllegalStateException("Failed to get Internal detained CMR listing letter in compatible format");
         }
     }
 }

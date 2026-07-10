@@ -68,7 +68,7 @@ class DetentionEngagementTeamCmrListingProductionPersonalisationTest {
     @Test
     void should_return_given_reference_id() {
         Long caseId = 12345L;
-        assertEquals(caseId + "_DETAINED_CASE_LISTED_PRODUCTION_DET", personalisation.getReferenceId(caseId));
+        assertEquals(caseId + "_DETAINED_CMR_LISTING_PRODUCTION_DET", personalisation.getReferenceId(caseId));
     }
 
     @Test
@@ -95,9 +95,9 @@ class DetentionEngagementTeamCmrListingProductionPersonalisationTest {
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(DETENTION_BUILDING, String.class)).thenReturn(Optional.of(someBuilding));
-        when(dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getHearingDateTime(asylumCase))).thenReturn(hearingDate);
-        when(dateTimeExtractor.extractHearingTime(hearingDetailsFinder.getHearingDateTime(asylumCase))).thenReturn(hearingTime);
-        when(hearingDetailsFinder.getHearingCentreAddress(asylumCase)).thenReturn(hearingCentreAddress);
+        when(dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getCmrHearingDateTime(asylumCase))).thenReturn(hearingDate);
+        when(dateTimeExtractor.extractHearingTime(hearingDetailsFinder.getCmrHearingDateTime(asylumCase))).thenReturn(hearingTime);
+        when(hearingDetailsFinder.getCmrHearingCentreAddress(asylumCase)).thenReturn(hearingCentreAddress);
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("prison"));
         PrisonNomsNumber prisonNomsNumber = mock(PrisonNomsNumber.class);
         when(asylumCase.read(PRISON_NOMS, PrisonNomsNumber.class)).thenReturn(Optional.of(prisonNomsNumber));
@@ -124,9 +124,9 @@ class DetentionEngagementTeamCmrListingProductionPersonalisationTest {
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(DETENTION_BUILDING, String.class)).thenReturn(Optional.of(someBuilding));
-        when(dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getHearingDateTime(asylumCase))).thenReturn(hearingDate);
-        when(dateTimeExtractor.extractHearingTime(hearingDetailsFinder.getHearingDateTime(asylumCase))).thenReturn(hearingTime);
-        when(hearingDetailsFinder.getHearingCentreAddress(asylumCase)).thenReturn(hearingCentreAddress);
+        when(dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getCmrHearingDateTime(asylumCase))).thenReturn(hearingDate);
+        when(dateTimeExtractor.extractHearingTime(hearingDetailsFinder.getCmrHearingDateTime(asylumCase))).thenReturn(hearingTime);
+        when(hearingDetailsFinder.getCmrHearingCentreAddress(asylumCase)).thenReturn(hearingCentreAddress);
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
 
         Map<String, String> actualPersonalisation = personalisation.getPersonalisation(asylumCase);
@@ -149,9 +149,9 @@ class DetentionEngagementTeamCmrListingProductionPersonalisationTest {
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(DETENTION_BUILDING, String.class)).thenReturn(Optional.empty());
-        when(dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getHearingDateTime(asylumCase))).thenReturn(hearingDate);
-        when(dateTimeExtractor.extractHearingTime(hearingDetailsFinder.getHearingDateTime(asylumCase))).thenReturn(hearingTime);
-        when(hearingDetailsFinder.getHearingCentreAddress(asylumCase)).thenReturn(hearingCentreAddress);
+        when(dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getCmrHearingDateTime(asylumCase))).thenReturn(hearingDate);
+        when(dateTimeExtractor.extractHearingTime(hearingDetailsFinder.getCmrHearingDateTime(asylumCase))).thenReturn(hearingTime);
+        when(hearingDetailsFinder.getCmrHearingCentreAddress(asylumCase)).thenReturn(hearingCentreAddress);
 
         Map<String, String> actualPersonalisation = personalisation.getPersonalisation(asylumCase);
 

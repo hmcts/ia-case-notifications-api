@@ -51,7 +51,7 @@ public class DetentionEngagementTeamCmrListingProductionPersonalisation implemen
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_DETAINED_CASE_LISTED_PRODUCTION_DET";
+        return caseId + "_DETAINED_CMR_LISTING_PRODUCTION_DET";
     }
 
     @Override
@@ -71,9 +71,9 @@ public class DetentionEngagementTeamCmrListingProductionPersonalisation implemen
             .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
             .put("nomsRef", prisonNomsNumber)
-            .put("hearingDate", dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getHearingDateTime(asylumCase)))
-            .put("hearingTime", dateTimeExtractor.extractHearingTime(hearingDetailsFinder.getHearingDateTime(asylumCase)))
-            .put("hearingCentreAddress", hearingDetailsFinder.getHearingCentreAddress(asylumCase))
+            .put("hearingDate", dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getCmrHearingDateTime(asylumCase)))
+            .put("hearingTime", dateTimeExtractor.extractHearingTime(hearingDetailsFinder.getCmrHearingDateTime(asylumCase)))
+            .put("hearingCentreAddress", hearingDetailsFinder.getCmrHearingCentreAddress(asylumCase))
             .put("detentionBuilding", asylumCase.read(DETENTION_BUILDING, String.class).orElse(""))
             .build();
     }

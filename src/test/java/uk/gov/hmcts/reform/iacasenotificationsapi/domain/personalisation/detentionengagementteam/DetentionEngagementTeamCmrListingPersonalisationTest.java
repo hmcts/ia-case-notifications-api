@@ -38,7 +38,7 @@ import uk.gov.service.notify.NotificationClientException;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class DetentionEngagementTeamCmrListingPersonalisationTest {
     final DocumentWithMetadata caseListedDoc = TestUtils.getDocumentWithMetadata(
-        "id", "detained-appellant-cmr-listing-letter", "some other desc", DocumentTag.INTERNAL_CASE_LISTED_LETTER_BUNDLE);
+        "id", "detained-appellant-cmr-listing-letter", "some other desc", DocumentTag.INTERNAL_CMR_LISTING_LETTER_BUNDLE);
     final IdValue<DocumentWithMetadata> caseListedBundle = new IdValue<>("1", caseListedDoc);
     private final String templateId = "templateId";
     private final String appealReferenceNumber = "someReferenceNumber";
@@ -93,7 +93,7 @@ class DetentionEngagementTeamCmrListingPersonalisationTest {
     @Test
     void should_return_given_reference_id() {
         Long caseId = 12345L;
-        assertEquals(caseId + "_INTERNAL_DETAINED_CASE_LISTED_DET",
+        assertEquals(caseId + "_INTERNAL_DETAINED_CMR_LISTING_DET",
             detentionEngagementTeamCmrListingPersonalisation.getReferenceId(caseId));
     }
 
@@ -161,7 +161,7 @@ class DetentionEngagementTeamCmrListingPersonalisationTest {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
         IllegalStateException exception =
             assertThrows(IllegalStateException.class, () -> detentionEngagementTeamCmrListingPersonalisation.getPersonalisationForLink(asylumCase));
-        assertEquals("internalCaseListedLetterBundle document not available", exception.getMessage());
+        assertEquals("internalCmrListingLetterBundle document not available", exception.getMessage());
     }
 
     @Test
@@ -169,6 +169,6 @@ class DetentionEngagementTeamCmrListingPersonalisationTest {
         when(documentDownloadClient.getJsonObjectFromDocument(caseListedDoc)).thenThrow(new NotificationClientException("File size is more than 2MB"));
         IllegalStateException exception =
             assertThrows(IllegalStateException.class, () -> detentionEngagementTeamCmrListingPersonalisation.getPersonalisationForLink(asylumCase));
-        assertEquals("Failed to get Internal detained case listed letter in compatible format", exception.getMessage());
+        assertEquals("Failed to get Internal detained CMR listing letter in compatible format", exception.getMessage());
     }
 }
