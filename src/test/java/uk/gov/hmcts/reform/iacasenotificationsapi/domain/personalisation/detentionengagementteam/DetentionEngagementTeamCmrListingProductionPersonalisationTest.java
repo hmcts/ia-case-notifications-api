@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 
 @ExtendWith(MockitoExtension.class)
@@ -76,9 +77,17 @@ class DetentionEngagementTeamCmrListingProductionPersonalisationTest {
         String detentionEngagementTeamEmail = "det@email.com";
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
+        when(asylumCase.read(CMR_IS_REMOTE_HEARING, YesOrNo.class)).thenReturn(Optional.of(NO));
         when(detentionFacilityEmailService.getDetentionEmailAddress(asylumCase)).thenReturn(detentionEngagementTeamEmail);
 
         assertTrue(personalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
+    }
+
+    @Test
+    void should_return_empty_recipients_list_when_cmr_is_remote_hearing() {
+        when(asylumCase.read(CMR_IS_REMOTE_HEARING, YesOrNo.class)).thenReturn(Optional.of(YES));
+
+        assertTrue(personalisation.getRecipientsList(asylumCase).isEmpty());
     }
 
     @Test

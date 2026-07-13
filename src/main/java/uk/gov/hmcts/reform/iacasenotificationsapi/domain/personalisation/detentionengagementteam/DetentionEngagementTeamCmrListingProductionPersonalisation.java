@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.PrisonNomsNumber;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionFacilityEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
@@ -46,7 +47,11 @@ public class DetentionEngagementTeamCmrListingProductionPersonalisation implemen
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return Collections.singleton(detentionFacilityEmailService.getDetentionEmailAddress(asylumCase));
+        if (isCmrLRemoteHearing(asylumCase)) {
+            return Collections.emptySet();
+        } else {
+            return Collections.singleton(detentionFacilityEmailService.getDetentionEmailAddress(asylumCase));
+        }
     }
 
     @Override
@@ -76,5 +81,9 @@ public class DetentionEngagementTeamCmrListingProductionPersonalisation implemen
             .put("hearingCentreAddress", hearingDetailsFinder.getCmrHearingCentreAddress(asylumCase))
             .put("detentionBuilding", asylumCase.read(DETENTION_BUILDING, String.class).orElse(""))
             .build();
+    }
+
+    private boolean isCmrLRemoteHearing(AsylumCase asylumCase) {
+        return asylumCase.read(CMR_IS_REMOTE_HEARING, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES;
     }
 }
