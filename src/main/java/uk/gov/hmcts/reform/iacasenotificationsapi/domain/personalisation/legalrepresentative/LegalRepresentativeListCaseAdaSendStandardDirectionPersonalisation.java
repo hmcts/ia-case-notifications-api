@@ -81,7 +81,7 @@ public class LegalRepresentativeListCaseAdaSendStandardDirectionPersonalisation 
                 .put("linkToOnlineService", iaExUiFrontendUrl)
                 .put("hearingCentreAddress", hearingDetailsFinder.getHearingCentreLocation(asylumCase));
 
-        PersonalisationProvider.buildHearingRequirementsFields(asylumCase, listCaseFields);
+        listCaseFields.putAll(PersonalisationProvider.getHearingRequirementsFields(asylumCase));
 
         return listCaseFields.build();
     }

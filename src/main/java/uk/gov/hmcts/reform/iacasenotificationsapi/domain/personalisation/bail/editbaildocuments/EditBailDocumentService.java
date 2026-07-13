@@ -23,13 +23,15 @@ public class EditBailDocumentService {
             Optional<List<IdValue<HasDocument>>> maybeDocumentCollectionBefore = bailCaseBefore.read(fieldDefinition);
             if (maybeDocumentCollectionBefore.isPresent()) {
                 List<IdValue<HasDocument>> docs = maybeDocumentCollectionBefore.get();
-                docs.forEach(doc -> addToListIfMatch(docNamesFromCaseNote, documentsList, doc.getValue()));
+                docs.forEach(doc -> getDocumentNameIfMatch(docNamesFromCaseNote, doc.getValue())
+                    .ifPresent(documentsList::add));
 
                 Optional<List<IdValue<HasDocument>>> maybeDocumentCollectionAfter = bailCaseAfter.read(fieldDefinition);
                 if (maybeDocumentCollectionAfter.isPresent()) {
                     List<IdValue<HasDocument>> addedDocs = removeDocsWithSameId(maybeDocumentCollectionAfter.get(),
                         maybeDocumentCollectionBefore.get());
-                    addedDocs.forEach(doc -> addToListIfMatch(docNamesFromCaseNote, documentsList, doc.getValue()));
+                    addedDocs.forEach(doc -> getDocumentNameIfMatch(docNamesFromCaseNote, doc.getValue())
+                        .ifPresent(documentsList::add));
                 }
             }
 
@@ -38,14 +40,9 @@ public class EditBailDocumentService {
     }
 
 
-    private void addToListIfMatch(List<String> docNamesFromCaseNote,
-                                  List<String> documentsList,
-                                  HasDocument doc) {
-
+    private Optional<String> getDocumentNameIfMatch(List<String> docNamesFromCaseNote, HasDocument doc) {
         String documentName = doc.getDocument().getDocumentFilename();
-        if (docNamesFromCaseNote.contains(documentName)) {
-            documentsList.add(documentName);
-        }
+        return docNamesFromCaseNote.contains(documentName) ? Optional.of(documentName) : Optional.empty();
     }
 
     private List<BailCaseFieldDefinition> getListOfDocumentFields() {

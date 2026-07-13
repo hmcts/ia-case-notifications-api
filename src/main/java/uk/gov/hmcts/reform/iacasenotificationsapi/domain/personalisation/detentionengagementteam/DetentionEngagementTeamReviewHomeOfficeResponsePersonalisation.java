@@ -26,8 +26,6 @@ import uk.gov.service.notify.NotificationClientException;
 @Service
 public class DetentionEngagementTeamReviewHomeOfficeResponsePersonalisation implements EmailWithLinkNotificationPersonalisation {
 
-    private final String homeOfficeAppealReviewMaintainedDocumentName = "Home Office Response";
-    private final String homeOfficeAppealReviewWithdrawnDocumentName = "Withdrawal Letter";
     private final String internalDetainedReviewHomeOfficeResponseTemplateId;
     private final DocumentDownloadClient documentDownloadClient;
     private final DetEmailService detEmailService;
@@ -83,6 +81,9 @@ public class DetentionEngagementTeamReviewHomeOfficeResponsePersonalisation impl
     }
 
     private String getDocumentName(AsylumCase asylumCase) {
+        final String homeOfficeAppealReviewMaintainedDocumentName = "Home Office Response";
+        final String homeOfficeAppealReviewWithdrawnDocumentName = "Withdrawal Letter";
+
         AppealReviewOutcome appealReviewOutcome =  asylumCase.read(APPEAL_REVIEW_OUTCOME, AppealReviewOutcome.class)
                 .orElseThrow(() -> new IllegalStateException("Appeal review outcome is not present"));
 
