@@ -5037,6 +5037,24 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("stf24WeeksCompleteCaseReviewLegalRepresentativeLetterNotificationGenerator")
+    public List<NotificationGenerator> stf24WeeksCompleteCaseReviewLegalRepresentativeLetterNotificationGenerator(
+            LegalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationLetter legalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationLetter,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new LetterNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationLetter
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
     @Bean("stf24WeeksCompleteCaseReviewHomeOfficeNotificationGenerator")
     public List<NotificationGenerator> stf24WeeksCompleteCaseReviewHomeOfficeNotificationGenerator(
             HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation homeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation,
