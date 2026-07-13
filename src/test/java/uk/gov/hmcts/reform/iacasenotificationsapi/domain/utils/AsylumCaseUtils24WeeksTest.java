@@ -24,13 +24,17 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_IN_UK;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_SUBMISSION_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CONTACT_PREFERENCE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.EMAIL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.INTERNAL_APPELLANT_EMAIL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.MOBILE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.SUBSCRIPTIONS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.TRIBUNAL_RECEIVED_DATE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.COMPLETE_CASE_REVIEW;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.SUBMIT_APPEAL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 
@@ -376,6 +380,59 @@ public class AsylumCaseUtils24WeeksTest {
             boolean result = AsylumCaseUtils.hasSmsContactPreference(asylumCase);
 
             assertTrue(result);
+        }
+    }
+
+    @Nested
+    @DisplayName("isCaseReviewFor24WeeksCase")
+    class IsCaseReviewFor24WeeksCaseTests {
+
+        // Scenario 1 - BAU in-country case with 24-week flag set to Yes → should fire
+        @Test
+        void should_return_true_for_bau_in_country_case_with_24_week_flag() {
+            AsylumCase asylumCase = mock(AsylumCase.class);
+            when(asylumCase.read(APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YES));
+            when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YES));
+
+            assertTrue(AsylumCaseUtils.isCaseReviewFor24WeeksCase(COMPLETE_CASE_REVIEW, asylumCase));
+        }
+
+        // Scenario 2 - BAU case with 24-week flag set to No → should NOT fire
+        @Test
+        void should_return_false_for_bau_case_when_24_week_flag_is_no() {
+            AsylumCase asylumCase = mock(AsylumCase.class);
+            when(asylumCase.read(APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YES));
+            when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(NO));
+
+            assertFalse(AsylumCaseUtils.isCaseReviewFor24WeeksCase(COMPLETE_CASE_REVIEW, asylumCase));
+        }
+
+        // Scenario 3 - Detained case with 24-week flag set to No → should NOT fire
+        @Test
+        void should_return_false_for_detained_case_when_24_week_flag_is_no() {
+            AsylumCase asylumCase = mock(AsylumCase.class);
+            when(asylumCase.read(APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YES));
+            when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(NO));
+
+            assertFalse(AsylumCaseUtils.isCaseReviewFor24WeeksCase(COMPLETE_CASE_REVIEW, asylumCase));
+        }
+
+        @Test
+        void should_return_false_when_event_is_not_complete_case_review() {
+            AsylumCase asylumCase = mock(AsylumCase.class);
+            when(asylumCase.read(APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YES));
+            when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YES));
+
+            assertFalse(AsylumCaseUtils.isCaseReviewFor24WeeksCase(SUBMIT_APPEAL, asylumCase));
+        }
+
+        @Test
+        void should_return_false_when_appellant_is_not_in_uk() {
+            AsylumCase asylumCase = mock(AsylumCase.class);
+            when(asylumCase.read(APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(NO));
+            when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YES));
+
+            assertFalse(AsylumCaseUtils.isCaseReviewFor24WeeksCase(COMPLETE_CASE_REVIEW, asylumCase));
         }
     }
 }
