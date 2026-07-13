@@ -28,6 +28,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24Weeks
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.DAYS_56;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.DAYS_56_FROM_DATE_OF_DIRECTION;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.DECISION_SENT_DATE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.HOME_OFFICE_REFERENCE_NUMBER_KEY;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.PRACTICE_DIRECTION;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.WEEKS_DEADLINE;
@@ -89,6 +90,7 @@ public class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation
 
         ImmutableMap.Builder<String, String> builder = ImmutableMap.<String, String>builder()
                 .put(APPEAL_REFERENCE_NUMBER_KEY, appealRef)
+                .put(HOME_OFFICE_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
                 .put(APPELLANT_GIVEN_NAMES_KEY, givenNames)
                 .put(APPELLANT_FAMILY_NAME_KEY, familyName)

@@ -28,6 +28,7 @@ public class Stf24WeeksUtil {
     public static final String APPEAL_RECEIVED_DATE = "appealReceivedDate";
     public static final String APPELLANT_FULL_NAME = "appellantFullName";
     public static final String EMPTY_STRING = "";
+    public static final String HOME_OFFICE_REFERENCE_NUMBER_KEY = "homeOfficeReferenceNumber";
 
     private Stf24WeeksUtil() {
     }
