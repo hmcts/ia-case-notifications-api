@@ -27,6 +27,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24Weeks
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.EMPTY_STRING;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_SMS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.WEEKS_DEADLINE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.noLegalRepresentation;
 
 @Slf4j
 @Service
@@ -77,7 +78,7 @@ public class Appellant24WeeksReviewSms implements SmsNotificationPersonalisation
                 .put(DAYS_14_FROM_DATE_OF_DIRECTION_KEY, now.plusDays(DAYS_14).format(dtf))
                 .put(DAYS_42_FROM_DATE_OF_DIRECTION_KEY, now.plusDays(DAYS_42).format(dtf))
                 .put(DAYS_56_FROM_DATE_OF_DIRECTION, now.plusDays(DAYS_56).format(dtf));
-        boolean noLegalRepresentation = AsylumCaseUtils.noLegalRepresentation(asylumCase);
+        boolean noLegalRepresentation = noLegalRepresentation(asylumCase);
         log.info("no legal representation? {}", noLegalRepresentation);
         if (noLegalRepresentation) {
             builder.put(LINK_TO_SERVICE_TEXT_AND_URL, "Sign into your account to see appeal: " + iaAipFrontendUrl);

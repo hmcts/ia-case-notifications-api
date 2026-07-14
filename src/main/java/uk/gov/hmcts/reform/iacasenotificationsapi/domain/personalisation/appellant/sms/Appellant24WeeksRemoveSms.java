@@ -18,6 +18,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Notific
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.EMPTY_STRING;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_SMS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.WEEKS_DEADLINE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.noLegalRepresentation;
 
 @Slf4j
 @Service
@@ -66,7 +67,7 @@ public class Appellant24WeeksRemoveSms implements SmsNotificationPersonalisation
         ImmutableMap.Builder<String, String> builder = ImmutableMap.<String, String>builder()
                 .put(APPEAL_REFERENCE_NUMBER_KEY, appealRef)
                 .put(WEEKS_DEADLINE, AsylumCaseUtils.populateStatutoryTimeFrame24wDate(asylumCase));
-        boolean noLegalRepresentation = AsylumCaseUtils.noLegalRepresentation(asylumCase);
+        boolean noLegalRepresentation = noLegalRepresentation(asylumCase);
         log.info("no legal representation? {}", noLegalRepresentation);
         if (noLegalRepresentation) {
             builder.put(LINK_TO_SERVICE_TEXT_AND_URL, "Sign into your account to see how your appeal is progressing: " + iaAipFrontendUrl);

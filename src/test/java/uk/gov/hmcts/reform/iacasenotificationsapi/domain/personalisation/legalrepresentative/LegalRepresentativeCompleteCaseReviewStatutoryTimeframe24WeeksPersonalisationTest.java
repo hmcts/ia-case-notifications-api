@@ -39,6 +39,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24Weeks
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.DAYS_56;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.DAYS_56_FROM_DATE_OF_DIRECTION;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.DECISION_SENT_DATE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.LEGAL_REP_REFERENCE_NUMBER_KEY;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.PRACTICE_DIRECTION;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.WEEKS_DEADLINE;
@@ -55,7 +56,6 @@ class LegalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisat
     public static final String WEEKS_DEADLINE_KEY = WEEKS_DEADLINE;
     public static final String APPEAL_RECEIVED_DATE_KEY = APPEAL_RECEIVED_DATE;
     public static final String PRACTICE_DIRECTION_KEY = PRACTICE_DIRECTION;
-    private static final String LEGAL_REP_REFERENCE_NUMBER_KEY = "legalRepReferenceNumber";
     private static final String APPELLANT_GIVEN_NAMES_KEY = "appellantGivenNames";
     private static final String APPEAL_REFERENCE_NUMBER_KEY = "appealReferenceNumber";
     private static final String APPELLANT_FAMILY_NAME_KEY = "appellantFamilyName";
