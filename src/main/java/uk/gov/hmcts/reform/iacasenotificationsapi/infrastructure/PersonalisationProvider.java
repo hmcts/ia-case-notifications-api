@@ -42,7 +42,6 @@ public class PersonalisationProvider {
     private final String recipient = "recipient";
 
     ImmutableMap.Builder<String, AsylumCaseDefinition> personalisationBuilder = new ImmutableMap.Builder<String, AsylumCaseDefinition>()
-<<<<<<< HEAD
             .put(APPEAL_REFERENCE_NUMBER_CONST, APPEAL_REFERENCE_NUMBER)
             .put("legalRepReferenceNumber", LEGAL_REP_REFERENCE_NUMBER)
             .put(ARIA_LISTING_REFERENCE_CONST, ARIA_LISTING_REFERENCE)
@@ -76,41 +75,6 @@ public class PersonalisationProvider {
             .put(APPLY_FOR_FTPA_RESPONDENT, personalisationBuilder
                     .build())
             .build();
-=======
-        .put(APPEAL_REFERENCE_NUMBER_CONST, APPEAL_REFERENCE_NUMBER)
-        .put("legalRepReferenceNumber", LEGAL_REP_REFERENCE_NUMBER)
-        .put(ARIA_LISTING_REFERENCE_CONST, ARIA_LISTING_REFERENCE)
-        .put(HOME_OFFICE_REFERENCE_NUMBER_CONST, HOME_OFFICE_REFERENCE_NUMBER)
-        .put(APPELLANT_GIVEN_NAMES_CONST, APPELLANT_GIVEN_NAMES)
-        .put(APPELLANT_FAMILY_NAME_CONST, APPELLANT_FAMILY_NAME);
-
-    Map<Event, Map<String, AsylumCaseDefinition>> eventDefinition = new ImmutableMap.Builder<Event, Map<String, AsylumCaseDefinition>>()
-        .put(CHANGE_DIRECTION_DUE_DATE, personalisationBuilder
-            .build())
-        .put(DRAFT_HEARING_REQUIREMENTS, personalisationBuilder
-            .build())
-        .put(EDIT_CASE_LISTING, personalisationBuilder
-            .build())
-        .put(UPLOAD_ADDITIONAL_EVIDENCE, personalisationBuilder
-            .build())
-        .put(UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE, personalisationBuilder
-            .build())
-        .put(UPLOAD_ADDENDUM_EVIDENCE, personalisationBuilder
-            .build())
-        .put(UPLOAD_ADDENDUM_EVIDENCE_LEGAL_REP, personalisationBuilder
-            .build())
-        .put(UPLOAD_ADDENDUM_EVIDENCE_HOME_OFFICE, personalisationBuilder
-            .build())
-        .put(UPLOAD_ADDENDUM_EVIDENCE_ADMIN_OFFICER, personalisationBuilder
-            .build())
-        .put(SEND_DIRECTION, personalisationBuilder
-            .build())
-        .put(APPLY_FOR_FTPA_APPELLANT, personalisationBuilder
-            .build())
-        .put(APPLY_FOR_FTPA_RESPONDENT, personalisationBuilder
-            .build())
-        .build();
->>>>>>> f26cb0222513c7e72a78a5a45ea5bee8b8bd511a
 
     public PersonalisationProvider(
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
@@ -168,83 +132,44 @@ public class PersonalisationProvider {
         if (isSubmitRequirementsAvailable.isPresent() && isSubmitRequirementsAvailable.get() == YesOrNo.YES) {
 
             caseListingValues
-<<<<<<< HEAD
-                    .put("hearingRequirementVulnerabilities", generateAdjustmentOutput(asylumCase,
-                            VULNERABILITIES_DECISION_FOR_DISPLAY,
-                            VULNERABILITIES_TRIBUNAL_RESPONSE,
-                            "No special adjustments are being made to accommodate vulnerabilities"))
-                    .put("hearingRequirementMultimedia", generateAdjustmentOutput(asylumCase,
-                            MULTIMEDIA_DECISION_FOR_DISPLAY,
-                            MULTIMEDIA_TRIBUNAL_RESPONSE,
-                            "No multimedia equipment is being provided"))
-                    .put("hearingRequirementSingleSexCourt", generateAdjustmentOutput(asylumCase,
-                            SINGLE_SEX_COURT_DECISION_FOR_DISPLAY,
-                            SINGLE_SEX_COURT_TRIBUNAL_RESPONSE,
-                            "The court will not be single sex"))
-                    .put("hearingRequirementInCameraCourt", generateAdjustmentOutput(asylumCase,
-                            IN_CAMERA_COURT_DECISION_FOR_DISPLAY,
-                            IN_CAMERA_COURT_TRIBUNAL_RESPONSE,
-                            "The hearing will be held in public court"))
-                    .put("hearingRequirementOther", generateAdjustmentOutput(asylumCase,
-                            OTHER_DECISION_FOR_DISPLAY,
-                            ADDITIONAL_TRIBUNAL_RESPONSE,
-                            "No other adjustments are being made"))
-                    .put("remoteVideoCallTribunalResponse", readStringCaseField(asylumCase, REMOTE_VIDEO_CALL_TRIBUNAL_RESPONSE,
-                            ""));
-=======
                 .put("hearingRequirementVulnerabilities", generateAdjustmentOutput(asylumCase,
-                    VULNERABILITIES_DECISION_FOR_DISPLAY,
-                    VULNERABILITIES_TRIBUNAL_RESPONSE,
-                    "No special adjustments are being made to accommodate vulnerabilities"))
+                        VULNERABILITIES_DECISION_FOR_DISPLAY,
+                        VULNERABILITIES_TRIBUNAL_RESPONSE,
+                        "No special adjustments are being made to accommodate vulnerabilities"))
                 .put("hearingRequirementMultimedia", generateAdjustmentOutput(asylumCase,
-                    MULTIMEDIA_DECISION_FOR_DISPLAY,
-                    MULTIMEDIA_TRIBUNAL_RESPONSE,
-                    "No multimedia equipment is being provided"))
+                        MULTIMEDIA_DECISION_FOR_DISPLAY,
+                        MULTIMEDIA_TRIBUNAL_RESPONSE,
+                        "No multimedia equipment is being provided"))
                 .put("hearingRequirementSingleSexCourt", generateAdjustmentOutput(asylumCase,
-                    SINGLE_SEX_COURT_DECISION_FOR_DISPLAY,
-                    SINGLE_SEX_COURT_TRIBUNAL_RESPONSE,
-                    "The court will not be single sex"))
+                        SINGLE_SEX_COURT_DECISION_FOR_DISPLAY,
+                        SINGLE_SEX_COURT_TRIBUNAL_RESPONSE,
+                        "The court will not be single sex"))
                 .put("hearingRequirementInCameraCourt", generateAdjustmentOutput(asylumCase,
-                    IN_CAMERA_COURT_DECISION_FOR_DISPLAY,
-                    IN_CAMERA_COURT_TRIBUNAL_RESPONSE,
-                    "The hearing will be held in public court"))
+                        IN_CAMERA_COURT_DECISION_FOR_DISPLAY,
+                        IN_CAMERA_COURT_TRIBUNAL_RESPONSE,
+                        "The hearing will be held in public court"))
                 .put("hearingRequirementOther", generateAdjustmentOutput(asylumCase,
-                    OTHER_DECISION_FOR_DISPLAY,
-                    ADDITIONAL_TRIBUNAL_RESPONSE,
-                    "No other adjustments are being made"))
+                        OTHER_DECISION_FOR_DISPLAY,
+                        ADDITIONAL_TRIBUNAL_RESPONSE,
+                        "No other adjustments are being made"))
                 .put("remoteVideoCallTribunalResponse", readStringCaseField(asylumCase, REMOTE_VIDEO_CALL_TRIBUNAL_RESPONSE,
-                    ""));
->>>>>>> f26cb0222513c7e72a78a5a45ea5bee8b8bd511a
+                        ""));
 
         } else {
 
             caseListingValues
-                    .put("hearingRequirementVulnerabilities", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_VULNERABILITIES,
-<<<<<<< HEAD
-                            "No special adjustments are being made to accommodate vulnerabilities"))
-                    .put("hearingRequirementMultimedia", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_MULTIMEDIA,
-                            "No multimedia equipment is being provided"))
-                    .put("hearingRequirementSingleSexCourt", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_SINGLE_SEX_COURT,
-                            "The court will not be single sex"))
-                    .put("hearingRequirementInCameraCourt", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_IN_CAMERA_COURT,
-                            "The hearing will be held in public court"))
-                    .put("hearingRequirementOther", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_OTHER,
-                            "No other adjustments are being made"))
-                    .put("remoteVideoCallTribunalResponse", readStringCaseField(asylumCase, REMOTE_VIDEO_CALL_TRIBUNAL_RESPONSE,
-                            ""));
-=======
+                .put("hearingRequirementVulnerabilities", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_VULNERABILITIES,
                         "No special adjustments are being made to accommodate vulnerabilities"))
-                    .put("hearingRequirementMultimedia", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_MULTIMEDIA,
+                .put("hearingRequirementMultimedia", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_MULTIMEDIA,
                         "No multimedia equipment is being provided"))
-                    .put("hearingRequirementSingleSexCourt", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_SINGLE_SEX_COURT,
+                .put("hearingRequirementSingleSexCourt", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_SINGLE_SEX_COURT,
                         "The court will not be single sex"))
-                    .put("hearingRequirementInCameraCourt", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_IN_CAMERA_COURT,
+                .put("hearingRequirementInCameraCourt", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_IN_CAMERA_COURT,
                         "The hearing will be held in public court"))
-                    .put("hearingRequirementOther", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_OTHER,
+                .put("hearingRequirementOther", readStringCaseField(asylumCase, LIST_CASE_REQUIREMENTS_OTHER,
                         "No other adjustments are being made"))
-                    .put("remoteVideoCallTribunalResponse", readStringCaseField(asylumCase, REMOTE_VIDEO_CALL_TRIBUNAL_RESPONSE,
+                .put("remoteVideoCallTribunalResponse", readStringCaseField(asylumCase, REMOTE_VIDEO_CALL_TRIBUNAL_RESPONSE,
                         ""));
->>>>>>> f26cb0222513c7e72a78a5a45ea5bee8b8bd511a
 
         }
     }
@@ -317,17 +242,10 @@ public class PersonalisationProvider {
         AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
         Map<String, String> immutableMap = eventDefinition
-<<<<<<< HEAD
-                .get(callback.getEvent())
-                .entrySet()
-                .stream()
-                .collect(Collectors.toMap(e -> e.getKey(), e -> asylumCase.read(e.getValue(), String.class).orElse("N/A")));
-=======
             .get(callback.getEvent())
             .entrySet()
             .stream()
             .collect(Collectors.toMap(e -> e.getKey(), e -> asylumCase.read(e.getValue(), String.class).orElse("N/A")));
->>>>>>> f26cb0222513c7e72a78a5a45ea5bee8b8bd511a
 
         if (callback.getEvent() == Event.SEND_DIRECTION) {
             immutableMap.putAll(getNonStandardDirectionPersonalisation(callback));
@@ -446,34 +364,21 @@ public class PersonalisationProvider {
         final String homeOffice = "Home Office";
 
         return ImmutableMap
-<<<<<<< HEAD
-                .<String, String>builder()
-                .put(recipient, homeOffice)
-                .put(recipientReferenceNumber, asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
-                .build();
-=======
             .<String, String>builder()
             .put(recipient, homeOffice)
             .put(recipientReferenceNumber, asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .build();
->>>>>>> f26cb0222513c7e72a78a5a45ea5bee8b8bd511a
+
     }
 
     public Map<String, String> getLegalRepRecipientHeader(AsylumCase asylumCase) {
         final String yourPrefix = "Your";
 
         return ImmutableMap
-<<<<<<< HEAD
-                .<String, String>builder()
-                .put(recipient, yourPrefix)
-                .put(recipientReferenceNumber, asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
-                .build();
-=======
             .<String, String>builder()
             .put(recipient, yourPrefix)
             .put(recipientReferenceNumber, asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
             .build();
->>>>>>> f26cb0222513c7e72a78a5a45ea5bee8b8bd511a
     }
 
     public Map<String, String> retrieveSelectedApplicationId(AsylumCase asylumCase, AsylumCaseDefinition definition) {
