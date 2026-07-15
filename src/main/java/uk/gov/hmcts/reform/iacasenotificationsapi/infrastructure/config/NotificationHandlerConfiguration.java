@@ -5698,11 +5698,9 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
                 (callbackStage, callback) -> {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    Set<String> legalRepEmails = Collections.singleton(getLegalRepEmailInternalOrLegalRepJourneyNonMandatory(asylumCase));
-                    String emails = String.join(",", legalRepEmails);
+                    // TODO DIAC-2607: letter sent regardless of LR email — revert to && emails.isEmpty() once confirmed
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && isCaseReviewFor24WeeksCase(callback.getEvent(), asylumCase)
-                            && emails.isEmpty();
+                            && isCaseReviewFor24WeeksCase(callback.getEvent(), asylumCase);
                 },
                 notificationGenerators, getErrorHandler()
         );
