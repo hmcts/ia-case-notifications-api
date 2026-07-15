@@ -74,9 +74,6 @@ class DocumentTagTest {
         assertEquals("internalCaseListedLetter", DocumentTag.INTERNAL_CASE_LISTED_LETTER.toString());
         assertEquals("internalCaseListedLrLetter", DocumentTag.INTERNAL_CASE_LISTED_LR_LETTER.toString());
         assertEquals("internalCaseListedLetterBundle", DocumentTag.INTERNAL_CASE_LISTED_LETTER_BUNDLE.toString());
-        assertEquals("internalCmrListingLetter", DocumentTag.INTERNAL_CMR_LISTING_LETTER.toString());
-        assertEquals("internalCmrListingLetterBundle", DocumentTag.INTERNAL_CMR_LISTING_LETTER_BUNDLE.toString());
-        assertEquals("internalCaseListedLetterBundle", DocumentTag.INTERNAL_CASE_LISTED_LETTER_BUNDLE.toString());
         assertEquals("internalCaseListedLrLetterBundle", DocumentTag.INTERNAL_CASE_LISTED_LR_LETTER_BUNDLE.toString());
         assertEquals("internalEditCaseListingLetterBundle", DocumentTag.INTERNAL_EDIT_CASE_LISTING_LETTER_BUNDLE.toString());
         assertEquals("internalEditCaseListingLrLetterBundle", DocumentTag.INTERNAL_EDIT_CASE_LISTING_LR_LETTER_BUNDLE.toString());
@@ -110,6 +107,6 @@ class DocumentTagTest {
 
     @Test
     void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(103, DocumentTag.values().length);
+        assertEquals(101, DocumentTag.values().length);
     }
 }
