@@ -5684,8 +5684,9 @@ public class NotificationHandlerConfiguration {
                                     .getCaseData();
                     Set<String> legalRepEmails = Collections.singleton(getLegalRepEmailInternalOrLegalRepJourneyNonMandatory(asylumCase));
                     String emails = String.join(",", legalRepEmails);
+                    // TODO DIAC-2607: LR letter sent instead — remove 'false &&' to re-enable LR email
                     boolean canSendLegalRep = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && isCaseReviewFor24WeeksCase(callback.getEvent(), asylumCase) && !emails.isEmpty();
+                            && false && isCaseReviewFor24WeeksCase(callback.getEvent(), asylumCase) && !emails.isEmpty();
                     return canSendLegalRep;
                 },
                 notificationGenerators,  getErrorHandler()
