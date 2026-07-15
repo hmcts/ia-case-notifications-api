@@ -135,6 +135,8 @@ public class EventTest {
                 Arguments.of("decideFtpaApplication", Event.DECIDE_FTPA_APPLICATION.toString()),
                 Arguments.of("updateTribunalDecision", Event.UPDATE_TRIBUNAL_DECISION.toString()),
                 Arguments.of("caseListing", CASE_LISTING.toString()),
+                Arguments.of("cmrListing", CMR_LISTING.toString()),
+                Arguments.of("cmrReListing", CMR_RE_LISTING.toString()),
                 Arguments.of("markAppealAsRemitted", Event.MARK_APPEAL_AS_REMITTED.toString()),
                 Arguments.of("addEvidenceForCosts", ADD_EVIDENCE_FOR_COSTS.toString()),
                 Arguments.of("considerMakingCostsOrder", CONSIDER_MAKING_COSTS_ORDER.toString()),

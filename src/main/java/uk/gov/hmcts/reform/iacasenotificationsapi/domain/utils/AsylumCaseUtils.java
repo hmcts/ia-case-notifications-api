@@ -30,6 +30,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealT
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DetentionFacility.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType.AIP;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType.REP;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision.APPROVED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision.PARTIALLY_APPROVED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision.REJECTED;
@@ -148,6 +149,13 @@ public class AsylumCaseUtils {
     private static String getFacilityName(AsylumCaseDefinition field, AsylumCase asylumCase) {
         return asylumCase.read(field, String.class)
                 .orElseThrow(() -> new RequiredFieldMissingException(field.name() + " is missing"));
+    }
+
+    public static boolean isRepJourney(AsylumCase asylumCase) {
+
+        return asylumCase
+                .read(JOURNEY_TYPE, JourneyType.class)
+                .map(type -> type == REP).orElse(true);
     }
 
     public static boolean isAipJourney(AsylumCase asylumCase) {
@@ -484,6 +492,12 @@ public class AsylumCaseUtils {
 
     public static boolean isHearingChannel(AsylumCase asylumCase, String hearingChannelCode) {
         return asylumCase.read(HEARING_CHANNEL, DynamicList.class)
+                .map(hearingChannels -> hearingChannels.getValue().getCode().equals(hearingChannelCode))
+                .orElse(false);
+    }
+
+    public static boolean isCmrHearingChannel(AsylumCase asylumCase, String hearingChannelCode) {
+        return asylumCase.read(CMR_HEARING_CHANNEL, DynamicList.class)
                 .map(hearingChannels -> hearingChannels.getValue().getCode().equals(hearingChannelCode))
                 .orElse(false);
     }

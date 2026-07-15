@@ -306,7 +306,7 @@ repositories {
     }
 }
 
-ext["tomcat.version"] = "10.1.55"
+ext["tomcat.version"] = "10.1.56"
 
 dependencyManagement {
     imports {
@@ -326,7 +326,7 @@ dependencyManagement {
         // CVE-2026-33870
         // CVE-2026-33871
         // CVE-2025-67735 - from spring-boot-starter-data-redis@3.5.14
-        mavenBom "io.netty:netty-bom:4.2.15.Final"
+        mavenBom "io.netty:netty-bom:4.2.16.Final"
     }
 
     dependencies {
