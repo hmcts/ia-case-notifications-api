@@ -31,13 +31,28 @@ public class CmrNotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && (CMR_LISTING.equals(callback.getEvent()) || CMR_RE_LISTING.equals(callback.getEvent()))
-                    && (isCmrHearingChannel(asylumCase, "INTER")
-                        || isCmrHearingChannel(asylumCase, "VID")
-                        || isCmrHearingChannel(asylumCase, "TEL")
-                    )
+                    && isCmrHearingInPersonOrRemote(asylumCase)
                     && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
                     && isRepJourney(callback.getCaseDetails().getCaseData())
                     && !isInternalCase(asylumCase);
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> cmrListingAipManualNotificationHandler(
+        @Qualifier("aipManualCmrListingNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && (CMR_LISTING.equals(callback.getEvent()) || CMR_RE_LISTING.equals(callback.getEvent()))
+                    && isCmrHearingInPersonOrRemote(asylumCase)
+                    && isInternalCase(callback.getCaseDetails().getCaseData())
+                    && isAipJourney(callback.getCaseDetails().getCaseData());
             },
             notificationGenerators
         );

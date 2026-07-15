@@ -8,10 +8,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detenti
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamCmrListingProductionPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeInPersonCmrListingCasePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.*;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.EmailNotificationGenerator;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.EmailWithLinkNotificationGenerator;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationGenerator;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationIdAppender;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.GovNotifyNotificationSender;
 
 import java.util.List;
@@ -46,6 +43,33 @@ public class CmrNotificationGeneratorConfiguration {
             new EmailWithLinkNotificationGenerator(
                 newArrayList(
                     detentionEngagementTeamCmrListingPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("aipManualCmrListingNotificationGenerator")
+    public List<NotificationGenerator> aipManualCmrListingNotificationGenerator(
+        CaseOfficerCmrListingPersonalisation caseOfficerCmrListingPersonalisation,
+        HomeOfficeInPersonCmrListingCasePersonalisation homeOfficeInPersonCmrListingCasePersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return newArrayList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    caseOfficerCmrListingPersonalisation,
+                    homeOfficeInPersonCmrListingCasePersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new LetterNotificationGenerator(
+                newArrayList(
+
                 ),
                 notificationSender,
                 notificationIdAppender
