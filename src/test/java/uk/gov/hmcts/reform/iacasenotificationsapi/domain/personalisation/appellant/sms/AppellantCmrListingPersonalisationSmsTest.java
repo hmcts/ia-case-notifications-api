@@ -8,6 +8,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CMR_HEARING_CENTRE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.JOURNEY_TYPE;
 
 import java.util.Collections;
@@ -22,6 +23,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
@@ -62,6 +64,7 @@ public class AppellantCmrListingPersonalisationSmsTest {
         when(dateTimeExtractor.extractHearingDate(hearingDateTime)).thenReturn(hearingDate);
         when(dateTimeExtractor.extractHearingTime(hearingDateTime)).thenReturn(hearingTime);
         when(hearingDetailsFinder.getCmrHearingCentreLocation(asylumCase)).thenReturn(hearingCentreAddress);
+        when(asylumCase.read(CMR_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(HearingCentre.TAYLOR_HOUSE));
 
         appellantCmrListingPersonalisationSms = new AppellantCmrListingPersonalisationSms(
             templateId,
@@ -135,7 +138,8 @@ public class AppellantCmrListingPersonalisationSmsTest {
             .containsEntry("Hyperlink to service", iaAipFrontendUrl)
             .containsEntry("hearingDate", hearingDate)
             .containsEntry("hearingTime", hearingTime)
-            .containsEntry("hearingCentreAddress", hearingCentreAddress);
+            .containsEntry("hearingCentreAddress", hearingCentreAddress)
+            .containsEntry("tribunalCentre", HearingCentre.TAYLOR_HOUSE.getValue());
     }
 
     @Test
@@ -145,5 +149,14 @@ public class AppellantCmrListingPersonalisationSmsTest {
         Map<String, String> personalisation = appellantCmrListingPersonalisationSms.getPersonalisation(asylumCase);
 
         assertThat(personalisation).containsEntry("appealReferenceNumber", "");
+    }
+
+    @Test
+    void should_throw_personalisation_when_no_cmr_hearing_centre() {
+        when(asylumCase.read(CMR_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.empty());
+        IllegalArgumentException exception =
+            assertThrows(IllegalArgumentException.class,
+                () -> appellantCmrListingPersonalisationSms.getPersonalisation(asylumCase));
+        assertEquals("No cmr hearing centre present", exception.getMessage());
     }
 }
