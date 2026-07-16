@@ -19,7 +19,6 @@ import java.util.Optional;
 
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_SUBMISSION_DATE;
@@ -108,10 +107,10 @@ class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationEmailTe
         assertEquals(EXPECTED_REFERENCE_ID, personalisation.getReferenceId(CASE_ID));
     }
 
-//    @Test
-//    void shouldReturnGivenEmailAddress() {
-//        assertTrue(personalisation.getRecipientsList(asylumCase).contains(EMAIL_ADDRESS));
-//    }
+    // @Test
+    // void shouldReturnGivenEmailAddress() {
+    // assertTrue(personalisation.getRecipientsList(asylumCase).contains(EMAIL_ADDRESS));
+    // }
 
     @Test
     void shouldReturnPersonalisationWhenAllInformationGiven() {
