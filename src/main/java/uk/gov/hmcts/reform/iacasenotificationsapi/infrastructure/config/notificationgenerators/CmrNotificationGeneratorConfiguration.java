@@ -3,12 +3,15 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config.notific
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Message;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerCmrListingPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamCmrListingPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamCmrListingProductionPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeInPersonCmrListingCasePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.GovNotifyNotificationSender;
 
 import java.util.List;
@@ -55,8 +58,10 @@ public class CmrNotificationGeneratorConfiguration {
         CaseOfficerCmrListingPersonalisation caseOfficerCmrListingPersonalisation,
         HomeOfficeInPersonCmrListingCasePersonalisation homeOfficeInPersonCmrListingCasePersonalisation,
         GovNotifyNotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender
+        NotificationIdAppender notificationIdAppender,
+        DocumentDownloadClient documentDownloadClient
     ) {
+        DocumentTag documentTag = DocumentTag.INTERNAL_CMR_LISTING_LETTER_BUNDLE;
 
         return newArrayList(
             new EmailNotificationGenerator(
@@ -67,13 +72,19 @@ public class CmrNotificationGeneratorConfiguration {
                 notificationSender,
                 notificationIdAppender
             ),
-            new LetterNotificationGenerator(
+            new PrecompiledLetterNotificationGenerator(
                 newArrayList(
-
+                    documentTag
                 ),
                 notificationSender,
-                notificationIdAppender
-            )
+                notificationIdAppender,
+                documentDownloadClient
+            ) {
+                    @Override
+                public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+            }
         );
     }
 }
