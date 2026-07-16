@@ -9,11 +9,14 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -55,7 +58,8 @@ class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmailTest {
     @Mock
     private AsylumCase asylumCase;
 
-
+    @Mock
+    private RecipientsFinder recipientsFinder;
     @Mock
     private CustomerServicesProvider customerServicesProvider;
 
@@ -70,6 +74,7 @@ class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmailTest {
             EMAIL_TEMPLATE_ID,
             IA_EX_UI_FRONTEND_URL,
             MOCK_PREFIX,
+            recipientsFinder,
             customerServicesProvider
         );
     }
@@ -86,6 +91,7 @@ class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmailTest {
 
     @Test
     void shouldReturnGivenEmailAddress() {
+        when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL)).thenReturn(Set.of(EMAIL_ADDRESS));
         assertTrue(personalisation.getRecipientsList(asylumCase).contains(EMAIL_ADDRESS));
     }
 
