@@ -250,10 +250,10 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
             Arguments.of(TestJourneyType.LR, true, false, false, 2, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
             Arguments.of(TestJourneyType.LR, true, true, true, 2, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
 
-            Arguments.of(TestJourneyType.LR_MANUAL, false, false, false, 2, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
-            Arguments.of(TestJourneyType.LR_MANUAL, false, true, true, 2, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
-            Arguments.of(TestJourneyType.LR_MANUAL, true, false, false, 2, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
-            Arguments.of(TestJourneyType.LR_MANUAL, true, true, true, 2, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL))
+            Arguments.of(TestJourneyType.LR_MANUAL, false, false, false, 1, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
+            Arguments.of(TestJourneyType.LR_MANUAL, false, true, true, 1, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
+            Arguments.of(TestJourneyType.LR_MANUAL, true, false, false, 1, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
+            Arguments.of(TestJourneyType.LR_MANUAL, true, true, true, 1, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL))
         );
     }
 
@@ -278,10 +278,10 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
             Arguments.of(true, TestJourneyType.LR, true, false, false, 2, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
             Arguments.of(true, TestJourneyType.LR, true, true, true, 2, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
 
-            Arguments.of(true, TestJourneyType.LR_MANUAL, false, false, false, 2, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
-            Arguments.of(true, TestJourneyType.LR_MANUAL, false, true, true, 2, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
-            Arguments.of(true, TestJourneyType.LR_MANUAL, true, false, false, 2, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
-            Arguments.of(true, TestJourneyType.LR_MANUAL, true, true, true, 2, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
+            Arguments.of(true, TestJourneyType.LR_MANUAL, false, false, false, 1, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
+            Arguments.of(true, TestJourneyType.LR_MANUAL, false, true, true, 1, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
+            Arguments.of(true, TestJourneyType.LR_MANUAL, true, false, false, 1, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
+            Arguments.of(true, TestJourneyType.LR_MANUAL, true, true, true, 1, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
 
             Arguments.of(false, TestJourneyType.AIP_MANUAL, true, true, true, 0, Collections.emptyList()),
             Arguments.of(false, TestJourneyType.AIP, true, true, true, 0, Collections.emptyList()),
