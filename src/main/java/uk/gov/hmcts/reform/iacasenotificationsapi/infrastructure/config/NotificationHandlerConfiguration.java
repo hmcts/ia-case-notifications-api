@@ -5695,8 +5695,9 @@ public class NotificationHandlerConfiguration {
                 (callbackStage, callback) -> {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && isInternalCase(asylumCase)
-                            && isCaseReviewFor24WeeksCase(callback.getEvent(), asylumCase);
+                            && !isInternalCase(asylumCase)
+                            && isCaseReviewFor24WeeksCase(callback.getEvent(), asylumCase)
+                            && isRepJourney(asylumCase);
                 },
                 notificationGenerators, getErrorHandler()
         );
