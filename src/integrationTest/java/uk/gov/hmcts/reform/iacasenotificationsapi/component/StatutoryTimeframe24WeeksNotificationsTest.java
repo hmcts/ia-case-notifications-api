@@ -2,9 +2,9 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.component;
 
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MvcResult;
@@ -17,23 +17,24 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fixtures.P
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ContactPreference;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Subscriber;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.SubscriberType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.AddressUk;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.NationalityFieldValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.GovNotifyNotificationSender;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Stream;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
@@ -46,18 +47,19 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fix
 import static uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fixtures.CaseDetailsForTest.CaseDetailsForTestBuilder.someCaseDetailsWith;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_SUBMISSION_DATE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANTS_REPRESENTATION;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_IN_UK;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.COMPLETE_CASE_REVIEW_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CONTACT_PREFERENCE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.EMAIL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HEARING_CENTRE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_DECISION_DATE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.INTERNAL_APPELLANT_EMAIL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ADMIN;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.JOURNEY_TYPE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.MOBILE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_HAS_ADDRESS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.NOTIFICATIONS_SENT;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.SUBSCRIPTIONS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.TRIBUNAL_RECEIVED_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.COMPLETE_CASE_REVIEW;
@@ -77,45 +79,95 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24Weeks
 @Slf4j
 @SuppressWarnings("unchecked")
 public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegrationTest implements WithServiceAuthStub,
-        WithNotificationEmailStub {
+    WithNotificationEmailStub {
 
     public static final String APPELLANT_MAIL = "appellant@domain.com";
+    public static final String APPELLANT_SMS = "07123456789";
     public static final String LR_EMAIL = "legalrep@domain.com";
     private static final String someNotificationId = UUID.randomUUID().toString();
-    private static final YesOrNo WANTS_EMAIL = YesOrNo.YES;
-    private static final YesOrNo WANTS_SMS = YesOrNo.YES;
-    private static final YesOrNo DONT_WANTS_SMS = YesOrNo.NO;
-    private static final YesOrNo DONT_WANTS_EMAIL = YesOrNo.NO;
 
     @MockitoBean
     private GovNotifyNotificationSender notificationSender;
 
     // --- Test data builders / helpers ---
-
-    private static AsylumCaseForTest mockCaseData(String lrEmail, String appellantEmail, String internalAppellantEmail, YesOrNo inCountry, YesOrNo wantsEmail, YesOrNo wantsSms) {
-        return anAsylumCase()
-                .with(HEARING_CENTRE, HearingCentre.MANCHESTER)
-                .with(APPEAL_REFERENCE_NUMBER, "some-appeal-reference-number")
-                .with(EMAIL, appellantEmail)
-                .with(INTERNAL_APPELLANT_EMAIL, internalAppellantEmail)
-                .with(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, lrEmail)
-                .with(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, APPEAL_SUBMITTED)
-                .with(SUBSCRIPTIONS, anySubscriptions(wantsEmail, wantsSms))
-                .with(COMPLETE_CASE_REVIEW_DATE, "2002-02-02")
-                .with(APPEAL_SUBMISSION_DATE, "2002-02-02")
-                .with(TRIBUNAL_RECEIVED_DATE, "2002-02-02")
-                .with(HOME_OFFICE_DECISION_DATE, "2002-02-02")
-                .with(APPELLANT_IN_UK, inCountry)
-                .with(AsylumCaseDefinition.APPELLANT_ADDRESS, new AddressUk("l1", "l2", "l2", "pt", "county", "pc", "uk"));
+    private enum TestJourneyType {
+        AIP_MANUAL, AIP, LR, LR_MANUAL
     }
 
-    private static @NotNull Optional<List<IdValue<Subscriber>>> anySubscriptions(YesOrNo wantsEmail, YesOrNo wantsSms) {
+    private static AsylumCaseForTest mockCaseData(TestJourneyType testJourneyType,
+                                                  boolean inCountry,
+                                                  boolean wantsEmail,
+                                                  boolean wantsSms,
+                                                  boolean is24wCase) {
+        AsylumCaseForTest someCase = anAsylumCase()
+            .with(HEARING_CENTRE, HearingCentre.MANCHESTER)
+            .with(APPEAL_REFERENCE_NUMBER, "some-appeal-reference-number")
+            .with(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, StatutoryTimeframe24WeeksNotificationsTest.LR_EMAIL)
+            .with(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, APPEAL_SUBMITTED)
+            .with(CONTACT_PREFERENCE, wantsEmail ? ContactPreference.WANTS_EMAIL : wantsSms ? ContactPreference.WANTS_SMS : null)
+            .with(SUBSCRIPTIONS, buildSubscriptions(wantsEmail, wantsSms, StatutoryTimeframe24WeeksNotificationsTest.APPELLANT_MAIL, StatutoryTimeframe24WeeksNotificationsTest.APPELLANT_SMS))
+            .with(COMPLETE_CASE_REVIEW_DATE, "2002-02-02")
+            .with(APPEAL_SUBMISSION_DATE, "2002-02-02")
+            .with(TRIBUNAL_RECEIVED_DATE, "2002-02-02")
+            .with(HOME_OFFICE_DECISION_DATE, "2002-02-02")
+            .with(STF_24W_CURRENT_STATUS_AUTO_GENERATED, is24wCase ? YesOrNo.YES : YesOrNo.NO);
+
+        switch (testJourneyType) {
+            case AIP_MANUAL -> {
+                someCase.with(IS_ADMIN, YesOrNo.YES)
+                    .with(APPELLANTS_REPRESENTATION, YesOrNo.YES);
+                if (inCountry) {
+                    someCase.with(APPELLANT_IN_UK, YesOrNo.YES)
+                        .with(AsylumCaseDefinition.APPELLANT_ADDRESS, new AddressUk("l1", "l2", "l3", "pt", "county", "pc", "uk"));
+                } else {
+                    someCase.with(APPELLANT_IN_UK, YesOrNo.NO)
+                        .with(AsylumCaseDefinition.ADDRESS_LINE_1_ADMIN_J, "line1")
+                        .with(AsylumCaseDefinition.ADDRESS_LINE_2_ADMIN_J, "line2")
+                        .with(AsylumCaseDefinition.ADDRESS_LINE_3_ADMIN_J, "line3")
+                        .with(AsylumCaseDefinition.ADDRESS_LINE_4_ADMIN_J, "line4")
+                        .with(AsylumCaseDefinition.COUNTRY_GOV_UK_OOC_ADMIN_J, new NationalityFieldValue("GB"));
+                }
+
+            }
+            case AIP -> {
+                someCase.with(IS_ADMIN, YesOrNo.NO)
+                    .with(JOURNEY_TYPE, JourneyType.AIP)
+                    .with(APPELLANT_IN_UK, inCountry ? YesOrNo.YES : YesOrNo.NO);
+            }
+            case LR -> {
+                someCase.with(IS_ADMIN, YesOrNo.NO)
+                    .with(JOURNEY_TYPE, JourneyType.REP)
+                    .with(LEGAL_REP_HAS_ADDRESS, inCountry ? YesOrNo.YES : YesOrNo.NO);
+            }
+            case LR_MANUAL -> {
+                someCase.with(IS_ADMIN, YesOrNo.YES)
+                    .with(APPELLANTS_REPRESENTATION, YesOrNo.NO);
+                if (inCountry) {
+                    someCase.with(LEGAL_REP_HAS_ADDRESS, YesOrNo.YES)
+                        .with(AsylumCaseDefinition.LEGAL_REP_ADDRESS_U_K, new AddressUk("lrl1", "lrl2", "lrl2", "lrpt", "lrcounty", "lrpc", "lruk"));
+                } else {
+                    someCase.with(LEGAL_REP_HAS_ADDRESS, YesOrNo.NO)
+                        .with(AsylumCaseDefinition.OOC_ADDRESS_LINE_1, "line1")
+                        .with(AsylumCaseDefinition.OOC_ADDRESS_LINE_2, "line2")
+                        .with(AsylumCaseDefinition.OOC_ADDRESS_LINE_3, "line3")
+                        .with(AsylumCaseDefinition.OOC_ADDRESS_LINE_4, "line4")
+                        .with(AsylumCaseDefinition.OOC_COUNTRY_LINE, "country")
+                        .with(AsylumCaseDefinition.OOC_LR_COUNTRY_GOV_UK_ADMIN_J, new NationalityFieldValue("GB"));
+
+                }
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + testJourneyType);
+        }
+        return someCase;
+    }
+
+    private static @NotNull Optional<List<IdValue<Subscriber>>> buildSubscriptions(boolean wantsEmail, boolean wantsSms, String appellantEmail, String appellantSms) {
         Subscriber subscriber = new Subscriber(
-                SubscriberType.APPELLANT,
-                "ppellantInSubscription@gmail.com",
-                wantsEmail,
-                "",
-                wantsSms
+            SubscriberType.APPELLANT,
+            appellantEmail,
+            wantsEmail ? YesOrNo.YES : YesOrNo.NO,
+            appellantSms,
+            wantsSms ? YesOrNo.YES : YesOrNo.NO
         );
 
         return Optional.of(Collections.singletonList(new IdValue<>("foo", subscriber)));
@@ -126,22 +178,13 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
         return response.getData().read(NOTIFICATIONS_SENT);
     }
 
-    private static void assertNoNotifications(PreSubmitCallbackResponseForTest response) {
-        Optional<List<IdValue<String>>> maybe = readNotifications(response);
-        assertFalse(maybe.isPresent());
-    }
-
-    private static void assertNotificationsContain(PreSubmitCallbackResponseForTest response, int expectedSize, String... expectedIds) {
-        Optional<List<IdValue<String>>> maybe = readNotifications(response);
-        assertTrue(maybe.isPresent());
-        List<IdValue<String>> notifications = maybe.get();
+    private static void assertNotificationsContain(PreSubmitCallbackResponseForTest response, int expectedSize, List<String> expectedIds) {
+        List<IdValue<String>> notifications = readNotifications(response).orElse(Collections.emptyList());
         String idsString = String.join(",", notifications.stream().map(IdValue::getId).toList());
-        log.info("Notifications sent: {}", idsString);
-        assertThat(notifications.size()).isEqualTo(expectedSize);
-
+        assertEquals(expectedSize, notifications.size());
 
         for (String id : expectedIds) {
-            assertThat(idsString).contains(id);
+            assertTrue(idsString.contains(id));
         }
     }
 
@@ -150,34 +193,34 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
         addNotificationEmailStub(server);
 
         when(notificationSender.sendEmail(anyString(), anyString(), anyMap(), anyString(), any(Callback.class)))
-                .thenReturn(someNotificationId);
+            .thenReturn(someNotificationId);
 
         when(notificationSender.sendLetter(anyString(), anyString(), anyMap(), anyString(), any(Callback.class)))
-                .thenReturn(someNotificationId);
+            .thenReturn(someNotificationId);
 
         when(notificationSender.sendSms(anyString(), anyString(), anyMap(), anyString(), any(Callback.class)))
-                .thenReturn(someNotificationId);
+            .thenReturn(someNotificationId);
 
         return aboutToSubmit(callback()
-                .event(event)
-                .caseDetails(someCaseDetailsWith()
-                        .state(APPEAL_SUBMITTED)
-                        .caseData(caseData)));
+            .event(event)
+            .caseDetails(someCaseDetailsWith()
+                .state(APPEAL_SUBMITTED)
+                .caseData(caseData)));
     }
 
     private PreSubmitCallbackResponseForTest aboutToSubmit(CallbackForTest.CallbackForTestBuilder callback) {
         try {
             MvcResult response = mockMvc
-                    .perform(
-                            post("/asylum/ccdAboutToSubmit")
-                                    .content(objectMapper.writeValueAsString(callback.build()))
-                                    .contentType(APPLICATION_JSON_VALUE)
-                    )
-                    .andReturn();
+                .perform(
+                    post("/asylum/ccdAboutToSubmit")
+                        .content(objectMapper.writeValueAsString(callback.build()))
+                        .contentType(APPLICATION_JSON_VALUE)
+                )
+                .andReturn();
 
             return objectMapper.readValue(
-                    response.getResponse().getContentAsString(),
-                    PreSubmitCallbackResponseForTest.class
+                response.getResponse().getContentAsString(),
+                PreSubmitCallbackResponseForTest.class
             );
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -185,229 +228,93 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
         }
     }
 
-    private void setSmsContactPreference(AsylumCaseForTest caseData) {
-        caseData.with(CONTACT_PREFERENCE, ContactPreference.WANTS_SMS);
-        caseData.with(MOBILE_NUMBER, "07123456789");
+    // --- Scenarios ---
+    private static Stream<Arguments> remove24wCaseDataPermutations() {
+        return Stream.of(
+            Arguments.of(TestJourneyType.AIP_MANUAL, false, false, false, 2, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
+            Arguments.of(TestJourneyType.AIP_MANUAL, false, true, true, 2, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
+            Arguments.of(TestJourneyType.AIP_MANUAL, true, false, false, 2, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
+            Arguments.of(TestJourneyType.AIP_MANUAL, true, true, true, 2, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
+
+            Arguments.of(TestJourneyType.AIP, false, false, false, 1, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
+            Arguments.of(TestJourneyType.AIP, false, false, true, 2, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_SMS, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
+            Arguments.of(TestJourneyType.AIP, false, true, false, 2, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
+            Arguments.of(TestJourneyType.AIP, false, true, true, 3, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_SMS, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
+            Arguments.of(TestJourneyType.AIP, true, false, false, 1, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
+            Arguments.of(TestJourneyType.AIP, true, false, true, 2, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_SMS, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
+            Arguments.of(TestJourneyType.AIP, true, true, false, 2, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
+            Arguments.of(TestJourneyType.AIP, true, true, true, 3, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_SMS, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
+
+            Arguments.of(TestJourneyType.LR, false, false, false, 2, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
+            Arguments.of(TestJourneyType.LR, false, true, true, 2, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
+            Arguments.of(TestJourneyType.LR, true, false, false, 2, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
+            Arguments.of(TestJourneyType.LR, true, true, true, 2, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
+
+            Arguments.of(TestJourneyType.LR_MANUAL, false, false, false, 2, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
+            Arguments.of(TestJourneyType.LR_MANUAL, false, true, true, 2, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
+            Arguments.of(TestJourneyType.LR_MANUAL, true, false, false, 2, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
+            Arguments.of(TestJourneyType.LR_MANUAL, true, true, true, 2, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL))
+        );
     }
 
-    private void createdByAdmin(AsylumCaseForTest caseData) {
-        caseData.with(IS_ADMIN, YesOrNo.YES);
-    }
+    private static Stream<Arguments> completeCaseReviewCaseDataPermutations() {
+        return Stream.of(
+            Arguments.of(true, TestJourneyType.AIP_MANUAL, false, false, false, 2, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER)),
+            Arguments.of(true, TestJourneyType.AIP_MANUAL, false, true, true, 2, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER)),
+            Arguments.of(true, TestJourneyType.AIP_MANUAL, true, false, false, 2, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER)),
+            Arguments.of(true, TestJourneyType.AIP_MANUAL, true, true, true, 2, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER)),
 
-    private void notCreatedByAdmin(AsylumCaseForTest caseData) {
-        caseData.with(IS_ADMIN, YesOrNo.NO);
+            Arguments.of(true, TestJourneyType.AIP, false, false, false, 1, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
+            Arguments.of(true, TestJourneyType.AIP, false, false, true, 2, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_SMS)),
+            Arguments.of(true, TestJourneyType.AIP, false, true, false, 2, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
+            Arguments.of(true, TestJourneyType.AIP, false, true, true, 3, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_SMS)),
+            Arguments.of(true, TestJourneyType.AIP, true, false, false, 1, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
+            Arguments.of(true, TestJourneyType.AIP, true, false, true, 2, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_SMS)),
+            Arguments.of(true, TestJourneyType.AIP, true, true, false, 2, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
+            Arguments.of(true, TestJourneyType.AIP, true, true, true, 3, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_SMS)),
+
+            Arguments.of(true, TestJourneyType.LR, false, false, false, 2, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
+            Arguments.of(true, TestJourneyType.LR, false, true, true, 2, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
+            Arguments.of(true, TestJourneyType.LR, true, false, false, 2, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
+            Arguments.of(true, TestJourneyType.LR, true, true, true, 2, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
+
+            Arguments.of(true, TestJourneyType.LR_MANUAL, false, false, false, 2, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER)),
+            Arguments.of(true, TestJourneyType.LR_MANUAL, false, true, true, 2, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER)),
+            Arguments.of(true, TestJourneyType.LR_MANUAL, true, false, false, 2, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER)),
+            Arguments.of(true, TestJourneyType.LR_MANUAL, true, true, true, 2, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER)),
+
+            Arguments.of(false, TestJourneyType.AIP_MANUAL, true, true, true, 0, Collections.emptyList()),
+            Arguments.of(false, TestJourneyType.AIP, true, true, true, 0, Collections.emptyList()),
+            Arguments.of(false, TestJourneyType.LR, true, true, true, 0, Collections.emptyList()),
+            Arguments.of(false, TestJourneyType.LR_MANUAL, true, true, true, 0, Collections.emptyList())
+        );
     }
 
     // --- Tests ---
-    @Nested
-    @DisplayName("REMOVE_STATUTORY_TIMEFRAME_24_WEEKS")
-    class RemoveStatutoryTimeframe24WeeksNotificationsTest {
-
-        @Test
-        @WithMockUser(authorities = {"caseworker-ia-system"})
-        void should_send_24weeks_remove_email_to_all_three_users() {
-            var response = mockResponse(mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES, WANTS_EMAIL, YesOrNo.NO), REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
-            assertNotificationsContain(response, 3, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL);
-        }
-
-        @Test
-        @WithMockUser(authorities = {"caseworker-ia-system"})
-        void should_send_24weeks_remove_letter_to_appellant_and_legal_rep_and_home_office_when_appellant_emails_are_empty() {
-            AsylumCaseForTest caseData = mockCaseData(LR_EMAIL, "", "", YesOrNo.YES, WANTS_EMAIL, YesOrNo.NO);
-            createdByAdmin(caseData);
-            var response = mockResponse(caseData, REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
-
-            assertNotificationsContain(response, 3, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER);
-        }
-
-        @Test
-        @WithMockUser(authorities = {"caseworker-ia-system"})
-        void should_send_24weeks_remove_email_to_appellant_and_ho_office() {
-            var response = mockResponse(mockCaseData(null, APPELLANT_MAIL, null, YesOrNo.YES, WANTS_EMAIL, YesOrNo.NO), REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
-            assertNotificationsContain(response, 2, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL);
-        }
-
-        @Test
-        @WithMockUser(authorities = {"caseworker-ia-system"})
-        void should_send_24weeks_remove_email_to_appellant_with_internal_email_and_ho_office() {
-            var response = mockResponse(mockCaseData(null, null, APPELLANT_MAIL, YesOrNo.YES, WANTS_EMAIL, YesOrNo.NO), REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
-            assertNotificationsContain(response, 2, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL);
-        }
-
-        @Test
-        @WithMockUser(authorities = {"caseworker-ia-system"})
-        void should_send_24weeks_remove_letter_to_appellant_and_email_to_ho_office() {
-            AsylumCaseForTest caseData = mockCaseData(null, null, null, YesOrNo.YES, WANTS_EMAIL, YesOrNo.NO);
-            createdByAdmin(caseData);
-            var response = mockResponse(caseData, REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
-            assertNotificationsContain(response, 2, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER);
-        }
-
-        @Test
-        @WithMockUser(authorities = {"caseworker-ia-system"})
-        void should_not_send_24weeks_remove_letter_to_appellant_if_application_is_ooc() {
-            var response = mockResponse(mockCaseData(null, null, null, YesOrNo.NO, WANTS_EMAIL, YesOrNo.NO), REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
-            assertNotificationsContain(response, 1, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL);
-        }
-
-        @Test
-        @WithMockUser(authorities = {"caseworker-ia-system"})
-        void should_send_24weeks_remove_letter_to_appellant_and_email_to_legal_rep_and_home_office() {
-            AsylumCaseForTest caseData = mockCaseData(LR_EMAIL, null, null, YesOrNo.YES, WANTS_EMAIL, YesOrNo.NO);
-            createdByAdmin(caseData);
-            var response = mockResponse(caseData, REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
-            assertNotificationsContain(response, 3, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER);
-        }
-
-        @Test
-        @WithMockUser(authorities = {"caseworker-ia-system"})
-        void should_send_24weeks_remove_sms_to_appellant() {
-            AsylumCaseForTest caseData = mockCaseData(null, null, null, YesOrNo.YES, DONT_WANTS_EMAIL, WANTS_SMS);
-            notCreatedByAdmin(caseData);
-            var response = mockResponse(caseData, REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
-            assertNotificationsContain(response, 2, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_SMS, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL);
-        }
-
+    @ParameterizedTest(name = "JourneyType: {0}, inCountry: {1}, wantsEmail: {2}, wantsSms: {3}")
+    @MethodSource("remove24wCaseDataPermutations")
+    @WithMockUser(authorities = {"caseworker-ia-system"})
+    void should_send_24weeks_remove_notifications_correctly(TestJourneyType testJourneyType,
+                                                            boolean inCountry,
+                                                            boolean wantsEmail,
+                                                            boolean wantsSms,
+                                                            int expectedSize,
+                                                            List<String> expectedIds) {
+        PreSubmitCallbackResponseForTest response = mockResponse(mockCaseData(testJourneyType, inCountry, wantsEmail, wantsSms, true), REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
+        assertNotificationsContain(response, expectedSize, expectedIds);
     }
 
-    @Nested
-    @DisplayName("COMPLETE_REVIEW_STATUTORY_TIMEFRAME_24_WEEKS")
-    class CompleteReviewStatutoryTimeframe24WeeksNotificationsTest {
-
-
-        @Test
-        @WithMockUser(authorities = {"caseworker-ia-system"})
-        void should_not_send_24weeks_case_review_email_for_bau_case() {
-            var caseData = mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES, WANTS_EMAIL, YesOrNo.NO);
-            createdByAdmin(caseData);
-            var response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
-            assertNoNotifications(response);
-        }
-
-        @Test
-        @WithMockUser(authorities = {"caseworker-ia-system"})
-        void should_not_send_24weeks_case_review_email_for_bau_case_not_created_by_admin() {
-            var caseData = mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES, WANTS_EMAIL, YesOrNo.NO);
-            notCreatedByAdmin(caseData);
-            var response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
-            assertNoNotifications(response);
-        }
-
-        @Test
-        @WithMockUser(authorities = {"caseworker-ia-system"})
-        void should_not_send_24weeks_case_review_email_or_letter_to_all_three_if_statutory_time_frame_is_not_present() {
-            var caseData = mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES, WANTS_EMAIL, DONT_WANTS_SMS);
-            caseData.with(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.NO);
-            notCreatedByAdmin(caseData);
-            var response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
-            assertNoNotifications(response);
-        }
-
-        @Test
-        @WithMockUser(authorities = {"caseworker-ia-system"})
-        void should_not_send_24weeks_case_review_email_or_letter_to_all_three_if_statutory_time_frame_is_not_present_created_by_admin() {
-            var caseData = mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES, WANTS_EMAIL, DONT_WANTS_SMS);
-            caseData.with(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.NO);
-            createdByAdmin(caseData);
-            var response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
-            assertNoNotifications(response);
-        }
-
-
-        @Test
-        @WithMockUser(authorities = {"caseworker-ia-system"})
-        void should_not_send_24weeks_case_review_email_for_stf_24Weeks_is_no() {
-            var caseData = mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES, WANTS_EMAIL, DONT_WANTS_SMS);
-            caseData.with(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.NO);
-            var response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
-            assertNoNotifications(response);
-        }
-
-        @Test
-        @WithMockUser(authorities = {"caseworker-ia-system"})
-        void should_send_24weeks_case_review_email_to_all_three() {
-            var caseData = mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES, WANTS_EMAIL, DONT_WANTS_SMS);
-            caseData.with(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.YES);
-
-            var response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
-            assertNotificationsContain(response, 3, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL);
-        }
-
-        @Test
-        @WithMockUser(authorities = {"caseworker-ia-system"})
-        void should_send_24weeks_review_letter_to_appellant_and_email_to_ho_office_and_lr_created_by_admin() {
-            var caseData = mockCaseData(LR_EMAIL, null, null, YesOrNo.YES, DONT_WANTS_EMAIL, DONT_WANTS_SMS);
-            caseData.with(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.YES);
-            createdByAdmin(caseData);
-            caseData.with(SUBSCRIPTIONS, Optional.of(new ArrayList<>()));
-
-            var response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
-            assertNotificationsContain(response, 3, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL);
-        }
-
-        @Test
-        @WithMockUser(authorities = {"caseworker-ia-system"})
-        void should_not_send_24weeks_review_letter_to_appellant_if_case_is_not_internal() {
-            var caseData = mockCaseData(LR_EMAIL, null, null, YesOrNo.YES, YesOrNo.YES, DONT_WANTS_SMS);
-            caseData.with(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.YES);
-            notCreatedByAdmin(caseData);
-            caseData.with(SUBSCRIPTIONS, Optional.of(new ArrayList<>()));
-
-            var response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
-            assertNotificationsContain(response, 2, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL);
-        }
-
-
-        @Test
-        @WithMockUser(authorities = {"caseworker-ia-system"})
-        void should_not_send_24weeks_review_one_sms_and_three_emails_to_all() {
-            var caseData = mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES, DONT_WANTS_EMAIL, WANTS_SMS);
-            caseData.with(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.YES);
-            createdByAdmin(caseData);
-            var response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
-            assertNotificationsContain(response, 3, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL);
-        }
-
-        @Test
-        @WithMockUser(authorities = {"caseworker-ia-system"})
-        void should_send_24weeks_review_one_sms_and_three_emails_to_all_not_created_by_admin() {
-            var caseData = mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES, DONT_WANTS_EMAIL, WANTS_SMS);
-            caseData.with(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.YES);
-            setSmsContactPreference(caseData);
-            notCreatedByAdmin(caseData);
-            var response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
-            assertNotificationsContain(response, 4, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_SMS, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL);
-        }
-
-        @Test
-        @WithMockUser(authorities = {"caseworker-ia-system"})
-        void should_not_send_24weeks_review_one_sms_and_three_emails_to_all_not_created_by_admin() {
-            var caseData = mockCaseData(LR_EMAIL, APPELLANT_MAIL, null, YesOrNo.YES, DONT_WANTS_EMAIL, WANTS_SMS);
-            caseData.with(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.NO);
-            notCreatedByAdmin(caseData);
-            var response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
-            assertNoNotifications(response);
-        }
-
-        @Test
-        @WithMockUser(authorities = {"caseworker-ia-system"})
-        void should_not_send_24weeks_review_letter_to_appellant_if_has_subscription() {
-            var caseData = mockCaseData(LR_EMAIL, null, null, YesOrNo.YES, WANTS_EMAIL, DONT_WANTS_SMS);
-            caseData.with(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.YES);
-            createdByAdmin(caseData);
-            var response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
-            assertNotificationsContain(response, 2, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL);
-        }
-
-        @Test
-        @WithMockUser(authorities = {"caseworker-ia-system"})
-        void should_not_send_24weeks_review_sms_to_appellant_if_has_subscription_and_not_created_by_admin() {
-            var caseData = mockCaseData(LR_EMAIL, null, null, YesOrNo.YES, DONT_WANTS_EMAIL, WANTS_SMS);
-            caseData.with(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.YES);
-            createdByAdmin(caseData);
-            var response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
-            assertNotificationsContain(response, 2, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL);
-        }
+    @ParameterizedTest(name = "Is 24w case: {0}, JourneyType: {1}, inCountry: {2}, wantsEmail: {3}, wantsSms: {4}")
+    @MethodSource("completeCaseReviewCaseDataPermutations")
+    @WithMockUser(authorities = {"caseworker-ia-system"})
+    void should_send_complete_case_review_notifications_correctly(boolean is24w,
+                                                                  TestJourneyType testJourneyType,
+                                                                  boolean inCountry,
+                                                                  boolean wantsEmail,
+                                                                  boolean wantsSms,
+                                                                  int expectedSize,
+                                                                  List<String> expectedIds) {
+        PreSubmitCallbackResponseForTest response = mockResponse(mockCaseData(testJourneyType, inCountry, wantsEmail, wantsSms, is24w), COMPLETE_CASE_REVIEW);
+        assertNotificationsContain(response, expectedSize, expectedIds);
     }
-
 }

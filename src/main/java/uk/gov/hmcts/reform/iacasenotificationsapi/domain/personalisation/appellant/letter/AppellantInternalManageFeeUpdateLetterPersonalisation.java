@@ -63,7 +63,6 @@ public class AppellantInternalManageFeeUpdateLetterPersonalisation implements Le
 
         final String dueDate = systemDateProvider.dueDate(afterManageFeeEvent);
 
-        List<String> address =  getAppellantOrLegalRepAddressLetterPersonalisation(asylumCase);
 
         String originalFeeTotal = asylumCase.read(AsylumCaseDefinition.FEE_AMOUNT_GBP, String.class).orElse("");
         String newFeeTotal = asylumCase.read(AsylumCaseDefinition.NEW_FEE_AMOUNT, String.class).orElse("");
@@ -86,9 +85,7 @@ public class AppellantInternalManageFeeUpdateLetterPersonalisation implements Le
             .put("onlineCaseRefNumber", asylumCase.read(AsylumCaseDefinition.CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class).orElse(""))
             .put("dueDate14Days", dueDate);
 
-        for (int i = 0; i < address.size(); i++) {
-            personalizationBuilder.put("address_line_" + (i + 1), address.get(i));
-        }
+        buildAddressForIccLetter(asylumCase, personalizationBuilder);
         return personalizationBuilder.build();
     }
 
