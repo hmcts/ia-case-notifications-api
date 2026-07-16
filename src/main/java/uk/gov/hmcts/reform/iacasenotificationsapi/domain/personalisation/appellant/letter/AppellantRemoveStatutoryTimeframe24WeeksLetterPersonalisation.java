@@ -42,9 +42,7 @@ public class AppellantRemoveStatutoryTimeframe24WeeksLetterPersonalisation imple
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        Set<String> appellantAddressInCountryOrOoc = getAppellantAddressInCountryOrOoc(asylumCase);
-        log.info("Appellant Address {}", appellantAddressInCountryOrOoc);
-        return appellantAddressInCountryOrOoc;
+        return getAppellantAddressInCountryOrOoc(asylumCase);
     }
 
     @Override

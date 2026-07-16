@@ -24,7 +24,6 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static java.time.LocalDate.parse;
 import static java.lang.Math.min;
 import static java.util.Collections.*;
 import static java.util.stream.Collectors.*;
@@ -596,19 +595,6 @@ public class AsylumCaseUtils {
 
 
 
-    public static @NonNull Set<String> getApplicantEmail(AsylumCase asylumCase) {
-
-        Set<String> emails = asylumCase.read(EMAIL, String.class)
-                .map(Collections::singleton)
-                .orElse(Collections.emptySet());
-        if (emails.isEmpty()) {
-            emails = asylumCase.read(INTERNAL_APPELLANT_EMAIL, String.class)
-                    .map(Collections::singleton)
-                    .orElse(Collections.emptySet());
-        }
-        return emails;
-    }
-
     public static String getAppealReceivedDate(AsylumCase asylumCase) {
         String tribunalReceivedDate = getCaseDateDate(asylumCase, TRIBUNAL_RECEIVED_DATE);
         String appealReceivedDate;
@@ -705,7 +691,7 @@ public class AsylumCaseUtils {
     }
 
     private static String add24WeeksToDate(String date) {
-        LocalDate appealDate = parse(date);
+        LocalDate appealDate = LocalDate.parse(date);
         LocalDate stf24WeeksDate = appealDate.plusWeeks(24);
         return stf24WeeksDate.format(DateTimeFormatter.ofPattern(D_MMM_YYYY));
     }

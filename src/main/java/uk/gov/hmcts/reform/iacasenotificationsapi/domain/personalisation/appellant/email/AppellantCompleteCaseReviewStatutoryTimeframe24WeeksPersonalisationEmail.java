@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
@@ -46,6 +48,7 @@ public class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation
     private final String templateId;
     private final String iaAipFrontendUrl;
     private final CustomerServicesProvider customerServicesProvider;
+    private final RecipientsFinder recipientsFinder;
     private final String nonAdaPrefix;
 
 
@@ -53,10 +56,12 @@ public class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation
             @Value("${govnotify.template.completeCaseReviewStatutoryTimeframe24Weeks.appellant.email}") String templateId,
             @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
             @Value("${govnotify.emailPrefix.nonAda}") String nonAdaPrefix,
+            RecipientsFinder recipientsFinder,
             CustomerServicesProvider customerServicesProvider) {
         this.templateId = templateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.customerServicesProvider = customerServicesProvider;
+        this.recipientsFinder = recipientsFinder;
         this.nonAdaPrefix = nonAdaPrefix;
     }
 
@@ -68,9 +73,7 @@ public class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        Set<String> emails = AsylumCaseUtils.getApplicantEmail(asylumCase);
-        log.info("getRecipientsList -> Appellant-emails {}", emails);
-        return emails;
+        return recipientsFinder.findAll(asylumCase, NotificationType.EMAIL);
     }
 
     @Override
