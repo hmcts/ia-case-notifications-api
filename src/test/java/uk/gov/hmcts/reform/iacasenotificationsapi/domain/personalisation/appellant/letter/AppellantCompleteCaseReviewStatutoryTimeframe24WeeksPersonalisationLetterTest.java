@@ -68,7 +68,7 @@ class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationLetterT
     private static final String CUSTOMER_SERVICE_EMAIL = "dummy@email.com";
     private static final Long CASE_ID = 12345L;
     private static final String EXPECTED_REFERENCE_ID =
-            CASE_ID + STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER;
+        CASE_ID + STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER;
     @Mock
     private AsylumCase asylumCase;
 
@@ -83,11 +83,14 @@ class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationLetterT
         setupCustomerServicesMocks();
 
         personalisation = new AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationLetter(
-                LETTER_TEMPLATE_ID, "http://localhost",
-                customerServicesProvider
+            LETTER_TEMPLATE_ID, "http://localhost",
+            customerServicesProvider
         );
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.of(
-                new AddressUk("10", "Main St", "", "Sometown", "", "CM3 4DC", "UK"))
+            new AddressUk("10", "Main St", "", "Sometown", "", "CM3 4DC", "UK"))
+        );
+        when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_ADDRESS_U_K, AddressUk.class)).thenReturn(Optional.of(
+            new AddressUk("10", "Main St", "", "Sometown", "", "CM3 4DC", "UK"))
         );
     }
 
@@ -132,30 +135,30 @@ class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationLetterT
 
     private void setupAsylumCaseMocks() {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class))
-                .thenReturn(Optional.of(APPELLANT_FAMILY_NAME_VALUE));
+            .thenReturn(Optional.of(APPELLANT_FAMILY_NAME_VALUE));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class))
-                .thenReturn(Optional.of(APPELLANT_GIVEN_NAMES_VALUE));
+            .thenReturn(Optional.of(APPELLANT_GIVEN_NAMES_VALUE));
 
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(HOME_OFFICE_REFERENCE_NUMBER_VALUE));
         when(asylumCase.read(EMAIL, String.class))
-                .thenReturn(Optional.of(EMAIL_ADDRESS));
+            .thenReturn(Optional.of(EMAIL_ADDRESS));
         when(asylumCase.read(COMPLETE_CASE_REVIEW_DATE, String.class))
-                .thenReturn(Optional.of(REVIEW_DATE));
+            .thenReturn(Optional.of(REVIEW_DATE));
         when(asylumCase.read(APPEAL_SUBMISSION_DATE, String.class))
-                .thenReturn(Optional.of(REVIEW_DATE));
+            .thenReturn(Optional.of(REVIEW_DATE));
         when(asylumCase.read(HOME_OFFICE_DECISION_DATE, String.class))
-                .thenReturn(Optional.of(REVIEW_DATE));
+            .thenReturn(Optional.of(REVIEW_DATE));
     }
 
     private void setupEmptyAsylumCaseMocks() {
         when(asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
     }
 
     private void setupCustomerServicesMocks() {
@@ -163,7 +166,7 @@ class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationLetterT
         customerServicesMap.put(CUSTOMER_SERVICES_TELEPHONE_KEY, CUSTOMER_SERVICE_PHONE);
         customerServicesMap.put(CUSTOMER_SERVICES_EMAIL_KEY, CUSTOMER_SERVICE_EMAIL);
         when(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
-                .thenReturn(customerServicesMap);
+            .thenReturn(customerServicesMap);
     }
 
     private void assertPersonalisationContainsMandatoryFields(Map<String, String> personalisation) {

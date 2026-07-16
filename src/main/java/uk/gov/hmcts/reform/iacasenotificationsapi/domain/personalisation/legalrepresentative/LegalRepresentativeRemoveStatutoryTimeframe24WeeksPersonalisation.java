@@ -7,16 +7,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
-import java.util.Collections;
 import java.util.Map;
-import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLegalRepEmailInternalOrLegalRepJourneyNonMandatory;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.EMPTY_STRING;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.LEGAL_REP_REFERENCE_NUMBER_KEY;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL;
@@ -24,7 +20,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24Weeks
 
 @Service
 @Slf4j
-public class LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation implements EmailNotificationPersonalisation {
+public class LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation implements LegalRepresentativeEmailNotificationPersonalisation {
 
 
     private static final String SUBJECT_PREFIX_KEY = "subjectPrefix";
@@ -52,13 +48,6 @@ public class LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation i
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
         return templateId;
-    }
-
-    @Override
-    public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        Set<String> legalRepEmails = Collections.singleton(getLegalRepEmailInternalOrLegalRepJourneyNonMandatory(asylumCase));
-        log.info("LegalRepresentative Emails {}", legalRepEmails);
-        return legalRepEmails;
     }
 
     @Override

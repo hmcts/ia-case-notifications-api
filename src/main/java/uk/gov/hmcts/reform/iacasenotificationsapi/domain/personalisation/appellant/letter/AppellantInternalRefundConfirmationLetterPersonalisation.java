@@ -10,7 +10,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.LetterN
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -66,8 +65,6 @@ public class AppellantInternalRefundConfirmationLetterPersonalisation implements
 
         final String dueDate = systemDateProvider.dueDate(daysAfterNotificationSent);
 
-        List<String> address = getAppellantOrLegalRepAddressLetterPersonalisation(asylumCase);
-
         ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap
                 .<String, String>builder()
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
@@ -81,9 +78,7 @@ public class AppellantInternalRefundConfirmationLetterPersonalisation implements
                 .put("onlineCaseReferenceNumber", asylumCase.read(AsylumCaseDefinition.CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class).orElse(""))
                 .put("dueDate", dueDate);
 
-        for (int i = 0; i < address.size(); i++) {
-            personalizationBuilder.put("address_line_" + (i + 1), address.get(i));
-        }
+        buildAddressForIccLetter(asylumCase, personalizationBuilder);
         return personalizationBuilder.build();
     }
 }
