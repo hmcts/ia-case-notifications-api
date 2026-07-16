@@ -17,6 +17,7 @@ import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.D_MMM_YYYY;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.buildAddressForAppellantIccLetter;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.buildAddressForIccLetter;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressInCountryOrOoc;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLegalRepAddressInCountryOrOoc;
@@ -69,8 +70,7 @@ public class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        return hasBeenSubmittedByAppellantInternalCase(asylumCase) ?
-            getAppellantAddressInCountryOrOoc(asylumCase) : getLegalRepAddressInCountryOrOoc(asylumCase);
+        return getAppellantAddressInCountryOrOoc(asylumCase);
     }
 
     @Override
@@ -105,7 +105,7 @@ public class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation
                 .put(DAYS_56_FROM_DATE_OF_DIRECTION, now.plusDays(DAYS_56).format(dtf))
                 .put(LINK_TO_SERVICE_KEY, iaAipFrontendUrl);
 
-        buildAddressForIccLetter(asylumCase, builder);
+        buildAddressForAppellantIccLetter(asylumCase, builder);
 
         return builder.build();
     }

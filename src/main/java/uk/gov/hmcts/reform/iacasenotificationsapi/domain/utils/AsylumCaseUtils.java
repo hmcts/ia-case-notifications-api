@@ -611,19 +611,28 @@ public class AsylumCaseUtils {
     }
 
     public static void buildAddressForIccLetter(AsylumCase asylumCase, ImmutableMap.Builder<String, String> builder) {
-        boolean appellantRepresentation = hasBeenSubmittedByAppellantInternalCase(asylumCase);
-        List<String> address;
-        // Internal appellant no representation - use appellant address
-        if (appellantRepresentation) {
-            address = inCountryAppeal(asylumCase) ?
-                getAppellantAddressAsList(asylumCase) :
-                getAppellantAddressAsListOoc(asylumCase);
-            // Internal appellant has representation - use legal rep address
+        if (hasBeenSubmittedByAppellantInternalCase(asylumCase)) {
+            buildAddressForAppellantIccLetter(asylumCase, builder);
         } else {
-            address = legalRepInCountryAppeal(asylumCase) ?
-                getLegalRepresentativeAddressAsList(asylumCase) :
-                getLegalRepresentativeAddressOocAsList(asylumCase);
+            buildAddressForLegalRepIccLetter(asylumCase, builder);
         }
+    }
+
+    public static void buildAddressForAppellantIccLetter(AsylumCase asylumCase, ImmutableMap.Builder<String, String> builder) {
+        List<String> address = inCountryAppeal(asylumCase) ?
+            getAppellantAddressAsList(asylumCase) :
+            getAppellantAddressAsListOoc(asylumCase);
+
+        for (int i = 0; i < address.size(); i++) {
+            builder.put("address_line_" + (i + 1), address.get(i));
+        }
+    }
+
+
+    public static void buildAddressForLegalRepIccLetter(AsylumCase asylumCase, ImmutableMap.Builder<String, String> builder) {
+        List<String> address = legalRepInCountryAppeal(asylumCase) ?
+            getLegalRepresentativeAddressAsList(asylumCase) :
+            getLegalRepresentativeAddressOocAsList(asylumCase);
 
         for (int i = 0; i < address.size(); i++) {
             builder.put("address_line_" + (i + 1), address.get(i));
