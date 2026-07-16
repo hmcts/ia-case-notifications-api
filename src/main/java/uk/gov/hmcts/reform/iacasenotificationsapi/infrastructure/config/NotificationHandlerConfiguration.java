@@ -5699,9 +5699,15 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
                 (callbackStage, callback) -> {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    boolean isAdmin = isInternalCase(asylumCase);
+                    boolean is24WeeksReview = isCaseReviewFor24WeeksCase(callback.getEvent(), asylumCase);
                     // TODO DIAC-2607: letter sent regardless of LR email — revert to && emails.isEmpty() once confirmed
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && isCaseReviewFor24WeeksCase(callback.getEvent(), asylumCase);
+                    boolean canSendLrLetter = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && isAdmin
+                            && is24WeeksReview;
+                    log.info("DIAC-2607 LR letter decision: canSend={}, isAdmin={}, is24WeeksReview={}",
+                            canSendLrLetter, isAdmin, is24WeeksReview);
+                    return canSendLrLetter;
                 },
                 notificationGenerators, getErrorHandler()
         );

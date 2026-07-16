@@ -429,7 +429,7 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
             caseData.with(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.YES);
             caseData.with(LEGAL_REP_HAS_ADDRESS, YesOrNo.YES);
             caseData.with(LEGAL_REP_ADDRESS_U_K, new AddressUk("lr-line1", "lr-line2", null, "lr-town", "lr-county", "SW1A 1AA", "UK"));
-            notCreatedByAdmin(caseData);
+            createdByAdmin(caseData);
 
             var response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
             assertNotificationsContain(response, 3,
