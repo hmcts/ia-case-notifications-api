@@ -55,7 +55,6 @@ public class AsylumCaseUtils24WeeksTest {
         writeSubscribers(asylumCase, subscriber(SubscriberType.APPELLANT, "", YesOrNo.NO, "07700000000", YesOrNo.NO));
 
         Assertions.assertFalse(AsylumCaseUtils.isSmsPreferred(asylumCase));
-        Assertions.assertTrue(AsylumCaseUtils.isLetterOnlyPreferredCommunication(asylumCase));
     }
 
     @Test
@@ -64,7 +63,6 @@ public class AsylumCaseUtils24WeeksTest {
         writeSubscribers(asylumCase, subscriber(SubscriberType.APPELLANT, "", YesOrNo.NO, "07700000000", YesOrNo.YES));
 
         Assertions.assertTrue(AsylumCaseUtils.isSmsPreferred(asylumCase));
-        Assertions.assertFalse(AsylumCaseUtils.isLetterOnlyPreferredCommunication(asylumCase));
     }
 
     @Test
@@ -74,7 +72,6 @@ public class AsylumCaseUtils24WeeksTest {
         writeSubscribers(asylumCase, subscriber(SubscriberType.APPELLANT, "", YesOrNo.NO, "07700000000", YesOrNo.YES));
 
         Assertions.assertTrue(AsylumCaseUtils.isSmsPreferred(asylumCase));
-        Assertions.assertFalse(AsylumCaseUtils.isLetterOnlyPreferredCommunication(asylumCase));
     }
 
     @Test
@@ -83,7 +80,6 @@ public class AsylumCaseUtils24WeeksTest {
         writeSubscribers(asylumCase, subscriber(SubscriberType.APPELLANT, "appellant@example.com", YesOrNo.YES, "07700000000", YesOrNo.YES));
 
         Assertions.assertTrue(AsylumCaseUtils.isSmsPreferred(asylumCase));
-        Assertions.assertFalse(AsylumCaseUtils.isLetterOnlyPreferredCommunication(asylumCase));
     }
 
     @Test
@@ -93,7 +89,6 @@ public class AsylumCaseUtils24WeeksTest {
         writeSubscribers(asylumCase, subscriber(SubscriberType.APPELLANT, "appellant@example.com", YesOrNo.YES, "", YesOrNo.NO));
 
         Assertions.assertFalse(AsylumCaseUtils.isSmsPreferred(asylumCase));
-        Assertions.assertFalse(AsylumCaseUtils.isLetterOnlyPreferredCommunication(asylumCase));
     }
 
     @Test
@@ -102,7 +97,6 @@ public class AsylumCaseUtils24WeeksTest {
         asylumCase.write(EMAIL, "appellant@example.com");
 
         Assertions.assertFalse(AsylumCaseUtils.isSmsPreferred(asylumCase));
-        Assertions.assertFalse(AsylumCaseUtils.isLetterOnlyPreferredCommunication(asylumCase));
     }
 
     @Test
@@ -111,7 +105,6 @@ public class AsylumCaseUtils24WeeksTest {
         asylumCase.write(SUBSCRIPTIONS, Optional.of(new ArrayList<>()));
 
         Assertions.assertFalse(AsylumCaseUtils.isSmsPreferred(asylumCase));
-        Assertions.assertTrue(AsylumCaseUtils.isLetterOnlyPreferredCommunication(asylumCase));
     }
 
     @Test
@@ -120,7 +113,6 @@ public class AsylumCaseUtils24WeeksTest {
         writeSubscribers(asylumCase, subscriber(SubscriberType.APPELLANT, "", YesOrNo.NO, "07700000000", YesOrNo.NO));
 
         Assertions.assertFalse(AsylumCaseUtils.isSmsPreferred(asylumCase));
-        Assertions.assertTrue(AsylumCaseUtils.isLetterOnlyPreferredCommunication(asylumCase));
     }
 
     @Test
@@ -129,7 +121,6 @@ public class AsylumCaseUtils24WeeksTest {
         writeSubscribers(asylumCase, subscriber(SubscriberType.APPELLANT, "", YesOrNo.NO, "", YesOrNo.YES));
 
         Assertions.assertTrue(AsylumCaseUtils.isSmsPreferred(asylumCase));
-        Assertions.assertFalse(AsylumCaseUtils.isLetterOnlyPreferredCommunication(asylumCase));
     }
 
     @Test
@@ -139,7 +130,6 @@ public class AsylumCaseUtils24WeeksTest {
         writeSubscribers(asylumCase, subscriber(SubscriberType.APPELLANT, "", YesOrNo.NO, "07700000000", YesOrNo.YES));
 
         Assertions.assertTrue(AsylumCaseUtils.isSmsPreferred(asylumCase));
-        Assertions.assertFalse(AsylumCaseUtils.isLetterOnlyPreferredCommunication(asylumCase));
     }
 
     @Test
@@ -150,7 +140,6 @@ public class AsylumCaseUtils24WeeksTest {
         writeSubscribers(asylumCase, s1, s2);
 
         Assertions.assertTrue(AsylumCaseUtils.isSmsPreferred(asylumCase));
-        Assertions.assertFalse(AsylumCaseUtils.isLetterOnlyPreferredCommunication(asylumCase));
     }
 
     @Test
@@ -161,7 +150,6 @@ public class AsylumCaseUtils24WeeksTest {
         writeSubscribers(asylumCase, s1, s2);
 
         Assertions.assertTrue(AsylumCaseUtils.isSmsPreferred(asylumCase));
-        Assertions.assertFalse(AsylumCaseUtils.isLetterOnlyPreferredCommunication(asylumCase));
     }
 
     @Test

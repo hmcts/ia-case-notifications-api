@@ -635,26 +635,6 @@ public class AsylumCaseUtils {
         }
     }
 
-    public static boolean isLetterOnlyPreferredCommunication(AsylumCase asylumCase) {
-        boolean hasApplicantEmail = !getApplicantEmail(asylumCase).isEmpty();
-        boolean emailPreferred = isEmailPreferred(asylumCase);
-        boolean smsPreferred = isSmsPreferred(asylumCase);
-        return !smsPreferred && (!hasApplicantEmail && !emailPreferred);
-    }
-
-    private static boolean isEmailPreferred(AsylumCase asylumCase) {
-
-        final Optional<List<IdValue<Subscriber>>> maybeSubscribers = asylumCase.read(SUBSCRIPTIONS);
-
-        Set<IdValue<Subscriber>> smsPreferred = maybeSubscribers
-                .orElse(Collections.emptyList()).stream()
-                .filter(subscriber -> YES.equals(subscriber.getValue().getWantsEmail()))
-                .collect(Collectors.toSet());
-
-        return !smsPreferred.isEmpty() && smsPreferred.stream().findFirst().map(subscriberIdValue ->
-                subscriberIdValue.getValue().getEmail()).isPresent();
-    }
-
     public static boolean isSmsPreferred(AsylumCase asylumCase) {
 
         final Optional<List<IdValue<Subscriber>>> maybeSubscribers = asylumCase.read(SUBSCRIPTIONS);

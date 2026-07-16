@@ -52,7 +52,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isHearingDetailsUpdated;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isInternalCase;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isLegalRepEjp;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isLetterOnlyPreferredCommunication;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isRemissionApproved;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isSubmissionOutOfTime;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.remissionDecisionGranted;
@@ -5724,8 +5723,7 @@ public class NotificationHandlerConfiguration {
                                     .getCaseData();
                     boolean canSendNotifications = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && isCaseReviewFor24WeeksCase(callback.getEvent(), asylumCase)
-                            && isInternalCase(asylumCase)
-                            && isLetterOnlyPreferredCommunication(asylumCase);
+                            && isInternalCase(asylumCase);
                     log.info("canSend review letter Notification {}", canSendNotifications);
                     return canSendNotifications;
                 },
