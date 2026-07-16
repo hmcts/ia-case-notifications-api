@@ -5,6 +5,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REF_NUMBER_PAPER_J;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantOrLegalRepAddressLetterPersonalisation;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLegalRepAddressInCountryOrOoc;
@@ -82,7 +83,9 @@ public class LegalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPerso
         ImmutableMap.Builder<String, String> builder = ImmutableMap.<String, String>builder()
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
                 .put(APPEAL_REFERENCE_NUMBER_KEY, asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING))
-                .put(LEGAL_REP_REFERENCE_NUMBER_KEY, asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING))
+                .put(LEGAL_REP_REFERENCE_NUMBER_KEY, asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)
+                        .filter(ref -> !ref.isEmpty())
+                        .orElseGet(() -> asylumCase.read(LEGAL_REP_REF_NUMBER_PAPER_J, String.class).orElse(EMPTY_STRING)))
                 .put(APPELLANT_GIVEN_NAMES_KEY, asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(EMPTY_STRING))
                 .put(APPELLANT_FAMILY_NAME_KEY, asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(EMPTY_STRING))
                 .put(HOME_OFFICE_REFERENCE_NUMBER_KEY, asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING))

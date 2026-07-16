@@ -325,7 +325,6 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
             assertNoNotifications(response);
         }
 
-        // TODO DIAC-2607: LR email disabled — revert by removing 'false &&' in handler; restore count to 3 and add LEGAL_REP_EMAIL
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
         void should_send_24weeks_case_review_email_to_all_three() {
@@ -336,7 +335,6 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
             assertNotificationsContain(response, 2, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL);
         }
 
-        // TODO DIAC-2607: LR email disabled — revert by removing 'false &&' in handler; restore count to 3 and add LEGAL_REP_EMAIL
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
         void should_send_24weeks_review_letter_to_appellant_and_email_to_ho_office_and_lr_created_by_admin() {
@@ -349,7 +347,6 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
             assertNotificationsContain(response, 2, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL);
         }
 
-        // TODO DIAC-2607: LR email disabled — revert by removing 'false &&' in handler; restore count to 2 and add LEGAL_REP_EMAIL
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
         void should_not_send_24weeks_review_letter_to_appellant_if_case_is_not_internal() {
@@ -363,7 +360,6 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
         }
 
 
-        // TODO DIAC-2607: LR email disabled — revert by removing 'false &&' in handler; restore count to 3 and add LEGAL_REP_EMAIL
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
         void should_not_send_24weeks_review_one_sms_and_three_emails_to_all() {
@@ -374,7 +370,6 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
             assertNotificationsContain(response, 2, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL);
         }
 
-        // TODO DIAC-2607: LR email disabled — revert by removing 'false &&' in handler; restore count to 4 and add LEGAL_REP_EMAIL
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
         void should_send_24weeks_review_one_sms_and_three_emails_to_all_not_created_by_admin() {
@@ -396,7 +391,6 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
             assertNoNotifications(response);
         }
 
-        // TODO DIAC-2607: LR email disabled — revert by removing 'false &&' in handler; restore count to 2 and add LEGAL_REP_EMAIL
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
         void should_not_send_24weeks_review_letter_to_appellant_if_has_subscription() {
@@ -407,7 +401,6 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
             assertNotificationsContain(response, 1, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL);
         }
 
-        // TODO DIAC-2607: LR email disabled — revert by removing 'false &&' in handler; restore count to 2 and add LEGAL_REP_EMAIL
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
         void should_not_send_24weeks_review_sms_to_appellant_if_has_subscription_and_not_created_by_admin() {
@@ -418,9 +411,6 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
             assertNotificationsContain(response, 1, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL);
         }
 
-        // TODO DIAC-2607: LR letter sent regardless of LR email (both letter handler and email handler changed).
-        //  When reverting letter handler: restore emails.isEmpty() condition; change expected count from 3 to 2 (letter + HO email, no appellant email).
-        //  When reverting email handler: remove 'false &&'; add LEGAL_REP_EMAIL back and bump count accordingly.
         @Test
         @WithMockUser(authorities = {"caseworker-ia-system"})
         void should_send_24weeks_review_letter_to_legal_rep() {

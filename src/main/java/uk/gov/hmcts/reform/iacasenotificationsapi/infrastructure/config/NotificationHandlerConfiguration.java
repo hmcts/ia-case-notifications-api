@@ -5677,18 +5677,7 @@ public class NotificationHandlerConfiguration {
     public PreSubmitCallbackHandler<AsylumCase> stf24WeeksCompleteCaseReviewLegalRepresentativeNotificationHandler(
             @Qualifier("stf24WeeksCompleteCaseReviewLegalRepresentativeNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
         return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase =
-                            callback
-                                    .getCaseDetails()
-                                    .getCaseData();
-                    Set<String> legalRepEmails = Collections.singleton(getLegalRepEmailInternalOrLegalRepJourneyNonMandatory(asylumCase));
-                    String emails = String.join(",", legalRepEmails);
-                    // TODO DIAC-2607: LR letter sent instead — remove 'false &&' to re-enable LR email
-                    boolean canSendLegalRep = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && false && isCaseReviewFor24WeeksCase(callback.getEvent(), asylumCase) && !emails.isEmpty();
-                    return canSendLegalRep;
-                },
+                (callbackStage, callback) -> false,
                 notificationGenerators,  getErrorHandler()
         );
     }
@@ -5699,15 +5688,9 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
                 (callbackStage, callback) -> {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    boolean isAdmin = isInternalCase(asylumCase);
-                    boolean is24WeeksReview = isCaseReviewFor24WeeksCase(callback.getEvent(), asylumCase);
-                    // TODO DIAC-2607: letter sent regardless of LR email — revert to && emails.isEmpty() once confirmed
-                    boolean canSendLrLetter = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && isAdmin
-                            && is24WeeksReview;
-                    log.info("DIAC-2607 LR letter decision: canSend={}, isAdmin={}, is24WeeksReview={}",
-                            canSendLrLetter, isAdmin, is24WeeksReview);
-                    return canSendLrLetter;
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && isInternalCase(asylumCase)
+                            && isCaseReviewFor24WeeksCase(callback.getEvent(), asylumCase);
                 },
                 notificationGenerators, getErrorHandler()
         );
