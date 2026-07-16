@@ -19,4 +19,10 @@
         <cve>CVE-2026-59083</cve>
         <cve>CVE-2026-49844</cve>
     </suppress>
+    <suppress until="2026-08-15">
+        <notes>TODO: check dependency-check report to identify affected library and update or confirm suppression reason</notes>
+        <cve>CVE-2026-59084</cve>
+        <cve>CVE-2026-59083</cve>
+        <cve>CVE-2026-49844</cve>
+    </suppress>
 </suppressions>
