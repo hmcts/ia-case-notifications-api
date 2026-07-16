@@ -2,6 +2,9 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.component;
 
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -28,6 +31,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.Nati
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.GovNotifyNotificationSender;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -55,14 +59,10 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HEARING_CENTRE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_DECISION_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ADMIN;
-<<<<<<< HEAD
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_ADDRESS_U_K;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_HAS_ADDRESS;
-=======
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.JOURNEY_TYPE;
->>>>>>> feature/DIAC-2252_TimeLine-Letter-for-Appellant
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_HAS_ADDRESS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.NOTIFICATIONS_SENT;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.SUBSCRIPTIONS;
@@ -79,6 +79,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24Weeks
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_SMS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_LETTER;
 
 @Slf4j
@@ -90,6 +91,11 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
     public static final String APPELLANT_SMS = "07123456789";
     public static final String LR_EMAIL = "legalrep@domain.com";
     private static final String someNotificationId = UUID.randomUUID().toString();
+
+    private static final YesOrNo WANTS_EMAIL = YesOrNo.YES;
+    private static final YesOrNo DONT_WANTS_EMAIL = YesOrNo.NO;
+    private static final YesOrNo WANTS_SMS = YesOrNo.YES;
+    private static final YesOrNo DONT_WANTS_SMS = YesOrNo.NO;
 
     @MockitoBean
     private GovNotifyNotificationSender notificationSender;
@@ -176,6 +182,54 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
         );
 
         return Optional.of(Collections.singletonList(new IdValue<>("foo", subscriber)));
+    }
+
+    private static AsylumCaseForTest mockCaseData(String lrEmail, String appellantEmail, String appellantSms,
+                                                   YesOrNo inUk, YesOrNo wantsEmail, YesOrNo wantsSms) {
+        boolean wEmail = YesOrNo.YES.equals(wantsEmail);
+        boolean wSms = YesOrNo.YES.equals(wantsSms);
+        AsylumCaseForTest someCase = anAsylumCase()
+            .with(HEARING_CENTRE, HearingCentre.MANCHESTER)
+            .with(APPEAL_REFERENCE_NUMBER, "some-appeal-reference-number")
+            .with(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, lrEmail)
+            .with(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, APPEAL_SUBMITTED)
+            .with(CONTACT_PREFERENCE, wEmail ? ContactPreference.WANTS_EMAIL : wSms ? ContactPreference.WANTS_SMS : null)
+            .with(SUBSCRIPTIONS, buildSubscriptions(wEmail, wSms, appellantEmail, appellantSms))
+            .with(COMPLETE_CASE_REVIEW_DATE, "2002-02-02")
+            .with(APPEAL_SUBMISSION_DATE, "2002-02-02")
+            .with(TRIBUNAL_RECEIVED_DATE, "2002-02-02")
+            .with(HOME_OFFICE_DECISION_DATE, "2002-02-02")
+            .with(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.YES)
+            .with(APPELLANT_IN_UK, inUk);
+
+        if (YesOrNo.YES.equals(inUk)) {
+            someCase.with(AsylumCaseDefinition.APPELLANT_ADDRESS,
+                new AddressUk("l1", "l2", "l3", "pt", "county", "pc", "uk"));
+        }
+
+        return someCase;
+    }
+
+    private static void createdByAdmin(AsylumCaseForTest caseData) {
+        caseData.with(IS_ADMIN, YesOrNo.YES)
+            .with(APPELLANTS_REPRESENTATION, YesOrNo.NO);
+    }
+
+    private static void notCreatedByAdmin(AsylumCaseForTest caseData) {
+        caseData.with(IS_ADMIN, YesOrNo.NO);
+    }
+
+    private static void setSmsContactPreference(AsylumCaseForTest caseData) {
+        caseData.with(CONTACT_PREFERENCE, ContactPreference.WANTS_SMS);
+    }
+
+    private static void assertNoNotifications(PreSubmitCallbackResponseForTest response) {
+        assertNotificationsContain(response, 0, List.of());
+    }
+
+    private static void assertNotificationsContain(PreSubmitCallbackResponseForTest response, int expectedSize,
+                                                   String... expectedIds) {
+        assertNotificationsContain(response, expectedSize, List.of(expectedIds));
     }
 
     // --- Notification assertion helpers to eliminate duplication ---
@@ -463,6 +517,8 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
                 STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL,
                 STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL);
         }
+    }
+
     @ParameterizedTest(name = "Is 24w case: {0}, JourneyType: {1}, inCountry: {2}, wantsEmail: {3}, wantsSms: {4}")
     @MethodSource("completeCaseReviewCaseDataPermutations")
     @WithMockUser(authorities = {"caseworker-ia-system"})
