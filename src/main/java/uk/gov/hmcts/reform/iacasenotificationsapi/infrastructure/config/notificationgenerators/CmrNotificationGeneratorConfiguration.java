@@ -3,6 +3,8 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config.notific
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Message;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantCmrRelistingPersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantCmrRelistingPersonalisationSms;
@@ -13,6 +15,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detenti
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeCmrRelistingPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeInPersonCmrListingCasePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.EmailNotificationGenerator;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.EmailWithLinkNotificationGenerator;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationGenerator;
@@ -59,6 +63,41 @@ public class CmrNotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("aipManualCmrListingNotificationGenerator")
+    public List<NotificationGenerator> aipManualCmrListingNotificationGenerator(
+        CaseOfficerCmrListingPersonalisation caseOfficerCmrListingPersonalisation,
+        HomeOfficeInPersonCmrListingCasePersonalisation homeOfficeInPersonCmrListingCasePersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender,
+        DocumentDownloadClient documentDownloadClient
+    ) {
+        DocumentTag documentTag = DocumentTag.INTERNAL_CMR_LISTING_LETTER_BUNDLE;
+
+        return newArrayList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    caseOfficerCmrListingPersonalisation,
+                    homeOfficeInPersonCmrListingCasePersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new PrecompiledLetterNotificationGenerator(
+                newArrayList(
+                    documentTag
+                ),
+                notificationSender,
+                notificationIdAppender,
+                documentDownloadClient
+            ) {
+                    @Override
+                public Message getSuccessMessage() {
+                        return new Message("success","body");
+                }
+            }
+        );
+    }
+  
     @Bean("nonDetainedCmrRelistingHoCoLrNotificationGenerator")
     public List<NotificationGenerator> nonDetainedCmrRelistingHoCoLrNotificationGenerator(
         LegalRepresentativeCmrRelistingPersonalisation legalRepresentativeCmrRelistingPersonalisation,
