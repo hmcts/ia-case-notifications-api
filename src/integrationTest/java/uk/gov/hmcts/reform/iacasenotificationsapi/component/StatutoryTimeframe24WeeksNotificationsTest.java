@@ -280,10 +280,10 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
             Arguments.of(true, TestJourneyType.LR, true, false, false, 2, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
             Arguments.of(true, TestJourneyType.LR, true, true, true, 2, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
 
-            Arguments.of(true, TestJourneyType.LR_MANUAL, false, false, false, 3, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_LETTER)),
-            Arguments.of(true, TestJourneyType.LR_MANUAL, false, true, true, 3, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_LETTER)),
-            Arguments.of(true, TestJourneyType.LR_MANUAL, true, false, false, 3, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_LETTER)),
-            Arguments.of(true, TestJourneyType.LR_MANUAL, true, true, true, 3, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_LETTER)),
+            Arguments.of(true, TestJourneyType.LR_MANUAL, false, false, false, 2, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_LETTER)),
+            Arguments.of(true, TestJourneyType.LR_MANUAL, false, true, true, 2, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_LETTER)),
+            Arguments.of(true, TestJourneyType.LR_MANUAL, true, false, false, 2, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_LETTER)),
+            Arguments.of(true, TestJourneyType.LR_MANUAL, true, true, true, 2, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_LETTER)),
 
             Arguments.of(false, TestJourneyType.AIP_MANUAL, true, true, true, 0, Collections.emptyList()),
             Arguments.of(false, TestJourneyType.AIP, true, true, true, 0, Collections.emptyList()),
@@ -325,9 +325,8 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
     void should_send_24weeks_review_letter_to_legal_rep() {
         var caseData = mockCaseData(TestJourneyType.LR_MANUAL, true, false, false, true);
         var response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
-        assertNotificationsContain(response, 3, List.of(
+        assertNotificationsContain(response, 2, List.of(
             STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_LETTER,
-            STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER,
             STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL));
     }
 }
