@@ -31,7 +31,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsF
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class LegalRepresentativeInPersonCmrListingPersonalisationTest {
+public class LegalRepresentativeCmrListingPersonalisationTest {
 
     private final String listAssistHearingTemplateId = "listAssistHearingTemplateId";
     private final String iaExUiFrontendUrl = "http://somefrontendurl";
@@ -67,7 +67,7 @@ public class LegalRepresentativeInPersonCmrListingPersonalisationTest {
     CustomerServicesProvider customerServicesProvider;
     @Mock
     HearingDetailsFinder hearingDetailsFinder;
-    private LegalRepresentativeInPersonCmrListingPersonalisation legalRepresentativeInPersonCmrListingPersonalisation;
+    private LegalRepresentativeCmrListingPersonalisation legalRepresentativeCmrListingPersonalisation;
 
     @BeforeEach
     void setup() {
@@ -108,7 +108,7 @@ public class LegalRepresentativeInPersonCmrListingPersonalisationTest {
         when(dateTimeExtractor.extractHearingTime(hearingDateTime)).thenReturn(hearingTime);
         when(hearingDetailsFinder.getCmrHearingCentreLocation(asylumCase)).thenReturn(hearingCentreAddress);
 
-        legalRepresentativeInPersonCmrListingPersonalisation = new LegalRepresentativeInPersonCmrListingPersonalisation(
+        legalRepresentativeCmrListingPersonalisation = new LegalRepresentativeCmrListingPersonalisation(
             listAssistHearingTemplateId,
             iaExUiFrontendUrl,
             appellantProvidingAppealArgumentDeadline,
@@ -122,20 +122,20 @@ public class LegalRepresentativeInPersonCmrListingPersonalisationTest {
     @Test
     void should_return_given_template_id() {
         assertEquals(listAssistHearingTemplateId,
-            legalRepresentativeInPersonCmrListingPersonalisation.getTemplateId(asylumCase));
+            legalRepresentativeCmrListingPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
     void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_CMR_LISTING_LEGAL_REPRESENTATIVE",
-            legalRepresentativeInPersonCmrListingPersonalisation.getReferenceId(caseId));
+            legalRepresentativeCmrListingPersonalisation.getReferenceId(caseId));
     }
 
     @Test
     void should_return_given_email_address_from_asylum_case() {
         assertTrue(
-            legalRepresentativeInPersonCmrListingPersonalisation.getRecipientsList(asylumCase).contains(legalRepEmailAddress));
+            legalRepresentativeCmrListingPersonalisation.getRecipientsList(asylumCase).contains(legalRepEmailAddress));
     }
 
     @Test
@@ -143,7 +143,7 @@ public class LegalRepresentativeInPersonCmrListingPersonalisationTest {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
-            assertThrows(IllegalStateException.class, () -> legalRepresentativeInPersonCmrListingPersonalisation.getRecipientsList(asylumCase));
+            assertThrows(IllegalStateException.class, () -> legalRepresentativeCmrListingPersonalisation.getRecipientsList(asylumCase));
         assertEquals("legalRepresentativeEmailAddress is not present", exception.getMessage());
     }
 
@@ -151,7 +151,7 @@ public class LegalRepresentativeInPersonCmrListingPersonalisationTest {
     void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-            assertThrows(NullPointerException.class, () -> legalRepresentativeInPersonCmrListingPersonalisation.getPersonalisation((AsylumCase) null));
+            assertThrows(NullPointerException.class, () -> legalRepresentativeCmrListingPersonalisation.getPersonalisation((AsylumCase) null));
         assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
@@ -160,8 +160,8 @@ public class LegalRepresentativeInPersonCmrListingPersonalisationTest {
     void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
-        initializePrefixes(legalRepresentativeInPersonCmrListingPersonalisation);
-        Map<String, String> personalisation = legalRepresentativeInPersonCmrListingPersonalisation.getPersonalisation(asylumCase);
+        initializePrefixes(legalRepresentativeCmrListingPersonalisation);
+        Map<String, String> personalisation = legalRepresentativeCmrListingPersonalisation.getPersonalisation(asylumCase);
 
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
@@ -188,9 +188,9 @@ public class LegalRepresentativeInPersonCmrListingPersonalisationTest {
     void should_return_personalisation_when_co_records_hearing_response(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
-        initializePrefixes(legalRepresentativeInPersonCmrListingPersonalisation);
+        initializePrefixes(legalRepresentativeCmrListingPersonalisation);
         when(asylumCase.read(SUBMIT_HEARING_REQUIREMENTS_AVAILABLE)).thenReturn(Optional.of(YesOrNo.YES));
-        Map<String, String> personalisation = legalRepresentativeInPersonCmrListingPersonalisation.getPersonalisation(asylumCase);
+        Map<String, String> personalisation = legalRepresentativeCmrListingPersonalisation.getPersonalisation(asylumCase);
 
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
@@ -237,8 +237,8 @@ public class LegalRepresentativeInPersonCmrListingPersonalisationTest {
         when(asylumCase.read(ADDITIONAL_TRIBUNAL_RESPONSE, String.class)).thenReturn(Optional.empty());
         String videoHearingSuitability = "someVideoHearingSuitability";
         when(asylumCase.read(REMOTE_VIDEO_CALL_TRIBUNAL_RESPONSE, String.class)).thenReturn(Optional.of(videoHearingSuitability));
-        initializePrefixes(legalRepresentativeInPersonCmrListingPersonalisation);
-        Map<String, String> personalisation = legalRepresentativeInPersonCmrListingPersonalisation.getPersonalisation(asylumCase);
+        initializePrefixes(legalRepresentativeCmrListingPersonalisation);
+        Map<String, String> personalisation = legalRepresentativeCmrListingPersonalisation.getPersonalisation(asylumCase);
 
         assertThat(personalisation)
             .containsEntry("hearingRequirementVulnerabilities", "Request Granted - Granted to vulnerabilities")
@@ -254,7 +254,7 @@ public class LegalRepresentativeInPersonCmrListingPersonalisationTest {
     void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
-        initializePrefixes(legalRepresentativeInPersonCmrListingPersonalisation);
+        initializePrefixes(legalRepresentativeCmrListingPersonalisation);
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
@@ -267,7 +267,7 @@ public class LegalRepresentativeInPersonCmrListingPersonalisationTest {
         when(asylumCase.read(LIST_CASE_REQUIREMENTS_IN_CAMERA_COURT, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(LIST_CASE_REQUIREMENTS_OTHER, String.class)).thenReturn(Optional.empty());
 
-        Map<String, String> personalisation = legalRepresentativeInPersonCmrListingPersonalisation.getPersonalisation(asylumCase);
+        Map<String, String> personalisation = legalRepresentativeCmrListingPersonalisation.getPersonalisation(asylumCase);
 
         assertThat(personalisation)
             .containsEntry("appealReferenceNumber", "")

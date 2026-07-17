@@ -15,7 +15,6 @@ import java.util.List;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DetentionFacility.IRC;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DetentionFacility.PRISON;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.CMR_LISTING;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.CMR_RE_LISTING;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
 @Slf4j
@@ -30,7 +29,7 @@ public class CmrNotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && (CMR_LISTING.equals(callback.getEvent()) || CMR_RE_LISTING.equals(callback.getEvent()))
+                    && CMR_LISTING.equals(callback.getEvent())
                     && isCmrHearingInPersonOrRemote(asylumCase)
                     && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
                     && isRepJourney(callback.getCaseDetails().getCaseData())
@@ -49,10 +48,28 @@ public class CmrNotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && (CMR_LISTING.equals(callback.getEvent()) || CMR_RE_LISTING.equals(callback.getEvent()))
+                    && CMR_LISTING.equals(callback.getEvent())
                     && isCmrHearingInPersonOrRemote(asylumCase)
                     && isInternalCase(callback.getCaseDetails().getCaseData())
                     && isAipJourney(callback.getCaseDetails().getCaseData());
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> cmrListingLegalRepDigitalNotificationHandler(
+        @Qualifier("legalRepDigitalCmrListingNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && CMR_LISTING.equals(callback.getEvent())
+                    && isCmrHearingInPersonOrRemote(asylumCase)
+                    && !isInternalCase(callback.getCaseDetails().getCaseData())
+                    && isRepJourney(callback.getCaseDetails().getCaseData());
             },
             notificationGenerators
         );

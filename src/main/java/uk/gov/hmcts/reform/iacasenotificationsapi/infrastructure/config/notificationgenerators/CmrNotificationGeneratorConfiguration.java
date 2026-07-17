@@ -5,6 +5,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Message;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantCmrListingPersonalisationEmail;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantCmrListingPersonalisationSms;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerCmrListingPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamCmrListingPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamCmrListingProductionPersonalisation;
@@ -23,7 +25,7 @@ import static com.google.common.collect.Lists.newArrayList;
 public class CmrNotificationGeneratorConfiguration {
     @Bean("detainedInPrisonIrcLegalRepInPersonCmrListingNotificationGenerator")
     public List<NotificationGenerator> detainedLegalRepInPersonCmrListingNotificationGenerator(
-        LegalRepresentativeInPersonCmrListingPersonalisation legalRepresentativeInPersonCmrListingPersonalisation,
+        LegalRepresentativeCmrListingPersonalisation legalRepresentativeCmrListingPersonalisation,
         CaseOfficerCmrListingPersonalisation caseOfficerCmrListingPersonalisation,
         HomeOfficeInPersonCmrListingCasePersonalisation homeOfficeInPersonCmrListingCasePersonalisation,
         DetentionEngagementTeamCmrListingPersonalisation detentionEngagementTeamCmrListingPersonalisation,
@@ -35,7 +37,7 @@ public class CmrNotificationGeneratorConfiguration {
         return newArrayList(
             new EmailNotificationGenerator(
                 newArrayList(
-                    legalRepresentativeInPersonCmrListingPersonalisation,
+                    legalRepresentativeCmrListingPersonalisation,
                     caseOfficerCmrListingPersonalisation,
                     homeOfficeInPersonCmrListingCasePersonalisation,
                     detentionEngagementTeamCmrListingProductionPersonalisation
@@ -80,11 +82,43 @@ public class CmrNotificationGeneratorConfiguration {
                 notificationIdAppender,
                 documentDownloadClient
             ) {
-                    @Override
+                @Override
                 public Message getSuccessMessage() {
                         return new Message("success","body");
                     }
             }
+        );
+    }
+
+    @Bean("legalRepDigitalCmrListingNotificationGenerator")
+    public List<NotificationGenerator> legalRepDigitalCmrListingNotificationGenerator(
+        LegalRepresentativeCmrListingPersonalisation legalRepresentativeCmrListingPersonalisation,
+        CaseOfficerCmrListingPersonalisation caseOfficerCmrListingPersonalisation,
+        HomeOfficeInPersonCmrListingCasePersonalisation homeOfficeInPersonCmrListingCasePersonalisation,
+        AppellantCmrListingPersonalisationEmail appellantCmrListingPersonalisationEmail,
+        AppellantCmrListingPersonalisationSms appellantCmrListingPersonalisationSms,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return newArrayList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    legalRepresentativeCmrListingPersonalisation,
+                    caseOfficerCmrListingPersonalisation,
+                    homeOfficeInPersonCmrListingCasePersonalisation,
+                    appellantCmrListingPersonalisationEmail
+                ),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(
+                    appellantCmrListingPersonalisationSms
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
         );
     }
 }
