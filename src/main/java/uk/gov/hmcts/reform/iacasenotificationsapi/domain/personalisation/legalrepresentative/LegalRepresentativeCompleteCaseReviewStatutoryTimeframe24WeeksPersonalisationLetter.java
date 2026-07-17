@@ -7,10 +7,8 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REF_NUMBER_PAPER_J;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.buildAddressForLegalRepIccLetter;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLegalRepAddressInCountryOrOoc;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLegalRepresentativeAddressAsList;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLegalRepresentativeAddressOocAsList;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.legalRepInCountryAppeal;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.APPEAL_RECEIVED_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.DAYS_14;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.DAYS_14_FROM_DATE_OF_DIRECTION_KEY;
@@ -28,10 +26,8 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24Weeks
 import com.google.common.collect.ImmutableMap;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
@@ -40,7 +36,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 @Service
-@Slf4j
 public class LegalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationLetter implements LetterNotificationPersonalisation {
 
     private static final String APPEAL_REFERENCE_NUMBER_KEY = "appealReferenceNumber";
@@ -65,9 +60,7 @@ public class LegalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPerso
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        Set<String> addresses = getLegalRepAddressInCountryOrOoc(asylumCase);
-        log.info("LegalRep address for 24-week review letter: {}", addresses);
-        return addresses;
+        return getLegalRepAddressInCountryOrOoc(asylumCase);
     }
 
     @Override
@@ -99,12 +92,7 @@ public class LegalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPerso
                 .put(DAYS_42_FROM_DATE_OF_DIRECTION_KEY, now.plusDays(DAYS_42).format(dtf))
                 .put(DAYS_56_FROM_DATE_OF_DIRECTION, now.plusDays(DAYS_56).format(dtf));
 
-        List<String> address = legalRepInCountryAppeal(asylumCase)
-                ? getLegalRepresentativeAddressAsList(asylumCase)
-                : getLegalRepresentativeAddressOocAsList(asylumCase);
-        for (int i = 0; i < address.size(); i++) {
-            builder.put("address_line_" + (i + 1), address.get(i));
-        }
+        buildAddressForLegalRepIccLetter(asylumCase, builder);
 
         return builder.build();
     }

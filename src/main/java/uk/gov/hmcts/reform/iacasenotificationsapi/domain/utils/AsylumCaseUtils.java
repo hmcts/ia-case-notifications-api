@@ -630,6 +630,16 @@ public class AsylumCaseUtils {
         }
     }
 
+    public static void buildAddressForLegalRepIccLetter(AsylumCase asylumCase, ImmutableMap.Builder<String, String> builder) {
+        List<String> address = legalRepInCountryAppeal(asylumCase)
+            ? getLegalRepresentativeAddressAsList(asylumCase)
+            : getLegalRepresentativeAddressOocAsList(asylumCase);
+
+        for (int i = 0; i < address.size(); i++) {
+            builder.put("address_line_" + (i + 1), address.get(i));
+        }
+    }
+
     public static boolean isCaseReviewFor24WeeksCase(Event event, AsylumCase asylumCase) {
         boolean hasStf24W = AsylumCaseUtils.hasStf24WeeksStatus(asylumCase);
         return event == COMPLETE_CASE_REVIEW
