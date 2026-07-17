@@ -651,26 +651,6 @@ public class AsylumCaseUtils {
             .orElse("");
     }
 
-    public static boolean isSmsPreferred(AsylumCase asylumCase) {
-        final Optional<List<IdValue<Subscriber>>> maybeSubscribers = asylumCase.read(SUBSCRIPTIONS);
-
-        Set<IdValue<Subscriber>> smsPreferred = maybeSubscribers
-            .orElse(Collections.emptyList()).stream()
-            .filter(subscriber -> YES.equals(subscriber.getValue().getWantsSms()))
-            .collect(toSet());
-
-        return !smsPreferred.isEmpty() && smsPreferred.stream().findFirst()
-            .map(subscriberIdValue -> subscriberIdValue.getValue().getMobileNumber()).isPresent();
-    }
-
-    public static boolean hasSmsContactPreference(AsylumCase asylumCase) {
-        boolean smsPreferred = asylumCase.read(CONTACT_PREFERENCE, ContactPreference.class)
-            .map(contactPreference -> ContactPreference.WANTS_SMS == contactPreference)
-            .orElse(false);
-        return (smsPreferred && asylumCase.read(MOBILE_NUMBER, String.class).isPresent())
-            || isSmsPreferred(asylumCase);
-    }
-
     private static String add24WeeksToDate(String date) {
         LocalDate appealDate = parse(date);
         LocalDate stf24WeeksDate = appealDate.plusWeeks(24);

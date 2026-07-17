@@ -4,7 +4,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ContactPreference;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
@@ -24,8 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_SUBMISSION_DATE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CONTACT_PREFERENCE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.MOBILE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.SUBSCRIPTIONS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.TRIBUNAL_RECEIVED_DATE;
@@ -184,83 +181,6 @@ public class AsylumCaseUtils24WeeksTest {
         String result = AsylumCaseUtils.getAppealReceivedDate(asylumCase);
 
         assertEquals("5 Mar 2024", result);
-    }
-
-    @Nested
-    class ContactPreferenceMobileTests {
-        AsylumCase asylumCase = mock(AsylumCase.class);
-
-        @Test
-        void should_return_true_when_sms_contact_preference_is_set_and_mobile_number_exists() {
-            when(asylumCase.read(CONTACT_PREFERENCE, ContactPreference.class))
-                    .thenReturn(Optional.of(ContactPreference.WANTS_SMS));
-            when(asylumCase.read(MOBILE_NUMBER, String.class))
-                    .thenReturn(Optional.of("07700900123"));
-
-            boolean result = AsylumCaseUtils.hasSmsContactPreference(asylumCase);
-
-            assertTrue(result);
-        }
-
-        @Test
-        void should_return_false_when_sms_contact_preference_is_not_set() {
-            when(asylumCase.read(CONTACT_PREFERENCE, ContactPreference.class))
-                    .thenReturn(Optional.empty());
-            when(asylumCase.read(MOBILE_NUMBER, String.class))
-                    .thenReturn(Optional.of("07700900123"));
-
-            boolean result = AsylumCaseUtils.hasSmsContactPreference(asylumCase);
-
-            assertFalse(result);
-        }
-
-        @Test
-        void should_return_false_when_contact_preference_is_not_sms() {
-            when(asylumCase.read(CONTACT_PREFERENCE, ContactPreference.class))
-                    .thenReturn(Optional.of(ContactPreference.WANTS_EMAIL));
-            when(asylumCase.read(MOBILE_NUMBER, String.class))
-                    .thenReturn(Optional.of("07700900123"));
-
-            boolean result = AsylumCaseUtils.hasSmsContactPreference(asylumCase);
-
-            assertFalse(result);
-        }
-
-        @Test
-        void should_return_false_when_mobile_number_is_not_present() {
-            when(asylumCase.read(CONTACT_PREFERENCE, ContactPreference.class))
-                    .thenReturn(Optional.of(ContactPreference.WANTS_SMS));
-            when(asylumCase.read(MOBILE_NUMBER, String.class))
-                    .thenReturn(Optional.empty());
-
-            boolean result = AsylumCaseUtils.hasSmsContactPreference(asylumCase);
-
-            assertFalse(result);
-        }
-
-
-        @Test
-        void should_return_false_when_both_contact_preference_and_mobile_number_are_missing() {
-            when(asylumCase.read(CONTACT_PREFERENCE, ContactPreference.class))
-                    .thenReturn(Optional.empty());
-            when(asylumCase.read(MOBILE_NUMBER, String.class))
-                    .thenReturn(Optional.empty());
-
-            boolean result = AsylumCaseUtils.hasSmsContactPreference(asylumCase);
-
-            assertFalse(result);
-        }
-
-        @Test
-        void should_return_true_when_no_contact_preference_but_has_subscriptions() {
-
-            AsylumCase asylumCase = new AsylumCase();
-            writeSubscribers(asylumCase, subscriber(SubscriberType.APPELLANT, "", YesOrNo.NO, "07700000000", YesOrNo.YES));
-
-            boolean result = AsylumCaseUtils.hasSmsContactPreference(asylumCase);
-
-            assertTrue(result);
-        }
     }
 
     @Nested
