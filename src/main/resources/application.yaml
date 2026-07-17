@@ -2028,6 +2028,7 @@ security:
       - "refundConfirmation"
       - "hearingCancelled"
       - "revokeCitizenAccess"
+      - "requestRespondentEvidence"
     ctsc:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2073,6 +2074,7 @@ security:
       - "refundConfirmation"
       - "hearingCancelled"
       - "revokeCitizenAccess"
+      - "requestRespondentEvidence"
     ctsc-team-leader:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2118,6 +2120,7 @@ security:
       - "editDocuments"
       - "hearingCancelled"
       - "revokeCitizenAccess"
+      - "requestRespondentEvidence"
     national-business-centre:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2163,6 +2166,7 @@ security:
       - "refundConfirmation"
       - "hearingCancelled"
       - "revokeCitizenAccess"
+      - "requestRespondentEvidence"
     challenged-access-ctsc:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2208,6 +2212,7 @@ security:
       - "refundConfirmation"
       - "hearingCancelled"
       - "revokeCitizenAccess"
+      - "requestRespondentEvidence"
     challenged-access-admin:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2253,6 +2258,7 @@ security:
       - "refundConfirmation"
       - "hearingCancelled"
       - "revokeCitizenAccess"
+      - "requestRespondentEvidence"
     caseworker-ia-homeofficeapc:
       - "startApplication"
       - "editBailApplication"
