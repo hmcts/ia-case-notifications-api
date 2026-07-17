@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure;
 
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CMR_HEARING_CENTRE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CMR_IS_REMOTE_HEARING;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_VIRTUAL_HEARING;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.IS_BAILS_LOCATION_REFERENCE_DATA_ENABLED;
@@ -142,6 +143,26 @@ public class HearingDetailsFinder {
         } else {
             return getCmrHearingCentreAddress(asylumCase);
         }
+    }
+
+    public String getCmrHearingCentreName(AsylumCase asylumCase) {
+        final HearingCentre hearingCentre =
+            asylumCase
+                .read(CMR_HEARING_CENTRE, HearingCentre.class)
+                .orElseThrow(() -> new IllegalStateException("cmrHearingCentre is not present"));
+
+        return stringProvider.get("hearingCentreName", hearingCentre.toString())
+            .orElseThrow(() -> new IllegalStateException("cmrHearingCentreName is not present"));
+    }
+
+    public String getOldCmrHearingCentreName(AsylumCase asylumCaseBefore) {
+        final Optional<HearingCentre> hearingCentre = asylumCaseBefore.read(CMR_HEARING_CENTRE, HearingCentre.class);
+
+        if (hearingCentre.isEmpty()) {
+            return "";
+        }
+
+        return stringProvider.get("hearingCentreName", hearingCentre.get().toString()).orElse("");
     }
 
     private String getRefDataLocationAddress(AsylumCase asylumCase) {

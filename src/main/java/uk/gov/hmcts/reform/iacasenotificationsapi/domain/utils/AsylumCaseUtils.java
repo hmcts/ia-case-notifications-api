@@ -508,6 +508,20 @@ public class AsylumCaseUtils {
                 .orElse(false);
     }
 
+    public static boolean isReppedAppellantEmailPreferred(AsylumCase asylumCase) {
+        return asylumCase.read(CONTACT_PREFERENCE, ContactPreference.class)
+                .map(contactPreference -> ContactPreference.WANTS_EMAIL == contactPreference)
+                .orElse(false)
+                && asylumCase.read(EMAIL, String.class).isPresent();
+    }
+
+    public static boolean isReppedAppellantSmsPreferred(AsylumCase asylumCase) {
+        return asylumCase.read(CONTACT_PREFERENCE, ContactPreference.class)
+                .map(contactPreference -> ContactPreference.WANTS_SMS == contactPreference)
+                .orElse(false)
+                && asylumCase.read(MOBILE_NUMBER, String.class).isPresent();
+    }
+
     public static Boolean remissionDecisionPartiallyGrantedOrRefused(AsylumCase asylumCase) {
         return asylumCase.read(REMISSION_DECISION, RemissionDecision.class)
             .map(decision -> PARTIALLY_APPROVED == decision || REJECTED == decision)
