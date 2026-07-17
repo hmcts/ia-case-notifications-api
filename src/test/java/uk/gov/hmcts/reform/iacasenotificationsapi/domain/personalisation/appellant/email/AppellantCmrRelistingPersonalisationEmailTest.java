@@ -130,7 +130,7 @@ class AppellantCmrRelistingPersonalisationEmailTest {
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
-        when(personalisationProvider.getCmrRelistingPersonalisation(callback)).thenReturn(getCmrRelistingPersonalisationMap());
+        when(personalisationProvider.getPersonalisation(callback)).thenReturn(getCmrRelistingPersonalisationMap());
 
         Map<String, String> personalisation = appellantCmrRelistingPersonalisationEmail.getPersonalisation(callback);
 

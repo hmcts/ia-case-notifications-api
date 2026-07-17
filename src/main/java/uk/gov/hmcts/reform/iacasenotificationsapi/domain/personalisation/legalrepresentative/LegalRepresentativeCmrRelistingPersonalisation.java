@@ -61,7 +61,7 @@ public class LegalRepresentativeCmrRelistingPersonalisation implements LegalRepr
         return ImmutableMap
             .<String, String>builder()
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation(callback))
-            .putAll(personalisationProvider.getCmrRelistingPersonalisation(callback))
+            .putAll(personalisationProvider.getPersonalisation(callback))
             .put("subjectPrefix", isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData())
                 ? adaPrefix
                 : nonAdaPrefix)

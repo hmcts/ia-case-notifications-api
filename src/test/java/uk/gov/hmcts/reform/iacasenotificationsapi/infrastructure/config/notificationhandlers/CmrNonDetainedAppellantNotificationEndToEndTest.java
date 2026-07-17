@@ -101,7 +101,7 @@ class CmrNonDetainedAppellantNotificationEndToEndTest {
         when(asylumCase.read(CMR_HEARING_CHANNEL, DynamicList.class)).thenReturn(Optional.of(inPersonChannel));
         when(asylumCase.read(CMR_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(HearingCentre.TAYLOR_HOUSE));
 
-        when(personalisationProvider.getCmrRelistingPersonalisation(callback)).thenReturn(Collections.emptyMap());
+        when(personalisationProvider.getPersonalisation(callback)).thenReturn(Collections.emptyMap());
         when(hearingDetailsFinder.getCmrHearingCentreName(asylumCase)).thenReturn("Taylor House");
 
         AppellantCmrRelistingPersonalisationEmail appellantEmailPersonalisation = new AppellantCmrRelistingPersonalisationEmail(

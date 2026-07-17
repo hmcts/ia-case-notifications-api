@@ -60,7 +60,7 @@ public class CaseOfficerCmrRelistingPersonalisation implements EmailNotification
 
         return ImmutableMap
             .<String, String>builder()
-            .putAll(personalisationProvider.getCmrRelistingPersonalisation(callback))
+            .putAll(personalisationProvider.getPersonalisation(callback))
             .put("subjectPrefix", isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData())
                 ? adaPrefix
                 : nonAdaPrefix)

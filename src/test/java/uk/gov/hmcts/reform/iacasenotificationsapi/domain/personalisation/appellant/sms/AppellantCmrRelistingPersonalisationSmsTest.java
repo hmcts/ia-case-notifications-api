@@ -118,7 +118,7 @@ class AppellantCmrRelistingPersonalisationSmsTest {
     void should_return_personalisation_when_all_information_given() {
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
-        when(personalisationProvider.getCmrRelistingPersonalisation(callback)).thenReturn(getCmrRelistingPersonalisationMap());
+        when(personalisationProvider.getPersonalisation(callback)).thenReturn(getCmrRelistingPersonalisationMap());
 
         Map<String, String> personalisation = appellantCmrRelistingPersonalisationSms.getPersonalisation(callback);
 

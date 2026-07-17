@@ -69,7 +69,7 @@ public class AppellantCmrRelistingPersonalisationSms implements SmsNotificationP
 
         return ImmutableMap
             .<String, String>builder()
-            .putAll(personalisationProvider.getCmrRelistingPersonalisation(callback))
+            .putAll(personalisationProvider.getPersonalisation(callback))
             .put("tribunalCentre", hearingDetailsFinder.getCmrHearingCentreName(asylumCase))
             .put("hyperlink to service", iaAipFrontendUrl)
             .build();

@@ -80,7 +80,7 @@ public class AppellantCmrRelistingPersonalisationEmail implements EmailNotificat
         return ImmutableMap
             .<String, String>builder()
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation(callback))
-            .putAll(personalisationProvider.getCmrRelistingPersonalisation(callback))
+            .putAll(personalisationProvider.getPersonalisation(callback))
             .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
             .put("tribunalCentre", hearingDetailsFinder.getCmrHearingCentreName(asylumCase))
             .put("hyperlink to service", iaAipFrontendUrl)

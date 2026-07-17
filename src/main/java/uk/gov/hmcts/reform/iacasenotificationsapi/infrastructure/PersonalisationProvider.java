@@ -292,6 +292,8 @@ public class PersonalisationProvider {
             immutableMap.putAll(getChangeDirectionDueDatePersonalisation(callback));
         } else if (callback.getEvent() == Event.EDIT_CASE_LISTING) {
             immutableMap.putAll(getEditCaseListingPersonalisation(callback));
+        } else if (callback.getEvent() == CMR_RE_LISTING) {
+            immutableMap.putAll(getCmrRelistingPersonalisation(callback));
         }
 
         return immutableMap;
