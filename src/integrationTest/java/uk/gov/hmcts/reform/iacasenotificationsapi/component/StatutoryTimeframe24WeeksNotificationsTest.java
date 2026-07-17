@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.component;
 
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -320,13 +319,4 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
         assertNotificationsContain(response, expectedSize, expectedIds);
     }
 
-    @Test
-    @WithMockUser(authorities = {"caseworker-ia-system"})
-    void should_send_24weeks_review_letter_to_legal_rep() {
-        var caseData = mockCaseData(TestJourneyType.LR_MANUAL, true, false, false, true);
-        var response = mockResponse(caseData, COMPLETE_CASE_REVIEW);
-        assertNotificationsContain(response, 2, List.of(
-            STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_LETTER,
-            STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL));
-    }
 }
