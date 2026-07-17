@@ -56,6 +56,8 @@ public class PersonalisationProvider {
                     .build())
             .put(EDIT_CASE_LISTING, personalisationBuilder
                     .build())
+            .put(CMR_RE_LISTING, personalisationBuilder
+                    .build())
             .put(UPLOAD_ADDITIONAL_EVIDENCE, personalisationBuilder
                     .build())
             .put(UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE, personalisationBuilder
@@ -119,6 +121,43 @@ public class PersonalisationProvider {
                 .put("hearingTime", dateTimeExtractor.extractHearingTime(hearingDateTime))
                 .put("hearingCentreName", hearingDetailsFinder.getHearingCentreName(asylumCase))
                 .put(HEARING_CENTRE_ADDRESS_CONST, hearingDetailsFinder.getHearingCentreLocation(asylumCase));
+
+        buildHearingRequirementsFields(asylumCase, caseListingValues);
+
+        return caseListingValues.build();
+    }
+
+    public Map<String, String> getCmrRelistingPersonalisation(Callback<AsylumCase> callback) {
+
+        AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+        Optional<CaseDetails<AsylumCase>> caseDetailsBefore = callback.getCaseDetailsBefore();
+
+        final String hearingDateTime =
+                hearingDetailsFinder.getCmrHearingDateTime(asylumCase);
+
+        String hearingCentreNameBefore = "";
+        String oldHearingDate = "";
+
+        if (caseDetailsBefore.isPresent()) {
+
+            AsylumCase asylumCaseBefore = caseDetailsBefore.get().getCaseData();
+
+            hearingCentreNameBefore =
+                    hearingDetailsFinder.getOldCmrHearingCentreName(asylumCaseBefore);
+
+            oldHearingDate =
+                    asylumCaseBefore.read(CMR_HEARING_DATE, String.class).orElse("");
+        }
+
+        final Builder<String, String> caseListingValues = ImmutableMap
+                .<String, String>builder()
+                .put(LINK_TO_ONLINE_SERVICE, iaExUiFrontendUrl)
+                .put("oldHearingCentre", hearingCentreNameBefore)
+                .put("oldHearingDate", oldHearingDate.isEmpty() ? oldHearingDate : dateTimeExtractor.extractHearingDate(oldHearingDate))
+                .put("hearingDate", dateTimeExtractor.extractHearingDate(hearingDateTime))
+                .put("hearingTime", dateTimeExtractor.extractHearingTime(hearingDateTime))
+                .put("hearingCentreName", hearingDetailsFinder.getCmrHearingCentreName(asylumCase))
+                .put(HEARING_CENTRE_ADDRESS_CONST, hearingDetailsFinder.getCmrHearingCentreLocation(asylumCase));
 
         buildHearingRequirementsFields(asylumCase, caseListingValues);
 

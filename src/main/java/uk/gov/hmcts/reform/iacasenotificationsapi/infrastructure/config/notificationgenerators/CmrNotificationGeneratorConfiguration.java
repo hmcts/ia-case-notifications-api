@@ -4,11 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantCmrListingPersonalisationEmail;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantCmrListingPersonalisationSms;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantCmrRelistingPersonalisationEmail;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantCmrRelistingPersonalisationSms;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerCmrListingPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerCmrRelistingPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamCmrListingPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamCmrListingProductionPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeCmrRelistingPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeInPersonCmrListingCasePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.EmailNotificationGenerator;
@@ -57,19 +59,19 @@ public class CmrNotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("nonDetainedCmrListingHoCoLrNotificationGenerator")
-    public List<NotificationGenerator> nonDetainedCmrListingHoCoLrNotificationGenerator(
-        LegalRepresentativeInPersonCmrListingPersonalisation legalRepresentativeInPersonCmrListingPersonalisation,
-        CaseOfficerCmrListingPersonalisation caseOfficerCmrListingPersonalisation,
-        HomeOfficeInPersonCmrListingCasePersonalisation homeOfficeInPersonCmrListingCasePersonalisation,
+    @Bean("nonDetainedCmrRelistingHoCoLrNotificationGenerator")
+    public List<NotificationGenerator> nonDetainedCmrRelistingHoCoLrNotificationGenerator(
+        LegalRepresentativeCmrRelistingPersonalisation legalRepresentativeCmrRelistingPersonalisation,
+        CaseOfficerCmrRelistingPersonalisation caseOfficerCmrRelistingPersonalisation,
+        HomeOfficeCmrRelistingPersonalisation homeOfficeCmrRelistingPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
 
         List<EmailNotificationPersonalisation> emailPersonalisations = newArrayList(
-            legalRepresentativeInPersonCmrListingPersonalisation,
-            caseOfficerCmrListingPersonalisation,
-            homeOfficeInPersonCmrListingCasePersonalisation
+            legalRepresentativeCmrRelistingPersonalisation,
+            caseOfficerCmrRelistingPersonalisation,
+            homeOfficeCmrRelistingPersonalisation
         );
 
         return newArrayList(
@@ -81,32 +83,32 @@ public class CmrNotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("nonDetainedCmrListingAppellantEmailNotificationGenerator")
-    public List<NotificationGenerator> nonDetainedCmrListingAppellantEmailNotificationGenerator(
-        AppellantCmrListingPersonalisationEmail appellantCmrListingPersonalisationEmail,
+    @Bean("nonDetainedCmrRelistingAppellantEmailNotificationGenerator")
+    public List<NotificationGenerator> nonDetainedCmrRelistingAppellantEmailNotificationGenerator(
+        AppellantCmrRelistingPersonalisationEmail appellantCmrRelistingPersonalisationEmail,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
 
         return newArrayList(
             new EmailNotificationGenerator(
-                newArrayList(appellantCmrListingPersonalisationEmail),
+                newArrayList(appellantCmrRelistingPersonalisationEmail),
                 notificationSender,
                 notificationIdAppender
             )
         );
     }
 
-    @Bean("nonDetainedCmrListingAppellantSmsNotificationGenerator")
-    public List<NotificationGenerator> nonDetainedCmrListingAppellantSmsNotificationGenerator(
-        AppellantCmrListingPersonalisationSms appellantCmrListingPersonalisationSms,
+    @Bean("nonDetainedCmrRelistingAppellantSmsNotificationGenerator")
+    public List<NotificationGenerator> nonDetainedCmrRelistingAppellantSmsNotificationGenerator(
+        AppellantCmrRelistingPersonalisationSms appellantCmrRelistingPersonalisationSms,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
 
         return newArrayList(
             new SmsNotificationGenerator(
-                newArrayList(appellantCmrListingPersonalisationSms),
+                newArrayList(appellantCmrRelistingPersonalisationSms),
                 notificationSender,
                 notificationIdAppender
             )
