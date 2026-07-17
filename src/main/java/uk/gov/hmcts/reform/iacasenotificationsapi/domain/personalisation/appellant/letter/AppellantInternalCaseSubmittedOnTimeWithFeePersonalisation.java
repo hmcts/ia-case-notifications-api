@@ -23,10 +23,12 @@ public class AppellantInternalCaseSubmittedOnTimeWithFeePersonalisation implemen
     private final CustomerServicesProvider customerServicesProvider;
     private final SystemDateProvider systemDateProvider;
     private final int daysAfterSubmitAppeal;
+    private final int daysAfterSubmitAppealDetained;
 
     public AppellantInternalCaseSubmittedOnTimeWithFeePersonalisation(
         @Value("${govnotify.template.appealSubmitted.appellant.letter.inTime.withFee}") String appellantInternalCaseSubmitAppealWithFeeLetterTemplateId,
         @Value("${appellantDaysToWait.letter.afterSubmitAppealWithFee}") int daysAfterSubmitAppeal,
+        @Value("${appellantDaysToWait.letter.afterSubmitAppealWithFeeDetained}") int daysAfterSubmitAppealDetained,
         CustomerServicesProvider customerServicesProvider,
         SystemDateProvider systemDateProvider
     ) {
@@ -34,6 +36,8 @@ public class AppellantInternalCaseSubmittedOnTimeWithFeePersonalisation implemen
         this.customerServicesProvider = customerServicesProvider;
         this.systemDateProvider = systemDateProvider;
         this.daysAfterSubmitAppeal = daysAfterSubmitAppeal;
+        this.daysAfterSubmitAppealDetained = daysAfterSubmitAppealDetained;
+
     }
 
     @Override
@@ -61,8 +65,9 @@ public class AppellantInternalCaseSubmittedOnTimeWithFeePersonalisation implemen
                 .getCaseDetails()
                 .getCaseData();
 
-        final String dueDate = systemDateProvider.dueDate(daysAfterSubmitAppeal);
-
+        final String dueDate = isAppellantInDetention(asylumCase)
+                ? systemDateProvider.dueDate(daysAfterSubmitAppealDetained)
+                : systemDateProvider.dueDate(daysAfterSubmitAppeal);
         ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap
             .<String, String>builder()
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))

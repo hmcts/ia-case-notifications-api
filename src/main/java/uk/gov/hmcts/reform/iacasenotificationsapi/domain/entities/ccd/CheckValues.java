@@ -19,6 +19,6 @@ public class CheckValues<T> {
 
     public List<T> getValues() {
         requireNonNull(values);
-        return values;
+        return List.copyOf(values);
     }
 }
