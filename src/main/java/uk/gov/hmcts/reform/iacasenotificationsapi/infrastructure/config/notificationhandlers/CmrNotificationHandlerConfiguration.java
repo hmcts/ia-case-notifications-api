@@ -30,7 +30,7 @@ public class CmrNotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                boolean result = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && (CMR_LISTING.equals(callback.getEvent()) || CMR_RE_LISTING.equals(callback.getEvent()))
                     && (isCmrHearingChannel(asylumCase, "INTER")
                         || isCmrHearingChannel(asylumCase, "VID")
@@ -39,6 +39,9 @@ public class CmrNotificationHandlerConfiguration {
                     && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
                     && isRepJourney(callback.getCaseDetails().getCaseData())
                     && !isInternalCase(asylumCase);
+                log.info("cmrInPersonDetainedInPrisonIrcListedNotificationHandler canHandle={} for event={}, stage={}",
+                    result, callback.getEvent(), callbackStage);
+                return result;
             },
             notificationGenerators
         );
@@ -52,8 +55,11 @@ public class CmrNotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                boolean result = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && isNonDetainedCmrRelisting(callback, asylumCase);
+                log.info("nonDetainedCmrRelistingHoCoLrNotificationHandler canHandle={} for event={}, stage={}",
+                    result, callback.getEvent(), callbackStage);
+                return result;
             },
             notificationGenerators
         );
@@ -67,9 +73,12 @@ public class CmrNotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                boolean isEmailPreferred = isReppedAppellantEmailPreferred(asylumCase);
+                log.info("nonDetainedCmrRelistingAppellantEmailNotificationHandler isReppedAppellantEmailPreferred={}",
+                    isEmailPreferred);
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && isNonDetainedCmrRelisting(callback, asylumCase)
-                    && isReppedAppellantEmailPreferred(asylumCase);
+                    && isEmailPreferred;
             },
             notificationGenerators
         );
@@ -83,22 +92,39 @@ public class CmrNotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                boolean isSmsPreferred = isReppedAppellantSmsPreferred(asylumCase);
+                log.info("nonDetainedCmrRelistingAppellantSmsNotificationHandler isReppedAppellantSmsPreferred={}",
+                    isSmsPreferred);
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && isNonDetainedCmrRelisting(callback, asylumCase)
-                    && isReppedAppellantSmsPreferred(asylumCase);
+                    && isSmsPreferred;
             },
             notificationGenerators
         );
     }
 
     private boolean isNonDetainedCmrRelisting(Callback<AsylumCase> callback, AsylumCase asylumCase) {
-        return CMR_RE_LISTING.equals(callback.getEvent())
-            && (isCmrHearingChannel(asylumCase, "INTER")
-                || isCmrHearingChannel(asylumCase, "VID")
-                || isCmrHearingChannel(asylumCase, "TEL")
-            )
-            && isRepJourney(asylumCase)
-            && !isInternalCase(asylumCase)
-            && !isAppellantInDetention(asylumCase);
+        boolean isCmrRelistingEvent = CMR_RE_LISTING.equals(callback.getEvent());
+        boolean isCmrChannelInPersonOrRemote = isCmrHearingChannel(asylumCase, "INTER")
+            || isCmrHearingChannel(asylumCase, "VID")
+            || isCmrHearingChannel(asylumCase, "TEL");
+        boolean isRepJourney = isRepJourney(asylumCase);
+        boolean isNotInternalCase = !isInternalCase(asylumCase);
+        boolean isNotAppellantInDetention = !isAppellantInDetention(asylumCase);
+
+        boolean result = isCmrRelistingEvent
+            && isCmrChannelInPersonOrRemote
+            && isRepJourney
+            && isNotInternalCase
+            && isNotAppellantInDetention;
+
+        log.info(
+            "isNonDetainedCmrRelisting evaluated to {} for event={}, isCmrRelistingEvent={}, "
+                + "isCmrChannelInPersonOrRemote={}, isRepJourney={}, isNotInternalCase={}, isNotAppellantInDetention={}",
+            result, callback.getEvent(), isCmrRelistingEvent, isCmrChannelInPersonOrRemote,
+            isRepJourney, isNotInternalCase, isNotAppellantInDetention
+        );
+
+        return result;
     }
 }
