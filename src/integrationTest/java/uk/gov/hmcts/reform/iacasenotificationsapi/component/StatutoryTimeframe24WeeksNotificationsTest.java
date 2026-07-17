@@ -252,10 +252,10 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
             Arguments.of(TestJourneyType.LR, true, false, false, 2, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
             Arguments.of(TestJourneyType.LR, true, true, true, 2, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
 
-            Arguments.of(TestJourneyType.LR_MANUAL, false, false, false, 2, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
-            Arguments.of(TestJourneyType.LR_MANUAL, false, true, true, 2, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
-            Arguments.of(TestJourneyType.LR_MANUAL, true, false, false, 2, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
-            Arguments.of(TestJourneyType.LR_MANUAL, true, true, true, 2, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL))
+            Arguments.of(TestJourneyType.LR_MANUAL, false, false, false, 1, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
+            Arguments.of(TestJourneyType.LR_MANUAL, false, true, true, 1, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
+            Arguments.of(TestJourneyType.LR_MANUAL, true, false, false, 1, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
+            Arguments.of(TestJourneyType.LR_MANUAL, true, true, true, 1, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL))
         );
     }
 
