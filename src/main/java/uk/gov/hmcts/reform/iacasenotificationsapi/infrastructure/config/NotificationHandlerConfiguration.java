@@ -5663,8 +5663,7 @@ public class NotificationHandlerConfiguration {
                         .getCaseData();
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && !isInternalCase(asylumCase)
-                    && isCaseReviewFor24WeeksCase(callback.getEvent(), asylumCase)
-                    && isAipJourney(asylumCase);
+                    && isCaseReviewFor24WeeksCase(callback.getEvent(), asylumCase);
             },
             notificationGenerators, getErrorHandler()
         );
@@ -5715,8 +5714,7 @@ public class NotificationHandlerConfiguration {
                         .getCaseData();
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && isCaseReviewFor24WeeksCase(callback.getEvent(), asylumCase)
-                    && isInternalCase(asylumCase)
-                    && hasBeenSubmittedByAppellantInternalCase(asylumCase);
+                    && isInternalCase(asylumCase);
             },
             notificationGenerators, getErrorHandler()
         );
@@ -5763,8 +5761,7 @@ public class NotificationHandlerConfiguration {
                         .getCaseData();
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == REMOVE_STATUTORY_TIMEFRAME_24_WEEKS
-                    && isInternalCase(asylumCase)
-                    && hasBeenSubmittedByAppellantInternalCase(asylumCase);
+                    && isInternalCase(asylumCase);
             },
             notificationGenerators, getErrorHandler()
         );
@@ -5781,8 +5778,7 @@ public class NotificationHandlerConfiguration {
                         .getCaseData();
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == REMOVE_STATUTORY_TIMEFRAME_24_WEEKS
-                    && !isInternalCase(asylumCase)
-                    && isAipJourney(asylumCase);
+                    && !isInternalCase(asylumCase);
             },
             notificationGenerators, getErrorHandler()
         );

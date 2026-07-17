@@ -9,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
@@ -21,6 +22,7 @@ import java.util.Set;
 
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -30,6 +32,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.EMAIL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_DECISION_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.JOURNEY_TYPE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.D_MMM_YYYY;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.APPEAL_RECEIVED_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.APPELLANT_FULL_NAME;
@@ -61,6 +64,7 @@ class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationEmailTe
     private static final String APPELLANT_FAMILY_NAME_KEY = "appellantFamilyName";
     private static final String IA_EX_UI_FRONTEND_URL = "http://localhost";
     private static final String EMAIL_ADDRESS = "legal@example.com";
+    private static final String AIP_EMAIL_ADDRESS = "aip@example.com";
     private static final String APPELLANT_GIVEN_NAMES_VALUE = "Given";
     private static final String APPELLANT_FAMILY_NAME_VALUE = "Family";
     private static final String MOCK_PREFIX = "some mock prefix";
@@ -110,9 +114,18 @@ class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationEmailTe
     }
 
     @Test
-    void shouldReturnGivenEmailAddress() {
-        when(recipientFinder.findAll(asylumCase, NotificationType.EMAIL)).thenReturn(Set.of(EMAIL_ADDRESS));
+    void shouldReturnGivenEmailAddress_rep() {
+        when(recipientFinder.findReppedAppellant(asylumCase, NotificationType.EMAIL)).thenReturn(Set.of(EMAIL_ADDRESS));
         assertTrue(personalisation.getRecipientsList(asylumCase).contains(EMAIL_ADDRESS));
+        assertFalse(personalisation.getRecipientsList(asylumCase).contains(AIP_EMAIL_ADDRESS));
+    }
+
+    @Test
+    void shouldReturnGivenEmailAddress_aip() {
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
+        when(recipientFinder.findAll(asylumCase, NotificationType.EMAIL)).thenReturn(Set.of(AIP_EMAIL_ADDRESS));
+        assertFalse(personalisation.getRecipientsList(asylumCase).contains(EMAIL_ADDRESS));
+        assertTrue(personalisation.getRecipientsList(asylumCase).contains(AIP_EMAIL_ADDRESS));
     }
 
     @Test
