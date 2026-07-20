@@ -19,9 +19,9 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
 @Service
-public class LegalRepresentativeInPersonCmrListingPersonalisation implements LegalRepresentativeEmailNotificationPersonalisation {
+public class LegalRepresentativeCmrListingPersonalisation implements LegalRepresentativeEmailNotificationPersonalisation {
 
-    private final String listAssistHearingLegalRepresentativeCaseListedTemplateId;
+    private final String listAssistHearingLegalRepresentativeCmrListingTemplateId;
     private final String iaExUiFrontendUrl;
     private final int appellantProvidingAppealArgumentDeadlineDelay;
     private final int respondentResponseToAppealArgumentDeadlineDelay;
@@ -34,8 +34,8 @@ public class LegalRepresentativeInPersonCmrListingPersonalisation implements Leg
     @Value("${govnotify.emailPrefix.nonAda}")
     private String nonAdaPrefix;
 
-    public LegalRepresentativeInPersonCmrListingPersonalisation(
-        @Value("${govnotify.template.listAssistHearing.caseListed.legalRep.email}") String listAssistHearingLegalRepresentativeCaseListedTemplateId,
+    public LegalRepresentativeCmrListingPersonalisation(
+        @Value("${govnotify.template.listAssistHearing.cmrListing.legalRep.email}") String listAssistHearingLegalRepresentativeCmrListingTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         @Value("${adaCaseListed.deadlines.appellantProvidingAppealArgumentDelay}") int appellantProvidingAppealArgumentDeadlineDelay,
         @Value("${adaCaseListed.deadlines.respondentResponseToAppealArgumentDelay}") int respondentResponseToAppealArgumentDeadlineDelay,
@@ -43,7 +43,7 @@ public class LegalRepresentativeInPersonCmrListingPersonalisation implements Leg
         CustomerServicesProvider customerServicesProvider,
         HearingDetailsFinder hearingDetailsFinder
     ) {
-        this.listAssistHearingLegalRepresentativeCaseListedTemplateId = listAssistHearingLegalRepresentativeCaseListedTemplateId;
+        this.listAssistHearingLegalRepresentativeCmrListingTemplateId = listAssistHearingLegalRepresentativeCmrListingTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.appellantProvidingAppealArgumentDeadlineDelay = appellantProvidingAppealArgumentDeadlineDelay;
         this.respondentResponseToAppealArgumentDeadlineDelay = respondentResponseToAppealArgumentDeadlineDelay;
@@ -54,7 +54,7 @@ public class LegalRepresentativeInPersonCmrListingPersonalisation implements Leg
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return listAssistHearingLegalRepresentativeCaseListedTemplateId;
+        return listAssistHearingLegalRepresentativeCmrListingTemplateId;
     }
 
     @Override

@@ -1,11 +1,11 @@
 {
-  "description": "DIAC-2359 Send cmr re-listing notification to legal rep, case officer and home office (in person hearing)",
+  "description": "DIAC-2298 Send cmr listing notification to legal rep, case officer and home office (in person hearing)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "SystemUser",
     "input": {
-      "id": 60005,
-      "eventId": "cmrReListing",
+      "id": 60021,
+      "eventId": "cmrListing",
       "state": "prepareForHearing",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
@@ -48,19 +48,19 @@
         "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
         "notificationsSent": [
           {
-            "id": "60005_CMR_RE_LISTING_LEGAL_REPRESENTATIVE",
+            "id": "60021_CMR_LISTING_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "60005_CMR_RE_LISTING_CASE_OFFICER",
+            "id": "60021_CMR_LISTING_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "60005_CMR_RE_LISTING_HOME_OFFICE",
+            "id": "60021_CMR_LISTING_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "60005_CMR_RE_LISTING_APPELLANT_EMAIL",
+            "id": "60021_CMR_LISTING_APPELLANT_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
