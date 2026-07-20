@@ -46,9 +46,7 @@ public class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksLrContentPerson
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return isAipJourney(asylumCase) ?
-                recipientsFinder.findAll(asylumCase, NotificationType.EMAIL) :
-                recipientsFinder.findReppedAppellant(asylumCase, NotificationType.EMAIL);
+        return recipientsFinder.findReppedAppellant(asylumCase, NotificationType.EMAIL);
     }
 
     @Override

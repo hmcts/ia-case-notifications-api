@@ -52,12 +52,14 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.COMPLETE_CASE_REVIEW_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CONTACT_PREFERENCE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.EMAIL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HEARING_CENTRE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_DECISION_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ADMIN;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.JOURNEY_TYPE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_HAS_ADDRESS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.MOBILE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.NOTIFICATIONS_SENT;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.SUBSCRIPTIONS;
@@ -71,6 +73,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24Weeks
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LEGAL_REP_COPY_EMAIL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_SMS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL;
@@ -105,7 +108,6 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
             .with(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, StatutoryTimeframe24WeeksNotificationsTest.LR_EMAIL)
             .with(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, APPEAL_SUBMITTED)
             .with(CONTACT_PREFERENCE, wantsEmail ? ContactPreference.WANTS_EMAIL : wantsSms ? ContactPreference.WANTS_SMS : null)
-            .with(SUBSCRIPTIONS, buildSubscriptions(wantsEmail, wantsSms, StatutoryTimeframe24WeeksNotificationsTest.APPELLANT_MAIL, StatutoryTimeframe24WeeksNotificationsTest.APPELLANT_SMS))
             .with(COMPLETE_CASE_REVIEW_DATE, "2002-02-02")
             .with(APPEAL_SUBMISSION_DATE, "2002-02-02")
             .with(TRIBUNAL_RECEIVED_DATE, "2002-02-02")
@@ -115,6 +117,7 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
         switch (testJourneyType) {
             case AIP_MANUAL -> {
                 someCase.with(IS_ADMIN, YesOrNo.YES)
+                    .with(SUBSCRIPTIONS, buildSubscriptions(wantsEmail, wantsSms, StatutoryTimeframe24WeeksNotificationsTest.APPELLANT_MAIL, StatutoryTimeframe24WeeksNotificationsTest.APPELLANT_SMS))
                     .with(APPELLANTS_REPRESENTATION, YesOrNo.YES);
                 if (inCountry) {
                     someCase.with(APPELLANT_IN_UK, YesOrNo.YES)
@@ -131,6 +134,7 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
             }
             case AIP -> {
                 someCase.with(IS_ADMIN, YesOrNo.NO)
+                    .with(SUBSCRIPTIONS, buildSubscriptions(wantsEmail, wantsSms, StatutoryTimeframe24WeeksNotificationsTest.APPELLANT_MAIL, StatutoryTimeframe24WeeksNotificationsTest.APPELLANT_SMS))
                     .with(JOURNEY_TYPE, JourneyType.AIP)
                     .with(APPELLANT_IN_UK, inCountry ? YesOrNo.YES : YesOrNo.NO);
             }
@@ -138,10 +142,12 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
                 someCase.with(IS_ADMIN, YesOrNo.NO)
                     .with(JOURNEY_TYPE, JourneyType.REP)
                     .with(LEGAL_REP_HAS_ADDRESS, inCountry ? YesOrNo.YES : YesOrNo.NO);
+                buildContactPreference(someCase, wantsEmail, wantsSms);
             }
             case LR_MANUAL -> {
                 someCase.with(IS_ADMIN, YesOrNo.YES)
                     .with(APPELLANTS_REPRESENTATION, YesOrNo.NO);
+                buildContactPreference(someCase, wantsEmail, wantsSms);
                 if (inCountry) {
                     someCase.with(LEGAL_REP_HAS_ADDRESS, YesOrNo.YES)
                         .with(AsylumCaseDefinition.LEGAL_REP_ADDRESS_U_K, new AddressUk("lrl1", "lrl2", "lrl2", "lrpt", "lrcounty", "lrpc", "lruk"));
@@ -159,6 +165,18 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
             default -> throw new IllegalStateException("Unexpected value: " + testJourneyType);
         }
         return someCase;
+    }
+
+    private static void buildContactPreference(AsylumCaseForTest someCase, boolean wantsEmail, boolean wantsSms) {
+        if (wantsEmail) {
+            someCase
+                .with(EMAIL, APPELLANT_MAIL)
+                .with(CONTACT_PREFERENCE, ContactPreference.WANTS_EMAIL);
+        } else if (wantsSms) {
+            someCase
+                .with(MOBILE_NUMBER, APPELLANT_SMS)
+                .with(CONTACT_PREFERENCE, ContactPreference.WANTS_SMS);
+        }
     }
 
     private static @NotNull Optional<List<IdValue<Subscriber>>> buildSubscriptions(boolean wantsEmail, boolean wantsSms, String appellantEmail, String appellantSms) {
@@ -246,14 +264,18 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
             Arguments.of(TestJourneyType.AIP, true, true, true, 3, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_SMS, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
 
             Arguments.of(TestJourneyType.LR, false, false, false, 2, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
-            Arguments.of(TestJourneyType.LR, false, true, true, 2, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
+            Arguments.of(TestJourneyType.LR, false, false, true, 3, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_SMS)),
+            Arguments.of(TestJourneyType.LR, false, true, false, 3, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL)),
             Arguments.of(TestJourneyType.LR, true, false, false, 2, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
-            Arguments.of(TestJourneyType.LR, true, true, true, 2, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
+            Arguments.of(TestJourneyType.LR, true, false, true, 3, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_SMS)),
+            Arguments.of(TestJourneyType.LR, true, true, false, 3, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL)),
 
             Arguments.of(TestJourneyType.LR_MANUAL, false, false, false, 1, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
-            Arguments.of(TestJourneyType.LR_MANUAL, false, true, true, 1, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
+            Arguments.of(TestJourneyType.LR_MANUAL, false, false, true, 1, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
+            Arguments.of(TestJourneyType.LR_MANUAL, false, true, false, 1, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
             Arguments.of(TestJourneyType.LR_MANUAL, true, false, false, 1, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
-            Arguments.of(TestJourneyType.LR_MANUAL, true, true, true, 1, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL))
+            Arguments.of(TestJourneyType.LR_MANUAL, true, false, true, 1, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
+            Arguments.of(TestJourneyType.LR_MANUAL, true, true, false, 1, List.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL))
         );
     }
 
@@ -274,14 +296,18 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
             Arguments.of(true, TestJourneyType.AIP, true, true, true, 3, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_SMS)),
 
             Arguments.of(true, TestJourneyType.LR, false, false, false, 2, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
-            Arguments.of(true, TestJourneyType.LR, false, true, true, 2, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
+            Arguments.of(true, TestJourneyType.LR, false, false, true, 3, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_SMS)),
+            Arguments.of(true, TestJourneyType.LR, false, true, false, 4, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LEGAL_REP_COPY_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL)),
             Arguments.of(true, TestJourneyType.LR, true, false, false, 2, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
-            Arguments.of(true, TestJourneyType.LR, true, true, true, 2, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
+            Arguments.of(true, TestJourneyType.LR, true, false, true, 3, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_SMS)),
+            Arguments.of(true, TestJourneyType.LR, true, true, false, 4, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LEGAL_REP_COPY_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL)),
 
             Arguments.of(true, TestJourneyType.LR_MANUAL, false, false, false, 1, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
-            Arguments.of(true, TestJourneyType.LR_MANUAL, false, true, true, 1, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
+            Arguments.of(true, TestJourneyType.LR_MANUAL, false, true, false, 1, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
+            Arguments.of(true, TestJourneyType.LR_MANUAL, false, false, true, 1, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
             Arguments.of(true, TestJourneyType.LR_MANUAL, true, false, false, 1, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
-            Arguments.of(true, TestJourneyType.LR_MANUAL, true, true, true, 1, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
+            Arguments.of(true, TestJourneyType.LR_MANUAL, true, true, false, 1, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
+            Arguments.of(true, TestJourneyType.LR_MANUAL, true, false, true, 1, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
 
             Arguments.of(false, TestJourneyType.AIP_MANUAL, true, true, true, 0, Collections.emptyList()),
             Arguments.of(false, TestJourneyType.AIP, true, true, true, 0, Collections.emptyList()),
