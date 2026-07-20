@@ -61,7 +61,7 @@ public class AppellantCmrListingPersonalisationSms implements SmsNotificationPer
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_CMR_LISTING_AIP_APPELLANT_SMS";
+        return caseId + "_CMR_LISTING_APPELLANT_SMS";
     }
 
     @Override

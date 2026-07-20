@@ -96,7 +96,7 @@ public class AppellantCmrListingPersonalisationEmailTest {
     @Test
     public void should_return_given_reference_id() {
         Long caseId = 12345L;
-        assertEquals(caseId + "_CMR_LISTING_AIP_APPELLANT_EMAIL",
+        assertEquals(caseId + "_CMR_LISTING_APPELLANT_EMAIL",
             appellantCmrListingPersonalisationEmail.getReferenceId(caseId));
     }
 

@@ -75,7 +75,7 @@ public class AppellantCmrListingPersonalisationSmsTest {
     @Test
     public void should_return_given_reference_id() {
         Long caseId = 12345L;
-        assertEquals(caseId + "_CMR_LISTING_AIP_APPELLANT_SMS",
+        assertEquals(caseId + "_CMR_LISTING_APPELLANT_SMS",
             appellantCmrListingPersonalisationSms.getReferenceId(caseId));
     }
 

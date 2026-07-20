@@ -84,7 +84,7 @@ public class AppellantCmrListingPersonalisationEmail implements EmailNotificatio
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_CMR_LISTING_AIP_APPELLANT_EMAIL";
+        return caseId + "_CMR_LISTING_APPELLANT_EMAIL";
     }
 
     @Override
