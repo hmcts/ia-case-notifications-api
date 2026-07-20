@@ -193,8 +193,6 @@ public class CmrNotificationGeneratorConfiguration {
         LegalRepresentativeCmrListingPersonalisation legalRepresentativeCmrListingPersonalisation,
         CaseOfficerCmrListingPersonalisation caseOfficerCmrListingPersonalisation,
         HomeOfficeInPersonCmrListingCasePersonalisation homeOfficeInPersonCmrListingCasePersonalisation,
-        AppellantCmrListingPersonalisationEmail appellantCmrListingPersonalisationEmail,
-        AppellantCmrListingPersonalisationSms appellantCmrListingPersonalisationSms,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender,
         DocumentDownloadClient documentDownloadClient
