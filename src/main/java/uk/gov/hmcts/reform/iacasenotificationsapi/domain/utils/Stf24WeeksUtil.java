@@ -46,6 +46,9 @@ public class Stf24WeeksUtil {
     private static final String APPELLANT_GIVEN_NAMES_KEY = "appellantGivenNames";
     private static final String APPELLANT_FAMILY_NAME_KEY = "appellantFamilyName";
     private static final String LINK_TO_ONLINE_SERVICE_KEY = "linkToOnlineService";
+    public static final String FYI_HEADING = "fyiHeading";
+    public static final String FYI_TEXT = "fyiText";
+    public static final String FYI_LINE_SEPARATOR = "fyiLineSeparator";
 
     private Stf24WeeksUtil() {
     }
@@ -74,34 +77,40 @@ public class Stf24WeeksUtil {
     public static ImmutableMap<String, String> buildParams(AsylumCase asylumCase, CustomerServicesProvider customerServicesProvider, String nonAdaPrefix, boolean isAppellant) {
         ImmutableMap.Builder<String, String> builder = ImmutableMap.builder();
 
-        LocalDate now = LocalDate.now();
+        String givenNames = asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(EMPTY_STRING);
+        String familyName = asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(EMPTY_STRING);
         builder.put(SUBJECT_PREFIX_KEY, nonAdaPrefix)
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
                 .put(HOME_OFFICE_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
                 .put(APPEAL_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING))
                 .put(LEGAL_REP_REFERENCE_NUMBER_KEY, getLegalRepReferenceNo(asylumCase))
-                .put(APPELLANT_GIVEN_NAMES_KEY, asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(EMPTY_STRING))
-                .put(APPELLANT_FAMILY_NAME_KEY, asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(EMPTY_STRING))
-
+                .put(APPELLANT_GIVEN_NAMES_KEY, givenNames)
+                .put(APPELLANT_FAMILY_NAME_KEY, familyName)
                 .put(APPEAL_RECEIVED_DATE, AsylumCaseUtils.getAppealReceivedDate(asylumCase))
                 .put(DECISION_SENT_DATE, AsylumCaseUtils.getHomeOfficeDecisionDate(asylumCase))
-                .put(WEEKS_DEADLINE, AsylumCaseUtils.populateStatutoryTimeFrame24wDate(asylumCase))
-                .put(PRACTICE_DIRECTION, now.format(ofPattern(D_MMM_YYYY)))
+                .put(WEEKS_DEADLINE, AsylumCaseUtils.populateStatutoryTimeFrame24wDate(asylumCase));
+        populate24WeeksDates(builder);
+
+        if (isAppellant) {
+            builder.put(FYI_HEADING, "#For your information");
+            builder.put(FYI_TEXT, String.format("Dear %s %s, \n", givenNames, familyName) +
+                    "The Tribunal has issued directions in your appeal that have been sent to your legal representative. We are also sending you a copy to ensure that you are aware of what will happen in your appeal.\n\n" +
+                    "Your legal representative is responsible for progressing your case and responding to these directions on your behalf. You should contact them if you have any questions.\n\n" +
+                    "If you cease to be represented, or if your contact details change, you must inform the Tribunal as soon as possible.\n");
+            builder.put(FYI_LINE_SEPARATOR, "---");
+        } else {
+            builder.put(FYI_HEADING, "");
+            builder.put(FYI_TEXT, "");
+            builder.put(FYI_LINE_SEPARATOR, "");
+        }
+        return builder.build();
+    }
+
+    public static void populate24WeeksDates(ImmutableMap.Builder<String, String> builder) {
+        LocalDate now = LocalDate.now();
+        builder.put(PRACTICE_DIRECTION, now.format(ofPattern(D_MMM_YYYY)))
                 .put(DAYS_14_FROM_DATE_OF_DIRECTION_KEY, now.plusDays(DAYS_14).format(ofPattern(D_MMM_YYYY)))
                 .put(DAYS_42_FROM_DATE_OF_DIRECTION_KEY, now.plusDays(DAYS_42).format(ofPattern(D_MMM_YYYY)))
                 .put(DAYS_56_FROM_DATE_OF_DIRECTION, now.plusDays(DAYS_56).format(ofPattern(D_MMM_YYYY)));
-        if (isAppellant) {
-            builder.put("fyi", "#For your information");
-            builder.put("text", "Dear ((appellantGivenNames)) ((appellantFamilyName)),\n" +
-                    "The Tribunal has issued directions in your appeal that have been sent to your legal representative. We are also sending you a copy to ensure that you are aware of what will happen in your appeal.\n" +
-                    "Your legal representative is responsible for progressing your case and responding to these directions on your behalf. You should contact them if you have any questions.\n" +
-                    "If you cease to be represented, or if your contact details change, you must inform the Tribunal as soon as possible.\n");
-            builder.put("line", "---");
-        } else {
-            builder.put("fyi", "");
-            builder.put("text", "");
-            builder.put("line", "");
-        }
-        return builder.build();
     }
 }
