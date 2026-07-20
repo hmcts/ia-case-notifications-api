@@ -2056,6 +2056,7 @@ security:
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
       - "joinAppealConfirmation"
+      - "requestRespondentEvidence"
     ctsc:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2104,6 +2105,7 @@ security:
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
       - "joinAppealConfirmation"
+      - "requestRespondentEvidence"
     ctsc-team-leader:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2152,6 +2154,7 @@ security:
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
       - "joinAppealConfirmation"
+      - "requestRespondentEvidence"
     national-business-centre:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2200,6 +2203,7 @@ security:
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
       - "joinAppealConfirmation"
+      - "requestRespondentEvidence"
     challenged-access-ctsc:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2248,6 +2252,7 @@ security:
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
       - "joinAppealConfirmation"
+      - "requestRespondentEvidence"
     challenged-access-admin:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2296,6 +2301,7 @@ security:
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
       - "joinAppealConfirmation"
+      - "requestRespondentEvidence"
     caseworker-ia-homeofficeapc:
       - "startApplication"
       - "editBailApplication"
