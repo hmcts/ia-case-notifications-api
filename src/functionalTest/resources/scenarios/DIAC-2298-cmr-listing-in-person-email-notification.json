@@ -11,6 +11,9 @@
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
+          "contactPreference": "wantsEmail",
+          "email": "{$TEST_CITIZEN_USERNAME}",
+          "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
           "cmrHearingCentre": "taylorHouse",
           "cmrHearingCentreAddress": {
             "value": {
