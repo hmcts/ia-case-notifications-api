@@ -31,7 +31,7 @@ public class CmrNotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && (CMR_LISTING.equals(callback.getEvent()) || CMR_RE_LISTING.equals(callback.getEvent()))
+                    && CMR_LISTING.equals(callback.getEvent())
                     && isCmrHearingInPersonOrRemote(asylumCase)
                     && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
                     && isRepJourney(callback.getCaseDetails().getCaseData())
@@ -50,7 +50,7 @@ public class CmrNotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && (CMR_LISTING.equals(callback.getEvent()) || CMR_RE_LISTING.equals(callback.getEvent()))
+                    && CMR_LISTING.equals(callback.getEvent())
                     && isCmrHearingInPersonOrRemote(asylumCase)
                     && isInternalCase(callback.getCaseDetails().getCaseData())
                     && isAipJourney(callback.getCaseDetails().getCaseData());
@@ -119,7 +119,8 @@ public class CmrNotificationHandlerConfiguration {
                     && CMR_LISTING.equals(callback.getEvent())
                     && isCmrHearingInPersonOrRemote(asylumCase)
                     && !isInternalCase(callback.getCaseDetails().getCaseData())
-                    && isRepJourney(callback.getCaseDetails().getCaseData());
+                    && isRepJourney(callback.getCaseDetails().getCaseData())
+                    && !isAppellantInDetention(asylumCase);
             },
             notificationGenerators
         );
