@@ -12,29 +12,20 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.D_MMM_YYYY;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAipJourney;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.APPEAL_RECEIVED_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.APPELLANT_FULL_NAME;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.DAYS_14;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.DAYS_14_FROM_DATE_OF_DIRECTION_KEY;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.DAYS_42;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.DAYS_42_FROM_DATE_OF_DIRECTION_KEY;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.DAYS_56;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.DAYS_56_FROM_DATE_OF_DIRECTION;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.DECISION_SENT_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.EMPTY_STRING;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.PRACTICE_DIRECTION;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.WEEKS_DEADLINE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.getAppellantFamilyName;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.getAppellantGivenName;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.populate24WeeksDates;
 
 @Service
 @Slf4j
@@ -75,8 +66,8 @@ public class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
         return isAipJourney(asylumCase) ?
-            recipientsFinder.findAll(asylumCase, NotificationType.EMAIL) :
-            recipientsFinder.findReppedAppellant(asylumCase, NotificationType.EMAIL);
+                recipientsFinder.findAll(asylumCase, NotificationType.EMAIL) :
+                recipientsFinder.findReppedAppellant(asylumCase, NotificationType.EMAIL);
     }
 
     @Override
@@ -87,12 +78,12 @@ public class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
-        LocalDate now = LocalDate.now();
+
         String familyName = getAppellantFamilyName(asylumCase);
         String givenNames = getAppellantGivenName(asylumCase);
-        return ImmutableMap.<String, String>builder()
-
-                .put(SUBJECT_PREFIX_KEY, nonAdaPrefix)
+        ImmutableMap.Builder<String, String> builder = ImmutableMap.builder();
+        populate24WeeksDates(builder);
+        return builder.put(SUBJECT_PREFIX_KEY, nonAdaPrefix)
                 .put(APPEAL_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING))
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
                 .put(APPELLANT_GIVEN_NAMES_KEY, givenNames)
@@ -101,10 +92,6 @@ public class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation
                 .put(APPEAL_RECEIVED_DATE, AsylumCaseUtils.getAppealReceivedDate(asylumCase))
                 .put(DECISION_SENT_DATE, AsylumCaseUtils.getHomeOfficeDecisionDate(asylumCase))
                 .put(WEEKS_DEADLINE, AsylumCaseUtils.populateStatutoryTimeFrame24wDate(asylumCase))
-                .put(PRACTICE_DIRECTION, now.format(DateTimeFormatter.ofPattern(D_MMM_YYYY)))
-                .put(DAYS_14_FROM_DATE_OF_DIRECTION_KEY, now.plusDays(DAYS_14).format(DateTimeFormatter.ofPattern(D_MMM_YYYY)))
-                .put(DAYS_42_FROM_DATE_OF_DIRECTION_KEY, now.plusDays(DAYS_42).format(DateTimeFormatter.ofPattern(D_MMM_YYYY)))
-                .put(DAYS_56_FROM_DATE_OF_DIRECTION, now.plusDays(DAYS_56).format(DateTimeFormatter.ofPattern(D_MMM_YYYY)))
                 .put(LINK_TO_SERVICE_KEY, iaAipFrontendUrl)
                 .build();
     }
