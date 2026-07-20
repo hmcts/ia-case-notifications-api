@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ContactPreference;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PreSubmitCallbackStage;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.PreSubmitCallbackHandler;
@@ -99,9 +101,61 @@ public class CmrNotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                asylumCase.read(AsylumCaseDefinition.CONTACT_PREFERENCE, String.class);
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && isNonDetainedCmrRelisting(callback, asylumCase)
                     && isReppedAppellantSmsPreferred(asylumCase);
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> cmrRelistedAipHoCoEmailHandler(
+        @Qualifier("cmrRelistedAipHoCoEmailsGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && isAipCmr(callback, asylumCase);
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> cmrRelistedAipAppellantEmailHandler(
+        @Qualifier("cmrRelistedAppellantEmailsGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                boolean wantsEmail = asylumCase.read(AsylumCaseDefinition.CONTACT_PREFERENCE, ContactPreference.class)
+                    .map(contactPreference -> ContactPreference.WANTS_EMAIL == contactPreference).orElse(false);
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && isAipCmr(callback, asylumCase)
+                    && wantsEmail;
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> cmrRelistedAipAppellantSmslHandler(
+        @Qualifier("cmrRelistedAppellantSmsGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                boolean wantsSms = asylumCase.read(AsylumCaseDefinition.CONTACT_PREFERENCE, ContactPreference.class)
+                    .map(contactPreference -> ContactPreference.WANTS_SMS == contactPreference).orElse(false);
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && isAipCmr(callback, asylumCase)
+                    && wantsSms;
             },
             notificationGenerators
         );
@@ -116,5 +170,14 @@ public class CmrNotificationHandlerConfiguration {
             && isRepJourney(asylumCase)
             && !isInternalCase(asylumCase)
             && !isAppellantInDetention(asylumCase);
+    }
+
+    private boolean isAipCmr(Callback<AsylumCase> callback, AsylumCase asylumCase) {
+        return CMR_RE_LISTING.equals(callback.getEvent())
+            && (isCmrHearingChannel(asylumCase, "INTER")
+                || isCmrHearingChannel(asylumCase, "VID")
+                || isCmrHearingChannel(asylumCase, "TEL")
+            )
+            && isAipJourney(asylumCase);
     }
 }
