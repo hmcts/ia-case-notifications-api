@@ -187,4 +187,44 @@ public class CmrNotificationGeneratorConfiguration {
             )
         );
     }
+
+    @Bean("legalRepDigitalDetainedOtherCmrListingNotificationGenerator")
+    public List<NotificationGenerator> legalRepDigitalDetainedOtherCmrListingNotificationGenerator(
+        LegalRepresentativeCmrListingPersonalisation legalRepresentativeCmrListingPersonalisation,
+        CaseOfficerCmrListingPersonalisation caseOfficerCmrListingPersonalisation,
+        HomeOfficeInPersonCmrListingCasePersonalisation homeOfficeInPersonCmrListingCasePersonalisation,
+        AppellantCmrListingPersonalisationEmail appellantCmrListingPersonalisationEmail,
+        AppellantCmrListingPersonalisationSms appellantCmrListingPersonalisationSms,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender,
+        DocumentDownloadClient documentDownloadClient
+    ) {
+
+        DocumentTag documentTag = DocumentTag.INTERNAL_CMR_LISTING_LETTER_BUNDLE;
+
+        return newArrayList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    legalRepresentativeCmrListingPersonalisation,
+                    caseOfficerCmrListingPersonalisation,
+                    homeOfficeInPersonCmrListingCasePersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new PrecompiledLetterNotificationGenerator(
+                newArrayList(
+                    documentTag
+                ),
+                notificationSender,
+                notificationIdAppender,
+                documentDownloadClient
+            ) {
+                @Override
+                public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+            }
+        );
+    }
 }
