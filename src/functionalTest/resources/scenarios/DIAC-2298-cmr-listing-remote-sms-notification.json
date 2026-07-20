@@ -1,5 +1,5 @@
 {
-  "description": "DIAC-2359 Send cmr re-listing notification to legal rep, case officer, home office and appellant sms (remote hearing)",
+  "description": "DIAC-2298 Send cmr listing notification to legal rep, case officer, home office and appellant sms (remote hearing)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "SystemUser",

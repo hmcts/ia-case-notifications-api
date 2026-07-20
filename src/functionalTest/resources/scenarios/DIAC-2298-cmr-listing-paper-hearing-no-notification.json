@@ -1,5 +1,5 @@
 {
-  "description": "DIAC-2359 No notification is sent when the re-listed CMR hearing is a paper hearing (not in attendance)",
+  "description": "DIAC-2298 No notification is sent when the listed CMR hearing is a paper hearing (not in attendance)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "SystemUser",
