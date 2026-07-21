@@ -49,7 +49,7 @@ public class AppellantCmrListingPersonalisationSms implements SmsNotificationPer
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
-        return recipientsFinder.findAll(asylumCase, NotificationType.SMS);
+        return recipientsFinder.findReppedAppellant(asylumCase, NotificationType.SMS);
     }
 
     @Override

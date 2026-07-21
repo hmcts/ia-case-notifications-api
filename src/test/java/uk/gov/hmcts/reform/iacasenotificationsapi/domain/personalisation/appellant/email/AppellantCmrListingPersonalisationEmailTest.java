@@ -100,24 +100,11 @@ public class AppellantCmrListingPersonalisationEmailTest {
     }
 
     @Test
-    public void should_return_given_email_address_list_from_subscribers_in_asylum_case() {
+    public void should_return_given_email_address_list_from_repped_appellant_in_asylum_case() {
 
-        when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL))
-            .thenReturn(Collections.singleton(mockedAppellantEmailAddress));
-
-        assertTrue(appellantCmrListingPersonalisationEmail.getRecipientsList(asylumCase)
-            .contains(mockedAppellantEmailAddress));
-        verify(recipientsFinder, times(1)).findAll(asylumCase, NotificationType.EMAIL);
-        verify(recipientsFinder, times(0)).findAll(asylumCase, NotificationType.SMS);
-        verify(recipientsFinder, times(0)).findReppedAppellant(asylumCase, NotificationType.EMAIL);
-        verify(recipientsFinder, times(0)).findReppedAppellant(asylumCase, NotificationType.SMS);
-    }
-
-    @Test
-    public void should_return_given_email_address_list_from_email_in_asylum_case_if_repped() {
-        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.REP));
         when(recipientsFinder.findReppedAppellant(asylumCase, NotificationType.EMAIL))
             .thenReturn(Collections.singleton(mockedAppellantEmailAddress));
+
         assertTrue(appellantCmrListingPersonalisationEmail.getRecipientsList(asylumCase)
             .contains(mockedAppellantEmailAddress));
         verify(recipientsFinder, times(0)).findAll(asylumCase, NotificationType.EMAIL);
