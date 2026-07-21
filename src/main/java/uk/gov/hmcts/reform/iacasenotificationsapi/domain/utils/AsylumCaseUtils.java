@@ -496,6 +496,10 @@ public class AsylumCaseUtils {
                 .orElse(false);
     }
 
+    public static boolean isCmrHearingInPerson(AsylumCase asylumCase) {
+        return isCmrHearingChannel(asylumCase, "INTER");
+    }
+
     public static boolean isCmrHearingInPersonOrRemote(AsylumCase asylumCase) {
         return isCmrHearingChannel(asylumCase, "INTER")
                 || isCmrHearingChannel(asylumCase, "VID")

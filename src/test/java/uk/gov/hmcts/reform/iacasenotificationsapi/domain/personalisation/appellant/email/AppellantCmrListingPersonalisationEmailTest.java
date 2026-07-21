@@ -36,10 +36,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsF
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class AppellantCmrListingPersonalisationEmailTest {
 
-    private final String templateId = "someTemplateId";
     private final String listAssistHearingTemplateId = "listAssistHearingTemplateId";
-    private final String legallyReppedTemplateId = "legallyReppedTemplateId";
-    private final String listAssistHearingLegallyReppedTemplateId = "listAssistHearingLegallyReppedTemplateId";
     private final String iaAipFrontendUrl = "http://somefrontendurl";
     private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
     private final String hearingCentreAddress = "some hearing centre address";
@@ -81,10 +78,7 @@ public class AppellantCmrListingPersonalisationEmailTest {
         when(dateTimeExtractor.extractHearingTime(hearingDateTime)).thenReturn(hearingTime);
 
         appellantCmrListingPersonalisationEmail = new AppellantCmrListingPersonalisationEmail(
-            templateId,
             listAssistHearingTemplateId,
-            legallyReppedTemplateId,
-            listAssistHearingLegallyReppedTemplateId,
             iaAipFrontendUrl,
             dateTimeExtractor,
             customerServicesProvider,
@@ -102,19 +96,7 @@ public class AppellantCmrListingPersonalisationEmailTest {
 
     @Test
     public void should_return_correct_template_id() {
-        when(asylumCase.read(IS_INTEGRATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
-        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
-        assertEquals(templateId, appellantCmrListingPersonalisationEmail.getTemplateId(asylumCase));
-
-        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.REP));
-        assertEquals(legallyReppedTemplateId, appellantCmrListingPersonalisationEmail.getTemplateId(asylumCase));
-
-        when(asylumCase.read(IS_INTEGRATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
         assertEquals(listAssistHearingTemplateId, appellantCmrListingPersonalisationEmail.getTemplateId(asylumCase));
-
-        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.REP));
-        assertEquals(listAssistHearingLegallyReppedTemplateId, appellantCmrListingPersonalisationEmail.getTemplateId(asylumCase));
     }
 
     @Test
