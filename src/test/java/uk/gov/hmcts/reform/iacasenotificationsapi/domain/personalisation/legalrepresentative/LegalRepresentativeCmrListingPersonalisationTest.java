@@ -11,6 +11,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,6 +24,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DynamicList;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Value;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.StringProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
@@ -33,7 +36,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsF
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class LegalRepresentativeCmrListingPersonalisationTest {
 
-    private final String listAssistHearingTemplateId = "listAssistHearingTemplateId";
+    private final String listAssistHearingInPersonTemplateId = "listAssistHearingInPersonTemplateId";
+    private final String listAssistHearingRemoteTemplateId = "listAssistHearingRemoteTemplateId";
     private final String iaExUiFrontendUrl = "http://somefrontendurl";
     private final String legalRepEmailAddress = "legalRepEmailAddress@example.com";
     private final String hearingCentreAddress = "some hearing centre address";
@@ -109,7 +113,8 @@ public class LegalRepresentativeCmrListingPersonalisationTest {
         when(hearingDetailsFinder.getCmrHearingCentreLocation(asylumCase)).thenReturn(hearingCentreAddress);
 
         legalRepresentativeCmrListingPersonalisation = new LegalRepresentativeCmrListingPersonalisation(
-            listAssistHearingTemplateId,
+            listAssistHearingInPersonTemplateId,
+            listAssistHearingRemoteTemplateId,
             iaExUiFrontendUrl,
             appellantProvidingAppealArgumentDeadline,
             respondentResponseToAppealArgumentDeadline,
@@ -120,8 +125,34 @@ public class LegalRepresentativeCmrListingPersonalisationTest {
     }
 
     @Test
-    void should_return_given_template_id() {
-        assertEquals(listAssistHearingTemplateId,
+    void should_return_in_person_template_id_when_cmr_hearing_is_in_person() {
+        DynamicList inPersonChannel = new DynamicList(
+            new Value("INTER", "In Person"),
+            List.of(new Value("INTER", "In Person"), new Value("VID", "Video"), new Value("TEL", "Telephone"))
+        );
+        when(asylumCase.read(CMR_HEARING_CHANNEL, DynamicList.class)).thenReturn(Optional.of(inPersonChannel));
+
+        assertEquals(listAssistHearingInPersonTemplateId,
+            legalRepresentativeCmrListingPersonalisation.getTemplateId(asylumCase));
+    }
+
+    @Test
+    void should_return_remote_template_id_when_cmr_hearing_is_not_in_person() {
+        DynamicList remoteChannel = new DynamicList(
+            new Value("VID", "Video"),
+            List.of(new Value("INTER", "In Person"), new Value("VID", "Video"), new Value("TEL", "Telephone"))
+        );
+        when(asylumCase.read(CMR_HEARING_CHANNEL, DynamicList.class)).thenReturn(Optional.of(remoteChannel));
+
+        assertEquals(listAssistHearingRemoteTemplateId,
+            legalRepresentativeCmrListingPersonalisation.getTemplateId(asylumCase));
+    }
+
+    @Test
+    void should_return_remote_template_id_when_cmr_hearing_channel_is_absent() {
+        when(asylumCase.read(CMR_HEARING_CHANNEL, DynamicList.class)).thenReturn(Optional.empty());
+
+        assertEquals(listAssistHearingRemoteTemplateId,
             legalRepresentativeCmrListingPersonalisation.getTemplateId(asylumCase));
     }
 

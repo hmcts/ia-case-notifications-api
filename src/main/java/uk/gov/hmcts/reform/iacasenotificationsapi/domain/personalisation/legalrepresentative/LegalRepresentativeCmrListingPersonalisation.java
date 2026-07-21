@@ -16,12 +16,13 @@ import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
 @Service
 public class LegalRepresentativeCmrListingPersonalisation implements LegalRepresentativeEmailNotificationPersonalisation {
 
-    private final String listAssistHearingLegalRepresentativeCmrListingTemplateId;
+    private final String listAssistHearingLegalRepresentativeCmrListingInPersonTemplateId;
+    private final String listAssistHearingLegalRepresentativeCmrListingRemoteTemplateId;
     private final String iaExUiFrontendUrl;
     private final int appellantProvidingAppealArgumentDeadlineDelay;
     private final int respondentResponseToAppealArgumentDeadlineDelay;
@@ -35,7 +36,8 @@ public class LegalRepresentativeCmrListingPersonalisation implements LegalRepres
     private String nonAdaPrefix;
 
     public LegalRepresentativeCmrListingPersonalisation(
-        @Value("${govnotify.template.listAssistHearing.cmrListing.legalRep.email}") String listAssistHearingLegalRepresentativeCmrListingTemplateId,
+        @Value("${govnotify.template.listAssistHearing.cmrListing.legalRep.inPerson.email}") String listAssistHearingLegalRepresentativeCmrListingInPersonTemplateId,
+        @Value("${govnotify.template.listAssistHearing.cmrListing.legalRep.remote.email}") String listAssistHearingLegalRepresentativeCmrListingRemoteTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         @Value("${adaCaseListed.deadlines.appellantProvidingAppealArgumentDelay}") int appellantProvidingAppealArgumentDeadlineDelay,
         @Value("${adaCaseListed.deadlines.respondentResponseToAppealArgumentDelay}") int respondentResponseToAppealArgumentDeadlineDelay,
@@ -43,7 +45,8 @@ public class LegalRepresentativeCmrListingPersonalisation implements LegalRepres
         CustomerServicesProvider customerServicesProvider,
         HearingDetailsFinder hearingDetailsFinder
     ) {
-        this.listAssistHearingLegalRepresentativeCmrListingTemplateId = listAssistHearingLegalRepresentativeCmrListingTemplateId;
+        this.listAssistHearingLegalRepresentativeCmrListingInPersonTemplateId = listAssistHearingLegalRepresentativeCmrListingInPersonTemplateId;
+        this.listAssistHearingLegalRepresentativeCmrListingRemoteTemplateId = listAssistHearingLegalRepresentativeCmrListingRemoteTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.appellantProvidingAppealArgumentDeadlineDelay = appellantProvidingAppealArgumentDeadlineDelay;
         this.respondentResponseToAppealArgumentDeadlineDelay = respondentResponseToAppealArgumentDeadlineDelay;
@@ -54,7 +57,11 @@ public class LegalRepresentativeCmrListingPersonalisation implements LegalRepres
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return listAssistHearingLegalRepresentativeCmrListingTemplateId;
+        if (isCmrHearingInPerson(asylumCase)) {
+            return listAssistHearingLegalRepresentativeCmrListingInPersonTemplateId;
+        } else {
+            return listAssistHearingLegalRepresentativeCmrListingRemoteTemplateId;
+        }
     }
 
     @Override
