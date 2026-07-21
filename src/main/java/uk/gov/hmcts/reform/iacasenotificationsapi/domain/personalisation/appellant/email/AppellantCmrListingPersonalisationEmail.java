@@ -7,7 +7,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
@@ -20,15 +19,11 @@ import java.util.Set;
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAipJourney;
 
 @Service
 public class AppellantCmrListingPersonalisationEmail implements EmailNotificationPersonalisation {
 
-    private final String appellantCaseListedTemplateId;
-    private final String listAssistHearingAppellantCaseListedTemplateId;
-    private final String legallyReppedAppellantCaseListedTemplateId;
-    private final String listAssistHearingLegallyReppedAppellantCaseListedTemplateId;
+    private final String listAssistHearingAppellantCmrListingTemplateId;
     private final DateTimeExtractor dateTimeExtractor;
     private final CustomerServicesProvider customerServicesProvider;
     private final HearingDetailsFinder hearingDetailsFinder;
@@ -41,20 +36,14 @@ public class AppellantCmrListingPersonalisationEmail implements EmailNotificatio
     private String nonAdaPrefix;
 
     public AppellantCmrListingPersonalisationEmail(
-        @Value("${govnotify.template.caseListed.appellant.email}") String appellantCaseListedEmailTemplateId,
-        @Value("${govnotify.template.listAssistHearing.caseListed.appellant.email}") String listAssistHearingAppellantCaseListedTemplateId,
-        @Value("${govnotify.template.caseListed.legallyReppedAppellant.email}") String legallyReppedAppellantCaseListedTemplateId,
-        @Value("${govnotify.template.listAssistHearing.caseListed.legallyReppedAppellant.email}") String listAssistHearingLegallyReppedAppellantCaseListedTemplateId,
+        @Value("${govnotify.template.listAssistHearing.cmrListing.appellant.email}") String listAssistHearingAppellantCmrListingTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         DateTimeExtractor dateTimeExtractor,
         CustomerServicesProvider customerServicesProvider,
         HearingDetailsFinder hearingDetailsFinder,
         RecipientsFinder recipientsFinder
     ) {
-        this.appellantCaseListedTemplateId = appellantCaseListedEmailTemplateId;
-        this.listAssistHearingAppellantCaseListedTemplateId = listAssistHearingAppellantCaseListedTemplateId;
-        this.legallyReppedAppellantCaseListedTemplateId = legallyReppedAppellantCaseListedTemplateId;
-        this.listAssistHearingLegallyReppedAppellantCaseListedTemplateId = listAssistHearingLegallyReppedAppellantCaseListedTemplateId;
+        this.listAssistHearingAppellantCmrListingTemplateId = listAssistHearingAppellantCmrListingTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.dateTimeExtractor = dateTimeExtractor;
         this.customerServicesProvider = customerServicesProvider;
@@ -64,22 +53,13 @@ public class AppellantCmrListingPersonalisationEmail implements EmailNotificatio
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        if (asylumCase.read(IS_INTEGRATED, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES) {
-            return isAipJourney(asylumCase) ?
-                listAssistHearingAppellantCaseListedTemplateId :
-                listAssistHearingLegallyReppedAppellantCaseListedTemplateId;
-        } else {
-            return isAipJourney(asylumCase) ?
-                appellantCaseListedTemplateId : legallyReppedAppellantCaseListedTemplateId;
-        }
+        return listAssistHearingAppellantCmrListingTemplateId;
     }
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
-        return isAipJourney(asylumCase) ?
-            recipientsFinder.findAll(asylumCase, NotificationType.EMAIL) :
-            recipientsFinder.findReppedAppellant(asylumCase, NotificationType.EMAIL);
+        return recipientsFinder.findReppedAppellant(asylumCase, NotificationType.EMAIL);
     }
 
     @Override

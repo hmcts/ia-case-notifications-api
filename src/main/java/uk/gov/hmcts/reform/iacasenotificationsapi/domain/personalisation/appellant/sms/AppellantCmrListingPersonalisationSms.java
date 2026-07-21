@@ -16,13 +16,11 @@ import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAipJourney;
 
 @Service
 public class AppellantCmrListingPersonalisationSms implements SmsNotificationPersonalisation {
 
     private final String appellantCaseListedSmsTemplateId;
-    private final String legallyReppedAppellantCaseListedSmsTemplateId;
     private final DateTimeExtractor dateTimeExtractor;
     private final HearingDetailsFinder hearingDetailsFinder;
     private final RecipientsFinder recipientsFinder;
@@ -31,14 +29,12 @@ public class AppellantCmrListingPersonalisationSms implements SmsNotificationPer
 
     public AppellantCmrListingPersonalisationSms(
         @Value("${govnotify.template.caseListed.appellant.sms}") String appellantCaseListedSmsTemplateId,
-        @Value("${govnotify.template.caseListed.legallyReppedAppellant.sms}") String legallyReppedAppellantCaseListedSmsTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         DateTimeExtractor dateTimeExtractor,
         HearingDetailsFinder hearingDetailsFinder,
         RecipientsFinder recipientsFinder
     ) {
         this.appellantCaseListedSmsTemplateId = appellantCaseListedSmsTemplateId;
-        this.legallyReppedAppellantCaseListedSmsTemplateId = legallyReppedAppellantCaseListedSmsTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.dateTimeExtractor = dateTimeExtractor;
         this.hearingDetailsFinder = hearingDetailsFinder;
@@ -47,16 +43,13 @@ public class AppellantCmrListingPersonalisationSms implements SmsNotificationPer
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-
-        return isAipJourney(asylumCase) ? appellantCaseListedSmsTemplateId : legallyReppedAppellantCaseListedSmsTemplateId;
+        return appellantCaseListedSmsTemplateId;
     }
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
-        return isAipJourney(asylumCase) ?
-            recipientsFinder.findAll(asylumCase, NotificationType.SMS) :
-            recipientsFinder.findReppedAppellant(asylumCase, NotificationType.SMS);
+        return recipientsFinder.findReppedAppellant(asylumCase, NotificationType.SMS);
     }
 
     @Override
