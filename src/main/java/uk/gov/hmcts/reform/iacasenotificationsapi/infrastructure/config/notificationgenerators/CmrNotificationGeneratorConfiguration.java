@@ -100,6 +100,31 @@ public class CmrNotificationGeneratorConfiguration {
         );
     }
   
+    @Bean("aipManualCmrRelistingAppellantPostalNotificationGenerator")
+    public List<NotificationGenerator> aipManualCmrRelistingAppellantPostalNotificationGenerator(
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender,
+        DocumentDownloadClient documentDownloadClient
+    ) {
+        DocumentTag documentTag = DocumentTag.INTERNAL_CMR_LISTING_LETTER_BUNDLE;
+
+        return newArrayList(
+            new PrecompiledLetterNotificationGenerator(
+                newArrayList(
+                    documentTag
+                ),
+                notificationSender,
+                notificationIdAppender,
+                documentDownloadClient
+            ) {
+                    @Override
+                public Message getSuccessMessage() {
+                        return new Message("success","body");
+                }
+            }
+        );
+    }
+
     @Bean("nonDetainedCmrRelistingHoCoLrNotificationGenerator")
     public List<NotificationGenerator> nonDetainedCmrRelistingHoCoLrNotificationGenerator(
         LegalRepresentativeCmrRelistingPersonalisation legalRepresentativeCmrRelistingPersonalisation,
