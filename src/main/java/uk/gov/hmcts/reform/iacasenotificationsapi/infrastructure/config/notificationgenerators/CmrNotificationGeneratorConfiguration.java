@@ -125,6 +125,26 @@ public class CmrNotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("aipManualCmrRelistingHoCoEmailsGenerator")
+    public List<NotificationGenerator> aipManualCmrRelistingHoCoEmailsGenerator(
+        CaseOfficerCmrRelistingPersonalisation caseOfficerCmrRelistingPersonalisation,
+        HomeOfficeCmrRelistingPersonalisation homeOfficeCmrRelistingPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        List<EmailNotificationPersonalisation> emailPersonalisations = newArrayList(
+            caseOfficerCmrRelistingPersonalisation,
+            homeOfficeCmrRelistingPersonalisation
+        );
+        return newArrayList(
+            new EmailNotificationGenerator(
+                emailPersonalisations,
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("nonDetainedCmrRelistingHoCoLrNotificationGenerator")
     public List<NotificationGenerator> nonDetainedCmrRelistingHoCoLrNotificationGenerator(
         LegalRepresentativeCmrRelistingPersonalisation legalRepresentativeCmrRelistingPersonalisation,

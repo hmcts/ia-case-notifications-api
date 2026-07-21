@@ -31,9 +31,11 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.PreSubmitCallb
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationGenerator;
 
 /**
- * Gating logic for AiP-manual CMR (re)listing handlers: listing keeps its own handler/templates,
- * while re-listing routes appellant notification through the postal (precompiled letter) generator
- * instead of email/sms, and neither fires for paper hearings.
+ * Gating logic for AiP-manual CMR (re)listing handlers: listing keeps its own handler/templates;
+ * re-listing routes the appellant notification through the postal (precompiled letter) generator
+ * and the case officer/Home Office notification through a dedicated relisting email handler,
+ * neither of which fires for paper hearings. Also verifies the pre-existing AiP-digital HO/CO
+ * relisting handler no longer double-fires for internal (AiP-manual) cases.
  */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -111,5 +113,39 @@ class CmrRelistingAipManualNotificationHandlerTest {
         when(callback.getEvent()).thenReturn(CMR_LISTING);
 
         assertThat(relistingPostalHandler.canHandle(ABOUT_TO_SUBMIT, callback)).isFalse();
+    }
+
+    @Test
+    void relisting_ho_co_email_handler_fires_for_in_person_and_remote_but_not_paper() {
+        PreSubmitCallbackHandler<AsylumCase> relistingHoCoEmailHandler =
+            handlerConfiguration.cmrRelistingAipManualHoCoEmailHandler(notificationGenerators);
+
+        when(callback.getEvent()).thenReturn(CMR_RE_LISTING);
+
+        setHearingChannel("INTER");
+        assertThat(relistingHoCoEmailHandler.canHandle(ABOUT_TO_SUBMIT, callback)).isTrue();
+
+        setHearingChannel("VID");
+        assertThat(relistingHoCoEmailHandler.canHandle(ABOUT_TO_SUBMIT, callback)).isTrue();
+
+        setHearingChannel("NA");
+        assertThat(relistingHoCoEmailHandler.canHandle(ABOUT_TO_SUBMIT, callback)).isFalse();
+    }
+
+    @Test
+    void aip_digital_ho_co_email_handler_no_longer_fires_for_internal_aip_manual_cases() {
+        // Guards against double-sending: the AiP-manual HO/CO relisting emails are now owned
+        // exclusively by cmrRelistingAipManualHoCoEmailHandler, so the pre-existing AiP-digital
+        // handler (built for non-internal, self-service AiP cases) must exclude internal cases.
+        PreSubmitCallbackHandler<AsylumCase> aipDigitalHoCoEmailHandler =
+            handlerConfiguration.cmrRelistedAipHoCoEmailHandler(notificationGenerators);
+
+        when(callback.getEvent()).thenReturn(CMR_RE_LISTING);
+        setHearingChannel("INTER");
+
+        assertThat(aipDigitalHoCoEmailHandler.canHandle(ABOUT_TO_SUBMIT, callback)).isFalse();
+
+        when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+        assertThat(aipDigitalHoCoEmailHandler.canHandle(ABOUT_TO_SUBMIT, callback)).isTrue();
     }
 }
