@@ -5022,6 +5022,7 @@ public class NotificationGeneratorConfiguration {
     @Bean("stf24WeeksCompleteCaseReviewLegalRepresentativeNotificationGenerator")
     public List<NotificationGenerator> stf24WeeksCompleteCaseReviewLegalRepresentativeNotificationGenerator(
             LegalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation legalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation,
+            AppellantCompleteCaseReviewStatutoryTimeframe24WeeksLrContentPersonalisationEmail appellantCompleteCaseReviewStatutoryTimeframe24WeeksLrContentPersonalisationEmail,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
@@ -5029,7 +5030,8 @@ public class NotificationGeneratorConfiguration {
         return singletonList(
                 new EmailNotificationGenerator(
                         newArrayList(
-                                legalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation
+                                legalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation,
+                                appellantCompleteCaseReviewStatutoryTimeframe24WeeksLrContentPersonalisationEmail
                         ),
                         notificationSender,
                         notificationIdAppender

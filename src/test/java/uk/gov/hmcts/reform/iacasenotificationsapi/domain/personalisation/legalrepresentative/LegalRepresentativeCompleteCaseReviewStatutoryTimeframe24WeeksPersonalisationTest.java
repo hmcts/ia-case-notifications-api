@@ -85,7 +85,6 @@ class LegalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisat
 
         personalisation = new LegalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation(
                 customerServicesProvider, STF_24_WEEKS_TEMPLATE_ID,
-                IA_EX_UI_FRONTEND_URL,
                 MOCK_PREFIX
         );
     }
@@ -124,7 +123,6 @@ class LegalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisat
         assertEquals(LEGAL_REF_NUMBER, result.get(LEGAL_REP_REFERENCE_NUMBER_KEY));
         assertEquals(APPELLANT_GIVEN_NAMES_VALUE, result.get(APPELLANT_GIVEN_NAMES_KEY));
         assertEquals(APPELLANT_FAMILY_NAME_VALUE, result.get(APPELLANT_FAMILY_NAME_KEY));
-        assertEquals(IA_EX_UI_FRONTEND_URL, result.get(LINK_TO_ONLINE_SERVICE_KEY));
         assertEquals(APPEAL_REFERENCE_NUMBER_VALUE, result.get(APPEAL_REFERENCE_NUMBER_KEY));
         assertEquals(FEB_2002, result.get(DECISION_SENT_DATE_KEY));
         assertEquals(JUL_2002, result.get(WEEKS_DEADLINE_KEY));
