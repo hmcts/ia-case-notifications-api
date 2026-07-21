@@ -30,13 +30,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.C
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.PreSubmitCallbackHandler;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationGenerator;
 
-/**
- * Gating logic for AiP-manual CMR (re)listing handlers: listing keeps its own handler/templates;
- * re-listing routes the appellant notification through the postal (precompiled letter) generator
- * and the case officer/Home Office notification through a dedicated relisting email handler,
- * neither of which fires for paper hearings. Also verifies the pre-existing AiP-digital HO/CO
- * relisting handler no longer double-fires for internal (AiP-manual) cases.
- */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class CmrRelistingAipManualNotificationHandlerTest {
