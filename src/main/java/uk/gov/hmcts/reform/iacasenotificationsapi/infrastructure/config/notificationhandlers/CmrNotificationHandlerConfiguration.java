@@ -52,7 +52,7 @@ public class CmrNotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && CMR_LISTING.equals(callback.getEvent())
                     && isCmrHearingInPersonOrRemote(asylumCase)
-                    && hasBeenSubmittedByAppellantInternalCase(callback.getCaseDetails().getCaseData());
+                    && hasBeenSubmittedByAppellantInternalCase(asylumCase);
             },
             notificationGenerators
         );
