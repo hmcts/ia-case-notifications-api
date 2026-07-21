@@ -120,7 +120,7 @@ public class LegalRepresentativeListCasePersonalisation implements LegalRepresen
                         .format(DateTimeFormatter.ofPattern("dd MMMM yyyy")));
         }
 
-        PersonalisationProvider.buildHearingRequirementsFields(asylumCase, listCaseFields);
+        listCaseFields.putAll(PersonalisationProvider.getHearingRequirementsFields(asylumCase));
 
         return listCaseFields.build();
 
