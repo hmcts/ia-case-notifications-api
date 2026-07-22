@@ -698,6 +698,42 @@ public class AsylumCaseUtilsTest {
         assertFalse(isCmrHearingChannel(asylumCase, "INTER"));
     }
 
+    @Test
+    void should_return_true_when_cmr_hearing_is_in_person() {
+        DynamicList hearingChannelList = new DynamicList(
+            new Value("INTER", "In Person"),
+            List.of(new Value("INTER", "In Person"),
+                new Value("VID", "Video"),
+                new Value("TEL", "Telephone"))
+        );
+
+        when(asylumCase.read(CMR_HEARING_CHANNEL, DynamicList.class)).thenReturn(Optional.of(hearingChannelList));
+
+        assertTrue(isCmrHearingInPerson(asylumCase));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"VID", "TEL"})
+    void should_return_false_when_cmr_hearing_is_not_in_person(String hearingChannelCode) {
+        DynamicList hearingChannelList = new DynamicList(
+            new Value(hearingChannelCode, "Remote"),
+            List.of(new Value("INTER", "In Person"),
+                new Value("VID", "Video"),
+                new Value("TEL", "Telephone"))
+        );
+
+        when(asylumCase.read(CMR_HEARING_CHANNEL, DynamicList.class)).thenReturn(Optional.of(hearingChannelList));
+
+        assertFalse(isCmrHearingInPerson(asylumCase));
+    }
+
+    @Test
+    void should_return_false_when_cmr_hearing_in_person_channel_is_empty() {
+        when(asylumCase.read(CMR_HEARING_CHANNEL, DynamicList.class)).thenReturn(Optional.empty());
+
+        assertFalse(isCmrHearingInPerson(asylumCase));
+    }
+
     @ParameterizedTest
     @ValueSource(strings = {"PARTIALLY_APPROVED", "REJECTED"})
     void should_return_true_for_remission_decision_partially_granted_or_refused(String remissionDecisionValue) {

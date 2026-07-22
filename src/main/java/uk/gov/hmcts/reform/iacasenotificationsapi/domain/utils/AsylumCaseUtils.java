@@ -496,6 +496,16 @@ public class AsylumCaseUtils {
                 .orElse(false);
     }
 
+    public static boolean isCmrHearingInPerson(AsylumCase asylumCase) {
+        return isCmrHearingChannel(asylumCase, "INTER");
+    }
+
+    public static boolean isCmrHearingInPersonOrRemote(AsylumCase asylumCase) {
+        return isCmrHearingChannel(asylumCase, "INTER")
+                || isCmrHearingChannel(asylumCase, "VID")
+                || isCmrHearingChannel(asylumCase, "TEL");
+    }
+
     public static boolean isCmrHearingChannel(AsylumCase asylumCase, String hearingChannelCode) {
         return asylumCase.read(CMR_HEARING_CHANNEL, DynamicList.class)
                 .map(hearingChannels -> hearingChannels.getValue().getCode().equals(hearingChannelCode))
