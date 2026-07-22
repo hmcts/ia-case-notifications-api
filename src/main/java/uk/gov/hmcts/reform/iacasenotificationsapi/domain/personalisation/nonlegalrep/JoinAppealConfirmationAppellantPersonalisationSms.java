@@ -44,7 +44,7 @@ public class JoinAppealConfirmationAppellantPersonalisationSms implements SmsNot
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_NON_LEGAL_REP_JOIN_APPEAL_CONFIRMATION_APPELLANT_EMAIL";
+        return caseId + "_NON_LEGAL_REP_JOIN_APPEAL_CONFIRMATION_APPELLANT_SMS";
     }
 
     @Override
