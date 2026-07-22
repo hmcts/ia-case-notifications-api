@@ -1556,6 +1556,18 @@ govnotify:
         email: d2a75610-004c-4fd8-8724-5fb7700cc27d
     revokeCitizenAccess:
       email: 8ea82724-5ddf-4f2d-9577-66bc565747e7
+    nlr:
+      sendInviteToNonLegalRep:
+        email: 7d3374d0-4dbb-4993-89d1-997c73eb7ed8
+      sendJoinAppealPin:
+        email: adb7418a-d54d-4f3c-8cc5-47dfabca3bad
+      joinAppealConfirmation:
+        email: 92b3ec95-cfc1-417e-a2f4-4cf3e9f84e5d
+        appellant:
+          email: c56dcb93-7c07-4fcc-9d48-c7e9814b3643
+          sms: 1a86539c-e685-4ece-9c07-ade4b22ab97c
+      nlrDetailsUpdated:
+        email: 989c80f9-df20-4c15-876d-911c3beec88a
     generatePinInPost:
       appellant:
         email: 698ec21d-a160-4b2d-a028-7fbb6fb91565
@@ -1733,6 +1745,10 @@ security:
       - "uploadAddendumEvidenceLegalRep"
       - "applyForFTPAAppellant"
       - "requestFeeRemission"
+      - "sendInviteToNonLegalRep"
+      - "sendPipToNonLegalRep"
+      - "joinAppealConfirmation"
+      - "nlrDetailsUpdated"
     caseworker-ia-legalrep-solicitor:
       - "startAppeal"
       - "editAppeal"
@@ -1828,6 +1844,9 @@ security:
       - "removeStatutoryTimeframe24Weeks"
       - "completeCaseReview"
       - "revokeCitizenAccess"
+      - "sendInviteToNonLegalRep"
+      - "sendPipToNonLegalRep"
+      - "joinAppealConfirmation"
     challenged-access-legal-operations:
       - "sendDirection"
       - "changeDirectionDueDate"
@@ -1893,6 +1912,9 @@ security:
       - "updateTribunalDecision"
       - "recordRemissionReminder"
       - "revokeCitizenAccess"
+      - "sendInviteToNonLegalRep"
+      - "sendPipToNonLegalRep"
+      - "joinAppealConfirmation"
     senior-tribunal-caseworker:
       - "sendDirection"
       - "changeDirectionDueDate"
@@ -1960,6 +1982,9 @@ security:
       - "removeStatutoryTimeframe24Weeks"
       - "completeCaseReview"
       - "revokeCitizenAccess"
+      - "sendInviteToNonLegalRep"
+      - "sendPipToNonLegalRep"
+      - "joinAppealConfirmation"
     # These events are used by the bails service, they will need to be migrated to the admin access management roles - see DIAC-855
     caseworker-ia-admofficer:
       - "editBailApplication"
@@ -2028,6 +2053,9 @@ security:
       - "refundConfirmation"
       - "hearingCancelled"
       - "revokeCitizenAccess"
+      - "sendInviteToNonLegalRep"
+      - "sendPipToNonLegalRep"
+      - "joinAppealConfirmation"
       - "requestRespondentEvidence"
     ctsc:
       - "progressMigratedCase"
@@ -2074,6 +2102,9 @@ security:
       - "refundConfirmation"
       - "hearingCancelled"
       - "revokeCitizenAccess"
+      - "sendInviteToNonLegalRep"
+      - "sendPipToNonLegalRep"
+      - "joinAppealConfirmation"
       - "requestRespondentEvidence"
     ctsc-team-leader:
       - "progressMigratedCase"
@@ -2120,6 +2151,9 @@ security:
       - "editDocuments"
       - "hearingCancelled"
       - "revokeCitizenAccess"
+      - "sendInviteToNonLegalRep"
+      - "sendPipToNonLegalRep"
+      - "joinAppealConfirmation"
       - "requestRespondentEvidence"
     national-business-centre:
       - "progressMigratedCase"
@@ -2166,6 +2200,9 @@ security:
       - "refundConfirmation"
       - "hearingCancelled"
       - "revokeCitizenAccess"
+      - "sendInviteToNonLegalRep"
+      - "sendPipToNonLegalRep"
+      - "joinAppealConfirmation"
       - "requestRespondentEvidence"
     challenged-access-ctsc:
       - "progressMigratedCase"
@@ -2212,6 +2249,9 @@ security:
       - "refundConfirmation"
       - "hearingCancelled"
       - "revokeCitizenAccess"
+      - "sendInviteToNonLegalRep"
+      - "sendPipToNonLegalRep"
+      - "joinAppealConfirmation"
       - "requestRespondentEvidence"
     challenged-access-admin:
       - "progressMigratedCase"
@@ -2258,6 +2298,9 @@ security:
       - "refundConfirmation"
       - "hearingCancelled"
       - "revokeCitizenAccess"
+      - "sendInviteToNonLegalRep"
+      - "sendPipToNonLegalRep"
+      - "joinAppealConfirmation"
       - "requestRespondentEvidence"
     caseworker-ia-homeofficeapc:
       - "startApplication"
@@ -2583,6 +2626,10 @@ security:
       - "removeStatutoryTimeframe24Weeks"
       - "completeCaseReview"
       - "revokeCitizenAccess"
+      - "sendInviteToNonLegalRep"
+      - "sendPipToNonLegalRep"
+      - "joinAppealConfirmation"
+      - "nlrDetailsUpdated"
       - "generatePinInPost"
     caseworker-ia-internal:
       - "revokeCitizenAccess"
