@@ -8,7 +8,7 @@ properties([
         ])
 ])
 
-@Library("Infrastructure@DTSPO-33489/disable-sonar-scan")
+@Library("Infrastructure")
 
 import uk.gov.hmcts.contino.AppPipelineDsl
 
