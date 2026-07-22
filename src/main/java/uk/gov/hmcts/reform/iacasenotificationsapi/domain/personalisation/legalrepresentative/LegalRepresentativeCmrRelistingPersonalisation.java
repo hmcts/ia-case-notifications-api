@@ -30,8 +30,8 @@ public class LegalRepresentativeCmrRelistingPersonalisation implements LegalRepr
     private String nonAdaPrefix;
 
     public LegalRepresentativeCmrRelistingPersonalisation(
-        @Value("${govnotify.template.listAssistHearing.caseEdited.legalRep.email}") String listAssistHearingLegalRepresentativeCaseEditedTemplateId,
-        @Value("${govnotify.template.listAssistHearing.caseEditedRemoteHearing.legalRep.email}") String listAssistHearingLegalRepresentativeCaseEditedRemoteHearingTemplateId,
+        @Value("${govnotify.template.listAssistHearing.cmrReListing.legalRep.email}") String listAssistHearingLegalRepresentativeCaseEditedTemplateId,
+        @Value("${govnotify.template.listAssistHearing.cmrRelistingRemoteHearing.legalRep.email}") String listAssistHearingLegalRepresentativeCaseEditedRemoteHearingTemplateId,
         PersonalisationProvider personalisationProvider,
         CustomerServicesProvider customerServicesProvider
     ) {
@@ -62,9 +62,6 @@ public class LegalRepresentativeCmrRelistingPersonalisation implements LegalRepr
             .<String, String>builder()
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation(callback))
             .putAll(personalisationProvider.getPersonalisation(callback))
-            .put("subjectPrefix", isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData())
-                ? adaPrefix
-                : nonAdaPrefix)
             .build();
     }
 }
