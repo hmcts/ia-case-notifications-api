@@ -2,8 +2,6 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalr
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CMR_IS_REMOTE_HEARING;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
-
 import com.google.common.collect.ImmutableMap;
 
 import java.util.Map;
