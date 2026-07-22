@@ -20,6 +20,7 @@ import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
@@ -72,8 +73,19 @@ class AppellantCmrHearingCancelledPersonalisationSmsTest {
     }
 
     @Test
-    void should_return_given_template_id() {
-        assertEquals(cmrCancelledSmsTemplateId, appellantCmrHearingCancelledPersonalisationSms.getTemplateId());
+    void should_return_given_template_id_appellant() {
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
+        when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+
+        assertEquals(cmrCancelledSmsTemplateId, appellantCmrHearingCancelledPersonalisationSms.getTemplateId(asylumCase));
+    }
+
+    @Test
+    void should_return_given_template_id_appellant_manual() {
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
+        when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+
+        assertEquals(manualCmrCancelledSmsTemplateId, appellantCmrHearingCancelledPersonalisationSms.getTemplateId(asylumCase));
     }
 
     @Test
