@@ -35,7 +35,7 @@ public class AppellantCmrHearingCancelledPersonalisationEmail implements EmailNo
 
     ) {
         this.appellantCmrCancelledEmailTemplateId = appellantCmrCancelledEmailTemplateId;
-        this.appellantManualCmrCancelledEmailTemplateId= appellantManualCmrCancelledEmailTemplateId;
+        this.appellantManualCmrCancelledEmailTemplateId = appellantManualCmrCancelledEmailTemplateId;
         this.recipientsFinder = recipientsFinder;
         this.dateTimeExtractor = dateTimeExtractor;
         this.hearingDetailsFinder = hearingDetailsFinder;
