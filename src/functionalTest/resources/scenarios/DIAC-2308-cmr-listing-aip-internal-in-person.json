@@ -69,6 +69,8 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
+        "appealReferenceNumber": "PA/12345/2023",
+        "ariaListingReference": "LP/12345/2021",
         "appellantsRepresentation": "Yes",
         "isAdmin": "Yes",
         "appellantAddress": {
