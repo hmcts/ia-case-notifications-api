@@ -5688,6 +5688,21 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> stf24WeeksCompleteCaseReviewLegalRepresentativeLetterNotificationHandler(
+            @Qualifier("stf24WeeksCompleteCaseReviewLegalRepresentativeLetterNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && isInternalCase(asylumCase)
+                            && hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)
+                            && isCaseReviewFor24WeeksCase(callback.getEvent(), asylumCase);
+                },
+                notificationGenerators, getErrorHandler()
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> stf24WeeksCompleteCaseReviewHomeOfficeNotificationHandler(
         @Qualifier("stf24WeeksCompleteCaseReviewHomeOfficeNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
         return new NotificationHandler(

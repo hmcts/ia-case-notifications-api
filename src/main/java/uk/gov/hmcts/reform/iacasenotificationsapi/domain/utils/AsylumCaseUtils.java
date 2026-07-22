@@ -630,9 +630,9 @@ public class AsylumCaseUtils {
 
 
     public static void buildAddressForLegalRepIccLetter(AsylumCase asylumCase, ImmutableMap.Builder<String, String> builder) {
-        List<String> address = legalRepInCountryAppeal(asylumCase) ?
-            getLegalRepresentativeAddressAsList(asylumCase) :
-            getLegalRepresentativeAddressOocAsList(asylumCase);
+        List<String> address = legalRepInCountryAppeal(asylumCase)
+            ? getLegalRepresentativeAddressAsList(asylumCase)
+            : getLegalRepresentativeAddressOocAsList(asylumCase);
 
         for (int i = 0; i < address.size(); i++) {
             builder.put("address_line_" + (i + 1), address.get(i));

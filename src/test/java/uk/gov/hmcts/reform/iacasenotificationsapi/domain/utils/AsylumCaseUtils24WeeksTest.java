@@ -1,5 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils;
 
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -21,8 +23,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_SUBMISSION_DATE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.SUBSCRIPTIONS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.TRIBUNAL_RECEIVED_DATE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.COMPLETE_CASE_REVIEW;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.SUBMIT_APPEAL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 
@@ -176,5 +181,45 @@ public class AsylumCaseUtils24WeeksTest {
         String result = AsylumCaseUtils.getAppealReceivedDate(asylumCase);
 
         assertEquals("5 Mar 2024", result);
+    }
+
+    @Nested
+    @DisplayName("isCaseReviewFor24WeeksCase")
+    class IsCaseReviewFor24WeeksCaseTests {
+
+        // Scenario 1 - 24-week flag set to Yes → should fire
+        @Test
+        void should_return_true_for_24_week_case() {
+            AsylumCase asylumCase = mock(AsylumCase.class);
+            when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YES));
+
+            assertTrue(AsylumCaseUtils.isCaseReviewFor24WeeksCase(COMPLETE_CASE_REVIEW, asylumCase));
+        }
+
+        // Scenario 2 - 24-week flag set to No → should NOT fire
+        @Test
+        void should_return_false_when_24_week_flag_is_no() {
+            AsylumCase asylumCase = mock(AsylumCase.class);
+            when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(NO));
+
+            assertFalse(AsylumCaseUtils.isCaseReviewFor24WeeksCase(COMPLETE_CASE_REVIEW, asylumCase));
+        }
+
+        // Scenario 3 - 24-week flag absent → should NOT fire
+        @Test
+        void should_return_false_when_24_week_flag_is_absent() {
+            AsylumCase asylumCase = mock(AsylumCase.class);
+            when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.empty());
+
+            assertFalse(AsylumCaseUtils.isCaseReviewFor24WeeksCase(COMPLETE_CASE_REVIEW, asylumCase));
+        }
+
+        @Test
+        void should_return_false_when_event_is_not_complete_case_review() {
+            AsylumCase asylumCase = mock(AsylumCase.class);
+            when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YES));
+
+            assertFalse(AsylumCaseUtils.isCaseReviewFor24WeeksCase(SUBMIT_APPEAL, asylumCase));
+        }
     }
 }

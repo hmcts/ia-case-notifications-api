@@ -78,6 +78,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24Weeks
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_SMS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_LETTER;
 
 @Slf4j
 @SuppressWarnings("unchecked")
@@ -302,12 +303,12 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
             Arguments.of(true, TestJourneyType.LR, true, false, true, 3, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_SMS)),
             Arguments.of(true, TestJourneyType.LR, true, true, false, 4, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LEGAL_REP_COPY_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL)),
 
-            Arguments.of(true, TestJourneyType.LR_MANUAL, false, false, false, 1, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
-            Arguments.of(true, TestJourneyType.LR_MANUAL, false, true, false, 1, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
-            Arguments.of(true, TestJourneyType.LR_MANUAL, false, false, true, 1, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
-            Arguments.of(true, TestJourneyType.LR_MANUAL, true, false, false, 1, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
-            Arguments.of(true, TestJourneyType.LR_MANUAL, true, true, false, 1, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
-            Arguments.of(true, TestJourneyType.LR_MANUAL, true, false, true, 1, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
+            Arguments.of(true, TestJourneyType.LR_MANUAL, false, false, false, 1, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_LETTER)),
+            Arguments.of(true, TestJourneyType.LR_MANUAL, false, true, false, 1, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_LETTER)),
+            Arguments.of(true, TestJourneyType.LR_MANUAL, false, false, true, 1, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_LETTER)),
+            Arguments.of(true, TestJourneyType.LR_MANUAL, true, false, false, 1, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_LETTER)),
+            Arguments.of(true, TestJourneyType.LR_MANUAL, true, true, false, 1, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_LETTER)),
+            Arguments.of(true, TestJourneyType.LR_MANUAL, true, false, true, 1, List.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_LETTER)),
 
             Arguments.of(false, TestJourneyType.AIP_MANUAL, true, true, true, 0, Collections.emptyList()),
             Arguments.of(false, TestJourneyType.AIP, true, true, true, 0, Collections.emptyList()),
@@ -343,4 +344,5 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
         PreSubmitCallbackResponseForTest response = mockResponse(mockCaseData(testJourneyType, inCountry, wantsEmail, wantsSms, is24w), COMPLETE_CASE_REVIEW);
         assertNotificationsContain(response, expectedSize, expectedIds);
     }
+
 }
