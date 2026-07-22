@@ -15,14 +15,14 @@ import java.util.Set;
 import static java.util.Objects.requireNonNull;
 
 @Service
-public class CaseOfficerAipCmrHearingCancelledPersonalisationEmail implements EmailNotificationPersonalisation {
+public class CaseOfficerCmrHearingCancelledPersonalisationEmail implements EmailNotificationPersonalisation {
 
     private final String cmrCancelledCaseOfficerEmailTemplateId;
     private final EmailAddressFinder emailAddressFinder;
     private final String iaExUiFrontendUrl;
 
 
-    public CaseOfficerAipCmrHearingCancelledPersonalisationEmail(
+    public CaseOfficerCmrHearingCancelledPersonalisationEmail(
             @Value("${govnotify.template.cmrCancelled.caseOfficer.email}") String cmrCancelledCaseOfficerEmailTemplateId,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
             EmailAddressFinder emailAddressFinder
@@ -45,7 +45,7 @@ public class CaseOfficerAipCmrHearingCancelledPersonalisationEmail implements Em
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_CMR_CANCELLED_AIP_CASE_OFFICER_EMAIL";
+        return caseId + "_CMR_CANCELLED_CASE_OFFICER_EMAIL";
     }
 
     @Override

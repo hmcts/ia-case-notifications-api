@@ -838,6 +838,9 @@ govnotify:
         sms: 344a7601-711b-4403-9c38-955cf52af870
       legallyReppedAppellant:
         email: a3e5d408-882b-4584-b310-8063154a6b90
+        sms: a1122d71-1dc0-4037-8f33-4c83e275ae28
+      legalRep:
+        email: 7b1591cd-8c44-4b5c-921c-04b8c8d07bd6
       caseOfficer:
         email: 97fdd824-7adf-46a2-973d-ad7d96bf76bd
       homeOffice:

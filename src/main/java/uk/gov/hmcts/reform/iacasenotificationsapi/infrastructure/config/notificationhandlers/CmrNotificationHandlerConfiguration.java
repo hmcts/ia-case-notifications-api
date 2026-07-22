@@ -15,8 +15,7 @@ import java.util.List;
 
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DetentionFacility.IRC;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DetentionFacility.PRISON;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.CMR_LISTING;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.CMR_RE_LISTING;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
 @Slf4j
@@ -135,5 +134,19 @@ public class CmrNotificationHandlerConfiguration {
             && isRepJourney(asylumCase)
             && !isInternalCase(asylumCase)
             && !isAppellantInDetention(asylumCase);
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> cmrHearingCancelledNotificationHandler(
+            @Qualifier("cmrHearingCancelledNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && CMR_HEARING_CANCELLED.equals(callback.getEvent());
+                },
+                notificationGenerators
+        );
     }
 }

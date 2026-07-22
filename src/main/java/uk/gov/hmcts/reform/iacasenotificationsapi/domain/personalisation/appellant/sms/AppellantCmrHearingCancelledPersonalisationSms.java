@@ -17,11 +17,13 @@ import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAipJourney;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isInternalCase;
 
 @Service
 public class AppellantCmrHearingCancelledPersonalisationSms implements SmsNotificationPersonalisation {
 
     private final String cmrCancelledSmsTemplateId;
+    private final String cmrCancelledLegallyReppedSmsTemplateId;
     private final RecipientsFinder recipientsFinder;
     private final String iaAipFrontendUrl;
     private final DateTimeExtractor dateTimeExtractor;
@@ -30,12 +32,14 @@ public class AppellantCmrHearingCancelledPersonalisationSms implements SmsNotifi
 
     public AppellantCmrHearingCancelledPersonalisationSms(
             @Value("${govnotify.template.cmrCancelled.appellant.sms}") String cmrCancelledSmsTemplateId,
+            @Value("${govnotify.template.cmrCancelled.legallyReppedAppellant.sms}") String cmrCancelledLegallyReppedSmsTemplateIdSmsTemplateId,
             @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
             RecipientsFinder recipientsFinder,
             DateTimeExtractor dateTimeExtractor,
             HearingDetailsFinder hearingDetailsFinder
     ) {
         this.cmrCancelledSmsTemplateId = cmrCancelledSmsTemplateId;
+        this.cmrCancelledLegallyReppedSmsTemplateId = cmrCancelledLegallyReppedSmsTemplateIdSmsTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.recipientsFinder = recipientsFinder;
         this.dateTimeExtractor = dateTimeExtractor;
@@ -44,18 +48,18 @@ public class AppellantCmrHearingCancelledPersonalisationSms implements SmsNotifi
     }
 
     @Override
-    public String getTemplateId() {
-        return cmrCancelledSmsTemplateId;
+    public String getTemplateId(final AsylumCase asylumCase) {
+        return isAipJourney(asylumCase) ? cmrCancelledSmsTemplateId : cmrCancelledLegallyReppedSmsTemplateId;
     }
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        return isAipJourney(asylumCase) ? recipientsFinder.findAll(asylumCase, NotificationType.SMS) : Collections.emptySet();
+        return isAipJourney(asylumCase) && !isInternalCase(asylumCase) ? recipientsFinder.findAll(asylumCase, NotificationType.SMS) : !isAipJourney(asylumCase) && !isInternalCase(asylumCase) ?   recipientsFinder.findReppedAppellant(asylumCase, NotificationType.SMS) : Collections.emptySet();
     }
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_CMR_HEARING_CANCELLED_APPELLANT_AIP_SMS";
+        return caseId + "_CMR_HEARING_CANCELLED_APPELLANT_SMS";
     }
 
 
@@ -68,7 +72,7 @@ public class AppellantCmrHearingCancelledPersonalisationSms implements SmsNotifi
                 .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("oldHearingDate", dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getCmrHearingDateTime(asylumCase)))
                 .put("oldHearingTime", dateTimeExtractor.extractHearingTime(hearingDetailsFinder.getCmrHearingDateTime(asylumCase)))
-                    .put("oldHearingCentreAddress", hearingDetailsFinder.getCmrHearingCentreLocation(asylumCase))
+                .put("oldHearingCentreAddress", hearingDetailsFinder.getCmrHearingCentreLocation(asylumCase))
                 .put("linkToService", iaAipFrontendUrl)
                 .build();
     }
