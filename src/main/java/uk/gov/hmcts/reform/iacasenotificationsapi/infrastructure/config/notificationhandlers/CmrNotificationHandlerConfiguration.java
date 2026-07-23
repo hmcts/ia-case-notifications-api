@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ContactPreference;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PreSubmitCallbackStage;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.PreSubmitCallbackHandler;
@@ -13,8 +15,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationGen
 
 import java.util.List;
 
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DetentionFacility.IRC;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DetentionFacility.PRISON;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DetentionFacility.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
@@ -51,8 +52,7 @@ public class CmrNotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && CMR_LISTING.equals(callback.getEvent())
                     && isCmrHearingInPersonOrRemote(asylumCase)
-                    && isInternalCase(callback.getCaseDetails().getCaseData())
-                    && isAipJourney(callback.getCaseDetails().getCaseData());
+                    && hasBeenSubmittedByAppellantInternalCase(asylumCase);
             },
             notificationGenerators
         );
@@ -98,9 +98,61 @@ public class CmrNotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                asylumCase.read(AsylumCaseDefinition.CONTACT_PREFERENCE, String.class);
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && isNonDetainedCmrRelisting(callback, asylumCase)
                     && isReppedAppellantSmsPreferred(asylumCase);
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> cmrRelistedAipHoCoEmailHandler(
+        @Qualifier("cmrRelistedAipHoCoEmailsGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && isAipCmr(callback, asylumCase);
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> cmrRelistedAipAppellantEmailHandler(
+        @Qualifier("cmrRelistedAppellantEmailsGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                boolean wantsEmail = asylumCase.read(AsylumCaseDefinition.CONTACT_PREFERENCE, ContactPreference.class)
+                    .map(contactPreference -> ContactPreference.WANTS_EMAIL == contactPreference).orElse(false);
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && isAipCmr(callback, asylumCase)
+                    && wantsEmail;
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> cmrRelistedAipAppellantSmslHandler(
+        @Qualifier("cmrRelistedAppellantSmsGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                boolean wantsSms = asylumCase.read(AsylumCaseDefinition.CONTACT_PREFERENCE, ContactPreference.class)
+                    .map(contactPreference -> ContactPreference.WANTS_SMS == contactPreference).orElse(false);
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && isAipCmr(callback, asylumCase)
+                    && wantsSms;
             },
             notificationGenerators
         );
@@ -120,6 +172,25 @@ public class CmrNotificationHandlerConfiguration {
                     && !isInternalCase(callback.getCaseDetails().getCaseData())
                     && isRepJourney(callback.getCaseDetails().getCaseData())
                     && !isAppellantInDetention(asylumCase);
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> cmrListingLegalRepDigitalDetainedOtherNotificationHandler(
+            @Qualifier("legalRepDigitalDetainedOtherCmrListingNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && CMR_LISTING.equals(callback.getEvent())
+                    && isCmrHearingInPersonOrRemote(asylumCase)
+                    && isRepJourney(callback.getCaseDetails().getCaseData())
+                    && !isInternalCase(asylumCase)
+                    && isDetainedInFacilityType(asylumCase, OTHER);
             },
             notificationGenerators
         );
@@ -148,5 +219,14 @@ public class CmrNotificationHandlerConfiguration {
                 },
                 notificationGenerators
         );
+    }
+
+    private boolean isAipCmr(Callback<AsylumCase> callback, AsylumCase asylumCase) {
+        return CMR_RE_LISTING.equals(callback.getEvent())
+            && (isCmrHearingChannel(asylumCase, "INTER")
+                || isCmrHearingChannel(asylumCase, "VID")
+                || isCmrHearingChannel(asylumCase, "TEL")
+            )
+            && isAipJourney(asylumCase);
     }
 }

@@ -32,7 +32,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsF
 public class AppellantCmrListingPersonalisationSmsTest {
 
     private final String templateId = "someTemplateId";
-    private final String legallyReppedTemplateId = "legallyReppedTemplateId";
     private final String iaAipFrontendUrl = "http://somefrontendurl";
     private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
     private final String hearingCentreAddress = "some hearing centre address";
@@ -64,7 +63,6 @@ public class AppellantCmrListingPersonalisationSmsTest {
 
         appellantCmrListingPersonalisationSms = new AppellantCmrListingPersonalisationSms(
             templateId,
-            legallyReppedTemplateId,
             iaAipFrontendUrl,
             dateTimeExtractor,
             hearingDetailsFinder,
@@ -81,11 +79,7 @@ public class AppellantCmrListingPersonalisationSmsTest {
 
     @Test
     public void should_return_correct_template_id() {
-        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
         assertEquals(templateId, appellantCmrListingPersonalisationSms.getTemplateId(asylumCase));
-
-        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.REP));
-        assertEquals(legallyReppedTemplateId, appellantCmrListingPersonalisationSms.getTemplateId(asylumCase));
     }
 
     @Test
@@ -96,22 +90,8 @@ public class AppellantCmrListingPersonalisationSmsTest {
     }
 
     @Test
-    public void should_return_given_mobile_list_from_subscribers_in_asylum_case() {
+    public void should_return_given_mobile_list_from_repped_appellant_in_asylum_case() {
 
-        when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
-            .thenReturn(Collections.singleton(mockedAppellantMobilePhone));
-
-        assertTrue(appellantCmrListingPersonalisationSms.getRecipientsList(asylumCase)
-            .contains(mockedAppellantMobilePhone));
-        verify(recipientsFinder, times(0)).findAll(asylumCase, NotificationType.EMAIL);
-        verify(recipientsFinder, times(1)).findAll(asylumCase, NotificationType.SMS);
-        verify(recipientsFinder, times(0)).findReppedAppellant(asylumCase, NotificationType.EMAIL);
-        verify(recipientsFinder, times(0)).findReppedAppellant(asylumCase, NotificationType.SMS);
-    }
-
-    @Test
-    public void should_return_given_mobile_list_from_sms_in_asylum_case_if_repped() {
-        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.REP));
         when(recipientsFinder.findReppedAppellant(asylumCase, NotificationType.SMS))
             .thenReturn(Collections.singleton(mockedAppellantMobilePhone));
 

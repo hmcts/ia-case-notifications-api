@@ -1,33 +1,31 @@
 {
-  "description": "DIAC-1869 Send CMR hearing cancelled email notification to appellant, legal rep, case officer and home office",
+  "description": "DIAC-2363 Send cmr re-listing notification to case officer, home office and appellant email for AiP digital appeal (in person hearing)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "SystemUser",
     "input": {
-      "id": 60008,
-      "eventId": "cmrHearingCancelled",
+      "id": 62001,
+      "eventId": "cmrReListing",
       "state": "prepareForHearing",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
-          "journeyType": "rep",
-          "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
-          "appealReferenceNumber": "PA/12346/2023",
-          "homeOfficeReferenceNumber": "012345678",
-          "email": "{$TEST_CITIZEN_USERNAME}",
-          "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
+          "journeyType": "aip",
+          "appealReferenceNumber": "PA/12345/2023",
+          "ariaListingReference": "LP/12345/2021",
+          "contactPreference": "wantsEmail",
           "subscriptions": [
             {
+              "id": "1",
               "value": {
                 "subscriber": "appellant",
                 "email": "{$TEST_CITIZEN_USERNAME}",
-                "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
                 "wantsEmail": "Yes",
+                "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
                 "wantsSms": "No"
               }
             }
           ],
-          "appellantInDetention": "No",
           "cmrHearingCentre": "taylorHouse",
           "cmrHearingCentreAddress": {
             "value": {
@@ -35,7 +33,20 @@
               "label": "Taylor House Tribunal Hearing Centre, York Road, SE1 7PB"
             }
           },
-          "cmrHearingDate": "2023-09-19T10:00:00.000"
+          "cmrHearingDate": "2023-10-05T10:00:00.000",
+          "cmrIsRemoteHearing": "No",
+          "cmrHearingChannel": {
+            "value": {
+              "code": "INTER",
+              "label": "In Person"
+            },
+            "list_items": [
+              { "code": "INTER", "label": "In Person" },
+              { "code": "NA", "label": "Not in Attendance" },
+              { "code": "TEL", "label": "Telephone" },
+              { "code": "VID", "label": "Video" }
+            ]
+          }
         }
       }
     }
@@ -46,24 +57,19 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
-        "appealReferenceNumber": "PA/12346/2023",
-        "homeOfficeReferenceNumber": "012345678",
-        "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "appealReferenceNumber": "PA/12345/2023",
+        "ariaListingReference": "LP/12345/2021",
         "notificationsSent": [
           {
-            "id": "60008_CMR_HEARING_CANCELLED_APPELLANT_EMAIL",
+            "id": "62001_CMR_RE_LISTING_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "60008_CMR_HEARING_CANCELLED_LEGAL_REPRESENTATIVE",
+            "id": "62001_CMR_RE_LISTING_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "60008_CMR_CANCELLED_CASE_OFFICER_EMAIL",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          },
-          {
-            "id": "60008_CMR_CANCELLED_HOME_OFFICE_EMAIL",
+            "id": "62001_CMR_RE_LISTING_AIP_APPELLANT_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
