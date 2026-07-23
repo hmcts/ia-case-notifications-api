@@ -5,13 +5,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
 
 
-import java.util.Collections;
 import java.util.Map;
-import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
@@ -23,30 +20,22 @@ public class LegalRepresentativeCmrHearingCancelledPersonalisation implements Le
     private final String iaExUiFrontendUrl;
     private final DateTimeExtractor dateTimeExtractor;
     private final HearingDetailsFinder hearingDetailsFinder;
-    private final EmailAddressFinder emailAddressFinder;
 
     public LegalRepresentativeCmrHearingCancelledPersonalisation(
             @Value("${govnotify.template.cmrCancelled.legalRep.email}") String legalRepCmrHearingCancelledTemplateId,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
             DateTimeExtractor dateTimeExtractor,
-            HearingDetailsFinder hearingDetailsFinder,
-            EmailAddressFinder emailAddressFinder
+            HearingDetailsFinder hearingDetailsFinder
     ) {
         this.legalRepCmrHearingCancelledTemplateId = legalRepCmrHearingCancelledTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.dateTimeExtractor = dateTimeExtractor;
         this.hearingDetailsFinder = hearingDetailsFinder;
-        this.emailAddressFinder = emailAddressFinder;
     }
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
         return legalRepCmrHearingCancelledTemplateId;
-    }
-
-    @Override
-    public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return Collections.singleton(emailAddressFinder.getLegalRepEmailAddress(asylumCase));
     }
 
     @Override

@@ -5,14 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,8 +17,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
 
 @ExtendWith(MockitoExtension.class)
@@ -48,13 +44,15 @@ class LegalRepresentativeCmrHearingCancelledPersonalisationTest {
     DateTimeExtractor dateTimeExtractor;
     @Mock
     HearingDetailsFinder hearingDetailsFinder;
-    @Mock
-    EmailAddressFinder emailAddressFinder;
 
     private LegalRepresentativeCmrHearingCancelledPersonalisation legalRepresentativeCmrHearingCancelledPersonalisation;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
+
+        when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class))
+                .thenReturn(Optional.of(legalRepEmailAddress));
+
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(legalRepReferenceNumber));
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
@@ -69,8 +67,7 @@ class LegalRepresentativeCmrHearingCancelledPersonalisationTest {
                 legalRepCmrHearingCancelledTemplateId,
                 iaExUiFrontendUrl,
                 dateTimeExtractor,
-                hearingDetailsFinder,
-                emailAddressFinder
+                hearingDetailsFinder
         );
     }
 
@@ -87,13 +84,17 @@ class LegalRepresentativeCmrHearingCancelledPersonalisationTest {
     }
 
     @Test
-    void should_return_legal_rep_email_address_as_recipients_list() {
-        when(emailAddressFinder.getLegalRepEmailAddress(asylumCase)).thenReturn(legalRepEmailAddress);
+    void should_return_given_email_address_from_asylum_case() {
+        assertTrue(legalRepresentativeCmrHearingCancelledPersonalisation.getRecipientsList(asylumCase)
+                .contains(legalRepEmailAddress));
+    }
 
-        Set<String> recipients = legalRepresentativeCmrHearingCancelledPersonalisation.getRecipientsList(asylumCase);
+    @Test
+    void should_return_empty_recipients_list_when_aip_journey() {
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
 
-        assertThat(recipients).hasSize(1);
-        assertTrue(recipients.contains(legalRepEmailAddress));
+        assertThat(legalRepresentativeCmrHearingCancelledPersonalisation.getRecipientsList(asylumCase))
+                .isEmpty();
     }
 
     @Test
