@@ -229,18 +229,4 @@ public class CmrNotificationHandlerConfiguration {
             )
             && isAipJourney(asylumCase);
     }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> cmrHearingCancelledNotificationHandler(
-            @Qualifier("cmrHearingCancelledNotificationGenerator") List<NotificationGenerator> notificationGenerators
-    ) {
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && CMR_HEARING_CANCELLED.equals(callback.getEvent());
-                },
-                notificationGenerators
-        );
-    }
 }
