@@ -7,15 +7,19 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Message;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AipCmrRelistedAppellantEmailPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantCmrHearingCancelledPersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantCmrListingPersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantCmrRelistingPersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AipCmrRelistedAppellantSmsPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantCmrHearingCancelledPersonalisationSms;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantCmrListingPersonalisationSms;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantCmrRelistingPersonalisationSms;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerAipCmrHearingCancelledPersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerCmrListingPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerCmrRelistingPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamCmrListingPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamCmrListingProductionPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeAipCmrHearingCancelledPersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeCmrRelistingPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeInPersonCmrListingCasePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.*;
@@ -275,6 +279,36 @@ public class CmrNotificationGeneratorConfiguration {
                         return new Message("success","body");
                     }
             }
+        );
+    }
+
+    @Bean("cmrHearingCancelledNotificationGenerator")
+    public List<NotificationGenerator> cmrHearingCancelledNotificationGenerator(
+            AppellantCmrHearingCancelledPersonalisationEmail appellantCmrHearingCancelledPersonalisationEmail,
+            AppellantCmrHearingCancelledPersonalisationSms appellantCmrHearingCancelledPersonalisationSms,
+            CaseOfficerAipCmrHearingCancelledPersonalisationEmail caseOfficerAipCmrHearingCancelledPersonalisationEmail,
+            HomeOfficeAipCmrHearingCancelledPersonalisationEmail homeOfficeAipCmrHearingCancelledPersonalisationEmail,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return newArrayList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                appellantCmrHearingCancelledPersonalisationEmail,
+                                caseOfficerAipCmrHearingCancelledPersonalisationEmail,
+                                homeOfficeAipCmrHearingCancelledPersonalisationEmail
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(
+                                appellantCmrHearingCancelledPersonalisationSms
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 }
