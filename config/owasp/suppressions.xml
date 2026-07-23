@@ -3,7 +3,7 @@
     <suppress until="2026-10-07">
         <cve>CVE-2026-54515</cve>
         <cve>CVE-2026-53404</cve>
-    </suppress>      
+    </suppress>
     <suppress>
         <notes>CVEs from s2s client's use of googleAuth - https://github.com/wstrange/GoogleAuth/pull/105</notes>
         <cve>CVE-2026-54399</cve>
@@ -22,6 +22,9 @@
         <cve>CVE-2026-54399</cve>
         <cve>CVE-2026-59084</cve>
         <cve>CVE-2026-59083</cve>
-        <cve>CVE-2026-49844</cve>    
+        <cve>CVE-2026-49844</cve>
+        <cve>CVE-2026-55833</cve>
+        <cve>CVE-2026-44891</cve>
+        <cve>CVE-2026-55831</cve>
     </suppress>
 </suppressions>
