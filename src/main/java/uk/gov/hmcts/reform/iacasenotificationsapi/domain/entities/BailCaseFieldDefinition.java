@@ -317,6 +317,9 @@ public enum BailCaseFieldDefinition {
         "TTL", new TypeReference<TtlCcdObject>(){}),
     LAST_EDIT_APPLICATION_NOTIFICATION_DATE(
         "lastEditApplicationNotificationDate", new TypeReference<String>(){}),
+    LAST_FILE_UPLOADED_BY(
+            "lastFileUploadedBy", new TypeReference<String>(){}),
+
     ;
 
     private final String value;
