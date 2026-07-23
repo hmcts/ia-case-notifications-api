@@ -32,5 +32,4 @@ class BailCaseUtilsTest {
         when(bailCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(NO));
         assertFalse(BailCaseUtils.isInternalCase(bailCase));
     }
-
 }

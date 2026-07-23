@@ -47,5 +47,4 @@ public class BailCaseUtils {
     public static boolean isInternalCase(BailCase bailCase) {
         return bailCase.read(IS_ADMIN, YesOrNo.class).map(isAdmin -> YES == isAdmin).orElse(false);
     }
-
 }
