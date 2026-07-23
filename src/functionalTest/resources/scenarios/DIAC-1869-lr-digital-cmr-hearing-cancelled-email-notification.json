@@ -12,21 +12,11 @@
         "replacements": {
           "journeyType": "rep",
           "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
+          "contactPreference": "wantsEmail",
           "appealReferenceNumber": "PA/12346/2023",
           "homeOfficeReferenceNumber": "012345678",
           "email": "{$TEST_CITIZEN_USERNAME}",
           "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
-          "subscriptions": [
-            {
-              "value": {
-                "subscriber": "appellant",
-                "email": "{$TEST_CITIZEN_USERNAME}",
-                "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
-                "wantsEmail": "Yes",
-                "wantsSms": "No"
-              }
-            }
-          ],
           "appellantInDetention": "No",
           "cmrHearingCentre": "taylorHouse",
           "cmrHearingCentreAddress": {
