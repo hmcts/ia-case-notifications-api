@@ -222,7 +222,7 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
         if (!unexpected.isEmpty()) {
             log.error("Actual  : {}    ", actualSet);
             log.error("Expected: {}    ", expectedSet);
-            fail("Unexpected notification ids generated: " + unexpected);
+            fail("Missed notification ids: " + unexpected);
         }
     }
 
