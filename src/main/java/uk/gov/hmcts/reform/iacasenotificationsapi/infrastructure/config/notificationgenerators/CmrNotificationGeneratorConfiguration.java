@@ -6,8 +6,10 @@ import org.springframework.context.annotation.Configuration;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Message;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantCmrHearingCancelledPersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantCmrListingPersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantCmrRelistingPersonalisationEmail;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantCmrHearingCancelledPersonalisationSms;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantCmrListingPersonalisationSms;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantCmrRelistingPersonalisationSms;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerCmrListingPersonalisation;
@@ -223,6 +225,32 @@ public class CmrNotificationGeneratorConfiguration {
                         return new Message("success","body");
                     }
             }
+        );
+    }
+
+    @Bean("cmrHearingCancelledNotificationGenerator")
+    public List<NotificationGenerator> cmrHearingCancelledNotificationGenerator(
+            AppellantCmrHearingCancelledPersonalisationEmail appellantCmrHearingCancelledPersonalisationEmail,
+            AppellantCmrHearingCancelledPersonalisationSms appellantCmrHearingCancelledPersonalisationSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return newArrayList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                appellantCmrHearingCancelledPersonalisationEmail
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new SmsNotificationGenerator(
+                        newArrayList(
+                                appellantCmrHearingCancelledPersonalisationSms
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 }
