@@ -13,8 +13,9 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationGen
 
 import java.util.List;
 
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DetentionFacility.IRC;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DetentionFacility.PRISON;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DetentionFacility.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.CMR_LISTING;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.CMR_RE_LISTING;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
@@ -120,6 +121,25 @@ public class CmrNotificationHandlerConfiguration {
                     && !isInternalCase(callback.getCaseDetails().getCaseData())
                     && isRepJourney(callback.getCaseDetails().getCaseData())
                     && !isAppellantInDetention(asylumCase);
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> cmrListingLegalRepDigitalDetainedOtherNotificationHandler(
+            @Qualifier("legalRepDigitalDetainedOtherCmrListingNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && CMR_LISTING.equals(callback.getEvent())
+                    && isCmrHearingInPersonOrRemote(asylumCase)
+                    && isRepJourney(callback.getCaseDetails().getCaseData())
+                    && !isInternalCase(asylumCase)
+                    && isDetainedInFacilityType(asylumCase, OTHER);
             },
             notificationGenerators
         );
