@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config.notific
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANTS_REPRESENTATION;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CMR_HEARING_CHANNEL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ADMIN;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.JOURNEY_TYPE;
@@ -72,6 +73,7 @@ class CmrRelistingAipManualNotificationHandlerTest {
             handlerConfiguration.cmrListingAipManualNotificationHandler(notificationGenerators);
 
         setHearingChannel("INTER");
+        when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
 
         when(callback.getEvent()).thenReturn(CMR_LISTING);
         assertThat(listingHandler.canHandle(ABOUT_TO_SUBMIT, callback)).isTrue();
