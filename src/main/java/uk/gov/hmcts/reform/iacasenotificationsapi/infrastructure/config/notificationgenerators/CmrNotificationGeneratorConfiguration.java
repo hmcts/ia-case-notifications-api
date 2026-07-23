@@ -6,20 +6,22 @@ import org.springframework.context.annotation.Configuration;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Message;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantCmrHearingCancelledPersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AipCmrRelistedAppellantEmailPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantCmrHearingCancelledPersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantCmrListingPersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantCmrRelistingPersonalisationEmail;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantCmrHearingCancelledPersonalisationSms;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AipCmrRelistedAppellantSmsPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantCmrHearingCancelledPersonalisationSms;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantCmrListingPersonalisationSms;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantCmrRelistingPersonalisationSms;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerAipCmrHearingCancelledPersonalisationEmail;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerCmrHearingCancelledPersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerCmrListingPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerCmrRelistingPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamCmrListingPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamCmrListingProductionPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeAipCmrHearingCancelledPersonalisationEmail;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeCmrHearingCancelledPersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeCmrRelistingPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeInPersonCmrListingCasePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.*;
@@ -286,8 +288,9 @@ public class CmrNotificationGeneratorConfiguration {
     public List<NotificationGenerator> cmrHearingCancelledNotificationGenerator(
             AppellantCmrHearingCancelledPersonalisationEmail appellantCmrHearingCancelledPersonalisationEmail,
             AppellantCmrHearingCancelledPersonalisationSms appellantCmrHearingCancelledPersonalisationSms,
-            CaseOfficerAipCmrHearingCancelledPersonalisationEmail caseOfficerAipCmrHearingCancelledPersonalisationEmail,
-            HomeOfficeAipCmrHearingCancelledPersonalisationEmail homeOfficeAipCmrHearingCancelledPersonalisationEmail,
+            LegalRepresentativeCmrHearingCancelledPersonalisation legalRepresentativeCmrHearingCancelledPersonalisation,
+            CaseOfficerCmrHearingCancelledPersonalisationEmail caseOfficerCmrHearingCancelledPersonalisationEmail,
+            HomeOfficeCmrHearingCancelledPersonalisationEmail homeOfficeCmrHearingCancelledPersonalisationEmail,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
@@ -296,8 +299,9 @@ public class CmrNotificationGeneratorConfiguration {
                 new EmailNotificationGenerator(
                         newArrayList(
                                 appellantCmrHearingCancelledPersonalisationEmail,
-                                caseOfficerAipCmrHearingCancelledPersonalisationEmail,
-                                homeOfficeAipCmrHearingCancelledPersonalisationEmail
+                                legalRepresentativeCmrHearingCancelledPersonalisation,
+                                caseOfficerCmrHearingCancelledPersonalisationEmail,
+                                homeOfficeCmrHearingCancelledPersonalisationEmail
                         ),
                         notificationSender,
                         notificationIdAppender

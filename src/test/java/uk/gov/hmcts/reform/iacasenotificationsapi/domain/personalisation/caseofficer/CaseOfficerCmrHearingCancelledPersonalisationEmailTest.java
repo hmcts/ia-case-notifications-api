@@ -22,7 +22,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class CaseOfficerAipCmrHearingCancelledPersonalisationEmailTest {
+class CaseOfficerCmrHearingCancelledPersonalisationEmailTest {
 
     private final Long caseId = 12345L;
     private final String cmrCancelledCaseOfficerEmailTemplateId = "cmrCancelledCaseOfficerEmailTemplateId";
@@ -37,7 +37,7 @@ class CaseOfficerAipCmrHearingCancelledPersonalisationEmailTest {
     @Mock
     EmailAddressFinder emailAddressFinder;
 
-    private CaseOfficerAipCmrHearingCancelledPersonalisationEmail caseOfficerAipCmrHearingCancelledPersonalisationEmail;
+    private CaseOfficerCmrHearingCancelledPersonalisationEmail caseOfficerCmrHearingCancelledPersonalisationEmail;
 
     @BeforeEach
     public void setup() {
@@ -45,7 +45,7 @@ class CaseOfficerAipCmrHearingCancelledPersonalisationEmailTest {
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
 
-        caseOfficerAipCmrHearingCancelledPersonalisationEmail = new CaseOfficerAipCmrHearingCancelledPersonalisationEmail(
+        caseOfficerCmrHearingCancelledPersonalisationEmail = new CaseOfficerCmrHearingCancelledPersonalisationEmail(
             cmrCancelledCaseOfficerEmailTemplateId,
             iaExUiFrontendUrl,
             emailAddressFinder
@@ -55,13 +55,13 @@ class CaseOfficerAipCmrHearingCancelledPersonalisationEmailTest {
     @Test
     void should_return_given_template_id() {
         assertEquals(cmrCancelledCaseOfficerEmailTemplateId,
-            caseOfficerAipCmrHearingCancelledPersonalisationEmail.getTemplateId(asylumCase));
+            caseOfficerCmrHearingCancelledPersonalisationEmail.getTemplateId(asylumCase));
     }
 
     @Test
     void should_return_given_reference_id() {
-        assertEquals(caseId + "_CMR_CANCELLED_AIP_CASE_OFFICER_EMAIL",
-            caseOfficerAipCmrHearingCancelledPersonalisationEmail.getReferenceId(caseId));
+        assertEquals(caseId + "_CMR_CANCELLED_CASE_OFFICER_EMAIL",
+            caseOfficerCmrHearingCancelledPersonalisationEmail.getReferenceId(caseId));
     }
 
     @Test
@@ -69,7 +69,7 @@ class CaseOfficerAipCmrHearingCancelledPersonalisationEmailTest {
         when(emailAddressFinder.getCmrListingCaseOfficerHearingCentreEmailAddress(asylumCase))
             .thenReturn(caseOfficerEmail);
 
-        assertThat(caseOfficerAipCmrHearingCancelledPersonalisationEmail.getRecipientsList(asylumCase))
+        assertThat(caseOfficerCmrHearingCancelledPersonalisationEmail.getRecipientsList(asylumCase))
             .containsExactly(caseOfficerEmail);
     }
 
@@ -77,14 +77,14 @@ class CaseOfficerAipCmrHearingCancelledPersonalisationEmailTest {
     void should_throw_exception_on_personalisation_when_case_is_null() {
         NullPointerException exception =
             assertThrows(NullPointerException.class,
-                () -> caseOfficerAipCmrHearingCancelledPersonalisationEmail.getPersonalisation((AsylumCase) null));
+                () -> caseOfficerCmrHearingCancelledPersonalisationEmail.getPersonalisation((AsylumCase) null));
         assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
     @Test
     void should_return_personalisation_when_all_information_given() {
         Map<String, String> personalisation =
-            caseOfficerAipCmrHearingCancelledPersonalisationEmail.getPersonalisation(asylumCase);
+            caseOfficerCmrHearingCancelledPersonalisationEmail.getPersonalisation(asylumCase);
 
         assertThat(personalisation)
             .containsEntry("appealReferenceNumber", appealReferenceNumber)

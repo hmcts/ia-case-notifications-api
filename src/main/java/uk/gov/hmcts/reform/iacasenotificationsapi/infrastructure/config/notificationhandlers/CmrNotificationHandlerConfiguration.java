@@ -16,8 +16,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationGen
 import java.util.List;
 
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DetentionFacility.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.CMR_LISTING;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.CMR_RE_LISTING;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
@@ -209,15 +207,6 @@ public class CmrNotificationHandlerConfiguration {
             && !isAppellantInDetention(asylumCase);
     }
 
-    private boolean isAipCmr(Callback<AsylumCase> callback, AsylumCase asylumCase) {
-        return CMR_RE_LISTING.equals(callback.getEvent())
-            && (isCmrHearingChannel(asylumCase, "INTER")
-                || isCmrHearingChannel(asylumCase, "VID")
-                || isCmrHearingChannel(asylumCase, "TEL")
-            )
-            && isAipJourney(asylumCase);
-    }
-
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> cmrHearingCancelledNotificationHandler(
             @Qualifier("cmrHearingCancelledNotificationGenerator") List<NotificationGenerator> notificationGenerators
@@ -230,5 +219,14 @@ public class CmrNotificationHandlerConfiguration {
                 },
                 notificationGenerators
         );
+    }
+
+    private boolean isAipCmr(Callback<AsylumCase> callback, AsylumCase asylumCase) {
+        return CMR_RE_LISTING.equals(callback.getEvent())
+            && (isCmrHearingChannel(asylumCase, "INTER")
+                || isCmrHearingChannel(asylumCase, "VID")
+                || isCmrHearingChannel(asylumCase, "TEL")
+            )
+            && isAipJourney(asylumCase);
     }
 }
