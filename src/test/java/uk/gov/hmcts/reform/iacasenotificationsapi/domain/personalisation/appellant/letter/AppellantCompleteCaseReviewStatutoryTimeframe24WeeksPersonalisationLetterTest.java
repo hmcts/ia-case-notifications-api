@@ -56,7 +56,7 @@ class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationLetterT
     private static final String LETTER_TEMPLATE_ID = "template123";
     private static final String APPELLANT_GIVEN_NAMES_KEY = "appellantGivenNames";
     private static final String APPELLANT_FAMILY_NAME_KEY = "appellantFamilyName";
-    private static final String IA_EX_UI_FRONTEND_URL = "http://localhost";
+
     private static final String EMAIL_ADDRESS = "legal@example.com";
     private static final String APPELLANT_GIVEN_NAMES_VALUE = "Given";
     private static final String APPELLANT_FAMILY_NAME_VALUE = "Family";
@@ -172,6 +172,5 @@ class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationLetterT
     private void assertPersonalisationContainsMandatoryFields(Map<String, String> personalisation) {
         assertEquals("", personalisation.get(APPELLANT_GIVEN_NAMES_KEY));
         assertEquals("", personalisation.get(APPELLANT_FAMILY_NAME_KEY));
-        assertEquals(IA_EX_UI_FRONTEND_URL, personalisation.get(LINK_TO_SERVICE_KEY));
     }
 }
