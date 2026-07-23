@@ -1,11 +1,6 @@
-package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
+package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter;
 
-import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLegalRepAddressInCountryOrOoc;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_LETTER;
-
-import java.util.Map;
-import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
@@ -13,13 +8,21 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.LetterN
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
+import java.util.Map;
+import java.util.Set;
+
+import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressInCountryOrOoc;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LEGAL_REP_COPY_LETTER;
+
 @Service
-public class LegalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationLetter implements LetterNotificationPersonalisation {
+@Slf4j
+public class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksLrCopyPersonalisationLetter implements LetterNotificationPersonalisation {
 
     private final String templateId;
     private final CustomerServicesProvider customerServicesProvider;
 
-    public LegalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationLetter(
+    public AppellantCompleteCaseReviewStatutoryTimeframe24WeeksLrCopyPersonalisationLetter(
             @Value("${govnotify.template.completeCaseReviewStatutoryTimeframe24Weeks.legalRep.letter}") String templateId,
             CustomerServicesProvider customerServicesProvider) {
         this.templateId = templateId;
@@ -32,17 +35,18 @@ public class LegalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPerso
     }
 
     @Override
-    public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return getLegalRepAddressInCountryOrOoc(asylumCase);
+    public Set<String> getRecipientsList(final AsylumCase asylumCase) {
+        return getAppellantAddressInCountryOrOoc(asylumCase);
     }
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_LETTER;
+        return caseId + STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LEGAL_REP_COPY_LETTER;
     }
 
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
-        return Stf24WeeksUtil.buildLetterParams(asylumCase, customerServicesProvider, false);
+
+        return Stf24WeeksUtil.buildLetterParams(asylumCase, customerServicesProvider, true);
     }
 }

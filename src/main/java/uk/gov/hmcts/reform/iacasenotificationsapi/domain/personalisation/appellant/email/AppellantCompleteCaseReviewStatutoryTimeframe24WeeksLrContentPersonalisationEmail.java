@@ -55,7 +55,6 @@ public class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksLrContentPerson
 
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
-        requireNonNull(asylumCase, "asylumCase must not be null");
         return Stf24WeeksUtil.buildParams(asylumCase, customerServicesProvider, nonAdaPrefix, true);
 
     }

@@ -34,20 +34,17 @@ public class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation
     private static final String APPEAL_REFERENCE_NUMBER_KEY = "appealReferenceNumber";
     private static final String APPELLANT_GIVEN_NAMES_KEY = "appellantGivenNames";
     private static final String APPELLANT_FAMILY_NAME_KEY = "appellantFamilyName";
-    private static final String LINK_TO_SERVICE_KEY = "linkToService";
     private static final String EMPTY_STRING = "";
 
     private final String removeStatutoryTimeframe24WeeksAppellantLetterId;
     private final CustomerServicesProvider customerServicesProvider;
-    private final String iaAipFrontendUrl;
 
     public AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationLetter(
             @Value("${govnotify.template.completeCaseReviewStatutoryTimeframe24Weeks.appellant.letter}") String removeStatutoryTimeframe24WeeksAppellantLetterId,
-            @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
             CustomerServicesProvider customerServicesProvider
     ) {
         this.removeStatutoryTimeframe24WeeksAppellantLetterId = removeStatutoryTimeframe24WeeksAppellantLetterId;
-        this.iaAipFrontendUrl = iaAipFrontendUrl;
+
         this.customerServicesProvider = customerServicesProvider;
     }
 
@@ -84,8 +81,7 @@ public class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation
                 .put(APPELLANT_FULL_NAME, (givenNames + " " + familyName).trim())
                 .put(APPEAL_RECEIVED_DATE, AsylumCaseUtils.getAppealReceivedDate(asylumCase))
                 .put(DECISION_SENT_DATE, AsylumCaseUtils.getHomeOfficeDecisionDate(asylumCase))
-                .put(WEEKS_DEADLINE, AsylumCaseUtils.populateStatutoryTimeFrame24wDate(asylumCase))
-                .put(LINK_TO_SERVICE_KEY, iaAipFrontendUrl);
+                .put(WEEKS_DEADLINE, AsylumCaseUtils.populateStatutoryTimeFrame24wDate(asylumCase));
         populate24WeeksDates(builder);
         buildAddressForAppellantIccLetter(asylumCase, builder);
 

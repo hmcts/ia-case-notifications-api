@@ -8,8 +8,16 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 import java.time.LocalDate;
 
 import static java.time.format.DateTimeFormatter.ofPattern;
+import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REF_NUMBER_PAPER_J;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.D_MMM_YYYY;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.buildAddressForAppellantIccLetter;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.buildAddressForLegalRepIccLetter;
 
 public class Stf24WeeksUtil {
     public static final int DAYS_14 = 14;
@@ -29,6 +37,7 @@ public class Stf24WeeksUtil {
     public static final String STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_SMS = "_STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_SMS";
     public static final String STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL = "_STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_EMAIL";
     public static final String STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_LETTER = "_STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_LEGAL_REP_LETTER";
+    public static final String STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LEGAL_REP_COPY_LETTER = "_STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LEGAL_REP_COPY_LETTER";
     public static final String STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LEGAL_REP_COPY_EMAIL = "_STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LEGAL_REP_COPY_EMAIL";
     public static final String STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL = "_STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL";
 
@@ -46,7 +55,6 @@ public class Stf24WeeksUtil {
 
     private static final String APPELLANT_GIVEN_NAMES_KEY = "appellantGivenNames";
     private static final String APPELLANT_FAMILY_NAME_KEY = "appellantFamilyName";
-    private static final String LINK_TO_ONLINE_SERVICE_KEY = "linkToOnlineService";
     public static final String FYI_HEADING = "fyiHeading";
     public static final String FYI_TEXT = "fyiText";
     public static final String FYI_LINE_SEPARATOR = "fyiLineSeparator";
@@ -77,7 +85,7 @@ public class Stf24WeeksUtil {
 
     public static ImmutableMap<String, String> buildParams(AsylumCase asylumCase, CustomerServicesProvider customerServicesProvider, String nonAdaPrefix, boolean isAppellant) {
         ImmutableMap.Builder<String, String> builder = ImmutableMap.builder();
-
+        requireNonNull(asylumCase, "asylumCase must not be null");
         String givenNames = asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(EMPTY_STRING);
         String familyName = asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(EMPTY_STRING);
         builder.put(SUBJECT_PREFIX_KEY, nonAdaPrefix)
@@ -91,20 +99,55 @@ public class Stf24WeeksUtil {
                 .put(DECISION_SENT_DATE, AsylumCaseUtils.getHomeOfficeDecisionDate(asylumCase))
                 .put(WEEKS_DEADLINE, AsylumCaseUtils.populateStatutoryTimeFrame24wDate(asylumCase));
         populate24WeeksDates(builder);
-
         if (isAppellant) {
-            builder.put(FYI_HEADING, "#For your information");
-            builder.put(FYI_TEXT, String.format("Dear %s %s, \n", givenNames, familyName) +
-                    "The Tribunal has issued directions in your appeal that have been sent to your legal representative. We are also sending you a copy to ensure that you are aware of what will happen in your appeal.\n\n" +
-                    "Your legal representative is responsible for progressing your case and responding to these directions on your behalf. You should contact them if you have any questions.\n\n" +
-                    "If you cease to be represented, or if your contact details change, you must inform the Tribunal as soon as possible.\n");
-            builder.put(FYI_LINE_SEPARATOR, "---");
+            buildFyiAppellantContent(builder, givenNames, familyName);
         } else {
-            builder.put(FYI_HEADING, "");
-            builder.put(FYI_TEXT, "");
-            builder.put(FYI_LINE_SEPARATOR, "");
+            buildLrFyiContent(builder);
         }
         return builder.build();
+    }
+
+
+    public static ImmutableMap<String, String> buildLetterParams(AsylumCase asylumCase, CustomerServicesProvider customerServicesProvider, boolean isAppellant) {
+        requireNonNull(asylumCase, "asylumCase must not be null");
+        String givenNames = asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(EMPTY_STRING);
+        String familyName = asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(EMPTY_STRING);
+        ImmutableMap.Builder<String, String> builder = ImmutableMap.<String, String>builder()
+                .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
+                .put(APPEAL_REFERENCE_NUMBER_KEY, asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING))
+                .put(LEGAL_REP_REFERENCE_NUMBER_KEY, asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)
+                        .filter(ref -> !ref.isEmpty())
+                        .orElseGet(() -> asylumCase.read(LEGAL_REP_REF_NUMBER_PAPER_J, String.class).orElse(EMPTY_STRING)))
+                .put(APPELLANT_GIVEN_NAMES_KEY, givenNames)
+                .put(APPELLANT_FAMILY_NAME_KEY, familyName)
+                .put(HOME_OFFICE_REFERENCE_NUMBER_KEY, asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING))
+                .put(APPEAL_RECEIVED_DATE, AsylumCaseUtils.getAppealReceivedDate(asylumCase))
+                .put(DECISION_SENT_DATE, AsylumCaseUtils.getHomeOfficeDecisionDate(asylumCase))
+                .put(WEEKS_DEADLINE, AsylumCaseUtils.populateStatutoryTimeFrame24wDate(asylumCase));
+        populate24WeeksDates(builder);
+        if (isAppellant) {
+            buildAddressForAppellantIccLetter(asylumCase, builder);
+            buildFyiAppellantContent(builder, givenNames, familyName);
+        } else {
+            buildAddressForLegalRepIccLetter(asylumCase, builder);
+            buildLrFyiContent(builder);
+        }
+        return builder.build();
+    }
+
+    private static void buildLrFyiContent(ImmutableMap.Builder<String, String> builder) {
+        builder.put(FYI_HEADING, EMPTY_STRING);
+        builder.put(FYI_TEXT, EMPTY_STRING);
+        builder.put(FYI_LINE_SEPARATOR, EMPTY_STRING);
+    }
+
+    private static void buildFyiAppellantContent(ImmutableMap.Builder<String, String> builder, String givenNames, String familyName) {
+        builder.put(FYI_HEADING, "#For your information");
+        builder.put(FYI_TEXT, String.format("Dear %s %s, \n", givenNames, familyName) +
+                "The Tribunal has issued directions in your appeal that have been sent to your legal representative. We are also sending you a copy to ensure that you are aware of what will happen in your appeal.\n\n" +
+                "Your legal representative is responsible for progressing your case and responding to these directions on your behalf. You should contact them if you have any questions.\n\n" +
+                "If you cease to be represented, or if your contact details change, you must inform the Tribunal as soon as possible.\n");
+        builder.put(FYI_LINE_SEPARATOR, "---");
     }
 
     public static void populate24WeeksDates(ImmutableMap.Builder<String, String> builder) {

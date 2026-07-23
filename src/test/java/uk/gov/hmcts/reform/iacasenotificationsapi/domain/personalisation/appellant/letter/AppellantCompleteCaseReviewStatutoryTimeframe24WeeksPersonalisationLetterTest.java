@@ -83,8 +83,8 @@ class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationLetterT
         setupCustomerServicesMocks();
 
         personalisation = new AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationLetter(
-            LETTER_TEMPLATE_ID, "http://localhost",
-            customerServicesProvider
+            LETTER_TEMPLATE_ID,
+                customerServicesProvider
         );
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.of(
             new AddressUk("10", "Main St", "", "Sometown", "", "CM3 4DC", "UK"))
