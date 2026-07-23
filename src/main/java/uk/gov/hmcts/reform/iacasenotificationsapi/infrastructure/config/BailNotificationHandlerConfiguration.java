@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config;
 
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.BailCaseUtils.isFileUploadedByLegalRepOrHomeOffice;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.BailCaseUtils.isInternalCase;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.EDIT_BAIL_APPLICATION;
@@ -259,8 +258,7 @@ public class BailNotificationHandlerConfiguration {
                 if (isAllowedBailCase) {
                     BailCase bailCase = callback.getCaseDetails().getCaseData();
                     return (callback.getEvent() == Event.UPLOAD_DOCUMENTS
-                        && isLegallyRepresented(bailCase)
-                        && !isFileUploadedByLegalRepOrHomeOffice(bailCase));
+                        && isLegallyRepresented(bailCase));
                 } else {
                     return false;
                 }

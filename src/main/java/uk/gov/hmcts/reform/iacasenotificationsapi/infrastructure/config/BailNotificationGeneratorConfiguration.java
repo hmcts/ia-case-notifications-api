@@ -632,24 +632,8 @@ public class BailNotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("bailChangeTribunalCentreNotificationGeneratorWithoutLegalRep")
-    public List<BailNotificationGenerator> bailChangeTribunalCentreNotificationGeneratorWithoutLegalRep(
-            AdminOfficerBailChangeTribunalCentrePersonalisation adminOfficerBailChangeTribunalCentrePersonalisation,
-            BailGovNotifyNotificationSender notificationSender,
-            NotificationIdAppender notificationIdAppender) {
-
-        return List.of(
-                new BailEmailNotificationGenerator(
-                        newArrayList(adminOfficerBailChangeTribunalCentrePersonalisation),
-                        notificationSender,
-                        notificationIdAppender
-                )
-        );
-    }
-
     @Bean("bailChangeTribunalCentreNotificationGeneratorWithLegalRep")
     public List<BailNotificationGenerator> bailChangeTribunalCentreNotificationGeneratorWithLegalRep(
-            AdminOfficerBailChangeTribunalCentrePersonalisation adminOfficerBailChangeTribunalCentrePersonalisation,
             LegalRepresentativeBailChangeTribunalCentrePersonalisation legalRepresentativeBailChangeTribunalCentrePersonalisation,
             BailGovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender) {
@@ -657,7 +641,6 @@ public class BailNotificationGeneratorConfiguration {
         return List.of(
                 new BailEmailNotificationGenerator(
                         newArrayList(
-                                adminOfficerBailChangeTribunalCentrePersonalisation,
                                 legalRepresentativeBailChangeTribunalCentrePersonalisation),
                         notificationSender,
                         notificationIdAppender

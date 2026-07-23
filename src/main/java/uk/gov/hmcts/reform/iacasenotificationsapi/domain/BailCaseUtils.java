@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain;
 
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.CURRENT_CASE_STATE_VISIBLE_TO_ALL_USERS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.IS_ADMIN;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.LAST_FILE_UPLOADED_BY;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.RECORD_DECISION_TYPE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RecordDecisionType.GRANTED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RecordDecisionType.CONDITIONAL_GRANT;
@@ -49,9 +48,4 @@ public class BailCaseUtils {
         return bailCase.read(IS_ADMIN, YesOrNo.class).map(isAdmin -> YES == isAdmin).orElse(false);
     }
 
-    public static boolean isFileUploadedByLegalRepOrHomeOffice(BailCase bailCase) {
-        return bailCase.read(LAST_FILE_UPLOADED_BY, String.class)
-                .filter(s -> s.equals("Legal Representative") || s.equals("Home Office"))
-                .isPresent();
-    }
 }
