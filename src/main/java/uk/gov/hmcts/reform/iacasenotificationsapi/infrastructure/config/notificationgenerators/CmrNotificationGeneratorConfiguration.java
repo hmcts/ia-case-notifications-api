@@ -7,8 +7,10 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Message;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AipCmrRelistedAppellantEmailPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantCmrListingPersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantCmrRelistingPersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AipCmrRelistedAppellantSmsPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantCmrListingPersonalisationSms;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantCmrRelistingPersonalisationSms;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerCmrListingPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerCmrRelistingPersonalisation;
@@ -35,7 +37,7 @@ import static com.google.common.collect.Lists.newArrayList;
 public class CmrNotificationGeneratorConfiguration {
     @Bean("detainedInPrisonIrcLegalRepInPersonCmrListingNotificationGenerator")
     public List<NotificationGenerator> detainedLegalRepInPersonCmrListingNotificationGenerator(
-        LegalRepresentativeInPersonCmrListingPersonalisation legalRepresentativeInPersonCmrListingPersonalisation,
+        LegalRepresentativeCmrListingPersonalisation legalRepresentativeCmrListingPersonalisation,
         CaseOfficerCmrListingPersonalisation caseOfficerCmrListingPersonalisation,
         HomeOfficeInPersonCmrListingCasePersonalisation homeOfficeInPersonCmrListingCasePersonalisation,
         DetentionEngagementTeamCmrListingPersonalisation detentionEngagementTeamCmrListingPersonalisation,
@@ -47,7 +49,7 @@ public class CmrNotificationGeneratorConfiguration {
         return newArrayList(
             new EmailNotificationGenerator(
                 newArrayList(
-                    legalRepresentativeInPersonCmrListingPersonalisation,
+                    legalRepresentativeCmrListingPersonalisation,
                     caseOfficerCmrListingPersonalisation,
                     homeOfficeInPersonCmrListingCasePersonalisation,
                     detentionEngagementTeamCmrListingProductionPersonalisation
@@ -248,6 +250,76 @@ public class CmrNotificationGeneratorConfiguration {
                 govNotifyNotificationSender,
                 notificationIdAppender
             )
+        );
+    }
+
+    @Bean("legalRepDigitalCmrListingNotificationGenerator")
+    public List<NotificationGenerator> legalRepDigitalCmrListingNotificationGenerator(
+        LegalRepresentativeCmrListingPersonalisation legalRepresentativeCmrListingPersonalisation,
+        CaseOfficerCmrListingPersonalisation caseOfficerCmrListingPersonalisation,
+        HomeOfficeInPersonCmrListingCasePersonalisation homeOfficeInPersonCmrListingCasePersonalisation,
+        AppellantCmrListingPersonalisationEmail appellantCmrListingPersonalisationEmail,
+        AppellantCmrListingPersonalisationSms appellantCmrListingPersonalisationSms,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return newArrayList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    legalRepresentativeCmrListingPersonalisation,
+                    caseOfficerCmrListingPersonalisation,
+                    homeOfficeInPersonCmrListingCasePersonalisation,
+                    appellantCmrListingPersonalisationEmail
+                ),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(
+                        appellantCmrListingPersonalisationSms
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("legalRepDigitalDetainedOtherCmrListingNotificationGenerator")
+    public List<NotificationGenerator> legalRepDigitalDetainedOtherCmrListingNotificationGenerator(
+        LegalRepresentativeCmrListingPersonalisation legalRepresentativeCmrListingPersonalisation,
+        CaseOfficerCmrListingPersonalisation caseOfficerCmrListingPersonalisation,
+        HomeOfficeInPersonCmrListingCasePersonalisation homeOfficeInPersonCmrListingCasePersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender,
+        DocumentDownloadClient documentDownloadClient
+    ) {
+
+        DocumentTag documentTag = DocumentTag.INTERNAL_CMR_LISTING_LETTER_BUNDLE;
+
+        return newArrayList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    legalRepresentativeCmrListingPersonalisation,
+                    caseOfficerCmrListingPersonalisation,
+                    homeOfficeInPersonCmrListingCasePersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new PrecompiledLetterNotificationGenerator(
+                newArrayList(
+                    documentTag
+                ),
+                notificationSender,
+                notificationIdAppender,
+                documentDownloadClient
+            ) {
+                @Override
+                public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+            }
         );
     }
 }
