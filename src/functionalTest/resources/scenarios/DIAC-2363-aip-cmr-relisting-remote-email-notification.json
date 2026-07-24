@@ -13,7 +13,6 @@
           "journeyType": "aip",
           "appealReferenceNumber": "PA/12345/2023",
           "ariaListingReference": "LP/12345/2021",
-          "contactPreference": "wantsEmail",
           "subscriptions": [
             {
               "id": "1",
