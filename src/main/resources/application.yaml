@@ -487,6 +487,9 @@ govnotify:
         appellant:
           email: be338005-287b-4fdc-af89-1f2efc9c290a
           sms: c5b9e556-49cd-4874-af39-d3740bd302a3
+          legallyRepresented:
+            email: e021c0e0-c436-4c9d-ab1e-cd8742ec97b5
+            sms: 654a09fd-cdd6-4cff-87f6-5db7c65a4989
           detained:
             prison:
               letter: 13b27666-9b88-4528-bc00-b789beec9fbf
