@@ -5729,7 +5729,7 @@ public class NotificationHandlerConfiguration {
                         .getCaseData();
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && isCaseReviewFor24WeeksCase(callback.getEvent(), asylumCase)
-                    && isInternalCase(asylumCase);
+                    && isInternalWithoutLegalRepresentation(asylumCase);
             },
             notificationGenerators, getErrorHandler()
         );
