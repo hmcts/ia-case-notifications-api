@@ -77,6 +77,7 @@ public class AppellantRemoveRepresentationDetainedOtherPersonalisation implement
         for (int i = 0; i < address.size(); i++) {
             personalizationBuilder.put("address_line_" + (i + 1), address.get(i));
         }
+
         return personalizationBuilder.build();
     }
 }

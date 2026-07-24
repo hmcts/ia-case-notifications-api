@@ -60,8 +60,6 @@ public class AppellantInternalCaseNonStandardDirectionPersonalisation implements
                         .getCaseDetails()
                         .getCaseData();
 
-        List<String> address =  getAppellantOrLegalRepAddressLetterPersonalisation(asylumCase);
-
         final Direction direction =
                 directionFinder
                         .findFirst(asylumCase, DirectionTag.NONE)
@@ -82,9 +80,7 @@ public class AppellantInternalCaseNonStandardDirectionPersonalisation implements
                 .put("directionExplanation", direction.getExplanation())
                 .put("directionDueDate", dueDate);
 
-        for (int i = 0; i < address.size(); i++) {
-            personalizationBuilder.put("address_line_" + (i + 1), address.get(i));
-        }
+        buildAddressForIccLetter(asylumCase, personalizationBuilder);
         return personalizationBuilder.build();
     }
 }
