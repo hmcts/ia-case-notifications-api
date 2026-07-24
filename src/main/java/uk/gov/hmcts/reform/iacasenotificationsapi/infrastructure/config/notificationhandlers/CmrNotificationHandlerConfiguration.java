@@ -59,6 +59,35 @@ public class CmrNotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> cmrRelistingAipManualAppellantPostalNotificationHandler(
+        @Qualifier("aipManualCmrRelistingAppellantPostalNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && isAipManualCmrRelisting(callback, asylumCase);
+            },
+            notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> cmrRelistingAipManualHoCoEmailHandler(
+        @Qualifier("aipManualCmrRelistingHoCoEmailsGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && isAipManualCmrRelisting(callback, asylumCase);
+            },
+            notificationGenerators
+        );
+    }
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> nonDetainedCmrRelistingHoCoLrNotificationHandler(
@@ -196,18 +225,7 @@ public class CmrNotificationHandlerConfiguration {
             notificationGenerators
         );
     }
-
-    private boolean isNonDetainedCmrRelisting(Callback<AsylumCase> callback, AsylumCase asylumCase) {
-        return CMR_RE_LISTING.equals(callback.getEvent())
-            && (isCmrHearingChannel(asylumCase, "INTER")
-                || isCmrHearingChannel(asylumCase, "VID")
-                || isCmrHearingChannel(asylumCase, "TEL")
-            )
-            && isRepJourney(asylumCase)
-            && !isInternalCase(asylumCase)
-            && !isAppellantInDetention(asylumCase);
-    }
-
+  
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> cmrHearingCancelledNotificationHandler(
             @Qualifier("cmrHearingCancelledNotificationGenerator") List<NotificationGenerator> notificationGenerators
@@ -222,12 +240,31 @@ public class CmrNotificationHandlerConfiguration {
         );
     }
 
+    private boolean isNonDetainedCmrRelisting(Callback<AsylumCase> callback, AsylumCase asylumCase) {
+        return CMR_RE_LISTING.equals(callback.getEvent())
+            && (isCmrHearingChannel(asylumCase, "INTER")
+                || isCmrHearingChannel(asylumCase, "VID")
+                || isCmrHearingChannel(asylumCase, "TEL")
+            )
+            && isRepJourney(asylumCase)
+            && !isInternalCase(asylumCase)
+            && !isAppellantInDetention(asylumCase);
+    }
+
+    private boolean isAipManualCmrRelisting(Callback<AsylumCase> callback, AsylumCase asylumCase) {
+        return CMR_RE_LISTING.equals(callback.getEvent())
+            && isCmrHearingInPersonOrRemote(asylumCase)
+            && isInternalCase(asylumCase)
+            && isAipJourney(asylumCase);
+    }
+
     private boolean isAipCmr(Callback<AsylumCase> callback, AsylumCase asylumCase) {
         return CMR_RE_LISTING.equals(callback.getEvent())
             && (isCmrHearingChannel(asylumCase, "INTER")
                 || isCmrHearingChannel(asylumCase, "VID")
                 || isCmrHearingChannel(asylumCase, "TEL")
             )
-            && isAipJourney(asylumCase);
+            && isAipJourney(asylumCase)
+            && !isInternalCase(asylumCase);
     }
 }

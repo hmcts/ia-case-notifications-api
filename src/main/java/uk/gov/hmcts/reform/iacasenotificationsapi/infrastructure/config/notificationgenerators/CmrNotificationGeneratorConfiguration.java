@@ -108,6 +108,51 @@ public class CmrNotificationGeneratorConfiguration {
             }
         );
     }
+  
+    @Bean("aipManualCmrRelistingAppellantPostalNotificationGenerator")
+    public List<NotificationGenerator> aipManualCmrRelistingAppellantPostalNotificationGenerator(
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender,
+        DocumentDownloadClient documentDownloadClient
+    ) {
+        DocumentTag documentTag = DocumentTag.INTERNAL_CMR_LISTING_LETTER_BUNDLE;
+
+        return newArrayList(
+            new PrecompiledLetterNotificationGenerator(
+                newArrayList(
+                    documentTag
+                ),
+                notificationSender,
+                notificationIdAppender,
+                documentDownloadClient
+            ) {
+                    @Override
+                public Message getSuccessMessage() {
+                        return new Message("success","body");
+                }
+            }
+        );
+    }
+
+    @Bean("aipManualCmrRelistingHoCoEmailsGenerator")
+    public List<NotificationGenerator> aipManualCmrRelistingHoCoEmailsGenerator(
+        CaseOfficerCmrRelistingPersonalisation caseOfficerCmrRelistingPersonalisation,
+        HomeOfficeCmrRelistingPersonalisation homeOfficeCmrRelistingPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        List<EmailNotificationPersonalisation> emailPersonalisations = newArrayList(
+            caseOfficerCmrRelistingPersonalisation,
+            homeOfficeCmrRelistingPersonalisation
+        );
+        return newArrayList(
+            new EmailNotificationGenerator(
+                emailPersonalisations,
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
 
     @Bean("nonDetainedCmrRelistingHoCoLrNotificationGenerator")
     public List<NotificationGenerator> nonDetainedCmrRelistingHoCoLrNotificationGenerator(
