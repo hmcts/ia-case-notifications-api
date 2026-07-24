@@ -17,8 +17,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 import java.util.List;
 
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DetentionFacility.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.CMR_LISTING;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.CMR_RE_LISTING;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
 @Slf4j
@@ -54,8 +53,7 @@ public class CmrNotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && CMR_LISTING.equals(callback.getEvent())
                     && isCmrHearingInPersonOrRemote(asylumCase)
-                    && isInternalCase(callback.getCaseDetails().getCaseData())
-                    && isAipJourney(callback.getCaseDetails().getCaseData());
+                    && hasBeenSubmittedByAppellantInternalCase(asylumCase);
             },
             notificationGenerators
         );
