@@ -19,11 +19,13 @@ import java.util.Set;
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isRepJourney;
 
 @Service
 public class AppellantCmrListingPersonalisationEmail implements EmailNotificationPersonalisation {
 
     private final String listAssistHearingAppellantCmrListingTemplateId;
+    private final String listAssistHearingAppellantCmrListingLrTemplateId;
     private final DateTimeExtractor dateTimeExtractor;
     private final CustomerServicesProvider customerServicesProvider;
     private final HearingDetailsFinder hearingDetailsFinder;
@@ -37,6 +39,7 @@ public class AppellantCmrListingPersonalisationEmail implements EmailNotificatio
 
     public AppellantCmrListingPersonalisationEmail(
         @Value("${govnotify.template.listAssistHearing.cmrListing.appellant.email}") String listAssistHearingAppellantCmrListingTemplateId,
+        @Value("${govnotify.template.listAssistHearing.cmrListing.appellant.legallyRepresented.email}") String listAssistHearingAppellantCmrListingLrTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         DateTimeExtractor dateTimeExtractor,
         CustomerServicesProvider customerServicesProvider,
@@ -44,6 +47,7 @@ public class AppellantCmrListingPersonalisationEmail implements EmailNotificatio
         RecipientsFinder recipientsFinder
     ) {
         this.listAssistHearingAppellantCmrListingTemplateId = listAssistHearingAppellantCmrListingTemplateId;
+        this.listAssistHearingAppellantCmrListingLrTemplateId = listAssistHearingAppellantCmrListingLrTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.dateTimeExtractor = dateTimeExtractor;
         this.customerServicesProvider = customerServicesProvider;
@@ -53,7 +57,11 @@ public class AppellantCmrListingPersonalisationEmail implements EmailNotificatio
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return listAssistHearingAppellantCmrListingTemplateId;
+        if (isRepJourney(asylumCase)) {
+            return listAssistHearingAppellantCmrListingLrTemplateId;
+        } else {
+            return listAssistHearingAppellantCmrListingTemplateId;
+        }
     }
 
     @Override

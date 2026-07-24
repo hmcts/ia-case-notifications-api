@@ -16,11 +16,13 @@ import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isRepJourney;
 
 @Service
 public class AppellantCmrListingPersonalisationSms implements SmsNotificationPersonalisation {
 
-    private final String appellantCaseListedSmsTemplateId;
+    private final String appellantCmrListingSmsTemplateId;
+    private final String appellantCmrListingSmsLrTemplateId;
     private final DateTimeExtractor dateTimeExtractor;
     private final HearingDetailsFinder hearingDetailsFinder;
     private final RecipientsFinder recipientsFinder;
@@ -28,13 +30,15 @@ public class AppellantCmrListingPersonalisationSms implements SmsNotificationPer
 
 
     public AppellantCmrListingPersonalisationSms(
-        @Value("${govnotify.template.listAssistHearing.cmrListing.appellant.sms}") String appellantCaseListedSmsTemplateId,
+        @Value("${govnotify.template.listAssistHearing.cmrListing.appellant.sms}") String appellantCmrListingSmsTemplateId,
+        @Value("${govnotify.template.listAssistHearing.cmrListing.appellant.legallyRepresented.sms}") String appellantCmrListingSmsLrTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         DateTimeExtractor dateTimeExtractor,
         HearingDetailsFinder hearingDetailsFinder,
         RecipientsFinder recipientsFinder
     ) {
-        this.appellantCaseListedSmsTemplateId = appellantCaseListedSmsTemplateId;
+        this.appellantCmrListingSmsTemplateId = appellantCmrListingSmsTemplateId;
+        this.appellantCmrListingSmsLrTemplateId = appellantCmrListingSmsLrTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.dateTimeExtractor = dateTimeExtractor;
         this.hearingDetailsFinder = hearingDetailsFinder;
@@ -43,7 +47,11 @@ public class AppellantCmrListingPersonalisationSms implements SmsNotificationPer
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return appellantCaseListedSmsTemplateId;
+        if (isRepJourney(asylumCase)) {
+            return appellantCmrListingSmsLrTemplateId;
+        } else {
+            return appellantCmrListingSmsTemplateId;
+        }
     }
 
     @Override
