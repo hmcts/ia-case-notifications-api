@@ -284,7 +284,7 @@ public class CmrNotificationGeneratorConfiguration {
             }
         );
     }
-}
+
 
     @Bean("cmrHearingCancelledNotificationGenerator")
     public List<NotificationGenerator> cmrHearingCancelledNotificationGenerator(
