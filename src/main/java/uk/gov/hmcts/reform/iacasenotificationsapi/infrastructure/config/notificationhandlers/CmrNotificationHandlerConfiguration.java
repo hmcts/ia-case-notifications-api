@@ -208,6 +208,20 @@ public class CmrNotificationHandlerConfiguration {
             && !isAppellantInDetention(asylumCase);
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> cmrHearingCancelledNotificationHandler(
+            @Qualifier("cmrHearingCancelledNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && CMR_HEARING_CANCELLED.equals(callback.getEvent());
+                },
+                notificationGenerators
+        );
+    }
+
     private boolean isAipCmr(Callback<AsylumCase> callback, AsylumCase asylumCase) {
         return CMR_RE_LISTING.equals(callback.getEvent())
             && (isCmrHearingChannel(asylumCase, "INTER")
