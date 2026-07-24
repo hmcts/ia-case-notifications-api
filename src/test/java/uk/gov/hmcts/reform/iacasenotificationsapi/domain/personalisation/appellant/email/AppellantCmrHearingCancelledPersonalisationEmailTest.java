@@ -21,8 +21,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
@@ -33,6 +35,7 @@ class AppellantCmrHearingCancelledPersonalisationEmailTest {
 
     private final Long caseId = 12345L;
     private final String appellantCmrCancelledEmailTemplateId = "appellantCmrCancelledEmailTemplateId";
+    private final String legallyReppedAppellantCmrCancelledEmailTemplateId = "legallyReppedAppellantCmrCancelledEmailTemplateId";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String appellantGivenNames = "someAppellantGivenNames";
     private final String appellantFamilyName = "someAppellantFamilyName";
@@ -65,6 +68,7 @@ class AppellantCmrHearingCancelledPersonalisationEmailTest {
 
         appellantCmrHearingCancelledPersonalisationEmail = new AppellantCmrHearingCancelledPersonalisationEmail(
                 appellantCmrCancelledEmailTemplateId,
+                legallyReppedAppellantCmrCancelledEmailTemplateId,
                 recipientsFinder,
                 dateTimeExtractor,
                 hearingDetailsFinder
@@ -72,14 +76,24 @@ class AppellantCmrHearingCancelledPersonalisationEmailTest {
     }
 
     @Test
-    void should_return_given_template_id() {
+    void should_return_appellant_template_id_when_aip_journey() {
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
+
         assertEquals(appellantCmrCancelledEmailTemplateId,
                 appellantCmrHearingCancelledPersonalisationEmail.getTemplateId(asylumCase));
     }
 
     @Test
+    void should_return_legally_repped_template_id_when_not_aip_journey() {
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.REP));
+
+        assertEquals(legallyReppedAppellantCmrCancelledEmailTemplateId,
+                appellantCmrHearingCancelledPersonalisationEmail.getTemplateId(asylumCase));
+    }
+
+    @Test
     void should_return_given_reference_id() {
-        assertEquals(caseId + "_CMR_HEARING_CANCELLED_APPELLANT_AIP_EMAIL",
+        assertEquals(caseId + "_CMR_HEARING_CANCELLED_APPELLANT_EMAIL",
                 appellantCmrHearingCancelledPersonalisationEmail.getReferenceId(caseId));
     }
 
@@ -96,8 +110,22 @@ class AppellantCmrHearingCancelledPersonalisationEmailTest {
     }
 
     @Test
-    void should_return_empty_recipients_list_when_not_aip_journey() {
+    void should_return_given_email_address_list_from_legal_rep_when_not_aip_journey() {
         when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.REP));
+
+        String mockedLegalRepEmail = "legalrep@faketest.com";
+        when(recipientsFinder.findReppedAppellant(asylumCase, NotificationType.EMAIL))
+                .thenReturn(Collections.singleton(mockedLegalRepEmail));
+
+        assertTrue(appellantCmrHearingCancelledPersonalisationEmail.getRecipientsList(asylumCase)
+                .contains(mockedLegalRepEmail));
+    }
+
+    @Test
+    void should_return_empty_recipients_list_when_internal_case() {
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
+        when(asylumCase.read(AsylumCaseDefinition.IS_ADMIN, YesOrNo.class))
+                .thenReturn(Optional.of(YesOrNo.YES));
 
         assertThat(appellantCmrHearingCancelledPersonalisationEmail.getRecipientsList(asylumCase))
                 .isEmpty();

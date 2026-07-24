@@ -55,19 +55,19 @@
         "ariaListingReference": "LP/12345/2021",
         "notificationsSent": [
           {
-            "id": "60007_CMR_CANCELLED_AIP_CASE_OFFICER_EMAIL",
+            "id": "60007_CMR_CANCELLED_CASE_OFFICER_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "60007_CMR_CANCELLED_AIP_HOME_OFFICE_EMAIL",
+            "id": "60007_CMR_CANCELLED_HOME_OFFICE_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "60007_CMR_HEARING_CANCELLED_APPELLANT_AIP_EMAIL",
+            "id": "60007_CMR_HEARING_CANCELLED_APPELLANT_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "60007_CMR_HEARING_CANCELLED_APPELLANT_AIP_SMS",
+            "id": "60007_CMR_HEARING_CANCELLED_APPELLANT_SMS",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

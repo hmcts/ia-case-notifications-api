@@ -21,18 +21,21 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 public class AppellantCmrHearingCancelledPersonalisationEmail implements EmailNotificationPersonalisation {
 
     private final String appellantCmrCancelledEmailTemplateId;
+    private final String legallyReppedAppellantCmrCancelledEmailTemplateId;
     private final RecipientsFinder recipientsFinder;
     private final DateTimeExtractor dateTimeExtractor;
     private final HearingDetailsFinder hearingDetailsFinder;
 
     public AppellantCmrHearingCancelledPersonalisationEmail(
             @Value("${govnotify.template.cmrCancelled.appellant.email}") String appellantCmrCancelledEmailTemplateId,
+            @Value("${govnotify.template.cmrCancelled.legallyReppedAppellant.email}") String legallyReppedAppellantCmrCancelledEmailTemplateId,
             RecipientsFinder recipientsFinder,
             DateTimeExtractor dateTimeExtractor,
             HearingDetailsFinder hearingDetailsFinder
 
     ) {
         this.appellantCmrCancelledEmailTemplateId = appellantCmrCancelledEmailTemplateId;
+        this.legallyReppedAppellantCmrCancelledEmailTemplateId = legallyReppedAppellantCmrCancelledEmailTemplateId;
         this.recipientsFinder = recipientsFinder;
         this.dateTimeExtractor = dateTimeExtractor;
         this.hearingDetailsFinder = hearingDetailsFinder;
@@ -41,19 +44,19 @@ public class AppellantCmrHearingCancelledPersonalisationEmail implements EmailNo
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return appellantCmrCancelledEmailTemplateId;
+        return isAipJourney(asylumCase) ? appellantCmrCancelledEmailTemplateId : legallyReppedAppellantCmrCancelledEmailTemplateId;
     }
 
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
-        return isAipJourney(asylumCase) && !isInternalCase(asylumCase) ? recipientsFinder.findAll(asylumCase, NotificationType.EMAIL) : Collections.emptySet();
+        return isAipJourney(asylumCase) && !isInternalCase(asylumCase) ? recipientsFinder.findAll(asylumCase, NotificationType.EMAIL) : !isAipJourney(asylumCase) && !isInternalCase(asylumCase) ?   recipientsFinder.findReppedAppellant(asylumCase, NotificationType.EMAIL) : Collections.emptySet();
 
     }
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_CMR_HEARING_CANCELLED_APPELLANT_AIP_EMAIL";
+        return caseId + "_CMR_HEARING_CANCELLED_APPELLANT_EMAIL";
     }
 
 
@@ -66,6 +69,7 @@ public class AppellantCmrHearingCancelledPersonalisationEmail implements EmailNo
             ImmutableMap
                 .<String, String>builder()
                 .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("legalRepReferenceNumber", asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                 .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
                 .put("oldHearingDate", dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getCmrHearingDateTime(asylumCase)))

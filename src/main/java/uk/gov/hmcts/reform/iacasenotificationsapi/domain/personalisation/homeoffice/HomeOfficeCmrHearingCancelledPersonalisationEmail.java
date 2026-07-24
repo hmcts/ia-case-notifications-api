@@ -17,7 +17,7 @@ import static java.util.Collections.singleton;
 import static java.util.Objects.requireNonNull;
 
 @Service
-public class HomeOfficeAipCmrHearingCancelledPersonalisationEmail implements EmailNotificationPersonalisation {
+public class HomeOfficeCmrHearingCancelledPersonalisationEmail implements EmailNotificationPersonalisation {
 
     private final String cmrCancelledHomeOfficeEmailTemplateId;
     private final String iaExUiFrontendUrl;
@@ -26,7 +26,7 @@ public class HomeOfficeAipCmrHearingCancelledPersonalisationEmail implements Ema
     private final HearingDetailsFinder hearingDetailsFinder;
 
 
-    public HomeOfficeAipCmrHearingCancelledPersonalisationEmail(
+    public HomeOfficeCmrHearingCancelledPersonalisationEmail(
             @Value("${govnotify.template.cmrCancelled.homeOffice.email}") String cmrCancelledHomeOfficeEmailTemplateId,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
             EmailAddressFinder emailAddressFinder,
@@ -53,7 +53,7 @@ public class HomeOfficeAipCmrHearingCancelledPersonalisationEmail implements Ema
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_CMR_CANCELLED_AIP_HOME_OFFICE_EMAIL";
+        return caseId + "_CMR_CANCELLED_HOME_OFFICE_EMAIL";
     }
 
 

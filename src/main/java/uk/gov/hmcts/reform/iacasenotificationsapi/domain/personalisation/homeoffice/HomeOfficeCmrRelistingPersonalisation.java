@@ -32,7 +32,7 @@ public class HomeOfficeCmrRelistingPersonalisation implements EmailNotificationP
     private String nonAdaPrefix;
 
     public HomeOfficeCmrRelistingPersonalisation(
-        @Value("${govnotify.template.listAssistHearing.caseEdited.homeOffice.email}") String listAssistHearingHomeOfficeCaseEditedTemplateId,
+        @Value("${govnotify.template.listAssistHearing.cmrReListing.homeOffice.email}") String listAssistHearingHomeOfficeCaseEditedTemplateId,
         EmailAddressFinder emailAddressFinder,
         PersonalisationProvider personalisationProvider,
         CustomerServicesProvider customerServicesProvider

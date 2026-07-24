@@ -30,7 +30,7 @@ public class CaseOfficerCmrRelistingPersonalisation implements EmailNotification
     private String nonAdaPrefix;
 
     public CaseOfficerCmrRelistingPersonalisation(
-        @Value("${govnotify.template.listAssistHearing.caseEdited.caseOfficer.email}") String listAssistHearingCaseOfficerCaseEditedTemplateId,
+        @Value("${govnotify.template.listAssistHearing.cmrReListing.caseOfficer.email}") String listAssistHearingCaseOfficerCaseEditedTemplateId,
         EmailAddressFinder emailAddressFinder,
         PersonalisationProvider personalisationProvider
     ) {
