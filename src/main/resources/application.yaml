@@ -506,6 +506,16 @@ govnotify:
             email: 0c63ae4d-bce7-4b11-9b66-1181052eaba6
         detentionEngagementTeam:
           email: fe92c79d-212e-4ffe-b619-c2fb4dd304ac
+      cmrReListing:
+        homeOffice:
+          email: 33312031-bb84-4598-81b7-faa0fd81da50
+        caseOfficer:
+          email: e67dbf06-5b6c-40a5-8fbf-98154ecf6e2a
+        legalRep:
+          email: 9580b7bd-0c9f-4dc0-bbf3-9f8a8c91421b
+      cmrRelistingRemoteHearing:
+        legalRep:
+          email: 57f7c73c-25d9-474b-9e03-966d4f608d62
       caseListed:
         caseOfficer:
           email: ddb88c55-c97e-45df-a6b1-dc92fd0433b3

@@ -1,30 +1,19 @@
 {
-  "description": "DIAC-2363 Send cmr re-listing notification to case officer, home office and appellant sms for AiP digital appeal (in person hearing)",
+  "description": "DIAC-2367 CMR re-listing for AiP manual appeal (in person hearing) emails case officer and home office, and sends the appellant a postal notification",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
-    "credentials": "SystemUser",
+    "credentials": "AdminOfficer",
     "input": {
-      "id": 62002,
+      "id": 63001,
       "eventId": "cmrReListing",
       "state": "prepareForHearing",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
           "journeyType": "aip",
-          "appealReferenceNumber": "PA/12345/2023",
-          "ariaListingReference": "LP/12345/2021",
-          "subscriptions": [
-            {
-              "id": "1",
-              "value": {
-                "subscriber": "appellant",
-                "email": "{$TEST_CITIZEN_USERNAME}",
-                "wantsEmail": "No",
-                "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
-                "wantsSms": "Yes"
-              }
-            }
-          ],
+          "isAdmin": "Yes",
+          "appealReferenceNumber": "PA/12346/2023",
+          "ariaListingReference": "LP/12346/2021",
           "cmrHearingCentre": "taylorHouse",
           "cmrHearingCentreAddress": {
             "value": {
@@ -45,7 +34,23 @@
               { "code": "TEL", "label": "Telephone" },
               { "code": "VID", "label": "Video" }
             ]
-          }
+          },
+          "letterBundleDocuments": [
+            {
+              "id": "1",
+              "value": {
+                "tag": "internalCmrListingLetterBundle",
+                "document": {
+                  "document_url": "{$FIXTURE_DOC1_PDF_URL}",
+                  "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
+                  "document_filename": "{$FIXTURE_DOC1_PDF_FILENAME}"
+                },
+                "suppliedBy": "",
+                "description": "",
+                "dateUploaded": "2024-06-12"
+              }
+            }
+          ]
         }
       }
     }
@@ -56,19 +61,19 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
-        "appealReferenceNumber": "PA/12345/2023",
-        "ariaListingReference": "LP/12345/2021",
+        "appealReferenceNumber": "PA/12346/2023",
+        "ariaListingReference": "LP/12346/2021",
         "notificationsSent": [
           {
-            "id": "62002_CMR_RE_LISTING_CASE_OFFICER",
+            "id": "63001_CMR_RE_LISTING_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "62002_CMR_RE_LISTING_HOME_OFFICE",
+            "id": "63001_CMR_RE_LISTING_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "62002_CMR_RE_LISTING_AIP_APPELLANT_SMS",
+            "id": "63001_INTERNAL_CMR_LISTING_LETTER_BUNDLE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config.notific
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Message;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
@@ -105,6 +106,51 @@ public class CmrNotificationGeneratorConfiguration {
                         return new Message("success","body");
                 }
             }
+        );
+    }
+  
+    @Bean("aipManualCmrRelistingAppellantPostalNotificationGenerator")
+    public List<NotificationGenerator> aipManualCmrRelistingAppellantPostalNotificationGenerator(
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender,
+        DocumentDownloadClient documentDownloadClient
+    ) {
+        DocumentTag documentTag = DocumentTag.INTERNAL_CMR_LISTING_LETTER_BUNDLE;
+
+        return newArrayList(
+            new PrecompiledLetterNotificationGenerator(
+                newArrayList(
+                    documentTag
+                ),
+                notificationSender,
+                notificationIdAppender,
+                documentDownloadClient
+            ) {
+                    @Override
+                public Message getSuccessMessage() {
+                        return new Message("success","body");
+                }
+            }
+        );
+    }
+
+    @Bean("aipManualCmrRelistingHoCoEmailsGenerator")
+    public List<NotificationGenerator> aipManualCmrRelistingHoCoEmailsGenerator(
+        CaseOfficerCmrRelistingPersonalisation caseOfficerCmrRelistingPersonalisation,
+        HomeOfficeCmrRelistingPersonalisation homeOfficeCmrRelistingPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        List<EmailNotificationPersonalisation> emailPersonalisations = newArrayList(
+            caseOfficerCmrRelistingPersonalisation,
+            homeOfficeCmrRelistingPersonalisation
+        );
+        return newArrayList(
+            new EmailNotificationGenerator(
+                emailPersonalisations,
+                notificationSender,
+                notificationIdAppender
+            )
         );
     }
 
