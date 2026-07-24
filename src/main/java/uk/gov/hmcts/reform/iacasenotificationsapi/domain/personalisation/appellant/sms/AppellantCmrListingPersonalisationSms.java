@@ -28,7 +28,7 @@ public class AppellantCmrListingPersonalisationSms implements SmsNotificationPer
 
 
     public AppellantCmrListingPersonalisationSms(
-        @Value("${govnotify.template.caseListed.appellant.sms}") String appellantCaseListedSmsTemplateId,
+        @Value("${govnotify.template.listAssistHearing.cmrListing.appellant.sms}") String appellantCaseListedSmsTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         DateTimeExtractor dateTimeExtractor,
         HearingDetailsFinder hearingDetailsFinder,

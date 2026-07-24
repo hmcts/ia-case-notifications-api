@@ -18,8 +18,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
@@ -30,6 +32,7 @@ class AppellantCmrHearingCancelledPersonalisationSmsTest {
 
     private final Long caseId = 12345L;
     private final String cmrCancelledSmsTemplateId = "cmrCancelledSmsTemplateId";
+    private final String cmrCancelledLegallyReppedSmsTemplateId = "cmrCancelledLegallyReppedSmsTemplateId";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String oldHearingCentreAddress = "someHearingCentreAddress";
     private final String oldHearingDate = "1 January 2026";
@@ -37,6 +40,7 @@ class AppellantCmrHearingCancelledPersonalisationSmsTest {
     private final String someHearingDateTime = "2026-01-01T14:00";
     private final String aipFrontendUrl = "http://somefrontendurl";
     private String appellantMobileNumber = "07781122334";
+    private String legallyReppedAppellantMobileNumber = "07781122335";
 
     @Mock
     AsylumCase asylumCase;
@@ -61,6 +65,7 @@ class AppellantCmrHearingCancelledPersonalisationSmsTest {
 
         appellantCmrHearingCancelledPersonalisationSms = new AppellantCmrHearingCancelledPersonalisationSms(
                 cmrCancelledSmsTemplateId,
+                cmrCancelledLegallyReppedSmsTemplateId,
                 aipFrontendUrl,
                 recipientsFinder,
                 dateTimeExtractor,
@@ -70,13 +75,24 @@ class AppellantCmrHearingCancelledPersonalisationSmsTest {
     }
 
     @Test
-    void should_return_given_template_id() {
-        assertEquals(cmrCancelledSmsTemplateId, appellantCmrHearingCancelledPersonalisationSms.getTemplateId());
+    void should_return_appellant_template_id_when_aip_journey() {
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
+
+        assertEquals(cmrCancelledSmsTemplateId,
+                appellantCmrHearingCancelledPersonalisationSms.getTemplateId(asylumCase));
+    }
+
+    @Test
+    void should_return_legally_repped_template_id_when_not_aip_journey() {
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.REP));
+
+        assertEquals(cmrCancelledLegallyReppedSmsTemplateId,
+                appellantCmrHearingCancelledPersonalisationSms.getTemplateId(asylumCase));
     }
 
     @Test
     void should_return_given_reference_id() {
-        assertEquals(caseId + "_CMR_HEARING_CANCELLED_APPELLANT_AIP_SMS",
+        assertEquals(caseId + "_CMR_HEARING_CANCELLED_APPELLANT_SMS",
                 appellantCmrHearingCancelledPersonalisationSms.getReferenceId(caseId));
     }
 
@@ -90,6 +106,28 @@ class AppellantCmrHearingCancelledPersonalisationSmsTest {
         assertTrue(appellantCmrHearingCancelledPersonalisationSms.getRecipientsList(asylumCase)
                 .contains(appellantMobileNumber));
     }
+
+    @Test
+    void should_return_given_sms_from_legal_rep_when_not_aip_journey() {
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.REP));
+
+        when(recipientsFinder.findReppedAppellant(asylumCase, NotificationType.SMS))
+                .thenReturn(Collections.singleton(legallyReppedAppellantMobileNumber));
+
+        assertTrue(appellantCmrHearingCancelledPersonalisationSms.getRecipientsList(asylumCase)
+                .contains(legallyReppedAppellantMobileNumber));
+    }
+
+    @Test
+    void should_return_empty_recipients_list_when_internal_case() {
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
+        when(asylumCase.read(AsylumCaseDefinition.IS_ADMIN, YesOrNo.class))
+                .thenReturn(Optional.of(YesOrNo.YES));
+
+        assertThat(appellantCmrHearingCancelledPersonalisationSms.getRecipientsList(asylumCase))
+                .isEmpty();
+    }
+
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
