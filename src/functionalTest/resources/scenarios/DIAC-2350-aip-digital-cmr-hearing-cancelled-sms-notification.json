@@ -1,0 +1,67 @@
+{
+  "description": "DIAC-2350 Send CMR hearing cancelled sms notification to appellant (AIP)",
+  "request": {
+    "uri": "/asylum/ccdAboutToSubmit",
+    "credentials": "SystemUser",
+    "input": {
+      "id": 60005,
+      "eventId": "cmrHearingCancelled",
+      "state": "prepareForHearing",
+      "caseData": {
+        "template": "minimal-appeal-submitted.json",
+        "replacements": {
+          "journeyType": "aip",
+          "appealReferenceNumber": "PA/12346/2023",
+          "homeOfficeReferenceNumber": "012345678",
+          "email": "{$TEST_CITIZEN_USERNAME}",
+          "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
+          "subscriptions": [
+            {
+              "value": {
+                "subscriber": "appellant",
+                "email": "{$TEST_CITIZEN_USERNAME}",
+                "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
+                "wantsEmail": "No",
+                "wantsSms": "Yes"
+              }
+            }
+          ],
+          "appellantInDetention": "No",
+          "cmrHearingCentre": "taylorHouse",
+          "cmrHearingCentreAddress": {
+            "value": {
+              "code": "Taylor House Tribunal Hearing Centre, York Road, SE1 7PB",
+              "label": "Taylor House Tribunal Hearing Centre, York Road, SE1 7PB"
+            }
+          },
+          "cmrHearingDate": "2023-09-19T10:00:00.000"
+        }
+      }
+    }
+  },
+  "expectation": {
+    "status": 200,
+    "errors": [],
+    "caseData": {
+      "template": "minimal-appeal-submitted.json",
+      "replacements": {
+        "appealReferenceNumber": "PA/12346/2023",
+        "homeOfficeReferenceNumber": "012345678",
+        "notificationsSent": [
+          {
+            "id": "60005_CMR_HEARING_CANCELLED_APPELLANT_SMS",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "60005_CMR_CANCELLED_CASE_OFFICER_EMAIL",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "60005_CMR_CANCELLED_HOME_OFFICE_EMAIL",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }
+        ]
+      }
+    }
+  }
+}

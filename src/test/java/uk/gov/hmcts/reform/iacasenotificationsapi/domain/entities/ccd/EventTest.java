@@ -135,6 +135,8 @@ public class EventTest {
                 Arguments.of("decideFtpaApplication", Event.DECIDE_FTPA_APPLICATION.toString()),
                 Arguments.of("updateTribunalDecision", Event.UPDATE_TRIBUNAL_DECISION.toString()),
                 Arguments.of("caseListing", CASE_LISTING.toString()),
+                Arguments.of("cmrListing", CMR_LISTING.toString()),
+                Arguments.of("cmrReListing", CMR_RE_LISTING.toString()),
                 Arguments.of("markAppealAsRemitted", Event.MARK_APPEAL_AS_REMITTED.toString()),
                 Arguments.of("addEvidenceForCosts", ADD_EVIDENCE_FOR_COSTS.toString()),
                 Arguments.of("considerMakingCostsOrder", CONSIDER_MAKING_COSTS_ORDER.toString()),
@@ -146,6 +148,7 @@ public class EventTest {
                 Arguments.of("recordRemissionReminder", Event.RECORD_REMISSION_REMINDER.toString()),
                 Arguments.of("refundConfirmation", Event.REFUND_CONFIRMATION.toString()),
                 Arguments.of("hearingCancelled", HEARING_CANCELLED.toString()),
+                Arguments.of("cmrHearingCancelled", CMR_HEARING_CANCELLED.toString()),
                 Arguments.of("revokeCitizenAccess", REVOKE_CITIZEN_ACCESS.toString()),
                 Arguments.of("generatePinInPost", GENERATE_PIN_IN_POST.toString()),
                 Arguments.of("unknown", Event.UNKNOWN.toString()));

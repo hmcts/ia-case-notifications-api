@@ -483,6 +483,39 @@ govnotify:
       legalRep:
         email: 74825ed3-240e-4b2a-afe9-9167c0ae29f5
     listAssistHearing:
+      cmrListing:
+        appellant:
+          email: be338005-287b-4fdc-af89-1f2efc9c290a
+          sms: c5b9e556-49cd-4874-af39-d3740bd302a3
+          legallyRepresented:
+            email: e021c0e0-c436-4c9d-ab1e-cd8742ec97b5
+            sms: 654a09fd-cdd6-4cff-87f6-5db7c65a4989
+          detained:
+            prison:
+              letter: 13b27666-9b88-4528-bc00-b789beec9fbf
+            irc:
+              letter: 13b27666-9b88-4528-bc00-b789beec9fbf
+        caseOfficer:
+          email: e30f3490-4649-4138-9711-749ecea07f8d
+        homeOffice:
+          email: becd75f2-613e-482c-9df8-3ebc76251f9e
+        legalRep:
+          inPerson:
+            email: f7bea6a0-2173-4c0a-b0dd-543e5a8b6b23
+          remote:
+            email: 0c63ae4d-bce7-4b11-9b66-1181052eaba6
+        detentionEngagementTeam:
+          email: fe92c79d-212e-4ffe-b619-c2fb4dd304ac
+      cmrReListing:
+        homeOffice:
+          email: 33312031-bb84-4598-81b7-faa0fd81da50
+        caseOfficer:
+          email: e67dbf06-5b6c-40a5-8fbf-98154ecf6e2a
+        legalRep:
+          email: 9580b7bd-0c9f-4dc0-bbf3-9f8a8c91421b
+      cmrRelistingRemoteHearing:
+        legalRep:
+          email: 57f7c73c-25d9-474b-9e03-966d4f608d62
       caseListed:
         caseOfficer:
           email: ddb88c55-c97e-45df-a6b1-dc92fd0433b3
@@ -817,6 +850,19 @@ govnotify:
       detentionEngagementTeam:
         production:
           email: b92c6233-5729-4844-a64c-4100274ecdc4
+    cmrCancelled:
+      appellant:
+        email: 0d6aad51-43c7-44e3-bc5c-e1b04ee54a98
+        sms: 344a7601-711b-4403-9c38-955cf52af870
+      legallyReppedAppellant:
+        email: a3e5d408-882b-4584-b310-8063154a6b90
+        sms: a1122d71-1dc0-4037-8f33-4c83e275ae28
+      legalRep:
+        email: 7b1591cd-8c44-4b5c-921c-04b8c8d07bd6
+      caseOfficer:
+        email: 97fdd824-7adf-46a2-973d-ad7d96bf76bd
+      homeOffice:
+        email: 2c9c4d9a-551d-480e-874e-46ef72b044ac
     reListCase:
       adminOfficer:
         email: 495c6f2b-46da-431f-a890-22371f2150dd
@@ -1822,6 +1868,8 @@ security:
       - "editAppeal"
       - "buildCase"
       - "listCase"
+      - "cmrListing"
+      - "cmrReListing"
       - "turnOnNotifications"
       - "updateTribunalDecision"
       - "recordRemissionReminder"
@@ -1889,6 +1937,8 @@ security:
       - "editAppeal"
       - "buildCase"
       - "listCase"
+      - "cmrListing"
+      - "cmrReListing"
       - "turnOnNotifications"
       - "updateTribunalDecision"
       - "recordRemissionReminder"
@@ -1954,6 +2004,8 @@ security:
       - "editAppeal"
       - "buildCase"
       - "listCase"
+      - "cmrListing"
+      - "cmrReListing"
       - "turnOnNotifications"
       - "updateTribunalDecision"
       - "recordRemissionReminder"
@@ -2012,6 +2064,8 @@ security:
       - "markAppealAsDetained"
       - "updateDetentionLocation"
       - "listCase"
+      - "cmrListing"
+      - "cmrReListing"
       - "editDocuments"
       - "uploadAdditionalEvidence"
       - "endAppeal"
@@ -2027,6 +2081,7 @@ security:
       - "startAppeal"
       - "refundConfirmation"
       - "hearingCancelled"
+      - "cmrHearingCancelled"
       - "revokeCitizenAccess"
       - "requestRespondentEvidence"
     ctsc:
@@ -2059,6 +2114,8 @@ security:
       - "markAppealAsDetained"
       - "updateDetentionLocation"
       - "listCase"
+      - "cmrListing"
+      - "cmrReListing"
       - "uploadAdditionalEvidence"
       - "endAppeal"
       - "recordAdjournmentDetails"
@@ -2073,6 +2130,7 @@ security:
       - "startAppeal"
       - "refundConfirmation"
       - "hearingCancelled"
+      - "cmrHearingCancelled"
       - "revokeCitizenAccess"
       - "requestRespondentEvidence"
     ctsc-team-leader:
@@ -2104,6 +2162,8 @@ security:
       - "markAppealAsDetained"
       - "updateDetentionLocation"
       - "listCase"
+      - "cmrListing"
+      - "cmrReListing"
       - "uploadAdditionalEvidence"
       - "endAppeal"
       - "recordAdjournmentDetails"
@@ -2119,6 +2179,7 @@ security:
       - "refundConfirmation"
       - "editDocuments"
       - "hearingCancelled"
+      - "cmrHearingCancelled"
       - "revokeCitizenAccess"
       - "requestRespondentEvidence"
     national-business-centre:
@@ -2150,6 +2211,8 @@ security:
       - "markAppealAsDetained"
       - "updateDetentionLocation"
       - "listCase"
+      - "cmrListing"
+      - "cmrReListing"
       - "editDocuments"
       - "uploadAdditionalEvidence"
       - "endAppeal"
@@ -2165,6 +2228,7 @@ security:
       - "startAppeal"
       - "refundConfirmation"
       - "hearingCancelled"
+      - "cmrHearingCancelled"
       - "revokeCitizenAccess"
       - "requestRespondentEvidence"
     challenged-access-ctsc:
@@ -2196,6 +2260,8 @@ security:
       - "markAppealAsDetained"
       - "updateDetentionLocation"
       - "listCase"
+      - "cmrListing"
+      - "cmrReListing"
       - "editDocuments"
       - "uploadAdditionalEvidence"
       - "endAppeal"
@@ -2211,6 +2277,7 @@ security:
       - "startAppeal"
       - "refundConfirmation"
       - "hearingCancelled"
+      - "cmrHearingCancelled"
       - "revokeCitizenAccess"
       - "requestRespondentEvidence"
     challenged-access-admin:
@@ -2242,6 +2309,8 @@ security:
       - "markAppealAsDetained"
       - "updateDetentionLocation"
       - "listCase"
+      - "cmrListing"
+      - "cmrReListing"
       - "editDocuments"
       - "uploadAdditionalEvidence"
       - "endAppeal"
@@ -2257,6 +2326,7 @@ security:
       - "startAppeal"
       - "refundConfirmation"
       - "hearingCancelled"
+      - "cmrHearingCancelled"
       - "revokeCitizenAccess"
       - "requestRespondentEvidence"
     caseworker-ia-homeofficeapc:
@@ -2573,6 +2643,8 @@ security:
       - "endAppealAutomatically"
       - "updatePaymentStatus"
       - "listCase"
+      - "cmrListing"
+      - "cmrReListing"
       - "recordAdjournmentDetails"
       - "editCaseListing"
       - "caseListing"
@@ -2580,6 +2652,7 @@ security:
       - "recordRemissionReminder"
       - "changeHearingCentre"
       - "hearingCancelled"
+      - "cmrHearingCancelled"
       - "removeStatutoryTimeframe24Weeks"
       - "completeCaseReview"
       - "revokeCitizenAccess"
