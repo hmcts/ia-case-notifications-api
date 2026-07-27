@@ -12,6 +12,7 @@
         "replacements": {
           "journeyType": "aip",
           "isAdmin": "Yes",
+          "appellantsRepresentation": "Yes",
           "appealReferenceNumber": "PA/12348/2023",
           "ariaListingReference": "LP/12348/2021",
           "cmrHearingCentre": "taylorHouse",
