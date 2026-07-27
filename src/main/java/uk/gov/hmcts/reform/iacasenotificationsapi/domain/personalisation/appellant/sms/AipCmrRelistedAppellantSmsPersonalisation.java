@@ -1,8 +1,6 @@
-package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
+package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAipJourney;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -14,63 +12,48 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.SmsNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
 @Service
-public class AppellantCmrRelistingPersonalisationEmail implements EmailNotificationPersonalisation {
+public class AipCmrRelistedAppellantSmsPersonalisation implements SmsNotificationPersonalisation {
 
-    private final String appellantCaseEditedTemplateId;
-    private final String legallyReppedAppellantCaseEditedTemplateId;
+    private final String appellantCaseEditedSmsTemplateId;
     private final String iaAipFrontendUrl;
     private final PersonalisationProvider personalisationProvider;
-    private final CustomerServicesProvider customerServicesProvider;
     private final RecipientsFinder recipientsFinder;
     private final HearingDetailsFinder hearingDetailsFinder;
 
-    @Value("${govnotify.emailPrefix.ada}")
-    private String adaPrefix;
-    @Value("${govnotify.emailPrefix.nonAda}")
-    private String nonAdaPrefix;
-
-    public AppellantCmrRelistingPersonalisationEmail(
-        @Value("${govnotify.template.listAssistHearing.cmrReListing.appellant.email}") String appellantCaseEditedTemplateId,
-        @Value("${govnotify.template.listAssistHearing.cmrReListing.appellant.email}") String legallyReppedAppellantCaseEditedTemplateId,
-
+    public AipCmrRelistedAppellantSmsPersonalisation(
+        @Value("${govnotify.template.caseEdited.appellant.sms}") String appellantCaseEditedSmsTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         PersonalisationProvider personalisationProvider,
-        CustomerServicesProvider customerServicesProvider,
         RecipientsFinder recipientsFinder,
         HearingDetailsFinder hearingDetailsFinder
     ) {
-        this.appellantCaseEditedTemplateId = appellantCaseEditedTemplateId;
-        this.legallyReppedAppellantCaseEditedTemplateId = legallyReppedAppellantCaseEditedTemplateId;
+        this.appellantCaseEditedSmsTemplateId = appellantCaseEditedSmsTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.personalisationProvider = personalisationProvider;
-        this.customerServicesProvider = customerServicesProvider;
         this.recipientsFinder = recipientsFinder;
         this.hearingDetailsFinder = hearingDetailsFinder;
     }
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return isAipJourney(asylumCase) ? appellantCaseEditedTemplateId : legallyReppedAppellantCaseEditedTemplateId;
+        return appellantCaseEditedSmsTemplateId;
     }
 
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
-        return isAipJourney(asylumCase) ?
-            recipientsFinder.findAll(asylumCase, NotificationType.EMAIL) :
-            recipientsFinder.findReppedAppellant(asylumCase, NotificationType.EMAIL);
+        return recipientsFinder.findAll(asylumCase, NotificationType.SMS);
     }
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_CMR_RE_LISTING_APPELLANT_EMAIL";
+        return caseId + "_CMR_RE_LISTING_AIP_APPELLANT_SMS";
     }
 
     @Override
@@ -80,9 +63,7 @@ public class AppellantCmrRelistingPersonalisationEmail implements EmailNotificat
 
         return ImmutableMap
             .<String, String>builder()
-            .putAll(customerServicesProvider.getCustomerServicesPersonalisation(callback))
             .putAll(personalisationProvider.getPersonalisation(callback))
-            .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
             .put("tribunalCentre", hearingDetailsFinder.getCmrHearingCentreName(asylumCase))
             .put("hyperlink to service", iaAipFrontendUrl)
             .build();
