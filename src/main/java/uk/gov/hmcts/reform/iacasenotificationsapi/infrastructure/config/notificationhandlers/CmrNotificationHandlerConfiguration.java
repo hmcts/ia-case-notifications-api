@@ -255,6 +255,7 @@ public class CmrNotificationHandlerConfiguration {
         return CMR_RE_LISTING.equals(callback.getEvent())
             && isCmrHearingInPersonOrRemote(asylumCase)
             && isInternalCase(asylumCase)
+            && hasBeenSubmittedByAppellantInternalCase(asylumCase)
             && isAipJourney(asylumCase);
     }
 
