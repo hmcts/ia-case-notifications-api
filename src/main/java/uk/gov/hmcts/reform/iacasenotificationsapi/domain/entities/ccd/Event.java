@@ -62,6 +62,7 @@ public enum Event {
     ADJOURN_HEARING_WITHOUT_DATE("adjournHearingWithoutDate"),
     CMR_HEARING_CANCELLED("cmrHearingCancelled"),
     HEARING_CANCELLED("hearingCancelled"),
+    CMR_HEARING_CANCELLED("cmrHearingCancelled"),
     RECORD_ADJOURNMENT_DETAILS("recordAdjournmentDetails"),
     RESTORE_STATE_FROM_ADJOURN("restoreStateFromAdjourn"),
     REQUEST_CMA_REQUIREMENTS("requestCmaRequirements"),
