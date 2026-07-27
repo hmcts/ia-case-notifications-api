@@ -37,8 +37,8 @@ public class AppellantCmrRelistingPersonalisationEmail implements EmailNotificat
     private String nonAdaPrefix;
 
     public AppellantCmrRelistingPersonalisationEmail(
-        @Value("${govnotify.template.listAssistHearing.caseEdited.appellant.email}") String appellantCaseEditedTemplateId,
-        @Value("${govnotify.template.listAssistHearing.caseEdited.legallyReppedAppellant.email}") String legallyReppedAppellantCaseEditedTemplateId,
+        @Value("${govnotify.template.listAssistHearing.cmrReListing.appellant.email}") String appellantCaseEditedTemplateId,
+        @Value("${govnotify.template.listAssistHearing.cmrReListing.legalRep.email}") String legallyReppedAppellantCaseEditedTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         PersonalisationProvider personalisationProvider,
         CustomerServicesProvider customerServicesProvider,

@@ -37,6 +37,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsF
 public class AppellantCmrListingPersonalisationEmailTest {
 
     private final String listAssistHearingTemplateId = "listAssistHearingTemplateId";
+    private final String listAssistHearingLrTemplateId = "listAssistHearingLrTemplateId";
     private final String iaAipFrontendUrl = "http://somefrontendurl";
     private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
     private final String hearingCentreAddress = "some hearing centre address";
@@ -79,6 +80,7 @@ public class AppellantCmrListingPersonalisationEmailTest {
 
         appellantCmrListingPersonalisationEmail = new AppellantCmrListingPersonalisationEmail(
             listAssistHearingTemplateId,
+            listAssistHearingLrTemplateId,
             iaAipFrontendUrl,
             dateTimeExtractor,
             customerServicesProvider,
@@ -96,6 +98,10 @@ public class AppellantCmrListingPersonalisationEmailTest {
 
     @Test
     public void should_return_correct_template_id() {
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.REP));
+        assertEquals(listAssistHearingLrTemplateId, appellantCmrListingPersonalisationEmail.getTemplateId(asylumCase));
+
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
         assertEquals(listAssistHearingTemplateId, appellantCmrListingPersonalisationEmail.getTemplateId(asylumCase));
     }
 
