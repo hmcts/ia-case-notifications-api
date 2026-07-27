@@ -40,7 +40,7 @@ public class AppellantManualCmrHearingCancelledLetterPersonalisation implements 
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_INTERNAL_UPDATE_TRIBUNAL_DECISION_RULE31_LETTER";
+        return caseId + "_INTERNAL_CMR_HEARING_CANCELLED_LETTER";
     }
 
     @Override
