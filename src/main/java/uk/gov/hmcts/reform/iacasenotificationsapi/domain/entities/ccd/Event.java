@@ -60,7 +60,6 @@ public enum Event {
     FORCE_CASE_TO_CASE_UNDER_REVIEW("forceCaseToCaseUnderReview"),
     FORCE_CASE_TO_SUBMIT_HEARING_REQUIREMENTS("forceCaseToSubmitHearingRequirements"),
     ADJOURN_HEARING_WITHOUT_DATE("adjournHearingWithoutDate"),
-    CMR_HEARING_CANCELLED("cmrHearingCancelled"),
     HEARING_CANCELLED("hearingCancelled"),
     CMR_HEARING_CANCELLED("cmrHearingCancelled"),
     RECORD_ADJOURNMENT_DETAILS("recordAdjournmentDetails"),
