@@ -10,7 +10,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.LetterN
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -64,11 +63,7 @@ public class AppellantInternalCaseDecisionWithoutHearingPersonalisation implemen
                 .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                 .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""));
 
-        List<String> address =  getAppellantOrLegalRepAddressLetterPersonalisation(asylumCase);
-
-        for (int i = 0; i < address.size(); i++) {
-            personalizationBuilder.put("address_line_" + (i + 1), address.get(i));
-        }
+        buildAddressForIccLetter(asylumCase, personalizationBuilder);
         return personalizationBuilder.build();
     }
 }

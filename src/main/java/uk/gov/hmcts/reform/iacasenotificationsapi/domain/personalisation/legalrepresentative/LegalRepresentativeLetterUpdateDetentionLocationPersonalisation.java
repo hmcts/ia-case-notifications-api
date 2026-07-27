@@ -10,7 +10,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.LetterN
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DetentionFacilityNameFinder;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +21,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DETENTION_FACILITY;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.PREVIOUS_DETENTION_LOCATION;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantOrLegalRepAddressLetterPersonalisation;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.buildAddressForIccLetter;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getDetentionFacilityName;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLegalRepAddressInCountryOrOoc;
 
@@ -96,11 +95,7 @@ public class LegalRepresentativeLetterUpdateDetentionLocationPersonalisation imp
                 .put("oldDetentionLocation", oldDetentionLocation)
                 .put("newDetentionLocation", newDetentionLocation);
 
-        List<String> address =  getAppellantOrLegalRepAddressLetterPersonalisation(asylumCase);
-
-        for (int i = 0; i < address.size(); i++) {
-            personalizationBuilder.put("address_line_" + (i + 1), address.get(i));
-        }
+        buildAddressForIccLetter(asylumCase, personalizationBuilder);
         return personalizationBuilder.build();
     }
 }

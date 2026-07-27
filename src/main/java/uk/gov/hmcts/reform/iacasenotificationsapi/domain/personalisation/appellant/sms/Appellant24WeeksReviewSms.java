@@ -1,0 +1,84 @@
+package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
+
+import com.google.common.collect.ImmutableMap;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.SmsNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
+
+import java.util.Map;
+import java.util.Set;
+
+import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAipJourney;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.EMPTY_STRING;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_SMS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.WEEKS_DEADLINE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.noLegalRepresentation;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.populate24WeeksDates;
+
+@Slf4j
+@Service
+public class Appellant24WeeksReviewSms implements SmsNotificationPersonalisation {
+    private static final String APPEAL_REFERENCE_NUMBER_KEY = "appealReferenceNumber";
+
+    private static final String LINK_TO_SERVICE_TEXT_AND_URL = "linkToServiceTextAndUrl";
+
+    private final String smsTemplateId;
+    private final String iaAipFrontendUrl;
+    private final RecipientsFinder recipientsFinder;
+
+    public Appellant24WeeksReviewSms(
+            @Value("${govnotify.template.completeCaseReviewStatutoryTimeframe24Weeks.appellant.sms}") String smsTemplateId,
+            @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
+            RecipientsFinder recipientsFinder
+    ) {
+        this.smsTemplateId = smsTemplateId;
+        this.iaAipFrontendUrl = iaAipFrontendUrl;
+        this.recipientsFinder = recipientsFinder;
+    }
+
+    @Override
+    public String getTemplateId(AsylumCase asylumCase) {
+        return smsTemplateId;
+    }
+
+    @Override
+    public Set<String> getRecipientsList(AsylumCase asylumCase) {
+        requireNonNull(asylumCase, "asylumCase must not be null");
+        return isAipJourney(asylumCase) ?
+                recipientsFinder.findAll(asylumCase, NotificationType.SMS) :
+                recipientsFinder.findReppedAppellant(asylumCase, NotificationType.SMS);
+    }
+
+    @Override
+    public String getReferenceId(Long caseId) {
+        return caseId + STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_SMS;
+    }
+
+    @Override
+    public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
+        requireNonNull(asylumCase, "asylumCase must not be null");
+
+        String appealRef = asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING);
+        ImmutableMap.Builder<String, String> builder = ImmutableMap.<String, String>builder()
+                .put(APPEAL_REFERENCE_NUMBER_KEY, appealRef)
+                .put(WEEKS_DEADLINE, AsylumCaseUtils.populateStatutoryTimeFrame24wDate(asylumCase));
+        populate24WeeksDates(builder);
+        boolean noLegalRepresentation = noLegalRepresentation(asylumCase);
+        log.info("no legal representation? {}", noLegalRepresentation);
+        if (noLegalRepresentation) {
+            builder.put(LINK_TO_SERVICE_TEXT_AND_URL, "Sign into your account to see appeal: " + iaAipFrontendUrl);
+        } else {
+            builder.put(LINK_TO_SERVICE_TEXT_AND_URL, EMPTY_STRING);
+        }
+
+        return builder.build();
+    }
+
+}
