@@ -84,10 +84,12 @@ class CmrRelistingAipManualNotificationHandlerTest {
 
     @Test
     void relisting_appellant_postal_handler_fires_for_in_person_and_remote_but_not_paper() {
-        PreSubmitCallbackHandler<AsylumCase> relistingPostalHandler =
-            handlerConfiguration.cmrRelistingAipManualAppellantPostalNotificationHandler(notificationGenerators);
 
         when(callback.getEvent()).thenReturn(CMR_RE_LISTING);
+        when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+
+        PreSubmitCallbackHandler<AsylumCase> relistingPostalHandler =
+                handlerConfiguration.cmrRelistingAipManualAppellantPostalNotificationHandler(notificationGenerators);
 
         setHearingChannel("INTER");
         assertThat(relistingPostalHandler.canHandle(ABOUT_TO_SUBMIT, callback)).isTrue();
@@ -112,10 +114,12 @@ class CmrRelistingAipManualNotificationHandlerTest {
 
     @Test
     void relisting_ho_co_email_handler_fires_for_in_person_and_remote_but_not_paper() {
-        PreSubmitCallbackHandler<AsylumCase> relistingHoCoEmailHandler =
-            handlerConfiguration.cmrRelistingAipManualHoCoEmailHandler(notificationGenerators);
 
         when(callback.getEvent()).thenReturn(CMR_RE_LISTING);
+        when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+
+        PreSubmitCallbackHandler<AsylumCase> relistingHoCoEmailHandler =
+                handlerConfiguration.cmrRelistingAipManualHoCoEmailHandler(notificationGenerators);
 
         setHearingChannel("INTER");
         assertThat(relistingHoCoEmailHandler.canHandle(ABOUT_TO_SUBMIT, callback)).isTrue();
