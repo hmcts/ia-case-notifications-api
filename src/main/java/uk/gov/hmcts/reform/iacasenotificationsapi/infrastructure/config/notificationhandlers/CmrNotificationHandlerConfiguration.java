@@ -234,6 +234,8 @@ public class CmrNotificationHandlerConfiguration {
         return new NotificationHandler(
                 (callbackStage, callback) -> {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    log.info("isAipJourney: {} for case reference: {}", isAipJourney(callback.getCaseDetails().getCaseData()),  callback.getCaseDetails().getId());
+                    log.info("isInternalCase: {} for case reference: {}", isInternalCase(callback.getCaseDetails().getCaseData()), callback.getCaseDetails().getId());
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && CMR_HEARING_CANCELLED.equals(callback.getEvent())
                             && isAipJourney(callback.getCaseDetails().getCaseData())
