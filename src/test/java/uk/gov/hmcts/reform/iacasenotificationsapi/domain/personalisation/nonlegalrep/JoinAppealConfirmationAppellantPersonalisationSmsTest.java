@@ -86,7 +86,7 @@ public class JoinAppealConfirmationAppellantPersonalisationSmsTest {
 
     @Test
     public void should_return_given_reference_id() {
-        assertEquals(caseId + "_NON_LEGAL_REP_JOIN_APPEAL_CONFIRMATION_APPELLANT_EMAIL",
+        assertEquals(caseId + "_NON_LEGAL_REP_JOIN_APPEAL_CONFIRMATION_APPELLANT_SMS",
             joinAppealConfirmationAppellantPersonalisationSms.getReferenceId(caseId));
     }
 
