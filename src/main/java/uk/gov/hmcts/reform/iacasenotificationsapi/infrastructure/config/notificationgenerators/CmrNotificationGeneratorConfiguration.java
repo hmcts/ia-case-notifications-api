@@ -330,6 +330,33 @@ public class CmrNotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("cmrCancelledAipManualNotificationGenerator")
+    public List<NotificationGenerator> cmrCancelledAipManualNotificationGenerator(
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender,
+            DocumentDownloadClient documentDownloadClient
+    ) {
+
+        DocumentTag documentTag = DocumentTag.CMR_HEARING_CANCELLED;
+
+        return newArrayList(
+                new PrecompiledLetterNotificationGenerator(
+                        newArrayList(
+                                documentTag
+                        ),
+                        notificationSender,
+                        notificationIdAppender,
+                        documentDownloadClient
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
+        );
+    }
+
+
     @Bean("cmrHearingCancelledNotificationGenerator")
     public List<NotificationGenerator> cmrHearingCancelledNotificationGenerator(
             AppellantCmrHearingCancelledPersonalisationEmail appellantCmrHearingCancelledPersonalisationEmail,

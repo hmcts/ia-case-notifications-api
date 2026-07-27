@@ -854,7 +854,6 @@ govnotify:
           email: b92c6233-5729-4844-a64c-4100274ecdc4
     cmrCancelled:
       appellant:
-        letter: 8d9cb04d-b5ab-4607-846a-dd8601df25b0
         email: 0d6aad51-43c7-44e3-bc5c-e1b04ee54a98
         sms: 344a7601-711b-4403-9c38-955cf52af870
       legallyReppedAppellant:
