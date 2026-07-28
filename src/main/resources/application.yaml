@@ -1568,6 +1568,11 @@ govnotify:
           sms: 1a86539c-e685-4ece-9c07-ade4b22ab97c
       nlrDetailsUpdated:
         email: 989c80f9-df20-4c15-876d-911c3beec88a
+      removeNonLegalRepConfirmation:
+        email: 9a2c5b6f-67bc-4453-bc6e-5b364b42fb22
+        appellant:
+          email: 6f01e926-6509-46aa-9e7a-249d185f50a9
+          sms: a3cd6f61-d11f-4979-9861-f64401d5f24a
     generatePinInPost:
       appellant:
         email: 698ec21d-a160-4b2d-a028-7fbb6fb91565
