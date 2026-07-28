@@ -51,7 +51,6 @@ public class AppellantInternalLateRemissionRejectedLetterPersonalisation impleme
                 .getCaseDetails()
                 .getCaseData();
 
-        List<String> address =  getAppellantOrLegalRepAddressLetterPersonalisation(asylumCase);
 
         ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap
             .<String, String>builder()
@@ -62,9 +61,7 @@ public class AppellantInternalLateRemissionRejectedLetterPersonalisation impleme
             .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
             .put("RemissionReasons", asylumCase.read(AsylumCaseDefinition.REMISSION_DECISION_REASON, String.class).orElse(""));
 
-        for (int i = 0; i < address.size(); i++) {
-            personalizationBuilder.put("address_line_" + (i + 1), address.get(i));
-        }
+        buildAddressForIccLetter(asylumCase, personalizationBuilder);
         return personalizationBuilder.build();
     }
 }

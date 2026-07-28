@@ -7,7 +7,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Remissi
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
 import com.google.common.collect.ImmutableMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
@@ -67,7 +66,6 @@ public class AppellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonali
                 .getCaseDetails()
                 .getCaseData();
 
-        List<String> address =  getAppellantOrLegalRepAddressLetterPersonalisation(asylumCase);
 
         final String dueDate = isAppellantInDetention(asylumCase)
                 ? systemDateProvider.dueDate(daysAfterRemissionDecisionDetained)
@@ -87,9 +85,7 @@ public class AppellantInternalRemissionPartiallyGrantedOrRejectedLetterPersonali
             .put("onlineCaseReferenceNumber", asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class).orElse(""))
             .put("payByDeadline", dueDate);
 
-        for (int i = 0; i < address.size(); i++) {
-            personalizationBuilder.put("address_line_" + (i + 1), address.get(i));
-        }
+        buildAddressForIccLetter(asylumCase, personalizationBuilder);
         return personalizationBuilder.build();
     }
 

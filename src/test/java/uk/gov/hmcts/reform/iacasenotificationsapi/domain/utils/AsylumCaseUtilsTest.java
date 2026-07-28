@@ -938,7 +938,6 @@ public class AsylumCaseUtilsTest {
         assertTrue(AsylumCaseUtils.isHearingDetailsUpdated(asylumCase, Optional.of(caseDetailsBefore)));
     }
 
-
     void setupHearingDataNotUpdated(AsylumCase asylumCase, AsylumCase asylumCaseBefore) {
 
         Mockito.when(asylumCase.read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class))
