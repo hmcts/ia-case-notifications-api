@@ -106,7 +106,7 @@ class DocumentTagTest {
         assertEquals("internalEditCaseListingLetter", DocumentTag.INTERNAL_EDIT_CASE_LISTING_LETTER.toString());
         assertEquals("internalEditCaseListingLrLetter", DocumentTag.INTERNAL_EDIT_CASE_LISTING_LR_LETTER.toString());
         assertEquals("cmrHearingCancelledLetter", DocumentTag.CMR_HEARING_CANCELLED_LETTER.toString());
-        assertEquals("cmrHearingCancelledLetterBundle", DocumentTag.CMR_HEARING_CANCELLED_LETTER.toString());
+        assertEquals("cmrHearingCancelledLetterBundle", DocumentTag.CMR_HEARING_CANCELLED_LETTER_BUNDLE.toString());
 
     }
 
