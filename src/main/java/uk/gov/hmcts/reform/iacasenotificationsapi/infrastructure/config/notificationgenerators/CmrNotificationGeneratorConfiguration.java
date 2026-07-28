@@ -337,7 +337,7 @@ public class CmrNotificationGeneratorConfiguration {
             DocumentDownloadClient documentDownloadClient
     ) {
 
-        DocumentTag documentTag = DocumentTag.CMR_HEARING_CANCELLED;
+        DocumentTag documentTag = DocumentTag.CMR_HEARING_CANCELLED_LETTER;
 
         return newArrayList(
                 new PrecompiledLetterNotificationGenerator(
