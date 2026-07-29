@@ -41,9 +41,7 @@
               "value": {
                 "subscriber": "appellant",
                 "email": "{$TEST_CITIZEN_USERNAME}",
-                "wantsEmail": "Yes",
-                "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
-                "wantsSms": "Yes"
+                "wantsEmail": "Yes"
               }
             }
           ]
