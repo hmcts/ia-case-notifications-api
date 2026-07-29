@@ -59,6 +59,7 @@ public class CmrNotificationHandlerConfiguration {
         );
     }
 
+//   This covers both AIP manual non detained and detained in other
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> cmrRelistingAipManualAppellantPostalNotificationHandler(
         @Qualifier("aipManualCmrRelistingAppellantPostalNotificationGenerator") List<NotificationGenerator> notificationGenerators
