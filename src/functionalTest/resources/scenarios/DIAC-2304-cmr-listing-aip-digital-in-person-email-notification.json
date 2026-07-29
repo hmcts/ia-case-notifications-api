@@ -33,6 +33,18 @@
               { "code": "NA", "label": "Not in Attendance" },
               { "code": "TEL", "label": "Telephone" },
               { "code": "VID", "label": "Video" }
+            ],
+            "subscriptions": [
+              {
+                "id": "1",
+                "value": {
+                  "subscriber": "appellant",
+                  "email": "{$TEST_CITIZEN_USERNAME}",
+                  "wantsEmail": "Yes",
+                  "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
+                  "wantsSms": "Yes"
+                }
+              }
             ]
           }
         }
