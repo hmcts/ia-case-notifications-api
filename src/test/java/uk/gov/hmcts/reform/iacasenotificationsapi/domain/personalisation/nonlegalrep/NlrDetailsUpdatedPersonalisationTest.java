@@ -19,18 +19,12 @@ import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NonLegalRepDetails;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class NlrDetailsUpdatedPersonalisationTest {
 
-    @Mock
-    Callback<AsylumCase> callback;
-    @Mock
-    CaseDetails<AsylumCase> caseDetails;
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -47,6 +41,8 @@ public class NlrDetailsUpdatedPersonalisationTest {
         .build();
     private final String appealReferenceNumber = "hmctsReference";
     private final String homeOfficeReference = "homeOfficeReference";
+    private final String appellantGivenNames = "someAppellantGivenNames";
+    private final String appellantFamilyName = "someAppellantFamilyName";
     private final String customerServicesTelephone = "555 555 555";
     private final String customerServicesEmail = "cust.services@example.com";
 
@@ -89,10 +85,10 @@ public class NlrDetailsUpdatedPersonalisationTest {
 
     @Test
     public void should_return_personalisation_when_all_information_given() {
-        when(callback.getCaseDetails()).thenReturn(caseDetails);
-        when(caseDetails.getCaseData()).thenReturn(asylumCase);
         when(asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReference));
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         Map<String, String> customerServicesPersonalisation = Map.of(
             "customerServicesTelephone", customerServicesTelephone,
             "customerServicesEmail", customerServicesEmail
@@ -101,25 +97,26 @@ public class NlrDetailsUpdatedPersonalisationTest {
         when(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase)).thenReturn(customerServicesPersonalisation);
 
         Map<String, String> personalisation =
-            nlrDetailsUpdatedPersonalisation.getPersonalisation(callback);
+            nlrDetailsUpdatedPersonalisation.getPersonalisation(asylumCase);
 
         assertFalse(personalisation.isEmpty());
-        assertEquals(personalisation.get("appealReferenceNumber"), appealReferenceNumber);
-        assertEquals(personalisation.get("homeOfficeReferenceNumber"), homeOfficeReference);
-        assertEquals(personalisation.get("customerServicesTelephone"), customerServicesTelephone);
-        assertEquals(personalisation.get("customerServicesEmail"), customerServicesEmail);
-        assertEquals(personalisation.get("nlrGivenNames"), nlrDetails.getGivenNames());
-        assertEquals(personalisation.get("nlrFamilyName"), nlrDetails.getFamilyName());
-        assertEquals(personalisation.get("Hyperlink to service"), aipFrontendUrl);
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(homeOfficeReference, personalisation.get("homeOfficeReferenceNumber"));
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals(customerServicesTelephone, personalisation.get("customerServicesTelephone"));
+        assertEquals(customerServicesEmail, personalisation.get("customerServicesEmail"));
+        assertEquals(nlrDetails.getGivenNames(), personalisation.get("nlrGivenNames"));
+        assertEquals(nlrDetails.getFamilyName(), personalisation.get("nlrFamilyName"));
+        assertEquals(aipFrontendUrl, personalisation.get("Hyperlink to service"));
     }
-
 
     @Test
     public void should_return_personalisation_when_nlr_names_empty() {
-        when(callback.getCaseDetails()).thenReturn(caseDetails);
-        when(caseDetails.getCaseData()).thenReturn(asylumCase);
         when(asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReference));
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
         Map<String, String> customerServicesPersonalisation = Map.of(
             "customerServicesTelephone", customerServicesTelephone,
             "customerServicesEmail", customerServicesEmail
@@ -128,16 +125,18 @@ public class NlrDetailsUpdatedPersonalisationTest {
         when(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase)).thenReturn(customerServicesPersonalisation);
 
         Map<String, String> personalisation =
-            nlrDetailsUpdatedPersonalisation.getPersonalisation(callback);
+            nlrDetailsUpdatedPersonalisation.getPersonalisation(asylumCase);
 
         assertFalse(personalisation.isEmpty());
-        assertEquals(personalisation.get("appealReferenceNumber"), appealReferenceNumber);
-        assertEquals(personalisation.get("homeOfficeReferenceNumber"), homeOfficeReference);
-        assertEquals(personalisation.get("customerServicesTelephone"), customerServicesTelephone);
-        assertEquals(personalisation.get("customerServicesEmail"), customerServicesEmail);
-        assertEquals(personalisation.get("nlrGivenNames"), "Sir /");
-        assertEquals(personalisation.get("nlrFamilyName"), "Madam");
-        assertEquals(personalisation.get("Hyperlink to service"), aipFrontendUrl);
+        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
+        assertEquals(homeOfficeReference, personalisation.get("homeOfficeReferenceNumber"));
+        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
+        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
+        assertEquals(customerServicesTelephone, personalisation.get("customerServicesTelephone"));
+        assertEquals(customerServicesEmail, personalisation.get("customerServicesEmail"));
+        assertEquals("Sir /", personalisation.get("nlrGivenNames"));
+        assertEquals("Madam", personalisation.get("nlrFamilyName"));
+        assertEquals(aipFrontendUrl, personalisation.get("Hyperlink to service"));
     }
 
     @Test
