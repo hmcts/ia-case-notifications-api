@@ -98,6 +98,7 @@ public class AppellantCmrListingPersonalisationSmsTest {
     @Test
     public void should_return_given_mobile_list_from_repped_appellant_in_asylum_case() {
 
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.REP));
         when(recipientsFinder.findReppedAppellant(asylumCase, NotificationType.SMS))
             .thenReturn(Collections.singleton(mockedAppellantMobilePhone));
 
@@ -107,6 +108,21 @@ public class AppellantCmrListingPersonalisationSmsTest {
         verify(recipientsFinder, times(0)).findAll(asylumCase, NotificationType.SMS);
         verify(recipientsFinder, times(0)).findReppedAppellant(asylumCase, NotificationType.EMAIL);
         verify(recipientsFinder, times(1)).findReppedAppellant(asylumCase, NotificationType.SMS);
+    }
+
+    @Test
+    public void should_return_given_mobile_list_from_aip_appellant_in_asylum_case() {
+
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
+        when(recipientsFinder.findAll(asylumCase, NotificationType.SMS))
+            .thenReturn(Collections.singleton(mockedAppellantMobilePhone));
+
+        assertTrue(appellantCmrListingPersonalisationSms.getRecipientsList(asylumCase)
+            .contains(mockedAppellantMobilePhone));
+        verify(recipientsFinder, times(0)).findAll(asylumCase, NotificationType.EMAIL);
+        verify(recipientsFinder, times(1)).findAll(asylumCase, NotificationType.SMS);
+        verify(recipientsFinder, times(0)).findReppedAppellant(asylumCase, NotificationType.EMAIL);
+        verify(recipientsFinder, times(0)).findReppedAppellant(asylumCase, NotificationType.SMS);
     }
 
     @Test

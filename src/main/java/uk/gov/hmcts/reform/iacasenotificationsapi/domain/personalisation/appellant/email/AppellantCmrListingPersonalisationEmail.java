@@ -18,8 +18,7 @@ import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isRepJourney;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
 @Service
 public class AppellantCmrListingPersonalisationEmail implements EmailNotificationPersonalisation {
@@ -67,7 +66,11 @@ public class AppellantCmrListingPersonalisationEmail implements EmailNotificatio
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
-        return recipientsFinder.findReppedAppellant(asylumCase, NotificationType.EMAIL);
+        if (isAipJourney(asylumCase)) {
+            return recipientsFinder.findAll(asylumCase, NotificationType.EMAIL);
+        } else {
+            return recipientsFinder.findReppedAppellant(asylumCase, NotificationType.EMAIL);
+        }
     }
 
     @Override
