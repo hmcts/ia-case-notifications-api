@@ -76,7 +76,7 @@ public class NlrNotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("generateNonLegalRepRemovedNotificationHandler")
+    @Bean("generateNonLegalRepRemovedNotificationGenerator")
     public List<NotificationGenerator> generateNonLegalRepRemovedNotificationGenerator(
         RemoveNonLegalRepConfirmationPersonalisation removeNonLegalRepConfirmationPersonalisation,
         RemoveNonLegalRepConfirmationAppellantPersonalisation removeNonLegalRepConfirmationAppellantPersonalisation,

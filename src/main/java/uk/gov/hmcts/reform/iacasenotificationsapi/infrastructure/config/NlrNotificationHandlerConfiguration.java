@@ -72,7 +72,7 @@ public class NlrNotificationHandlerConfiguration {
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> generateNonLegalRepRemovedNotificationHandler(
-        @Qualifier("generateNonLegalRepRemovedNotificationHandler") List<NotificationGenerator> notificationGenerators) {
+        @Qualifier("generateNonLegalRepRemovedNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
         return new NotificationHandler(
             (callbackStage, callback) -> callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                 && callback.getEvent() == REMOVE_NON_LEGAL_REP,
