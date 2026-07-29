@@ -361,4 +361,34 @@ public class CmrNotificationGeneratorConfiguration {
                 )
         );
     }
+
+    @Bean("aipDigitalCmrListingNotificationGenerator")
+    public List<NotificationGenerator> aipDigitalCmrListingNotificationGenerator(
+        CaseOfficerCmrListingPersonalisation caseOfficerCmrListingPersonalisation,
+        HomeOfficeInPersonCmrListingCasePersonalisation homeOfficeInPersonCmrListingCasePersonalisation,
+        AppellantCmrListingPersonalisationEmail appellantCmrListingPersonalisationEmail,
+        AppellantCmrListingPersonalisationSms appellantCmrListingPersonalisationSms,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return newArrayList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    caseOfficerCmrListingPersonalisation,
+                    homeOfficeInPersonCmrListingCasePersonalisation,
+                    appellantCmrListingPersonalisationEmail
+                ),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(
+                    appellantCmrListingPersonalisationSms
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
 }
