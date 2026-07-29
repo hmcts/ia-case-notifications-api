@@ -105,11 +105,13 @@ class DocumentTagTest {
         assertEquals("aipmDetainedInPrisonOrIrcReinstateAppealLetter", DocumentTag.AIPM_DETAINED_IN_PRISON_IRC_REINSTATE_APPEAL_LETTER.toString());
         assertEquals("internalEditCaseListingLetter", DocumentTag.INTERNAL_EDIT_CASE_LISTING_LETTER.toString());
         assertEquals("internalEditCaseListingLrLetter", DocumentTag.INTERNAL_EDIT_CASE_LISTING_LR_LETTER.toString());
+        assertEquals("cmrHearingCancelledLetter", DocumentTag.CMR_HEARING_CANCELLED_LETTER.toString());
+        assertEquals("cmrHearingCancelledLetterBundle", DocumentTag.CMR_HEARING_CANCELLED_LETTER_BUNDLE.toString());
 
     }
 
     @Test
     void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(103, DocumentTag.values().length);
+        assertEquals(105, DocumentTag.values().length);
     }
 }
