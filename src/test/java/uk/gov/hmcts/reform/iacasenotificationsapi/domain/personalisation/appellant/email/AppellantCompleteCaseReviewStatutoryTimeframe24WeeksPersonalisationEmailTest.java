@@ -114,13 +114,6 @@ class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationEmailTe
     }
 
     @Test
-    void shouldReturnGivenEmailAddress_rep() {
-        when(recipientFinder.findReppedAppellant(asylumCase, NotificationType.EMAIL)).thenReturn(Set.of(EMAIL_ADDRESS));
-        assertTrue(personalisation.getRecipientsList(asylumCase).contains(EMAIL_ADDRESS));
-        assertFalse(personalisation.getRecipientsList(asylumCase).contains(AIP_EMAIL_ADDRESS));
-    }
-
-    @Test
     void shouldReturnGivenEmailAddress_aip() {
         when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
         when(recipientFinder.findAll(asylumCase, NotificationType.EMAIL)).thenReturn(Set.of(AIP_EMAIL_ADDRESS));

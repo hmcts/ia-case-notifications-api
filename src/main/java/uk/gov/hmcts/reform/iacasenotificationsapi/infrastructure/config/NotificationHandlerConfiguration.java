@@ -5663,6 +5663,7 @@ public class NotificationHandlerConfiguration {
                         .getCaseData();
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && !isInternalCase(asylumCase)
+                    && isAipJourney(asylumCase)
                     && isCaseReviewFor24WeeksCase(callback.getEvent(), asylumCase);
             },
             notificationGenerators, getErrorHandler()
