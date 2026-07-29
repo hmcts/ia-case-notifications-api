@@ -1,12 +1,12 @@
 {
-  "description": "DIAC-2308 Send cmr listing notification to legal rep, case officer, home office and appellant - AiP internal (remote hearing)",
+  "description": "DIAC-2358 Send cmr cancelled notification to appellant, case officer, home office and appellant - AiP internal (remote hearing)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "SystemUser",
     "input": {
       "id": 64023,
-      "eventId": "cmrListing",
-      "state": "prepareForHearing",
+      "eventId": "cmrHearingCancelled",
+      "state": "listing",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
