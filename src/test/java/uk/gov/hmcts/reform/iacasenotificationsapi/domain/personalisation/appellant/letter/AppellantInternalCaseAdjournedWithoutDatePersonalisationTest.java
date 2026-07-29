@@ -220,7 +220,7 @@ class AppellantInternalCaseAdjournedWithoutDatePersonalisationTest {
 
     void legalRepOocDataSetupOoc() {
         when(asylumCase.read(AsylumCaseDefinition.APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
-        when(asylumCase.read(APPELLANT_IN_UK, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+        when(asylumCase.read(LEGAL_REP_HAS_ADDRESS, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
         when(asylumCase.read(OOC_ADDRESS_LINE_1, String.class)).thenReturn(Optional.of(oocAddressLine1));
         when(asylumCase.read(OOC_ADDRESS_LINE_2, String.class)).thenReturn(Optional.of(oocAddressLine2));
         when(asylumCase.read(OOC_ADDRESS_LINE_3, String.class)).thenReturn(Optional.of(oocAddressLine3));

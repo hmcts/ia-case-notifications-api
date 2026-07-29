@@ -1597,13 +1597,17 @@ govnotify:
       appellant:
         email: 12bf5ed3-2d4f-4de8-b7d9-6a3d29caf1a3
         letter: 69820c60-76b6-4707-ba8b-06c21dfaa272
+        sms: 2084d900-c583-45a1-ba0d-3395ab4e4867
     completeCaseReviewStatutoryTimeframe24Weeks:
       homeOffice:
         email: 778af412-31bb-40b8-9cd7-39471eeb5dbd
       legalRep:
         email: 068fa543-6167-4494-a532-74291b931d59
+        letter: 92286f0b-2f97-406e-b636-1593e917d9fe
       appellant:
         email: d2a75610-004c-4fd8-8724-5fb7700cc27d
+        letter: bd089be2-4b5d-4e09-8e91-ddc2f4968573
+        sms: 2caf61de-d839-4d78-9f4d-c8b7183ea0c1
     revokeCitizenAccess:
       email: 8ea82724-5ddf-4f2d-9577-66bc565747e7
     generatePinInPost:
@@ -1946,6 +1950,8 @@ security:
       - "turnOnNotifications"
       - "updateTribunalDecision"
       - "recordRemissionReminder"
+      - "removeStatutoryTimeframe24Weeks"
+      - "completeCaseReview"
       - "revokeCitizenAccess"
     senior-tribunal-caseworker:
       - "sendDirection"
@@ -2037,8 +2043,6 @@ security:
       - "sendBailDirection"
       - "createBailCaseLink"
       - "markAppealAsRemitted"
-      - "removeStatutoryTimeframe24Weeks"
-      - "completeCaseReview"
     hearing-centre-admin:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2087,6 +2091,8 @@ security:
       - "hearingCancelled"
       - "cmrHearingCancelled"
       - "revokeCitizenAccess"
+      - "removeStatutoryTimeframe24Weeks"
+      - "completeCaseReview"
       - "requestRespondentEvidence"
     ctsc:
       - "progressMigratedCase"
@@ -2136,6 +2142,8 @@ security:
       - "hearingCancelled"
       - "cmrHearingCancelled"
       - "revokeCitizenAccess"
+      - "removeStatutoryTimeframe24Weeks"
+      - "completeCaseReview"
       - "requestRespondentEvidence"
     ctsc-team-leader:
       - "progressMigratedCase"
@@ -2185,6 +2193,8 @@ security:
       - "hearingCancelled"
       - "cmrHearingCancelled"
       - "revokeCitizenAccess"
+      - "removeStatutoryTimeframe24Weeks"
+      - "completeCaseReview"
       - "requestRespondentEvidence"
     national-business-centre:
       - "progressMigratedCase"
@@ -2234,6 +2244,8 @@ security:
       - "hearingCancelled"
       - "cmrHearingCancelled"
       - "revokeCitizenAccess"
+      - "removeStatutoryTimeframe24Weeks"
+      - "completeCaseReview"
       - "requestRespondentEvidence"
     challenged-access-ctsc:
       - "progressMigratedCase"
@@ -2283,6 +2295,8 @@ security:
       - "hearingCancelled"
       - "cmrHearingCancelled"
       - "revokeCitizenAccess"
+      - "removeStatutoryTimeframe24Weeks"
+      - "completeCaseReview"
       - "requestRespondentEvidence"
     challenged-access-admin:
       - "progressMigratedCase"
@@ -2332,6 +2346,8 @@ security:
       - "hearingCancelled"
       - "cmrHearingCancelled"
       - "revokeCitizenAccess"
+      - "removeStatutoryTimeframe24Weeks"
+      - "completeCaseReview"
       - "requestRespondentEvidence"
     caseworker-ia-homeofficeapc:
       - "startApplication"
@@ -2441,6 +2457,8 @@ security:
       - "updateTribunalDecision"
       - "leadershipJudgeFtpaDecision"
       - "editAppeal"
+      - "removeStatutoryTimeframe24Weeks"
+      - "completeCaseReview"
       - "decideCostsApplication"
     senior-judge:
       - "adaSuitabilityReview"
@@ -2466,6 +2484,8 @@ security:
       - "updateTribunalDecision"
       - "leadershipJudgeFtpaDecision"
       - "editAppeal"
+      - "removeStatutoryTimeframe24Weeks"
+      - "completeCaseReview"
       - "decideCostsApplication"
     leadership-judge:
       - "adaSuitabilityReview"
@@ -2491,6 +2511,8 @@ security:
       - "updateTribunalDecision"
       - "leadershipJudgeFtpaDecision"
       - "editAppeal"
+      - "removeStatutoryTimeframe24Weeks"
+      - "completeCaseReview"
       - "decideCostsApplication"
     fee-paid-judge:
       - "adaSuitabilityReview"
@@ -2516,6 +2538,8 @@ security:
       - "updateTribunalDecision"
       - "leadershipJudgeFtpaDecision"
       - "editAppeal"
+      - "removeStatutoryTimeframe24Weeks"
+      - "completeCaseReview"
       - "decideCostsApplication"
     lead-judge:
       - "adaSuitabilityReview"
@@ -2541,6 +2565,8 @@ security:
       - "updateTribunalDecision"
       - "leadershipJudgeFtpaDecision"
       - "editAppeal"
+      - "removeStatutoryTimeframe24Weeks"
+      - "completeCaseReview"
       - "decideCostsApplication"
     hearing-judge:
       - "adaSuitabilityReview"
@@ -2566,6 +2592,8 @@ security:
       - "updateTribunalDecision"
       - "leadershipJudgeFtpaDecision"
       - "editAppeal"
+      - "removeStatutoryTimeframe24Weeks"
+      - "completeCaseReview"
       - "decideCostsApplication"
     ftpa-judge:
       - "adaSuitabilityReview"
@@ -2591,6 +2619,8 @@ security:
       - "updateTribunalDecision"
       - "leadershipJudgeFtpaDecision"
       - "editAppeal"
+      - "removeStatutoryTimeframe24Weeks"
+      - "completeCaseReview"
       - "decideCostsApplication"
     hearing-panel-judge:
       - "adaSuitabilityReview"
@@ -2616,6 +2646,8 @@ security:
       - "updateTribunalDecision"
       - "leadershipJudgeFtpaDecision"
       - "editAppeal"
+      - "removeStatutoryTimeframe24Weeks"
+      - "completeCaseReview"
       - "decideCostsApplication"
     challenged-access-judiciary:
       - "adaSuitabilityReview"
@@ -2641,6 +2673,8 @@ security:
       - "updateTribunalDecision"
       - "leadershipJudgeFtpaDecision"
       - "editAppeal"
+      - "removeStatutoryTimeframe24Weeks"
+      - "completeCaseReview"
       - "decideCostsApplication"
     caseworker-ia-system:
       - "requestHearingRequirementsFeature"

@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
+package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter;
 
 import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
@@ -6,9 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.LetterNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
@@ -16,11 +14,13 @@ import java.util.Map;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.buildAddressForAppellantIccLetter;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressInCountryOrOoc;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.APPEAL_RECEIVED_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.APPELLANT_FULL_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.DECISION_SENT_DATE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.EMPTY_STRING;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.HOME_OFFICE_REFERENCE_NUMBER_KEY;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.WEEKS_DEADLINE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.getAppellantFamilyName;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.getAppellantGivenName;
@@ -28,70 +28,63 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24Weeks
 
 @Service
 @Slf4j
-public class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationEmail implements EmailNotificationPersonalisation {
+public class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationLetter implements LetterNotificationPersonalisation {
 
-    private static final String SUBJECT_PREFIX_KEY = "subjectPrefix";
+
     private static final String APPEAL_REFERENCE_NUMBER_KEY = "appealReferenceNumber";
     private static final String APPELLANT_GIVEN_NAMES_KEY = "appellantGivenNames";
     private static final String APPELLANT_FAMILY_NAME_KEY = "appellantFamilyName";
-    private static final String LINK_TO_SERVICE_KEY = "linkToService";
+    private static final String EMPTY_STRING = "";
 
-    private final String templateId;
-    private final String iaAipFrontendUrl;
+    private final String removeStatutoryTimeframe24WeeksAppellantLetterId;
     private final CustomerServicesProvider customerServicesProvider;
-    private final RecipientsFinder recipientsFinder;
-    private final String nonAdaPrefix;
 
+    public AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationLetter(
+            @Value("${govnotify.template.completeCaseReviewStatutoryTimeframe24Weeks.appellant.letter}") String removeStatutoryTimeframe24WeeksAppellantLetterId,
+            CustomerServicesProvider customerServicesProvider
+    ) {
+        this.removeStatutoryTimeframe24WeeksAppellantLetterId = removeStatutoryTimeframe24WeeksAppellantLetterId;
 
-    public AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationEmail(
-            @Value("${govnotify.template.completeCaseReviewStatutoryTimeframe24Weeks.appellant.email}") String templateId,
-            @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
-            @Value("${govnotify.emailPrefix.nonAda}") String nonAdaPrefix,
-            RecipientsFinder recipientsFinder,
-            CustomerServicesProvider customerServicesProvider) {
-        this.templateId = templateId;
-        this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.customerServicesProvider = customerServicesProvider;
-        this.recipientsFinder = recipientsFinder;
-        this.nonAdaPrefix = nonAdaPrefix;
     }
-
 
     @Override
     public String getTemplateId() {
-        return templateId;
+        return removeStatutoryTimeframe24WeeksAppellantLetterId;
     }
 
     @Override
-    public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return recipientsFinder.findAll(asylumCase, NotificationType.EMAIL);
+    public Set<String> getRecipientsList(final AsylumCase asylumCase) {
+        return getAppellantAddressInCountryOrOoc(asylumCase);
     }
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL;
+        return caseId + STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER;
     }
 
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
 
+
         String familyName = getAppellantFamilyName(asylumCase);
         String givenNames = getAppellantGivenName(asylumCase);
-        ImmutableMap.Builder<String, String> builder = ImmutableMap.builder();
-        populate24WeeksDates(builder);
-        return builder.put(SUBJECT_PREFIX_KEY, nonAdaPrefix)
-                .put(APPEAL_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING))
+        String appealRef = asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING);
+
+        ImmutableMap.Builder<String, String> builder = ImmutableMap.<String, String>builder()
+                .put(APPEAL_REFERENCE_NUMBER_KEY, appealRef)
+                .put(HOME_OFFICE_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
                 .put(APPELLANT_GIVEN_NAMES_KEY, givenNames)
                 .put(APPELLANT_FAMILY_NAME_KEY, familyName)
                 .put(APPELLANT_FULL_NAME, (givenNames + " " + familyName).trim())
                 .put(APPEAL_RECEIVED_DATE, AsylumCaseUtils.getAppealReceivedDate(asylumCase))
                 .put(DECISION_SENT_DATE, AsylumCaseUtils.getHomeOfficeDecisionDate(asylumCase))
-                .put(WEEKS_DEADLINE, AsylumCaseUtils.populateStatutoryTimeFrame24wDate(asylumCase))
-                .put(LINK_TO_SERVICE_KEY, iaAipFrontendUrl)
-                .build();
+                .put(WEEKS_DEADLINE, AsylumCaseUtils.populateStatutoryTimeFrame24wDate(asylumCase));
+        populate24WeeksDates(builder);
+        buildAddressForAppellantIccLetter(asylumCase, builder);
+
+        return builder.build();
     }
-
-
 }
