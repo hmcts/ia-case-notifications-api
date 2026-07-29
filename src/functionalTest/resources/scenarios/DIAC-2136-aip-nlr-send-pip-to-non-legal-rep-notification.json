@@ -74,7 +74,7 @@
       {
         "reference": "2139_SEND_PIP_TO_NON_LEGAL_REP",
         "recipient": "{$TEST_NLR_USERNAME}",
-        "subject": "",
+        "subject": "Join an ongoing appeal",
         "body": [
           "PA/12345/2019",
           "A1234567",

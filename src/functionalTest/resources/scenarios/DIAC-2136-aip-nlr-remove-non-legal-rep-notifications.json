@@ -2,7 +2,7 @@
   "description": "DIAC-2136 AIP NLR Remove Non Legal Rep - sends notifications to NLR (email) and Appellant (email and SMS)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
-    "credentials": "Nlr",
+    "credentials": "SystemUser",
     "input": {
       "id": 2137,
       "eventId": "removeNonLegalRep",
@@ -80,7 +80,7 @@
       {
         "reference": "2137_REMOVE_NON_LEGAL_REP_CONFIRMATION",
         "recipient": "{$TEST_NLR_USERNAME}",
-        "subject": "",
+        "subject": "Removed from appeal as non-legal representative",
         "body": [
           "PA/12345/2019",
           "A1234567",
@@ -91,7 +91,7 @@
       {
         "reference": "2137_REMOVE_NON_LEGAL_REP_CONFIRMATION_APPELLANT_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
-        "subject": "",
+        "subject": "A non-legal representative has been removed from your appeal",
         "body": [
           "PA/12345/2019",
           "A1234567",

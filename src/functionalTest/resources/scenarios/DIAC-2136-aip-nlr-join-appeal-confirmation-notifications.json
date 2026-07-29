@@ -92,7 +92,7 @@
       {
         "reference": "2136_NON_LEGAL_REP_JOIN_APPEAL_CONFIRMATION_APPELLANT_EMAIL",
         "recipient": "{$TEST_CITIZEN_USERNAME}",
-        "subject": "",
+        "subject": "A non-legal representative has joined your appeal",
         "body": [
           "PA/12345/2019",
           "A1234567",
