@@ -2,7 +2,7 @@
   "description": "DIAC-2136 AIP NLR Remove Non Legal Rep - sends notifications to NLR (email) and Appellant (email and SMS)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
-    "credentials": "SystemUser",
+    "credentials": "Citizen",
     "input": {
       "id": 2137,
       "eventId": "removeNonLegalRep",
