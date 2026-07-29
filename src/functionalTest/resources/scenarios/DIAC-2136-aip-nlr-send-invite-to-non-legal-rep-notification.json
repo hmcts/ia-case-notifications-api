@@ -73,7 +73,7 @@
       {
         "reference": "2140_SEND_INVITE_TO_NON_LEGAL_REP",
         "recipient": "{$TEST_NLR_USERNAME}",
-        "subject": "",
+        "subject": "Sign up to HMCTS services",
         "body": [
           "PA/12345/2019",
           "A1234567",

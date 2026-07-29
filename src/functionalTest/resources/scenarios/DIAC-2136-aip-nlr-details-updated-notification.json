@@ -72,7 +72,7 @@
       {
         "reference": "2138_NON_LEGAL_REP_PHONE_NUMBER_SUBMITTED",
         "recipient": "{$TEST_NLR_USERNAME}",
-        "subject": "",
+        "subject": "Details updated",
         "body": [
           "PA/12345/2019",
           "A1234567",

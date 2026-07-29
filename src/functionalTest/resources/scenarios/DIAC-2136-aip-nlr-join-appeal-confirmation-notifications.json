@@ -80,7 +80,7 @@
       {
         "reference": "2136_NON_LEGAL_REP_JOIN_APPEAL_CONFIRMATION",
         "recipient": "{$TEST_NLR_USERNAME}",
-        "subject": "",
+        "subject": "Joined appeal as non-legal representative",
         "body": [
           "PA/12345/2019",
           "A1234567",
