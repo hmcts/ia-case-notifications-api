@@ -446,6 +446,23 @@ public class AsylumCaseUtils {
         return isInternal && isLegallyRepresented;
     }
 
+    public static List<String> getAppellantOrLegalRepAddressLetterPersonalisation(AsylumCase asylumCase) {
+        boolean appellantRepresentation = hasBeenSubmittedByAppellantInternalCase(asylumCase);
+        List<String> address;
+        // Internal appellant no representation - use appellant address
+        if (appellantRepresentation) {
+            address = inCountryAppeal(asylumCase) ?
+                    getAppellantAddressAsList(asylumCase) :
+                    getAppellantAddressAsListOoc(asylumCase);
+            // Internal appellant has representation - use legal rep address
+        } else {
+            address = legalRepInCountryAppeal(asylumCase) ?
+                    getLegalRepresentativeAddressAsList(asylumCase) :
+                    getLegalRepresentativeAddressOocAsList(asylumCase);
+        }
+        return address;
+    }
+
     public static String normalizeDecisionHearingOptionText(String decisionHearingFeeOption) {
         if ("decisionWithHearing".equals(decisionHearingFeeOption)) {
             return "Decision with hearing";
