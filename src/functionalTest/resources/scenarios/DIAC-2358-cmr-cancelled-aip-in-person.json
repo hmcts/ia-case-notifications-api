@@ -5,7 +5,7 @@
     "credentials": "SystemUser",
     "input": {
       "id": 64021,
-      "eventId": "cmrCancelled",
+      "eventId": "cmrHearingCancelled",
       "state": "listing",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
