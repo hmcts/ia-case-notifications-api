@@ -1,8 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAipJourney;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -57,7 +56,7 @@ public class AppellantCmrRelistingPersonalisationEmail implements EmailNotificat
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return isAipJourney(asylumCase) ? appellantCaseEditedTemplateId : legallyReppedAppellantCaseEditedTemplateId;
+        return isRepJourney(asylumCase) ? legallyReppedAppellantCaseEditedTemplateId : appellantCaseEditedTemplateId;
     }
 
     @Override
