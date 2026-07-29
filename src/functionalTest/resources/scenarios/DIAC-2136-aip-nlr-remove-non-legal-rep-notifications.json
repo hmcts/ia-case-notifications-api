@@ -1,0 +1,112 @@
+{
+  "description": "DIAC-2136 AIP NLR Remove Non Legal Rep - sends notifications to NLR (email) and Appellant (email and SMS)",
+  "request": {
+    "uri": "/asylum/ccdAboutToSubmit",
+    "credentials": "Citizen",
+    "input": {
+      "id": 2137,
+      "eventId": "removeNonLegalRep",
+      "state": "appealSubmitted",
+      "caseData": {
+        "template": "aip-minimal-appeal-submitted.json",
+        "replacements": {
+          "hearingCentre": "manchester",
+          "nlrDetails": {
+            "idamId": "nlr-idam-id-123",
+            "emailAddress": "{$TEST_NLR_USERNAME}",
+            "givenNames": "John",
+            "familyName": "Smith",
+            "phoneNumber": "07123456789"
+          },
+          "subscriptions": [
+            {
+              "id": "1",
+              "value": {
+                "subscriber": "appellant",
+                "email": "{$TEST_CITIZEN_USERNAME}",
+                "wantsEmail": "Yes",
+                "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
+                "wantsSms": "Yes"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "expectation": {
+    "status": 200,
+    "errors": [],
+    "caseData": {
+      "template": "aip-minimal-appeal-submitted.json",
+      "replacements": {
+        "hearingCentre": "manchester",
+        "nlrDetails": {
+          "idamId": "nlr-idam-id-123",
+          "emailAddress": "{$TEST_NLR_USERNAME}",
+          "givenNames": "John",
+          "familyName": "Smith",
+          "phoneNumber": "07123456789"
+        },
+        "subscriptions": [
+          {
+            "id": "1",
+            "value": {
+              "subscriber": "appellant",
+              "email": "{$TEST_CITIZEN_USERNAME}",
+              "wantsEmail": "Yes",
+              "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
+              "wantsSms": "Yes"
+            }
+          }
+        ],
+        "notificationsSent": [
+          {
+            "id": "2137_REMOVE_NON_LEGAL_REP_CONFIRMATION",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "2137_REMOVE_NON_LEGAL_REP_CONFIRMATION_APPELLANT_EMAIL",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "2137_REMOVE_NON_LEGAL_REP_CONFIRMATION_APPELLANT_SMS",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }
+        ]
+      }
+    },
+    "notifications": [
+      {
+        "reference": "2137_REMOVE_NON_LEGAL_REP_CONFIRMATION",
+        "recipient": "{$TEST_NLR_USERNAME}",
+        "subject": "",
+        "body": [
+          "PA/12345/2019",
+          "A1234567",
+          "John",
+          "Smith"
+        ]
+      },
+      {
+        "reference": "2137_REMOVE_NON_LEGAL_REP_CONFIRMATION_APPELLANT_EMAIL",
+        "recipient": "{$TEST_CITIZEN_USERNAME}",
+        "subject": "",
+        "body": [
+          "PA/12345/2019",
+          "A1234567",
+          "Pablo",
+          "Jimenez"
+        ]
+      },
+      {
+        "reference": "2137_REMOVE_NON_LEGAL_REP_CONFIRMATION_APPELLANT_SMS",
+        "recipient": "{$TEST_CITIZEN_MOBILE}",
+        "subject": "",
+        "body": [
+          "PA/12345/2019"
+        ]
+      }
+    ]
+  }
+}

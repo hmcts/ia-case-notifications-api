@@ -1,0 +1,94 @@
+{
+  "description": "DIAC-2136 AIP NLR Send PIP (PIN in Post) to Non Legal Rep - sends notification to NLR (email)",
+  "request": {
+    "uri": "/asylum/ccdAboutToSubmit",
+    "credentials": "Citizen",
+    "input": {
+      "id": 2139,
+      "eventId": "sendPipToNonLegalRep",
+      "state": "appealSubmitted",
+      "caseData": {
+        "template": "aip-minimal-appeal-submitted.json",
+        "replacements": {
+          "hearingCentre": "manchester",
+          "ccdReferenceNumberForDisplay": "1234-5678-9012-3456",
+          "nlrDetails": {
+            "idamId": "nlr-idam-id-123",
+            "emailAddress": "{$TEST_NLR_USERNAME}",
+            "givenNames": "John",
+            "familyName": "Smith",
+            "phoneNumber": "07123456789"
+          },
+          "subscriptions": [
+            {
+              "id": "1",
+              "value": {
+                "subscriber": "appellant",
+                "email": "{$TEST_CITIZEN_USERNAME}",
+                "wantsEmail": "Yes",
+                "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
+                "wantsSms": "Yes"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "expectation": {
+    "status": 200,
+    "errors": [],
+    "caseData": {
+      "template": "aip-minimal-appeal-submitted.json",
+      "replacements": {
+        "hearingCentre": "manchester",
+        "ccdReferenceNumberForDisplay": "1234-5678-9012-3456",
+        "nlrDetails": {
+          "idamId": "nlr-idam-id-123",
+          "emailAddress": "{$TEST_NLR_USERNAME}",
+          "givenNames": "John",
+          "familyName": "Smith",
+          "phoneNumber": "07123456789"
+        },
+        "subscriptions": [
+          {
+            "id": "1",
+            "value": {
+              "subscriber": "appellant",
+              "email": "{$TEST_CITIZEN_USERNAME}",
+              "wantsEmail": "Yes",
+              "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
+              "wantsSms": "Yes"
+            }
+          }
+        ],
+        "notificationsSent": [
+          {
+            "id": "2139_SEND_PIP_TO_NON_LEGAL_REP",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }
+        ],
+        "nlrJoinAppealPinInPost": {
+          "pinUsed": "No",
+          "accessCode": "$/[A-Z0-9]{8}/",
+          "expiryDate": "$/\\d{4}-\\d{2}-\\d{2}/"
+        }
+      }
+    },
+    "notifications": [
+      {
+        "reference": "2139_SEND_PIP_TO_NON_LEGAL_REP",
+        "recipient": "{$TEST_NLR_USERNAME}",
+        "subject": "",
+        "body": [
+          "PA/12345/2019",
+          "A1234567",
+          "Pablo Jimenez",
+          "1234-5678-9012-3456",
+          "John",
+          "Smith"
+        ]
+      }
+    ]
+  }
+}

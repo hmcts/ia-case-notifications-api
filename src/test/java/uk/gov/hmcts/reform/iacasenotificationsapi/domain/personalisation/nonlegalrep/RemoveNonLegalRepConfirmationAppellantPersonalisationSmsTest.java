@@ -5,8 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.NLR_DETAILS;
-
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -19,7 +17,6 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NonLegalRepDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
@@ -40,12 +37,6 @@ class RemoveNonLegalRepConfirmationAppellantPersonalisationSmsTest {
 
     private final Long caseId = 12345L;
     private final String templateId = "removeNonLegalRepConfirmationAppellantSmsTemplateId";
-    private final NonLegalRepDetails nlrDetails = NonLegalRepDetails.builder()
-        .emailAddress("nlr@example.com")
-        .givenNames("someGivenNames")
-        .familyName("someFamilyName")
-        .idamId("someIdamId")
-        .build();
     private final String appealReferenceNumber = "hmctsReference";
     private final String appellantPhone = "07123456789";
 
@@ -94,31 +85,12 @@ class RemoveNonLegalRepConfirmationAppellantPersonalisationSmsTest {
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
         when(asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
-        when(asylumCase.read(NLR_DETAILS, NonLegalRepDetails.class)).thenReturn(Optional.of(nlrDetails));
 
         Map<String, String> personalisation =
             removeNonLegalRepConfirmationAppellantPersonalisationSms.getPersonalisation(callback);
 
         assertFalse(personalisation.isEmpty());
         assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(nlrDetails.getGivenNames(), personalisation.get("nlrGivenNames"));
-        assertEquals(nlrDetails.getFamilyName(), personalisation.get("nlrFamilyName"));
-    }
-
-    @Test
-    void should_return_personalisation_when_nlr_names_empty() {
-        when(callback.getCaseDetails()).thenReturn(caseDetails);
-        when(caseDetails.getCaseData()).thenReturn(asylumCase);
-        when(asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
-        when(asylumCase.read(NLR_DETAILS, NonLegalRepDetails.class)).thenReturn(Optional.empty());
-
-        Map<String, String> personalisation =
-            removeNonLegalRepConfirmationAppellantPersonalisationSms.getPersonalisation(callback);
-
-        assertFalse(personalisation.isEmpty());
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals("Sir /", personalisation.get("nlrGivenNames"));
-        assertEquals("Madam", personalisation.get("nlrFamilyName"));
     }
 
     @Test

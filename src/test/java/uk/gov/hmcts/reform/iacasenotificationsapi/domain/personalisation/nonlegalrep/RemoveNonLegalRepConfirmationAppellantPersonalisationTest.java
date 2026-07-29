@@ -5,8 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.NLR_DETAILS;
-
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -19,10 +17,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NonLegalRepDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
@@ -30,10 +25,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 @MockitoSettings(strictness = Strictness.LENIENT)
 class RemoveNonLegalRepConfirmationAppellantPersonalisationTest {
 
-    @Mock
-    Callback<AsylumCase> callback;
-    @Mock
-    CaseDetails<AsylumCase> caseDetails;
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -43,12 +34,6 @@ class RemoveNonLegalRepConfirmationAppellantPersonalisationTest {
 
     private final Long caseId = 12345L;
     private final String templateId = "removeNonLegalRepConfirmationAppellantTemplateId";
-    private final NonLegalRepDetails nlrDetails = NonLegalRepDetails.builder()
-        .emailAddress("nlr@example.com")
-        .givenNames("someGivenNames")
-        .familyName("someFamilyName")
-        .idamId("someIdamId")
-        .build();
     private final String appealReferenceNumber = "hmctsReference";
     private final String homeOfficeReference = "homeOfficeReference";
     private final String appellantGivenNames = "someAppellantGivenNames";
@@ -100,8 +85,6 @@ class RemoveNonLegalRepConfirmationAppellantPersonalisationTest {
 
     @Test
     void should_return_personalisation_when_all_information_given() {
-        when(callback.getCaseDetails()).thenReturn(caseDetails);
-        when(caseDetails.getCaseData()).thenReturn(asylumCase);
         when(asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         when(asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReference));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
@@ -110,7 +93,6 @@ class RemoveNonLegalRepConfirmationAppellantPersonalisationTest {
             "customerServicesTelephone", customerServicesTelephone,
             "customerServicesEmail", customerServicesEmail
         );
-        when(asylumCase.read(NLR_DETAILS, NonLegalRepDetails.class)).thenReturn(Optional.of(nlrDetails));
         when(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase)).thenReturn(customerServicesPersonalisation);
 
         Map<String, String> personalisation =
@@ -123,37 +105,6 @@ class RemoveNonLegalRepConfirmationAppellantPersonalisationTest {
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(customerServicesTelephone, personalisation.get("customerServicesTelephone"));
         assertEquals(customerServicesEmail, personalisation.get("customerServicesEmail"));
-        assertEquals(nlrDetails.getGivenNames(), personalisation.get("nlrGivenNames"));
-        assertEquals(nlrDetails.getFamilyName(), personalisation.get("nlrFamilyName"));
-    }
-
-    @Test
-    void should_return_personalisation_when_nlr_names_empty() {
-        when(callback.getCaseDetails()).thenReturn(caseDetails);
-        when(caseDetails.getCaseData()).thenReturn(asylumCase);
-        when(asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
-        when(asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReference));
-        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(appellantGivenNames));
-        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
-        Map<String, String> customerServicesPersonalisation = Map.of(
-            "customerServicesTelephone", customerServicesTelephone,
-            "customerServicesEmail", customerServicesEmail
-        );
-        when(asylumCase.read(NLR_DETAILS, NonLegalRepDetails.class)).thenReturn(Optional.empty());
-        when(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase)).thenReturn(customerServicesPersonalisation);
-
-        Map<String, String> personalisation =
-            removeNonLegalRepConfirmationAppellantPersonalisation.getPersonalisation(asylumCase);
-
-        assertFalse(personalisation.isEmpty());
-        assertEquals(appealReferenceNumber, personalisation.get("appealReferenceNumber"));
-        assertEquals(homeOfficeReference, personalisation.get("homeOfficeReferenceNumber"));
-        assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
-        assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
-        assertEquals(customerServicesTelephone, personalisation.get("customerServicesTelephone"));
-        assertEquals(customerServicesEmail, personalisation.get("customerServicesEmail"));
-        assertEquals("Sir /", personalisation.get("nlrGivenNames"));
-        assertEquals("Madam", personalisation.get("nlrFamilyName"));
     }
 
     @Test

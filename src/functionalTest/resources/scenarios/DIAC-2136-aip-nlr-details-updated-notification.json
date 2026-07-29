@@ -1,0 +1,85 @@
+{
+  "description": "DIAC-2136 AIP NLR Details Updated - sends notification to NLR (email)",
+  "request": {
+    "uri": "/asylum/ccdAboutToSubmit",
+    "credentials": "Citizen",
+    "input": {
+      "id": 2138,
+      "eventId": "nlrDetailsUpdated",
+      "state": "appealSubmitted",
+      "caseData": {
+        "template": "aip-minimal-appeal-submitted.json",
+        "replacements": {
+          "hearingCentre": "manchester",
+          "nlrDetails": {
+            "idamId": "nlr-idam-id-123",
+            "emailAddress": "{$TEST_NLR_USERNAME}",
+            "givenNames": "John",
+            "familyName": "Smith",
+            "phoneNumber": "07123456789"
+          },
+          "subscriptions": [
+            {
+              "id": "1",
+              "value": {
+                "subscriber": "appellant",
+                "email": "{$TEST_CITIZEN_USERNAME}",
+                "wantsEmail": "Yes",
+                "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
+                "wantsSms": "Yes"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "expectation": {
+    "status": 200,
+    "errors": [],
+    "caseData": {
+      "template": "aip-minimal-appeal-submitted.json",
+      "replacements": {
+        "hearingCentre": "manchester",
+        "nlrDetails": {
+          "idamId": "nlr-idam-id-123",
+          "emailAddress": "{$TEST_NLR_USERNAME}",
+          "givenNames": "John",
+          "familyName": "Smith",
+          "phoneNumber": "07123456789"
+        },
+        "subscriptions": [
+          {
+            "id": "1",
+            "value": {
+              "subscriber": "appellant",
+              "email": "{$TEST_CITIZEN_USERNAME}",
+              "wantsEmail": "Yes",
+              "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
+              "wantsSms": "Yes"
+            }
+          }
+        ],
+        "notificationsSent": [
+          {
+            "id": "2138_NON_LEGAL_REP_PHONE_NUMBER_SUBMITTED",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }
+        ]
+      }
+    },
+    "notifications": [
+      {
+        "reference": "2138_NON_LEGAL_REP_PHONE_NUMBER_SUBMITTED",
+        "recipient": "{$TEST_NLR_USERNAME}",
+        "subject": "",
+        "body": [
+          "PA/12345/2019",
+          "A1234567",
+          "John",
+          "Smith"
+        ]
+      }
+    ]
+  }
+}

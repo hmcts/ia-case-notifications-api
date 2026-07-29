@@ -57,8 +57,6 @@ public class RemoveNonLegalRepConfirmationAppellantPersonalisationSms implements
             ImmutableMap
                 .<String, String>builder()
                 .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("nlrGivenNames", nlrDetails.map(NonLegalRepDetails::getGivenNames).orElse("Sir /"))
-                .put("nlrFamilyName", nlrDetails.map(NonLegalRepDetails::getFamilyName).orElse("Madam"))
                 .build();
     }
 }
