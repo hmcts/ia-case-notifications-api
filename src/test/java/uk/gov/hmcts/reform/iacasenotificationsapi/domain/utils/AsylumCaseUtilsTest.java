@@ -735,6 +735,104 @@ public class AsylumCaseUtilsTest {
     }
 
     @ParameterizedTest
+    @ValueSource(strings = {"INTER", "VID", "TEL"})
+    void should_return_true_when_cmr_hearing_is_in_person_or_remote(String hearingChannelCode) {
+        DynamicList hearingChannelList = new DynamicList(
+            new Value(hearingChannelCode, hearingChannelCode),
+            List.of(new Value("INTER", "In Person"),
+                new Value("NA", "Not in Attendance"),
+                new Value("VID", "Video"),
+                new Value("TEL", "Telephone"))
+        );
+
+        when(asylumCase.read(CMR_HEARING_CHANNEL, DynamicList.class)).thenReturn(Optional.of(hearingChannelList));
+
+        assertTrue(isCmrHearingInPersonOrRemote(asylumCase));
+    }
+
+    @Test
+    void should_return_false_when_cmr_hearing_is_not_in_person_or_remote() {
+        DynamicList hearingChannelList = new DynamicList(
+            new Value("NA", "Not in Attendance"),
+            List.of(new Value("INTER", "In Person"),
+                new Value("NA", "Not in Attendance"),
+                new Value("VID", "Video"),
+                new Value("TEL", "Telephone"))
+        );
+
+        when(asylumCase.read(CMR_HEARING_CHANNEL, DynamicList.class)).thenReturn(Optional.of(hearingChannelList));
+
+        assertFalse(isCmrHearingInPersonOrRemote(asylumCase));
+    }
+
+    @Test
+    void should_return_false_when_cmr_hearing_in_person_or_remote_channel_is_empty() {
+        when(asylumCase.read(CMR_HEARING_CHANNEL, DynamicList.class)).thenReturn(Optional.empty());
+
+        assertFalse(isCmrHearingInPersonOrRemote(asylumCase));
+    }
+
+    @Test
+    void should_return_true_when_repped_appellant_email_preferred() {
+        when(asylumCase.read(CONTACT_PREFERENCE, ContactPreference.class))
+            .thenReturn(Optional.of(ContactPreference.WANTS_EMAIL));
+        when(asylumCase.read(EMAIL, String.class)).thenReturn(Optional.of("appellant@example.com"));
+
+        assertTrue(isReppedAppellantEmailPreferred(asylumCase));
+    }
+
+    @Test
+    void should_return_false_when_repped_appellant_email_preferred_but_no_email_present() {
+        when(asylumCase.read(CONTACT_PREFERENCE, ContactPreference.class))
+            .thenReturn(Optional.of(ContactPreference.WANTS_EMAIL));
+        when(asylumCase.read(EMAIL, String.class)).thenReturn(Optional.empty());
+
+        assertFalse(isReppedAppellantEmailPreferred(asylumCase));
+    }
+
+    @Test
+    void should_return_false_when_repped_appellant_does_not_prefer_email() {
+        when(asylumCase.read(EMAIL, String.class)).thenReturn(Optional.of("appellant@example.com"));
+
+        when(asylumCase.read(CONTACT_PREFERENCE, ContactPreference.class))
+            .thenReturn(Optional.of(ContactPreference.WANTS_SMS));
+        assertFalse(isReppedAppellantEmailPreferred(asylumCase));
+
+        when(asylumCase.read(CONTACT_PREFERENCE, ContactPreference.class)).thenReturn(Optional.empty());
+        assertFalse(isReppedAppellantEmailPreferred(asylumCase));
+    }
+
+    @Test
+    void should_return_true_when_repped_appellant_sms_preferred() {
+        when(asylumCase.read(CONTACT_PREFERENCE, ContactPreference.class))
+            .thenReturn(Optional.of(ContactPreference.WANTS_SMS));
+        when(asylumCase.read(MOBILE_NUMBER, String.class)).thenReturn(Optional.of("07123456789"));
+
+        assertTrue(isReppedAppellantSmsPreferred(asylumCase));
+    }
+
+    @Test
+    void should_return_false_when_repped_appellant_sms_preferred_but_no_mobile_number_present() {
+        when(asylumCase.read(CONTACT_PREFERENCE, ContactPreference.class))
+            .thenReturn(Optional.of(ContactPreference.WANTS_SMS));
+        when(asylumCase.read(MOBILE_NUMBER, String.class)).thenReturn(Optional.empty());
+
+        assertFalse(isReppedAppellantSmsPreferred(asylumCase));
+    }
+
+    @Test
+    void should_return_false_when_repped_appellant_does_not_prefer_sms() {
+        when(asylumCase.read(MOBILE_NUMBER, String.class)).thenReturn(Optional.of("07123456789"));
+
+        when(asylumCase.read(CONTACT_PREFERENCE, ContactPreference.class))
+            .thenReturn(Optional.of(ContactPreference.WANTS_EMAIL));
+        assertFalse(isReppedAppellantSmsPreferred(asylumCase));
+
+        when(asylumCase.read(CONTACT_PREFERENCE, ContactPreference.class)).thenReturn(Optional.empty());
+        assertFalse(isReppedAppellantSmsPreferred(asylumCase));
+    }
+
+    @ParameterizedTest
     @ValueSource(strings = {"PARTIALLY_APPROVED", "REJECTED"})
     void should_return_true_for_remission_decision_partially_granted_or_refused(String remissionDecisionValue) {
         RemissionDecision remissionDecision = RemissionDecision.valueOf(remissionDecisionValue);
