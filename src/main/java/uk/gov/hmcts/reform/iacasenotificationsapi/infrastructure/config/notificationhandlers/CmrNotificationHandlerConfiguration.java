@@ -59,6 +59,7 @@ public class CmrNotificationHandlerConfiguration {
         );
     }
 
+//   This covers both AIP manual non detained and detained in other
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> cmrRelistingAipManualAppellantPostalNotificationHandler(
         @Qualifier("aipManualCmrRelistingAppellantPostalNotificationGenerator") List<NotificationGenerator> notificationGenerators
@@ -223,6 +224,25 @@ public class CmrNotificationHandlerConfiguration {
                     && isDetainedInFacilityType(asylumCase, OTHER);
             },
             notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> cmrCancelledAipManualNotificationHandler(
+            @Qualifier("cmrCancelledAipManualNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    log.info("isCmrHearingInPersonOrRemote : {} for case reference: {}", isCmrHearingInPersonOrRemote(asylumCase),  callback.getCaseDetails().getId());
+                    log.info("hasBeenSubmittedByAppellantInternalCase: {} for case reference: {}", hasBeenSubmittedByAppellantInternalCase(asylumCase), callback.getCaseDetails().getId());
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && CMR_HEARING_CANCELLED.equals(callback.getEvent())
+                            && isCmrHearingInPersonOrRemote(asylumCase)
+                            && hasBeenSubmittedByAppellantInternalCase(asylumCase);
+                },
+                notificationGenerators
         );
     }
   
