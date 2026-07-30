@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAipJourney;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.APPEAL_RECEIVED_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.APPELLANT_FULL_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.DECISION_SENT_DATE;
@@ -65,9 +64,7 @@ public class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return isAipJourney(asylumCase) ?
-                recipientsFinder.findAll(asylumCase, NotificationType.EMAIL) :
-                recipientsFinder.findReppedAppellant(asylumCase, NotificationType.EMAIL);
+        return recipientsFinder.findAll(asylumCase, NotificationType.EMAIL);
     }
 
     @Override
