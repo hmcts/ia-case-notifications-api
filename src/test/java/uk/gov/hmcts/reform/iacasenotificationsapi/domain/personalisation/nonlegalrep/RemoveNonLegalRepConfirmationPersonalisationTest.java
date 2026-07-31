@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.NLR_DETAILS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.PREVIOUS_NLR_DETAILS;
 
 import java.util.Collections;
 import java.util.Map;
@@ -57,7 +57,7 @@ class RemoveNonLegalRepConfirmationPersonalisationTest {
 
     @Test
     void should_return_nlr_email_address() {
-        when(asylumCase.read(NLR_DETAILS, NonLegalRepDetails.class)).thenReturn(Optional.of(nlrDetails));
+        when(asylumCase.read(PREVIOUS_NLR_DETAILS, NonLegalRepDetails.class)).thenReturn(Optional.of(nlrDetails));
         assertEquals(Collections.singleton(nlrDetails.getEmailAddress()),
             removeNonLegalRepConfirmationPersonalisation.getRecipientsList(asylumCase));
     }
@@ -66,7 +66,7 @@ class RemoveNonLegalRepConfirmationPersonalisationTest {
     void should_throw_if_no_nlr_details() {
         IllegalStateException exception = assertThrows(IllegalStateException.class,
             () -> removeNonLegalRepConfirmationPersonalisation.getRecipientsList(asylumCase));
-        assertEquals("NLR details is not present", exception.getMessage());
+        assertEquals("Previous NLR details is not present", exception.getMessage());
     }
 
     @Test
@@ -89,7 +89,7 @@ class RemoveNonLegalRepConfirmationPersonalisationTest {
             "customerServicesTelephone", customerServicesTelephone,
             "customerServicesEmail", customerServicesEmail
         );
-        when(asylumCase.read(NLR_DETAILS, NonLegalRepDetails.class)).thenReturn(Optional.of(nlrDetails));
+        when(asylumCase.read(PREVIOUS_NLR_DETAILS, NonLegalRepDetails.class)).thenReturn(Optional.of(nlrDetails));
         when(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase)).thenReturn(customerServicesPersonalisation);
 
         Map<String, String> personalisation =
@@ -112,7 +112,7 @@ class RemoveNonLegalRepConfirmationPersonalisationTest {
             "customerServicesTelephone", customerServicesTelephone,
             "customerServicesEmail", customerServicesEmail
         );
-        when(asylumCase.read(NLR_DETAILS, NonLegalRepDetails.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(PREVIOUS_NLR_DETAILS, NonLegalRepDetails.class)).thenReturn(Optional.empty());
         when(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase)).thenReturn(customerServicesPersonalisation);
 
         Map<String, String> personalisation =

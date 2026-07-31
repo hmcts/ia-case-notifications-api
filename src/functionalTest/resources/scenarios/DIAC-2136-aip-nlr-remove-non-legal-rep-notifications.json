@@ -11,7 +11,7 @@
         "template": "aip-minimal-appeal-submitted.json",
         "replacements": {
           "hearingCentre": "manchester",
-          "nlrDetails": {
+          "previousNlrDetails": {
             "idamId": "nlr-idam-id-123",
             "emailAddress": "{$TEST_NLR_USERNAME}",
             "givenNames": "John",
@@ -41,7 +41,7 @@
       "template": "aip-minimal-appeal-submitted.json",
       "replacements": {
         "hearingCentre": "manchester",
-        "nlrDetails": {
+        "previousNlrDetails": {
           "idamId": "nlr-idam-id-123",
           "emailAddress": "{$TEST_NLR_USERNAME}",
           "givenNames": "John",

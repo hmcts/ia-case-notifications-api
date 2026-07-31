@@ -39,8 +39,8 @@ public class RemoveNonLegalRepConfirmationPersonalisation implements EmailNotifi
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        NonLegalRepDetails nlrDetails = asylumCase.read(AsylumCaseDefinition.NLR_DETAILS, NonLegalRepDetails.class)
-            .orElseThrow(() -> new IllegalStateException("NLR details is not present"));
+        NonLegalRepDetails nlrDetails = asylumCase.read(AsylumCaseDefinition.PREVIOUS_NLR_DETAILS, NonLegalRepDetails.class)
+            .orElseThrow(() -> new IllegalStateException("Previous NLR details is not present"));
         return Collections.singleton(nlrDetails.getEmailAddress());
     }
 
@@ -52,7 +52,7 @@ public class RemoveNonLegalRepConfirmationPersonalisation implements EmailNotifi
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
-        Optional<NonLegalRepDetails> nlrDetails = asylumCase.read(AsylumCaseDefinition.NLR_DETAILS, NonLegalRepDetails.class);
+        Optional<NonLegalRepDetails> nlrDetails = asylumCase.read(AsylumCaseDefinition.PREVIOUS_NLR_DETAILS, NonLegalRepDetails.class);
 
         final ImmutableMap.Builder<String, String> fields = ImmutableMap
             .<String, String>builder()
