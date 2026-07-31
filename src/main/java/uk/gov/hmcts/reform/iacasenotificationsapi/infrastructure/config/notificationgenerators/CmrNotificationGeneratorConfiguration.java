@@ -421,38 +421,38 @@ public class CmrNotificationGeneratorConfiguration {
 
     @Bean("lrManualCmrListingNotificationGenerator")
     public List<NotificationGenerator> lrManualCmrListingNotificationGenerator(
-        CaseOfficerCmrListingPersonalisation caseOfficerCmrListingPersonalisation,
-        HomeOfficeInPersonCmrListingCasePersonalisation homeOfficeInPersonCmrListingCasePersonalisation,
-        GovNotifyNotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender,
-        DocumentDownloadClient documentDownloadClient
+            CaseOfficerCmrListingPersonalisation caseOfficerCmrListingPersonalisation,
+            HomeOfficeInPersonCmrListingCasePersonalisation homeOfficeInPersonCmrListingCasePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender,
+            DocumentDownloadClient documentDownloadClient
     ) {
         DocumentTag appellantDocumentTag = DocumentTag.INTERNAL_CMR_LISTING_APPELLANT_LETTER_BUNDLE;
         DocumentTag lrDocumentTag = DocumentTag.INTERNAL_CMR_LISTING_LR_LETTER_BUNDLE;
 
         return newArrayList(
-            new EmailNotificationGenerator(
-                newArrayList(
-                    caseOfficerCmrListingPersonalisation,
-                    homeOfficeInPersonCmrListingCasePersonalisation
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                caseOfficerCmrListingPersonalisation,
+                                homeOfficeInPersonCmrListingCasePersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
                 ),
-                notificationSender,
-                notificationIdAppender
-            ),
-            new PrecompiledLetterNotificationGenerator(
-                newArrayList(
-                    appellantDocumentTag,
-                    lrDocumentTag
-                ),
-                notificationSender,
-                notificationIdAppender,
-                documentDownloadClient
-            ) {
-                @Override
-                public Message getSuccessMessage() {
-                    return new Message("success","body");
+                new PrecompiledLetterNotificationGenerator(
+                        newArrayList(
+                                appellantDocumentTag,
+                                lrDocumentTag
+                        ),
+                        notificationSender,
+                        notificationIdAppender,
+                        documentDownloadClient
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
                 }
-            }
         );
     }
 }

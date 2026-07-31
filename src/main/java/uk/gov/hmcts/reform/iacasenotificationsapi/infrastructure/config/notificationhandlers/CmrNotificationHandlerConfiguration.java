@@ -281,19 +281,19 @@ public class CmrNotificationHandlerConfiguration {
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> cmrListingLrManualNotificationHandler(
-        @Qualifier("lrManualCmrListingNotificationGenerator") List<NotificationGenerator> notificationGenerators
+            @Qualifier("lrManualCmrListingNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
 
         return new NotificationHandler(
-            (callbackStage, callback) -> {
-                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && CMR_LISTING.equals(callback.getEvent())
-                    && isCmrHearingInPersonOrRemote(asylumCase)
-                    && !isAppellantInDetention(asylumCase)
-                    && hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase);
-            },
-            notificationGenerators
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && CMR_LISTING.equals(callback.getEvent())
+                            && isCmrHearingInPersonOrRemote(asylumCase)
+                            && !isAppellantInDetention(asylumCase)
+                            && hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase);
+                },
+                notificationGenerators
         );
     }
 
