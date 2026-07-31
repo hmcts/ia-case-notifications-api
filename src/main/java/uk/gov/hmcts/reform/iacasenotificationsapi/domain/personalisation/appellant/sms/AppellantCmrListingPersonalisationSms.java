@@ -16,6 +16,7 @@ import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAipJourney;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isRepJourney;
 
 @Service
@@ -57,7 +58,11 @@ public class AppellantCmrListingPersonalisationSms implements SmsNotificationPer
     @Override
     public Set<String> getRecipientsList(final AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
-        return recipientsFinder.findReppedAppellant(asylumCase, NotificationType.SMS);
+        if (isAipJourney(asylumCase)) {
+            return recipientsFinder.findAll(asylumCase, NotificationType.SMS);
+        } else {
+            return recipientsFinder.findReppedAppellant(asylumCase, NotificationType.SMS);
+        }
     }
 
     @Override
