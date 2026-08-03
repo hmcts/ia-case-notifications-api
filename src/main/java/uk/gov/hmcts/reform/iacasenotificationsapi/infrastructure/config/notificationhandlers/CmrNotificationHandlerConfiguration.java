@@ -303,7 +303,7 @@ public class CmrNotificationHandlerConfiguration {
     ) {
 
         return new NotificationHandler(
-                (callbackStage, callback)->{
+                (callbackStage, callback) -> {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && CMR_RE_LISTING.equals(callback.getEvent())

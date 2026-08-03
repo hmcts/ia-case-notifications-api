@@ -38,8 +38,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.GovNoti
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.INTERNAL_CMR_LISTING_APPELLANT_LETTER_BUNDLE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.INTERNAL_CMR_LISTING_LR_LETTER_BUNDLE;
 
 @Slf4j
 @Configuration
@@ -490,7 +488,7 @@ public class CmrNotificationGeneratorConfiguration {
                             documentDownloadClient
                     ) {
                         @Override
-                        public Message getSuccessMessage(){
+                        public Message getSuccessMessage() {
                             return new Message("success", "body");
                         }
                     }
