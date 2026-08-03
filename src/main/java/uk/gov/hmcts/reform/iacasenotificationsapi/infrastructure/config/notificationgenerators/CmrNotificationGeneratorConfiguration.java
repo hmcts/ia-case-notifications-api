@@ -38,6 +38,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.GovNoti
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.INTERNAL_CMR_LISTING_APPELLANT_LETTER_BUNDLE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag.INTERNAL_CMR_LISTING_LR_LETTER_BUNDLE;
 
 @Slf4j
 @Configuration
@@ -427,8 +429,8 @@ public class CmrNotificationGeneratorConfiguration {
             NotificationIdAppender notificationIdAppender,
             DocumentDownloadClient documentDownloadClient
     ) {
-        DocumentTag appellantDocumentTag = DocumentTag.INTERNAL_CMR_LISTING_APPELLANT_LETTER_BUNDLE;
-        DocumentTag lrDocumentTag = DocumentTag.INTERNAL_CMR_LISTING_LR_LETTER_BUNDLE;
+        DocumentTag appellantDocumentTag = INTERNAL_CMR_LISTING_APPELLANT_LETTER_BUNDLE;
+        DocumentTag lrDocumentTag = INTERNAL_CMR_LISTING_LR_LETTER_BUNDLE;
 
         return newArrayList(
                 new EmailNotificationGenerator(
@@ -454,5 +456,46 @@ public class CmrNotificationGeneratorConfiguration {
                     }
                 }
         );
+    }
+
+    @Bean("cmrRelistingLegallyRepresentedManualNonDetainedAppealGenerator")
+    public List<NotificationGenerator> cmrRelistingLegallyRepresentedManualNonDetainedAppealGenerator(
+            CaseOfficerCmrRelistingPersonalisation caseOfficerCmrRelistingPersonalisation,
+            HomeOfficeCmrRelistingPersonalisation homeOfficeCmrRelistingPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender,
+            DocumentDownloadClient documentDownloadClient
+    ) {
+
+        {
+            List<EmailNotificationPersonalisation> emailPersonalisations = newArrayList(
+                    caseOfficerCmrRelistingPersonalisation,
+                    homeOfficeCmrRelistingPersonalisation
+            );
+
+            List<DocumentTag> letters = newArrayList(
+                    INTERNAL_CMR_LISTING_APPELLANT_LETTER_BUNDLE,
+                    INTERNAL_CMR_LISTING_LR_LETTER_BUNDLE
+            );
+            return newArrayList(
+                    new EmailNotificationGenerator(
+                            emailPersonalisations,
+                            notificationSender,
+                            notificationIdAppender
+                    ),
+                    new PrecompiledLetterNotificationGenerator(
+                            letters,
+                            notificationSender,
+                            notificationIdAppender,
+                            documentDownloadClient
+                    ) {
+                        @Override
+                        public Message getSuccessMessage(){
+                            return new Message("success", "body");
+                        }
+                    }
+            );
+        }
+
     }
 }
