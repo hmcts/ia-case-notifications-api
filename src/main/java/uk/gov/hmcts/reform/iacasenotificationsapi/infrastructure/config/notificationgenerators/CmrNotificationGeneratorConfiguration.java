@@ -429,8 +429,8 @@ public class CmrNotificationGeneratorConfiguration {
             NotificationIdAppender notificationIdAppender,
             DocumentDownloadClient documentDownloadClient
     ) {
-        DocumentTag appellantDocumentTag = INTERNAL_CMR_LISTING_APPELLANT_LETTER_BUNDLE;
-        DocumentTag lrDocumentTag = INTERNAL_CMR_LISTING_LR_LETTER_BUNDLE;
+        DocumentTag appellantDocumentTag = DocumentTag.INTERNAL_CMR_LISTING_APPELLANT_LETTER_BUNDLE;
+        DocumentTag lrDocumentTag = DocumentTag.INTERNAL_CMR_LISTING_LR_LETTER_BUNDLE;
 
         return newArrayList(
                 new EmailNotificationGenerator(
@@ -474,8 +474,8 @@ public class CmrNotificationGeneratorConfiguration {
             );
 
             List<DocumentTag> letters = newArrayList(
-                    INTERNAL_CMR_LISTING_APPELLANT_LETTER_BUNDLE,
-                    INTERNAL_CMR_LISTING_LR_LETTER_BUNDLE
+                    DocumentTag.INTERNAL_CMR_LISTING_APPELLANT_LETTER_BUNDLE,
+                    DocumentTag.INTERNAL_CMR_LISTING_LR_LETTER_BUNDLE
             );
             return newArrayList(
                     new EmailNotificationGenerator(
