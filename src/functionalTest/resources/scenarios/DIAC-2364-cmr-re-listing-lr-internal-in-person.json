@@ -12,7 +12,7 @@
         "replacements": {
           "appealReferenceNumber": "PA/12345/2023",
           "ariaListingReference": "LP/12345/2021",
-          "appellantsRepresentation": "Yes",
+          "appellantsRepresentation": "No",
           "isAdmin": "Yes",
           "appellantAddress": {
             "County": "",
@@ -85,7 +85,7 @@
       "replacements": {
         "appealReferenceNumber": "PA/12345/2023",
         "ariaListingReference": "LP/12345/2021",
-        "appellantsRepresentation": "Yes",
+        "appellantsRepresentation": "No",
         "isAdmin": "Yes",
         "appellantAddress": {
           "County": "",
