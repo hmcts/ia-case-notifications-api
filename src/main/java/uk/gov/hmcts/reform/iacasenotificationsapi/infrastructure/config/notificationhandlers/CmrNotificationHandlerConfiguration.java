@@ -297,7 +297,7 @@ public class CmrNotificationHandlerConfiguration {
         );
     }
 
-//    This handler also handles DIAC-2366 LR manual detained in other since notifications for non detained and detained in other behave identically
+    //    This handler also handles DIAC-2366 LR manual detained in other since notifications for non detained and detained in other behave identically
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> cmrRelistingNonDetainedLegallyRepresentedManualAppeal(
             @Qualifier("cmrRelistingLegallyRepresentedManualNonDetainedAppealGenerator") List<NotificationGenerator> notificationGenerators
