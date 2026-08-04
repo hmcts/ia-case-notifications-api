@@ -1,5 +1,5 @@
 {
-  "description": "DIAC-2306 No notification is sent when the listed CMR hearing is a paper hearing for appellant - AiP internal (not in attendance)",
+  "description": "DIAC-2306 No notification is sent when the listed CMR hearing is a paper hearing for appellant - LR internal (not in attendance)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "SystemUser",
