@@ -143,7 +143,7 @@ public class AppellantCmrListingPersonalisationSmsTest {
             .containsEntry("hearingDate", hearingDate)
             .containsEntry("hearingTime", hearingTime)
             .containsEntry("hearingCentreAddress", hearingCentreAddress)
-            .containsEntry("tribunalCentre", hearingCentre.getValue());
+            .containsEntry("tribunalCentre", hearingCentreAddress);
     }
 
     @Test
@@ -159,15 +159,17 @@ public class AppellantCmrListingPersonalisationSmsTest {
             .containsEntry("hearingDate", hearingDate)
             .containsEntry("hearingTime", hearingTime)
             .containsEntry("hearingCentreAddress", hearingCentreAddress)
-            .containsEntry("tribunalCentre", hearingCentre.getValue());
+            .containsEntry("tribunalCentre", hearingCentreAddress);
     }
 
     @Test
-    void should_throw_personalisation_when_no_hearing_centre() {
+    void should_return_personalisation_when_no_hearing_centre_in_asylum_case() {
         when(asylumCase.read(CMR_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.empty());
-        IllegalArgumentException exception =
-            assertThrows(IllegalArgumentException.class,
-                () -> appellantCmrListingPersonalisationSms.getPersonalisation(asylumCase));
-        assertEquals("No hearing centre present", exception.getMessage());
+
+        Map<String, String> personalisation = appellantCmrListingPersonalisationSms.getPersonalisation(asylumCase);
+
+        assertThat(personalisation)
+            .containsEntry("hearingCentreAddress", hearingCentreAddress)
+            .containsEntry("tribunalCentre", hearingCentreAddress);
     }
 }
