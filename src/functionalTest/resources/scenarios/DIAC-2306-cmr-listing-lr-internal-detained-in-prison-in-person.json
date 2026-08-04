@@ -42,7 +42,7 @@
             {
               "id": "1",
               "value": {
-                "tag": "internalCmrListingLetterBundle",
+                "tag": "internalCmrListingLrLetterBundle",
                 "document": {
                   "document_url": "{$FIXTURE_DOC1_PDF_URL}",
                   "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
@@ -52,11 +52,13 @@
                 "description": "",
                 "dateUploaded": "{$TODAY}"
               }
-            },
+            }
+          ],
+          "notificationAttachmentDocuments": [
             {
-              "id": "2",
+              "id": "1",
               "value": {
-                "tag": "internalCmrListingLrLetterBundle",
+                "tag": "internalCmrListingLetterBundle",
                 "document": {
                   "document_url": "{$FIXTURE_DOC1_PDF_URL}",
                   "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
