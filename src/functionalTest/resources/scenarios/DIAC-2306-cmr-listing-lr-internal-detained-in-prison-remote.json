@@ -14,14 +14,9 @@
           "isAdmin": "Yes",
           "appealReferenceNumber": "PA/12345/2023",
           "ariaListingReference": "LP/12345/2021",
-          "appellantAddress": {
-            "County": "",
-            "Country": "United Kingdom",
-            "PostCode": "NE21JX",
-            "PostTown": "Example Town",
-            "AddressLine1": "5",
-            "AddressLine2": "Example Street"
-          },
+          "appellantInDetention": "Yes",
+          "detentionFacility": "prison",
+          "prisonName": "Aylesbury",
           "cmrHearingCentre": "taylorHouse",
           "cmrHearingDate": "2023-09-19T10:00:00.000",
           "cmrIsRemoteHearing": "Yes",
@@ -81,14 +76,9 @@
         "ariaListingReference": "LP/12345/2021",
         "appellantsRepresentation": "No",
         "isAdmin": "Yes",
-        "appellantAddress": {
-          "County": "",
-          "Country": "United Kingdom",
-          "PostCode": "NE21JX",
-          "PostTown": "Example Town",
-          "AddressLine1": "5",
-          "AddressLine2": "Example Street"
-        },
+        "appellantInDetention": "Yes",
+        "detentionFacility": "prison",
+        "prisonName": "Aylesbury",
         "notificationsSent": [
           {
             "id": "44026_CMR_LISTING_CASE_OFFICER",
