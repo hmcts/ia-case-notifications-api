@@ -5022,6 +5022,7 @@ public class NotificationGeneratorConfiguration {
     @Bean("stf24WeeksCompleteCaseReviewLegalRepresentativeNotificationGenerator")
     public List<NotificationGenerator> stf24WeeksCompleteCaseReviewLegalRepresentativeNotificationGenerator(
             LegalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation legalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation,
+            AppellantCompleteCaseReviewStatutoryTimeframe24WeeksLrContentPersonalisationEmail appellantCompleteCaseReviewStatutoryTimeframe24WeeksLrContentPersonalisationEmail,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
@@ -5029,7 +5030,28 @@ public class NotificationGeneratorConfiguration {
         return singletonList(
                 new EmailNotificationGenerator(
                         newArrayList(
-                                legalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation
+                                legalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation,
+                                appellantCompleteCaseReviewStatutoryTimeframe24WeeksLrContentPersonalisationEmail
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("stf24WeeksCompleteCaseReviewLegalRepresentativeLetterNotificationGenerator")
+    public List<NotificationGenerator> stf24WeeksCompleteCaseReviewLegalRepresentativeLetterNotificationGenerator(
+            LegalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationLetter legalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationLetter,
+            AppellantCompleteCaseReviewStatutoryTimeframe24WeeksLrCopyPersonalisationLetter appellantCompleteCaseReviewStatutoryTimeframe24WeeksLrCopyPersonalisationLetter,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new LetterNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationLetter,
+                                appellantCompleteCaseReviewStatutoryTimeframe24WeeksLrCopyPersonalisationLetter
                         ),
                         notificationSender,
                         notificationIdAppender
@@ -5078,6 +5100,45 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("completeCaseReview24WeeksAppellantLetterNotificationGenerator")
+    public List<NotificationGenerator> completeCaseReview24WeeksAppellantLetterNotificationGenerator(
+            AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationLetter appellantCompleteCaseReview24WeeksLetterPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new LetterNotificationGenerator(
+                        newArrayList(
+                                appellantCompleteCaseReview24WeeksLetterPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success", "body");
+                    }
+                }
+        );
+    }
+
+    @Bean("completeCaseReview24WeeksAppellantSmsNotificationGenerator")
+    public List<NotificationGenerator> completeCaseReview24WeeksAppellantSmsNotificationGenerator(
+            Appellant24WeeksReviewSms appellant24WeeksReviewSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+                new SmsNotificationGenerator(
+                        newArrayList(appellant24WeeksReviewSms),
+                        notificationSender,
+                        notificationIdAppender
+                )
+
+        );
+    }
+
     @Bean("removeStatutoryTimeframe24WeeksAppellantNotificationGenerator")
     public List<NotificationGenerator> removeStatutoryTimeframe24WeeksAppellantNotificationGenerator(
             AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail appellantRemoveStatutoryTimeframe24WeeksPersonalisationEmail,
@@ -5096,6 +5157,23 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("removeStatutoryTimeframe24WeeksAppellantSmsNotificationGenerator")
+    public List<NotificationGenerator> removeStatutoryTimeframe24WeeksAppellantSmsNotificationGenerator(
+            Appellant24WeeksRemoveSms appellant24WeeksRemoveSms,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+                new SmsNotificationGenerator(
+                        newArrayList(
+                                appellant24WeeksRemoveSms
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
 
     @Bean("removeStatutoryTimeframe24WeeksLegalRepNotificationGenerator")
     public List<NotificationGenerator> removeStatutoryTimeframe24WeeksLegalRepNotificationGenerator(

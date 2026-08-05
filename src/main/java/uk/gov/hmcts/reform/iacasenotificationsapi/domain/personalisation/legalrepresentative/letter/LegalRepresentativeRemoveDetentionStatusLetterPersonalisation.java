@@ -71,9 +71,7 @@ public class LegalRepresentativeRemoveDetentionStatusLetterPersonalisation imple
                 getLegalRepresentativeAddressAsList(asylumCase) :
                 getLegalRepresentativeAddressOocAsList(asylumCase);
 
-        for (int i = 0; i < address.size(); i++) {
-            personalizationBuilder.put("address_line_" + (i + 1), address.get(i));
-        }
+        buildAddressForIccLetter(asylumCase, personalizationBuilder);
         return personalizationBuilder.build();
     }
 }

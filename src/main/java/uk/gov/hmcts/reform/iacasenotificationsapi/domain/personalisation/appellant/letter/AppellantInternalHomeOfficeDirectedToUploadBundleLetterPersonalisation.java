@@ -14,7 +14,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -64,7 +63,6 @@ public class AppellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisat
                 .getCaseDetails()
                 .getCaseData();
 
-        List<String> address =  getAppellantOrLegalRepAddressLetterPersonalisation(asylumCase);
 
         final Direction direction =
             directionFinder
@@ -85,9 +83,7 @@ public class AppellantInternalHomeOfficeDirectedToUploadBundleLetterPersonalisat
             .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
             .put("directionDueDate", dueDate);
 
-        for (int i = 0; i < address.size(); i++) {
-            personalizationBuilder.put("address_line_" + (i + 1), address.get(i));
-        }
+        buildAddressForIccLetter(asylumCase, personalizationBuilder);
         return personalizationBuilder.build();
     }
 }
