@@ -41,7 +41,7 @@
             {
               "id": "1",
               "value": {
-                "tag": "cmrHearingCancelledLetterBundle",
+                "tag": "cmrHearingCancelledLetter",
                 "document": {
                   "document_url": "{$FIXTURE_DOC1_PDF_URL}",
                   "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
