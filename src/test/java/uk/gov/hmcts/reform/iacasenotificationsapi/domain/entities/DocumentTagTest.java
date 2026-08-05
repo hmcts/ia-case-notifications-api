@@ -109,12 +109,12 @@ class DocumentTagTest {
         assertEquals("internalEditCaseListingLetter", DocumentTag.INTERNAL_EDIT_CASE_LISTING_LETTER.toString());
         assertEquals("internalEditCaseListingLrLetter", DocumentTag.INTERNAL_EDIT_CASE_LISTING_LR_LETTER.toString());
         assertEquals("cmrHearingCancelledLetter", DocumentTag.CMR_HEARING_CANCELLED_LETTER.toString());
-        assertEquals("cmrHearingCancelledLrLetterBundle", DocumentTag.CMR_HEARING_CANCELLED_LR_LETTER.toString());
+        assertEquals("cmrHearingCancelledLrLetter", DocumentTag.CMR_HEARING_CANCELLED_LR_LETTER.toString());
 
     }
 
     @Test
     void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(111, DocumentTag.values().length);
+        assertEquals(109, DocumentTag.values().length);
     }
 }
