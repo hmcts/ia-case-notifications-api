@@ -35,6 +35,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationIdA
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.SmsNotificationGenerator;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.GovNotifyNotificationSender;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -327,6 +328,44 @@ public class CmrNotificationGeneratorConfiguration {
                         return new Message("success","body");
                     }
             }
+        );
+    }
+
+    @Bean("legalRepDigitalDetainedOtherCmrReListingNotificationGenerator")
+    public List<NotificationGenerator> legalRepDigitalDetainedOtherCmrReListingNotificationGenerator(
+            LegalRepresentativeCmrRelistingPersonalisation legalRepresentativeCmrRelistingPersonalisation,
+            CaseOfficerCmrRelistingPersonalisation caseOfficerCmrReListingPersonalisation,
+            HomeOfficeCmrRelistingPersonalisation homeOfficeCmrRelistingPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender,
+            DocumentDownloadClient documentDownloadClient
+    ) {
+
+        DocumentTag documentTag = DocumentTag.INTERNAL_CMR_LISTING_LETTER_BUNDLE;
+
+        return newArrayList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeCmrRelistingPersonalisation,
+                                caseOfficerCmrReListingPersonalisation,
+                                homeOfficeCmrRelistingPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new PrecompiledLetterNotificationGenerator(
+                        newArrayList(
+                                documentTag
+                        ),
+                        notificationSender,
+                        notificationIdAppender,
+                        documentDownloadClient
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
         );
     }
 
