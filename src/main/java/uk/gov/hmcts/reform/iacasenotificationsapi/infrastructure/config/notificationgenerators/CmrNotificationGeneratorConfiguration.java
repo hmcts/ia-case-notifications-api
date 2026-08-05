@@ -35,7 +35,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationIdA
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.SmsNotificationGenerator;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.GovNotifyNotificationSender;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
