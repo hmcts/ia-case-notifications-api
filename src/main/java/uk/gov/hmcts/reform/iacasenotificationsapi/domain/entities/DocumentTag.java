@@ -109,6 +109,8 @@ public enum DocumentTag {
     AIPM_DETAINED_IN_PRISON_IRC_REINSTATE_APPEAL_LETTER("aipmDetainedInPrisonOrIrcReinstateAppealLetter"),
     CMR_HEARING_CANCELLED_LETTER("cmrHearingCancelledLetter"),
     CMR_HEARING_CANCELLED_LETTER_BUNDLE("cmrHearingCancelledLetterBundle"),
+    CMR_HEARING_CANCELLED_LR_LETTER("cmrHearingCancelledLrLetter"),
+    CMR_HEARING_CANCELLED_LR_LETTER_BUNDLE("cmrHearingCancelledLrLetterBundle"),
 
 
     @JsonEnumDefaultValue

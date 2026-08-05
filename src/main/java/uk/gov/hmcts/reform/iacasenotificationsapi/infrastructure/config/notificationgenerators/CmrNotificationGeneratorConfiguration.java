@@ -330,14 +330,40 @@ public class CmrNotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("cmrCancelledAipManualNotificationGenerator")
-    public List<NotificationGenerator> cmrCancelledAipManualNotificationGenerator(
+    @Bean("cmrCancelledManualNotificationGenerator")
+    public List<NotificationGenerator> cmrCancelledManualNotificationGenerator(
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender,
             DocumentDownloadClient documentDownloadClient
     ) {
 
         DocumentTag documentTag = DocumentTag.CMR_HEARING_CANCELLED_LETTER_BUNDLE;
+
+        return newArrayList(
+                new PrecompiledLetterNotificationGenerator(
+                        newArrayList(
+                                documentTag
+                        ),
+                        notificationSender,
+                        notificationIdAppender,
+                        documentDownloadClient
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
+        );
+    }
+
+    @Bean("cmrCancelledLrManualNotificationGenerator")
+    public List<NotificationGenerator> cmrCancelledLrManualNotificationGenerator(
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender,
+            DocumentDownloadClient documentDownloadClient
+    ) {
+
+        DocumentTag documentTag = DocumentTag.CMR_HEARING_CANCELLED_LR_LETTER_BUNDLE;
 
         return newArrayList(
                 new PrecompiledLetterNotificationGenerator(
