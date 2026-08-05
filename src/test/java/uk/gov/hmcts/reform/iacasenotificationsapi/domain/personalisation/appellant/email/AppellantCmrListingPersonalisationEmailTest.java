@@ -168,7 +168,7 @@ public class AppellantCmrListingPersonalisationEmailTest {
             .containsEntry("hearingDate", hearingDate)
             .containsEntry("hearingTime", hearingTime)
             .containsEntry("hearingCentreAddress", hearingCentreAddress)
-            .containsEntry("tribunalCentre", hearingCentre.getValue());
+            .containsEntry("tribunalCentre", hearingCentreAddress);
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
@@ -198,18 +198,24 @@ public class AppellantCmrListingPersonalisationEmailTest {
             .containsEntry("hearingDate", hearingDate)
             .containsEntry("hearingTime", hearingTime)
             .containsEntry("hearingCentreAddress", hearingCentreAddress)
-            .containsEntry("tribunalCentre", hearingCentre.getValue());
+            .containsEntry("tribunalCentre", hearingCentreAddress);
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
-    @Test
-    void should_throw_personalisation_when_no_hearing_centre() {
+    @ParameterizedTest
+    @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
+    void should_return_personalisation_when_no_hearing_centre_in_asylum_case(YesOrNo isAda) {
+
+        initializePrefixes(appellantCmrListingPersonalisationEmail);
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         when(asylumCase.read(CMR_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.empty());
-        IllegalArgumentException exception =
-            assertThrows(IllegalArgumentException.class,
-                () -> appellantCmrListingPersonalisationEmail.getPersonalisation(asylumCase));
-        assertEquals("No hearing centre present", exception.getMessage());
+
+        Map<String, String> personalisation = appellantCmrListingPersonalisationEmail.getPersonalisation(asylumCase);
+
+        assertThat(personalisation)
+            .containsEntry("hearingCentreAddress", hearingCentreAddress)
+            .containsEntry("tribunalCentre", hearingCentreAddress);
     }
 }
