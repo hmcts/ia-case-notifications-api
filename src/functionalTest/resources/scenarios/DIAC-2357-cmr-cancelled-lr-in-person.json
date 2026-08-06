@@ -53,7 +53,7 @@
               { "code": "VID", "label": "Video" }
             ]
           },
-          "letterBundleDocuments": [
+          "letterNotificationDocuments": [
             {
               "id": "1",
               "value": {
