@@ -453,7 +453,7 @@ public class CmrNotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender,
         DocumentDownloadClient documentDownloadClient
     ) {
-        DocumentTag appellantDocumentTag = DocumentTag.INTERNAL_CMR_LISTING_APPELLANT_LETTER_BUNDLE;
+        DocumentTag appellantDocumentTag = DocumentTag.INTERNAL_CMR_LISTING_LETTER_BUNDLE;
         DocumentTag lrDocumentTag = DocumentTag.INTERNAL_CMR_LISTING_LR_LETTER_BUNDLE;
 
         return newArrayList(
@@ -525,5 +525,46 @@ public class CmrNotificationGeneratorConfiguration {
                 }
             }
         );
+    }
+
+    @Bean("cmrRelistingLegallyRepresentedManualNonDetainedAppealGenerator")
+    public List<NotificationGenerator> cmrRelistingLegallyRepresentedManualNonDetainedAppealGenerator(
+            CaseOfficerCmrRelistingPersonalisation caseOfficerCmrRelistingPersonalisation,
+            HomeOfficeCmrRelistingPersonalisation homeOfficeCmrRelistingPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender,
+            DocumentDownloadClient documentDownloadClient
+    ) {
+
+        {
+            List<EmailNotificationPersonalisation> emailPersonalisations = newArrayList(
+                    caseOfficerCmrRelistingPersonalisation,
+                    homeOfficeCmrRelistingPersonalisation
+            );
+
+            List<DocumentTag> letters = newArrayList(
+                    DocumentTag.INTERNAL_CMR_LISTING_APPELLANT_LETTER_BUNDLE,
+                    DocumentTag.INTERNAL_CMR_LISTING_LR_LETTER_BUNDLE
+            );
+            return newArrayList(
+                    new EmailNotificationGenerator(
+                            emailPersonalisations,
+                            notificationSender,
+                            notificationIdAppender
+                    ),
+                    new PrecompiledLetterNotificationGenerator(
+                            letters,
+                            notificationSender,
+                            notificationIdAppender,
+                            documentDownloadClient
+                    ) {
+                        @Override
+                        public Message getSuccessMessage() {
+                            return new Message("success", "body");
+                        }
+                    }
+            );
+        }
+
     }
 }

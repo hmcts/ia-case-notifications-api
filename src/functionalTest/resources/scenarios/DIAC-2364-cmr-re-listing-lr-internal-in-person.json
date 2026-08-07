@@ -1,11 +1,11 @@
 {
-  "description": "DIAC-2305 Send cmr listing notification to case officer, home office, legal rep and appellant - AiP internal (in person hearing)",
+  "description": "DIAC-2364 Send cmr re-listing notification to case officer, home office, legal rep and appellant - AiP internal (in person hearing)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "SystemUser",
     "input": {
       "id": 34021,
-      "eventId": "cmrListing",
+      "eventId": "cmrReListing",
       "state": "prepareForHearing",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
@@ -47,7 +47,7 @@
             {
               "id": "1",
               "value": {
-                "tag": "internalCmrListingLetterBundle",
+                "tag": "internalCmrListingAppellantLetterBundle",
                 "document": {
                   "document_url": "{$FIXTURE_DOC1_PDF_URL}",
                   "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
@@ -98,15 +98,15 @@
         "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
         "notificationsSent": [
           {
-            "id": "34021_CMR_LISTING_CASE_OFFICER",
+            "id": "34021_CMR_RE_LISTING_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "34021_CMR_LISTING_HOME_OFFICE",
+            "id": "34021_CMR_RE_LISTING_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "34021_INTERNAL_CMR_LISTING_LETTER_BUNDLE",
+            "id": "34021_INTERNAL_CMR_LISTING_APPELLANT_LETTER_BUNDLE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
