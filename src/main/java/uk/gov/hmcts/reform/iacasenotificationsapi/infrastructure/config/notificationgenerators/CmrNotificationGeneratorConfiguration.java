@@ -517,7 +517,7 @@ public class CmrNotificationGeneratorConfiguration {
             );
 
             List<DocumentTag> letters = newArrayList(
-                    DocumentTag.INTERNAL_CMR_LISTING_APPELLANT_LETTER_BUNDLE,
+                    DocumentTag.INTERNAL_CMR_LISTING_LETTER_BUNDLE,
                     DocumentTag.INTERNAL_CMR_LISTING_LR_LETTER_BUNDLE
             );
             return newArrayList(
