@@ -255,8 +255,7 @@ public class CmrNotificationHandlerConfiguration {
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && CMR_HEARING_CANCELLED.equals(callback.getEvent())
                             && isCmrHearingInPersonOrRemote(asylumCase)
-                            && isRepJourney(asylumCase)
-                            && isInternalCase(asylumCase);
+                            && hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase);
                 },
                 notificationGenerators
         );
