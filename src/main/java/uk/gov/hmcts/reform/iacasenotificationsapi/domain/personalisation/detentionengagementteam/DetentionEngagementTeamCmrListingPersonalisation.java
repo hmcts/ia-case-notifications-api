@@ -34,7 +34,6 @@ public class DetentionEngagementTeamCmrListingPersonalisation implements EmailWi
     private final PersonalisationProvider personalisationProvider;
     private final String subjectPrefix;
 
-
     public DetentionEngagementTeamCmrListingPersonalisation(
         @Value("${govnotify.template.listAssistHearing.cmrListing.detentionEngagementTeam.email}") String internalDetainedCmrListingTemplateId,
         DetentionEmailService detentionEmailService,

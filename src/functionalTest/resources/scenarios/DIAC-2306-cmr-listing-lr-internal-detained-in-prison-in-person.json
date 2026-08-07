@@ -1,10 +1,10 @@
 {
-  "description": "DIAC-2305 Send cmr listing notification to case officer, home office, legal rep and appellant - AiP internal (in person hearing)",
+  "description": "DIAC-2306 Send cmr listing notification to case officer, home office, legal rep and appellant - LR internal (in person hearing)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "SystemUser",
     "input": {
-      "id": 34021,
+      "id": 44024,
       "eventId": "cmrListing",
       "state": "prepareForHearing",
       "caseData": {
@@ -14,14 +14,9 @@
           "ariaListingReference": "LP/12345/2021",
           "appellantsRepresentation": "No",
           "isAdmin": "Yes",
-          "appellantAddress": {
-            "County": "",
-            "Country": "United Kingdom",
-            "PostCode": "NE21JX",
-            "PostTown": "Example Town",
-            "AddressLine1": "5",
-            "AddressLine2": "Example Street"
-          },
+          "appellantInDetention": "Yes",
+          "detentionFacility": "prison",
+          "prisonName": "Aylesbury",
           "cmrHearingCentre": "taylorHouse",
           "cmrHearingCentreAddress": {
             "value": {
@@ -47,7 +42,7 @@
             {
               "id": "1",
               "value": {
-                "tag": "internalCmrListingLetterBundle",
+                "tag": "internalCmrListingLrLetterBundle",
                 "document": {
                   "document_url": "{$FIXTURE_DOC1_PDF_URL}",
                   "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
@@ -57,11 +52,13 @@
                 "description": "",
                 "dateUploaded": "{$TODAY}"
               }
-            },
+            }
+          ],
+          "notificationAttachmentDocuments": [
             {
-              "id": "2",
+              "id": "1",
               "value": {
-                "tag": "internalCmrListingLrLetterBundle",
+                "tag": "internalCmrListingLetterBundle",
                 "document": {
                   "document_url": "{$FIXTURE_DOC1_PDF_URL}",
                   "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
@@ -87,30 +84,29 @@
         "ariaListingReference": "LP/12345/2021",
         "appellantsRepresentation": "No",
         "isAdmin": "Yes",
-        "appellantAddress": {
-          "County": "",
-          "Country": "United Kingdom",
-          "PostCode": "NE21JX",
-          "PostTown": "Example Town",
-          "AddressLine1": "5",
-          "AddressLine2": "Example Street"
-        },
+        "appellantInDetention": "Yes",
+        "detentionFacility": "prison",
+        "prisonName": "Aylesbury",
         "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
         "notificationsSent": [
           {
-            "id": "34021_CMR_LISTING_CASE_OFFICER",
+            "id": "44024_CMR_LISTING_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "34021_CMR_LISTING_HOME_OFFICE",
+            "id": "44024_CMR_LISTING_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "34021_INTERNAL_CMR_LISTING_LETTER_BUNDLE",
+            "id": "44024_DETAINED_CMR_LISTING_PRODUCTION_DET",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "34021_INTERNAL_CMR_LISTING_LR_LETTER_BUNDLE",
+            "id": "44024_INTERNAL_DETAINED_CMR_LISTING_DET",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "44024_INTERNAL_CMR_LISTING_LR_LETTER_BUNDLE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
