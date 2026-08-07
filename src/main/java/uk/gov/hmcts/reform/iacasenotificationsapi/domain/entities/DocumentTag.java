@@ -84,8 +84,6 @@ public enum DocumentTag {
     INTERNAL_CMR_LISTING_LETTER_BUNDLE("internalCmrListingLetterBundle"),
     INTERNAL_CMR_LISTING_LR_LETTER("internalCmrListingLrLetter"),
     INTERNAL_CMR_LISTING_LR_LETTER_BUNDLE("internalCmrListingLrLetterBundle"),
-    INTERNAL_CMR_LISTING_APPELLANT_LETTER("internalCmrListingAppellantLetter"),
-    INTERNAL_CMR_LISTING_APPELLANT_LETTER_BUNDLE("internalCmrListingAppellantLetterBundle"),
     INTERNAL_CASE_LISTED_LR_LETTER_BUNDLE("internalCaseListedLrLetterBundle"),
     INTERNAL_EDIT_CASE_LISTING_LETTER_BUNDLE("internalEditCaseListingLetterBundle"),
     INTERNAL_EDIT_CASE_LISTING_LR_LETTER_BUNDLE("internalEditCaseListingLrLetterBundle"),
