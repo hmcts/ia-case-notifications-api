@@ -315,6 +315,25 @@ public class CmrNotificationHandlerConfiguration {
         );
     }
 
+    //    This handler also handles DIAC-2366 LR manual detained in other since notifications for non detained and detained in other behave identically
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> cmrRelistingNonDetainedLegallyRepresentedManualAppeal(
+            @Qualifier("cmrRelistingLegallyRepresentedManualNonDetainedAppealGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && CMR_RE_LISTING.equals(callback.getEvent())
+                            && isCmrHearingInPersonOrRemote(asylumCase)
+                            && hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)
+                            && !isAppellantInDetention(asylumCase);
+                },
+                notificationGenerators
+        );
+    }
+
     private boolean isNonDetainedCmrRelisting(Callback<AsylumCase> callback, AsylumCase asylumCase) {
         return CMR_RE_LISTING.equals(callback.getEvent())
             && (isCmrHearingChannel(asylumCase, "INTER")
