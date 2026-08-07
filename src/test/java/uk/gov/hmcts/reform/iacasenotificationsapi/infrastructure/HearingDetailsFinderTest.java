@@ -374,7 +374,53 @@ class HearingDetailsFinderTest {
     }
 
     @Test
+    void should_return_given_cmr_hearing_centre_address_from_ref_data_if_location_ref_data_enabled() {
+        String cmrHearingCentreRefDataAddress = "cmr hearing centre address retrieved from ref data";
+        when(asylumCase.read(IS_CASE_USING_LOCATION_REF_DATA, YesOrNo.class)).thenReturn(Optional.of(YES));
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE_ADDRESS, String.class))
+            .thenReturn(Optional.of(cmrHearingCentreRefDataAddress));
+        when(asylumCase.read(CMR_HEARING_CENTRE_ADDRESS, DynamicList.class))
+            .thenReturn(Optional.of(new DynamicList("some cmr hearing centre address")));
+
+        assertEquals(cmrHearingCentreRefDataAddress, hearingDetailsFinder.getCmrHearingCentreAddress(asylumCase));
+    }
+
+    @Test
+    void should_return_given_cmr_hearing_centre_address_if_location_ref_data_enabled_but_ref_data_address_is_empty() {
+        String cmrHearingCentreAddress = "some cmr hearing centre address";
+        when(asylumCase.read(IS_CASE_USING_LOCATION_REF_DATA, YesOrNo.class)).thenReturn(Optional.of(YES));
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE_ADDRESS, String.class)).thenReturn(Optional.empty());
+        when(asylumCase.read(CMR_HEARING_CENTRE_ADDRESS, DynamicList.class))
+            .thenReturn(Optional.of(new DynamicList(cmrHearingCentreAddress)));
+
+        assertEquals(cmrHearingCentreAddress, hearingDetailsFinder.getCmrHearingCentreAddress(asylumCase));
+    }
+
+    @Test
+    void should_return_given_cmr_hearing_centre_address_if_location_ref_data_disabled() {
+        String cmrHearingCentreAddress = "some cmr hearing centre address";
+        when(asylumCase.read(IS_CASE_USING_LOCATION_REF_DATA, YesOrNo.class)).thenReturn(Optional.of(NO));
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE_ADDRESS, String.class))
+            .thenReturn(Optional.of("cmr hearing centre address retrieved from ref data"));
+        when(asylumCase.read(CMR_HEARING_CENTRE_ADDRESS, DynamicList.class))
+            .thenReturn(Optional.of(new DynamicList(cmrHearingCentreAddress)));
+
+        assertEquals(cmrHearingCentreAddress, hearingDetailsFinder.getCmrHearingCentreAddress(asylumCase));
+    }
+
+    @Test
     void should_throw_exception_when_cmr_hearing_centre_address_is_empty() {
+        when(asylumCase.read(CMR_HEARING_CENTRE_ADDRESS, DynamicList.class)).thenReturn(Optional.empty());
+
+        IllegalStateException exception =
+            assertThrows(IllegalStateException.class, () -> hearingDetailsFinder.getCmrHearingCentreAddress(asylumCase));
+        assertEquals("cmrHearingCentreAddress is not present", exception.getMessage());
+    }
+
+    @Test
+    void should_throw_exception_when_location_ref_data_enabled_and_both_addresses_are_empty() {
+        when(asylumCase.read(IS_CASE_USING_LOCATION_REF_DATA, YesOrNo.class)).thenReturn(Optional.of(YES));
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE_ADDRESS, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(CMR_HEARING_CENTRE_ADDRESS, DynamicList.class)).thenReturn(Optional.empty());
 
         IllegalStateException exception =
@@ -414,6 +460,19 @@ class HearingDetailsFinderTest {
             .thenReturn(Optional.of(new DynamicList(cmrHearingCentreAddress)));
 
         assertEquals(cmrHearingCentreAddress, hearingDetailsFinder.getCmrHearingCentreLocation(asylumCase));
+    }
+
+    @Test
+    void getCmrHearingCentreLocation_should_return_ref_data_address_when_cmr_is_not_remote_and_refdata_enabled() {
+        String cmrHearingCentreRefDataAddress = "cmr hearing centre address retrieved from ref data";
+        when(asylumCase.read(CMR_IS_REMOTE_HEARING, YesOrNo.class)).thenReturn(Optional.of(NO));
+        when(asylumCase.read(IS_CASE_USING_LOCATION_REF_DATA, YesOrNo.class)).thenReturn(Optional.of(YES));
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE_ADDRESS, String.class))
+            .thenReturn(Optional.of(cmrHearingCentreRefDataAddress));
+        when(asylumCase.read(CMR_HEARING_CENTRE_ADDRESS, DynamicList.class))
+            .thenReturn(Optional.of(new DynamicList("some cmr hearing centre address")));
+
+        assertEquals(cmrHearingCentreRefDataAddress, hearingDetailsFinder.getCmrHearingCentreLocation(asylumCase));
     }
 
     @Test
