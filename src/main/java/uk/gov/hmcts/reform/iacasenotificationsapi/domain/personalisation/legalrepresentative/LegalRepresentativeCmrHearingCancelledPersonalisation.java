@@ -8,10 +8,13 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtract
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
 
 
+import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isInternalCase;
 
 @Service
 public class LegalRepresentativeCmrHearingCancelledPersonalisation implements LegalRepresentativeEmailNotificationPersonalisation {
@@ -36,6 +39,15 @@ public class LegalRepresentativeCmrHearingCancelledPersonalisation implements Le
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
         return legalRepCmrHearingCancelledTemplateId;
+    }
+
+    @Override
+    public Set<String> getRecipientsList(AsylumCase asylumCase) {
+        if (isInternalCase(asylumCase)) {
+            return Collections.emptySet();
+        }
+
+        return LegalRepresentativeEmailNotificationPersonalisation.super.getRecipientsList(asylumCase);
     }
 
     @Override

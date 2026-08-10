@@ -47,7 +47,7 @@
             {
               "id": "1",
               "value": {
-                "tag": "cmrHearingCancelledLetterBundle",
+                "tag": "cmrHearingCancelledLetter",
                 "document": {
                   "document_url": "{$FIXTURE_DOC1_PDF_URL}",
                   "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
@@ -84,7 +84,7 @@
         "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
         "notificationsSent": [
           {
-            "id": "64021_CMR_HEARING_CANCELLED_LETTER_BUNDLE",
+            "id": "64021_CMR_HEARING_CANCELLED_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
