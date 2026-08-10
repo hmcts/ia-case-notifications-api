@@ -374,6 +374,18 @@ class HearingDetailsFinderTest {
     }
 
     @Test
+    void should_return_given_cmr_hearing_centre_address_ignoring_location_ref_data() {
+        String cmrHearingCentreAddress = "some cmr hearing centre address";
+        when(asylumCase.read(IS_CASE_USING_LOCATION_REF_DATA, YesOrNo.class)).thenReturn(Optional.of(YES));
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE_ADDRESS, String.class))
+            .thenReturn(Optional.of("hearing centre address retrieved from ref data"));
+        when(asylumCase.read(CMR_HEARING_CENTRE_ADDRESS, DynamicList.class))
+            .thenReturn(Optional.of(new DynamicList(cmrHearingCentreAddress)));
+
+        assertEquals(cmrHearingCentreAddress, hearingDetailsFinder.getCmrHearingCentreAddress(asylumCase));
+    }
+
+    @Test
     void should_throw_exception_when_cmr_hearing_centre_address_is_empty() {
         when(asylumCase.read(CMR_HEARING_CENTRE_ADDRESS, DynamicList.class)).thenReturn(Optional.empty());
 
