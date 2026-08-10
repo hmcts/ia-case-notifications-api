@@ -1,5 +1,5 @@
 {
-  "description": "DIAC-2357 Send cmr cancelled notification to case officer, home office and appellant - AiP internal (in person hearing) for appellant - AiP internal (not in attendance)",
+  "description": "DIAC-2357 No notification sent for paper hearing - AiP internal (in person hearing) for appellant - AiP internal (not in attendance)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "SystemUser",
