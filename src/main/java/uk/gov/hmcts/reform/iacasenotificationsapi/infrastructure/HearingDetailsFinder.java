@@ -41,7 +41,7 @@ public class HearingDetailsFinder {
                 getHearingCentre(asylumCase);
 
         Optional<String> refDataAddress = asylumCase
-            .read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE_ADDRESS, String.class);
+                .read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE_ADDRESS, String.class);
 
         if (isCaseUsingLocationRefData(asylumCase) && refDataAddress.isPresent())  {
             return refDataAddress.get();
@@ -51,10 +51,16 @@ public class HearingDetailsFinder {
     }
 
     public String getCmrHearingCentreAddress(AsylumCase asylumCase) {
-        DynamicList cmrHearingCentreAddress = asylumCase.read(AsylumCaseDefinition.CMR_HEARING_CENTRE_ADDRESS, DynamicList.class)
-                .orElseThrow(() -> new IllegalStateException("cmrHearingCentreAddress is not present"));
+        Optional<String> refDataAddress = asylumCase.read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE_ADDRESS, String.class);
 
-        return cmrHearingCentreAddress.getValue().getLabel();
+        if (isCaseUsingLocationRefData(asylumCase) && refDataAddress.isPresent())  {
+            return refDataAddress.get();
+        } else {
+            DynamicList cmrHearingCentreAddress = asylumCase.read(AsylumCaseDefinition.CMR_HEARING_CENTRE_ADDRESS, DynamicList.class)
+                    .orElseThrow(() -> new IllegalStateException("cmrHearingCentreAddress is not present"));
+
+            return cmrHearingCentreAddress.getValue().getLabel();
+        }
     }
 
     public String getHearingCentreName(AsylumCase asylumCase) {
@@ -260,5 +266,4 @@ public class HearingDetailsFinder {
         }
         return hearingLocationAddress;
     }
-
 }
