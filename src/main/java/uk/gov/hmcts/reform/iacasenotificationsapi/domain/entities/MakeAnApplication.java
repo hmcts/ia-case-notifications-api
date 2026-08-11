@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.List;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.ToString;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.Document;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
@@ -20,9 +21,13 @@ public class MakeAnApplication {
     private String decision;
     private String state;
     private String applicantRole;
+    @Getter
     private String decisionReason;
+    @Getter
     private String decisionDate;
+    @Getter
     private String decisionMaker;
+    private Document refusalOfRemoval24wDocument;
 
     public MakeAnApplication() {
 
@@ -114,17 +119,5 @@ public class MakeAnApplication {
     public void setDecisionMaker(String decisionMaker) {
         requireNonNull(decisionMaker);
         this.decisionMaker = decisionMaker;
-    }
-
-    public String getDecisionReason() {
-        return decisionReason;
-    }
-
-    public String getDecisionDate() {
-        return decisionDate;
-    }
-
-    public String getDecisionMaker() {
-        return decisionMaker;
     }
 }
