@@ -228,38 +228,34 @@ public class CmrNotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> cmrReListingLegalRepDigitalDetainedOtherNotificationHandler(
-            @Qualifier("legalRepDigitalDetainedOtherCmrReListingNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    public PreSubmitCallbackHandler<AsylumCase> cmrCancelledManualNotificationHandler(
+            @Qualifier("cmrCancelledManualNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
 
         return new NotificationHandler(
                 (callbackStage, callback) -> {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && CMR_RE_LISTING.equals(callback.getEvent())
+                            && CMR_HEARING_CANCELLED.equals(callback.getEvent())
                             && isCmrHearingInPersonOrRemote(asylumCase)
-                            && isRepJourney(callback.getCaseDetails().getCaseData())
-                            && !isInternalCase(asylumCase)
-                            && isDetainedInFacilityType(asylumCase, OTHER);
+                            && ((isInternalCase(asylumCase) && !isAppellantInDetention(asylumCase)) || isDetainedInFacilityType(asylumCase, OTHER));
                 },
                 notificationGenerators
         );
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> cmrCancelledAipManualNotificationHandler(
-            @Qualifier("cmrCancelledAipManualNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    public PreSubmitCallbackHandler<AsylumCase> cmrCancelledLrManualNotificationHandler(
+            @Qualifier("cmrCancelledLrManualNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
 
         return new NotificationHandler(
                 (callbackStage, callback) -> {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    log.info("isCmrHearingInPersonOrRemote : {} for case reference: {}", isCmrHearingInPersonOrRemote(asylumCase),  callback.getCaseDetails().getId());
-                    log.info("hasBeenSubmittedByAppellantInternalCase: {} for case reference: {}", hasBeenSubmittedByAppellantInternalCase(asylumCase), callback.getCaseDetails().getId());
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && CMR_HEARING_CANCELLED.equals(callback.getEvent())
                             && isCmrHearingInPersonOrRemote(asylumCase)
-                            && hasBeenSubmittedByAppellantInternalCase(asylumCase);
+                            && hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase);
                 },
                 notificationGenerators
         );

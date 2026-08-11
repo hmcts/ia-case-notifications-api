@@ -41,7 +41,7 @@ public class HearingDetailsFinder {
                 getHearingCentre(asylumCase);
 
         Optional<String> refDataAddress = asylumCase
-            .read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE_ADDRESS, String.class);
+                .read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE_ADDRESS, String.class);
 
         if (isCaseUsingLocationRefData(asylumCase) && refDataAddress.isPresent())  {
             return refDataAddress.get();
@@ -260,5 +260,4 @@ public class HearingDetailsFinder {
         }
         return hearingLocationAddress;
     }
-
 }

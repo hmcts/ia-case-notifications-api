@@ -330,28 +330,16 @@ public class CmrNotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("legalRepDigitalDetainedOtherCmrReListingNotificationGenerator")
-    public List<NotificationGenerator> legalRepDigitalDetainedOtherCmrReListingNotificationGenerator(
-            LegalRepresentativeCmrRelistingPersonalisation legalRepresentativeCmrRelistingPersonalisation,
-            CaseOfficerCmrRelistingPersonalisation caseOfficerCmrReListingPersonalisation,
-            HomeOfficeCmrRelistingPersonalisation homeOfficeCmrRelistingPersonalisation,
+    @Bean("cmrCancelledManualNotificationGenerator")
+    public List<NotificationGenerator> cmrCancelledManualNotificationGenerator(
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender,
             DocumentDownloadClient documentDownloadClient
     ) {
 
-        DocumentTag documentTag = DocumentTag.INTERNAL_CMR_LISTING_LETTER_BUNDLE;
+        DocumentTag documentTag = DocumentTag.CMR_HEARING_CANCELLED_LETTER;
 
         return newArrayList(
-                new EmailNotificationGenerator(
-                        newArrayList(
-                                legalRepresentativeCmrRelistingPersonalisation,
-                                caseOfficerCmrReListingPersonalisation,
-                                homeOfficeCmrRelistingPersonalisation
-                        ),
-                        notificationSender,
-                        notificationIdAppender
-                ),
                 new PrecompiledLetterNotificationGenerator(
                         newArrayList(
                                 documentTag
@@ -368,14 +356,14 @@ public class CmrNotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("cmrCancelledAipManualNotificationGenerator")
-    public List<NotificationGenerator> cmrCancelledAipManualNotificationGenerator(
+    @Bean("cmrCancelledLrManualNotificationGenerator")
+    public List<NotificationGenerator> cmrCancelledLrManualNotificationGenerator(
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender,
             DocumentDownloadClient documentDownloadClient
     ) {
 
-        DocumentTag documentTag = DocumentTag.CMR_HEARING_CANCELLED_LETTER_BUNDLE;
+        DocumentTag documentTag = DocumentTag.CMR_HEARING_CANCELLED_LR_LETTER;
 
         return newArrayList(
                 new PrecompiledLetterNotificationGenerator(
@@ -465,7 +453,7 @@ public class CmrNotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender,
         DocumentDownloadClient documentDownloadClient
     ) {
-        DocumentTag appellantDocumentTag = DocumentTag.INTERNAL_CMR_LISTING_APPELLANT_LETTER_BUNDLE;
+        DocumentTag appellantDocumentTag = DocumentTag.INTERNAL_CMR_LISTING_LETTER_BUNDLE;
         DocumentTag lrDocumentTag = DocumentTag.INTERNAL_CMR_LISTING_LR_LETTER_BUNDLE;
 
         return newArrayList(
@@ -555,7 +543,7 @@ public class CmrNotificationGeneratorConfiguration {
             );
 
             List<DocumentTag> letters = newArrayList(
-                    DocumentTag.INTERNAL_CMR_LISTING_APPELLANT_LETTER_BUNDLE,
+                    DocumentTag.INTERNAL_CMR_LISTING_LETTER_BUNDLE,
                     DocumentTag.INTERNAL_CMR_LISTING_LR_LETTER_BUNDLE
             );
             return newArrayList(

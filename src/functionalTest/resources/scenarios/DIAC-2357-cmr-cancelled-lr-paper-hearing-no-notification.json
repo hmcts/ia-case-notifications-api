@@ -1,5 +1,5 @@
 {
-  "description": "DIAC-2358 No notification sent for paper hearing - AiP internal (in person hearing) for appellant - AiP internal (not in attendance)",
+  "description": "DIAC-2357 No notification sent for paper hearing - AiP internal (in person hearing) for appellant - AiP internal (not in attendance)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "SystemUser",
@@ -12,7 +12,7 @@
         "replacements": {
           "appealReferenceNumber": "PA/12345/2023",
           "ariaListingReference": "LP/12345/2021",
-          "appellantsRepresentation": "Yes",
+          "appellantsRepresentation": "No",
           "isAdmin": "Yes",
           "appellantAddress": {
             "County": "",
@@ -55,7 +55,7 @@
       "replacements": {
         "appealReferenceNumber": "PA/12345/2023",
         "ariaListingReference": "LP/12345/2021",
-        "appellantsRepresentation": "Yes",
+        "appellantsRepresentation": "No",
         "isAdmin": "Yes",
         "appellantAddress": {
           "County": "",

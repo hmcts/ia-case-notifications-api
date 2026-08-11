@@ -1,19 +1,29 @@
 {
-  "description": "DIAC-2305 Send cmr listing notification to case officer, home office, legal rep and appellant - AiP internal (in person hearing)",
+  "description": "DIAC-2357 Send cmr cancelled notification to legal representative, appellant, case officer and home office - LR Manual Appeal (in person hearing)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "SystemUser",
     "input": {
-      "id": 34021,
-      "eventId": "cmrListing",
-      "state": "prepareForHearing",
+      "id": 64027,
+      "eventId": "cmrHearingCancelled",
+      "state": "listing",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
-          "appealReferenceNumber": "PA/12345/2023",
-          "ariaListingReference": "LP/12345/2021",
+          "appealReferenceNumber": "PA/12347/2023",
+          "ariaListingReference": "LP/12347/2021",
           "appellantsRepresentation": "No",
           "isAdmin": "Yes",
+          "legalRepresentativeName": "A Test Legal Rep",
+          "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
+          "legalRepresentativeAddress": {
+            "County": "",
+            "Country": "United Kingdom",
+            "PostCode": "EC1A1BB",
+            "PostTown": "London",
+            "AddressLine1": "10",
+            "AddressLine2": "Example Legal Street"
+          },
           "appellantAddress": {
             "County": "",
             "Country": "United Kingdom",
@@ -30,11 +40,11 @@
             }
           },
           "cmrHearingDate": "2023-10-05T10:00:00.000",
-          "cmrIsRemoteHearing": "No",
+          "cmrIsRemoteHearing": "Yes",
           "cmrHearingChannel": {
             "value": {
-              "code": "INTER",
-              "label": "In Person"
+              "code": "VID",
+              "label": "Video"
             },
             "list_items": [
               { "code": "INTER", "label": "In Person" },
@@ -47,7 +57,7 @@
             {
               "id": "1",
               "value": {
-                "tag": "internalCmrListingLetterBundle",
+                "tag": "cmrHearingCancelledLetter",
                 "document": {
                   "document_url": "{$FIXTURE_DOC1_PDF_URL}",
                   "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
@@ -61,7 +71,7 @@
             {
               "id": "2",
               "value": {
-                "tag": "internalCmrListingLrLetterBundle",
+                "tag": "cmrHearingCancelledLrLetter",
                 "document": {
                   "document_url": "{$FIXTURE_DOC1_PDF_URL}",
                   "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
@@ -83,10 +93,11 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
-        "appealReferenceNumber": "PA/12345/2023",
-        "ariaListingReference": "LP/12345/2021",
+        "appealReferenceNumber": "PA/12347/2023",
+        "ariaListingReference": "LP/12347/2021",
         "appellantsRepresentation": "No",
         "isAdmin": "Yes",
+        "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
         "appellantAddress": {
           "County": "",
           "Country": "United Kingdom",
@@ -95,22 +106,21 @@
           "AddressLine1": "5",
           "AddressLine2": "Example Street"
         },
-        "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
         "notificationsSent": [
           {
-            "id": "34021_CMR_LISTING_CASE_OFFICER",
+            "id": "64027_CMR_HEARING_CANCELLED_LR_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "34021_CMR_LISTING_HOME_OFFICE",
+            "id": "64027_CMR_HEARING_CANCELLED_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "34021_INTERNAL_CMR_LISTING_LETTER_BUNDLE",
+            "id": "64027_CMR_CANCELLED_CASE_OFFICER_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "34021_INTERNAL_CMR_LISTING_LR_LETTER_BUNDLE",
+            "id": "64027_CMR_CANCELLED_HOME_OFFICE_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
