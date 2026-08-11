@@ -115,7 +115,7 @@ public class CmrNotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender,
         DocumentDownloadClient documentDownloadClient
     ) {
-        DocumentTag documentTag = DocumentTag.INTERNAL_CMR_LISTING_LETTER_BUNDLE;
+        DocumentTag documentTag = DocumentTag.INTERNAL_CMR_RE_LISTING_LETTER;
 
         return newArrayList(
             new PrecompiledLetterNotificationGenerator(
@@ -543,8 +543,8 @@ public class CmrNotificationGeneratorConfiguration {
             );
 
             List<DocumentTag> letters = newArrayList(
-                    DocumentTag.INTERNAL_CMR_LISTING_LETTER_BUNDLE,
-                    DocumentTag.INTERNAL_CMR_LISTING_LR_LETTER_BUNDLE
+                    DocumentTag.INTERNAL_CMR_RE_LISTING_LETTER_BUNDLE,
+                    DocumentTag.INTERNAL_CMR_RE_LISTING_LR_LETTER_BUNDLE
             );
             return newArrayList(
                     new EmailNotificationGenerator(
