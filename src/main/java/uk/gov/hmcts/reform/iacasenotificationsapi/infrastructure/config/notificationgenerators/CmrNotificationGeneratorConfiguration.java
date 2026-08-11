@@ -322,7 +322,13 @@ public class CmrNotificationGeneratorConfiguration {
                         documentDownloadClient
 
 
-                )
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success", "body");
+                    }
+                }
+
         );
     }
 
