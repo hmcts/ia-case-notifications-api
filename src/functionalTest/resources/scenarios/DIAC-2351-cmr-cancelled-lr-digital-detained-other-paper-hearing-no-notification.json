@@ -1,19 +1,31 @@
 {
-  "description": "DIAC-2358 No notification sent for paper hearing - AiP internal (in person hearing) for appellant - AiP internal (not in attendance)",
+  "description": "DIAC-2351 No notification sent for paper hearing - LR Digital Appeal Detained Other (paper hearing)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "SystemUser",
     "input": {
-      "id": 64022,
+      "id": 640251,
       "eventId": "cmrHearingCancelled",
       "state": "listing",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
-          "appealReferenceNumber": "PA/12345/2023",
-          "ariaListingReference": "LP/12345/2021",
-          "appellantsRepresentation": "Yes",
-          "isAdmin": "Yes",
+          "appealReferenceNumber": "PA/12347/2023",
+          "ariaListingReference": "LP/12347/2021",
+          "appellantsRepresentation": "No",
+          "appellantInDetention": "Yes",
+          "detentionFacility": "other",
+          "isAdmin": "No",
+          "legalRepresentativeName": "A Test Legal Rep",
+          "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
+          "legalRepresentativeAddress": {
+            "County": "",
+            "Country": "United Kingdom",
+            "PostCode": "EC1A1BB",
+            "PostTown": "London",
+            "AddressLine1": "10",
+            "AddressLine2": "Example Legal Street"
+          },
           "appellantAddress": {
             "County": "",
             "Country": "United Kingdom",
@@ -29,7 +41,7 @@
               "label": "Taylor House Tribunal Hearing Centre, York Road, SE1 7PB"
             }
           },
-          "cmrHearingDate": "2023-09-19T10:00:00.000",
+          "cmrHearingDate": "2023-10-05T10:00:00.000",
           "cmrIsRemoteHearing": "No",
           "cmrHearingChannel": {
             "value": {
@@ -53,10 +65,11 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
-        "appealReferenceNumber": "PA/12345/2023",
-        "ariaListingReference": "LP/12345/2021",
-        "appellantsRepresentation": "Yes",
-        "isAdmin": "Yes",
+        "appealReferenceNumber": "PA/12347/2023",
+        "ariaListingReference": "LP/12347/2021",
+        "appellantsRepresentation": "No",
+        "isAdmin": "No",
+        "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
         "appellantAddress": {
           "County": "",
           "Country": "United Kingdom",

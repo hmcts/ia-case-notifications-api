@@ -110,7 +110,7 @@ public enum DocumentTag {
     HOME_OFFICE_APPLICATION_DECIDED_LETTER("homeOfficeApplicationDecidedLetter"),
     AIPM_DETAINED_IN_PRISON_IRC_REINSTATE_APPEAL_LETTER("aipmDetainedInPrisonOrIrcReinstateAppealLetter"),
     CMR_HEARING_CANCELLED_LETTER("cmrHearingCancelledLetter"),
-    CMR_HEARING_CANCELLED_LETTER_BUNDLE("cmrHearingCancelledLetterBundle"),
+    CMR_HEARING_CANCELLED_LR_LETTER("cmrHearingCancelledLrLetter"),
 
 
     @JsonEnumDefaultValue
