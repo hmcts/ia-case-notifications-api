@@ -47,7 +47,7 @@
             {
               "id": "1",
               "value": {
-                "tag": "internalCmrListingLetterBundle",
+                "tag": "internalCmrReListingLetterBundle",
                 "document": {
                   "document_url": "{$FIXTURE_DOC1_PDF_URL}",
                   "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
@@ -61,7 +61,7 @@
             {
               "id": "2",
               "value": {
-                "tag": "internalCmrListingLrLetterBundle",
+                "tag": "internalCmrReListingLrLetterBundle",
                 "document": {
                   "document_url": "{$FIXTURE_DOC1_PDF_URL}",
                   "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
@@ -106,11 +106,11 @@
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "34021_INTERNAL_CMR_LISTING_LETTER_BUNDLE",
+            "id": "34021_INTERNAL_CMR_RE_LISTING_LETTER_BUNDLE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "34021_INTERNAL_CMR_LISTING_LR_LETTER_BUNDLE",
+            "id": "34021_INTERNAL_CMR_RE_LISTING_LR_LETTER_BUNDLE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
