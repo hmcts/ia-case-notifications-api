@@ -292,6 +292,46 @@ public class CmrNotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("cmrReListingLegalRepDigitalDetainedInOtherNotificationGenerator")
+    public List<NotificationGenerator> cmrReListingLegalRepDigitalDetainedInOtherNotificationGenerator(
+            LegalRepresentativeCmrRelistingPersonalisation legalRepresentativeCmrRelistingPersonalisation,
+            CaseOfficerCmrRelistingPersonalisation caseOfficerCmrListingPersonalisation,
+            HomeOfficeCmrRelistingPersonalisation homeOfficeInPersonCmrListingCasePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender,
+            DocumentDownloadClient documentDownloadClient
+    ) {
+        DocumentTag documentTag = DocumentTag.INTERNAL_CMR_RE_LISTING_LETTER_BUNDLE;
+
+        return newArrayList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeCmrRelistingPersonalisation,
+                                caseOfficerCmrListingPersonalisation,
+                                homeOfficeInPersonCmrListingCasePersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new PrecompiledLetterNotificationGenerator(
+                        newArrayList(
+                                documentTag
+                        ),
+                        notificationSender,
+                        notificationIdAppender,
+                        documentDownloadClient
+
+
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success", "body");
+                    }
+                }
+
+        );
+    }
+
     @Bean("legalRepDigitalDetainedOtherCmrListingNotificationGenerator")
     public List<NotificationGenerator> legalRepDigitalDetainedOtherCmrListingNotificationGenerator(
         LegalRepresentativeCmrListingPersonalisation legalRepresentativeCmrListingPersonalisation,
