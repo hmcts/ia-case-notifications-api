@@ -91,6 +91,15 @@ class DetentionEngagementTeamCmrListingProductionPersonalisationTest {
     }
 
     @Test
+    void should_return_given_det_email_address_when_cmr_remote_hearing_field_is_absent() {
+        String detentionEngagementTeamEmail = "det@email.com";
+        when(asylumCase.read(CMR_IS_REMOTE_HEARING, YesOrNo.class)).thenReturn(Optional.empty());
+        when(detentionFacilityEmailService.getDetentionEmailAddress(asylumCase)).thenReturn(detentionEngagementTeamEmail);
+
+        assertTrue(personalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
+    }
+
+    @Test
     public void should_throw_exception_on_personalisation_when_case_is_null() {
         NullPointerException exception =
             assertThrows(NullPointerException.class, () -> personalisation.getPersonalisation((AsylumCase) null));

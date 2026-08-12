@@ -506,6 +506,8 @@ govnotify:
             email: 0c63ae4d-bce7-4b11-9b66-1181052eaba6
         detentionEngagementTeam:
           email: fe92c79d-212e-4ffe-b619-c2fb4dd304ac
+          production:
+            email: 4d479ce3-9139-44a8-a42b-e242086016eb
       cmrReListing:
         homeOffice:
           email: 33312031-bb84-4598-81b7-faa0fd81da50
