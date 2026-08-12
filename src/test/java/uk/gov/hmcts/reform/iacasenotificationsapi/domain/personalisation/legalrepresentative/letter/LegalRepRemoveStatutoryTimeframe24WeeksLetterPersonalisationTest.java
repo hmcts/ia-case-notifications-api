@@ -96,7 +96,9 @@ class LegalRepRemoveStatutoryTimeframe24WeeksLetterPersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of("homeOffice123"));
         when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_NAME, String.class)).thenReturn(Optional.of("John"));
         when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_FAMILY_NAME, String.class)).thenReturn(Optional.of("Doe"));
-        when(asylumCaseBefore.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of("legalRep456"));
+        when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of("legalRep456"));
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of("jane"));
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of("smith"));
         when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YES));
 
         when(asylumCase.read(AsylumCaseDefinition.LEGAL_REP_ADDRESS_U_K, AddressUk.class)).thenReturn(Optional.of(
@@ -111,6 +113,8 @@ class LegalRepRemoveStatutoryTimeframe24WeeksLetterPersonalisationTest {
                 .containsEntry("appellantFamilyName", "Doe")
                 .containsEntry("completeCaseReviewDate", "15 May 1990")
                 .containsEntry("customerServices", "value")
+                .containsEntry("appellantNameField", "jane smith")
+                .containsEntry("legalRepRefPlusTitle", "\nYour reference: legalRep456")
                 .containsEntry("address_line_1", "10")
                 .containsEntry("address_line_2", "Main St")
                 .containsEntry("address_line_3", "")

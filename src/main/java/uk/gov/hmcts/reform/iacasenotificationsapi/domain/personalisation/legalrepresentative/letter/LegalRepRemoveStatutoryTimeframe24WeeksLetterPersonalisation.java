@@ -18,6 +18,8 @@ import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.buildAddressForLegalRepIccLetter;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressInCountryOrOoc;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.getAppellantFamilyName;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.getAppellantGivenName;
 
 @Slf4j
 @Service
@@ -57,7 +59,8 @@ public class LegalRepRemoveStatutoryTimeframe24WeeksLetterPersonalisation implem
                 callback
                         .getCaseDetails()
                         .getCaseData();
-
+        String familyName = getAppellantFamilyName(asylumCase);
+        String givenNames = getAppellantGivenName(asylumCase);
         ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap
                 .<String, String>builder()
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
@@ -65,6 +68,9 @@ public class LegalRepRemoveStatutoryTimeframe24WeeksLetterPersonalisation implem
                 .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.LEGAL_REP_NAME, String.class).orElse(""))
                 .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.LEGAL_REP_FAMILY_NAME, String.class).orElse(""))
+                .put("appellantNameField", givenNames + " " + familyName)
+                .put("legalRepRefPlusTitle", "\nYour reference: "
+                    + asylumCase.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
                 .put(COMPLETE_CASE_REVIEW_DATE_KEY, AsylumCaseUtils.getCompleteCasedReviewDate(asylumCase));
         buildAddressForLegalRepIccLetter(asylumCase, personalizationBuilder);
         return personalizationBuilder.build();

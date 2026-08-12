@@ -25,6 +25,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANTS_REPRESENTATION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ADMIN;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER;
 
@@ -54,8 +57,8 @@ class AppellantRemoveStatutoryTimeframe24WeeksLetterPersonalisationTest {
     @BeforeEach
     void setUp() {
         personalisation = new AppellantRemoveStatutoryTimeframe24WeeksLetterPersonalisation(
-                TEMPLATE_ID,
-                customerServicesProvider
+            TEMPLATE_ID,
+            customerServicesProvider
         );
 
         when(callback.getCaseDetails()).thenReturn(caseDetails);
@@ -66,10 +69,10 @@ class AppellantRemoveStatutoryTimeframe24WeeksLetterPersonalisationTest {
 
         // Default stubs
         when(asylumCase.read(AsylumCaseDefinition.COMPLETE_CASE_REVIEW_DATE, String.class))
-                .thenReturn(Optional.of(LocalDate.of(1990, 5, 15).toString()));
+            .thenReturn(Optional.of(LocalDate.of(1990, 5, 15).toString()));
 
         when(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
-                .thenReturn(ImmutableMap.of("customerServices", "value"));
+            .thenReturn(ImmutableMap.of("customerServices", "value"));
 
     }
 
@@ -96,33 +99,65 @@ class AppellantRemoveStatutoryTimeframe24WeeksLetterPersonalisationTest {
         when(asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of("homeOffice123"));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of("John"));
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of("Doe"));
-        when(asylumCaseBefore.read(AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of("legalRep456"));
         when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YES));
+        when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
 
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.of(
-                new AddressUk("10", "Main St", "", "Sometown", "", "CM3 4DC", "UK")));
+            new AddressUk("10", "Main St", "", "Sometown", "", "CM3 4DC", "UK")));
 
         Map<String, String> result = personalisation.getPersonalisation(callback);
 
         assertThat(result)
-                .containsEntry("appealReferenceNumber", "appealRef123")
-                .containsEntry("homeOfficeReferenceNumber", "homeOffice123")
-                .containsEntry("appellantGivenNames", "John")
-                .containsEntry("appellantFamilyName", "Doe")
-                .containsEntry("completeCaseReviewDate", "15 May 1990")
-                .containsEntry("customerServices", "value")
-                .containsEntry("address_line_1", "John Doe")
-                .containsEntry("address_line_2", "10")
-                .containsEntry("address_line_3", "Main St")
-                .containsEntry("address_line_4", "")
-                .containsEntry("address_line_5", "Sometown")
-                .containsEntry("address_line_6", "CM3 4DC");
+            .containsEntry("appealReferenceNumber", "appealRef123")
+            .containsEntry("homeOfficeReferenceNumber", "homeOffice123")
+            .containsEntry("appellantGivenNames", "John")
+            .containsEntry("appellantFamilyName", "Doe")
+            .containsEntry("completeCaseReviewDate", "15 May 1990")
+            .containsEntry("customerServices", "value")
+            .containsEntry("address_line_1", "John Doe")
+            .containsEntry("address_line_2", "10")
+            .containsEntry("address_line_3", "Main St")
+            .containsEntry("address_line_4", "")
+            .containsEntry("address_line_5", "Sometown")
+            .containsEntry("address_line_6", "CM3 4DC")
+            .doesNotContainEntry("legalRepRefPlusTitle", "Legal rep reference: legalRep456");
+    }
+
+    @Test
+    void should_return_personalisation_with_all_fields_with_lr() {
+        when(asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of("appealRef123"));
+        when(asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of("homeOffice123"));
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of("John"));
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of("Doe"));
+        when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YES));
+        when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(NO));
+        when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of("legalRep456"));
+
+        when(asylumCase.read(AsylumCaseDefinition.APPELLANT_ADDRESS, AddressUk.class)).thenReturn(Optional.of(
+            new AddressUk("10", "Main St", "", "Sometown", "", "CM3 4DC", "UK")));
+
+        Map<String, String> result = personalisation.getPersonalisation(callback);
+
+        assertThat(result)
+            .containsEntry("appealReferenceNumber", "appealRef123")
+            .containsEntry("homeOfficeReferenceNumber", "homeOffice123")
+            .containsEntry("appellantGivenNames", "John")
+            .containsEntry("appellantFamilyName", "Doe")
+            .containsEntry("completeCaseReviewDate", "15 May 1990")
+            .containsEntry("customerServices", "value")
+            .containsEntry("address_line_1", "John Doe")
+            .containsEntry("address_line_2", "10")
+            .containsEntry("address_line_3", "Main St")
+            .containsEntry("address_line_4", "")
+            .containsEntry("address_line_5", "Sometown")
+            .containsEntry("address_line_6", "CM3 4DC")
+            .containsEntry("legalRepRefPlusTitle", "Legal rep reference: legalRep456");
     }
 
     @Test
     void should_throw_if_case_review_date_is_missing() {
         when(asylumCase.read(AsylumCaseDefinition.COMPLETE_CASE_REVIEW_DATE, String.class))
-                .thenReturn(Optional.empty());
+            .thenReturn(Optional.empty());
 
         assertThrows(IllegalStateException.class, () -> personalisation.getPersonalisation(callback));
     }
