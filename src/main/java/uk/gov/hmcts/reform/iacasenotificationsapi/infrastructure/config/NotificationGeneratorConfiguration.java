@@ -112,6 +112,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoff
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.linkunlinkappeal.HomeOfficeLinkAppealPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.linkunlinkappeal.HomeOfficeUnlinkAppealPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.letter.LegalRepRemoveStatutoryTimeframe24WeeksLetterPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.letter.LegalRepresentativeMarkAppealAsDetainedLetterPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.letter.LegalRepresentativeRemoveDetentionStatusLetterPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.linkunlinkappeal.LegalRepresentativeLinkAppealPersonalisation;
@@ -5097,6 +5098,29 @@ public class NotificationGeneratorConfiguration {
                         return new Message("success", "body");
                     }
                 }
+        );
+    }
+
+    @Bean("removeStatutoryTimeframe24WeeksLegalRepLetterNotificationGenerator")
+    public List<NotificationGenerator> removeStatutoryTimeframe24WeeksLegalRepLetterNotificationGenerator(
+        LegalRepRemoveStatutoryTimeframe24WeeksLetterPersonalisation lrRemoveStatutoryTimeframe24WeeksLetterPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+            new LetterNotificationGenerator(
+                newArrayList(
+                    lrRemoveStatutoryTimeframe24WeeksLetterPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            ) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success", "body");
+                }
+            }
         );
     }
 
