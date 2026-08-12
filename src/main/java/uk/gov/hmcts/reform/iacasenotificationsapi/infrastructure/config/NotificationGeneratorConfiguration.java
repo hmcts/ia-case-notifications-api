@@ -6840,6 +6840,86 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("stf24WeeksRemovalDecisionLetterNotificationGenerator")
+    public List<NotificationGenerator> stf24WeeksRemovalDecisionLetterNotificationGenerator(
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender,
+        DocumentDownloadClient documentDownloadClient
+    ) {
+        return singletonList(
+            new PrecompiledLetterNotificationGenerator(
+                newArrayList(DocumentTag.STF_24WEEKS_REMOVAL_DECISION_LETTER_BUNDLE),
+                notificationSender,
+                notificationIdAppender,
+                documentDownloadClient) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
+        );
+    }
+
+    @Bean("stf24WeeksRemovalDecisionLetterLrNotificationGenerator")
+    public List<NotificationGenerator> stf24WeeksRemovalDecisionLetterLrNotificationGenerator(
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender,
+        DocumentDownloadClient documentDownloadClient
+    ) {
+        return singletonList(
+            new PrecompiledLetterNotificationGenerator(
+                newArrayList(DocumentTag.STF_24WEEKS_REMOVAL_DECISION_LETTER_LR_BUNDLE),
+                notificationSender,
+                notificationIdAppender,
+                documentDownloadClient) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
+        );
+    }
+
+    @Bean("stf24WeeksRemovalRefusedDecisionLetterNotificationGenerator")
+    public List<NotificationGenerator> stf24WeeksRemovalRefusedDecisionLetterNotificationGenerator(
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender,
+        DocumentDownloadClient documentDownloadClient
+    ) {
+        return singletonList(
+            new PrecompiledLetterNotificationGenerator(
+                newArrayList(DocumentTag.STF_24WEEKS_REMOVAL_REFUSED_DECISION_LETTER_BUNDLE),
+                notificationSender,
+                notificationIdAppender,
+                documentDownloadClient) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
+        );
+    }
+
+    @Bean("stf24WeeksRemovalRefusedDecisionLetterLrNotificationGenerator")
+    public List<NotificationGenerator> stf24WeeksRemovalRefusedDecisionLetterLrNotificationGenerator(
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender,
+        DocumentDownloadClient documentDownloadClient
+    ) {
+        return singletonList(
+            new PrecompiledLetterNotificationGenerator(
+                newArrayList(DocumentTag.STF_24WEEKS_REMOVAL_REFUSED_DECISION_LETTER_LR_BUNDLE),
+                notificationSender,
+                notificationIdAppender,
+                documentDownloadClient) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
+        );
+    }
+
     @Bean("internalReinstateAppealAppellantLetterNotificationGenerator")
     public List<NotificationGenerator> internalReinstateAppealAppellantLetterNotificationGenerator(
         AppellantInternalReinstateAppealLetterPersonalisation appellantInternalReinstateAppealLetterPersonalisation,

@@ -106,7 +106,15 @@ public enum DocumentTag {
     HOME_OFFICE_APPLICATION_DECIDED_LETTER("homeOfficeApplicationDecidedLetter"),
     AIPM_DETAINED_IN_PRISON_IRC_REINSTATE_APPEAL_LETTER("aipmDetainedInPrisonOrIrcReinstateAppealLetter"),
     STF_24WEEKS_REMOVAL_DECISION_DOCUMENT("stf24WeeksRemovalDecisionDocument"),
+    STF_24WEEKS_REMOVAL_DECISION_LETTER("stf24WeeksRemovalDecisionLetter"),
+    STF_24WEEKS_REMOVAL_DECISION_LETTER_BUNDLE("stf24WeeksRemovalDecisionLetterBundle"),
+    STF_24WEEKS_REMOVAL_DECISION_LETTER_LR("stf24WeeksRemovalDecisionLetterLr"),
+    STF_24WEEKS_REMOVAL_DECISION_LETTER_LR_BUNDLE("stf24WeeksRemovalDecisionLetterLrBundle"),
     STF_24WEEKS_REMOVAL_REFUSED_DECISION_DOCUMENT("stf24WeeksRemovalRefusedDecisionDocument"),
+    STF_24WEEKS_REMOVAL_REFUSED_DECISION_LETTER("stf24WeeksRemovalRefusedDecisionLetter"),
+    STF_24WEEKS_REMOVAL_REFUSED_DECISION_LETTER_BUNDLE("stf24WeeksRemovalRefusedDecisionLetterBundle"),
+    STF_24WEEKS_REMOVAL_REFUSED_DECISION_LETTER_LR("stf24WeeksRemovalRefusedDecisionLetterLr"),
+    STF_24WEEKS_REMOVAL_REFUSED_DECISION_LETTER_LR_BUNDLE("stf24WeeksRemovalRefusedDecisionLetterLrBundle"),
 
     @JsonEnumDefaultValue
     NONE("");

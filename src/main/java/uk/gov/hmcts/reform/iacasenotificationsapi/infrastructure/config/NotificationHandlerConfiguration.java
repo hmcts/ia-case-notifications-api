@@ -39,6 +39,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasBeenSubmittedAsLegalRepresentedInternalCase;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasBeenSubmittedByAppellantInternalCase;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.internalNonDetainedWithAddressAvailable;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isApplicationRefused24w;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isCaseReviewFor24WeeksCase;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isHearingChannel;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.inCountryAppeal;
@@ -3872,6 +3873,7 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == DECIDE_AN_APPLICATION
                     && isInternalWithoutLegalRepresentation(asylumCase)
+                    && !isApplicationRefused24w(asylumCase)
                     && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
                     && isApplicationCreatedByAdmin(asylumCase);
             },
@@ -5690,16 +5692,16 @@ public class NotificationHandlerConfiguration {
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> stf24WeeksCompleteCaseReviewLegalRepresentativeLetterNotificationHandler(
-            @Qualifier("stf24WeeksCompleteCaseReviewLegalRepresentativeLetterNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+        @Qualifier("stf24WeeksCompleteCaseReviewLegalRepresentativeLetterNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
         return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && isInternalCase(asylumCase)
-                            && hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)
-                            && isCaseReviewFor24WeeksCase(callback.getEvent(), asylumCase);
-                },
-                notificationGenerators, getErrorHandler()
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && isInternalCase(asylumCase)
+                    && hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)
+                    && isCaseReviewFor24WeeksCase(callback.getEvent(), asylumCase);
+            },
+            notificationGenerators, getErrorHandler()
         );
     }
 
@@ -7313,6 +7315,72 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> stf24WeeksRemovalDecisionLetterNotificationHandler(
+        @Qualifier("stf24WeeksRemovalDecisionLetterNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == REMOVE_STATUTORY_TIMEFRAME_24_WEEKS
+                    && isInternalCase(asylumCase);
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> stf24WeeksRemovalDecisionLetterLrNotificationHandler(
+        @Qualifier("stf24WeeksRemovalDecisionLetterLrNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == REMOVE_STATUTORY_TIMEFRAME_24_WEEKS
+                    && hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase);
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> stf24WeeksRemovalRefusedDecisionLetterNotificationHandler(
+        @Qualifier("stf24WeeksRemovalRefusedDecisionLetterNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.DECIDE_AN_APPLICATION
+                    && isInternalCase(asylumCase)
+                    && isApplicationRefused24w(asylumCase);
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> stf24WeeksRemovalRefusedDecisionLetterLrNotificationHandler(
+        @Qualifier("stf24WeeksRemovalRefusedDecisionLetterLrNotificationGenerator")
+        List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.DECIDE_AN_APPLICATION
+                    && hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)
+                    && isApplicationRefused24w(asylumCase);
+            },
+            notificationGenerators,
+            getErrorHandler()
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> digitalCaseListedAppellantDetainedInOtherLetterNotificationHandler(
         @Qualifier("internalCaseListedAppellantLetterNotificationGenerator")
         List<NotificationGenerator> notificationGenerators) {
@@ -7554,6 +7622,7 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == DECIDE_AN_APPLICATION
                     && isInternalCase(asylumCase)
+                    && !isApplicationRefused24w(asylumCase)
                     && (!isAppellantInDetention(asylumCase)
                     || (hasBeenSubmittedByAppellantInternalCase(asylumCase)
                     && isDetainedInFacilityType(asylumCase, OTHER))
@@ -7641,6 +7710,7 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.DECIDE_AN_APPLICATION
                     && isInternalCase(asylumCase)
+                    && !isApplicationRefused24w(asylumCase)
                     && (!isAppellantInDetention(asylumCase)
                     || (isDetainedInFacilityType(asylumCase, OTHER)
                     && hasBeenSubmittedByAppellantInternalCase(asylumCase))
