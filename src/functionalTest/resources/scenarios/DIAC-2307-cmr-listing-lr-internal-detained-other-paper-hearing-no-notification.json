@@ -1,10 +1,10 @@
 {
-  "description": "DIAC-2305 No notification is sent when the listed CMR hearing is a paper hearing for appellant - LR internal (not in attendance)",
+  "description": "DIAC-2305 No notification is sent when the listed CMR hearing is a paper hearing for appellant - LR internal detained in other (not in attendance)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "SystemUser",
     "input": {
-      "id": 34022,
+      "id": 24022,
       "eventId": "cmrListing",
       "state": "prepareForHearing",
       "caseData": {
@@ -14,6 +14,8 @@
           "ariaListingReference": "LP/12345/2021",
           "appellantsRepresentation": "No",
           "isAdmin": "Yes",
+          "appellantInDetention": "Yes",
+          "detentionFacility": "other",
           "appellantAddress": {
             "County": "",
             "Country": "United Kingdom",
@@ -57,6 +59,8 @@
         "ariaListingReference": "LP/12345/2021",
         "appellantsRepresentation": "No",
         "isAdmin": "Yes",
+        "appellantInDetention": "Yes",
+        "detentionFacility": "other",
         "appellantAddress": {
           "County": "",
           "Country": "United Kingdom",
