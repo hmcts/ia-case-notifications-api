@@ -31,7 +31,7 @@ public class HomeOfficeInPersonCmrRelistingCasePersonalisation implements EmailN
     private final HearingDetailsFinder hearingDetailsFinder;
 
     public HomeOfficeInPersonCmrRelistingCasePersonalisation(
-            @Value("${govnotify.template.listAssistHearing.cmrRelisting.homeOffice.email}") String listAssistHearingHomeOfficeCaseRelistedTemplateId,
+            @Value("${govnotify.template.listAssistHearing.cmrReListing.homeOffice.email}") String listAssistHearingHomeOfficeCaseRelistedTemplateId,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
             @Value("${adaCaseListed.deadlines.appellantProvidingAppealArgumentDelay}") int appellantProvidingAppealArgumentDeadlineDelay,
             @Value("${adaCaseListed.deadlines.respondentResponseToAppealArgumentDelay}") int respondentResponseToAppealArgumentDeadlineDelay,
