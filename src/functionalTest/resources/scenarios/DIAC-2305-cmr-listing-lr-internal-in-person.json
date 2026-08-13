@@ -1,5 +1,5 @@
 {
-  "description": "DIAC-2305 Send cmr listing notification to case officer, home office, legal rep and appellant - AiP internal (in person hearing)",
+  "description": "DIAC-2305 Send cmr listing notification to case officer, home office, legal rep and appellant - LR internal (in person hearing)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "SystemUser",

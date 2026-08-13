@@ -29,7 +29,7 @@ public class DetentionEngagementTeamCmrListingProductionPersonalisation implemen
     private final HearingDetailsFinder hearingDetailsFinder;
 
     public DetentionEngagementTeamCmrListingProductionPersonalisation(
-        @Value("${govnotify.template.caseListed.detentionEngagementTeam.production.email}") String caseListedProductionDetainedTemplateId,
+        @Value("${govnotify.template.listAssistHearing.cmrListing.detentionEngagementTeam.production.email}") String caseListedProductionDetainedTemplateId,
         DetentionFacilityEmailService detentionFacilityEmailService,
         DateTimeExtractor dateTimeExtractor,
         HearingDetailsFinder hearingDetailsFinder
