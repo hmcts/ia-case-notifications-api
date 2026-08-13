@@ -94,7 +94,7 @@ class DetentionEngagementTeamCmrReListingManualAipDetainedPersonalisationTest {
     @Test
     void should_return_given_reference_id() {
         Long caseId = 12345L;
-        assertEquals(caseId + "_INTERNAL_DETAINED_CMR_LISTING_DET",
+        assertEquals(caseId + "_INTERNAL_CMR_RE_LISTING_LETTER_DET",
                 detentionEngagementTeamCmrReListingManualAipDetainedPersonalisation.getReferenceId(caseId));
     }
 
@@ -162,7 +162,7 @@ class DetentionEngagementTeamCmrReListingManualAipDetainedPersonalisationTest {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
         IllegalStateException exception =
             assertThrows(IllegalStateException.class, () -> detentionEngagementTeamCmrReListingManualAipDetainedPersonalisation.getPersonalisationForLink(asylumCase));
-        assertEquals("internalCmrListingLetterBundle document not available", exception.getMessage());
+        assertEquals("internalCmrReListingLetterBundle document not available", exception.getMessage());
     }
 
     @Test
@@ -170,6 +170,6 @@ class DetentionEngagementTeamCmrReListingManualAipDetainedPersonalisationTest {
         when(documentDownloadClient.getJsonObjectFromDocument(caseListedDoc)).thenThrow(new NotificationClientException("File size is more than 2MB"));
         IllegalStateException exception =
             assertThrows(IllegalStateException.class, () -> detentionEngagementTeamCmrReListingManualAipDetainedPersonalisation.getPersonalisationForLink(asylumCase));
-        assertEquals("Failed to get Internal detained CMR listing letter in compatible format", exception.getMessage());
+        assertEquals("Failed to get Internal Detained CMR relisting letter document in compatible format", exception.getMessage());
     }
 }
