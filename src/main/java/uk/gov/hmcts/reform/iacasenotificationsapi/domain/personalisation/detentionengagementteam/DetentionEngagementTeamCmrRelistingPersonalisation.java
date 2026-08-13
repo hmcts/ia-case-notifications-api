@@ -35,7 +35,7 @@ public class DetentionEngagementTeamCmrRelistingPersonalisation implements Email
     private final String subjectPrefix;
 
     public DetentionEngagementTeamCmrRelistingPersonalisation(
-            @Value("${govnotify.template.listAssistHearing.cmrRelisting.detentionEngagementTeam.email}") String internalDetainedCmrRelistingTemplateId,
+            @Value("${govnotify.template.listAssistHearing.cmrReListing.detentionEngagementTeam.email}") String internalDetainedCmrRelistingTemplateId,
             DetentionEmailService detentionEmailService,
             DocumentDownloadClient documentDownloadClient,
             @Value("${govnotify.emailPrefix.nonAdaInPerson}") String subjectPrefix,
