@@ -77,6 +77,39 @@ public class CmrNotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("detainedInPrisonIrcLegalRepInPersonCmrRelistingNotificationGenerator")
+    public List<NotificationGenerator> detainedLegalRepInPersonCmrRelistingNotificationGenerator(
+            LegalRepresentativeCmrRelistingPersonalisation legalRepresentativeCmrRelistingPersonalisation,
+            CaseOfficerCmrRelistingPersonalisation caseOfficerCmrRelistingPersonalisation,
+            HomeOfficeInPersonCmrRelistingCasePersonalisation homeOfficeInPersonCmrRelistingCasePersonalisation,
+            DetentionEngagementTeamCmrRelistingPersonalisation detentionEngagementTeamCmrRelistingPersonalisation,
+            DetentionEngagementTeamCmrRelistingProductionPersonalisation detentionEngagementTeamCmrRelistingProductionPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return newArrayList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeCmrRelistingPersonalisation,
+                                caseOfficerCmrRelistingPersonalisation,
+                                homeOfficeInPersonCmrRelistingCasePersonalisation,
+                                detentionEngagementTeamCmrRelistingProductionPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(
+                                detentionEngagementTeamCmrRelistingPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+
     @Bean("aipManualCmrListingNotificationGenerator")
     public List<NotificationGenerator> aipManualCmrListingNotificationGenerator(
         CaseOfficerCmrListingPersonalisation caseOfficerCmrListingPersonalisation,
