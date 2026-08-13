@@ -228,25 +228,6 @@ public class CmrNotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> cmrRelistingLegalRepDigitalDetainedOtherNotificationHandler(
-            @Qualifier("legalRepDigitalDetainedOtherCmrRelistingNotificationGenerator") List<NotificationGenerator> notificationGenerators
-    ) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && CMR_RE_LISTING.equals(callback.getEvent())
-                            && isCmrHearingInPersonOrRemote(asylumCase)
-                            && isRepJourney(callback.getCaseDetails().getCaseData())
-                            && !isInternalCase(asylumCase)
-                            && isDetainedInFacilityType(asylumCase, OTHER);
-                },
-                notificationGenerators
-        );
-    }
-
-    @Bean
     public PreSubmitCallbackHandler<AsylumCase> cmrCancelledManualNotificationHandler(
             @Qualifier("cmrCancelledManualNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
@@ -332,24 +313,6 @@ public class CmrNotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> cmrRelistingLrManualNotificationHandler(
-            @Qualifier("lrManualCmrRelistingNotificationGenerator") List<NotificationGenerator> notificationGenerators
-    ) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && CMR_RE_LISTING.equals(callback.getEvent())
-                            && isCmrHearingInPersonOrRemote(asylumCase)
-                            && (!isAppellantInDetention(asylumCase) || isDetainedInFacilityType(asylumCase, OTHER))
-                            && hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase);
-                },
-                notificationGenerators
-        );
-    }
-
-    @Bean
     public PreSubmitCallbackHandler<AsylumCase> cmrListingLrManualDetainedInPrisonOrIrcNotificationHandler(
         @Qualifier("lrManualDetainedInPrisonOrIrcCmrListingNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
@@ -367,24 +330,6 @@ public class CmrNotificationHandlerConfiguration {
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> cmrRelistingLrManualDetainedInPrisonOrIrcNotificationHandler(
-            @Qualifier("lrManualDetainedInPrisonOrIrcCmrRelistingNotificationGenerator") List<NotificationGenerator> notificationGenerators
-    ) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && CMR_RE_LISTING.equals(callback.getEvent())
-                            && isCmrHearingInPersonOrRemote(asylumCase)
-                            && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
-                            && hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase);
-                },
-                notificationGenerators
-        );
-    }
-
     //    This handler also handles DIAC-2366 LR manual detained in other since notifications for non detained and detained in other behave identically
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> cmrRelistingNonDetainedLegallyRepresentedManualAppeal(
@@ -398,7 +343,7 @@ public class CmrNotificationHandlerConfiguration {
                             && CMR_RE_LISTING.equals(callback.getEvent())
                             && isCmrHearingInPersonOrRemote(asylumCase)
                             && hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)
-                            && (!isAppellantInDetention(asylumCase) || isDetainedInOneOfFacilityTypes(asylumCase,OTHER));
+                            && !isAppellantInDetention(asylumCase);
                 },
                 notificationGenerators
         );

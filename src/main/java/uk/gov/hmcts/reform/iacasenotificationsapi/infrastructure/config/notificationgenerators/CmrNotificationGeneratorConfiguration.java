@@ -6,12 +6,15 @@ import org.springframework.context.annotation.Configuration;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Message;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantCmrHearingCancelledPersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AipCmrRelistedAppellantEmailPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantCmrHearingCancelledPersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantCmrListingPersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantCmrRelistingPersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantCmrHearingCancelledPersonalisationSms;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AipCmrRelistedAppellantSmsPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantCmrHearingCancelledPersonalisationSms;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantCmrListingPersonalisationSms;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantCmrRelistingPersonalisationSms;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerCmrHearingCancelledPersonalisationEmail;
@@ -367,43 +370,6 @@ public class CmrNotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("legalRepDigitalDetainedOtherCmrRelistingNotificationGenerator")
-    public List<NotificationGenerator> legalRepDigitalDetainedOtherCmrRelistingNotificationGenerator(
-            LegalRepresentativeCmrRelistingPersonalisation legalRepresentativeCmrRelistingPersonalisation,
-            CaseOfficerCmrRelistingPersonalisation caseOfficerCmrRelistingPersonalisation,
-            GovNotifyNotificationSender notificationSender,
-            NotificationIdAppender notificationIdAppender,
-            DocumentDownloadClient documentDownloadClient
-    ) {
-
-        DocumentTag documentTag = DocumentTag.INTERNAL_CMR_RE_LISTING_LETTER_BUNDLE;
-
-        return newArrayList(
-                new EmailNotificationGenerator(
-                        newArrayList(
-                                legalRepresentativeCmrRelistingPersonalisation,
-                                caseOfficerCmrRelistingPersonalisation
-                        ),
-                        notificationSender,
-                        notificationIdAppender
-                ),
-                new PrecompiledLetterNotificationGenerator(
-                        newArrayList(
-                                documentTag
-                        ),
-                        notificationSender,
-                        notificationIdAppender,
-                        documentDownloadClient
-                ) {
-                    @Override
-                    public Message getSuccessMessage() {
-                        return new Message("success","body");
-                    }
-                }
-        );
-    }
-
-
     @Bean("cmrCancelledManualNotificationGenerator")
     public List<NotificationGenerator> cmrCancelledManualNotificationGenerator(
             GovNotifyNotificationSender notificationSender,
@@ -553,41 +519,6 @@ public class CmrNotificationGeneratorConfiguration {
                     return new Message("success","body");
                 }
             }
-        );
-    }
-
-    @Bean("lrManualCmrRelistingNotificationGenerator")
-    public List<NotificationGenerator> lrManualCmrRelistingNotificationGenerator(
-            CaseOfficerCmrRelistingPersonalisation caseOfficerCmrRelistingPersonalisation,
-            GovNotifyNotificationSender notificationSender,
-            NotificationIdAppender notificationIdAppender,
-            DocumentDownloadClient documentDownloadClient
-    ) {
-        DocumentTag appellantDocumentTag = DocumentTag.INTERNAL_CMR_RE_LISTING_LETTER_BUNDLE;
-        DocumentTag lrDocumentTag = DocumentTag.INTERNAL_CMR_RE_LISTING_LR_LETTER_BUNDLE;
-
-        return newArrayList(
-                new EmailNotificationGenerator(
-                        newArrayList(
-                                caseOfficerCmrRelistingPersonalisation
-                        ),
-                        notificationSender,
-                        notificationIdAppender
-                ),
-                new PrecompiledLetterNotificationGenerator(
-                        newArrayList(
-                                appellantDocumentTag,
-                                lrDocumentTag
-                        ),
-                        notificationSender,
-                        notificationIdAppender,
-                        documentDownloadClient
-                ) {
-                    @Override
-                    public Message getSuccessMessage() {
-                        return new Message("success","body");
-                    }
-                }
         );
     }
 
