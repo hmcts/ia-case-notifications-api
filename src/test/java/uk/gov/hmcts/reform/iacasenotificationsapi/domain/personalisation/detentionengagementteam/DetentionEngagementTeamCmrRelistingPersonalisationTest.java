@@ -161,7 +161,7 @@ class DetentionEngagementTeamCmrRelistingPersonalisationTest {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
         IllegalStateException exception =
                 assertThrows(IllegalStateException.class, () -> detentionEngagementTeamCmrRelistingPersonalisation.getPersonalisationForLink(asylumCase));
-        assertEquals("internalCmrRelistingLetterBundle document not available", exception.getMessage());
+        assertEquals("internalCmrReListingLetterBundle document not available", exception.getMessage());
     }
 
     @Test
