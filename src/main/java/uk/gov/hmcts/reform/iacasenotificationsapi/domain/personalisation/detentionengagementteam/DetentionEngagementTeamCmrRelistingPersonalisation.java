@@ -88,8 +88,8 @@ public class DetentionEngagementTeamCmrRelistingPersonalisation implements Email
         try {
             return documentDownloadClient.getJsonObjectFromDocument(getLetterForNotification(asylumCase, INTERNAL_CMR_RE_LISTING_LETTER_BUNDLE));
         } catch (IOException | NotificationClientException e) {
-            log.error("Failed to get Internal detained CMR re-listing letter in compatible format", e);
-            throw new IllegalStateException("Failed to get Internal detained CMR re-listing letter in compatible format");
+            log.error("Failed to get Internal detained CMR relisting letter in compatible format", e);
+            throw new IllegalStateException("Failed to get Internal detained CMR relisting letter in compatible format");
         }
     }
 }
