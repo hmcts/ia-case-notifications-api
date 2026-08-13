@@ -370,7 +370,7 @@ public class CmrNotificationHandlerConfiguration {
 
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> cmrListingAipManualDetainedInPrisonOrIrcNotificationHandler(
-            @Qualifier("aipManualDetainedInPrisonOrIrcCmrListingNotificationGenerator") List<NotificationGenerator> notificationGenerators
+        @Qualifier("aipManualDetainedInPrisonOrIrcCmrListingNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
 
         return new NotificationHandler(
