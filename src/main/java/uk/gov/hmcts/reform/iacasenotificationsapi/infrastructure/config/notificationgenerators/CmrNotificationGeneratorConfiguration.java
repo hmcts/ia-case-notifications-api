@@ -567,6 +567,51 @@ public class CmrNotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("aipManualDetainedInPrisonOrIrcCmrListingNotificationGenerator")
+    public List<NotificationGenerator> aipManualDetainedInPrisonOrIrcCmrListingNotificationGenerator(
+        CaseOfficerCmrListingPersonalisation caseOfficerCmrListingPersonalisation,
+        HomeOfficeInPersonCmrListingCasePersonalisation homeOfficeInPersonCmrListingCasePersonalisation,
+        DetentionEngagementTeamCmrListingPersonalisation detentionEngagementTeamCmrListingPersonalisation,
+        DetentionEngagementTeamCmrListingProductionPersonalisation detentionEngagementTeamCmrListingProductionPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender,
+        DocumentDownloadClient documentDownloadClient
+    ) {
+        DocumentTag documentTag = DocumentTag.INTERNAL_CMR_LISTING_LETTER_BUNDLE;
+
+        return newArrayList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    caseOfficerCmrListingPersonalisation,
+                    homeOfficeInPersonCmrListingCasePersonalisation,
+                    detentionEngagementTeamCmrListingProductionPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new EmailWithLinkNotificationGenerator(
+                newArrayList(
+                    detentionEngagementTeamCmrListingPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new PrecompiledLetterNotificationGenerator(
+                newArrayList(
+                    documentTag
+                ),
+                notificationSender,
+                notificationIdAppender,
+                documentDownloadClient
+            ) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
+        );
+    }
+
     @Bean("cmrRelistingLegallyRepresentedManualNonDetainedAppealGenerator")
     public List<NotificationGenerator> cmrRelistingLegallyRepresentedManualNonDetainedAppealGenerator(
             CaseOfficerCmrRelistingPersonalisation caseOfficerCmrRelistingPersonalisation,
