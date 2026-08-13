@@ -867,6 +867,10 @@ govnotify:
         email: 97fdd824-7adf-46a2-973d-ad7d96bf76bd
       homeOffice:
         email: 2c9c4d9a-551d-480e-874e-46ef72b044ac
+      detentionEngagementTeam:
+        email: fe92c79d-212e-4ffe-b619-c2fb4dd304ac
+        production:
+          email: b92c6233-5729-4844-a64c-4100274ecdc4
     reListCase:
       adminOfficer:
         email: 495c6f2b-46da-431f-a890-22371f2150dd
