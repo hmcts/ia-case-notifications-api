@@ -22,9 +22,12 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseoff
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerCmrRelistingPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamCmrListingPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamCmrListingProductionPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamCmrRelistingPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamCmrRelistingProductionPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeCmrHearingCancelledPersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeCmrRelistingPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeInPersonCmrListingCasePersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeInPersonCmrRelistingCasePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
@@ -370,6 +373,45 @@ public class CmrNotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("legalRepDigitalDetainedOtherCmrRelistingNotificationGenerator")
+    public List<NotificationGenerator> legalRepDigitalDetainedOtherCmrRelistingNotificationGenerator(
+            LegalRepresentativeCmrRelistingPersonalisation legalRepresentativeCmrRelistingPersonalisation,
+            CaseOfficerCmrRelistingPersonalisation caseOfficerCmrRelistingPersonalisation,
+            HomeOfficeInPersonCmrRelistingCasePersonalisation homeOfficeInPersonCmrRelistingCasePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender,
+            DocumentDownloadClient documentDownloadClient
+    ) {
+
+        DocumentTag documentTag = DocumentTag.INTERNAL_CMR_RE_LISTING_LETTER_BUNDLE;
+
+        return newArrayList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeCmrRelistingPersonalisation,
+                                caseOfficerCmrRelistingPersonalisation,
+                                homeOfficeInPersonCmrRelistingCasePersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new PrecompiledLetterNotificationGenerator(
+                        newArrayList(
+                                documentTag
+                        ),
+                        notificationSender,
+                        notificationIdAppender,
+                        documentDownloadClient
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
+        );
+    }
+
+
     @Bean("cmrCancelledManualNotificationGenerator")
     public List<NotificationGenerator> cmrCancelledManualNotificationGenerator(
             GovNotifyNotificationSender notificationSender,
@@ -522,6 +564,43 @@ public class CmrNotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("lrManualCmrRelistingNotificationGenerator")
+    public List<NotificationGenerator> lrManualCmrRelistingNotificationGenerator(
+            CaseOfficerCmrRelistingPersonalisation caseOfficerCmrRelistingPersonalisation,
+            HomeOfficeInPersonCmrRelistingCasePersonalisation homeOfficeInPersonCmrRelistingCasePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender,
+            DocumentDownloadClient documentDownloadClient
+    ) {
+        DocumentTag appellantDocumentTag = DocumentTag.INTERNAL_CMR_RE_LISTING_LETTER_BUNDLE;
+        DocumentTag lrDocumentTag = DocumentTag.INTERNAL_CMR_RE_LISTING_LR_LETTER_BUNDLE;
+
+        return newArrayList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                caseOfficerCmrRelistingPersonalisation,
+                                homeOfficeInPersonCmrRelistingCasePersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new PrecompiledLetterNotificationGenerator(
+                        newArrayList(
+                                appellantDocumentTag,
+                                lrDocumentTag
+                        ),
+                        notificationSender,
+                        notificationIdAppender,
+                        documentDownloadClient
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
+        );
+    }
+
     @Bean("lrManualDetainedInPrisonOrIrcCmrListingNotificationGenerator")
     public List<NotificationGenerator> lrManualDetainedInPrisonOrIrcCmrListingNotificationGenerator(
         CaseOfficerCmrListingPersonalisation caseOfficerCmrListingPersonalisation,
@@ -564,6 +643,51 @@ public class CmrNotificationGeneratorConfiguration {
                     return new Message("success","body");
                 }
             }
+        );
+    }
+
+    @Bean("lrManualDetainedInPrisonOrIrcCmrRelistingNotificationGenerator")
+    public List<NotificationGenerator> lrManualDetainedInPrisonOrIrcCmrRelistingNotificationGenerator(
+            CaseOfficerCmrRelistingPersonalisation caseOfficerCmrRelistingPersonalisation,
+            HomeOfficeInPersonCmrRelistingCasePersonalisation homeOfficeInPersonCmrRelistingCasePersonalisation,
+            DetentionEngagementTeamCmrRelistingPersonalisation detentionEngagementTeamCmrRelistingPersonalisation,
+            DetentionEngagementTeamCmrRelistingProductionPersonalisation detentionEngagementTeamCmrRelistingProductionPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender,
+            DocumentDownloadClient documentDownloadClient
+    ) {
+        DocumentTag lrDocumentTag = DocumentTag.INTERNAL_CMR_RE_LISTING_LR_LETTER_BUNDLE;
+
+        return newArrayList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                caseOfficerCmrRelistingPersonalisation,
+                                homeOfficeInPersonCmrRelistingCasePersonalisation,
+                                detentionEngagementTeamCmrRelistingProductionPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(
+                                detentionEngagementTeamCmrRelistingPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new PrecompiledLetterNotificationGenerator(
+                        newArrayList(
+                                lrDocumentTag
+                        ),
+                        notificationSender,
+                        notificationIdAppender,
+                        documentDownloadClient
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
         );
     }
 
