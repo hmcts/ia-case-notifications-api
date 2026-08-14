@@ -53,6 +53,11 @@ public class EmailNotificationGenerator implements NotificationGenerator {
         EmailNotificationPersonalisation emailNotificationPersonalisation = (EmailNotificationPersonalisation) personalisation;
         Set<String> subscriberEmails = emailNotificationPersonalisation.getRecipientsList(asylumCase);
         log.info("-------personalisation: {}", personalisation.getClass().getName());
+        try {
+            throw new Exception("error");
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
         log.info("-------subscriberEmails: {}", subscriberEmails);
         for (String email : subscriberEmails) {
             log.info("-------email: {}", email);
