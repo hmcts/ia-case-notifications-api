@@ -19,6 +19,7 @@ import java.util.List;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DetentionFacility.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasBeenSubmittedByAppellantInternalCase;
 
 @Slf4j
 @Configuration
@@ -74,10 +75,20 @@ public class CmrNotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                log.info(
+                        "---------cmrListingAipManualNotificationHandler: {} {}",
+                        callback.getCaseDetails().getId(),
+                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                                && CMR_LISTING.equals(callback.getEvent())
+                                && isCmrHearingInPersonOrRemote(asylumCase)
+                                && hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                                && !isAppellantInDetention(asylumCase)
+                );
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && CMR_LISTING.equals(callback.getEvent())
                     && isCmrHearingInPersonOrRemote(asylumCase)
-                    && hasBeenSubmittedByAppellantInternalCase(asylumCase);
+                    && hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                    && !isAppellantInDetention(asylumCase);
             },
             notificationGenerators
         );
