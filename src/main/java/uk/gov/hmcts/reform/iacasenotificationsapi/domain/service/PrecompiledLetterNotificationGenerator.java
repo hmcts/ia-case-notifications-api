@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag;
@@ -18,7 +17,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdVa
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.GovNotifyNotificationSender;
 
-@Slf4j
 public class PrecompiledLetterNotificationGenerator implements NotificationGenerator {
 
     protected final List<DocumentTag> documentTagList;
