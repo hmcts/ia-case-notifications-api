@@ -439,6 +439,18 @@ public class CmrNotificationHandlerConfiguration {
                                 && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
                                 && hasBeenSubmittedByAppellantInternalCase(asylumCase)
                 );
+                log.info(
+                        "-------isCmrHearingInPersonOrRemote(asylumCase): {}",
+                        isCmrHearingInPersonOrRemote(asylumCase)
+                );
+                log.info(
+                        "-------isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON): {}",
+                        isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
+                );
+                log.info(
+                        "-------hasBeenSubmittedByAppellantInternalCase(asylumCase): {}",
+                        hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                );
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && CMR_LISTING.equals(callback.getEvent())

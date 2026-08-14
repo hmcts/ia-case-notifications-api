@@ -56,7 +56,7 @@ public class EmailNotificationGenerator implements NotificationGenerator {
         try {
             throw new Exception("error");
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            log.error("-------" + e.getMessage(), e);
         }
         log.info("-------subscriberEmails: {}", subscriberEmails);
         for (String email : subscriberEmails) {
