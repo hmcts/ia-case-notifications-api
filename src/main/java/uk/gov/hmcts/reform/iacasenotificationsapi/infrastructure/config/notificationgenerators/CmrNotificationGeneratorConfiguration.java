@@ -7,6 +7,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNo
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Message;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailWithLinkNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantCmrHearingCancelledPersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AipCmrRelistedAppellantEmailPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantCmrHearingCancelledPersonalisationEmail;
@@ -23,6 +24,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseoff
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamCmrListingPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamCmrListingProductionPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamCmrReListingManualAipDetainedPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeCmrHearingCancelledPersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeCmrRelistingPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeInPersonCmrListingCasePersonalisation;
@@ -461,6 +463,7 @@ public class CmrNotificationGeneratorConfiguration {
             CaseOfficerCmrRelistingPersonalisation caseOfficerCmrRelistingPersonalisation,
             HomeOfficeCmrRelistingPersonalisation homeOfficeCmrRelistingPersonalisation,
             DetentionEngagementTeamCmrReListingManualAipDetainedPersonalisation detentionEngagementTeamCmrReListingManualAipDetainedPersonalisation,
+            DetentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisation detentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
@@ -468,9 +471,16 @@ public class CmrNotificationGeneratorConfiguration {
         return newArrayList(
                 new EmailNotificationGenerator(
                         newArrayList(
-                                detentionEngagementTeamCmrReListingManualAipDetainedPersonalisation,
                                 caseOfficerCmrRelistingPersonalisation,
-                                homeOfficeCmrRelistingPersonalisation
+                                homeOfficeCmrRelistingPersonalisation,
+                                detentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(
+                                detentionEngagementTeamCmrReListingManualAipDetainedPersonalisation
                         ),
                         notificationSender,
                         notificationIdAppender

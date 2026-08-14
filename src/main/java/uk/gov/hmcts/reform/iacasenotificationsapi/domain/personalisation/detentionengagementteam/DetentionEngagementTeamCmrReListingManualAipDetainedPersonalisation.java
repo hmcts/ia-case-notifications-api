@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailWithLinkNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionEmailService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.DocumentDownloadClient;
@@ -26,7 +27,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 
 @Slf4j
 @Service
-public class DetentionEngagementTeamCmrReListingManualAipDetainedPersonalisation implements EmailNotificationPersonalisation {
+public class DetentionEngagementTeamCmrReListingManualAipDetainedPersonalisation implements EmailWithLinkNotificationPersonalisation {
 
     private final String internalDetEditAppealTemplateId;
     private final DetentionEmailService detentionEmailService;
@@ -35,7 +36,7 @@ public class DetentionEngagementTeamCmrReListingManualAipDetainedPersonalisation
     private String nonAdaPrefix;
 
     public DetentionEngagementTeamCmrReListingManualAipDetainedPersonalisation(
-            @Value("${govnotify.template.appealSubmitted.detentionEngagementTeam.email}") String templateId,
+            @Value("${govnotify.template.listAssistHearing.cmrReListing.detentionEngagementTeam.email}") String templateId,
             DetentionEmailService detentionEmailService,
             DocumentDownloadClient documentDownloadClient,
             PersonalisationProvider personalisationProvider,
