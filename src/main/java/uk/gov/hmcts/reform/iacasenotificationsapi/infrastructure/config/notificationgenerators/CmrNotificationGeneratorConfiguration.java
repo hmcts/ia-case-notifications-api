@@ -71,8 +71,8 @@ public class CmrNotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("aipManualCmrListingNotificationGenerator")
-    public List<NotificationGenerator> aipManualCmrListingNotificationGenerator(
+    @Bean("aipManualNonDetainedCmrListingNotificationGenerator")
+    public List<NotificationGenerator> aipManualNonDetainedCmrListingNotificationGenerator(
         CaseOfficerCmrListingPersonalisation caseOfficerCmrListingPersonalisation,
         HomeOfficeInPersonCmrListingCasePersonalisation homeOfficeInPersonCmrListingCasePersonalisation,
         GovNotifyNotificationSender notificationSender,

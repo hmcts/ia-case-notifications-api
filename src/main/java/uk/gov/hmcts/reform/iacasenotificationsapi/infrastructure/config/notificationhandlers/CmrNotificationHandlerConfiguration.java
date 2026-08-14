@@ -32,29 +32,6 @@ public class CmrNotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                log.info(
-                        "---------cmrInPersonDetainedInPrisonIrcListedNotificationHandler: {} {}",
-                        callback.getCaseDetails().getId(),
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && CMR_LISTING.equals(callback.getEvent())
-                                && isCmrHearingInPersonOrRemote(asylumCase)
-                                && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
-                                && isRepJourney(callback.getCaseDetails().getCaseData())
-                                && !isInternalCase(asylumCase)
-                );
-                log.info(
-                        "-------isCmrHearingInPersonOrRemote(asylumCase): {}",
-                        isCmrHearingInPersonOrRemote(asylumCase)
-                );
-                log.info(
-                        "-------isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON): {}",
-                        isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
-                );
-                log.info(
-                        "-------isRepJourney(callback.getCaseDetails().getCaseData()): {}",
-                        isRepJourney(callback.getCaseDetails().getCaseData())
-                );
-                log.info("-------!isInternalCase(asylumCase)(asylumCase): {}", !isInternalCase(asylumCase));
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && CMR_LISTING.equals(callback.getEvent())
@@ -68,22 +45,13 @@ public class CmrNotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> cmrListingAipManualNotificationHandler(
-        @Qualifier("aipManualCmrListingNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    public PreSubmitCallbackHandler<AsylumCase> cmrListingAipManualNonDetainedNotificationHandler(
+        @Qualifier("aipManualNonDetainedCmrListingNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
 
         return new NotificationHandler(
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                log.info(
-                        "---------cmrListingAipManualNotificationHandler: {} {}",
-                        callback.getCaseDetails().getId(),
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && CMR_LISTING.equals(callback.getEvent())
-                                && isCmrHearingInPersonOrRemote(asylumCase)
-                                && hasBeenSubmittedByAppellantInternalCase(asylumCase)
-                                && !isAppellantInDetention(asylumCase)
-                );
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && CMR_LISTING.equals(callback.getEvent())
                     && isCmrHearingInPersonOrRemote(asylumCase)
@@ -355,15 +323,6 @@ public class CmrNotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                log.info(
-                        "---------cmrListingLrManualDetainedInPrisonOrIrcNotificationHandler: {} {}",
-                        callback.getCaseDetails().getId(),
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && CMR_LISTING.equals(callback.getEvent())
-                            && isCmrHearingInPersonOrRemote(asylumCase)
-                            && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
-                            && hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)
-                );
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && CMR_LISTING.equals(callback.getEvent())
@@ -384,14 +343,6 @@ public class CmrNotificationHandlerConfiguration {
         return new NotificationHandler(
                 (callbackStage, callback) -> {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    log.info(
-                            "---------cmrRelistingNonDetainedLegallyRepresentedManualAppeal: {} {}",
-                            callback.getCaseDetails().getId(),
-                            callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT && CMR_RE_LISTING.equals(callback.getEvent())
-                                    && isCmrHearingInPersonOrRemote(asylumCase)
-                                    && hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase)
-                                    && (!isAppellantInDetention(asylumCase) || isDetainedInOneOfFacilityTypes(asylumCase,OTHER))
-                    );
 
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && CMR_RE_LISTING.equals(callback.getEvent())
@@ -411,16 +362,6 @@ public class CmrNotificationHandlerConfiguration {
         return new NotificationHandler(
                 (callbackStage, callback) -> {
                     AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    log.info(
-                            "---------cmrReListingLegalRepDigitalDetainedInOtherNotificationHandler: {} {}",
-                            callback.getCaseDetails().getId(),
-                            callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                    && CMR_RE_LISTING.equals(callback.getEvent())
-                                    && isCmrHearingInPersonOrRemote(asylumCase)
-                                    && !isInternalCase(callback.getCaseDetails().getCaseData())
-                                    && isRepJourney(callback.getCaseDetails().getCaseData())
-                                    && isDetainedInOneOfFacilityTypes(asylumCase, OTHER)
-                    );
 
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && CMR_RE_LISTING.equals(callback.getEvent())
@@ -441,27 +382,6 @@ public class CmrNotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                log.info(
-                        "---------cmrListingAipManualDetainedInPrisonOrIrcNotificationHandler: {} {}",
-                        callback.getCaseDetails().getId(),
-                        callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                                && CMR_LISTING.equals(callback.getEvent())
-                                && isCmrHearingInPersonOrRemote(asylumCase)
-                                && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
-                                && hasBeenSubmittedByAppellantInternalCase(asylumCase)
-                );
-                log.info(
-                        "-------isCmrHearingInPersonOrRemote(asylumCase): {}",
-                        isCmrHearingInPersonOrRemote(asylumCase)
-                );
-                log.info(
-                        "-------isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON): {}",
-                        isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
-                );
-                log.info(
-                        "-------hasBeenSubmittedByAppellantInternalCase(asylumCase): {}",
-                        hasBeenSubmittedByAppellantInternalCase(asylumCase)
-                );
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && CMR_LISTING.equals(callback.getEvent())

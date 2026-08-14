@@ -61,7 +61,6 @@ public class PrecompiledLetterNotificationGenerator implements NotificationGener
         final String referenceId) throws IOException {
         Optional<List<IdValue<DocumentWithMetadata>>> optionalLetterNotificationDocs = asylumCase.read(LETTER_BUNDLE_DOCUMENTS);
 
-        log.info("-----------------referenceId: {}", referenceId);
         DocumentWithMetadata bundledLetterPdf = optionalLetterNotificationDocs
             .orElse(Collections.emptyList())
             .stream()
