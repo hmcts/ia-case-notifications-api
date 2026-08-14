@@ -571,11 +571,8 @@ public class CmrNotificationGeneratorConfiguration {
         DetentionEngagementTeamCmrListingPersonalisation detentionEngagementTeamCmrListingPersonalisation,
         DetentionEngagementTeamCmrListingProductionPersonalisation detentionEngagementTeamCmrListingProductionPersonalisation,
         GovNotifyNotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender,
-        DocumentDownloadClient documentDownloadClient
+        NotificationIdAppender notificationIdAppender
     ) {
-        DocumentTag documentTag = DocumentTag.INTERNAL_CMR_LISTING_LETTER_BUNDLE;
-
         return newArrayList(
             new EmailNotificationGenerator(
                 newArrayList(
@@ -592,14 +589,6 @@ public class CmrNotificationGeneratorConfiguration {
                 ),
                 notificationSender,
                 notificationIdAppender
-            ),
-            new PrecompiledLetterNotificationGenerator(
-                newArrayList(
-                    documentTag
-                ),
-                notificationSender,
-                notificationIdAppender,
-                documentDownloadClient
             ) {
                 @Override
                 public Message getSuccessMessage() {
