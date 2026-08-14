@@ -35,7 +35,7 @@ public class DetentionEngagementTeamCmrReListingManualAipDetainedPersonalisation
     private String nonAdaPrefix;
 
     public DetentionEngagementTeamCmrReListingManualAipDetainedPersonalisation(
-            @Value("${govnotify.template.listAssistHearing.cmrReListing.detentionEngagementTeam.email}") String templateId,
+            @Value("${govnotify.template.listAssistHearing.cmrListing.detentionEngagementTeam.email}") String templateId,
             DetentionEmailService detentionEmailService,
             DocumentDownloadClient documentDownloadClient,
             PersonalisationProvider personalisationProvider,
