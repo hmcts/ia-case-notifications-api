@@ -37,6 +37,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Remissi
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision.PARTIALLY_APPROVED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision.REJECTED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.COMPLETE_CASE_REVIEW;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.RESEND_TIMELINE_NOTICE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 
@@ -641,7 +642,7 @@ public class AsylumCaseUtils {
 
     public static boolean isCaseReviewFor24WeeksCase(Event event, AsylumCase asylumCase) {
         boolean hasStf24W = AsylumCaseUtils.hasStf24WeeksStatus(asylumCase);
-        return event == COMPLETE_CASE_REVIEW
+        return List.of(RESEND_TIMELINE_NOTICE, COMPLETE_CASE_REVIEW).contains(event)
             && hasStf24W;
     }
 
