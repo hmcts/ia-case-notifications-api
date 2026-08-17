@@ -74,7 +74,7 @@ class CmrRelistingAipManualNotificationHandlerTest {
         when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
 
         PreSubmitCallbackHandler<AsylumCase> listingHandler =
-                handlerConfiguration.cmrListingAipManualNotificationHandler(notificationGenerators);
+                handlerConfiguration.cmrListingAipManualNonDetainedNotificationHandler(notificationGenerators);
         when(callback.getEvent()).thenReturn(CMR_LISTING);
         assertThat(listingHandler.canHandle(ABOUT_TO_SUBMIT, callback)).isTrue();
 
