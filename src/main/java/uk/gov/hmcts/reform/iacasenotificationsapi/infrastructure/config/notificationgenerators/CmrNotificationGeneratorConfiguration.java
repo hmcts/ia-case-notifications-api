@@ -115,7 +115,7 @@ public class CmrNotificationGeneratorConfiguration {
         NotificationIdAppender notificationIdAppender,
         DocumentDownloadClient documentDownloadClient
     ) {
-        DocumentTag documentTag = DocumentTag.INTERNAL_CMR_RE_LISTING_LETTER;
+        DocumentTag documentTag = DocumentTag.INTERNAL_CMR_RE_LISTING_LETTER_BUNDLE;
 
         return newArrayList(
             new PrecompiledLetterNotificationGenerator(
