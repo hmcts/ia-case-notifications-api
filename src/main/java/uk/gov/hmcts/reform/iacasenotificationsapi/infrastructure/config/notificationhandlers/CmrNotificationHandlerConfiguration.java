@@ -56,7 +56,7 @@ public class CmrNotificationHandlerConfiguration {
                     && CMR_LISTING.equals(callback.getEvent())
                     && isCmrHearingInPersonOrRemote(asylumCase)
                     && hasBeenSubmittedByAppellantInternalCase(asylumCase)
-                    && !isAppellantInDetention(asylumCase);
+                    && (!isAppellantInDetention(asylumCase) || isDetainedInFacilityType(asylumCase, OTHER));
             },
             notificationGenerators
         );
