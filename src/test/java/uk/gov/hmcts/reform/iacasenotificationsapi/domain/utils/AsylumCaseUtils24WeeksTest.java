@@ -191,7 +191,7 @@ public class AsylumCaseUtils24WeeksTest {
 
         // Scenario 1 - 24-week flag set to Yes → should fire
         @ParameterizedTest
-        @EnumSource(value = Event.class, names = {"COMPLETE_CASE_REVIEW", "RESEND_TIMELINE_NOTICE"})
+        @EnumSource(value = Event.class, names = {"COMPLETE_CASE_REVIEW", "SEND_LATE_TIMELINE_NOTICE"})
         void should_return_true_for_24_week_case_valid_event(Event event) {
             AsylumCase asylumCase = mock(AsylumCase.class);
             when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YES));
@@ -218,7 +218,7 @@ public class AsylumCaseUtils24WeeksTest {
         }
 
         @ParameterizedTest
-        @EnumSource(value = Event.class, names = {"COMPLETE_CASE_REVIEW", "RESEND_TIMELINE_NOTICE"}, mode = EnumSource.Mode.EXCLUDE)
+        @EnumSource(value = Event.class, names = {"COMPLETE_CASE_REVIEW", "SEND_LATE_TIMELINE_NOTICE"}, mode = EnumSource.Mode.EXCLUDE)
         void should_return_false_when_event_is_invalid(Event event) {
             AsylumCase asylumCase = mock(AsylumCase.class);
             when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YES));

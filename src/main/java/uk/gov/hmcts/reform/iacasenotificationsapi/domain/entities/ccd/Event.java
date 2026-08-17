@@ -109,7 +109,7 @@ public enum Event {
     TRANSFER_OUT_OF_ADA("transferOutOfAda"),
     REMOVE_STATUTORY_TIMEFRAME_24_WEEKS("removeStatutoryTimeframe24Weeks"),
     COMPLETE_CASE_REVIEW("completeCaseReview"),
-    RESEND_TIMELINE_NOTICE("resendTimelineNotice"),
+    SEND_LATE_TIMELINE_NOTICE("sendLateTimelineNotice"),
     MARK_APPEAL_AS_ADA("markAppealAsAda"),
     REMOVE_DETAINED_STATUS("removeDetainedStatus"),
     MARK_APPEAL_AS_DETAINED("markAppealAsDetained"),
