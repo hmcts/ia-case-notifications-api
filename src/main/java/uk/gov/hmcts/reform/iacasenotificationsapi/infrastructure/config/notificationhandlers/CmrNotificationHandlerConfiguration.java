@@ -25,8 +25,8 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 @Configuration
 public class CmrNotificationHandlerConfiguration {
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> cmrInPersonDetainedInPrisonIrcListedNotificationHandler(
-        @Qualifier("detainedInPrisonIrcLegalRepInPersonCmrListingNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    public PreSubmitCallbackHandler<AsylumCase> cmrListingLegalRepDigitalDetainedInPrisonOrIrcNotificationHandler(
+        @Qualifier("legalRepDigitalDetainedInPrisonOrIrcCmrListingNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
 
         return new NotificationHandler(

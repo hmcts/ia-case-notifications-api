@@ -39,8 +39,8 @@ import static com.google.common.collect.Lists.newArrayList;
 @Slf4j
 @Configuration
 public class CmrNotificationGeneratorConfiguration {
-    @Bean("detainedInPrisonIrcLegalRepInPersonCmrListingNotificationGenerator")
-    public List<NotificationGenerator> detainedLegalRepInPersonCmrListingNotificationGenerator(
+    @Bean("legalRepDigitalDetainedInPrisonOrIrcCmrListingNotificationGenerator")
+    public List<NotificationGenerator> legalRepDigitalDetainedInPrisonOrIrcCmrListingNotificationGenerator(
         LegalRepresentativeCmrListingPersonalisation legalRepresentativeCmrListingPersonalisation,
         CaseOfficerCmrListingPersonalisation caseOfficerCmrListingPersonalisation,
         HomeOfficeInPersonCmrListingCasePersonalisation homeOfficeInPersonCmrListingCasePersonalisation,
