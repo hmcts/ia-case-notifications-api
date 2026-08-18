@@ -519,10 +519,6 @@ govnotify:
           email: 9580b7bd-0c9f-4dc0-bbf3-9f8a8c91421b
         reppedAppellant:
           email: 5a94de6b-1984-442e-9a4b-8fb43ecd6b7b
-        detentionEngagementTeam:
-          email: fe92c79d-212e-4ffe-b619-c2fb4dd304ac
-          production:
-            email: 4d479ce3-9139-44a8-a42b-e242086016eb
       cmrRelistingRemoteHearing:
         legalRep:
           email: 57f7c73c-25d9-474b-9e03-966d4f608d62
