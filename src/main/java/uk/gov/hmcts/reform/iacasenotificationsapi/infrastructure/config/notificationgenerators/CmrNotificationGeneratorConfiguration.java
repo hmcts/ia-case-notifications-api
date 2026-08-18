@@ -17,6 +17,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appella
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerCmrHearingCancelledPersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerCmrListingPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerCmrRelistingPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamCmrCancelledPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamCmrCancelledProductionPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamCmrListingPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamCmrListingProductionPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeCmrHearingCancelledPersonalisationEmail;
@@ -410,6 +412,37 @@ public class CmrNotificationGeneratorConfiguration {
                         notificationSender,
                         notificationIdAppender,
                         documentDownloadClient
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
+        );
+    }
+
+    @Bean("cmrCancelledLrDetainedInPrisonOrIrcNotificationGenerator")
+    public List<NotificationGenerator> cmrCancelledLrDetainedInPrisonOrIrcNotificationGenerator(
+            DetentionEngagementTeamCmrCancelledPersonalisation detentionEngagementTeamCmrCancelledPersonalisation,
+            DetentionEngagementTeamCmrCancelledProductionPersonalisation detentionEngagementTeamCmrCancelledProductionPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return newArrayList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                detentionEngagementTeamCmrCancelledProductionPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(
+                                detentionEngagementTeamCmrCancelledPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
                 ) {
                     @Override
                     public Message getSuccessMessage() {
