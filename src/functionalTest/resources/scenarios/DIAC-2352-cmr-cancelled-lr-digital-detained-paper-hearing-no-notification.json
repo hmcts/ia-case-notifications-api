@@ -1,5 +1,5 @@
 {
-  "description": "DIAC-2352 Send cmr cancelled notification to case officer, home office, legal rep and appellant - LR digital (in person hearing)",
+  "description": "DIAC-2352 Send cmr cancelled notification to case officer, home office, legal rep and appellant - LR digital (paper hearing)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "SystemUser",

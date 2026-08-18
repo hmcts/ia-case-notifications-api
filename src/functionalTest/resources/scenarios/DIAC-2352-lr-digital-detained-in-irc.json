@@ -16,7 +16,7 @@
           "isAdmin": "No",
           "appellantInDetention": "Yes",
           "detentionFacility": "immigrationRemovalCentre",
-          "prisonName": "Aylesbury",
+          "ircName": "Harmondsworth",
           "cmrHearingCentre": "taylorHouse",
           "cmrHearingCentreAddress": {
             "value": {
@@ -70,7 +70,7 @@
         "isAdmin": "No",
         "appellantInDetention": "Yes",
         "detentionFacility": "immigrationRemovalCentre",
-        "prisonName": "Aylesbury",
+        "ircName": "Harmondsworth",
         "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
         "notificationsSent": [
           {

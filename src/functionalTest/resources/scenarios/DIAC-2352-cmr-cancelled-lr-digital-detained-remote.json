@@ -1,5 +1,5 @@
 {
-  "description": "DIAC-2352 Send cmr cancelled notification to case officer, home office, legal rep and appellant - LR digital (in person hearing)",
+  "description": "DIAC-2352 Send cmr cancelled notification to case officer, home office, legal rep and appellant - LR digital (remote hearing)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "SystemUser",
@@ -79,10 +79,6 @@
           },
           {
             "id": "55022_CMR_CANCELLED_HOME_OFFICE_EMAIL",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          },
-          {
-            "id": "55022_DETAINED_CMR_CANCELLED_PRODUCTION_DET",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
