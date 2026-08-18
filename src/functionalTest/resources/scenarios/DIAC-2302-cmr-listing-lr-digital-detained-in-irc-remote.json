@@ -74,8 +74,6 @@
       "replacements": {
         "appealReferenceNumber": "PA/12345/2023",
         "ariaListingReference": "LP/12345/2021",
-        "appellantsRepresentation": "No",
-        "isAdmin": "Yes",
         "appellantInDetention": "Yes",
         "detentionFacility": "prison",
         "prisonName": "Aylesbury",
