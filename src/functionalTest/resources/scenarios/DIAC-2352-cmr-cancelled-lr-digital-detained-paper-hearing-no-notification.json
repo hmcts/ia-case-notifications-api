@@ -1,0 +1,79 @@
+{
+  "description": "DIAC-2352 Send cmr cancelled notification to case officer, home office, legal rep and appellant - LR digital (paper hearing)",
+  "request": {
+    "uri": "/asylum/ccdAboutToSubmit",
+    "credentials": "SystemUser",
+    "input": {
+      "id": 55021,
+      "eventId": "cmrHearingCancelled",
+      "state": "listing",
+      "caseData": {
+        "template": "minimal-appeal-submitted.json",
+        "replacements": {
+          "appealReferenceNumber": "PA/12345/2023",
+          "ariaListingReference": "LP/12345/2021",
+          "appellantsRepresentation": "No",
+          "isAdmin": "No",
+          "appellantInDetention": "Yes",
+          "detentionFacility": "prison",
+          "prisonName": "Aylesbury",
+          "cmrHearingCentre": "taylorHouse",
+          "cmrHearingCentreAddress": {
+            "value": {
+              "code": "Taylor House Tribunal Hearing Centre, York Road, SE1 7PB",
+              "label": "Taylor House Tribunal Hearing Centre, York Road, SE1 7PB"
+            }
+          },
+          "cmrHearingDate": "2023-10-05T10:00:00.000",
+          "cmrIsRemoteHearing": "No",
+          "cmrHearingChannel": {
+            "value": {
+              "code": "NA",
+              "label": "Not in Attendance"
+            },
+            "list_items": [
+              { "code": "INTER", "label": "In Person" },
+              { "code": "NA", "label": "Not in Attendance" },
+              { "code": "TEL", "label": "Telephone" },
+              { "code": "VID", "label": "Video" }
+            ]
+          },
+          "notificationAttachmentDocuments": [
+            {
+              "id": "1",
+              "value": {
+                "tag": "cmrHearingCancelledLetter",
+                "document": {
+                  "document_url": "{$FIXTURE_DOC1_PDF_URL}",
+                  "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
+                  "document_filename": "{$FIXTURE_DOC1_PDF_FILENAME}"
+                },
+                "suppliedBy": "",
+                "description": "",
+                "dateUploaded": "{$TODAY}"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "expectation": {
+    "status": 200,
+    "errors": [],
+    "caseData": {
+      "template": "minimal-appeal-submitted.json",
+      "replacements": {
+        "appealReferenceNumber": "PA/12345/2023",
+        "ariaListingReference": "LP/12345/2021",
+        "appellantsRepresentation": "No",
+        "isAdmin": "No",
+        "appellantInDetention": "Yes",
+        "detentionFacility": "prison",
+        "prisonName": "Aylesbury",
+        "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "notificationsSent": null
+      }
+    }
+  }
+}

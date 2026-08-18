@@ -25,8 +25,8 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 @Configuration
 public class CmrNotificationHandlerConfiguration {
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> cmrInPersonDetainedInPrisonIrcListedNotificationHandler(
-        @Qualifier("detainedInPrisonIrcLegalRepInPersonCmrListingNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    public PreSubmitCallbackHandler<AsylumCase> cmrListingLegalRepDigitalDetainedInPrisonOrIrcNotificationHandler(
+        @Qualifier("legalRepDigitalDetainedInPrisonOrIrcCmrListingNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
 
         return new NotificationHandler(
@@ -259,6 +259,23 @@ public class CmrNotificationHandlerConfiguration {
                             && CMR_HEARING_CANCELLED.equals(callback.getEvent())
                             && isCmrHearingInPersonOrRemote(asylumCase)
                             && hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase);
+                },
+                notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> cmrCancelledLrDetainedInPrisonOrIrcNotificationHandler(
+            @Qualifier("cmrCancelledLrDetainedInPrisonOrIrcNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && CMR_HEARING_CANCELLED.equals(callback.getEvent())
+                            && isCmrHearingInPersonOrRemote(asylumCase)
+                            && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON);
                 },
                 notificationGenerators
         );
