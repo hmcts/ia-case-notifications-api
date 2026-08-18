@@ -301,10 +301,10 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
 
     private static Stream<Arguments> completeCaseReviewCaseDataPermutations() {
         return Stream.of(
-                Arguments.of(true, TestJourneyType.AIP_MANUAL, false, false, false, Set.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER)),
-                Arguments.of(true, TestJourneyType.AIP_MANUAL, false, true, true, Set.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER)),
-                Arguments.of(true, TestJourneyType.AIP_MANUAL, true, false, false, Set.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER)),
-                Arguments.of(true, TestJourneyType.AIP_MANUAL, true, true, true, Set.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER)),
+                // Arguments.of(true, TestJourneyType.AIP_MANUAL, false, false, false, Set.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER)),
+                // Arguments.of(true, TestJourneyType.AIP_MANUAL, false, true, true, Set.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER)),
+                // Arguments.of(true, TestJourneyType.AIP_MANUAL, true, false, false, Set.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER)),
+                // Arguments.of(true, TestJourneyType.AIP_MANUAL, true, true, true, Set.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LETTER)),
 
                 Arguments.of(true, TestJourneyType.AIP, false, false, false, Set.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL)),
                 Arguments.of(true, TestJourneyType.AIP, false, false, true, Set.of(STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_SMS)),

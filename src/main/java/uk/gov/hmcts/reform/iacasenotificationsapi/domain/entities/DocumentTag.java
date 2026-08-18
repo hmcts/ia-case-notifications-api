@@ -105,7 +105,7 @@ public enum DocumentTag {
     INTERNAL_DETAINED_IRC_PRISON_FTPA_DISPOSED_RULES_31_OR_32_LETTER("internalDetainedIrcPrisonFtpaDisposedRules31Or32Letter"),
     HOME_OFFICE_APPLICATION_DECIDED_LETTER("homeOfficeApplicationDecidedLetter"),
     AIPM_DETAINED_IN_PRISON_IRC_REINSTATE_APPEAL_LETTER("aipmDetainedInPrisonOrIrcReinstateAppealLetter"),
-
+    STF_24WEEKS_CASE_REVIEW_APPELLANT_DOCUMENT("stf24WeeksCaseReviewAppeallantDocument"),
 
     @JsonEnumDefaultValue
     NONE("");
