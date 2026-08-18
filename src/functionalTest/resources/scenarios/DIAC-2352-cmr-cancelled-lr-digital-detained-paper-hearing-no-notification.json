@@ -6,7 +6,7 @@
     "input": {
       "id": 55021,
       "eventId": "cmrCancelled",
-      "state": "prepareForHearing",
+      "state": "listing",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
