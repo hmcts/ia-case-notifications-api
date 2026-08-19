@@ -672,8 +672,8 @@ public class CmrNotificationGeneratorConfiguration {
         DetentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisation detentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
-) {
-    return newArrayList(
+    ) {
+        return newArrayList(
             new EmailNotificationGenerator(
                     newArrayList(
                             legalRepresentativeCmrRelistingPersonalisation,
