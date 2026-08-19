@@ -666,6 +666,7 @@ public class CmrNotificationGeneratorConfiguration {
     @Bean("cmrRelistingLrManualDetainedIrcPrisonGenerator")
     public List<NotificationGenerator> cmrRelistingLrManualDetainedIrcPrisonGenerator(
         CaseOfficerCmrRelistingPersonalisation caseOfficerCmrRelistingPersonalisation,
+        LegalRepresentativeCmrRelistingPersonalisation legalRepresentativeCmrRelistingPersonalisation,
         HomeOfficeCmrRelistingPersonalisation homeOfficeCmrRelistingPersonalisation,
         DetentionEngagementTeamCmrReListingManualAipDetainedPersonalisation detentionEngagementTeamCmrReListingManualAipDetainedPersonalisation,
         DetentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisation detentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisation,
@@ -675,6 +676,7 @@ public class CmrNotificationGeneratorConfiguration {
     return newArrayList(
             new EmailNotificationGenerator(
                     newArrayList(
+                            legalRepresentativeCmrRelistingPersonalisation,
                             caseOfficerCmrRelistingPersonalisation,
                             homeOfficeCmrRelistingPersonalisation,
                             detentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisation
