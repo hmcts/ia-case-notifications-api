@@ -663,6 +663,40 @@ public class CmrNotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("cmrRelistingLrManualDetainedIrcPrisonGenerator")
+    public List<NotificationGenerator> cmrRelistingLrManualDetainedIrcPrisonGenerator(
+        CaseOfficerCmrRelistingPersonalisation caseOfficerCmrRelistingPersonalisation,
+        HomeOfficeCmrRelistingPersonalisation homeOfficeCmrRelistingPersonalisation,
+        DetentionEngagementTeamCmrReListingManualAipDetainedPersonalisation detentionEngagementTeamCmrReListingManualAipDetainedPersonalisation,
+        DetentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisation detentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+) {
+    return newArrayList(
+            new EmailNotificationGenerator(
+                    newArrayList(
+                            caseOfficerCmrRelistingPersonalisation,
+                            homeOfficeCmrRelistingPersonalisation,
+                            detentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisation
+                    ),
+                    notificationSender,
+                    notificationIdAppender
+            ),
+            new EmailWithLinkNotificationGenerator(
+                    newArrayList(
+                            detentionEngagementTeamCmrReListingManualAipDetainedPersonalisation
+                    ),
+                    notificationSender,
+                    notificationIdAppender
+            ) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
+        );
+    }
+
     @Bean("cmrRelistingLegallyRepresentedManualNonDetainedAppealGenerator")
     public List<NotificationGenerator> cmrRelistingLegallyRepresentedManualNonDetainedAppealGenerator(
             CaseOfficerCmrRelistingPersonalisation caseOfficerCmrRelistingPersonalisation,

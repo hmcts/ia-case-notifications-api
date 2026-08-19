@@ -14,6 +14,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.presubmit.Noti
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationGenerator;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 
+import javax.print.attribute.standard.PresentationDirection;
 import java.util.List;
 
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DetentionFacility.*;
@@ -447,6 +448,24 @@ public class CmrNotificationHandlerConfiguration {
                 notificationGenerators
         );
     }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> cmrRelistingLrManualDetainedIrcPrisonHandler(
+        @Qualifier("cmrRelistingLrManualDetainedIrcPrisonGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+        return new NotificationHandler(
+                (callbackStage,callback)-> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_START
+                        && CMR_RE_LISTING.equals(callback.getEvent())
+                        && isCmrHearingInPersonOrRemote(asylumCase)
+                        && isDetainedInOneOfFacilityTypes(asylumCase,IRC,PRISON)
+                        && hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase);
+
+                },
+                notificationGenerators
+            );
+        }
 
     private boolean isNonDetainedCmrRelisting(Callback<AsylumCase> callback, AsylumCase asylumCase) {
         return CMR_RE_LISTING.equals(callback.getEvent())
