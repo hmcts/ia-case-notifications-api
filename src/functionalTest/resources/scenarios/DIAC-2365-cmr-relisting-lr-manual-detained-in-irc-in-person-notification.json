@@ -12,6 +12,7 @@
         "replacements": {
           "isAdmin": "Yes",
           "appellantsRepresentation": "No",
+          "legalRepEmai": "legal@legal.com",
           "appellantInDetention": "Yes",
           "detentionFacility": "immigrationRemovalCentre",
           "ircName": "Brookhouse",
@@ -72,6 +73,7 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
+        "legalRepEmai": "legal@legal.com",
         "appealReferenceNumber": "PA/12361/2023",
         "ariaListingReference": "LP/12361/2021",
         "appellantInDetention": "Yes",
