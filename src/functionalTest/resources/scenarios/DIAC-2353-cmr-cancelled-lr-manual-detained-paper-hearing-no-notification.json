@@ -1,10 +1,10 @@
 {
-  "description": "DIAC-2352 No cmr cancelled notification sent - LR digital (paper hearing)",
+  "description": "DIAC-2352 No cmr cancelled notification sent - LR manual (paper hearing)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "SystemUser",
     "input": {
-      "id": 55021,
+      "id": 55027,
       "eventId": "cmrHearingCancelled",
       "state": "listing",
       "caseData": {
@@ -13,7 +13,7 @@
           "appealReferenceNumber": "PA/12345/2023",
           "ariaListingReference": "LP/12345/2021",
           "appellantsRepresentation": "No",
-          "isAdmin": "No",
+          "isAdmin": "Yes",
           "appellantInDetention": "Yes",
           "detentionFacility": "prison",
           "prisonName": "Aylesbury",
