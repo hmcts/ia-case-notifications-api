@@ -280,7 +280,7 @@ public class CmrNotificationHandlerConfiguration {
                 notificationGenerators
         );
     }
-  
+
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> cmrHearingCancelledNotificationHandler(
             @Qualifier("cmrHearingCancelledNotificationGenerator") List<NotificationGenerator> notificationGenerators
@@ -407,6 +407,25 @@ public class CmrNotificationHandlerConfiguration {
                     && hasBeenSubmittedByAppellantInternalCase(asylumCase);
             },
             notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> cmrReListingLegalRepDigitalDetainedInOtherNotificationHandler(
+            @Qualifier("cmrReListingLegalRepDigitalDetainedInOtherNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && CMR_RE_LISTING.equals(callback.getEvent())
+                            && isCmrHearingInPersonOrRemote(asylumCase)
+                            && !isInternalCase(callback.getCaseDetails().getCaseData())
+                            && isRepJourney(callback.getCaseDetails().getCaseData())
+                            && isDetainedInOneOfFacilityTypes(asylumCase, OTHER);
+                },
+                notificationGenerators
         );
     }
 
