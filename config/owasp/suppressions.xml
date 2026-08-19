@@ -3,5 +3,6 @@
     <suppress until="2026-08-30">
         <notes>Awaiting tomcat 10.1.58</notes>
         <cve>CVE-2026-66299</cve>
+        <cve>CVE-2026-71290</cve>
     </suppress>
 </suppressions>
