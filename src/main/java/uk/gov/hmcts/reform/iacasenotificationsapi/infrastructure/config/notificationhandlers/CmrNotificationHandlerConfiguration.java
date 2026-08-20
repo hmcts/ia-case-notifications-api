@@ -62,6 +62,24 @@ public class CmrNotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> remoteCmrListingAipManualNonDetainedNotificationHandler(
+            @Qualifier("remoteAipManualNonDetainedCmrListingNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && CMR_LISTING.equals(callback.getEvent())
+                            && isCmrHearingRemote(asylumCase)
+                            && hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                            && (!isAppellantInDetention(asylumCase) || isDetainedInFacilityType(asylumCase, OTHER));
+                },
+                notificationGenerators
+        );
+    }
+
     // This covers both AIP manual non detained and detained in other
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> cmrRelistingAipManualAppellantPostalNotificationHandler(
@@ -75,6 +93,22 @@ public class CmrNotificationHandlerConfiguration {
                     && isAipManualCmrRelisting(callback, asylumCase);
             },
             notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> remoteCmrRelistingAipManualAppellantPostalNotificationHandler(
+            @Qualifier("remoteAipManualCmrRelistingAppellantPostalNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && isAipManualCmrRelisting(callback, asylumCase)
+                            && isCmrHearingRemote(asylumCase);
+                },
+                notificationGenerators
         );
     }
 

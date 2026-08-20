@@ -513,6 +513,11 @@ public class AsylumCaseUtils {
                 || isCmrHearingChannel(asylumCase, "TEL");
     }
 
+    public static boolean isCmrHearingRemote(AsylumCase asylumCase) {
+        return isCmrHearingChannel(asylumCase, "VID")
+                || isCmrHearingChannel(asylumCase, "TEL");
+    }
+
     public static boolean isCmrHearingChannel(AsylumCase asylumCase, String hearingChannelCode) {
         return asylumCase.read(CMR_HEARING_CHANNEL, DynamicList.class)
                 .map(hearingChannels -> hearingChannels.getValue().getCode().equals(hearingChannelCode))
