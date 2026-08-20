@@ -1,30 +1,22 @@
 {
-  "description": "DIAC-2369 CMR re-listing for AiP manual detained appeal (Other) (in person hearing) emails case officer and home office, and sends the appellant a postal notification",
+  "description": "DIAC-2352 Send cmr cancelled notification to case officer, home office, legal rep and appellant - LR manual (in person hearing)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
-    "credentials": "AdminOfficer",
+    "credentials": "SystemUser",
     "input": {
-      "id": 65001,
-      "eventId": "cmrReListing",
-      "state": "prepareForHearing",
+      "id": 55025,
+      "eventId": "cmrHearingCancelled",
+      "state": "listing",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
-          "journeyType": "aip",
+          "appealReferenceNumber": "PA/12345/2023",
+          "ariaListingReference": "LP/12345/2021",
+          "appellantsRepresentation": "No",
           "isAdmin": "Yes",
-          "appellantsRepresentation": "Yes",
           "appellantInDetention": "Yes",
-          "detentionFacility": "other",
-          "appellantAddress": {
-            "County": "",
-            "Country": "United Kingdom",
-            "PostCode": "NE21JX",
-            "PostTown": "Example Town",
-            "AddressLine1": "5",
-            "AddressLine2": "Example Street"
-          },
-          "appealReferenceNumber": "PA/12349/2023",
-          "ariaListingReference": "LP/12349/2021",
+          "detentionFacility": "prison",
+          "prisonName": "Aylesbury",
           "cmrHearingCentre": "taylorHouse",
           "cmrHearingCentreAddress": {
             "value": {
@@ -50,7 +42,7 @@
             {
               "id": "1",
               "value": {
-                "tag": "internalCmrReListingLetterBundle",
+                "tag": "cmrHearingCancelledLrLetter",
                 "document": {
                   "document_url": "{$FIXTURE_DOC1_PDF_URL}",
                   "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
@@ -58,7 +50,23 @@
                 },
                 "suppliedBy": "",
                 "description": "",
-                "dateUploaded": "2024-06-12"
+                "dateUploaded": "{$TODAY}"
+              }
+            }
+            ],
+          "notificationAttachmentDocuments": [
+            {
+              "id": "2",
+              "value": {
+                "tag": "cmrHearingCancelledLetter",
+                "document": {
+                  "document_url": "{$FIXTURE_DOC1_PDF_URL}",
+                  "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
+                  "document_filename": "{$FIXTURE_DOC1_PDF_FILENAME}"
+                },
+                "suppliedBy": "",
+                "description": "",
+                "dateUploaded": "{$TODAY}"
               }
             }
           ]
@@ -72,21 +80,33 @@
     "caseData": {
       "template": "minimal-appeal-submitted.json",
       "replacements": {
-        "appealReferenceNumber": "PA/12349/2023",
-        "ariaListingReference": "LP/12349/2021",
+        "appealReferenceNumber": "PA/12345/2023",
+        "ariaListingReference": "LP/12345/2021",
+        "appellantsRepresentation": "No",
+        "isAdmin": "Yes",
         "appellantInDetention": "Yes",
-        "detentionFacility": "other",
+        "detentionFacility": "prison",
+        "prisonName": "Aylesbury",
+        "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
         "notificationsSent": [
           {
-            "id": "65001_CMR_RE_LISTING_CASE_OFFICER",
+            "id": "55025_CMR_CANCELLED_CASE_OFFICER_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "65001_CMR_RE_LISTING_HOME_OFFICE",
+            "id": "55025_CMR_CANCELLED_HOME_OFFICE_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "65001_INTERNAL_CMR_RE_LISTING_LETTER_BUNDLE",
+            "id": "55025_DETAINED_CMR_CANCELLED_PRODUCTION_DET",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "55025_DETAINED_CMR_CANCELLED_DET",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "55025_CMR_HEARING_CANCELLED_LR_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

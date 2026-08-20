@@ -1,17 +1,15 @@
 {
-  "description": "DIAC-2306 Send cmr listing notification to legal rep, case officer, home office and appellant - LR internal (remote hearing)",
+  "description": "DIAC-2302 Send cmr listing notification to legal rep, case officer, home office and appellant - LR internal (remote hearing)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "SystemUser",
     "input": {
-      "id": 44026,
+      "id": 23026,
       "eventId": "cmrListing",
       "state": "prepareForHearing",
       "caseData": {
         "template": "minimal-appeal-submitted.json",
         "replacements": {
-          "appellantsRepresentation": "No",
-          "isAdmin": "Yes",
           "appealReferenceNumber": "PA/12345/2023",
           "ariaListingReference": "LP/12345/2021",
           "appellantInDetention": "Yes",
@@ -76,26 +74,24 @@
       "replacements": {
         "appealReferenceNumber": "PA/12345/2023",
         "ariaListingReference": "LP/12345/2021",
-        "appellantsRepresentation": "No",
-        "isAdmin": "Yes",
         "appellantInDetention": "Yes",
         "detentionFacility": "prison",
         "prisonName": "Aylesbury",
         "notificationsSent": [
           {
-            "id": "44026_CMR_LISTING_CASE_OFFICER",
+            "id": "23026_CMR_LISTING_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "44026_CMR_LISTING_HOME_OFFICE",
+            "id": "23026_CMR_LISTING_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "44026_INTERNAL_DETAINED_CMR_LISTING_DET",
+            "id": "23026_INTERNAL_DETAINED_CMR_LISTING_DET",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "44026_INTERNAL_CMR_LISTING_LR_LETTER_BUNDLE",
+            "id": "23026_CMR_LISTING_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]

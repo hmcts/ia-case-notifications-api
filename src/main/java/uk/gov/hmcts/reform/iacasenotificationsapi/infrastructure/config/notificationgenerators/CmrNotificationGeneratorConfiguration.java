@@ -17,6 +17,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appella
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerCmrHearingCancelledPersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerCmrListingPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.caseofficer.CaseOfficerCmrRelistingPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamCmrCancelledPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamCmrCancelledProductionPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamCmrListingPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamCmrListingProductionPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamCmrReListingManualAipDetainedPersonalisation;
@@ -41,8 +43,8 @@ import static com.google.common.collect.Lists.newArrayList;
 @Slf4j
 @Configuration
 public class CmrNotificationGeneratorConfiguration {
-    @Bean("detainedInPrisonIrcLegalRepInPersonCmrListingNotificationGenerator")
-    public List<NotificationGenerator> detainedLegalRepInPersonCmrListingNotificationGenerator(
+    @Bean("legalRepDigitalDetainedInPrisonOrIrcCmrListingNotificationGenerator")
+    public List<NotificationGenerator> legalRepDigitalDetainedInPrisonOrIrcCmrListingNotificationGenerator(
         LegalRepresentativeCmrListingPersonalisation legalRepresentativeCmrListingPersonalisation,
         CaseOfficerCmrListingPersonalisation caseOfficerCmrListingPersonalisation,
         HomeOfficeInPersonCmrListingCasePersonalisation homeOfficeInPersonCmrListingCasePersonalisation,
@@ -73,8 +75,8 @@ public class CmrNotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("aipManualCmrListingNotificationGenerator")
-    public List<NotificationGenerator> aipManualCmrListingNotificationGenerator(
+    @Bean("aipManualNonDetainedCmrListingNotificationGenerator")
+    public List<NotificationGenerator> aipManualNonDetainedCmrListingNotificationGenerator(
         CaseOfficerCmrListingPersonalisation caseOfficerCmrListingPersonalisation,
         HomeOfficeInPersonCmrListingCasePersonalisation homeOfficeInPersonCmrListingCasePersonalisation,
         GovNotifyNotificationSender notificationSender,
@@ -107,14 +109,14 @@ public class CmrNotificationGeneratorConfiguration {
             }
         );
     }
-  
+
     @Bean("aipManualCmrRelistingAppellantPostalNotificationGenerator")
     public List<NotificationGenerator> aipManualCmrRelistingAppellantPostalNotificationGenerator(
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender,
         DocumentDownloadClient documentDownloadClient
     ) {
-        DocumentTag documentTag = DocumentTag.INTERNAL_CMR_RE_LISTING_LETTER;
+        DocumentTag documentTag = DocumentTag.INTERNAL_CMR_RE_LISTING_LETTER_BUNDLE;
 
         return newArrayList(
             new PrecompiledLetterNotificationGenerator(
@@ -421,6 +423,37 @@ public class CmrNotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("cmrCancelledLrDetainedInPrisonOrIrcNotificationGenerator")
+    public List<NotificationGenerator> cmrCancelledLrDetainedInPrisonOrIrcNotificationGenerator(
+            DetentionEngagementTeamCmrCancelledPersonalisation detentionEngagementTeamCmrCancelledPersonalisation,
+            DetentionEngagementTeamCmrCancelledProductionPersonalisation detentionEngagementTeamCmrCancelledProductionPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return newArrayList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                detentionEngagementTeamCmrCancelledProductionPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new EmailWithLinkNotificationGenerator(
+                        newArrayList(
+                                detentionEngagementTeamCmrCancelledPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
+        );
+    }
+
 
     @Bean("cmrHearingCancelledNotificationGenerator")
     public List<NotificationGenerator> cmrHearingCancelledNotificationGenerator(
@@ -587,6 +620,40 @@ public class CmrNotificationGeneratorConfiguration {
                 notificationSender,
                 notificationIdAppender,
                 documentDownloadClient
+            ) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
+        );
+    }
+
+    @Bean("aipManualDetainedInPrisonOrIrcCmrListingNotificationGenerator")
+    public List<NotificationGenerator> aipManualDetainedInPrisonOrIrcCmrListingNotificationGenerator(
+        CaseOfficerCmrListingPersonalisation caseOfficerCmrListingPersonalisation,
+        HomeOfficeInPersonCmrListingCasePersonalisation homeOfficeInPersonCmrListingCasePersonalisation,
+        DetentionEngagementTeamCmrListingPersonalisation detentionEngagementTeamCmrListingPersonalisation,
+        DetentionEngagementTeamCmrListingProductionPersonalisation detentionEngagementTeamCmrListingProductionPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return newArrayList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    caseOfficerCmrListingPersonalisation,
+                    homeOfficeInPersonCmrListingCasePersonalisation,
+                    detentionEngagementTeamCmrListingProductionPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new EmailWithLinkNotificationGenerator(
+                newArrayList(
+                    detentionEngagementTeamCmrListingPersonalisation
+                ),
+                notificationSender,
+                notificationIdAppender
             ) {
                 @Override
                 public Message getSuccessMessage() {
