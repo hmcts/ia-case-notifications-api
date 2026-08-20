@@ -5722,15 +5722,22 @@ public class NotificationHandlerConfiguration {
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> completeCaseReview24WeeksAppellantLetterNotificationHandler(
         @Qualifier("completeCaseReview24WeeksAppellantLetterNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+        log.info("completeCaseReview24WeeksAppellantLetterNotificationGenerator --: {}", notificationGenerators);
         return new NotificationHandler(
             (callbackStage, callback) -> {
                 AsylumCase asylumCase =
                     callback
                         .getCaseDetails()
                         .getCaseData();
-                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && isCaseReviewFor24WeeksCase(callback.getEvent(), asylumCase)
-                    && isInternalWithoutLegalRepresentation(asylumCase);
+                boolean caseReviewFor24WeeksCase = isCaseReviewFor24WeeksCase(callback.getEvent(), asylumCase);
+                boolean internalWithoutLegalRepresentation = isInternalWithoutLegalRepresentation(asylumCase);
+                log.info("caseReviewFor24WeeksCase {}", caseReviewFor24WeeksCase);
+                log.info("internalWithoutLegalRepresentation {}", internalWithoutLegalRepresentation);
+                boolean b = callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                        && caseReviewFor24WeeksCase
+                        && internalWithoutLegalRepresentation;
+                log.info("Can generate notification: {}", b);
+                return b;
             },
             notificationGenerators, getErrorHandler()
         );

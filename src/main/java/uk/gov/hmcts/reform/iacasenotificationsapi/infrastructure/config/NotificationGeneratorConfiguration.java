@@ -5030,7 +5030,7 @@ public class NotificationGeneratorConfiguration {
             DocumentDownloadClient documentDownloadClient
     ) {
 
-        DocumentTag documentTag = DocumentTag.STF_24WEEKS_CASE_REVIEW_APPELLANT_DOCUMENT;
+        DocumentTag documentTag = DocumentTag.STF_24WEEKS_CASE_REVIEW_APPELLANT_LETTER;
 
         return singletonList(
                 new PrecompiledLetterNotificationGenerator(
