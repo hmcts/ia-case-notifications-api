@@ -108,6 +108,41 @@ public class CmrNotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("remoteAipManualNonDetainedCmrListingNotificationGenerator")
+    public List<NotificationGenerator> remoteAipManualNonDetainedCmrListingNotificationGenerator(
+            CaseOfficerCmrListingPersonalisation caseOfficerCmrListingPersonalisation,
+            HomeOfficeInPersonCmrListingCasePersonalisation homeOfficeInPersonCmrListingCasePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender,
+            DocumentDownloadClient documentDownloadClient
+    ) {
+        DocumentTag documentTag = DocumentTag.REMOTE_CMR_LISTING_LETTER_BUNDLE;
+
+        return newArrayList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                caseOfficerCmrListingPersonalisation,
+                                homeOfficeInPersonCmrListingCasePersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new PrecompiledLetterNotificationGenerator(
+                        newArrayList(
+                                documentTag
+                        ),
+                        notificationSender,
+                        notificationIdAppender,
+                        documentDownloadClient
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
+        );
+    }
+
     @Bean("aipManualCmrRelistingAppellantPostalNotificationGenerator")
     public List<NotificationGenerator> aipManualCmrRelistingAppellantPostalNotificationGenerator(
         GovNotifyNotificationSender notificationSender,
@@ -130,6 +165,31 @@ public class CmrNotificationGeneratorConfiguration {
                         return new Message("success","body");
                 }
             }
+        );
+    }
+
+    @Bean("remoteAipManualCmrRelistingAppellantPostalNotificationGenerator")
+    public List<NotificationGenerator> remoteAipManualCmrRelistingAppellantPostalNotificationGenerator(
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender,
+            DocumentDownloadClient documentDownloadClient
+    ) {
+        DocumentTag documentTag = DocumentTag.REMOTE_CMR_RE_LISTING_LETTER_BUNDLE;
+
+        return newArrayList(
+                new PrecompiledLetterNotificationGenerator(
+                        newArrayList(
+                                documentTag
+                        ),
+                        notificationSender,
+                        notificationIdAppender,
+                        documentDownloadClient
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
         );
     }
 

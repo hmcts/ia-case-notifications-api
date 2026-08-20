@@ -112,11 +112,17 @@ class DocumentTagTest {
         assertEquals("internalEditCaseListingLrLetter", DocumentTag.INTERNAL_EDIT_CASE_LISTING_LR_LETTER.toString());
         assertEquals("cmrHearingCancelledLetter", DocumentTag.CMR_HEARING_CANCELLED_LETTER.toString());
         assertEquals("cmrHearingCancelledLrLetter", DocumentTag.CMR_HEARING_CANCELLED_LR_LETTER.toString());
-
+        assertEquals("remoteCmrListingLetterBundle", DocumentTag.REMOTE_CMR_LISTING_LETTER_BUNDLE.toString());
+        assertEquals("remoteCmrListingLrLetterBundle", DocumentTag.REMOTE_CMR_LISTING_LR_LETTER_BUNDLE.toString());
+        assertEquals("remoteCmrReListingLetterBundle", DocumentTag.REMOTE_CMR_RE_LISTING_LETTER_BUNDLE.toString());
+        assertEquals("remoteCmrReListingLrLetterBundle", DocumentTag.REMOTE_CMR_RE_LISTING_LR_LETTER_BUNDLE.toString());
+        assertEquals("remoteCmrListingLetter",  DocumentTag.REMOTE_CMR_LISTING_LETTER.toString());
+        assertEquals("remoteCmrReListingLetter", DocumentTag.REMOTE_CMR_RE_LISTING_LETTER.toString());
+        assertEquals("remoteCmrReListingLrLetter",  DocumentTag.REMOTE_CMR_RE_LISTING_LR_LETTER.toString());
     }
 
     @Test
     void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(111, DocumentTag.values().length);
+        assertEquals(119, DocumentTag.values().length);
     }
 }
