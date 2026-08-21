@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.core.parameters.P;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
@@ -429,21 +430,20 @@ public class CmrNotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> cmrReListingLegalRepDigitalDetainedInOtherNotificationHandler(
-            @Qualifier("cmrReListingLegalRepDigitalDetainedInOtherNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    public PreSubmitCallbackHandler<AsylumCase> cmrRelistingLrDigitalInPrisonIrcHandler(
+            @Qualifier("cmrRelistingLrDigitalInPrisonIrcGenerator") List<NotificationGenerator> notificationGenerators
     ) {
-
         return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && CMR_RE_LISTING.equals(callback.getEvent())
-                            && isCmrHearingInPersonOrRemote(asylumCase)
-                            && !isInternalCase(callback.getCaseDetails().getCaseData())
-                            && isRepJourney(callback.getCaseDetails().getCaseData())
-                            && isDetainedInOneOfFacilityTypes(asylumCase, OTHER);
-                },
-                notificationGenerators
+                (callBackStage, callback) -> {
+            AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+            return callBackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
+                    && isRepJourney(asylumCase)
+                    && !isInternalCase(asylumCase)
+                    && isCmrHearingInPersonOrRemote(asylumCase)
+
+        },
+            notificationGenerators
         );
     }
 
