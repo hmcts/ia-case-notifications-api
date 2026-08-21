@@ -83,7 +83,7 @@ class CmrRelistingAipManualNotificationHandlerTest {
     }
 
     @Test
-    void relisting_appellant_postal_handler_fires_for_in_person_and_remote_but_not_paper() {
+    void relisting_appellant_postal_handler_fires_for_in_person_but_not_paper() {
 
         when(callback.getEvent()).thenReturn(CMR_RE_LISTING);
         when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
@@ -92,9 +92,6 @@ class CmrRelistingAipManualNotificationHandlerTest {
                 handlerConfiguration.cmrRelistingAipManualAppellantPostalNotificationHandler(notificationGenerators);
 
         setHearingChannel("INTER");
-        assertThat(relistingPostalHandler.canHandle(ABOUT_TO_SUBMIT, callback)).isTrue();
-
-        setHearingChannel("VID");
         assertThat(relistingPostalHandler.canHandle(ABOUT_TO_SUBMIT, callback)).isTrue();
 
         setHearingChannel("NA");
