@@ -72,7 +72,7 @@ public class CmrNotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && isAipManualCmrRelisting(callback, asylumCase);
+                    && isAipManualOtherOrNonDetainedCmrRelisting(callback, asylumCase);
             },
             notificationGenerators
         );
@@ -87,7 +87,7 @@ public class CmrNotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && isAipManualCmrRelisting(callback, asylumCase);
+                    && isAipManualOtherOrNonDetainedCmrRelisting(callback, asylumCase);
             },
             notificationGenerators
         );
@@ -372,6 +372,24 @@ public class CmrNotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> cmrReListingAipManualDetainedInIrcNotificationHandler(
+            @Qualifier("cmrReListingAipManualDetainedInIrcNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && CMR_RE_LISTING.equals(callback.getEvent())
+                            && isCmrHearingInPersonOrRemote(asylumCase)
+                            && hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                            && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON);
+                },
+                notificationGenerators
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> cmrReListingLegalRepDigitalDetainedInOtherNotificationHandler(
             @Qualifier("cmrReListingLegalRepDigitalDetainedInOtherNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
@@ -421,10 +439,11 @@ public class CmrNotificationHandlerConfiguration {
             && !isAppellantInDetention(asylumCase);
     }
 
-    private boolean isAipManualCmrRelisting(Callback<AsylumCase> callback, AsylumCase asylumCase) {
+    private boolean isAipManualOtherOrNonDetainedCmrRelisting(Callback<AsylumCase> callback, AsylumCase asylumCase) {
         return CMR_RE_LISTING.equals(callback.getEvent())
             && isCmrHearingInPersonOrRemote(asylumCase)
-            && hasBeenSubmittedByAppellantInternalCase(asylumCase);
+            && hasBeenSubmittedByAppellantInternalCase(asylumCase)
+            && !isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON);
     }
 
     private boolean isAipCmr(Callback<AsylumCase> callback, AsylumCase asylumCase) {
