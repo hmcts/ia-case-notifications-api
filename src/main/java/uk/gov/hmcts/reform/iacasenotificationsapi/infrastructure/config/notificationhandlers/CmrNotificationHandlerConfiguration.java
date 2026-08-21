@@ -56,6 +56,7 @@ public class CmrNotificationHandlerConfiguration {
                     && CMR_LISTING.equals(callback.getEvent())
                     && isCmrHearingInPersonOrRemote(asylumCase)
                     && hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                    && !isCmrHearingRemote(asylumCase)
                     && (!isAppellantInDetention(asylumCase) || isDetainedInFacilityType(asylumCase, OTHER));
             },
             notificationGenerators
@@ -90,7 +91,8 @@ public class CmrNotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && isAipManualCmrRelisting(callback, asylumCase);
+                    && isAipManualCmrRelisting(callback, asylumCase)
+                    && !isCmrHearingRemote(asylumCase);
             },
             notificationGenerators
         );
