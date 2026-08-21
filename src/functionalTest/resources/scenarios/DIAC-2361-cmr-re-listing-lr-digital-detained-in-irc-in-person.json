@@ -4,7 +4,7 @@
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "SystemUser",
     "input": {
-      "id": 23021,
+      "id": 233021,
       "eventId": "cmrReListing",
       "state": "prepareForHearing",
       "caseData": {
@@ -58,7 +58,7 @@
            {
              "id": "1",
              "value": {
-               "tag": "internalCmrListingLetterBundle",
+               "tag": "internalCmrReListingLetterBundle",
                "document": {
                  "document_url": "{$FIXTURE_DOC1_PDF_URL}",
                  "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
@@ -90,23 +90,23 @@
         "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
         "notificationsSent": [
           {
-            "id": "23021_CMR_RE_LISTING_LEGAL_REPRESENTATIVE",
+            "id": "233021_CMR_RE_LISTING_LEGAL_REPRESENTATIVE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "23021_CMR_RE_LISTING_HOME_OFFICE",
+            "id": "233021_CMR_RE_LISTING_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "23021_CMR_RE_LISTING_CASE_OFFICER",
+            "id": "233021_CMR_RE_LISTING_CASE_OFFICER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "23021_INTERNAL_CMR_RE_LISTING_LETTER_PRODUCTION_DET",
+            "id": "233021_INTERNAL_CMR_RE_LISTING_LETTER_PRODUCTION_DET",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "23021_INTERNAL_CMR_RE_LISTING_LETTER_DET",
+            "id": "233021_INTERNAL_CMR_RE_LISTING_LETTER_DET",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
