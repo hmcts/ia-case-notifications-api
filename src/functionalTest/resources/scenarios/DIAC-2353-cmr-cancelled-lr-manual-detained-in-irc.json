@@ -1,10 +1,10 @@
 {
-  "description": "DIAC-2352 No cmr cancelled notification sent - LR digital (paper hearing)",
+  "description": "DIAC-2352 Send cmr cancelled notification to case officer, home office, legal rep and appellant - LR manual (in person hearing)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "SystemUser",
     "input": {
-      "id": 55021,
+      "id": 55026,
       "eventId": "cmrHearingCancelled",
       "state": "listing",
       "caseData": {
@@ -13,10 +13,10 @@
           "appealReferenceNumber": "PA/12345/2023",
           "ariaListingReference": "LP/12345/2021",
           "appellantsRepresentation": "No",
-          "isAdmin": "No",
+          "isAdmin": "Yes",
           "appellantInDetention": "Yes",
-          "detentionFacility": "prison",
-          "prisonName": "Aylesbury",
+          "detentionFacility": "immigrationRemovalCentre",
+          "ircName": "Harmondsworth",
           "cmrHearingCentre": "taylorHouse",
           "cmrHearingCentreAddress": {
             "value": {
@@ -28,8 +28,8 @@
           "cmrIsRemoteHearing": "No",
           "cmrHearingChannel": {
             "value": {
-              "code": "NA",
-              "label": "Not in Attendance"
+              "code": "INTER",
+              "label": "In Person"
             },
             "list_items": [
               { "code": "INTER", "label": "In Person" },
@@ -38,9 +38,25 @@
               { "code": "VID", "label": "Video" }
             ]
           },
-          "notificationAttachmentDocuments": [
+          "letterBundleDocuments": [
             {
               "id": "1",
+              "value": {
+                "tag": "cmrHearingCancelledLrLetter",
+                "document": {
+                  "document_url": "{$FIXTURE_DOC1_PDF_URL}",
+                  "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
+                  "document_filename": "{$FIXTURE_DOC1_PDF_FILENAME}"
+                },
+                "suppliedBy": "",
+                "description": "",
+                "dateUploaded": "{$TODAY}"
+              }
+            }
+          ],
+          "notificationAttachmentDocuments": [
+            {
+              "id": "2",
               "value": {
                 "tag": "cmrHearingCancelledLetter",
                 "document": {
@@ -67,12 +83,34 @@
         "appealReferenceNumber": "PA/12345/2023",
         "ariaListingReference": "LP/12345/2021",
         "appellantsRepresentation": "No",
-        "isAdmin": "No",
+        "isAdmin": "Yes",
         "appellantInDetention": "Yes",
-        "detentionFacility": "prison",
-        "prisonName": "Aylesbury",
+        "detentionFacility": "immigrationRemovalCentre",
+        "ircName": "Harmondsworth",
         "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "notificationsSent": null
+        "notificationsSent": [
+          {
+            "id": "55026_CMR_CANCELLED_CASE_OFFICER_EMAIL",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "55026_CMR_CANCELLED_HOME_OFFICE_EMAIL",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "55026_DETAINED_CMR_CANCELLED_PRODUCTION_DET",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "55026_DETAINED_CMR_CANCELLED_DET",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "55026_CMR_HEARING_CANCELLED_LR_LETTER",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }
+
+        ]
       }
     }
   }
