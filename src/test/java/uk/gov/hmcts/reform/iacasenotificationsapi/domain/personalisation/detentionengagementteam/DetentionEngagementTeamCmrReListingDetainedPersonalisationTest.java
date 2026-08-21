@@ -37,7 +37,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.fie
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class DetentionEngagementTeamCmrReListingManualAipDetainedPersonalisationTest {
+class DetentionEngagementTeamCmrReListingDetainedPersonalisationTest {
     final DocumentWithMetadata caseListedDoc = TestUtils.getDocumentWithMetadata(
         "id", "detained-appellant-cmr-re-listing-letter", "some other desc", DocumentTag.INTERNAL_CMR_RE_LISTING_LETTER_BUNDLE);
     final IdValue<DocumentWithMetadata> caseListedBundle = new IdValue<>("1", caseListedDoc);
@@ -57,9 +57,9 @@ class DetentionEngagementTeamCmrReListingManualAipDetainedPersonalisationTest {
     private DetentionEmailService detentionEmailService;
     @Mock
     private PersonalisationProvider personalisationProvider;
-    private DetentionEngagementTeamCmrReListingManualAipDetainedPersonalisation detentionEngagementTeamCmrReListingManualAipDetainedPersonalisation;
+    private DetentionEngagementTeamCmrReListingDetainedPersonalisation detentionEngagementTeamCmrReListingDetainedPersonalisation;
 
-    DetentionEngagementTeamCmrReListingManualAipDetainedPersonalisationTest() {
+    DetentionEngagementTeamCmrReListingDetainedPersonalisationTest() {
     }
 
     @BeforeEach
@@ -74,7 +74,7 @@ class DetentionEngagementTeamCmrReListingManualAipDetainedPersonalisationTest {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.of(newArrayList(caseListedBundle)));
         when(documentDownloadClient.getJsonObjectFromDocument(any(DocumentWithMetadata.class))).thenReturn(jsonDocument);
 
-        detentionEngagementTeamCmrReListingManualAipDetainedPersonalisation = new DetentionEngagementTeamCmrReListingManualAipDetainedPersonalisation(
+        detentionEngagementTeamCmrReListingDetainedPersonalisation = new DetentionEngagementTeamCmrReListingDetainedPersonalisation(
             templateId,
             detentionEmailService,
             documentDownloadClient,
@@ -87,7 +87,7 @@ class DetentionEngagementTeamCmrReListingManualAipDetainedPersonalisationTest {
     public void should_return_given_template_id_detained() {
         assertEquals(
             templateId,
-                detentionEngagementTeamCmrReListingManualAipDetainedPersonalisation.getTemplateId()
+                detentionEngagementTeamCmrReListingDetainedPersonalisation.getTemplateId()
         );
     }
 
@@ -95,7 +95,7 @@ class DetentionEngagementTeamCmrReListingManualAipDetainedPersonalisationTest {
     void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_INTERNAL_CMR_RE_LISTING_LETTER_DET",
-                detentionEngagementTeamCmrReListingManualAipDetainedPersonalisation.getReferenceId(caseId));
+                detentionEngagementTeamCmrReListingDetainedPersonalisation.getReferenceId(caseId));
     }
 
     @Test
@@ -105,28 +105,28 @@ class DetentionEngagementTeamCmrReListingManualAipDetainedPersonalisationTest {
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("immigrationRemovalCentre"));
         when(detentionEmailService.getDetentionEmailAddress(asylumCase)).thenReturn(detentionEngagementTeamEmail);
         assertTrue(
-                detentionEngagementTeamCmrReListingManualAipDetainedPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
+                detentionEngagementTeamCmrReListingDetainedPersonalisation.getRecipientsList(asylumCase).contains(detentionEngagementTeamEmail));
     }
 
     @Test
     void getRecipientsList_should_return_empty_set_if_not_in_detention() {
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(NO));
 
-        assertEquals(Collections.emptySet(), detentionEngagementTeamCmrReListingManualAipDetainedPersonalisation.getRecipientsList(asylumCase));
+        assertEquals(Collections.emptySet(), detentionEngagementTeamCmrReListingDetainedPersonalisation.getRecipientsList(asylumCase));
     }
 
     @Test
     public void should_return_empty_set_email_address_from_asylum_case_no_detention_facility() {
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.empty());
-        assertEquals(Collections.emptySet(), detentionEngagementTeamCmrReListingManualAipDetainedPersonalisation.getRecipientsList(asylumCase));
+        assertEquals(Collections.emptySet(), detentionEngagementTeamCmrReListingDetainedPersonalisation.getRecipientsList(asylumCase));
     }
 
     @Test
     public void should_return_empty_set_email_address_from_asylum_case_other_detention_facility() {
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("other"));
-        assertEquals(Collections.emptySet(), detentionEngagementTeamCmrReListingManualAipDetainedPersonalisation.getRecipientsList(asylumCase));
+        assertEquals(Collections.emptySet(), detentionEngagementTeamCmrReListingDetainedPersonalisation.getRecipientsList(asylumCase));
     }
 
     @Test
@@ -144,7 +144,7 @@ class DetentionEngagementTeamCmrReListingManualAipDetainedPersonalisationTest {
                 .build();
 
         Map<String, Object> actualPersonalisation =
-                detentionEngagementTeamCmrReListingManualAipDetainedPersonalisation.getPersonalisationForLink(asylumCase);
+                detentionEngagementTeamCmrReListingDetainedPersonalisation.getPersonalisationForLink(asylumCase);
 
         assertTrue(compareStringsAndJsonObjects(expectedPersonalisation, actualPersonalisation));
     }
@@ -153,7 +153,7 @@ class DetentionEngagementTeamCmrReListingManualAipDetainedPersonalisationTest {
     public void should_throw_exception_on_personalisation_when_case_is_null() {
 
         NullPointerException exception =
-            assertThrows(NullPointerException.class, () -> detentionEngagementTeamCmrReListingManualAipDetainedPersonalisation.getPersonalisationForLink((AsylumCase) null));
+            assertThrows(NullPointerException.class, () -> detentionEngagementTeamCmrReListingDetainedPersonalisation.getPersonalisationForLink((AsylumCase) null));
         assertEquals("asylumCase must not be null", exception.getMessage());
     }
 
@@ -161,7 +161,7 @@ class DetentionEngagementTeamCmrReListingManualAipDetainedPersonalisationTest {
     public void should_throw_exception_when_case_listed_letter_is_empty() {
         when(asylumCase.read(NOTIFICATION_ATTACHMENT_DOCUMENTS)).thenReturn(Optional.empty());
         IllegalStateException exception =
-            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamCmrReListingManualAipDetainedPersonalisation.getPersonalisationForLink(asylumCase));
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamCmrReListingDetainedPersonalisation.getPersonalisationForLink(asylumCase));
         assertEquals("internalCmrReListingLetterBundle document not available", exception.getMessage());
     }
 
@@ -169,7 +169,7 @@ class DetentionEngagementTeamCmrReListingManualAipDetainedPersonalisationTest {
     public void should_throw_exception_when_notification_client_throws_Exception() throws NotificationClientException, IOException {
         when(documentDownloadClient.getJsonObjectFromDocument(caseListedDoc)).thenThrow(new NotificationClientException("File size is more than 2MB"));
         IllegalStateException exception =
-            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamCmrReListingManualAipDetainedPersonalisation.getPersonalisationForLink(asylumCase));
+            assertThrows(IllegalStateException.class, () -> detentionEngagementTeamCmrReListingDetainedPersonalisation.getPersonalisationForLink(asylumCase));
         assertEquals("Failed to get Internal Detained CMR relisting letter document in compatible format", exception.getMessage());
     }
 }

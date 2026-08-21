@@ -436,6 +436,7 @@ public class CmrNotificationHandlerConfiguration {
                 (callBackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 return callBackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && CMR_RE_LISTING.equals(callback.getEvent())
                     && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
                     && isRepJourney(asylumCase)
                     && !isInternalCase(asylumCase)
