@@ -1,10 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config.notificationgenerators;
 
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.weaver.ast.Not;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.NotificationSender;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Message;
@@ -38,9 +36,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationGen
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationIdAppender;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.SmsNotificationGenerator;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.GovNotifyNotificationSender;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.NotificationServiceResponseException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -677,7 +673,7 @@ public class CmrNotificationGeneratorConfiguration {
             DetentionEngagementTeamCmrReListingManualAipDetainedPersonalisation detentionEngagementTeamCmrReListingManualAipDetainedPersonalisation,
             NotificationIdAppender notificationIdAppender,
             GovNotifyNotificationSender notificationSender
-    ){
+    ) {
         List<EmailNotificationPersonalisation> emailPersonalisations = newArrayList(
                 legalRepresentativeCmrRelistingPersonalisation,
                 homeOfficeCmrRelistingPersonalisation,
@@ -700,7 +696,9 @@ public class CmrNotificationGeneratorConfiguration {
                         notificationIdAppender
                 ) {
                     @Override
-                    public Message getSuccessMessage() { return new Message("success", "body");
+                    public Message getSuccessMessage() {
+                        return new Message("success", "body");
+
                     }
 
                 }

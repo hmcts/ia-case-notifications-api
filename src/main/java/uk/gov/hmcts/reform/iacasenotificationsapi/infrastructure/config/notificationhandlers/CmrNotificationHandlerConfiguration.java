@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.core.parameters.P;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
@@ -435,15 +434,15 @@ public class CmrNotificationHandlerConfiguration {
     ) {
         return new NotificationHandler(
                 (callBackStage, callback) -> {
-            AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-            return callBackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                return callBackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
                     && isRepJourney(asylumCase)
                     && !isInternalCase(asylumCase)
-                    && isCmrHearingInPersonOrRemote(asylumCase)
+                    && isCmrHearingInPersonOrRemote(asylumCase);
 
-        },
-            notificationGenerators
+            },
+                notificationGenerators
         );
     }
 
