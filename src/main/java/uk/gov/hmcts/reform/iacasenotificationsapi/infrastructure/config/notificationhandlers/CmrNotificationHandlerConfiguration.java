@@ -81,6 +81,25 @@ public class CmrNotificationHandlerConfiguration {
         );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> remoteCmrListingLrNonDetainedNotificationHandler(
+            @Qualifier("remoteLrNonDetainedCmrListingNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && CMR_LISTING.equals(callback.getEvent())
+                            && isCmrHearingRemote(asylumCase)
+                            && !isInternalCase(callback.getCaseDetails().getCaseData())
+                            && isRepJourney(callback.getCaseDetails().getCaseData())
+                            && !isAppellantInDetention(asylumCase);
+                },
+                notificationGenerators
+        );
+    }
+
     // This covers both AIP manual non detained and detained in other
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> cmrRelistingAipManualAppellantPostalNotificationHandler(
@@ -109,6 +128,23 @@ public class CmrNotificationHandlerConfiguration {
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                             && isAipManualOtherOrNonDetainedCmrRelisting(callback, asylumCase)
                             && isCmrHearingRemote(asylumCase);
+                },
+                notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> remoteCmrRelistingLrPostalNotificationHandler(
+            @Qualifier("remoteLrCmrRelistingAppellantPostalNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && !isInternalCase(callback.getCaseDetails().getCaseData())
+                            && isRepJourney(callback.getCaseDetails().getCaseData())
+                            && !isAppellantInDetention(asylumCase);
                 },
                 notificationGenerators
         );
