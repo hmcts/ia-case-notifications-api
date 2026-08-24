@@ -16,6 +16,16 @@
           "appellantInDetention": "Yes",
           "detentionFacility": "other",
           "isAdmin": "Yes",
+          "legalRepresentativeName": "A Test Legal Rep",
+          "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
+          "legalRepresentativeAddress": {
+            "County": "",
+            "Country": "United Kingdom",
+            "PostCode": "EC1A1BB",
+            "PostTown": "London",
+            "AddressLine1": "10",
+            "AddressLine2": "Example Legal Street"
+          },
           "appellantAddress": {
             "County": "",
             "Country": "United Kingdom",
