@@ -26,7 +26,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 
 @Slf4j
 @Service
-public class DetentionEngagementTeamCmrReListingManualAipDetainedPersonalisation implements EmailWithLinkNotificationPersonalisation {
+public class DetentionEngagementTeamCmrReListingDetainedPersonalisation implements EmailWithLinkNotificationPersonalisation {
 
     private final String internalDetEditAppealTemplateId;
     private final DetentionEmailService detentionEmailService;
@@ -34,7 +34,7 @@ public class DetentionEngagementTeamCmrReListingManualAipDetainedPersonalisation
     private final PersonalisationProvider personalisationProvider;
     private String nonAdaPrefix;
 
-    public DetentionEngagementTeamCmrReListingManualAipDetainedPersonalisation(
+    public DetentionEngagementTeamCmrReListingDetainedPersonalisation(
             @Value("${govnotify.template.listAssistHearing.cmrListing.detentionEngagementTeam.email}") String templateId,
             DetentionEmailService detentionEmailService,
             DocumentDownloadClient documentDownloadClient,

@@ -446,6 +446,25 @@ public class CmrNotificationHandlerConfiguration {
             );
     }
 
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> cmrRelistingLrDigitalInPrisonIrcHandler(
+            @Qualifier("cmrRelistingLrDigitalInPrisonIrcGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+        return new NotificationHandler(
+                (callBackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                return callBackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && CMR_RE_LISTING.equals(callback.getEvent())
+                    && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
+                    && isRepJourney(asylumCase)
+                    && !isInternalCase(asylumCase)
+                    && isCmrHearingInPersonOrRemote(asylumCase);
+
+            },
+                notificationGenerators
+        );
+    }
+
     private boolean isNonDetainedCmrRelisting(Callback<AsylumCase> callback, AsylumCase asylumCase) {
         return CMR_RE_LISTING.equals(callback.getEvent())
             && (isCmrHearingChannel(asylumCase, "INTER")
