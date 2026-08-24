@@ -1831,6 +1831,7 @@ security:
       - "recordRemissionReminder"
       - "removeStatutoryTimeframe24Weeks"
       - "completeCaseReview"
+      - "sendLateTimelineNotice"
       - "revokeCitizenAccess"
     challenged-access-legal-operations:
       - "sendDirection"
@@ -1898,6 +1899,7 @@ security:
       - "recordRemissionReminder"
       - "removeStatutoryTimeframe24Weeks"
       - "completeCaseReview"
+      - "sendLateTimelineNotice"
       - "revokeCitizenAccess"
     senior-tribunal-caseworker:
       - "sendDirection"
@@ -1965,6 +1967,7 @@ security:
       - "recordRemissionReminder"
       - "removeStatutoryTimeframe24Weeks"
       - "completeCaseReview"
+      - "sendLateTimelineNotice"
       - "revokeCitizenAccess"
     # These events are used by the bails service, they will need to be migrated to the admin access management roles - see DIAC-855
     caseworker-ia-admofficer:
