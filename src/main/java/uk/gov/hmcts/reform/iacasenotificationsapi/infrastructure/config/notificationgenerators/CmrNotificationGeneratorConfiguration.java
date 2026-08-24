@@ -785,6 +785,42 @@ public class CmrNotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("cmrRelistingLrManualDetainedIrcPrisonGenerator")
+    public List<NotificationGenerator> cmrRelistingLrManualDetainedIrcPrisonGenerator(
+        CaseOfficerCmrRelistingPersonalisation caseOfficerCmrRelistingPersonalisation,
+        LegalRepresentativeCmrRelistingPersonalisation legalRepresentativeCmrRelistingPersonalisation,
+        HomeOfficeCmrRelistingPersonalisation homeOfficeCmrRelistingPersonalisation,
+        DetentionEngagementTeamCmrReListingDetainedPersonalisation detentionEngagementTeamCmrReListingDetainedPersonalisation,
+        DetentionEngagementTeamCmrReListingDetainedProductionPersonalisation detentionEngagementTeamCmrReListingDetainedProductionPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return newArrayList(
+            new EmailNotificationGenerator(
+                    newArrayList(
+                            legalRepresentativeCmrRelistingPersonalisation,
+                            caseOfficerCmrRelistingPersonalisation,
+                            homeOfficeCmrRelistingPersonalisation,
+                            detentionEngagementTeamCmrReListingDetainedProductionPersonalisation
+                    ),
+                    notificationSender,
+                    notificationIdAppender
+            ),
+            new EmailWithLinkNotificationGenerator(
+                    newArrayList(
+                            detentionEngagementTeamCmrReListingDetainedPersonalisation
+                    ),
+                    notificationSender,
+                    notificationIdAppender
+            ) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
+        );
+    }
+      
     @Bean ("cmrRelistingLrDigitalInPrisonIrcGenerator")
     public List<NotificationGenerator> cmrRelistingLrDigitalInPrisonIrcGenerator(
             LegalRepresentativeCmrRelistingPersonalisation legalRepresentativeCmrRelistingPersonalisation,
