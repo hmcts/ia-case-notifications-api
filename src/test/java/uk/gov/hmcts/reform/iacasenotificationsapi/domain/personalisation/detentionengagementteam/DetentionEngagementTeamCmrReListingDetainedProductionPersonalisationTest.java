@@ -28,7 +28,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.fie
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class DetentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisationTest {
+class DetentionEngagementTeamCmrReListingDetainedProductionPersonalisationTest {
 
     private final String templateId = "templateId";
     private final String appealReferenceNumber = "someReferenceNumber";
@@ -50,12 +50,12 @@ class DetentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisat
     @Mock
     private HearingDetailsFinder hearingDetailsFinder;
 
-    private DetentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisation detentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisation;
+    private DetentionEngagementTeamCmrReListingDetainedProductionPersonalisation detentionEngagementTeamCmrReListingDetainedProductionPersonalisation;
 
     @BeforeEach
     public void setup() {
-        detentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisation =
-            new DetentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisation(
+        detentionEngagementTeamCmrReListingDetainedProductionPersonalisation =
+            new DetentionEngagementTeamCmrReListingDetainedProductionPersonalisation(
                 templateId,
                 detentionEmailService,
                 dateTimeExtractor,
@@ -67,7 +67,7 @@ class DetentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisat
     public void should_return_given_template_id() {
         assertEquals(
             templateId,
-            detentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisation.getTemplateId()
+            detentionEngagementTeamCmrReListingDetainedProductionPersonalisation.getTemplateId()
         );
     }
 
@@ -75,7 +75,7 @@ class DetentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisat
     void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_INTERNAL_CMR_RE_LISTING_LETTER_PRODUCTION_DET",
-            detentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisation.getReferenceId(caseId));
+            detentionEngagementTeamCmrReListingDetainedProductionPersonalisation.getReferenceId(caseId));
     }
 
     @Test
@@ -87,7 +87,7 @@ class DetentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisat
         when(detentionEmailService.getDetentionEmailAddress(asylumCase)).thenReturn(detentionEngagementTeamEmail);
 
         assertEquals(Collections.singleton(detentionEngagementTeamEmail),
-            detentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisation.getRecipientsList(asylumCase));
+            detentionEngagementTeamCmrReListingDetainedProductionPersonalisation.getRecipientsList(asylumCase));
     }
 
     @Test
@@ -95,7 +95,7 @@ class DetentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisat
         when(asylumCase.read(CMR_IS_REMOTE_HEARING, YesOrNo.class)).thenReturn(Optional.of(YES));
 
         assertEquals(Collections.emptySet(),
-            detentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisation.getRecipientsList(asylumCase));
+            detentionEngagementTeamCmrReListingDetainedProductionPersonalisation.getRecipientsList(asylumCase));
     }
 
     @Test
@@ -104,7 +104,7 @@ class DetentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisat
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(NO));
 
         assertEquals(Collections.emptySet(),
-            detentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisation.getRecipientsList(asylumCase));
+            detentionEngagementTeamCmrReListingDetainedProductionPersonalisation.getRecipientsList(asylumCase));
     }
 
     @Test
@@ -114,7 +114,7 @@ class DetentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisat
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.empty());
 
         assertEquals(Collections.emptySet(),
-            detentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisation.getRecipientsList(asylumCase));
+            detentionEngagementTeamCmrReListingDetainedProductionPersonalisation.getRecipientsList(asylumCase));
     }
 
     @Test
@@ -124,7 +124,7 @@ class DetentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisat
         when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of("other"));
 
         assertEquals(Collections.emptySet(),
-            detentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisation.getRecipientsList(asylumCase));
+            detentionEngagementTeamCmrReListingDetainedProductionPersonalisation.getRecipientsList(asylumCase));
     }
 
     @Test
@@ -155,7 +155,7 @@ class DetentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisat
                 .build();
 
         assertEquals(expectedPersonalisation,
-            detentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisation.getPersonalisation(asylumCase));
+            detentionEngagementTeamCmrReListingDetainedProductionPersonalisation.getPersonalisation(asylumCase));
     }
 
     @Test
@@ -169,7 +169,7 @@ class DetentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisat
         when(dateTimeExtractor.extractHearingTime(cmrHearingDateTime)).thenReturn(hearingTime);
 
         Map<String, String> actualPersonalisation =
-            detentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisation.getPersonalisation(asylumCase);
+            detentionEngagementTeamCmrReListingDetainedProductionPersonalisation.getPersonalisation(asylumCase);
 
         assertEquals("NOMS Ref: AB1234", actualPersonalisation.get("nomsRef"));
     }
@@ -178,7 +178,7 @@ class DetentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisat
     public void should_throw_exception_on_personalisation_when_case_is_null() {
         NullPointerException exception =
             assertThrows(NullPointerException.class,
-                () -> detentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisation.getPersonalisation((AsylumCase) null));
+                () -> detentionEngagementTeamCmrReListingDetainedProductionPersonalisation.getPersonalisation((AsylumCase) null));
         assertEquals("asylumCase must not be null", exception.getMessage());
     }
 }

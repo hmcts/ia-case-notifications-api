@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Message;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailWithLinkNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantCmrHearingCancelledPersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AipCmrRelistedAppellantEmailPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantCmrListingPersonalisationEmail;
@@ -21,8 +22,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detenti
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamCmrCancelledProductionPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamCmrListingPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamCmrListingProductionPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamCmrReListingManualAipDetainedPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamCmrReListingDetainedPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamCmrReListingDetainedProductionPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeCmrHearingCancelledPersonalisationEmail;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeCmrRelistingPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeInPersonCmrListingCasePersonalisation;
@@ -491,8 +492,8 @@ public class CmrNotificationGeneratorConfiguration {
     public List<NotificationGenerator> cmrReListingAipManualDetainedInIrcNotificationGenerator(
             CaseOfficerCmrRelistingPersonalisation caseOfficerCmrRelistingPersonalisation,
             HomeOfficeCmrRelistingPersonalisation homeOfficeCmrRelistingPersonalisation,
-            DetentionEngagementTeamCmrReListingManualAipDetainedPersonalisation detentionEngagementTeamCmrReListingManualAipDetainedPersonalisation,
-            DetentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisation detentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisation,
+            DetentionEngagementTeamCmrReListingDetainedPersonalisation detentionEngagementTeamCmrReListingDetainedPersonalisation,
+            DetentionEngagementTeamCmrReListingDetainedProductionPersonalisation detentionEngagementTeamCmrReListingDetainedProductionPersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
@@ -502,14 +503,14 @@ public class CmrNotificationGeneratorConfiguration {
                         newArrayList(
                                 caseOfficerCmrRelistingPersonalisation,
                                 homeOfficeCmrRelistingPersonalisation,
-                                detentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisation
+                                detentionEngagementTeamCmrReListingDetainedProductionPersonalisation
                         ),
                         notificationSender,
                         notificationIdAppender
                 ),
                 new EmailWithLinkNotificationGenerator(
                         newArrayList(
-                                detentionEngagementTeamCmrReListingManualAipDetainedPersonalisation
+                                detentionEngagementTeamCmrReListingDetainedPersonalisation
                         ),
                         notificationSender,
                         notificationIdAppender
@@ -661,6 +662,48 @@ public class CmrNotificationGeneratorConfiguration {
                 }
             }
         );
+    }
+
+    @Bean ("cmrRelistingLrDigitalInPrisonIrcGenerator")
+    public List<NotificationGenerator> cmrRelistingLrDigitalInPrisonIrcGenerator(
+            LegalRepresentativeCmrRelistingPersonalisation legalRepresentativeCmrRelistingPersonalisation,
+            HomeOfficeCmrRelistingPersonalisation homeOfficeCmrRelistingPersonalisation,
+            CaseOfficerCmrRelistingPersonalisation caseOfficerCmrRelistingPersonalisation,
+            DetentionEngagementTeamCmrReListingDetainedProductionPersonalisation detentionEngagementTeamCmrReListingDetainedProductionPersonalisation,
+            DetentionEngagementTeamCmrReListingDetainedPersonalisation detentionEngagementTeamCmrReListingDetainedPersonalisation,
+            NotificationIdAppender notificationIdAppender,
+            GovNotifyNotificationSender notificationSender
+    ) {
+        List<EmailNotificationPersonalisation> emailPersonalisations = newArrayList(
+                legalRepresentativeCmrRelistingPersonalisation,
+                homeOfficeCmrRelistingPersonalisation,
+                caseOfficerCmrRelistingPersonalisation,
+                detentionEngagementTeamCmrReListingDetainedProductionPersonalisation
+        );
+
+        List<EmailWithLinkNotificationPersonalisation> attachmentNotifications = newArrayList(
+                detentionEngagementTeamCmrReListingDetainedPersonalisation
+        );
+        return newArrayList(
+                new EmailNotificationGenerator(
+                        emailPersonalisations,
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new EmailWithLinkNotificationGenerator(
+                        attachmentNotifications,
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success", "body");
+
+                    }
+
+                }
+        );
+
     }
 
     @Bean("cmrRelistingLegallyRepresentedManualNonDetainedAppealGenerator")
