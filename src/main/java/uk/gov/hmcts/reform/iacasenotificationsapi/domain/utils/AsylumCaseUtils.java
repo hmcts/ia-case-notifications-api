@@ -578,6 +578,10 @@ public class AsylumCaseUtils {
         return LocalDate.parse(reviewDate).format(DateTimeFormatter.ofPattern(D_MMM_YYYY));
     }
 
+    public static boolean hasCompleteCaseReviewDate(AsylumCase asylumCase) {
+        return asylumCase.read(AsylumCaseDefinition.COMPLETE_CASE_REVIEW_DATE, String.class).isPresent();
+    }
+
     public static boolean hasStf24WeeksStatus(AsylumCase asylumCase) {
         Optional<YesOrNo> read = asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class);
         return read.map(value -> value.equals(YES)).orElse(false);

@@ -46,6 +46,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.handlers.presubmit.Noti
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.NotificationGenerator;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecordApplicationRespondentFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -173,10 +174,12 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.fie
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.CommonUtils.isLastEditNotificationNotToday;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getCompleteCasedReviewDate;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLatestAddendumEvidenceDocument;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasAppellantAddressInCountryOrOutOfCountry;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasBeenSubmittedAsLegalRepresentedInternalCase;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasBeenSubmittedByAppellantInternalCase;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasCompleteCaseReviewDate;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.inCountryAppeal;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.internalNonDetainedWithAddressAvailable;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
@@ -3955,7 +3958,6 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == DECIDE_AN_APPLICATION
                     && isInternalWithoutLegalRepresentation(asylumCase)
-                    && !isApplicationRefused24w(asylumCase)
                     && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
                     && isApplicationCreatedByAdmin(asylumCase);
             },
@@ -5844,6 +5846,7 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == REMOVE_STATUTORY_TIMEFRAME_24_WEEKS
+                    && hasCompleteCaseReviewDate(asylumCase)
                     && !isInternalCase(asylumCase);
             },
             notificationGenerators
@@ -5861,6 +5864,7 @@ public class NotificationHandlerConfiguration {
                         .getCaseData();
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == REMOVE_STATUTORY_TIMEFRAME_24_WEEKS
+                    && hasCompleteCaseReviewDate(asylumCase)
                     && !isInternalCase(asylumCase);
             },
             notificationGenerators, getErrorHandler()
@@ -5878,6 +5882,7 @@ public class NotificationHandlerConfiguration {
                         .getCaseData();
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == REMOVE_STATUTORY_TIMEFRAME_24_WEEKS
+                    && hasCompleteCaseReviewDate(asylumCase)
                     && !isInternalCase(asylumCase)
                     && isRepJourney(asylumCase);
             },
@@ -5889,9 +5894,12 @@ public class NotificationHandlerConfiguration {
     public PreSubmitCallbackHandler<AsylumCase> removeStatutoryTimeframe24WeeksHomeOfficeNotificationHandler(
         @Qualifier("removeStatutoryTimeframe24WeeksHomeOfficeNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
         return new NotificationHandler(
-            (callbackStage, callback) ->
-                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == REMOVE_STATUTORY_TIMEFRAME_24_WEEKS,
+            (callbackStage, callback) -> {
+                final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && hasCompleteCaseReviewDate(asylumCase)
+                    && callback.getEvent() == REMOVE_STATUTORY_TIMEFRAME_24_WEEKS;
+            },
             notificationGenerators, getErrorHandler()
         );
     }
@@ -7388,6 +7396,7 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == REMOVE_STATUTORY_TIMEFRAME_24_WEEKS
+                    && hasCompleteCaseReviewDate(asylumCase)
                     && isInternalCase(asylumCase);
             },
             notificationGenerators,
@@ -7404,6 +7413,7 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == REMOVE_STATUTORY_TIMEFRAME_24_WEEKS
+                    && hasCompleteCaseReviewDate(asylumCase)
                     && hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase);
             },
             notificationGenerators,
