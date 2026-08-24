@@ -1,0 +1,100 @@
+{
+  "description": "DIAC-2355 No notifications sent CMR cancelled - LR Manual Appeal Detained Other (paper hearing)",
+  "request": {
+    "uri": "/asylum/ccdAboutToSubmit",
+    "credentials": "SystemUser",
+    "input": {
+      "id": 12056,
+      "eventId": "cmrHearingCancelled",
+      "state": "listing",
+      "caseData": {
+        "template": "minimal-appeal-submitted.json",
+        "replacements": {
+          "appealReferenceNumber": "PA/12347/2023",
+          "ariaListingReference": "LP/12347/2021",
+          "appellantsRepresentation": "No",
+          "appellantInDetention": "Yes",
+          "detentionFacility": "other",
+          "isAdmin": "Yes",
+          "appellantAddress": {
+            "County": "",
+            "Country": "United Kingdom",
+            "PostCode": "NE21JX",
+            "PostTown": "Example Town",
+            "AddressLine1": "5",
+            "AddressLine2": "Example Street"
+          },
+          "cmrHearingCentre": "taylorHouse",
+          "cmrHearingCentreAddress": {
+            "value": {
+              "code": "Taylor House Tribunal Hearing Centre, York Road, SE1 7PB",
+              "label": "Taylor House Tribunal Hearing Centre, York Road, SE1 7PB"
+            }
+          },
+          "cmrHearingDate": "2023-10-05T10:00:00.000",
+          "cmrIsRemoteHearing": "Yes",
+          "cmrHearingChannel": {
+            "value": {
+              "code": "NA",
+              "label": "Not in Attendance"
+            },
+            "list_items": [
+              { "code": "INTER", "label": "In Person" },
+              { "code": "NA", "label": "Not in Attendance" },
+              { "code": "TEL", "label": "Telephone" },
+              { "code": "VID", "label": "Video" }
+            ]
+          },
+          "letterBundleDocuments": [
+            {
+              "id": "1",
+              "value": {
+                "tag": "cmrHearingCancelledLetter",
+                "document": {
+                  "document_url": "{$FIXTURE_DOC1_PDF_URL}",
+                  "document_binary_url": "{$FIXTURE_DOC1_PDF_URL_BINARY}",
+                  "document_filename": "{$FIXTURE_DOC1_PDF_FILENAME}"
+                },
+                "suppliedBy": "",
+                "description": "",
+                "dateUploaded": "{$TODAY}"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "expectation": {
+    "status": 200,
+    "errors": [],
+    "caseData": {
+      "template": "minimal-appeal-submitted.json",
+      "replacements": {
+        "appealReferenceNumber": "PA/12347/2023",
+        "ariaListingReference": "LP/12347/2021",
+        "appellantsRepresentation": "No",
+        "isAdmin": "Yes",
+        "legalRepresentativeName": "A Test Legal Rep",
+        "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "legalRepresentativeAddress": {
+          "County": "",
+          "Country": "United Kingdom",
+          "PostCode": "EC1A1BB",
+          "PostTown": "London",
+          "AddressLine1": "10",
+          "AddressLine2": "Example Legal Street"
+        },
+        "appellantAddress": {
+          "County": "",
+          "Country": "United Kingdom",
+          "PostCode": "NE21JX",
+          "PostTown": "Example Town",
+          "AddressLine1": "5",
+          "AddressLine2": "Example Street"
+        },
+        "notificationsSent": null
+      }
+    }
+  }
+}
