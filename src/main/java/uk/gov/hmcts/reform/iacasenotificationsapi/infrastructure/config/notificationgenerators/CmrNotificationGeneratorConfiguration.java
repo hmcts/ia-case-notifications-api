@@ -669,8 +669,8 @@ public class CmrNotificationGeneratorConfiguration {
         CaseOfficerCmrRelistingPersonalisation caseOfficerCmrRelistingPersonalisation,
         LegalRepresentativeCmrRelistingPersonalisation legalRepresentativeCmrRelistingPersonalisation,
         HomeOfficeCmrRelistingPersonalisation homeOfficeCmrRelistingPersonalisation,
-        DetentionEngagementTeamCmrReListingManualAipDetainedPersonalisation detentionEngagementTeamCmrReListingManualAipDetainedPersonalisation,
-        DetentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisation detentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisation,
+        DetentionEngagementTeamCmrReListingDetainedPersonalisation detentionEngagementTeamCmrReListingDetainedPersonalisation,
+        DetentionEngagementTeamCmrReListingDetainedProductionPersonalisation detentionEngagementTeamCmrReListingDetainedProductionPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
@@ -680,14 +680,14 @@ public class CmrNotificationGeneratorConfiguration {
                             legalRepresentativeCmrRelistingPersonalisation,
                             caseOfficerCmrRelistingPersonalisation,
                             homeOfficeCmrRelistingPersonalisation,
-                            detentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisation
+                            detentionEngagementTeamCmrReListingDetainedProductionPersonalisation
                     ),
                     notificationSender,
                     notificationIdAppender
             ),
             new EmailWithLinkNotificationGenerator(
                     newArrayList(
-                            detentionEngagementTeamCmrReListingManualAipDetainedPersonalisation
+                            detentionEngagementTeamCmrReListingDetainedPersonalisation
                     ),
                     notificationSender,
                     notificationIdAppender
