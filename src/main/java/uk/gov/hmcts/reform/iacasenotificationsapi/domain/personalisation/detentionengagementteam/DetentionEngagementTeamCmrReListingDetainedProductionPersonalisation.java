@@ -21,14 +21,14 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
 
 @Service
-public class DetentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisation implements EmailNotificationPersonalisation {
+public class DetentionEngagementTeamCmrReListingDetainedProductionPersonalisation implements EmailNotificationPersonalisation {
 
     private final String internalDetCmrReListingProductionTemplateId;
     private final DetentionEmailService detentionEmailService;
     private final DateTimeExtractor dateTimeExtractor;
     private final HearingDetailsFinder hearingDetailsFinder;
 
-    public DetentionEngagementTeamCmrReListingManualAipDetainedProductionPersonalisation(
+    public DetentionEngagementTeamCmrReListingDetainedProductionPersonalisation(
             @Value("${govnotify.template.listAssistHearing.cmrListing.detentionEngagementTeam.production.email}") String internalDetCmrReListingProductionTemplateId,
             DetentionEmailService detentionEmailService,
             DateTimeExtractor dateTimeExtractor,
