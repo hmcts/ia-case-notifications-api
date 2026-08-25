@@ -150,6 +150,7 @@ public class EventTest {
                 Arguments.of("queryManagementRaiseQuery", QUERY_MANAGEMENT_RAISE_QUERY.toString()),
                 Arguments.of("queryManagementRespondQuery", QUERY_MANAGEMENT_RESPOND_QUERY.toString()),
                 Arguments.of("generatePinInPost", GENERATE_PIN_IN_POST.toString()),
+                Arguments.of("sendLateTimelineNotice", SEND_LATE_TIMELINE_NOTICE.toString()),
                 Arguments.of("unknown", Event.UNKNOWN.toString()));
     }
 
