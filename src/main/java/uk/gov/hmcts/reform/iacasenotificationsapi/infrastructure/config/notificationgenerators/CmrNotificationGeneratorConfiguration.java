@@ -525,11 +525,8 @@ public class CmrNotificationGeneratorConfiguration {
         AppellantCmrListingPersonalisationEmail appellantCmrListingPersonalisationEmail,
         AppellantCmrListingPersonalisationSms appellantCmrListingPersonalisationSms,
         GovNotifyNotificationSender notificationSender,
-        NotificationIdAppender notificationIdAppender,
-        DocumentDownloadClient documentDownloadClient
+        NotificationIdAppender notificationIdAppender
     ) {
-
-        DocumentTag documentTag = DocumentTag.INTERNAL_CMR_LISTING_LETTER;
 
         return newArrayList(
             new EmailNotificationGenerator(
@@ -547,20 +544,7 @@ public class CmrNotificationGeneratorConfiguration {
                 ),
                 notificationSender,
                 notificationIdAppender
-            ),
-            new PrecompiledLetterNotificationGenerator(
-                    newArrayList(
-                            documentTag
-                    ),
-                    notificationSender,
-                    notificationIdAppender,
-                    documentDownloadClient
-            ) {
-                @Override
-                public Message getSuccessMessage() {
-                    return new Message("success","body");
-                }
-            }
+            )
         );
     }
 
