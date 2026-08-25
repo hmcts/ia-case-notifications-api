@@ -19,7 +19,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.RetryableException;
 import io.restassured.RestAssured;
 import io.restassured.http.Headers;
-import io.restassured.response.Response;
 import net.serenitybdd.junit.spring.integration.SpringIntegrationSerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import org.junit.jupiter.api.BeforeAll;
@@ -207,7 +206,7 @@ public class CcdScenarioRunnerTest {
         for (int i = 0; i < maxRetries; i++) {
             Map<String, Object> responseForError = null;
             try {
-                Response response =
+                String actualResponseBody =
                     SerenityRest
                         .given()
                         .headers(authorizationHeaders)
@@ -218,20 +217,14 @@ public class CcdScenarioRunnerTest {
                         .then()
                         .log().ifError()
                         .log().ifValidationFails()
+                        .statusCode(expectedStatus)
+                        .and()
                         .extract()
-                        .response();
+                        .body()
+                        .asString();
 
-                String actualResponseBody = response.getBody().asString();
                 Map<String, Object> actualResponse = MapSerializer.deserialize(actualResponseBody);
                 responseForError = actualResponse;
-
-                if (response.getStatusCode() != expectedStatus) {
-                    throw new AssertionError(
-                        "Expected status code <" + expectedStatus + "> but was <" + response.getStatusCode()
-                            + ">. Response body: " + actualResponseBody
-                    );
-                }
-
                 assertNotNull(actualResponse);
                 verifiers.forEach(verifier -> verifier.verify(
                         filename,
