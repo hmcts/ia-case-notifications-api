@@ -231,8 +231,8 @@ public class CmrNotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("remoteLrCmrRelistingAppellantPostalNotificationGenerator")
-    public List<NotificationGenerator> remoteLrCmrRelistingAppellantPostalNotificationGenerator(
+    @Bean("remoteLrCmrRelistingPostalNotificationGenerator")
+    public List<NotificationGenerator> remoteLrCmrRelistingPostalNotificationGenerator(
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender,
             DocumentDownloadClient documentDownloadClient
