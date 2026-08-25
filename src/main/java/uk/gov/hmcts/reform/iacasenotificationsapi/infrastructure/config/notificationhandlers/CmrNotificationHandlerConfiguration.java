@@ -81,24 +81,6 @@ public class CmrNotificationHandlerConfiguration {
         );
     }
 
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> remoteCmrListingLrNonDetainedNotificationHandler(
-            @Qualifier("remoteLrNonDetainedCmrListingNotificationGenerator") List<NotificationGenerator> notificationGenerators
-    ) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && CMR_LISTING.equals(callback.getEvent())
-                            && isCmrHearingRemote(asylumCase)
-                            && isRepJourney(callback.getCaseDetails().getCaseData())
-                            && !isAppellantInDetention(asylumCase);
-                },
-                notificationGenerators
-        );
-    }
-
     // This covers both AIP manual non detained and detained in other
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> cmrRelistingAipManualAppellantPostalNotificationHandler(
