@@ -146,6 +146,41 @@ public class CmrNotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("remoteCmrListingLrNotificationGenerator")
+    public List<NotificationGenerator> remoteCmrListingLrNotificationGenerator(
+            CaseOfficerCmrListingPersonalisation caseOfficerCmrListingPersonalisation,
+            HomeOfficeInPersonCmrListingCasePersonalisation homeOfficeInPersonCmrListingCasePersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender,
+            DocumentDownloadClient documentDownloadClient
+    ) {
+        DocumentTag documentTag = DocumentTag.REMOTE_CMR_LISTING_LR_LETTER_BUNDLE;
+
+        return newArrayList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                caseOfficerCmrListingPersonalisation,
+                                homeOfficeInPersonCmrListingCasePersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ),
+                new PrecompiledLetterNotificationGenerator(
+                        newArrayList(
+                                documentTag
+                        ),
+                        notificationSender,
+                        notificationIdAppender,
+                        documentDownloadClient
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
+        );
+    }
+
     @Bean("aipManualCmrRelistingAppellantPostalNotificationGenerator")
     public List<NotificationGenerator> aipManualCmrRelistingAppellantPostalNotificationGenerator(
         GovNotifyNotificationSender notificationSender,
@@ -178,6 +213,31 @@ public class CmrNotificationGeneratorConfiguration {
             DocumentDownloadClient documentDownloadClient
     ) {
         DocumentTag documentTag = DocumentTag.REMOTE_CMR_RE_LISTING_LETTER_BUNDLE;
+
+        return newArrayList(
+                new PrecompiledLetterNotificationGenerator(
+                        newArrayList(
+                                documentTag
+                        ),
+                        notificationSender,
+                        notificationIdAppender,
+                        documentDownloadClient
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success","body");
+                    }
+                }
+        );
+    }
+
+    @Bean("remoteCmrRelistingLrPostalNotificationGenerator")
+    public List<NotificationGenerator> remoteCmrRelistingLrPostalNotificationGenerator(
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender,
+            DocumentDownloadClient documentDownloadClient
+    ) {
+        DocumentTag documentTag = DocumentTag.REMOTE_CMR_RE_LISTING_LR_LETTER_BUNDLE;
 
         return newArrayList(
                 new PrecompiledLetterNotificationGenerator(
