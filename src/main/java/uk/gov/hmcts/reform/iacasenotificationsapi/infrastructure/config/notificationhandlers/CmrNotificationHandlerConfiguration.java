@@ -133,24 +133,6 @@ public class CmrNotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> remoteCmrRelistingLrPostalNotificationHandler(
-            @Qualifier("remoteLrCmrRelistingPostalNotificationGenerator") List<NotificationGenerator> notificationGenerators
-    ) {
-
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && CMR_RE_LISTING.equals(callback.getEvent())
-                            && isCmrHearingRemote(asylumCase)
-                            && isRepJourney(callback.getCaseDetails().getCaseData())
-                            && !isAppellantInDetention(asylumCase);
-                },
-                notificationGenerators
-        );
-    }
-
-    @Bean
     public PreSubmitCallbackHandler<AsylumCase> cmrRelistingAipManualHoCoEmailHandler(
         @Qualifier("aipManualCmrRelistingHoCoEmailsGenerator") List<NotificationGenerator> notificationGenerators
     ) {

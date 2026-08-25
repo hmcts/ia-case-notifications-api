@@ -231,32 +231,6 @@ public class CmrNotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("remoteLrCmrRelistingPostalNotificationGenerator")
-    public List<NotificationGenerator> remoteLrCmrRelistingPostalNotificationGenerator(
-            GovNotifyNotificationSender notificationSender,
-            NotificationIdAppender notificationIdAppender,
-            DocumentDownloadClient documentDownloadClient
-    ) {
-        DocumentTag documentTag = DocumentTag.REMOTE_CMR_RE_LISTING_LR_LETTER_BUNDLE;
-
-        return newArrayList(
-                new PrecompiledLetterNotificationGenerator(
-                        newArrayList(
-                                documentTag
-                        ),
-                        notificationSender,
-                        notificationIdAppender,
-                        documentDownloadClient
-                ) {
-                    @Override
-                    public Message getSuccessMessage() {
-                        return new Message("success","body");
-                    }
-                }
-        );
-    }
-
-
     @Bean("aipManualCmrRelistingHoCoEmailsGenerator")
     public List<NotificationGenerator> aipManualCmrRelistingHoCoEmailsGenerator(
         CaseOfficerCmrRelistingPersonalisation caseOfficerCmrRelistingPersonalisation,
