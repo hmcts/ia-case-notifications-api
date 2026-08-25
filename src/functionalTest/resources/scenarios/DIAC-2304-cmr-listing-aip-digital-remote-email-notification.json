@@ -66,6 +66,10 @@
           {
             "id": "30024_CMR_LISTING_APPELLANT_EMAIL",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "30024_INTERNAL_CMR_LISTING_LETTER",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
       }
