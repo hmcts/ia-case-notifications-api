@@ -151,6 +151,7 @@ public class EventTest {
                 Arguments.of("cmrHearingCancelled", CMR_HEARING_CANCELLED.toString()),
                 Arguments.of("revokeCitizenAccess", REVOKE_CITIZEN_ACCESS.toString()),
                 Arguments.of("generatePinInPost", GENERATE_PIN_IN_POST.toString()),
+                Arguments.of("sendLateTimelineNotice", SEND_LATE_TIMELINE_NOTICE.toString()),
                 Arguments.of("unknown", Event.UNKNOWN.toString()));
     }
 
