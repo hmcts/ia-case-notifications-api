@@ -698,7 +698,7 @@ public class CmrNotificationGeneratorConfiguration {
                     notificationSender,
                     notificationIdAppender,
                     documentDownloadClient
-            ){
+            ) {
                 @Override
                 public Message getSuccessMessage() {
                     return new Message("success","body");
