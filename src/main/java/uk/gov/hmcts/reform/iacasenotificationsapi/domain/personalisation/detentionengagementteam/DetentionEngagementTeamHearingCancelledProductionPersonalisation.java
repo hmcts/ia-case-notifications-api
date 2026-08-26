@@ -77,7 +77,7 @@ public class DetentionEngagementTeamHearingCancelledProductionPersonalisation im
             hearingTime = dateTimeExtractor.extractHearingTime(hearingDetailsFinder.getHearingDateTime(asylumCaseBefore));
             hearingCentreAddress = hearingDetailsFinder.getHearingCentreAddress(asylumCaseBefore);
 
-        } else if(caseDetailsBefore.isPresent() && asylumCase.read(CMR_HEARING_DATE, String.class).isPresent()) {
+        } else if (caseDetailsBefore.isPresent() && asylumCase.read(CMR_HEARING_DATE, String.class).isPresent()) {
 
             AsylumCase asylumCaseBefore = caseDetailsBefore.get().getCaseData();
             hearingDate = dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getCmrHearingDateTime(asylumCaseBefore));
