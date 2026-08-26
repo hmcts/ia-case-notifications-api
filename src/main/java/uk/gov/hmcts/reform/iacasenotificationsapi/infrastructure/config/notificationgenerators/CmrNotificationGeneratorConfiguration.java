@@ -705,7 +705,6 @@ public class CmrNotificationGeneratorConfiguration {
                 }
             }
         );
-
     }
       
     @Bean ("cmrRelistingLrDigitalInPrisonIrcGenerator")
