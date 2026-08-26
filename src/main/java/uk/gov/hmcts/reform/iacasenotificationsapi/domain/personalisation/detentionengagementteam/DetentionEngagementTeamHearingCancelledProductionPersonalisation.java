@@ -19,13 +19,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DETENTION_BUILDING;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DETENTION_FACILITY;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.PRISON_NOMS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
 @Slf4j
 @Service
@@ -76,11 +70,21 @@ public class DetentionEngagementTeamHearingCancelledProductionPersonalisation im
         String hearingDate;
         String hearingTime;
         String hearingCentreAddress;
-        if (caseDetailsBefore.isPresent()) {
+        if (caseDetailsBefore.isPresent() && asylumCase.read(CMR_HEARING_DATE, String.class).isEmpty()) {
+
+            AsylumCase asylumCaseBefore = caseDetailsBefore.get().getCaseData();
+            hearingDate = dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getHearingDateTime(asylumCaseBefore));
+            hearingTime = dateTimeExtractor.extractHearingTime(hearingDetailsFinder.getHearingDateTime(asylumCaseBefore));
+            hearingCentreAddress = hearingDetailsFinder.getHearingCentreAddress(asylumCaseBefore);
+
+        } else if(caseDetailsBefore.isPresent() && asylumCase.read(CMR_HEARING_DATE, String.class).isPresent()) {
+
             AsylumCase asylumCaseBefore = caseDetailsBefore.get().getCaseData();
             hearingDate = dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getCmrHearingDateTime(asylumCaseBefore));
             hearingTime = dateTimeExtractor.extractHearingTime(hearingDetailsFinder.getCmrHearingDateTime(asylumCaseBefore));
             hearingCentreAddress = hearingDetailsFinder.getCmrHearingCentreAddress(asylumCaseBefore);
+
+
         } else {
             hearingDate = "";
             hearingTime = "";

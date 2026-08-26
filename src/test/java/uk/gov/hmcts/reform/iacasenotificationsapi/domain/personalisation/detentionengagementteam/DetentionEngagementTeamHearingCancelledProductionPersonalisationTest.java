@@ -29,6 +29,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_IN_DETENTION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CMR_HEARING_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DETENTION_BUILDING;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DETENTION_FACILITY;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
@@ -95,9 +96,10 @@ class DetentionEngagementTeamHearingCancelledProductionPersonalisationTest {
     }
 
     @Test
-    void should_return_personalisation_with_values() {
+    void should_return_personalisation_with_values_for_cmr_hearing() {
         when(callback.getCaseDetailsBefore()).thenReturn(Optional.of(caseDetailsBefore));
         when(caseDetailsBefore.getCaseData()).thenReturn(asylumCaseBefore);
+        when(asylumCase.read(CMR_HEARING_DATE, String.class)).thenReturn(Optional.of("2024-06-01T10:00"));
 
         when(hearingDetailsFinder.getCmrHearingDateTime(asylumCaseBefore)).thenReturn("2024-06-01T10:00");
         when(dateTimeExtractor.extractHearingDate("2024-06-01T10:00")).thenReturn("01-06-2024");
@@ -127,6 +129,35 @@ class DetentionEngagementTeamHearingCancelledProductionPersonalisationTest {
             .containsEntry("hearingTime", "10:00")
             .containsEntry("hearingCentreAddress", "some address")
             .containsEntry("detentionBuilding", "Building X");
+    }
+
+    @Test
+    void should_return_personalisation_with_values_for_substantive_hearing() {
+        when(callback.getCaseDetailsBefore()).thenReturn(Optional.of(caseDetailsBefore));
+        when(caseDetailsBefore.getCaseData()).thenReturn(asylumCaseBefore);
+        when(asylumCase.read(CMR_HEARING_DATE, String.class)).thenReturn(Optional.empty());
+
+        when(hearingDetailsFinder.getHearingDateTime(asylumCaseBefore)).thenReturn("2024-06-01T10:00");
+        when(dateTimeExtractor.extractHearingDate("2024-06-01T10:00")).thenReturn("01-06-2024");
+        when(dateTimeExtractor.extractHearingTime("2024-06-01T10:00")).thenReturn("10:00");
+        when(hearingDetailsFinder.getHearingCentreAddress(asylumCaseBefore)).thenReturn("some address");
+
+        when(asylumCase.read(DETENTION_FACILITY, String.class)).thenReturn(Optional.of(PRISON));
+        when(asylumCase.read(PRISON_NOMS, PrisonNomsNumber.class)).thenReturn(Optional.of(prisonNomsNumber));
+        when(prisonNomsNumber.getPrison()).thenReturn("ABC123");
+
+        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of("REF123"));
+        when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of("HO123"));
+        when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of("John"));
+        when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of("Doe"));
+        when(asylumCase.read(DETENTION_BUILDING, String.class)).thenReturn(Optional.of("Building X"));
+
+        Map<String, String> personalisationMap = personalisation.getPersonalisation(callback);
+
+        assertThat(personalisationMap)
+            .containsEntry("hearingDate", "01-06-2024")
+            .containsEntry("hearingTime", "10:00")
+            .containsEntry("hearingCentreAddress", "some address");
     }
 
     @Test
