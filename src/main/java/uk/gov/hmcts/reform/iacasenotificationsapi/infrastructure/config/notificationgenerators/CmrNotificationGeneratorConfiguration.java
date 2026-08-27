@@ -666,7 +666,7 @@ public class CmrNotificationGeneratorConfiguration {
         HomeOfficeCmrRelistingPersonalisation homeOfficeCmrRelistingPersonalisation,
         DetentionEngagementTeamCmrReListingDetainedPersonalisation detentionEngagementTeamCmrReListingDetainedPersonalisation,
         DetentionEngagementTeamCmrReListingDetainedProductionPersonalisation detentionEngagementTeamCmrReListingDetainedProductionPersonalisation,
-        DetentionEngagementTeamHearingCancelledProductionPersonalisation detentionEngagementTeamHearingCancelledProductionPersonalisation,
+        DetentionEngagementTeamCmrCancelledProductionPersonalisation detentionEngagementTeamCmrCancelledProductionPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender,
         DocumentDownloadClient documentDownloadClient) {
@@ -676,7 +676,7 @@ public class CmrNotificationGeneratorConfiguration {
                 caseOfficerCmrRelistingPersonalisation,
                 homeOfficeCmrRelistingPersonalisation,
                 detentionEngagementTeamCmrReListingDetainedProductionPersonalisation,
-                detentionEngagementTeamHearingCancelledProductionPersonalisation
+                detentionEngagementTeamCmrCancelledProductionPersonalisation
         );
         return newArrayList(
             new EmailNotificationGenerator(
