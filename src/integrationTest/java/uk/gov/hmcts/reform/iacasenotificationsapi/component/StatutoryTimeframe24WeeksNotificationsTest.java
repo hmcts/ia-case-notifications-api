@@ -9,13 +9,18 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MvcResult;
 import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.SpringBootIntegrationTest;
+import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.WithDocumentDownloadStub;
+import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.WithIdamStub;
 import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.WithNotificationEmailStub;
 import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.WithServiceAuthStub;
+import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.WithUserDetailsStub;
 import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fixtures.AsylumCaseForTest;
 import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fixtures.CallbackForTest;
 import uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fixtures.PreSubmitCallbackResponseForTest;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ContactPreference;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentWithMetadata;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Subscriber;
@@ -23,6 +28,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.SubscriberType
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.AddressUk;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.Document;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.NationalityFieldValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
@@ -62,6 +68,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.JOURNEY_TYPE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_HAS_ADDRESS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LETTER_BUNDLE_DOCUMENTS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.MOBILE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.NOTIFICATIONS_SENT;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED;
@@ -71,7 +78,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Eve
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.REMOVE_STATUTORY_TIMEFRAME_24_WEEKS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State.APPEAL_SUBMITTED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_SMS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL;
@@ -88,7 +94,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24Weeks
 @Slf4j
 @SuppressWarnings("unchecked")
 public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegrationTest implements WithServiceAuthStub,
-        WithNotificationEmailStub {
+        WithNotificationEmailStub, WithIdamStub, WithUserDetailsStub, WithDocumentDownloadStub {
 
     public static final String APPELLANT_MAIL = "appellant@domain.com";
     public static final String APPELLANT_SMS = "07123456789";
@@ -103,11 +109,23 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
         AIP_MANUAL, AIP, LR, LR_MANUAL
     }
 
+    private static DocumentWithMetadata generateDocumentWithMetadata(int index, DocumentTag documentTag) {
+        String filename = "filename-" + index;
+        String url = "http://localhost:8080/dm-store/" + filename;
+        String binaryUrl = url + "/binary";
+        Document document = new Document(url, binaryUrl, filename);
+        return new DocumentWithMetadata(document, "", "", documentTag, "");
+    }
+
     private static AsylumCaseForTest mockCaseData(TestJourneyType testJourneyType,
                                                   boolean inCountry,
                                                   boolean wantsEmail,
                                                   boolean wantsSms,
                                                   boolean is24wCase) {
+        List<IdValue<DocumentWithMetadata>> letterBundleDocuments = List.of(
+                new IdValue<>("1", generateDocumentWithMetadata(1, DocumentTag.STF_24WEEKS_REMOVAL_DECISION_LETTER_BUNDLE)),
+                new IdValue<>("2", generateDocumentWithMetadata(2, DocumentTag.STF_24WEEKS_REMOVAL_DECISION_LETTER_LR_BUNDLE))
+        );
         AsylumCaseForTest someCase = anAsylumCase()
                 .with(HEARING_CENTRE, HearingCentre.MANCHESTER)
                 .with(APPEAL_REFERENCE_NUMBER, "some-appeal-reference-number")
@@ -118,6 +136,7 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
                 .with(APPEAL_SUBMISSION_DATE, "2002-02-02")
                 .with(TRIBUNAL_RECEIVED_DATE, "2002-02-02")
                 .with(HOME_OFFICE_DECISION_DATE, "2002-02-02")
+                .with(LETTER_BUNDLE_DOCUMENTS, letterBundleDocuments)
                 .with(STF_24W_CURRENT_STATUS_AUTO_GENERATED, is24wCase ? YesOrNo.YES : YesOrNo.NO);
 
         switch (testJourneyType) {
@@ -229,11 +248,18 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
     private PreSubmitCallbackResponseForTest mockResponse(AsylumCaseForTest caseData, Event event) {
         addServiceAuthStub(server);
         addNotificationEmailStub(server);
+        addIdamTokenStub(server);
+        addUserInfoStub(server);
+        addCaseWorkerUserDetailsStub(server);
+        addDocumentDownloadStub(server);
 
         when(notificationSender.sendEmail(anyString(), anyString(), anyMap(), anyString(), any(Callback.class)))
                 .thenReturn(someNotificationId);
 
         when(notificationSender.sendLetter(anyString(), anyString(), anyMap(), anyString(), any(Callback.class)))
+                .thenReturn(someNotificationId);
+
+        when(notificationSender.sendPrecompiledLetter(anyString(), any()))
                 .thenReturn(someNotificationId);
 
         when(notificationSender.sendSms(anyString(), anyString(), anyMap(), anyString(), any(Callback.class)))
@@ -251,6 +277,8 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
             MvcResult response = mockMvc
                     .perform(
                             post("/asylum/ccdAboutToSubmit")
+                                    .header("Authorization", USER_JWT_TOKEN)
+                                    .header("ServiceAuthorization", SERVICE_JWT_TOKEN)
                                     .content(objectMapper.writeValueAsString(callback.build()))
                                     .contentType(APPLICATION_JSON_VALUE)
                     )
@@ -269,10 +297,10 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
     // --- Scenarios ---
     private static Stream<Arguments> remove24wCaseDataPermutations() {
         return Stream.of(
-                Arguments.of(TestJourneyType.AIP_MANUAL, false, false, false, Set.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
-                Arguments.of(TestJourneyType.AIP_MANUAL, false, true, true, Set.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
-                Arguments.of(TestJourneyType.AIP_MANUAL, true, false, false, Set.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
-                Arguments.of(TestJourneyType.AIP_MANUAL, true, true, true, Set.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
+                Arguments.of(TestJourneyType.AIP_MANUAL, false, false, false, Set.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL, "_STF_24WEEKS_REMOVAL_DECISION_LETTER_BUNDLE")),
+                Arguments.of(TestJourneyType.AIP_MANUAL, false, true, true, Set.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL, "_STF_24WEEKS_REMOVAL_DECISION_LETTER_BUNDLE")),
+                Arguments.of(TestJourneyType.AIP_MANUAL, true, false, false, Set.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL, "_STF_24WEEKS_REMOVAL_DECISION_LETTER_BUNDLE")),
+                Arguments.of(TestJourneyType.AIP_MANUAL, true, true, true, Set.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL, "_STF_24WEEKS_REMOVAL_DECISION_LETTER_BUNDLE")),
 
                 Arguments.of(TestJourneyType.AIP, false, false, false, Set.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
                 Arguments.of(TestJourneyType.AIP, false, false, true, Set.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_SMS, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
@@ -290,12 +318,12 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
                 Arguments.of(TestJourneyType.LR, true, false, true, Set.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_SMS)),
                 Arguments.of(TestJourneyType.LR, true, true, false, Set.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL)),
 
-                Arguments.of(TestJourneyType.LR_MANUAL, false, false, false, Set.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
-                Arguments.of(TestJourneyType.LR_MANUAL, false, false, true, Set.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
-                Arguments.of(TestJourneyType.LR_MANUAL, false, true, false, Set.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL)),
-                Arguments.of(TestJourneyType.LR_MANUAL, true, false, false, Set.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER)),
-                Arguments.of(TestJourneyType.LR_MANUAL, true, false, true, Set.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER)),
-                Arguments.of(TestJourneyType.LR_MANUAL, true, true, false, Set.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL, REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_LETTER))
+                Arguments.of(TestJourneyType.LR_MANUAL, false, false, false, Set.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL, "_STF_24WEEKS_REMOVAL_DECISION_LETTER_BUNDLE", "_STF_24WEEKS_REMOVAL_DECISION_LETTER_LR_BUNDLE")),
+                Arguments.of(TestJourneyType.LR_MANUAL, false, false, true, Set.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL, "_STF_24WEEKS_REMOVAL_DECISION_LETTER_BUNDLE", "_STF_24WEEKS_REMOVAL_DECISION_LETTER_LR_BUNDLE")),
+                Arguments.of(TestJourneyType.LR_MANUAL, false, true, false, Set.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL, "_STF_24WEEKS_REMOVAL_DECISION_LETTER_BUNDLE", "_STF_24WEEKS_REMOVAL_DECISION_LETTER_LR_BUNDLE")),
+                Arguments.of(TestJourneyType.LR_MANUAL, true, false, false, Set.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL, "_STF_24WEEKS_REMOVAL_DECISION_LETTER_BUNDLE", "_STF_24WEEKS_REMOVAL_DECISION_LETTER_LR_BUNDLE")),
+                Arguments.of(TestJourneyType.LR_MANUAL, true, false, true, Set.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL, "_STF_24WEEKS_REMOVAL_DECISION_LETTER_BUNDLE", "_STF_24WEEKS_REMOVAL_DECISION_LETTER_LR_BUNDLE")),
+                Arguments.of(TestJourneyType.LR_MANUAL, true, true, false, Set.of(REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL, "_STF_24WEEKS_REMOVAL_DECISION_LETTER_BUNDLE", "_STF_24WEEKS_REMOVAL_DECISION_LETTER_LR_BUNDLE"))
         );
     }
 
@@ -339,7 +367,7 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
     // --- Tests ---
     @ParameterizedTest(name = "JourneyType: {0}, inCountry: {1}, wantsEmail: {2}, wantsSms: {3}")
     @MethodSource("remove24wCaseDataPermutations")
-    @WithMockUser(authorities = {"caseworker-ia-system"})
+    @WithMockUser(authorities = {"caseworker-ia", "tribunal-caseworker"})
     void should_send_24weeks_remove_notifications_correctly(TestJourneyType testJourneyType,
                                                             boolean inCountry,
                                                             boolean wantsEmail,

@@ -78,6 +78,11 @@ public class AsylumCaseUtils {
         return asylumCase.read(IS_ADMIN, YesOrNo.class).map(isAdmin -> YES == isAdmin).orElse(false);
     }
 
+    public static boolean isApplicationRefused24w(AsylumCase asylumCase) {
+        return asylumCase.read(IS_REMOVAL_OF_24W_APPLICATION_REFUSED, YesOrNo.class).orElse(YesOrNo.NO)
+            .equals(YesOrNo.YES);
+    }
+
     public static boolean isNotInternalOrIsInternalWithLegalRepresentation(AsylumCase asylumCase) {
         return (!isInternalCase(asylumCase) ||
             isInternalCase(asylumCase) && hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase));
@@ -572,6 +577,10 @@ public class AsylumCaseUtils {
             .read(AsylumCaseDefinition.COMPLETE_CASE_REVIEW_DATE, String.class)
             .orElseThrow(() -> new IllegalStateException("Complete CaseReview Date is not present"));
         return LocalDate.parse(reviewDate).format(DateTimeFormatter.ofPattern(D_MMM_YYYY));
+    }
+
+    public static boolean hasCompleteCaseReviewDate(AsylumCase asylumCase) {
+        return asylumCase.read(AsylumCaseDefinition.COMPLETE_CASE_REVIEW_DATE, String.class).isPresent();
     }
 
     public static boolean hasStf24WeeksStatus(AsylumCase asylumCase) {
