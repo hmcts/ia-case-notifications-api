@@ -490,6 +490,7 @@ public class CmrNotificationGeneratorConfiguration {
             HomeOfficeCmrRelistingPersonalisation homeOfficeCmrRelistingPersonalisation,
             DetentionEngagementTeamCmrReListingDetainedPersonalisation detentionEngagementTeamCmrReListingDetainedPersonalisation,
             DetentionEngagementTeamCmrReListingDetainedProductionPersonalisation detentionEngagementTeamCmrReListingDetainedProductionPersonalisation,
+            DetentionEngagementTeamCmrCancelledProductionPersonalisation detentionEngagementTeamCmrCancelledProductionPersonalisation,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
@@ -499,7 +500,8 @@ public class CmrNotificationGeneratorConfiguration {
                         newArrayList(
                                 caseOfficerCmrRelistingPersonalisation,
                                 homeOfficeCmrRelistingPersonalisation,
-                                detentionEngagementTeamCmrReListingDetainedProductionPersonalisation
+                                detentionEngagementTeamCmrReListingDetainedProductionPersonalisation,
+                                detentionEngagementTeamCmrCancelledProductionPersonalisation
                         ),
                         notificationSender,
                         notificationIdAppender
@@ -510,7 +512,13 @@ public class CmrNotificationGeneratorConfiguration {
                         ),
                         notificationSender,
                         notificationIdAppender
-                )
+                ) {
+
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success","body");
+                }
+            }
         );
     }
 
