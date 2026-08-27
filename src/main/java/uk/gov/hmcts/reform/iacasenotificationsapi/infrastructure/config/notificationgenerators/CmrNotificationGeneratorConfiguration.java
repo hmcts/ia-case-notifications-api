@@ -722,6 +722,7 @@ public class CmrNotificationGeneratorConfiguration {
             CaseOfficerCmrRelistingPersonalisation caseOfficerCmrRelistingPersonalisation,
             DetentionEngagementTeamCmrReListingDetainedProductionPersonalisation detentionEngagementTeamCmrReListingDetainedProductionPersonalisation,
             DetentionEngagementTeamCmrReListingDetainedPersonalisation detentionEngagementTeamCmrReListingDetainedPersonalisation,
+            DetentionEngagementTeamCmrCancelledProductionPersonalisation detentionEngagementTeamCmrCancelledProductionPersonalisation,
             NotificationIdAppender notificationIdAppender,
             GovNotifyNotificationSender notificationSender
     ) {
@@ -729,7 +730,8 @@ public class CmrNotificationGeneratorConfiguration {
                 legalRepresentativeCmrRelistingPersonalisation,
                 homeOfficeCmrRelistingPersonalisation,
                 caseOfficerCmrRelistingPersonalisation,
-                detentionEngagementTeamCmrReListingDetainedProductionPersonalisation
+                detentionEngagementTeamCmrReListingDetainedProductionPersonalisation,
+                detentionEngagementTeamCmrCancelledProductionPersonalisation
         );
 
         List<EmailWithLinkNotificationPersonalisation> attachmentNotifications = newArrayList(
