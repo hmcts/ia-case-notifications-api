@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.PrisonNomsNumber;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DetentionFacilityEmailService;
@@ -14,6 +16,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsF
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
@@ -27,17 +30,22 @@ public class DetentionEngagementTeamCmrCancelledProductionPersonalisation implem
     private final DetentionFacilityEmailService detentionFacilityEmailService;
     private final DateTimeExtractor dateTimeExtractor;
     private final HearingDetailsFinder hearingDetailsFinder;
+    private final String subjectPrefix;
 
     public DetentionEngagementTeamCmrCancelledProductionPersonalisation(
             @Value("${govnotify.template.cmrCancelled.detentionEngagementTeam.production.email}") String cmrCancelledProductionDetainedTemplateId,
             DetentionFacilityEmailService detentionFacilityEmailService,
             DateTimeExtractor dateTimeExtractor,
-            HearingDetailsFinder hearingDetailsFinder
+            HearingDetailsFinder hearingDetailsFinder,
+            @Value("${govnotify.emailPrefix.nonAdaInPerson}") String subjectPrefix
+
+
     ) {
         this.cmrCancelledProductionDetainedTemplateId = cmrCancelledProductionDetainedTemplateId;
         this.detentionFacilityEmailService = detentionFacilityEmailService;
         this.dateTimeExtractor = dateTimeExtractor;
         this.hearingDetailsFinder = hearingDetailsFinder;
+        this.subjectPrefix = subjectPrefix;
     }
 
     @Override
@@ -60,8 +68,26 @@ public class DetentionEngagementTeamCmrCancelledProductionPersonalisation implem
     }
 
     @Override
-    public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
-        requireNonNull(asylumCase, "asylumCase must not be null");
+    public Map<String, String> getPersonalisation(Callback<AsylumCase> callback) {
+        requireNonNull(callback, "asylumCase must not be null");
+
+        AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+        Optional<CaseDetails<AsylumCase>> caseDetailsBefore = callback.getCaseDetailsBefore();
+
+        String hearingDate;
+        String hearingTime;
+        String hearingCentreAddress;
+        if (caseDetailsBefore.isPresent()) {
+            AsylumCase asylumCaseBefore = caseDetailsBefore.get().getCaseData();
+            hearingDate = dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getCmrHearingDateTime(asylumCaseBefore));
+            hearingTime = dateTimeExtractor.extractHearingTime(hearingDetailsFinder.getCmrHearingDateTime(asylumCaseBefore));
+            hearingCentreAddress = hearingDetailsFinder.getCmrHearingCentreAddress(asylumCaseBefore);
+        } else {
+            hearingDate = "";
+            hearingTime = "";
+            hearingCentreAddress = "";
+        }
+
 
         boolean isPrison = asylumCase.read(DETENTION_FACILITY, String.class).orElse("").equals("prison");
         String prisonNomsNumber = isPrison
@@ -70,15 +96,16 @@ public class DetentionEngagementTeamCmrCancelledProductionPersonalisation implem
                 : "";
 
         return ImmutableMap
-                .<String, String>builder()
+            .<String, String>builder()
+                .put("subjectPrefix", subjectPrefix)
                 .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("homeOfficeReferenceNumber", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
                 .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
                 .put("nomsRef", prisonNomsNumber)
-                .put("hearingDate", dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getCmrHearingDateTime(asylumCase)))
-                .put("hearingTime", dateTimeExtractor.extractHearingTime(hearingDetailsFinder.getCmrHearingDateTime(asylumCase)))
-                .put("hearingCentreAddress", hearingDetailsFinder.getCmrHearingCentreAddress(asylumCase))
+                .put("hearingDate", hearingDate)
+                .put("hearingTime", hearingTime)
+                .put("hearingCentreAddress", hearingCentreAddress)
                 .put("detentionBuilding", asylumCase.read(DETENTION_BUILDING, String.class).orElse(""))
                 .build();
     }
