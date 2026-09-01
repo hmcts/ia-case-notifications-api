@@ -103,6 +103,7 @@ public class CacheConfiguration {
                 .withCacheConfiguration("legalRepShareCaseATokenCache", tokenCacheConfig)
                 .withCacheConfiguration("judgeTokenCache", tokenCacheConfig)
                 .withCacheConfiguration("citizenTokenCache", tokenCacheConfig)
+                .withCacheConfiguration("nlrTokenCache", tokenCacheConfig)
                 .build();
 
         } catch (Exception e) {
