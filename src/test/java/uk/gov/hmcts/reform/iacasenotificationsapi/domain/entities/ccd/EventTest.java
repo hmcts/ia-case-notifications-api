@@ -148,6 +148,7 @@ public class EventTest {
             Arguments.of("hearingCancelled", HEARING_CANCELLED.toString()),
             Arguments.of("revokeCitizenAccess", REVOKE_CITIZEN_ACCESS.toString()),
             Arguments.of("generatePinInPost", GENERATE_PIN_IN_POST.toString()),
+            Arguments.of("sendLateTimelineNotice", SEND_LATE_TIMELINE_NOTICE.toString()),
             Arguments.of("sendInviteToNonLegalRep", Event.SEND_INVITE_TO_NON_LEGAL_REP.toString()),
             Arguments.of("sendPipToNonLegalRep", Event.SEND_PIP_TO_NON_LEGAL_REP.toString()),
             Arguments.of("joinAppealConfirmation", Event.JOIN_APPEAL_CONFIRMATION.toString()),
