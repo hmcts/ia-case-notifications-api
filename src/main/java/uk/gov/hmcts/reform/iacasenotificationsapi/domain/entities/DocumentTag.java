@@ -116,6 +116,16 @@ public enum DocumentTag {
     CMR_HEARING_CANCELLED_LETTER("cmrHearingCancelledLetter"),
     CMR_HEARING_CANCELLED_LR_LETTER("cmrHearingCancelledLrLetter"),
 
+    STF_24WEEKS_REMOVAL_DECISION_DOCUMENT("stf24WeeksRemovalDecisionDocument"),
+    STF_24WEEKS_REMOVAL_DECISION_LETTER("stf24WeeksRemovalDecisionLetter"),
+    STF_24WEEKS_REMOVAL_DECISION_LETTER_BUNDLE("stf24WeeksRemovalDecisionLetterBundle"),
+    STF_24WEEKS_REMOVAL_DECISION_LETTER_LR("stf24WeeksRemovalDecisionLetterLr"),
+    STF_24WEEKS_REMOVAL_DECISION_LETTER_LR_BUNDLE("stf24WeeksRemovalDecisionLetterLrBundle"),
+    STF_24WEEKS_REMOVAL_REFUSED_DECISION_DOCUMENT("stf24WeeksRemovalRefusedDecisionDocument"),
+    STF_24WEEKS_REMOVAL_REFUSED_DECISION_LETTER("stf24WeeksRemovalRefusedDecisionLetter"),
+    STF_24WEEKS_REMOVAL_REFUSED_DECISION_LETTER_BUNDLE("stf24WeeksRemovalRefusedDecisionLetterBundle"),
+    STF_24WEEKS_REMOVAL_REFUSED_DECISION_LETTER_LR("stf24WeeksRemovalRefusedDecisionLetterLr"),
+    STF_24WEEKS_REMOVAL_REFUSED_DECISION_LETTER_LR_BUNDLE("stf24WeeksRemovalRefusedDecisionLetterLrBundle"),
 
     @JsonEnumDefaultValue
     NONE("");

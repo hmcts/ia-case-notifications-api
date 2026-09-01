@@ -113,6 +113,18 @@ public class AsylumCaseUtilsTest {
     }
 
     @Test
+    void isApplicationRefused24w_should_return_true() {
+        when(asylumCase.read(IS_REMOVAL_OF_24W_APPLICATION_REFUSED, YesOrNo.class)).thenReturn(Optional.of(YES));
+        assertTrue(isApplicationRefused24w(asylumCase));
+    }
+
+    @Test
+    void isApplicationRefused24w_should_return_false() {
+        when(asylumCase.read(IS_REMOVAL_OF_24W_APPLICATION_REFUSED, YesOrNo.class)).thenReturn(Optional.of(NO));
+        assertFalse(isApplicationRefused24w(asylumCase));
+    }
+
+    @Test
     void isNotInternalOrIsInternalWithLegalRepresentation_should_return_true() {
         when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(NO));
