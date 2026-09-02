@@ -44,6 +44,8 @@ public class EventTest {
             Arguments.of("uploadAdditionalEvidence", Event.UPLOAD_ADDITIONAL_EVIDENCE.toString()),
             Arguments.of("uploadAdditionalEvidenceHomeOffice", Event.UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE.toString()),
             Arguments.of("listCase", Event.LIST_CASE.toString()),
+            Arguments.of("cmrListing", Event.CMR_LISTING.toString()),
+            Arguments.of("cmrReListing", CMR_RE_LISTING.toString()),
             Arguments.of("createCaseSummary", Event.CREATE_CASE_SUMMARY.toString()),
             Arguments.of("revertStateToAwaitingRespondentEvidence", Event.REVERT_STATE_TO_AWAITING_RESPONDENT_EVIDENCE.toString()),
             Arguments.of("generateHearingBundle", Event.GENERATE_HEARING_BUNDLE.toString()),
