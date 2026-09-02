@@ -75,7 +75,7 @@ public class HomeOfficeAdaReviewHearingRequirementsPersonalisation implements Em
             .put("hearingDate", dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getHearingDateTime(asylumCase)))
             .put("hearingCentreAddress", hearingDetailsFinder.getHearingCentreLocation(asylumCase));
 
-        hearingRequirementFields.putAll(PersonalisationProvider.getHearingRequirementsFields(asylumCase));
+        PersonalisationProvider.buildHearingRequirementsFields(asylumCase, hearingRequirementFields);
 
         return hearingRequirementFields.build();
     }
