@@ -148,6 +148,8 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Eve
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.LIST_CASE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.MANAGE_FEE_UPDATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.MARK_APPEAL_AS_REMITTED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.QUERY_MANAGEMENT_RAISE_QUERY;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.QUERY_MANAGEMENT_RESPOND_QUERY;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.RECORD_ADJOURNMENT_DETAILS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.RECORD_OUT_OF_TIME_DECISION;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.RECORD_REMISSION_DECISION;
@@ -8269,6 +8271,36 @@ public class NotificationHandlerConfiguration {
             },
             notificationGenerators,
             getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> legalRepresentativeRaiseQueryEmailNotificationHandler(
+            @Qualifier("legalRepresentationRaiseQueryNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == QUERY_MANAGEMENT_RAISE_QUERY;
+                },
+                notificationGenerators,
+                getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> legalRepresentativeRespondQueryEmailNotificationHandler(
+            @Qualifier("legalRepresentationRespondQueryNotificationGenerator")
+            List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                            && callback.getEvent() == QUERY_MANAGEMENT_RESPOND_QUERY;
+                },
+                notificationGenerators,
+                getErrorHandler()
         );
     }
 
