@@ -168,8 +168,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Eve
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.TURN_ON_NOTIFICATIONS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.UPLOAD_ADDENDUM_EVIDENCE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.UPLOAD_ADDENDUM_EVIDENCE_ADMIN_OFFICER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.QUERY_MANAGEMENT_RAISE_QUERY;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.QUERY_MANAGEMENT_RESPOND_QUERY;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.PaymentStatus.FAILED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.PaymentStatus.PAID;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.PaymentStatus.PAYMENT_PENDING;
