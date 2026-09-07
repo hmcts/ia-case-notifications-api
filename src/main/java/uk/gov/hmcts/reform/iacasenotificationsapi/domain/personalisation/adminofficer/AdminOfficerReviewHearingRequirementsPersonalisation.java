@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.admino
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasStf24WeeksStatus;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
 import com.google.common.collect.ImmutableMap;
@@ -16,6 +17,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
 
 @Service
@@ -25,6 +27,7 @@ public class AdminOfficerReviewHearingRequirementsPersonalisation implements Ema
     private final String reviewReheardHearingRequirementsAdminOfficerTemplateId;
     private final String reviewHearingRequirementsAdminOfficerEmailAddress;
     private final AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
+    private final EmailAddressFinder emailAddressFinder;
 
     @Value("${govnotify.emailPrefix.ada}")
     private String adaPrefix;
@@ -35,12 +38,14 @@ public class AdminOfficerReviewHearingRequirementsPersonalisation implements Ema
         @NotNull(message = "reviewHearingRequirementsAdminOfficerTemplateId cannot be null") @Value("${govnotify.template.reviewHearingRequirements.adminOfficer.email}") String reviewHearingRequirementsAdminOfficerTemplateId,
         @NotNull(message = "reviewReheardHearingRequirementsAdminOfficerTemplateId cannot be null") @Value("${govnotify.template.reviewReheardHearingRequirements.adminOfficer.email}") String reviewReheardHearingRequirementsAdminOfficerTemplateId,
         @Value("${reviewHearingRequirementsAdminOfficerEmailAddress}") String reviewHearingRequirementsAdminOfficerEmailAddress,
-        AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider
+        AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider,
+        EmailAddressFinder emailAddressFinder
     ) {
         this.reviewHearingRequirementsAdminOfficerTemplateId = reviewHearingRequirementsAdminOfficerTemplateId;
         this.reviewReheardHearingRequirementsAdminOfficerTemplateId = reviewReheardHearingRequirementsAdminOfficerTemplateId;
         this.reviewHearingRequirementsAdminOfficerEmailAddress = reviewHearingRequirementsAdminOfficerEmailAddress;
         this.adminOfficerPersonalisationProvider = adminOfficerPersonalisationProvider;
+        this.emailAddressFinder = emailAddressFinder;
     }
 
     @Override
@@ -56,7 +61,11 @@ public class AdminOfficerReviewHearingRequirementsPersonalisation implements Ema
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return Collections.singleton(reviewHearingRequirementsAdminOfficerEmailAddress);
+        if (hasStf24WeeksStatus(asylumCase)) {
+            return Collections.singleton(emailAddressFinder.getAdminEmailAddress(asylumCase));
+        } else {
+            return Collections.singleton(reviewHearingRequirementsAdminOfficerEmailAddress);
+        }
     }
 
     @Override
