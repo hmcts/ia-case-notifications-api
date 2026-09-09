@@ -372,8 +372,8 @@ public class CmrNotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> cmrReListingAipManualDetainedInIrcNotificationHandler(
-            @Qualifier("cmrReListingAipManualDetainedInIrcNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    public PreSubmitCallbackHandler<AsylumCase> cmrReListingAipManualDetainedInPrisonOrIrcNotificationHandler(
+            @Qualifier("cmrReListingAipManualDetainedInPrisonOrIrcNotificationGenerator") List<NotificationGenerator> notificationGenerators
     ) {
 
         return new NotificationHandler(
@@ -437,7 +437,7 @@ public class CmrNotificationHandlerConfiguration {
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                         && CMR_RE_LISTING.equals(callback.getEvent())
                         && isCmrHearingInPersonOrRemote(asylumCase)
-                        && isDetainedInOneOfFacilityTypes(asylumCase,IRC,PRISON)
+                        && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON)
                         && hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase);
 
                 },

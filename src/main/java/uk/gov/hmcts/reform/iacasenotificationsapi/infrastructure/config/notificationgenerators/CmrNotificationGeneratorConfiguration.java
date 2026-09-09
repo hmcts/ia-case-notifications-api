@@ -484,8 +484,8 @@ public class CmrNotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("cmrReListingAipManualDetainedInIrcNotificationGenerator")
-    public List<NotificationGenerator> cmrReListingAipManualDetainedInIrcNotificationGenerator(
+    @Bean("cmrReListingAipManualDetainedInPrisonOrIrcNotificationGenerator")
+    public List<NotificationGenerator> cmrReListingAipManualDetainedInPrisonOrIrcNotificationGenerator(
             CaseOfficerCmrRelistingPersonalisation caseOfficerCmrRelistingPersonalisation,
             HomeOfficeCmrRelistingPersonalisation homeOfficeCmrRelistingPersonalisation,
             DetentionEngagementTeamCmrReListingDetainedPersonalisation detentionEngagementTeamCmrReListingDetainedPersonalisation,
