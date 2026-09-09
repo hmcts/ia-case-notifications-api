@@ -24,10 +24,6 @@
         "hearingCentre": "manchester",
         "notificationsSent": [
           {
-            "id": "2109_BAIL_APPLICATION_SUBMITTED_HEARING_CENTRE",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          },
-          {
             "id": "2109_BAIL_APPLICATION_SUBMITTED_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
@@ -39,17 +35,6 @@
       }
     },
     "notifications": [
-      {
-        "reference": "2109_BAIL_APPLICATION_SUBMITTED_HEARING_CENTRE",
-        "recipient": "{$bailHearingCentreEmailAddresses.manchester}",
-        "subject": "Bail application: Application submitted",
-        "body": [
-          "1650-6221-2061-5101",
-          "John Smith",
-          "A12345",
-          "123654LR"
-        ]
-      },
       {
         "reference": "2109_BAIL_APPLICATION_SUBMITTED_HOME_OFFICE",
         "recipient": "{$bailHomeOfficeEmailAddress}",
