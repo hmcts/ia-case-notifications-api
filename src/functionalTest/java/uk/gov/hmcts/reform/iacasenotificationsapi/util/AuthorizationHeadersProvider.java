@@ -118,6 +118,16 @@ public class AuthorizationHeadersProvider {
         );
     }
 
+    public Headers getNlrAuthorization() {
+        String serviceToken = tokens.computeIfAbsent("ServiceAuth", user -> serviceAuthTokenGenerator.generate());
+        String accessToken = idamAuthProvider.getNlrToken();
+
+        return new Headers(
+            new Header("ServiceAuthorization", serviceToken),
+            new Header("Authorization", accessToken)
+        );
+    }
+
     public Headers getSystemUserAuthorization() {
         String serviceToken = tokens.computeIfAbsent("ServiceAuth", user -> serviceAuthTokenGenerator.generate());
         String accessToken = idamAuthProvider.getSystemToken();

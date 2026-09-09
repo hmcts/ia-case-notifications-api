@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -46,6 +47,7 @@ public class MakeAnApplicationTest {
         assertEquals(decision, makeAnApplication.getDecision());
         assertEquals(state, makeAnApplication.getState());
         assertEquals(applicantRole, makeAnApplication.getApplicantRole());
+        assertNull(makeAnApplication.getRefusalOfRemoval24wDocument());
     }
 
     @Test

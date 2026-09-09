@@ -77,6 +77,8 @@ public class AsylumCaseUtilsTest {
         )
     );
 
+    private final String generatedCode = "12345";
+
     @AfterEach
     void tearDown() {
         generatorMockedStatic.close();
@@ -110,6 +112,18 @@ public class AsylumCaseUtilsTest {
     void isAdmin_should_return_false() {
         when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(NO));
         assertFalse(isInternalCase(asylumCase));
+    }
+
+    @Test
+    void isApplicationRefused24w_should_return_true() {
+        when(asylumCase.read(IS_REMOVAL_OF_24W_APPLICATION_REFUSED, YesOrNo.class)).thenReturn(Optional.of(YES));
+        assertTrue(isApplicationRefused24w(asylumCase));
+    }
+
+    @Test
+    void isApplicationRefused24w_should_return_false() {
+        when(asylumCase.read(IS_REMOVAL_OF_24W_APPLICATION_REFUSED, YesOrNo.class)).thenReturn(Optional.of(NO));
+        assertFalse(isApplicationRefused24w(asylumCase));
     }
 
     @Test
@@ -383,11 +397,58 @@ public class AsylumCaseUtilsTest {
 
     @Test
     void generateAppellantPin_generate_new_pin_if_not_present() {
-        String generatedCode = "12345";
         generatorMockedStatic.when(AccessCodeGenerator::generateAccessCode)
             .thenReturn(generatedCode);
 
         PinInPostDetails generatedPinDetails = generateAppellantPinIfNotPresent(asylumCaseSpy);
+
+        assertEquals(generatedCode, generatedPinDetails.getAccessCode());
+        assertEquals(LocalDate.now().plusDays(30).toString(), generatedPinDetails.getExpiryDate());
+        assertEquals(NO, generatedPinDetails.getPinUsed());
+    }
+
+
+    @Test
+    void generateJoinAppealPin_return_existing_pin_if_present() {
+        PinInPostDetails existingPin = PinInPostDetails.builder()
+            .accessCode("123")
+            .expiryDate(LocalDate.now().plusDays(30).toString())
+            .pinUsed(YesOrNo.NO)
+            .build();
+
+        when(asylumCase.read(AsylumCaseDefinition.JOIN_APPEAL_PIN, PinInPostDetails.class))
+            .thenReturn(Optional.of(existingPin));
+
+        assertEquals(existingPin, generateJoinAppealPinIfNotPresentOrUsed(asylumCase));
+    }
+
+    @Test
+    void generateJoinAppealPin_generate_new_pin_if_not_present() {
+        generatorMockedStatic.when(() -> AccessCodeGenerator.generateAccessCode())
+            .thenReturn(generatedCode);
+
+        PinInPostDetails generatedPinDetails = generateJoinAppealPinIfNotPresentOrUsed(asylumCaseSpy);
+
+        assertEquals(generatedCode, generatedPinDetails.getAccessCode());
+        assertEquals(LocalDate.now().plusDays(30).toString(), generatedPinDetails.getExpiryDate());
+        assertEquals(NO, generatedPinDetails.getPinUsed());
+    }
+
+    @Test
+    void generateJoinAppealPin_generate_new_pin_if_used() {
+        PinInPostDetails existingPin = PinInPostDetails.builder()
+            .accessCode("123")
+            .expiryDate(LocalDate.now().plusDays(30).toString())
+            .pinUsed(YesOrNo.YES)
+            .build();
+
+        when(asylumCase.read(AsylumCaseDefinition.JOIN_APPEAL_PIN, PinInPostDetails.class))
+            .thenReturn(Optional.of(existingPin));
+
+        generatorMockedStatic.when(AccessCodeGenerator::generateAccessCode)
+            .thenReturn(generatedCode);
+
+        PinInPostDetails generatedPinDetails = generateJoinAppealPinIfNotPresentOrUsed(asylumCaseSpy);
 
         assertEquals(generatedCode, generatedPinDetails.getAccessCode());
         assertEquals(LocalDate.now().plusDays(30).toString(), generatedPinDetails.getExpiryDate());

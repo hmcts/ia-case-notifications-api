@@ -378,6 +378,7 @@ public class CcdScenarioRunnerTest {
         map.put("homeofficegeneric", authorizationHeadersProvider.getHomeOfficeGenericAuthorization());
         map.put("judge", authorizationHeadersProvider.getJudgeAuthorization());
         map.put("citizen", authorizationHeadersProvider.getCitizenAuthorization());
+        map.put("nlr", authorizationHeadersProvider.getNlrAuthorization());
         map.put("systemuser", authorizationHeadersProvider.getSystemUserAuthorization());
         return map;
     }

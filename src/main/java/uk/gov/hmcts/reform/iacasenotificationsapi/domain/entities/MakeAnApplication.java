@@ -23,6 +23,7 @@ public class MakeAnApplication {
     private String decisionReason;
     private String decisionDate;
     private String decisionMaker;
+    private Document refusalOfRemoval24wDocument;
 
     public MakeAnApplication() {
 
@@ -126,5 +127,9 @@ public class MakeAnApplication {
 
     public String getDecisionMaker() {
         return decisionMaker;
+    }
+
+    public Document getRefusalOfRemoval24wDocument() {
+        return refusalOfRemoval24wDocument;
     }
 }
