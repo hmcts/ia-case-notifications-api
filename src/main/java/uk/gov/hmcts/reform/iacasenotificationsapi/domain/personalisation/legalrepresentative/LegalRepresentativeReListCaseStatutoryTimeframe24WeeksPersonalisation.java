@@ -14,28 +14,28 @@ import static java.util.Objects.requireNonNull;
 
 
 @Service
-public class LegalRepresentativeReListCasePersonalisation implements LegalRepresentativeEmailNotificationPersonalisation {
+public class LegalRepresentativeReListCaseStatutoryTimeframe24WeeksPersonalisation implements LegalRepresentativeEmailNotificationPersonalisation {
 
-    private final String reListCaseLegalRepresentativeTemplateId;
+    private final String templateId;
     private final PersonalisationProvider personalisationProvider;
 
-    public LegalRepresentativeReListCasePersonalisation(
-        @NotNull(message = "reListCaseLegalRepresentativeTemplateId cannot be null")
-        @Value("${govnotify.template.reListCase.legalRep24Weeks.email}") String reListCaseLegalRepresentativeTemplateId,
+    public LegalRepresentativeReListCaseStatutoryTimeframe24WeeksPersonalisation(
+        @NotNull(message = "templateId cannot be null")
+        @Value("${govnotify.template.reListCase.legalRep24Weeks.email}") String templateId,
         PersonalisationProvider personalisationProvider
     ) {
-        this.reListCaseLegalRepresentativeTemplateId = reListCaseLegalRepresentativeTemplateId;
+        this.templateId = templateId;
         this.personalisationProvider = personalisationProvider;
     }
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + "_RE_LIST_CASE_LEGAL_REPRESENTATIVE";
+        return caseId + "_STATUTORY_TIMEFRAME_24WEEKS_RE_LIST_CASE_LEGAL_REPRESENTATIVE";
     }
 
     @Override
     public String getTemplateId() {
-        return reListCaseLegalRepresentativeTemplateId;
+        return templateId;
     }
 
     @Override

@@ -380,7 +380,7 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("reListCase24WeeksNotificationGenerator")
     public List<NotificationGenerator> reListCase24WeeksNotificationGenerator(
-        LegalRepresentativeReListCasePersonalisation legalRepresentativeReListCasePersonalisation,
+        LegalRepresentativeReListCaseStatutoryTimeframe24WeeksPersonalisation legalRepresentativeReListCasePersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 

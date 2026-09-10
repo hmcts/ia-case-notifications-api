@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class LegalRepresentativeReListCasePersonalisationTest {
+class LegalRepresentativeReListCaseStatutoryTimeframe24WeeksPersonalisationTest {
 
     private final String templateId = "someTemplateId";
 
@@ -26,12 +26,12 @@ class LegalRepresentativeReListCasePersonalisationTest {
     Callback<AsylumCase> callback;
     @Mock
     PersonalisationProvider personalisationProvider;
-    private LegalRepresentativeReListCasePersonalisation legalRepresentativeReListCasePersonalisation;
+    private LegalRepresentativeReListCaseStatutoryTimeframe24WeeksPersonalisation legalRepresentativeReListCaseStatutoryTimeframe24WeeksPersonalisation;
 
     @BeforeEach
     void setup() {
 
-        legalRepresentativeReListCasePersonalisation = new LegalRepresentativeReListCasePersonalisation(
+        legalRepresentativeReListCaseStatutoryTimeframe24WeeksPersonalisation = new LegalRepresentativeReListCaseStatutoryTimeframe24WeeksPersonalisation(
             templateId,
             personalisationProvider
         );
@@ -39,15 +39,15 @@ class LegalRepresentativeReListCasePersonalisationTest {
 
     @Test
     void should_return_given_template_id() {
-        assertEquals(templateId, legalRepresentativeReListCasePersonalisation.getTemplateId());
+        assertEquals(templateId, legalRepresentativeReListCaseStatutoryTimeframe24WeeksPersonalisation.getTemplateId());
     }
 
     @Test
     void should_return_given_reference_id() {
 
         Long caseId = 12345L;
-        assertEquals(caseId + "_RE_LIST_CASE_LEGAL_REPRESENTATIVE",
-            legalRepresentativeReListCasePersonalisation.getReferenceId(caseId));
+        assertEquals(caseId + "_STATUTORY_TIMEFRAME_24WEEKS_RE_LIST_CASE_LEGAL_REPRESENTATIVE",
+            legalRepresentativeReListCaseStatutoryTimeframe24WeeksPersonalisation.getReferenceId(caseId));
     }
 
     @Test
@@ -55,7 +55,7 @@ class LegalRepresentativeReListCasePersonalisationTest {
 
         NullPointerException exception =
             assertThrows(NullPointerException.class,
-                () -> legalRepresentativeReListCasePersonalisation.getPersonalisation((Callback<AsylumCase>) null));
+                () -> legalRepresentativeReListCaseStatutoryTimeframe24WeeksPersonalisation.getPersonalisation((Callback<AsylumCase>) null));
         assertEquals("callback must not be null", exception.getMessage());
     }
 
@@ -64,7 +64,7 @@ class LegalRepresentativeReListCasePersonalisationTest {
 
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisationMapWithGivenValues());
 
-        Map<String, String> personalisation = legalRepresentativeReListCasePersonalisation.getPersonalisation(callback);
+        Map<String, String> personalisation = legalRepresentativeReListCaseStatutoryTimeframe24WeeksPersonalisation.getPersonalisation(callback);
 
         assertFalse(personalisation.isEmpty());
         assertThat(personalisation)
