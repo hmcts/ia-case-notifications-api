@@ -38,7 +38,7 @@ public class EmailNotificationGenerator implements NotificationGenerator {
         final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
         if (callback.getEvent() == Event.LIST_CASE || callback.getEvent() == Event.EDIT_CASE_LISTING) {
-            log.info("Case listing notification triggered for event {} on case {}",
+            log.info("Case listing notification triggered for the event {} on case {}",
                 callback.getEvent(), callback.getCaseDetails().getId());
         }
 
