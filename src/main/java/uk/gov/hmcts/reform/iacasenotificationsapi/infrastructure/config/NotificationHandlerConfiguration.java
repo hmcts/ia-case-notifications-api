@@ -178,6 +178,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasBeenSubmittedAsLegalRepresentedInternalCase;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasBeenSubmittedByAppellantInternalCase;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasCompleteCaseReviewDate;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasStf24WeeksStatus;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.inCountryAppeal;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.internalNonDetainedWithAddressAvailable;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
@@ -364,6 +365,20 @@ public class NotificationHandlerConfiguration {
                     && isIntegrated.equals(NO);
             },
             notificationGenerators
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> reListCase24WeeksNotificationHandler(
+        @Qualifier("reListCase24WeeksNotificationGenerator") List<NotificationGenerator> notificationGenerators
+    ) {
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                return callback.getEvent() == Event.EDIT_CASE_LISTING
+                    && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && hasStf24WeeksStatus(asylumCase);
+            }, notificationGenerators
         );
     }
 
@@ -1848,13 +1863,15 @@ public class NotificationHandlerConfiguration {
 
         // RIA-3631 - editCaseListing
         return new NotificationHandler(
-            (callbackStage, callback) ->
-                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+            (callbackStage, callback) -> {
+                final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.EDIT_CASE_LISTING
                     && isRepJourney(callback.getCaseDetails().getCaseData())
                     && !isInternalCase(callback.getCaseDetails().getCaseData())
-                    && !isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData()),
-            notificationGenerators
+                    && !isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData())
+                    && !hasStf24WeeksStatus(asylumCase);
+            }, notificationGenerators
         );
     }
 

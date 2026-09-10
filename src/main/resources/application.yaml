@@ -820,6 +820,8 @@ govnotify:
     reListCase:
       adminOfficer:
         email: 495c6f2b-46da-431f-a890-22371f2150dd
+      legalRep24Weeks:
+        email: 347f2959-4cb5-447f-bd35-cb1e2308f6fb
     requestCmaRequirements:
       appellant:
         email: 84c2958e-cea0-4a5f-a1e2-7099673d8aa1
