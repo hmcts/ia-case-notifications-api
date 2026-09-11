@@ -7992,9 +7992,9 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 boolean isStf24W = hasStf24WeeksStatus(asylumCase);
-                log.info("reListCase24WeeksNotificationHandler canHandle check: event={}, stage={}, isStf24W={}, caseId={}",
+                log.info("reListCase24WeeksNotificationHandler canHandle: event={}, stage={}, isStf24W={}, caseId={}",
                     callback.getEvent(), callbackStage, isStf24W, callback.getCaseDetails().getId());
-                return callback.getEvent() == Event.EDIT_CASE_LISTING
+                return callback.getEvent() == Event.LIST_CASE
                     && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && isStf24W;
             }, notificationGenerators
