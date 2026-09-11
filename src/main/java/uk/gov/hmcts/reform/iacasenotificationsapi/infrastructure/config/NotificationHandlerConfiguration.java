@@ -7994,7 +7994,7 @@ public class NotificationHandlerConfiguration {
                 boolean isStf24W = hasStf24WeeksStatus(asylumCase);
                 log.info("reListCase24WeeksNotificationHandler canHandle: event={}, stage={}, isStf24W={}, caseId={}",
                     callback.getEvent(), callbackStage, isStf24W, callback.getCaseDetails().getId());
-                return callback.getEvent() == Event.LIST_CASE
+                return callback.getEvent() == Event.EDIT_CASE_LISTING
                     && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && isStf24W;
             }, notificationGenerators

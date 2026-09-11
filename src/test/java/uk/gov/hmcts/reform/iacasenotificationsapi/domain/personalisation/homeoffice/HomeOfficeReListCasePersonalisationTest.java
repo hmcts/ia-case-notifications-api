@@ -24,7 +24,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetail
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
 @ExtendWith(MockitoExtension.class)
@@ -34,7 +33,6 @@ class HomeOfficeReListCasePersonalisationTest {
     private final String templateId = "someTemplateId";
     private final String homeOfficeEmailAddress = "homeoffice@example.com";
     private final String listCaseHomeOfficeEmailAddress = "listCaseHomeOffice@example.com";
-    private final String hearingCentreAddress = "Manchester Civil Justice Centre, 1 Bridge Street West, Manchester, M60 9DJ";
 
     @Mock
     Callback<AsylumCase> callback;
@@ -48,8 +46,6 @@ class HomeOfficeReListCasePersonalisationTest {
     EmailAddressFinder emailAddressFinder;
     @Mock
     CustomerServicesProvider customerServicesProvider;
-    @Mock
-    HearingDetailsFinder hearingDetailsFinder;
 
     private HomeOfficeReListCasePersonalisation homeOfficeReListCasePersonalisation;
 
@@ -64,8 +60,7 @@ class HomeOfficeReListCasePersonalisationTest {
             templateId,
             personalisationProvider,
             emailAddressFinder,
-            customerServicesProvider,
-            hearingDetailsFinder
+            customerServicesProvider
         );
     }
 
@@ -109,15 +104,13 @@ class HomeOfficeReListCasePersonalisationTest {
     @Test
     void should_return_personalisation_when_all_information_given() {
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisationMap());
-        when(hearingDetailsFinder.getHearingCentreLocation(asylumCase)).thenReturn(hearingCentreAddress);
 
         Map<String, String> personalisation = homeOfficeReListCasePersonalisation.getPersonalisation(callback);
 
         assertFalse(personalisation.isEmpty());
         assertThat(personalisation)
             .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
-            .containsAllEntriesOf(personalisationProvider.getPersonalisation(callback))
-            .containsEntry("hearingCentreAddress", hearingCentreAddress);
+            .containsAllEntriesOf(personalisationProvider.getPersonalisation(callback));
     }
 
     private Map<String, String> getPersonalisationMap() {
@@ -130,6 +123,7 @@ class HomeOfficeReListCasePersonalisationTest {
             .put("hearingCentreName", "Manchester")
             .put("hearingDate", "12 Jan 2026")
             .put("hearingTime", "10:00")
+            .put("hearingCentreAddress", "Manchester Civil Justice Centre, 1 Bridge Street West, Manchester, M60 9DJ")
             .put("oldHearingCentre", "Taylor House")
             .put("oldHearingDate", "05 Jan 2026")
             .put("linkToOnlineService", "http://localhost")

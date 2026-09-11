@@ -18,7 +18,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.C
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
 @Service
@@ -28,21 +27,18 @@ public class HomeOfficeReListCasePersonalisation implements EmailNotificationPer
     private final PersonalisationProvider personalisationProvider;
     private final EmailAddressFinder emailAddressFinder;
     private final CustomerServicesProvider customerServicesProvider;
-    private final HearingDetailsFinder hearingDetailsFinder;
 
     public HomeOfficeReListCasePersonalisation(
         @NotNull(message = "reListCaseHomeOfficeTemplateId cannot be null")
         @Value("${govnotify.template.reListCase.homeOffice.email}") String reListCaseHomeOfficeTemplateId,
         PersonalisationProvider personalisationProvider,
         EmailAddressFinder emailAddressFinder,
-        CustomerServicesProvider customerServicesProvider,
-        HearingDetailsFinder hearingDetailsFinder
+        CustomerServicesProvider customerServicesProvider
     ) {
         this.reListCaseHomeOfficeTemplateId = reListCaseHomeOfficeTemplateId;
         this.personalisationProvider = personalisationProvider;
         this.emailAddressFinder = emailAddressFinder;
         this.customerServicesProvider = customerServicesProvider;
-        this.hearingDetailsFinder = hearingDetailsFinder;
     }
 
     @Override
@@ -69,8 +65,6 @@ public class HomeOfficeReListCasePersonalisation implements EmailNotificationPer
         final Map<String, String> personalisation = new HashMap<>();
         personalisation.putAll(customerServicesProvider.getCustomerServicesPersonalisation(callback));
         personalisation.putAll(personalisationProvider.getPersonalisation(callback));
-        personalisation.put("hearingCentreAddress", hearingDetailsFinder
-            .getHearingCentreLocation(callback.getCaseDetails().getCaseData()));
 
         return ImmutableMap.copyOf(personalisation);
     }
