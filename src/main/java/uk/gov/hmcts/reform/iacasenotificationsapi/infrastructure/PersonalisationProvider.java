@@ -113,6 +113,27 @@ public class PersonalisationProvider {
         return caseListingValues.build();
     }
 
+    public Map<String, String> getListCasePersonalisation(Callback<AsylumCase> callback) {
+
+        AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+        final String hearingDateTime = hearingDetailsFinder.getHearingDateTime(asylumCase);
+
+        final Builder<String, String> caseListingValues = ImmutableMap
+            .<String, String>builder()
+            .put(LINK_TO_ONLINE_SERVICE, iaExUiFrontendUrl)
+            .put("oldHearingCentre", "")
+            .put("oldHearingDate", "")
+            .put("hearingDate", dateTimeExtractor.extractHearingDate(hearingDateTime))
+            .put("hearingTime", dateTimeExtractor.extractHearingTime(hearingDateTime))
+            .put("hearingCentreName", hearingDetailsFinder.getHearingCentreName(asylumCase))
+            .put(HEARING_CENTRE_ADDRESS_CONST, hearingDetailsFinder.getHearingCentreLocation(asylumCase));
+
+        caseListingValues.putAll(getHearingRequirementsFields(asylumCase));
+
+        return caseListingValues.build();
+    }
+
     public static Map<String, String> getHearingRequirementsFields(AsylumCase asylumCase) {
         final Optional<YesOrNo> isSubmitRequirementsAvailable = asylumCase.read(SUBMIT_HEARING_REQUIREMENTS_AVAILABLE);
 
@@ -236,8 +257,10 @@ public class PersonalisationProvider {
             immutableMap.putAll(getNonStandardDirectionPersonalisation(callback));
         } else if (callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE) {
             immutableMap.putAll(getChangeDirectionDueDatePersonalisation(callback));
-        } else if (callback.getEvent() == Event.EDIT_CASE_LISTING || callback.getEvent() == Event.LIST_CASE) {
+        } else if (callback.getEvent() == Event.EDIT_CASE_LISTING) {
             immutableMap.putAll(getEditCaseListingPersonalisation(callback));
+        } else if (callback.getEvent() == Event.LIST_CASE) {
+            immutableMap.putAll(getListCasePersonalisation(callback));
         }
 
         return immutableMap;
