@@ -52,6 +52,7 @@ public class PersonalisationProvider {
         .put(CHANGE_DIRECTION_DUE_DATE, PERSONALISATION_MAP)
         .put(DRAFT_HEARING_REQUIREMENTS, PERSONALISATION_MAP)
         .put(EDIT_CASE_LISTING, PERSONALISATION_MAP)
+        .put(LIST_CASE, PERSONALISATION_MAP)
         .put(UPLOAD_ADDITIONAL_EVIDENCE, PERSONALISATION_MAP)
         .put(UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE, PERSONALISATION_MAP)
         .put(UPLOAD_ADDENDUM_EVIDENCE, PERSONALISATION_MAP)
@@ -235,7 +236,7 @@ public class PersonalisationProvider {
             immutableMap.putAll(getNonStandardDirectionPersonalisation(callback));
         } else if (callback.getEvent() == Event.CHANGE_DIRECTION_DUE_DATE) {
             immutableMap.putAll(getChangeDirectionDueDatePersonalisation(callback));
-        } else if (callback.getEvent() == Event.EDIT_CASE_LISTING) {
+        } else if (callback.getEvent() == Event.EDIT_CASE_LISTING || callback.getEvent() == Event.LIST_CASE) {
             immutableMap.putAll(getEditCaseListingPersonalisation(callback));
         }
 
