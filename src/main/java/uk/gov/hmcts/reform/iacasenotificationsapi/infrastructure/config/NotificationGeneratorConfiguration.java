@@ -168,6 +168,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoff
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeMarkAppealReadyForUtTransferPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeNocRequestDecisionPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeRecordApplicationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeReListCasePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeReinstateAppealPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeRemoveDetentionStatusPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeRemoveRepresentationPersonalisation;
@@ -372,6 +373,21 @@ public class NotificationGeneratorConfiguration {
         return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(adminOfficerReListCasePersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("reListCase24WeeksNotificationGenerator")
+    public List<NotificationGenerator> reListCase24WeeksNotificationGenerator(
+        HomeOfficeReListCasePersonalisation homeOfficeReListCasePersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(homeOfficeReListCasePersonalisation),
                 notificationSender,
                 notificationIdAppender
             )
