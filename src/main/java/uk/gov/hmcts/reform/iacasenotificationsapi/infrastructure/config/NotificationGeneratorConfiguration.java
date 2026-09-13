@@ -378,6 +378,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("reListCase24WeeksNotificationGenerator")
+    public List<NotificationGenerator> reListCase24WeeksNotificationGenerator(
+        LegalRepresentativeReListCaseStatutoryTimeframe24WeeksPersonalisation legalRepresentativeReListCaseStatutoryTimeframe24WeeksPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return singletonList(
+            new EmailNotificationGenerator(
+                newArrayList(legalRepresentativeReListCaseStatutoryTimeframe24WeeksPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("requestCaseEditNotificationGenerator")
     public List<NotificationGenerator> requestCaseEditNotificationGenerator(
         LegalRepresentativeRequestCaseEditPersonalisation legalRepresentativeRequestCaseEditPersonalisation,
