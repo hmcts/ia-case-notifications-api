@@ -37,6 +37,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Remissi
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision.PARTIALLY_APPROVED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision.REJECTED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.COMPLETE_CASE_REVIEW;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.SEND_LATE_TIMELINE_NOTICE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 
@@ -75,6 +76,11 @@ public class AsylumCaseUtils {
 
     public static boolean isInternalCase(AsylumCase asylumCase) {
         return asylumCase.read(IS_ADMIN, YesOrNo.class).map(isAdmin -> YES == isAdmin).orElse(false);
+    }
+
+    public static boolean isApplicationRefused24w(AsylumCase asylumCase) {
+        return asylumCase.read(IS_REMOVAL_OF_24W_APPLICATION_REFUSED, YesOrNo.class).orElse(YesOrNo.NO)
+            .equals(YesOrNo.YES);
     }
 
     public static boolean isNotInternalOrIsInternalWithLegalRepresentation(AsylumCase asylumCase) {
@@ -254,6 +260,23 @@ public class AsylumCaseUtils {
 
         return asylumCase.read(APPELLANT_PIN_IN_POST, PinInPostDetails.class)
             .orElseThrow(() -> new IllegalStateException("Failed to generate appellantPinInPost."));
+    }
+
+
+    public static PinInPostDetails generateJoinAppealPinIfNotPresentOrUsed(AsylumCase asylumCase) {
+        YesOrNo isPinUsedOrMissing = asylumCase.read(JOIN_APPEAL_PIN, PinInPostDetails.class)
+            .map(PinInPostDetails::getPinUsed)
+            .orElse(YES);
+        if (isPinUsedOrMissing.equals(YES)) {
+            asylumCase.write(JOIN_APPEAL_PIN, PinInPostDetails.builder()
+                .accessCode(AccessCodeGenerator.generateAccessCode())
+                .expiryDate(LocalDate.now().plusDays(30).toString())
+                .pinUsed(YesOrNo.NO)
+                .build());
+        }
+
+        return asylumCase.read(JOIN_APPEAL_PIN, PinInPostDetails.class)
+            .orElseThrow(() -> new IllegalStateException("Failed to generate joinAppealPin."));
     }
 
     public static boolean isSubmissionOutOfTime(AsylumCase asylumCase) {
@@ -573,6 +596,10 @@ public class AsylumCaseUtils {
         return LocalDate.parse(reviewDate).format(DateTimeFormatter.ofPattern(D_MMM_YYYY));
     }
 
+    public static boolean hasCompleteCaseReviewDate(AsylumCase asylumCase) {
+        return asylumCase.read(AsylumCaseDefinition.COMPLETE_CASE_REVIEW_DATE, String.class).isPresent();
+    }
+
     public static boolean hasStf24WeeksStatus(AsylumCase asylumCase) {
         Optional<YesOrNo> read = asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class);
         return read.map(value -> value.equals(YES)).orElse(false);
@@ -641,7 +668,7 @@ public class AsylumCaseUtils {
 
     public static boolean isCaseReviewFor24WeeksCase(Event event, AsylumCase asylumCase) {
         boolean hasStf24W = AsylumCaseUtils.hasStf24WeeksStatus(asylumCase);
-        return event == COMPLETE_CASE_REVIEW
+        return List.of(SEND_LATE_TIMELINE_NOTICE, COMPLETE_CASE_REVIEW).contains(event)
             && hasStf24W;
     }
 
