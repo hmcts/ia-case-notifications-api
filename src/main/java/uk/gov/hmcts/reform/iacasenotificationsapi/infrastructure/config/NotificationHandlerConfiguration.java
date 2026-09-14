@@ -63,6 +63,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealT
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealType.PA;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ApplicantType.APPELLANT;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_TYPE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ARIA_LISTING_REFERENCE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CONTACT_PREFERENCE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DECIDE_AN_APPLICATION_ID;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.DETENTION_FACILITY;
@@ -7992,11 +7993,17 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 boolean isStf24W = hasStf24WeeksStatus(asylumCase);
-                log.info("reListCase24WeeksNotificationHandler canHandle: event={}, stage={}, isStf24W={}, caseId={}",
-                    callback.getEvent(), callbackStage, isStf24W, callback.getCaseDetails().getId());
+                boolean isRelisting = callback.getCaseDetailsBefore()
+                    .map(CaseDetails::getCaseData)
+                    .flatMap(before -> before.read(ARIA_LISTING_REFERENCE, String.class))
+                    .filter(ref -> !ref.isBlank())
+                    .isPresent();
+                log.debug("reListCase24WeeksNotificationHandler canHandle: event={}, stage={}, isStf24W={}, isRelisting={}, caseId={}",
+                    callback.getEvent(), callbackStage, isStf24W, isRelisting, callback.getCaseDetails().getId());
                 return callback.getEvent() == LIST_CASE
                     && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && isStf24W;
+                    && isStf24W
+                    && isRelisting;
             }, notificationGenerators
         );
     }

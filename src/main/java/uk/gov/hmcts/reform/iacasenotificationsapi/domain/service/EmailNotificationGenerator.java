@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.BaseNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
@@ -36,11 +35,6 @@ public class EmailNotificationGenerator implements NotificationGenerator {
     public void generate(Callback<AsylumCase> callback) {
 
         final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-
-        if (callback.getEvent() == Event.LIST_CASE || callback.getEvent() == Event.EDIT_CASE_LISTING) {
-            log.info("Case listing notification triggered for the event {} on case {}",
-                callback.getEvent(), callback.getCaseDetails().getId());
-        }
 
         personalisationList.forEach(personalisation -> {
 
