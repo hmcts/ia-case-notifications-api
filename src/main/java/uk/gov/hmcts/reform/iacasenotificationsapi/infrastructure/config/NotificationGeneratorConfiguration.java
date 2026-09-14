@@ -221,6 +221,8 @@ import java.util.List;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STF_24_WEEKS_HEARING_REQ_APPELLANT_GENERATOR;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STF_24_WEEKS_HEARING_REQ_LR_GENERATOR;
 
 @Configuration
 @Slf4j
@@ -5256,6 +5258,46 @@ public class NotificationGeneratorConfiguration {
                 new EmailNotificationGenerator(
                         newArrayList(
                                 homeOfficeTransferOutOfStf24WeeksPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean(STF_24_WEEKS_HEARING_REQ_APPELLANT_GENERATOR)
+    public List<NotificationGenerator> hearingRequirementsStatutoryTimeframe24WeeksAppellantNotificationGenerator(
+            AppellantSubmittedHearingRequirementsStf24WeeksEmailPersonalisation emailPersonalisation,
+            HomeOfficeHearingRequirementsStf24WeeksEmailPersonalisation homeOfficeEmailPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+        return singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                emailPersonalisation,
+                                homeOfficeEmailPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean(STF_24_WEEKS_HEARING_REQ_LR_GENERATOR)
+    public List<NotificationGenerator> hearingRequirementsStatutoryTimeframe24WeeksLegalRepresentativeNotificationGenerator(
+            AppellantSubmittedHearingRequirementsStf24WeeksEmailPersonalisation emailPersonalisation,
+            LegalRepHearingRequirementsStf24WeeksEmailPersonalisation lrEmailPersonalisation,
+            HomeOfficeHearingRequirementsStf24WeeksEmailPersonalisation homeOfficeEmailPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+        return singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                emailPersonalisation,
+                                lrEmailPersonalisation,
+                                homeOfficeEmailPersonalisation
                         ),
                         notificationSender,
                         notificationIdAppender
