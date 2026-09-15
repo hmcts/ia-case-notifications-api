@@ -165,7 +165,7 @@ public class EmailAddressFinderTest {
         assertEquals("hearingCentre is not present", exception.getMessage());
 
         exception =
-            assertThrows(IllegalStateException.class, () -> emailAddressFinder.getAdminHearingCenterEmailAddress(asylumCase));
+            assertThrows(IllegalStateException.class, () -> emailAddressFinder.getAdminHearingCentreEmailAddress(asylumCase));
         assertEquals("hearingCentre is not present", exception.getMessage());
     }
 
@@ -206,7 +206,7 @@ public class EmailAddressFinderTest {
         "HARMONDSWORTH,admin-hc-harmondsworth-default@example.com",
         "YARLS_WOOD,admin-hc-yarls-wood-default@example.com"
     })
-    public void should_return_correct_admin_hearing_center_email_address_from_lookup_map(String hearingCentre, String mappedEmail) {
+    public void should_return_correct_admin_hearing_centre_email_address_from_lookup_map(String hearingCentre, String mappedEmail) {
         // Given
         // The addresses defined in the adminHearingCentreEmailAddresses
         given(adminHearingCentreEmailAddresses.get(HearingCentre.BIRMINGHAM)).willReturn("admin-hc-birmingham-default@example.com");
@@ -219,7 +219,7 @@ public class EmailAddressFinderTest {
         when(asylumCase.read(AsylumCaseDefinition.HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(HearingCentre.valueOf(hearingCentre)));
 
         // Then
-        assertEquals(mappedEmail, emailAddressFinder.getAdminHearingCenterEmailAddress(asylumCase));
+        assertEquals(mappedEmail, emailAddressFinder.getAdminHearingCentreEmailAddress(asylumCase));
     }
 
     @Test

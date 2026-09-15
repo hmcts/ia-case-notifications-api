@@ -20,7 +20,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFin
 public class AdminOfficerChangeToHearingRequirementsPersonalisation implements EmailNotificationPersonalisation {
 
     private final String changeToHearingRequirementsAdminOfficerTemplateId;
-    private final String changeToHearingRequirementsAdminHearingCenterTemplateId;
+    private final String changeToHearingRequirementsAdminHearingCentreTemplateId;
     private final String reviewHearingRequirementsAdminOfficerEmailAddress;
     private final AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
     private final EmailAddressFinder emailAddressFinder;
@@ -32,13 +32,13 @@ public class AdminOfficerChangeToHearingRequirementsPersonalisation implements E
 
     public AdminOfficerChangeToHearingRequirementsPersonalisation(
         @NotNull(message = "changeToHearingRequirementsAdminOfficerTemplateId cannot be null") @Value("${govnotify.template.changeToHearingRequirements.adminOfficer.email}") String changeToHearingRequirementsAdminOfficerTemplateId,
-        @NotNull(message = "changeToHearingRequirementsAdminHearingCenterTemplateId cannot be null") @Value("${govnotify.template.changeToHearingRequirements.adminHearingCenter24Weeks.email}") String changeToHearingRequirementsAdminHearingCenterTemplateId,
+        @NotNull(message = "changeToHearingRequirementsAdminHearingCentreTemplateId cannot be null") @Value("${govnotify.template.changeToHearingRequirements.adminHearingCentre24Weeks.email}") String changeToHearingRequirementsAdminHearingCentreTemplateId,
         @Value("${reviewHearingRequirementsAdminOfficerEmailAddress}") String reviewHearingRequirementsAdminOfficerEmailAddress,
         AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider,
         EmailAddressFinder emailAddressFinder
     ) {
         this.changeToHearingRequirementsAdminOfficerTemplateId = changeToHearingRequirementsAdminOfficerTemplateId;
-        this.changeToHearingRequirementsAdminHearingCenterTemplateId = changeToHearingRequirementsAdminHearingCenterTemplateId;
+        this.changeToHearingRequirementsAdminHearingCentreTemplateId = changeToHearingRequirementsAdminHearingCentreTemplateId;
         this.reviewHearingRequirementsAdminOfficerEmailAddress = reviewHearingRequirementsAdminOfficerEmailAddress;
         this.adminOfficerPersonalisationProvider = adminOfficerPersonalisationProvider;
         this.emailAddressFinder = emailAddressFinder;
@@ -51,13 +51,13 @@ public class AdminOfficerChangeToHearingRequirementsPersonalisation implements E
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return hasStf24WeeksStatus(asylumCase) ? changeToHearingRequirementsAdminHearingCenterTemplateId : changeToHearingRequirementsAdminOfficerTemplateId;
+        return hasStf24WeeksStatus(asylumCase) ? changeToHearingRequirementsAdminHearingCentreTemplateId : changeToHearingRequirementsAdminOfficerTemplateId;
     }
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
         if (hasStf24WeeksStatus(asylumCase)) {
-            return Collections.singleton(emailAddressFinder.getAdminHearingCenterEmailAddress(asylumCase));
+            return Collections.singleton(emailAddressFinder.getAdminHearingCentreEmailAddress(asylumCase));
         } else {
             return Collections.singleton(reviewHearingRequirementsAdminOfficerEmailAddress);
         }

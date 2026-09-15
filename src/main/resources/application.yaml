@@ -700,7 +700,7 @@ govnotify:
     changeToHearingRequirements:
       adminOfficer:
         email: d3317a7a-4ce5-4032-b6b4-2806683b8b9a
-      adminHearingCenter24Weeks:
+      adminHearingCentre24Weeks:
         email: 2d11161d-36d1-4265-8cd8-f15671836aac
     removeAppealFromOnlineBeforeListing:
       homeOffice:

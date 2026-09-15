@@ -34,7 +34,7 @@ class AdminOfficerReviewHearingRequirementsPersonalisationTest {
     private final String templateId = "someTemplateId";
     private final String reviewHearingRequirementsTemplateId = "someTemplateId";
     private final String reviewReheardHearingRequirementsTemplateId = "anotherTemplateId";
-    private final String changeToHearingRequirementsAdminHearingCenterTemplateId = "anotherAnotherTemplateId";
+    private final String changeToHearingRequirementsAdminHearingCentreTemplateId = "anotherAnotherTemplateId";
     private final String reviewHearingRequirementsAdminOfficerEmailAddress = "adminofficer-review-hearing-requirements@example.com";
     @Mock
     AsylumCase asylumCase;
@@ -50,7 +50,7 @@ class AdminOfficerReviewHearingRequirementsPersonalisationTest {
         adminOfficerReviewHearingRequirementsPersonalisation = new AdminOfficerReviewHearingRequirementsPersonalisation(
             reviewHearingRequirementsTemplateId,
             reviewReheardHearingRequirementsTemplateId,
-            changeToHearingRequirementsAdminHearingCenterTemplateId,
+            changeToHearingRequirementsAdminHearingCentreTemplateId,
             reviewHearingRequirementsAdminOfficerEmailAddress,
             adminOfficerPersonalisationProvider,
             emailAddressFinder
@@ -84,7 +84,7 @@ class AdminOfficerReviewHearingRequirementsPersonalisationTest {
     public void should_return_given_template_id_when_stf24w() {
         when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
 
-        assertEquals(changeToHearingRequirementsAdminHearingCenterTemplateId, adminOfficerReviewHearingRequirementsPersonalisation.getTemplateId(asylumCase));
+        assertEquals(changeToHearingRequirementsAdminHearingCentreTemplateId, adminOfficerReviewHearingRequirementsPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
@@ -102,12 +102,12 @@ class AdminOfficerReviewHearingRequirementsPersonalisationTest {
 
     @Test
     void should_return_given_email_address_from_asylum_case_when_stf24w() {
-        String adminHearingCenterEmailAddress = "admin-hearing-center@example.com";
+        String adminHearingCentreEmailAddress = "admin-hearing-centre@example.com";
 
         when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        when(emailAddressFinder.getAdminHearingCenterEmailAddress(asylumCase)).thenReturn(adminHearingCenterEmailAddress);
+        when(emailAddressFinder.getAdminHearingCentreEmailAddress(asylumCase)).thenReturn(adminHearingCentreEmailAddress);
 
-        assertEquals(adminOfficerReviewHearingRequirementsPersonalisation.getRecipientsList(asylumCase), Collections.singleton(adminHearingCenterEmailAddress));
+        assertEquals(adminOfficerReviewHearingRequirementsPersonalisation.getRecipientsList(asylumCase), Collections.singleton(adminHearingCentreEmailAddress));
     }
 
     @Test

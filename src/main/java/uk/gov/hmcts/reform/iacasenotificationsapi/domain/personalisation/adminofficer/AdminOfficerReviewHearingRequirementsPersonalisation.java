@@ -25,7 +25,7 @@ public class AdminOfficerReviewHearingRequirementsPersonalisation implements Ema
 
     private final String reviewHearingRequirementsAdminOfficerTemplateId;
     private final String reviewReheardHearingRequirementsAdminOfficerTemplateId;
-    private final String changeToHearingRequirementsAdminHearingCenterTemplateId;
+    private final String changeToHearingRequirementsAdminHearingCentreTemplateId;
     private final String reviewHearingRequirementsAdminOfficerEmailAddress;
     private final AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
     private final EmailAddressFinder emailAddressFinder;
@@ -38,14 +38,14 @@ public class AdminOfficerReviewHearingRequirementsPersonalisation implements Ema
     public AdminOfficerReviewHearingRequirementsPersonalisation(
         @NotNull(message = "reviewHearingRequirementsAdminOfficerTemplateId cannot be null") @Value("${govnotify.template.reviewHearingRequirements.adminOfficer.email}") String reviewHearingRequirementsAdminOfficerTemplateId,
         @NotNull(message = "reviewReheardHearingRequirementsAdminOfficerTemplateId cannot be null") @Value("${govnotify.template.reviewReheardHearingRequirements.adminOfficer.email}") String reviewReheardHearingRequirementsAdminOfficerTemplateId,
-        @NotNull(message = "changeToHearingRequirementsAdminHearingCenterTemplateId cannot be null") @Value("${govnotify.template.changeToHearingRequirements.adminHearingCenter24Weeks.email}") String changeToHearingRequirementsAdminHearingCenterTemplateId,
+        @NotNull(message = "changeToHearingRequirementsAdminHearingCentreTemplateId cannot be null") @Value("${govnotify.template.changeToHearingRequirements.adminHearingCentre24Weeks.email}") String changeToHearingRequirementsAdminHearingCentreTemplateId,
         @Value("${reviewHearingRequirementsAdminOfficerEmailAddress}") String reviewHearingRequirementsAdminOfficerEmailAddress,
         AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider,
         EmailAddressFinder emailAddressFinder
     ) {
         this.reviewHearingRequirementsAdminOfficerTemplateId = reviewHearingRequirementsAdminOfficerTemplateId;
         this.reviewReheardHearingRequirementsAdminOfficerTemplateId = reviewReheardHearingRequirementsAdminOfficerTemplateId;
-        this.changeToHearingRequirementsAdminHearingCenterTemplateId = changeToHearingRequirementsAdminHearingCenterTemplateId;
+        this.changeToHearingRequirementsAdminHearingCentreTemplateId = changeToHearingRequirementsAdminHearingCentreTemplateId;
         this.reviewHearingRequirementsAdminOfficerEmailAddress = reviewHearingRequirementsAdminOfficerEmailAddress;
         this.adminOfficerPersonalisationProvider = adminOfficerPersonalisationProvider;
         this.emailAddressFinder = emailAddressFinder;
@@ -54,7 +54,7 @@ public class AdminOfficerReviewHearingRequirementsPersonalisation implements Ema
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
         if (hasStf24WeeksStatus(asylumCase)) {
-            return changeToHearingRequirementsAdminHearingCenterTemplateId;
+            return changeToHearingRequirementsAdminHearingCentreTemplateId;
         } else if ((asylumCase.read(AsylumCaseDefinition.IS_REHEARD_APPEAL_ENABLED, YesOrNo.class).equals(Optional.of(YesOrNo.YES))
              && (asylumCase.read(CASE_FLAG_SET_ASIDE_REHEARD_EXISTS, YesOrNo.class).map(flag -> flag.equals(YesOrNo.YES)).orElse(false)))) {
             return reviewReheardHearingRequirementsAdminOfficerTemplateId;
@@ -66,7 +66,7 @@ public class AdminOfficerReviewHearingRequirementsPersonalisation implements Ema
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
         if (hasStf24WeeksStatus(asylumCase)) {
-            return Collections.singleton(emailAddressFinder.getAdminHearingCenterEmailAddress(asylumCase));
+            return Collections.singleton(emailAddressFinder.getAdminHearingCentreEmailAddress(asylumCase));
         } else {
             return Collections.singleton(reviewHearingRequirementsAdminOfficerEmailAddress);
         }
