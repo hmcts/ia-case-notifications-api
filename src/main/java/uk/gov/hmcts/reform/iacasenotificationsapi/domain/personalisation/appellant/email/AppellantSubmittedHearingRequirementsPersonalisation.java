@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
 
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasStf24WeeksStatus;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
 import com.google.common.collect.ImmutableMap;
@@ -19,6 +20,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvi
 @Service
 public class AppellantSubmittedHearingRequirementsPersonalisation implements EmailNotificationPersonalisation {
     private final String submittedHearingRequirementsEmailTemplateId;
+    private final String submittedHearingRequirementsEmail24WeeksTemplateId;
     private final RecipientsFinder recipientsFinder;
     private final CustomerServicesProvider customerServicesProvider;
     private final SystemDateProvider systemDateProvider;
@@ -31,12 +33,14 @@ public class AppellantSubmittedHearingRequirementsPersonalisation implements Ema
 
     public AppellantSubmittedHearingRequirementsPersonalisation(
         @Value("${govnotify.template.submittedHearingRequirements.appellant.email}") String submittedHearingRequirementsEmailTemplateId,
+        @Value("${govnotify.template.submittedHearingRequirements.appellant.email24Weeks}") String submittedHearingRequirementsEmail24WeeksTemplateId,
         @Value("${appellantDaysToWait.afterHearingRequirementsSubmitted}") int daysToWaitAfterHearingRequirementsSubmitted,
         RecipientsFinder recipientsFinder,
         CustomerServicesProvider customerServicesProvider,
         SystemDateProvider systemDateProvider
     ) {
         this.submittedHearingRequirementsEmailTemplateId = submittedHearingRequirementsEmailTemplateId;
+        this.submittedHearingRequirementsEmail24WeeksTemplateId = submittedHearingRequirementsEmail24WeeksTemplateId;
         this.recipientsFinder = recipientsFinder;
         this.customerServicesProvider = customerServicesProvider;
         this.systemDateProvider = systemDateProvider;
@@ -47,6 +51,13 @@ public class AppellantSubmittedHearingRequirementsPersonalisation implements Ema
     @Override
     public String getTemplateId() {
         return submittedHearingRequirementsEmailTemplateId;
+    }
+
+    @Override
+    public String getTemplateId(AsylumCase asylumCase) {
+        return hasStf24WeeksStatus(asylumCase)
+            ? submittedHearingRequirementsEmail24WeeksTemplateId
+            : submittedHearingRequirementsEmailTemplateId;
     }
 
     @Override
