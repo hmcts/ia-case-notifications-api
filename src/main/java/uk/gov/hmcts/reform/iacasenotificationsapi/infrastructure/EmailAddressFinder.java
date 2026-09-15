@@ -180,14 +180,14 @@ public class EmailAddressFinder {
     }
 
     public String getAdminEmailAddress(AsylumCase asylumCase) {
-        return getHearingCentreEmailAddress(asylumCase, adminEmailAddresses);
+        return getHearingCentreAdminEmailAddress(asylumCase, adminEmailAddresses);
     }
 
     public String getAdminHearingCentreEmailAddress(AsylumCase asylumCase) {
-        return getHearingCentreEmailAddress(asylumCase, adminHearingCentreEmailAddresses);
+        return getHearingCentreAdminEmailAddress(asylumCase, adminHearingCentreEmailAddresses);
     }
 
-    private String getHearingCentreEmailAddress(AsylumCase asylumCase, Map<HearingCentre, String> emailAddresses) {
+    private String getHearingCentreAdminEmailAddress(AsylumCase asylumCase, Map<HearingCentre, String> emailAddresses) {
         return asylumCase
             .read(HEARING_CENTRE, HearingCentre.class)
             .map(it -> Optional.ofNullable(getAdminHearingCentreAddress(emailAddresses, it))
