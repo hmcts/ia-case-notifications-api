@@ -7,10 +7,13 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CASE_FLAG_SET_ASIDE_REHEARD_EXISTS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ACCELERATED_DETAINED_APPEAL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_REHEARD_APPEAL_ENABLED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
 import com.google.common.collect.ImmutableMap;
+
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,6 +35,7 @@ class AdminOfficerReviewHearingRequirementsPersonalisationTest {
     private final String reviewHearingRequirementsTemplateId = "someTemplateId";
     private final String reviewReheardHearingRequirementsTemplateId = "anotherTemplateId";
     private final String changeToHearingRequirementsAdminHearingCenterTemplateId = "anotherAnotherTemplateId";
+    private final String reviewHearingRequirementsAdminOfficerEmailAddress = "adminofficer-review-hearing-requirements@example.com";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -43,7 +47,6 @@ class AdminOfficerReviewHearingRequirementsPersonalisationTest {
     @BeforeEach
     public void setup() {
 
-        String reviewHearingRequirementsAdminOfficerEmailAddress = "adminofficer-review-hearing-requirements@example.com";
         adminOfficerReviewHearingRequirementsPersonalisation = new AdminOfficerReviewHearingRequirementsPersonalisation(
             reviewHearingRequirementsTemplateId,
             reviewReheardHearingRequirementsTemplateId,
@@ -57,6 +60,7 @@ class AdminOfficerReviewHearingRequirementsPersonalisationTest {
     @Test
     void should_return_given_template_id_when_reheard_flag_is_disabled() {
 
+        when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.empty());
         when(asylumCase.read(IS_REHEARD_APPEAL_ENABLED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
 
         assertEquals(reviewHearingRequirementsTemplateId, adminOfficerReviewHearingRequirementsPersonalisation.getTemplateId(asylumCase));
@@ -65,8 +69,8 @@ class AdminOfficerReviewHearingRequirementsPersonalisationTest {
     @Test
     void should_return_given_template_id_when_reheard_flag_is_enabled() {
 
+        when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.empty());
         when(asylumCase.read(IS_REHEARD_APPEAL_ENABLED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-
         when(asylumCase.read(CASE_FLAG_SET_ASIDE_REHEARD_EXISTS, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
 
         assertEquals(reviewHearingRequirementsTemplateId, adminOfficerReviewHearingRequirementsPersonalisation.getTemplateId(asylumCase));
@@ -77,11 +81,33 @@ class AdminOfficerReviewHearingRequirementsPersonalisationTest {
     }
 
     @Test
+    public void should_return_given_template_id_when_stf24w() {
+        when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+
+        assertEquals(changeToHearingRequirementsAdminHearingCenterTemplateId, adminOfficerReviewHearingRequirementsPersonalisation.getTemplateId(asylumCase));
+    }
+
+    @Test
     void should_return_given_reference_id() {
 
         Long caseId = 12345L;
         assertEquals(caseId + "_REVIEW_HEARING_REQUIREMENTS_ADMIN_OFFICER",
             adminOfficerReviewHearingRequirementsPersonalisation.getReferenceId(caseId));
+    }
+
+    @Test
+    void should_return_given_email_address_from_asylum_case() {
+        assertEquals(adminOfficerReviewHearingRequirementsPersonalisation.getRecipientsList(asylumCase), Collections.singleton(reviewHearingRequirementsAdminOfficerEmailAddress));
+    }
+
+    @Test
+    void should_return_given_email_address_from_asylum_case_when_stf24w() {
+        String adminHearingCenterEmailAddress = "admin-hearing-center@example.com";
+
+        when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        when(emailAddressFinder.getAdminHearingCenterEmailAddress(asylumCase)).thenReturn(adminHearingCenterEmailAddress);
+
+        assertEquals(adminOfficerReviewHearingRequirementsPersonalisation.getRecipientsList(asylumCase), Collections.singleton(adminHearingCenterEmailAddress));
     }
 
     @Test

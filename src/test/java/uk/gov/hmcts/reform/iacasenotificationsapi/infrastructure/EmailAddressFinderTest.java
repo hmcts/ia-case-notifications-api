@@ -210,13 +210,8 @@ public class EmailAddressFinderTest {
         // Given
         // The addresses defined in the adminHearingCentreEmailAddresses
         given(adminHearingCentreEmailAddresses.get(HearingCentre.BIRMINGHAM)).willReturn("admin-hc-birmingham-default@example.com");
-        given(adminHearingCentreEmailAddresses.get(HearingCentre.NOTTINGHAM)).willReturn("admin-hc-nottingham-default@example.com");
-        given(adminHearingCentreEmailAddresses.get(HearingCentre.COVENTRY)).willReturn("admin-hc-coventry-default@example.com");
         given(adminHearingCentreEmailAddresses.get(HearingCentre.BRADFORD)).willReturn("admin-hc-bradford-default@example.com");
-        given(adminHearingCentreEmailAddresses.get(HearingCentre.NEWCASTLE)).willReturn("admin-hc-bradford-default@example.com");
         given(adminHearingCentreEmailAddresses.get(HearingCentre.GLASGOW)).willReturn("admin-hc-glasgow-default@example.com");
-        given(adminHearingCentreEmailAddresses.get(HearingCentre.GLASGOW_TRIBUNAL_CENTRE)).willReturn("admin-hc-glasgow-default@example.com");
-        given(adminHearingCentreEmailAddresses.get(HearingCentre.BELFAST)).willReturn("admin-hc-belfast-default@example.com");
         given(adminHearingCentreEmailAddresses.get(HearingCentre.HARMONDSWORTH)).willReturn("admin-hc-harmondsworth-default@example.com");
         given(adminHearingCentreEmailAddresses.get(HearingCentre.YARLS_WOOD)).willReturn("admin-hc-yarls-wood-default@example.com");
 
