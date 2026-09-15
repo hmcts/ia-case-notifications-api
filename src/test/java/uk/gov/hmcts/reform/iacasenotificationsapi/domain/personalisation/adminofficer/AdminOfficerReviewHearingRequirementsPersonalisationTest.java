@@ -22,6 +22,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -30,10 +31,13 @@ class AdminOfficerReviewHearingRequirementsPersonalisationTest {
     private final String templateId = "someTemplateId";
     private final String reviewHearingRequirementsTemplateId = "someTemplateId";
     private final String reviewReheardHearingRequirementsTemplateId = "anotherTemplateId";
+    private final String changeToHearingRequirementsAdminHearingCenterTemplateId = "anotherAnotherTemplateId";
     @Mock
     AsylumCase asylumCase;
     @Mock
     AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
+    @Mock
+    private EmailAddressFinder emailAddressFinder;
     private AdminOfficerReviewHearingRequirementsPersonalisation adminOfficerReviewHearingRequirementsPersonalisation;
 
     @BeforeEach
@@ -43,8 +47,10 @@ class AdminOfficerReviewHearingRequirementsPersonalisationTest {
         adminOfficerReviewHearingRequirementsPersonalisation = new AdminOfficerReviewHearingRequirementsPersonalisation(
             reviewHearingRequirementsTemplateId,
             reviewReheardHearingRequirementsTemplateId,
+            changeToHearingRequirementsAdminHearingCenterTemplateId,
             reviewHearingRequirementsAdminOfficerEmailAddress,
-            adminOfficerPersonalisationProvider
+            adminOfficerPersonalisationProvider,
+            emailAddressFinder
         );
     }
 
