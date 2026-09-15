@@ -46,6 +46,8 @@ public class EmailAddressFinderTest {
     @Mock
     Map<HearingCentre, String> adminEmailAddresses;
     @Mock
+    Map<HearingCentre, String> adminHearingCentreEmailAddresses;
+    @Mock
     Map<BailHearingCentre, String> bailHearingCentreEmailAddresses;
     private EmailAddressFinder emailAddressFinder;
 
@@ -80,6 +82,7 @@ public class EmailAddressFinderTest {
             homeOfficeFtpaEmailAddresses,
             bailHearingCentreEmailAddresses,
             adminEmailAddresses,
+            adminHearingCentreEmailAddresses,
             listCaseCaseOfficerEmailAddress
         );
     }
@@ -160,6 +163,10 @@ public class EmailAddressFinderTest {
         IllegalStateException exception =
             assertThrows(IllegalStateException.class, () -> emailAddressFinder.getAdminEmailAddress(asylumCase));
         assertEquals("hearingCentre is not present", exception.getMessage());
+
+        exception =
+            assertThrows(IllegalStateException.class, () -> emailAddressFinder.getAdminHearingCenterEmailAddress(asylumCase));
+        assertEquals("hearingCentre is not present", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -184,6 +191,40 @@ public class EmailAddressFinderTest {
 
         // Then
         assertEquals(mappedEmail, emailAddressFinder.getAdminEmailAddress(asylumCase));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+        "BIRMINGHAM,admin-hc-birmingham-default@example.com",
+        "NOTTINGHAM,admin-hc-birmingham-default@example.com",
+        "COVENTRY,admin-hc-birmingham-default@example.com",
+        "BRADFORD,admin-hc-bradford-default@example.com",
+        "NEWCASTLE,admin-hc-bradford-default@example.com",
+        "GLASGOW,admin-hc-glasgow-default@example.com",
+        "GLASGOW_TRIBUNAL_CENTRE,admin-hc-glasgow-default@example.com",
+        "BELFAST,admin-hc-glasgow-default@example.com",
+        "HARMONDSWORTH,admin-hc-harmondsworth-default@example.com",
+        "YARLS_WOOD,admin-hc-yarls-wood-default@example.com"
+    })
+    public void should_return_correct_admin_hearing_center_email_address_from_lookup_map(String hearingCentre, String mappedEmail) {
+        // Given
+        // The addresses defined in the adminHearingCentreEmailAddresses
+        given(adminHearingCentreEmailAddresses.get(HearingCentre.BIRMINGHAM)).willReturn("admin-hc-birmingham-default@example.com");
+        given(adminHearingCentreEmailAddresses.get(HearingCentre.NOTTINGHAM)).willReturn("admin-hc-nottingham-default@example.com");
+        given(adminHearingCentreEmailAddresses.get(HearingCentre.COVENTRY)).willReturn("admin-hc-coventry-default@example.com");
+        given(adminHearingCentreEmailAddresses.get(HearingCentre.BRADFORD)).willReturn("admin-hc-bradford-default@example.com");
+        given(adminHearingCentreEmailAddresses.get(HearingCentre.NEWCASTLE)).willReturn("admin-hc-bradford-default@example.com");
+        given(adminHearingCentreEmailAddresses.get(HearingCentre.GLASGOW)).willReturn("admin-hc-glasgow-default@example.com");
+        given(adminHearingCentreEmailAddresses.get(HearingCentre.GLASGOW_TRIBUNAL_CENTRE)).willReturn("admin-hc-glasgow-default@example.com");
+        given(adminHearingCentreEmailAddresses.get(HearingCentre.BELFAST)).willReturn("admin-hc-belfast-default@example.com");
+        given(adminHearingCentreEmailAddresses.get(HearingCentre.HARMONDSWORTH)).willReturn("admin-hc-harmondsworth-default@example.com");
+        given(adminHearingCentreEmailAddresses.get(HearingCentre.YARLS_WOOD)).willReturn("admin-hc-yarls-wood-default@example.com");
+
+        // When
+        when(asylumCase.read(AsylumCaseDefinition.HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(HearingCentre.valueOf(hearingCentre)));
+
+        // Then
+        assertEquals(mappedEmail, emailAddressFinder.getAdminHearingCenterEmailAddress(asylumCase));
     }
 
     @Test

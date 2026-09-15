@@ -2747,8 +2747,6 @@ adminHearingCentreEmailAddresses:
   hattonCross: ${IA_ADMIN_HEARING_CENTRE_HATTON_CROSS_EMAIL:admin-hc-hatton-cross-default@example.com}
   yarlsWood: ${IA_ADMIN_HEARING_CENTRE_YARLSWOOD_EMAIL:admin-hc-yarls-wood-default@example.com}
   northShields: ${IA_ADMIN_HEARING_CENTRE_BRADFORD_EMAIL:admin-hc-north-shields-default@example.com}
-  newcastle: ${IA_ADMIN_HEARING_CENTRE_BRADFORD_EMAIL:admin-hc-newcastle-default@example.com}
-  belfast: ${IA_ADMIN_HEARING_CENTRE_GLASGOW_EMAIL:admin-hc-belfast-default@example.com}
   glasgow: ${IA_ADMIN_HEARING_CENTRE_GLASGOW_EMAIL:admin-hc-glasgow-default@example.com}
   hendon: ${IA_ADMIN_HEARING_CENTRE_TAYLOR_HOUSE_EMAIL:admin-hc-hendon-default@example.com}
   bradfordKeighley: ${IA_ADMIN_HEARING_CENTRE_BRADFORD_EMAIL:admin-hc-bradford-keighley-default@example.com}
@@ -2758,8 +2756,6 @@ adminHearingCentreEmailAddresses:
   nthTyneMags: ${IA_ADMIN_HEARING_CENTRE_BRADFORD_EMAIL:admin-hc-nth-tyne-mags-default@example.com}
   leedsMags: ${IA_ADMIN_HEARING_CENTRE_BRADFORD_EMAIL:admin-hc-leeds-mags-default@example.com}
   alloaSherrif: ${IA_ADMIN_HEARING_CENTRE_GLASGOW_EMAIL:admin-hc-alloa-sherrif-default@example.com}
-  coventry: ${IA_ADMIN_HEARING_CENTRE_BIRMINGHAM_EMAIL:admin-hc-coventry-default@example.com}
-  Nottingham: ${IA_ADMIN_HEARING_CENTRE_BIRMINGHAM_EMAIL:admin-hc-nottingham-default@example.com}
   newport: ${IA_ADMIN_HEARING_CENTRE_NEWPORT_EMAIL:admin-hc-newport-default@example.com}
   iacNationalVirtual: ${IA_ADMIN_HEARING_CENTRE_VIRTUAL_REGION_EMAIL:admin-hc-virtualregion-default@example.com}
   bradford: ${IA_ADMIN_HEARING_CENTRE_BRADFORD_EMAIL:admin-hc-bradford-default@example.com}
