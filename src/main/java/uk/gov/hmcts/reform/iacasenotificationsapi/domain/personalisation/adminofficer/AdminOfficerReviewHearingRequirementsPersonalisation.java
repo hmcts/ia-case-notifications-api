@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.admino
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasStf24WeeksStatus;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
 import com.google.common.collect.ImmutableMap;
@@ -16,6 +17,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
 
 @Service
@@ -23,8 +25,10 @@ public class AdminOfficerReviewHearingRequirementsPersonalisation implements Ema
 
     private final String reviewHearingRequirementsAdminOfficerTemplateId;
     private final String reviewReheardHearingRequirementsAdminOfficerTemplateId;
+    private final String changeToHearingRequirementsAdminHearingCentreTemplateId;
     private final String reviewHearingRequirementsAdminOfficerEmailAddress;
     private final AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
+    private final EmailAddressFinder emailAddressFinder;
 
     @Value("${govnotify.emailPrefix.ada}")
     private String adaPrefix;
@@ -34,19 +38,24 @@ public class AdminOfficerReviewHearingRequirementsPersonalisation implements Ema
     public AdminOfficerReviewHearingRequirementsPersonalisation(
         @NotNull(message = "reviewHearingRequirementsAdminOfficerTemplateId cannot be null") @Value("${govnotify.template.reviewHearingRequirements.adminOfficer.email}") String reviewHearingRequirementsAdminOfficerTemplateId,
         @NotNull(message = "reviewReheardHearingRequirementsAdminOfficerTemplateId cannot be null") @Value("${govnotify.template.reviewReheardHearingRequirements.adminOfficer.email}") String reviewReheardHearingRequirementsAdminOfficerTemplateId,
+        @NotNull(message = "changeToHearingRequirementsAdminHearingCentreTemplateId cannot be null") @Value("${govnotify.template.changeToHearingRequirements.adminHearingCentre24Weeks.email}") String changeToHearingRequirementsAdminHearingCentreTemplateId,
         @Value("${reviewHearingRequirementsAdminOfficerEmailAddress}") String reviewHearingRequirementsAdminOfficerEmailAddress,
-        AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider
+        AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider,
+        EmailAddressFinder emailAddressFinder
     ) {
         this.reviewHearingRequirementsAdminOfficerTemplateId = reviewHearingRequirementsAdminOfficerTemplateId;
         this.reviewReheardHearingRequirementsAdminOfficerTemplateId = reviewReheardHearingRequirementsAdminOfficerTemplateId;
+        this.changeToHearingRequirementsAdminHearingCentreTemplateId = changeToHearingRequirementsAdminHearingCentreTemplateId;
         this.reviewHearingRequirementsAdminOfficerEmailAddress = reviewHearingRequirementsAdminOfficerEmailAddress;
         this.adminOfficerPersonalisationProvider = adminOfficerPersonalisationProvider;
+        this.emailAddressFinder = emailAddressFinder;
     }
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-
-        if ((asylumCase.read(AsylumCaseDefinition.IS_REHEARD_APPEAL_ENABLED, YesOrNo.class).equals(Optional.of(YesOrNo.YES))
+        if (hasStf24WeeksStatus(asylumCase)) {
+            return changeToHearingRequirementsAdminHearingCentreTemplateId;
+        } else if ((asylumCase.read(AsylumCaseDefinition.IS_REHEARD_APPEAL_ENABLED, YesOrNo.class).equals(Optional.of(YesOrNo.YES))
              && (asylumCase.read(CASE_FLAG_SET_ASIDE_REHEARD_EXISTS, YesOrNo.class).map(flag -> flag.equals(YesOrNo.YES)).orElse(false)))) {
             return reviewReheardHearingRequirementsAdminOfficerTemplateId;
         } else {
@@ -56,7 +65,11 @@ public class AdminOfficerReviewHearingRequirementsPersonalisation implements Ema
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return Collections.singleton(reviewHearingRequirementsAdminOfficerEmailAddress);
+        if (hasStf24WeeksStatus(asylumCase)) {
+            return Collections.singleton(emailAddressFinder.getAdminHearingCentreEmailAddress(asylumCase));
+        } else {
+            return Collections.singleton(reviewHearingRequirementsAdminOfficerEmailAddress);
+        }
     }
 
     @Override
