@@ -371,20 +371,6 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> reListCase24WeeksNotificationHandler(
-        @Qualifier("reListCase24WeeksNotificationGenerator") List<NotificationGenerator> notificationGenerators
-    ) {
-        return new NotificationHandler(
-            (callbackStage, callback) -> {
-                final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                return callback.getEvent() == Event.EDIT_CASE_LISTING
-                    && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && hasStf24WeeksStatus(asylumCase);
-            }, notificationGenerators
-        );
-    }
-
-    @Bean
     public PreSubmitCallbackHandler<AsylumCase> requestCaseEditNotificationHandler(
         @Qualifier("requestCaseEditNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
         return new NotificationHandler(
