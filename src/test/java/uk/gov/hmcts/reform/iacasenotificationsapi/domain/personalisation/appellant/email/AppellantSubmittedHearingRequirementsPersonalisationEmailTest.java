@@ -76,8 +76,8 @@ class AppellantSubmittedHearingRequirementsPersonalisationEmailTest {
     }
 
     @Test
-    void should_return_given_template_id() {
-        assertEquals(templateId, appellantSubmittedHearingRequirementsPersonalisation.getTemplateId());
+    void should_return_null_template_id_so_case_aware_override_is_used() {
+        assertThat(appellantSubmittedHearingRequirementsPersonalisation.getTemplateId()).isNull();
     }
 
     @Test

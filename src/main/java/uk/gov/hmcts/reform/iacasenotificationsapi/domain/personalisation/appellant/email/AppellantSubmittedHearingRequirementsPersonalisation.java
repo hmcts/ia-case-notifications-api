@@ -50,7 +50,7 @@ public class AppellantSubmittedHearingRequirementsPersonalisation implements Ema
 
     @Override
     public String getTemplateId() {
-        return submittedHearingRequirementsEmailTemplateId;
+        return null;
     }
 
     @Override
