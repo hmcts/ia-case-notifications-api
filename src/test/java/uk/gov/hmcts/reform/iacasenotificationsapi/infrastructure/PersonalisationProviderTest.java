@@ -235,6 +235,20 @@ class PersonalisationProviderTest {
     }
 
     @Test
+    void should_return_list_case_personalisation_with_no_old_hearing_info() {
+        when(callback.getEvent()).thenReturn(Event.LIST_CASE);
+
+        Map<String, String> personalisation = personalisationProvider.getPersonalisation(callback);
+
+        assertThat(personalisation)
+            .containsEntry("oldHearingCentre", "")
+            .containsEntry("oldHearingDate", "")
+            .containsEntry("hearingDate", "2019-08-27")
+            .containsEntry("hearingTime", "14:25")
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
+    }
+
+    @Test
     void should_return_uploaded_additional_evidence_personalisation() {
         when(callback.getEvent()).thenReturn(Event.UPLOAD_ADDITIONAL_EVIDENCE);
 

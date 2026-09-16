@@ -52,6 +52,7 @@ public class PersonalisationProvider {
         .put(CHANGE_DIRECTION_DUE_DATE, PERSONALISATION_MAP)
         .put(DRAFT_HEARING_REQUIREMENTS, PERSONALISATION_MAP)
         .put(EDIT_CASE_LISTING, PERSONALISATION_MAP)
+        .put(LIST_CASE, PERSONALISATION_MAP)
         .put(UPLOAD_ADDITIONAL_EVIDENCE, PERSONALISATION_MAP)
         .put(UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE, PERSONALISATION_MAP)
         .put(UPLOAD_ADDENDUM_EVIDENCE, PERSONALISATION_MAP)
@@ -102,6 +103,27 @@ public class PersonalisationProvider {
             .put(LINK_TO_ONLINE_SERVICE, iaExUiFrontendUrl)
             .put("oldHearingCentre", hearingCentreNameBefore)
             .put("oldHearingDate", oldHearingDate.isEmpty() ? oldHearingDate : dateTimeExtractor.extractHearingDate(oldHearingDate))
+            .put("hearingDate", dateTimeExtractor.extractHearingDate(hearingDateTime))
+            .put("hearingTime", dateTimeExtractor.extractHearingTime(hearingDateTime))
+            .put("hearingCentreName", hearingDetailsFinder.getHearingCentreName(asylumCase))
+            .put(HEARING_CENTRE_ADDRESS_CONST, hearingDetailsFinder.getHearingCentreLocation(asylumCase));
+
+        caseListingValues.putAll(getHearingRequirementsFields(asylumCase));
+
+        return caseListingValues.build();
+    }
+
+    public Map<String, String> getListCasePersonalisation(Callback<AsylumCase> callback) {
+
+        AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+        final String hearingDateTime = hearingDetailsFinder.getHearingDateTime(asylumCase);
+
+        final Builder<String, String> caseListingValues = ImmutableMap
+            .<String, String>builder()
+            .put(LINK_TO_ONLINE_SERVICE, iaExUiFrontendUrl)
+            .put("oldHearingCentre", "")
+            .put("oldHearingDate", "")
             .put("hearingDate", dateTimeExtractor.extractHearingDate(hearingDateTime))
             .put("hearingTime", dateTimeExtractor.extractHearingTime(hearingDateTime))
             .put("hearingCentreName", hearingDetailsFinder.getHearingCentreName(asylumCase))
@@ -237,6 +259,8 @@ public class PersonalisationProvider {
             immutableMap.putAll(getChangeDirectionDueDatePersonalisation(callback));
         } else if (callback.getEvent() == Event.EDIT_CASE_LISTING) {
             immutableMap.putAll(getEditCaseListingPersonalisation(callback));
+        } else if (callback.getEvent() == Event.LIST_CASE) {
+            immutableMap.putAll(getListCasePersonalisation(callback));
         }
 
         return immutableMap;
