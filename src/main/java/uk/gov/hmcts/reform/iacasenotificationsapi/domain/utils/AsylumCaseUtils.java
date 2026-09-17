@@ -33,6 +33,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AppealT
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DetentionFacility.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType.AIP;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType.REP;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision.APPROVED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision.PARTIALLY_APPROVED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionDecision.REJECTED;
@@ -161,6 +162,13 @@ public class AsylumCaseUtils {
     private static String getFacilityName(AsylumCaseDefinition field, AsylumCase asylumCase) {
         return asylumCase.read(field, String.class)
             .orElseThrow(() -> new RequiredFieldMissingException(field.name() + " is missing"));
+    }
+
+    public static boolean isRepJourney(AsylumCase asylumCase) {
+
+        return asylumCase
+                .read(JOURNEY_TYPE, JourneyType.class)
+                .map(type -> type == REP).orElse(true);
     }
 
     public static boolean isAipJourney(AsylumCase asylumCase) {
@@ -461,6 +469,23 @@ public class AsylumCaseUtils {
         return isInternal && isLegallyRepresented;
     }
 
+    public static List<String> getAppellantOrLegalRepAddressLetterPersonalisation(AsylumCase asylumCase) {
+        boolean appellantRepresentation = hasBeenSubmittedByAppellantInternalCase(asylumCase);
+        List<String> address;
+        // Internal appellant no representation - use appellant address
+        if (appellantRepresentation) {
+            address = inCountryAppeal(asylumCase) ?
+                    getAppellantAddressAsList(asylumCase) :
+                    getAppellantAddressAsListOoc(asylumCase);
+            // Internal appellant has representation - use legal rep address
+        } else {
+            address = legalRepInCountryAppeal(asylumCase) ?
+                    getLegalRepresentativeAddressAsList(asylumCase) :
+                    getLegalRepresentativeAddressOocAsList(asylumCase);
+        }
+        return address;
+    }
+
     public static String normalizeDecisionHearingOptionText(String decisionHearingFeeOption) {
         if ("decisionWithHearing".equals(decisionHearingFeeOption)) {
             return "Decision with hearing";
@@ -499,6 +524,36 @@ public class AsylumCaseUtils {
         return asylumCase.read(HEARING_CHANNEL, DynamicList.class)
             .map(hearingChannels -> hearingChannels.getValue().getCode().equals(hearingChannelCode))
             .orElse(false);
+    }
+
+    public static boolean isCmrHearingInPerson(AsylumCase asylumCase) {
+        return isCmrHearingChannel(asylumCase, "INTER");
+    }
+
+    public static boolean isCmrHearingInPersonOrRemote(AsylumCase asylumCase) {
+        return isCmrHearingChannel(asylumCase, "INTER")
+                || isCmrHearingChannel(asylumCase, "VID")
+                || isCmrHearingChannel(asylumCase, "TEL");
+    }
+
+    public static boolean isCmrHearingChannel(AsylumCase asylumCase, String hearingChannelCode) {
+        return asylumCase.read(CMR_HEARING_CHANNEL, DynamicList.class)
+                .map(hearingChannels -> hearingChannels.getValue().getCode().equals(hearingChannelCode))
+                .orElse(false);
+    }
+
+    public static boolean isReppedAppellantEmailPreferred(AsylumCase asylumCase) {
+        return asylumCase.read(CONTACT_PREFERENCE, ContactPreference.class)
+                .map(contactPreference -> ContactPreference.WANTS_EMAIL == contactPreference)
+                .orElse(false)
+                && asylumCase.read(EMAIL, String.class).isPresent();
+    }
+
+    public static boolean isReppedAppellantSmsPreferred(AsylumCase asylumCase) {
+        return asylumCase.read(CONTACT_PREFERENCE, ContactPreference.class)
+                .map(contactPreference -> ContactPreference.WANTS_SMS == contactPreference)
+                .orElse(false)
+                && asylumCase.read(MOBILE_NUMBER, String.class).isPresent();
     }
 
     public static Boolean remissionDecisionPartiallyGrantedOrRefused(AsylumCase asylumCase) {
