@@ -291,4 +291,19 @@ public class HomeOfficeListCasePersonalisationTest {
             .containsEntry("hearingTime", hearingTime)
             .containsEntry("hearingCentreAddress", hearingCentreAddress);
     }
+
+    @Test
+    public void should_return_empty_recipients_for_24_week_relisting() {
+        when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        // ARIA_LISTING_REFERENCE already mocked as non-blank in setUp — simulates a re-listing
+        assertTrue(homeOfficeListCasePersonalisation.getRecipientsList(asylumCase).isEmpty());
+    }
+
+    @Test
+    public void should_return_recipients_for_24_week_first_listing() {
+        when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.empty());
+        // No ARIA_LISTING_REFERENCE in current state — simulates a first listing
+        assertTrue(homeOfficeListCasePersonalisation.getRecipientsList(asylumCase).contains(homeOfficeEmailAddress));
+    }
 }

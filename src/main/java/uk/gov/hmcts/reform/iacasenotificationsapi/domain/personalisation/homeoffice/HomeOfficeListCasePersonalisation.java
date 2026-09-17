@@ -2,7 +2,9 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeof
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasStf24WeeksStatus;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isRelisting;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
@@ -69,6 +71,9 @@ public class HomeOfficeListCasePersonalisation implements EmailNotificationPerso
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
+        if (hasStf24WeeksStatus(asylumCase) && isRelisting(asylumCase)) {
+            return Collections.emptySet();
+        }
         return Collections.singleton(emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase));
     }
 

@@ -9,6 +9,7 @@ import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ADDENDUM_EVIDENCE_DOCUMENTS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ARIA_LISTING_REFERENCE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_TYPE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANTS_REPRESENTATION;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_HAS_FIXED_ADDRESS;
@@ -42,6 +43,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLatestAddendumEvidenceDocument;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasAppellantAddressInCountryOrOutOfCountry;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isApplicationRefused24w;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isRelisting;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isHearingChannel;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAgeAssessmentAppeal;
@@ -1018,5 +1020,23 @@ public class AsylumCaseUtilsTest {
             .thenReturn(Optional.of(new DynamicList(new Value("video", "Video"), List.of(new Value("video", "Video")))));
         Mockito.when(asylumCaseBefore.read(AsylumCaseDefinition.HEARING_CHANNEL, DynamicList.class))
             .thenReturn(Optional.of(new DynamicList(new Value("video", "Video"), List.of(new Value("video", "Video")))));
+    }
+
+    @Test
+    void isRelisting_should_return_true_when_aria_listing_reference_present() {
+        when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of("someAriaRef"));
+        assertTrue(isRelisting(asylumCase));
+    }
+
+    @Test
+    void isRelisting_should_return_false_when_aria_listing_reference_absent() {
+        when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.empty());
+        assertFalse(isRelisting(asylumCase));
+    }
+
+    @Test
+    void isRelisting_should_return_false_when_aria_listing_reference_blank() {
+        when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(""));
+        assertFalse(isRelisting(asylumCase));
     }
 }

@@ -605,6 +605,12 @@ public class AsylumCaseUtils {
         return read.map(value -> value.equals(YES)).orElse(false);
     }
 
+    public static boolean isRelisting(AsylumCase asylumCase) {
+        return asylumCase.read(ARIA_LISTING_REFERENCE, String.class)
+            .filter(ref -> !ref.isBlank())
+            .isPresent();
+    }
+
     public static String getAppealReceivedDate(AsylumCase asylumCase) {
         String tribunalReceivedDate = getCaseDateDate(asylumCase, TRIBUNAL_RECEIVED_DATE);
         String appealReceivedDate;

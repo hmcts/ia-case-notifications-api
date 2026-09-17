@@ -30,7 +30,7 @@ public class HomeOfficeReListCasePersonalisation implements EmailNotificationPer
 
     public HomeOfficeReListCasePersonalisation(
         @NotNull(message = "reListCaseHomeOfficeTemplateId cannot be null")
-        @Value("${govnotify.template.reListCase.homeOffice.email}") String reListCaseHomeOfficeTemplateId,
+        @Value("${govnotify.template.reListCase24Weeks.homeOffice.email}") String reListCaseHomeOfficeTemplateId,
         PersonalisationProvider personalisationProvider,
         EmailAddressFinder emailAddressFinder,
         CustomerServicesProvider customerServicesProvider
