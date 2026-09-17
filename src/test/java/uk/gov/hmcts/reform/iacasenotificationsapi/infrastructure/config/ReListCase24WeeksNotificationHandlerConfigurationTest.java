@@ -4,7 +4,7 @@ import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ARIA_LISTING_REFERENCE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.NOTIFICATIONS_SENT;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.LIST_CASE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PreSubmitCallbackStage.ABOUT_TO_START;
@@ -13,6 +13,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.fie
 
 import java.util.List;
 import java.util.Optional;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -83,8 +84,8 @@ class ReListCase24WeeksNotificationHandlerConfigurationTest {
             given(callback.getEvent()).willReturn(LIST_CASE);
             given(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class))
                 .willReturn(Optional.of(YES));
-            given(asylumCaseBefore.read(ARIA_LISTING_REFERENCE, String.class))
-                .willReturn(Optional.of("LP/12345/2026"));
+            given(asylumCaseBefore.<List<IdValue<String>>>read(NOTIFICATIONS_SENT))
+                .willReturn(Optional.of(List.of(new IdValue<>("1_CASE_LISTED_CASE_OFFICER_abc123", "some-notify-id"))));
 
             assertTrue(handler.canHandle(ABOUT_TO_SUBMIT, callback));
         }
@@ -103,8 +104,8 @@ class ReListCase24WeeksNotificationHandlerConfigurationTest {
             given(callback.getEvent()).willReturn(event);
             given(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class))
                 .willReturn(Optional.of(YES));
-            given(asylumCaseBefore.read(ARIA_LISTING_REFERENCE, String.class))
-                .willReturn(Optional.of("LP/12345/2026"));
+            given(asylumCaseBefore.<List<IdValue<String>>>read(NOTIFICATIONS_SENT))
+                .willReturn(Optional.of(List.of(new IdValue<>("1_CASE_LISTED_CASE_OFFICER_abc123", "some-notify-id"))));
 
             assertFalse(handler.canHandle(ABOUT_TO_SUBMIT, callback));
         }
@@ -114,30 +115,30 @@ class ReListCase24WeeksNotificationHandlerConfigurationTest {
             given(callback.getEvent()).willReturn(LIST_CASE);
             given(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class))
                 .willReturn(Optional.empty());
-            given(asylumCaseBefore.read(ARIA_LISTING_REFERENCE, String.class))
-                .willReturn(Optional.of("LP/12345/2026"));
+            given(asylumCaseBefore.<List<IdValue<String>>>read(NOTIFICATIONS_SENT))
+                .willReturn(Optional.of(List.of(new IdValue<>("1_CASE_LISTED_CASE_OFFICER_abc123", "some-notify-id"))));
 
             assertFalse(handler.canHandle(ABOUT_TO_SUBMIT, callback));
         }
 
         @Test
-        void should_not_handle_on_first_listing_when_aria_listing_reference_absent() {
+        void should_not_handle_on_first_listing_when_notifications_sent_absent() {
             given(callback.getEvent()).willReturn(LIST_CASE);
             given(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class))
                 .willReturn(Optional.of(YES));
-            given(asylumCaseBefore.read(ARIA_LISTING_REFERENCE, String.class))
+            given(asylumCaseBefore.<List<IdValue<String>>>read(NOTIFICATIONS_SENT))
                 .willReturn(Optional.empty());
 
             assertFalse(handler.canHandle(ABOUT_TO_SUBMIT, callback));
         }
 
         @Test
-        void should_not_handle_on_first_listing_when_aria_listing_reference_blank() {
+        void should_not_handle_on_first_listing_when_no_case_listed_notification_in_list() {
             given(callback.getEvent()).willReturn(LIST_CASE);
             given(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class))
                 .willReturn(Optional.of(YES));
-            given(asylumCaseBefore.read(ARIA_LISTING_REFERENCE, String.class))
-                .willReturn(Optional.of(""));
+            given(asylumCaseBefore.<List<IdValue<String>>>read(NOTIFICATIONS_SENT))
+                .willReturn(Optional.of(List.of(new IdValue<>("1_APPEAL_SUBMITTED_CASE_OFFICER_abc123", "some-notify-id"))));
 
             assertFalse(handler.canHandle(ABOUT_TO_SUBMIT, callback));
         }

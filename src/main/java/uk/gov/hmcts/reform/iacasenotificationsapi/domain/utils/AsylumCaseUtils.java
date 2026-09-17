@@ -606,9 +606,10 @@ public class AsylumCaseUtils {
     }
 
     public static boolean isRelisting(AsylumCase asylumCase) {
-        return asylumCase.read(ARIA_LISTING_REFERENCE, String.class)
-            .filter(ref -> !ref.isBlank())
-            .isPresent();
+        return asylumCase.<List<IdValue<String>>>read(NOTIFICATIONS_SENT)
+            .orElseGet(ArrayList::new)
+            .stream()
+            .anyMatch(n -> n.getId().contains("_CASE_LISTED_"));
     }
 
     public static String getAppealReceivedDate(AsylumCase asylumCase) {
