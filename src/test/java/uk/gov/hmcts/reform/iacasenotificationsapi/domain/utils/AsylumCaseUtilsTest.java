@@ -9,7 +9,7 @@ import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ADDENDUM_EVIDENCE_DOCUMENTS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ARIA_LISTING_REFERENCE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.NOTIFICATIONS_SENT;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_TYPE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANTS_REPRESENTATION;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_HAS_FIXED_ADDRESS;
@@ -1023,20 +1023,27 @@ public class AsylumCaseUtilsTest {
     }
 
     @Test
-    void isRelisting_should_return_true_when_aria_listing_reference_present() {
-        when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of("someAriaRef"));
+    void isRelisting_should_return_true_when_case_listed_notification_present() {
+        List<IdValue<String>> notifications = List.of(
+            new IdValue<>("1", "some-notify-id"),
+            new IdValue<>("2_CASE_LISTED_CASE_OFFICER_abc123", "another-notify-id")
+        );
+        when(asylumCase.<List<IdValue<String>>>read(NOTIFICATIONS_SENT)).thenReturn(Optional.of(notifications));
         assertTrue(isRelisting(asylumCase));
     }
 
     @Test
-    void isRelisting_should_return_false_when_aria_listing_reference_absent() {
-        when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.empty());
+    void isRelisting_should_return_false_when_notifications_sent_absent() {
+        when(asylumCase.<List<IdValue<String>>>read(NOTIFICATIONS_SENT)).thenReturn(Optional.empty());
         assertFalse(isRelisting(asylumCase));
     }
 
     @Test
-    void isRelisting_should_return_false_when_aria_listing_reference_blank() {
-        when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.of(""));
+    void isRelisting_should_return_false_when_no_case_listed_notification_in_list() {
+        List<IdValue<String>> notifications = List.of(
+            new IdValue<>("1_APPEAL_SUBMITTED_CASE_OFFICER_abc123", "some-notify-id")
+        );
+        when(asylumCase.<List<IdValue<String>>>read(NOTIFICATIONS_SENT)).thenReturn(Optional.of(notifications));
         assertFalse(isRelisting(asylumCase));
     }
 }
