@@ -82,6 +82,7 @@ public class EventTest {
             Arguments.of("submitCmaRequirements", Event.SUBMIT_CMA_REQUIREMENTS.toString()),
             Arguments.of("listCma", Event.LIST_CMA.toString()),
             Arguments.of("editAppealAfterSubmit", Event.EDIT_APPEAL_AFTER_SUBMIT.toString()),
+            Arguments.of("editAppellantPersonalData", EDIT_APPELLANT_PERSONAL_DATA.toString()),
             Arguments.of("linkAppeal", Event.LINK_APPEAL.toString()),
             Arguments.of("unlinkAppeal", Event.UNLINK_APPEAL.toString()),
             Arguments.of("leadershipJudgeFtpaDecision", Event.LEADERSHIP_JUDGE_FTPA_DECISION.toString()),

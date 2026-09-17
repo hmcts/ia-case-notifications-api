@@ -139,6 +139,8 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Eve
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.DECIDE_COSTS_APPLICATION;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.DECISION_WITHOUT_HEARING;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.EDIT_APPEAL;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.EDIT_APPEAL_AFTER_SUBMIT;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.EDIT_APPELLANT_PERSONAL_DATA;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.EDIT_CASE_LISTING;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.END_APPEAL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.END_APPEAL_AUTOMATICALLY;
@@ -2920,7 +2922,7 @@ public class NotificationHandlerConfiguration {
 
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.EDIT_APPEAL_AFTER_SUBMIT
+                    && Set.of(EDIT_APPEAL_AFTER_SUBMIT, EDIT_APPELLANT_PERSONAL_DATA).contains(callback.getEvent())
                     && isRepJourney(asylumCase)
                     && !isInternalCase(asylumCase);
             },
@@ -2936,7 +2938,7 @@ public class NotificationHandlerConfiguration {
 
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.EDIT_APPEAL_AFTER_SUBMIT
+                    && Set.of(EDIT_APPEAL_AFTER_SUBMIT, EDIT_APPELLANT_PERSONAL_DATA).contains(callback.getEvent())
                     && isInternalCase(asylumCase);
             },
             notificationGenerator
@@ -2951,7 +2953,7 @@ public class NotificationHandlerConfiguration {
 
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.EDIT_APPEAL_AFTER_SUBMIT
+                    && Set.of(EDIT_APPEAL_AFTER_SUBMIT, EDIT_APPELLANT_PERSONAL_DATA).contains(callback.getEvent())
                     && hasBeenSubmittedByAppellantInternalCase(asylumCase)
                     && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON);
             },
@@ -7827,7 +7829,7 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.EDIT_APPEAL_AFTER_SUBMIT
+                    && Set.of(EDIT_APPEAL_AFTER_SUBMIT, EDIT_APPELLANT_PERSONAL_DATA).contains(callback.getEvent())
                     && isInternalCase(asylumCase)
                     && (!isAppellantInDetention(asylumCase)
                     || (hasBeenSubmittedByAppellantInternalCase(asylumCase)
