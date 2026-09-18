@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_DATE;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
@@ -23,7 +24,9 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,19 +36,30 @@ class HomeOfficeReListCasePersonalisationTest {
     private final String templateId = "someTemplateId";
     private final String homeOfficeEmailAddress = "homeoffice@example.com";
     private final String listCaseHomeOfficeEmailAddress = "listCaseHomeOffice@example.com";
+    private final String oldHearingDateTime = "2026-01-05T10:00:00.000";
+    private final String oldHearingDateFormatted = "05 Jan 2026";
+    private final String oldHearingCentreName = "Taylor House";
 
     @Mock
     Callback<AsylumCase> callback;
     @Mock
     CaseDetails<AsylumCase> caseDetails;
     @Mock
+    CaseDetails<AsylumCase> caseDetailsBefore;
+    @Mock
     AsylumCase asylumCase;
+    @Mock
+    AsylumCase asylumCaseBefore;
     @Mock
     PersonalisationProvider personalisationProvider;
     @Mock
     EmailAddressFinder emailAddressFinder;
     @Mock
     CustomerServicesProvider customerServicesProvider;
+    @Mock
+    HearingDetailsFinder hearingDetailsFinder;
+    @Mock
+    DateTimeExtractor dateTimeExtractor;
 
     private HomeOfficeReListCasePersonalisation homeOfficeReListCasePersonalisation;
 
@@ -53,14 +67,21 @@ class HomeOfficeReListCasePersonalisationTest {
     void setUp() {
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
+        when(callback.getCaseDetailsBefore()).thenReturn(Optional.of(caseDetailsBefore));
+        when(caseDetailsBefore.getCaseData()).thenReturn(asylumCaseBefore);
         when(emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase)).thenReturn(listCaseHomeOfficeEmailAddress);
         when(emailAddressFinder.getHomeOfficeEmailAddress(asylumCase)).thenReturn(homeOfficeEmailAddress);
+        when(hearingDetailsFinder.getOldHearingCentreName(asylumCaseBefore)).thenReturn(oldHearingCentreName);
+        when(asylumCaseBefore.read(LIST_CASE_HEARING_DATE, String.class)).thenReturn(Optional.of(oldHearingDateTime));
+        when(dateTimeExtractor.extractHearingDate(oldHearingDateTime)).thenReturn(oldHearingDateFormatted);
 
         homeOfficeReListCasePersonalisation = new HomeOfficeReListCasePersonalisation(
             templateId,
             personalisationProvider,
             emailAddressFinder,
-            customerServicesProvider
+            customerServicesProvider,
+            hearingDetailsFinder,
+            dateTimeExtractor
         );
     }
 
@@ -113,6 +134,29 @@ class HomeOfficeReListCasePersonalisationTest {
             .containsAllEntriesOf(personalisationProvider.getPersonalisation(callback));
     }
 
+    @Test
+    void should_populate_old_hearing_fields_from_before_state() {
+        when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisationMap());
+
+        Map<String, String> personalisation = homeOfficeReListCasePersonalisation.getPersonalisation(callback);
+
+        assertThat(personalisation)
+            .containsEntry("oldHearingCentre", oldHearingCentreName)
+            .containsEntry("oldHearingDate", oldHearingDateFormatted);
+    }
+
+    @Test
+    void should_leave_old_hearing_fields_empty_when_no_before_state() {
+        when(callback.getCaseDetailsBefore()).thenReturn(Optional.empty());
+        when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisationMapWithEmptyOldHearing());
+
+        Map<String, String> personalisation = homeOfficeReListCasePersonalisation.getPersonalisation(callback);
+
+        assertThat(personalisation)
+            .containsEntry("oldHearingCentre", "")
+            .containsEntry("oldHearingDate", "");
+    }
+
     private Map<String, String> getPersonalisationMap() {
         return ImmutableMap.<String, String>builder()
             .put("appealReferenceNumber", "HU/12345/2024")
@@ -126,6 +170,25 @@ class HomeOfficeReListCasePersonalisationTest {
             .put("hearingCentreAddress", "Manchester Civil Justice Centre, 1 Bridge Street West, Manchester, M60 9DJ")
             .put("oldHearingCentre", "Taylor House")
             .put("oldHearingDate", "05 Jan 2026")
+            .put("linkToOnlineService", "http://localhost")
+            .put("customerServicesTelephone", "0300 123 1711")
+            .put("customerServicesEmail", "customer.service@justice.gov.uk")
+            .build();
+    }
+
+    private Map<String, String> getPersonalisationMapWithEmptyOldHearing() {
+        return ImmutableMap.<String, String>builder()
+            .put("appealReferenceNumber", "HU/12345/2024")
+            .put("ariaListingReference", "someAriaListingReference")
+            .put("homeOfficeReferenceNumber", "A1234567")
+            .put("appellantGivenNames", "John")
+            .put("appellantFamilyName", "Smith")
+            .put("hearingCentreName", "Manchester")
+            .put("hearingDate", "12 Jan 2026")
+            .put("hearingTime", "10:00")
+            .put("hearingCentreAddress", "Manchester Civil Justice Centre, 1 Bridge Street West, Manchester, M60 9DJ")
+            .put("oldHearingCentre", "")
+            .put("oldHearingDate", "")
             .put("linkToOnlineService", "http://localhost")
             .put("customerServicesTelephone", "0300 123 1711")
             .put("customerServicesEmail", "customer.service@justice.gov.uk")

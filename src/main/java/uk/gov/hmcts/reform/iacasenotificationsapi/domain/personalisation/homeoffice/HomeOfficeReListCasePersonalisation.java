@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeof
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_DATE;
 
 import com.google.common.collect.ImmutableMap;
 import jakarta.validation.constraints.NotNull;
@@ -17,7 +18,9 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
 @Service
@@ -27,18 +30,24 @@ public class HomeOfficeReListCasePersonalisation implements EmailNotificationPer
     private final PersonalisationProvider personalisationProvider;
     private final EmailAddressFinder emailAddressFinder;
     private final CustomerServicesProvider customerServicesProvider;
+    private final HearingDetailsFinder hearingDetailsFinder;
+    private final DateTimeExtractor dateTimeExtractor;
 
     public HomeOfficeReListCasePersonalisation(
         @NotNull(message = "reListCaseHomeOfficeTemplateId cannot be null")
         @Value("${govnotify.template.reListCase24Weeks.homeOffice.email}") String reListCaseHomeOfficeTemplateId,
         PersonalisationProvider personalisationProvider,
         EmailAddressFinder emailAddressFinder,
-        CustomerServicesProvider customerServicesProvider
+        CustomerServicesProvider customerServicesProvider,
+        HearingDetailsFinder hearingDetailsFinder,
+        DateTimeExtractor dateTimeExtractor
     ) {
         this.reListCaseHomeOfficeTemplateId = reListCaseHomeOfficeTemplateId;
         this.personalisationProvider = personalisationProvider;
         this.emailAddressFinder = emailAddressFinder;
         this.customerServicesProvider = customerServicesProvider;
+        this.hearingDetailsFinder = requireNonNull(hearingDetailsFinder, "hearingDetailsFinder must not be null");
+        this.dateTimeExtractor = requireNonNull(dateTimeExtractor, "dateTimeExtractor must not be null");
     }
 
     @Override
@@ -65,6 +74,13 @@ public class HomeOfficeReListCasePersonalisation implements EmailNotificationPer
         final Map<String, String> personalisation = new HashMap<>();
         personalisation.putAll(customerServicesProvider.getCustomerServicesPersonalisation(callback));
         personalisation.putAll(personalisationProvider.getPersonalisation(callback));
+
+        callback.getCaseDetailsBefore().ifPresent(before -> {
+            AsylumCase asylumCaseBefore = before.getCaseData();
+            personalisation.put("oldHearingCentre", hearingDetailsFinder.getOldHearingCentreName(asylumCaseBefore));
+            String oldHearingDate = asylumCaseBefore.read(LIST_CASE_HEARING_DATE, String.class).orElse("");
+            personalisation.put("oldHearingDate", oldHearingDate.isEmpty() ? "" : dateTimeExtractor.extractHearingDate(oldHearingDate));
+        });
 
         return ImmutableMap.copyOf(personalisation);
     }
