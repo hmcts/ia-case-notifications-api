@@ -1,23 +1,24 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils;
 
 import com.google.common.collect.ImmutableMap;
+import org.jspecify.annotations.NonNull;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.PreSubmitCallbackStage;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REF_NUMBER_PAPER_J;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.D_MMM_YYYY;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.buildAddressForAppellantIccLetter;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.buildAddressForLegalRepIccLetter;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.REVIEW_HEARING_REQUIREMENTS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
 public class Stf24WeeksUtil {
     public static final int DAYS_14 = 14;
@@ -40,6 +41,12 @@ public class Stf24WeeksUtil {
     public static final String STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LEGAL_REP_COPY_EMAIL = "_STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_LEGAL_REP_COPY_EMAIL";
     public static final String STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL = "_STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL";
 
+    public static final String STATUTORY_TIMEFRAME_24WEEKS_SUBMITTED_HEARING_REQUIREMENTS_APPELLANT_EMAIL = "_STATUTORY_TIMEFRAME_24WEEKS_SUBMITTED_HEARING_REQUIREMENTS_APPELLANT_EMAIL";
+    public static final String STATUTORY_TIMEFRAME_24WEEKS_SUBMITTED_HEARING_REQUIREMENTS_LR_EMAIL = "_STATUTORY_TIMEFRAME_24WEEKS_SUBMITTED_HEARING_REQUIREMENTS_LR_EMAIL";
+    public static final String STATUTORY_TIMEFRAME_24WEEKS_SUBMITTED_HEARING_REQUIREMENTS_HOME_OFFICE_EMAIL = "_STATUTORY_TIMEFRAME_24WEEKS_SUBMITTED_HEARING_REQUIREMENTS_HOME_OFFICE_EMAIL";
+    public static final String STATUTORY_TIMEFRAME_24WEEKS_SUBMITTED_HEARING_REQUIREMENTS_LR_LETTER = "_STATUTORY_TIMEFRAME_24WEEKS_SUBMITTED_HEARING_REQUIREMENTS_LR_LETTER";
+    public static final String STATUTORY_TIMEFRAME_24WEEKS_SUBMITTED_HEARING_REQUIREMENTS_APPELLANT_LETTER = "_STATUTORY_TIMEFRAME_24WEEKS_SUBMITTED_HEARING_REQUIREMENTS_APPELLANT_LETTER";
+
     public static final String WEEKS_DEADLINE = "24WeeksDeadline";
     public static final String DECISION_SENT_DATE = "decisionSentDate";
     public static final String PRACTICE_DIRECTION = "practiceDirection";
@@ -49,14 +56,33 @@ public class Stf24WeeksUtil {
     public static final String HOME_OFFICE_REFERENCE_NUMBER_KEY = "homeOfficeReferenceNumber";
     public static final String LEGAL_REP_REFERENCE_NUMBER_KEY = "legalRepReferenceNumber";
 
-    private static final String SUBJECT_PREFIX_KEY = "subjectPrefix";
-    private static final String APPEAL_REFERENCE_NUMBER_KEY = "appealReferenceNumber";
+    public static final String SUBJECT_PREFIX_KEY = "subjectPrefix";
+    public static final String APPEAL_REFERENCE_NUMBER_KEY = "appealReferenceNumber";
 
-    private static final String APPELLANT_GIVEN_NAMES_KEY = "appellantGivenNames";
-    private static final String APPELLANT_FAMILY_NAME_KEY = "appellantFamilyName";
+    public static final String APPELLANT_GIVEN_NAMES_KEY = "appellantGivenNames";
+    public static final String APPELLANT_FAMILY_NAME_KEY = "appellantFamilyName";
     public static final String FYI_HEADING = "fyiHeading";
     public static final String FYI_TEXT = "fyiText";
     public static final String FYI_LINE_SEPARATOR = "fyiLineSeparator";
+    public static final String LINK_TO_ONLINE_SERVICE_KEY = "linkToOnlineService";
+
+    public static final String STF_24_WEEKS_HEARING_REQUIREMENTS_EMAIL_TEMPLATE = "${govnotify.template.submittedHearingRequirements24Weeks.email}";
+    public static final String STF_24_WEEKS_HEARING_REQUIREMENTS_LETTER_TEMPLATE = "${govnotify.template.submittedHearingRequirements24Weeks.letter}";
+    public static final String STF_24_WEEKS_HEARING_REQ_HO_GENERATOR = "hearingRequirementsStatutoryTimeframe24WeeksHomeOfficeNotificationGenerator";
+    public static final String STF_24_WEEKS_HEARING_REQ_APPELLANT_GENERATOR = "hearingRequirementsStatutoryTimeframe24WeeksAppellantNotificationGenerator";
+    public static final String STF_24_WEEKS_HEARING_REQ_LR_GENERATOR = "hearingRequirementsStatutoryTimeframe24WeeksLegalRepresentativeNotificationGenerator";
+    public static final String STF_24_WEEKS_HEARING_REQ_APPELLANT_LETTER_GENERATOR = "hearingRequirementsStatutoryTimeframe24WeeksAppellantLetterNotificationGenerator";
+    public static final String STF_24_WEEKS_HEARING_REQ_LR_LETTER_GENERATOR = "hearingRequirementsStatutoryTimeframe24WeeksLegalRepresentativeLetterNotificationGenerator";
+
+    private static final String HO_REFERENCE_WITH_TEXT = "hoReferenceWithText";
+    private static final String LR_REFERENCE_WITH_TEXT = "lrReferenceWithText";
+    private static final String HEARING_DATE = "hearingDate";
+    private static final String HEARING_CENTRE_ADDRESS = "hearingCentreAddress";
+    private static final String LEGAL_SUPPORT_INFO = "legalSupportInfo";
+
+    public enum Stf24WeeksNotificationFor {
+        LEGAL_REPRESENTATIVE, HOME_OFFICE, APPELLANT
+    }
 
     private Stf24WeeksUtil() {
     }
@@ -156,4 +182,96 @@ public class Stf24WeeksUtil {
                 .put(DAYS_42_FROM_DATE_OF_DIRECTION_KEY, now.plusDays(DAYS_42).format(ofPattern(D_MMM_YYYY)))
                 .put(DAYS_56_FROM_DATE_OF_DIRECTION, now.plusDays(DAYS_56).format(ofPattern(D_MMM_YYYY)));
     }
+
+    public static ImmutableMap<String, String> buildHearingRequirementsLetterParameters(Stf24WeeksNotificationFor notificationFor, AsylumCase asylumCase, CustomerServicesProvider customerServicesProvider, DateTimeExtractor dateTimeExtractor, HearingDetailsFinder hearingDetailsFinder) {
+        requireNonNull(asylumCase, "asylumCase must not be null");
+        ImmutableMap.Builder<String, String> builder = buildCommonParams(notificationFor, asylumCase, customerServicesProvider, dateTimeExtractor, hearingDetailsFinder);
+        builder.put(LEGAL_SUPPORT_INFO, buildLegalSupportInfo(notificationFor));
+        return builder.build();
+    }
+
+    public static ImmutableMap<String, String> buildHearingRequirementsEmailParams(Stf24WeeksNotificationFor notificationFor, AsylumCase asylumCase, String nonAdaPrefix, String iaExUiFrontendUrl, CustomerServicesProvider customerServicesProvider, DateTimeExtractor dateTimeExtractor, HearingDetailsFinder hearingDetailsFinder) {
+        requireNonNull(asylumCase, "asylumCase must not be null");
+        ImmutableMap.Builder<String, String> builder = buildCommonParams(notificationFor, asylumCase, customerServicesProvider, dateTimeExtractor, hearingDetailsFinder)
+                .put(SUBJECT_PREFIX_KEY, nonAdaPrefix).put(LINK_TO_ONLINE_SERVICE_KEY, iaExUiFrontendUrl);
+
+        return builder.build();
+    }
+
+    private static ImmutableMap.@NonNull Builder<String, String> buildCommonParams(Stf24WeeksNotificationFor notificationFor, AsylumCase asylumCase, CustomerServicesProvider customerServicesProvider, DateTimeExtractor dateTimeExtractor, HearingDetailsFinder hearingDetailsFinder) {
+        ImmutableMap.Builder<String, String> builder = ImmutableMap.<String, String>builder()
+                .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
+                .put(APPELLANT_GIVEN_NAMES_KEY, asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(EMPTY_STRING))
+                .put(APPELLANT_FAMILY_NAME_KEY, asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(EMPTY_STRING))
+                .put(APPEAL_REFERENCE_NUMBER_KEY, asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+                .put(HEARING_DATE, dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getHearingDateTime(asylumCase)))
+                .put(HEARING_CENTRE_ADDRESS, hearingDetailsFinder.getHearingCentreAddress(asylumCase));
+        builder.putAll(PersonalisationProvider.getHearingRequirementsFields(asylumCase));
+        builder.put(LR_REFERENCE_WITH_TEXT, legalRefText(notificationFor, asylumCase));
+        builder.put(HO_REFERENCE_WITH_TEXT, hoRefText(notificationFor, asylumCase));
+        return builder;
+
+    }
+
+    public static boolean isHearingRequirementsFor24WeeksCase(Event event, AsylumCase asylumCase) {
+        boolean hasStf24W = AsylumCaseUtils.hasStf24WeeksStatus(asylumCase);
+        return Objects.equals(REVIEW_HEARING_REQUIREMENTS, event)
+                && hasStf24W;
+    }
+
+    public static boolean canRunHearingReq(PreSubmitCallbackStage callbackStage, Event event, AsylumCase asylumCase, boolean canRunFor24Weeks) {
+        return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                && !isInternalCase(asylumCase)
+                && canRunFor24Weeks
+                && isHearingRequirementsFor24WeeksCase(event, asylumCase);
+    }
+
+    public static boolean canRunHearingReqInternalCase(PreSubmitCallbackStage callbackStage, Event event, AsylumCase asylumCase, boolean canRunFor24Weeks) {
+        return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                && canRunFor24Weeks
+                && isHearingRequirementsFor24WeeksCase(event, asylumCase);
+    }
+
+
+    private static String buildLegalSupportInfo(Stf24WeeksNotificationFor notificationFor) {
+
+        String appellantInfo = "#How to find legal support and more information\n" +
+                "\n" +
+                "You may be able to find a solicitor or immigration adviser to help with your appeal. If you have access to a computer, you can:\n" +
+                "\n" +
+                "* search for a solicitor or immigration adviser\n" +
+                "https://www.gov.uk/find-an-immigration-adviser\n" +
+                "\n" +
+                "* find out more about appealing an immigration or asylum decision\n" +
+                "https://www.gov.uk/immigration-asylum-tribunal";
+        if (notificationFor == Stf24WeeksNotificationFor.APPELLANT) {
+            return appellantInfo;
+        } else {
+            return EMPTY_STRING;
+        }
+    }
+
+
+    private static String legalRefText(Stf24WeeksNotificationFor notificationFor, AsylumCase asylumCase) {
+
+        if (notificationFor == Stf24WeeksNotificationFor.LEGAL_REPRESENTATIVE) {
+            String lrNumber = asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)
+                    .filter(ref -> !ref.isEmpty())
+                    .orElseGet(() -> asylumCase.read(LEGAL_REP_REF_NUMBER_PAPER_J, String.class).orElse(EMPTY_STRING));
+            return "Your reference:" + lrNumber;
+        } else {
+            return EMPTY_STRING;
+        }
+    }
+
+    private static String hoRefText(Stf24WeeksNotificationFor notificationFor, AsylumCase asylumCase) {
+
+        if (notificationFor == Stf24WeeksNotificationFor.HOME_OFFICE) {
+            return "Home office reference:" + asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse("");
+        } else {
+            return EMPTY_STRING;
+        }
+    }
+
+
 }
