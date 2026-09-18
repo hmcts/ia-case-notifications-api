@@ -1860,6 +1860,7 @@ security:
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
       - "joinAppealConfirmation"
+      - "generatePinInPost"
     challenged-access-legal-operations:
       - "sendDirection"
       - "changeDirectionDueDate"
@@ -1931,6 +1932,7 @@ security:
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
       - "joinAppealConfirmation"
+      - "generatePinInPost"
     senior-tribunal-caseworker:
       - "sendDirection"
       - "changeDirectionDueDate"
@@ -2002,6 +2004,7 @@ security:
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
       - "joinAppealConfirmation"
+      - "generatePinInPost"
     # These events are used by the bails service, they will need to be migrated to the admin access management roles - see DIAC-855
     caseworker-ia-admofficer:
       - "editBailApplication"
@@ -2074,6 +2077,7 @@ security:
       - "removeStatutoryTimeframe24Weeks"
       - "completeCaseReview"
       - "requestRespondentEvidence"
+      - "generatePinInPost"
     ctsc:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2125,6 +2129,7 @@ security:
       - "removeStatutoryTimeframe24Weeks"
       - "completeCaseReview"
       - "requestRespondentEvidence"
+      - "generatePinInPost"
     ctsc-team-leader:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2176,6 +2181,7 @@ security:
       - "removeStatutoryTimeframe24Weeks"
       - "completeCaseReview"
       - "requestRespondentEvidence"
+      - "generatePinInPost"
     national-business-centre:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2227,6 +2233,7 @@ security:
       - "removeStatutoryTimeframe24Weeks"
       - "completeCaseReview"
       - "requestRespondentEvidence"
+      - "generatePinInPost"
     challenged-access-ctsc:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2258,6 +2265,7 @@ security:
       - "listCase"
       - "editDocuments"
       - "uploadAdditionalEvidence"
+      - "generatePinInPost"
       - "endAppeal"
       - "recordAdjournmentDetails"
       - "createCaseLink"
@@ -2329,6 +2337,7 @@ security:
       - "removeStatutoryTimeframe24Weeks"
       - "completeCaseReview"
       - "requestRespondentEvidence"
+      - "generatePinInPost"
     caseworker-ia-homeofficeapc:
       - "startApplication"
       - "editBailApplication"
