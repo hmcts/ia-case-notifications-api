@@ -74,8 +74,11 @@ public class Stf24WeeksUtil {
     public static final String STF_24_WEEKS_HEARING_REQ_APPELLANT_LETTER_GENERATOR = "hearingRequirementsStatutoryTimeframe24WeeksAppellantLetterNotificationGenerator";
     public static final String STF_24_WEEKS_HEARING_REQ_LR_LETTER_GENERATOR = "hearingRequirementsStatutoryTimeframe24WeeksLegalRepresentativeLetterNotificationGenerator";
 
-    public static final String HO_REFERENCE_WITH_TEXT = "hoReferenceWithText";
-    public static final String LR_REFERENCE_WITH_TEXT = "lrReferenceWithText";
+    private static final String HO_REFERENCE_WITH_TEXT = "hoReferenceWithText";
+    private static final String LR_REFERENCE_WITH_TEXT = "lrReferenceWithText";
+    private static final String HEARING_DATE = "hearingDate";
+    private static final String HEARING_CENTRE_ADDRESS = "hearingCentreAddress";
+    private static final String LEGAL_SUPPORT_INFO = "legalSupportInfo";
 
     public enum Stf24WeeksNotificationFor {
         LEGAL_REPRESENTATIVE, HOME_OFFICE, APPELLANT
@@ -183,7 +186,7 @@ public class Stf24WeeksUtil {
     public static ImmutableMap<String, String> buildHearingRequirementsLetterParameters(Stf24WeeksNotificationFor notificationFor, AsylumCase asylumCase, CustomerServicesProvider customerServicesProvider, DateTimeExtractor dateTimeExtractor, HearingDetailsFinder hearingDetailsFinder) {
         requireNonNull(asylumCase, "asylumCase must not be null");
         ImmutableMap.Builder<String, String> builder = buildCommonParams(notificationFor, asylumCase, customerServicesProvider, dateTimeExtractor, hearingDetailsFinder);
-        builder.put("legalSupportInfo", buildLegalSupportInfo(notificationFor));
+        builder.put(LEGAL_SUPPORT_INFO, buildLegalSupportInfo(notificationFor));
         return builder.build();
     }
 
@@ -201,8 +204,8 @@ public class Stf24WeeksUtil {
                 .put(APPELLANT_GIVEN_NAMES_KEY, asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(EMPTY_STRING))
                 .put(APPELLANT_FAMILY_NAME_KEY, asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(EMPTY_STRING))
                 .put(APPEAL_REFERENCE_NUMBER_KEY, asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-                .put("hearingDate", dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getHearingDateTime(asylumCase)))
-                .put("hearingCentreAddress", hearingDetailsFinder.getHearingCentreAddress(asylumCase));
+                .put(HEARING_DATE, dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getHearingDateTime(asylumCase)))
+                .put(HEARING_CENTRE_ADDRESS, hearingDetailsFinder.getHearingCentreAddress(asylumCase));
         builder.putAll(PersonalisationProvider.getHearingRequirementsFields(asylumCase));
         builder.put(LR_REFERENCE_WITH_TEXT, legalRefText(notificationFor, asylumCase));
         builder.put(HO_REFERENCE_WITH_TEXT, hoRefText(notificationFor, asylumCase));
