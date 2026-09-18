@@ -8,13 +8,18 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_INTEGRATED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasStf24WeeksStatus;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isRelisting;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
@@ -85,6 +90,13 @@ public class LegalRepresentativeListCasePersonalisation implements LegalRepresen
                 : (isIntegrated == YesOrNo.YES ?
                 listAssistHearingLegalRepresentativeCaseListedTemplateId : legalRepresentativeCaseListedNonAdaTemplateId);
         }
+    }
+
+    @Override
+    public Set<String> getRecipientsList(AsylumCase asylumCase) {
+        return hasStf24WeeksStatus(asylumCase) && isRelisting(asylumCase)
+            ? Collections.emptySet()
+            : LegalRepresentativeEmailNotificationPersonalisation.super.getRecipientsList(asylumCase);
     }
 
     @Override
