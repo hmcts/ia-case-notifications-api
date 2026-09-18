@@ -382,12 +382,13 @@ public class NotificationGeneratorConfiguration {
     @Bean("reListCase24WeeksNotificationGenerator")
     public List<NotificationGenerator> reListCase24WeeksNotificationGenerator(
         HomeOfficeReListCasePersonalisation homeOfficeReListCasePersonalisation,
+        LegalRepresentativeReListCaseStatutoryTimeframe24WeeksPersonalisation legalRepresentativeReListCaseStatutoryTimeframe24WeeksPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
         return singletonList(
             new EmailNotificationGenerator(
-                newArrayList(homeOfficeReListCasePersonalisation),
+                newArrayList(homeOfficeReListCasePersonalisation, legalRepresentativeReListCaseStatutoryTimeframe24WeeksPersonalisation),
                 notificationSender,
                 notificationIdAppender
             )
