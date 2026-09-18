@@ -21,7 +21,7 @@ public class LegalRepresentativeReListCaseStatutoryTimeframe24WeeksPersonalisati
 
     public LegalRepresentativeReListCaseStatutoryTimeframe24WeeksPersonalisation(
         @NotNull(message = "templateId cannot be null")
-        @Value("${govnotify.template.reListCase.legalRep24Weeks.email}") String templateId,
+        @Value("${govnotify.template.reListCase24Weeks.legalRep24Weeks.email}") String templateId,
         PersonalisationProvider personalisationProvider
     ) {
         this.templateId = templateId;
