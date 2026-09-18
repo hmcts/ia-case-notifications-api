@@ -22,6 +22,7 @@ public class LegalRepresentativeHearingReqReviewStatutoryTimeframe24WeeksPersona
     private final CustomerServicesProvider customerServicesProvider;
     private final DateTimeExtractor dateTimeExtractor;
     private final HearingDetailsFinder hearingDetailsFinder;
+
     public LegalRepresentativeHearingReqReviewStatutoryTimeframe24WeeksPersonalisationLetter(
             @Value(STF_24_WEEKS_HEARING_REQUIREMENTS_LETTER_TEMPLATE) String templateId,
             CustomerServicesProvider customerServicesProvider,
