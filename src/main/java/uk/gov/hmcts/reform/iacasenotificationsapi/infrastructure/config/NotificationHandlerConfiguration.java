@@ -5881,6 +5881,21 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> hearingRequirementsStatutoryTimeframe24WeeksHoHandler(
+            @Qualifier(STF_24_WEEKS_HEARING_REQ_HO_GENERATOR) List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase =
+                            callback
+                                    .getCaseDetails()
+                                    .getCaseData();
+                    return canRunHearingReqInternalCase(callbackStage, callback.getEvent(), asylumCase, true);
+                },
+                notificationGenerators, getErrorHandler()
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> hearingRequirementsStatutoryTimeframe24WeeksAppellantNotificationHandler(
             @Qualifier(STF_24_WEEKS_HEARING_REQ_APPELLANT_GENERATOR) List<NotificationGenerator> notificationGenerators) {
         return new NotificationHandler(
@@ -5889,7 +5904,7 @@ public class NotificationHandlerConfiguration {
                             callback
                                     .getCaseDetails()
                                     .getCaseData();
-                    return canRunHearingReq(callbackStage, callback.getEvent(), asylumCase, isAipJourney(asylumCase));
+                    return canRunHearingReqInternalCase(callbackStage, callback.getEvent(), asylumCase, isAipJourney(asylumCase));
                 },
                 notificationGenerators, getErrorHandler()
         );
@@ -5905,6 +5920,37 @@ public class NotificationHandlerConfiguration {
                                     .getCaseDetails()
                                     .getCaseData();
                     return canRunHearingReq(callbackStage, callback.getEvent(), asylumCase, isRepJourney(asylumCase));
+                },
+                notificationGenerators, getErrorHandler()
+        );
+    }
+
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> hearingRequirementsStatutoryTimeframe24WeeksAppellantLetterNotificationHandler(
+            @Qualifier(STF_24_WEEKS_HEARING_REQ_APPELLANT_LETTER_GENERATOR) List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase =
+                            callback
+                                    .getCaseDetails()
+                                    .getCaseData();
+                    return canRunHearingReqInternalCase(callbackStage, callback.getEvent(), asylumCase, isInternalWithoutLegalRepresentation(asylumCase));
+                },
+                notificationGenerators, getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> hearingRequirementsStatutoryTimeframe24WeeksLegalRepresentativeLetterNotificationHandler(
+            @Qualifier(STF_24_WEEKS_HEARING_REQ_LR_LETTER_GENERATOR) List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase =
+                            callback
+                                    .getCaseDetails()
+                                    .getCaseData();
+                    return canRunHearingReqInternalCase(callbackStage, callback.getEvent(), asylumCase, hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase));
                 },
                 notificationGenerators, getErrorHandler()
         );

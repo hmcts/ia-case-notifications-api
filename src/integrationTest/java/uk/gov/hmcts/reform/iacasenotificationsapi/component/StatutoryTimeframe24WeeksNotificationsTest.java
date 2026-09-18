@@ -402,8 +402,8 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
         return Stream.of(
                 Arguments.of(true, TestJourneyType.AIP, true, true, false, Set.of(STATUTORY_TIMEFRAME_24WEEKS_SUBMITTED_HEARING_REQUIREMENTS_APPELLANT_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_SUBMITTED_HEARING_REQUIREMENTS_HOME_OFFICE_EMAIL)),
                 Arguments.of(true, TestJourneyType.LR, true, true, false, Set.of(STATUTORY_TIMEFRAME_24WEEKS_SUBMITTED_HEARING_REQUIREMENTS_LR_EMAIL, STATUTORY_TIMEFRAME_24WEEKS_SUBMITTED_HEARING_REQUIREMENTS_HOME_OFFICE_EMAIL)),
-                Arguments.of(true, TestJourneyType.AIP_MANUAL, true, true, true, Collections.emptySet()),
-                Arguments.of(true, TestJourneyType.LR_MANUAL, true, true, true, Collections.emptySet()),
+                Arguments.of(true, TestJourneyType.AIP_MANUAL, true, true, false, Set.of(STATUTORY_TIMEFRAME_24WEEKS_SUBMITTED_HEARING_REQUIREMENTS_APPELLANT_LETTER, STATUTORY_TIMEFRAME_24WEEKS_SUBMITTED_HEARING_REQUIREMENTS_HOME_OFFICE_EMAIL)),
+                Arguments.of(true, TestJourneyType.LR_MANUAL, true, true, false, Set.of(STATUTORY_TIMEFRAME_24WEEKS_SUBMITTED_HEARING_REQUIREMENTS_LR_LETTER, STATUTORY_TIMEFRAME_24WEEKS_SUBMITTED_HEARING_REQUIREMENTS_HOME_OFFICE_EMAIL)),
 
                 Arguments.of(false, TestJourneyType.AIP_MANUAL, true, true, true, Set.of("_REVIEW_HEARING_REQUIREMENTS_ADMIN_OFFICER")),
                 Arguments.of(false, TestJourneyType.AIP, true, true, true, Set.of("_REVIEW_HEARING_REQUIREMENTS_ADMIN_OFFICER")),

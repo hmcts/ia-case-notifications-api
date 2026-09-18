@@ -58,7 +58,7 @@ public class AppellantSubmittedHearingRequirementsStf24WeeksEmailPersonalisation
 
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
-        return buildHearingRequirementsParams(Stf24WeeksNotificationFor.APPELLANT, asylumCase, nonAdaPrefix, iaExUiFrontendUrl, customerServicesProvider, dateTimeExtractor, hearingDetailsFinder);
+        return buildHearingRequirementsEmailParams(Stf24WeeksNotificationFor.APPELLANT, asylumCase, nonAdaPrefix, iaExUiFrontendUrl, customerServicesProvider, dateTimeExtractor, hearingDetailsFinder);
     }
 
 
