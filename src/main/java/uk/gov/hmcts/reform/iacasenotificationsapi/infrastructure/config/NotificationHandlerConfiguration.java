@@ -7328,13 +7328,14 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.SEND_DIRECTION
-                    && (isInternalNonStdDirectionWithParty(asylumCase, Parties.APPELLANT, directionFinder) ||
-                    isInternalNonStdDirectionWithParty(asylumCase, Parties.LEGAL_REPRESENTATIVE, directionFinder))
-                    && (!isAppellantInDetention(asylumCase)
-                    || (hasBeenSubmittedByAppellantInternalCase(asylumCase)
-                    && isDetainedInFacilityType(asylumCase, OTHER))
-                    || hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase));
+                        && callback.getEvent() == Event.SEND_DIRECTION
+                        && (isInternalNonStdDirectionWithParty(asylumCase, Parties.APPELLANT, directionFinder) ||
+                        isInternalNonStdDirectionWithParty(asylumCase, Parties.LEGAL_REPRESENTATIVE, directionFinder) ||
+                        isInternalNonStdDirectionWithParty(asylumCase, Parties.APPELLANT_AND_RESPONDENT, directionFinder))
+                        && (!isAppellantInDetention(asylumCase)
+                        || (hasBeenSubmittedByAppellantInternalCase(asylumCase)
+                        && isDetainedInFacilityType(asylumCase, OTHER))
+                        || hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase));
             },
             notificationGenerators,
             getErrorHandler()
