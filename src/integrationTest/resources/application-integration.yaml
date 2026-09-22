@@ -24,6 +24,12 @@ app:
     enabled: false
 
 spring:
+  data:
+    redis:
+      url: ${REDIS_URL:redis://localhost:6379}
+      secret: ${IA_REDIS_ACCESS_KEY:}
+      encryption:
+        key: ${IA_REDIS_ENCRYPTION_KEY:}
   autoconfigure:
     exclude:
       - org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration
