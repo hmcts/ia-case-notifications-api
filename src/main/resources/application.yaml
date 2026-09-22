@@ -628,6 +628,7 @@ govnotify:
         email: 70a0ff4c-8822-4e6a-be3b-71bc1676bc83
       appellant:
         email: fe78b847-225f-4fc5-963b-cd5a0b3e671e
+        email24Weeks: 7078f646-6598-44cc-8213-2be4827d4652
         sms: b43b2fe3-f662-4b25-ad15-af3ddc07ec81
     uploadedAdditionalEvidenceBeforeListing:
       legalRep:
@@ -648,6 +649,7 @@ govnotify:
         email: 9fd3928e-a004-4572-8208-297df1cef925
       appellant:
         email: 770dbf2c-b8b4-4a63-9b46-5330c3aa6d76
+        email24Weeks: beb5fb69-e293-4759-a8e7-2e86b8dc0f3f
         sms: c7c18cf5-619d-427e-b984-d161689baec4
     uploadedAddendumEvidence:
       legalRep:

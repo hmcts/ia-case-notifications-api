@@ -17,6 +17,7 @@ import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ARIA_LISTING_REFERENCE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasStf24WeeksStatus;
 
 
 @Service
@@ -24,6 +25,7 @@ public class AppellantUploadAdditionalEvidencePersonalisationEmail implements Em
 
     private final String uploadAdditionalEvidenceEmailBeforeListingNotificationTemplateId;
     private final String uploadAdditionalEvidenceEmailAfterListingNotificationTemplateId;
+    private final String uploadAdditionalEvidenceEmailAfterListing24WeeksNotificationTemplateId;
     private final String iaAipFrontendUrl;
     private final RecipientsFinder recipientsFinder;
     private final CustomerServicesProvider customerServicesProvider;
@@ -31,21 +33,32 @@ public class AppellantUploadAdditionalEvidencePersonalisationEmail implements Em
     public AppellantUploadAdditionalEvidencePersonalisationEmail(
             @Value("${govnotify.template.uploadedAdditionalEvidenceBeforeListing.appellant.email}") String uploadAdditionalEvidenceEmailBeforeListingNotificationTemplateId,
             @Value("${govnotify.template.uploadedAdditionalEvidenceAfterListing.appellant.email}") String uploadAdditionalEvidenceEmailAfterListingNotificationTemplateId,
+            @Value("${govnotify.template.uploadedAdditionalEvidenceAfterListing.appellant.email24Weeks}") String uploadAdditionalEvidenceEmailAfterListing24WeeksNotificationTemplateId,
             @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
             RecipientsFinder recipientsFinder,
             CustomerServicesProvider customerServicesProvider
     ) {
         this.uploadAdditionalEvidenceEmailBeforeListingNotificationTemplateId = uploadAdditionalEvidenceEmailBeforeListingNotificationTemplateId;
         this.uploadAdditionalEvidenceEmailAfterListingNotificationTemplateId = uploadAdditionalEvidenceEmailAfterListingNotificationTemplateId;
+        this.uploadAdditionalEvidenceEmailAfterListing24WeeksNotificationTemplateId = uploadAdditionalEvidenceEmailAfterListing24WeeksNotificationTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.recipientsFinder = recipientsFinder;
         this.customerServicesProvider = customerServicesProvider;
     }
 
     @Override
+    public String getTemplateId() {
+        return null;
+    }
+
+    @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return isAppealListed(asylumCase)
-                ? uploadAdditionalEvidenceEmailAfterListingNotificationTemplateId : uploadAdditionalEvidenceEmailBeforeListingNotificationTemplateId;
+        if (!isAppealListed(asylumCase)) {
+            return uploadAdditionalEvidenceEmailBeforeListingNotificationTemplateId;
+        }
+        return hasStf24WeeksStatus(asylumCase)
+                ? uploadAdditionalEvidenceEmailAfterListing24WeeksNotificationTemplateId
+                : uploadAdditionalEvidenceEmailAfterListingNotificationTemplateId;
     }
 
     @Override
