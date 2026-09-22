@@ -20,7 +20,7 @@ import org.springframework.data.redis.connection.RedisPassword;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.JacksonJsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.model.idam.UserInfo;
@@ -57,7 +57,7 @@ public class CacheConfiguration {
             // Idam user info config
             AesEncryptingRedisSerializer<UserInfo> userInfoSerializer =
                 new AesEncryptingRedisSerializer<>(
-                    new Jackson2JsonRedisSerializer<>(UserInfo.class),
+                    new JacksonJsonRedisSerializer<>(UserInfo.class),
                     redisEncryptionKey
                 );
 
@@ -74,7 +74,7 @@ public class CacheConfiguration {
             // system user token config
             AesEncryptingRedisSerializer<String> tokenSerializer =
                 new AesEncryptingRedisSerializer<>(
-                    new Jackson2JsonRedisSerializer<>(String.class),
+                    new JacksonJsonRedisSerializer<>(String.class),
                     redisEncryptionKey
                 );
 
