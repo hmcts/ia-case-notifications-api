@@ -127,7 +127,7 @@
     "notifications": [
       {
         "reference": "2024_CASE_RE_LISTED_HOME_OFFICE",
-        "recipient": "ho-harmondsworth@example.com",
+        "recipient": "hatton-crossHO@example.com",
         "subject": "Immigration and Asylum appeal: case re-listed",
         "body": [
           "PA/12345/2023",
