@@ -382,6 +382,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-restclient:4.0.8"
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+    implementation 'org.springframework.boot:spring-boot-starter-security-oauth2-client'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-cache'
@@ -402,7 +403,7 @@ dependencies {
 
     implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '8.1'
 
-    implementation group: 'com.github.hmcts', name: 'document-management-client', version: '7.0.1'
+    implementation group: 'com.github.hmcts', name: 'document-management-client', version: '9.0.0'
 
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: '8.0.0'
     implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '5.3.5'
@@ -429,7 +430,9 @@ dependencies {
         exclude group: 'org.apache.commons', module: 'commons-lang3'
     }
 
-    testImplementation 'org.springframework.cloud:spring-cloud-contract-wiremock'
+    testImplementation 'org.springframework.cloud:spring-cloud-contract-wiremock:5.0.3'
+    testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-actuator'
     contractTestImplementation group: 'au.com.dius.pact.consumer', name: 'junit5', version: '4.6.20'
     contractTestImplementation group: 'au.com.dius.pact.provider', name: 'junit5', version: '4.6.20'
     contractTestImplementation group: 'au.com.dius.pact.provider', name: 'spring', version: '4.6.20'

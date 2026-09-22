@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.core.MethodParameter;
@@ -188,7 +189,7 @@ class CallbackControllerAdviceTest {
 
     @Test
     void should_handle_no_resource_found_exception() {
-        NoResourceFoundException exception = new NoResourceFoundException(null, "/unknown");
+        NoResourceFoundException exception = new NoResourceFoundException(HttpMethod.GET, "/unknown", "/unknown");
         ErrorResponse expectedResponse = buildErrorResponse(ErrorCode.NOT_FOUND);
 
         when(errorResponseBuilder.build(eq(ErrorCode.NOT_FOUND), eq(request), eq(null)))
