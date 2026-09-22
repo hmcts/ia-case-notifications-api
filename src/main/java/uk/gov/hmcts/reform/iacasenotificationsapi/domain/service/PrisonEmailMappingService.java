@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.service;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,7 +42,7 @@ public class PrisonEmailMappingService {
         @Value("${prison.email.mappings:}") String prisonEmailAddresses
     ) {
         this.prisonEmailAddresses = prisonEmailAddresses;
-        this.objectMapper = new ObjectMapper();
+        this.objectMapper = new JsonMapper();
     }
 
     @PostConstruct

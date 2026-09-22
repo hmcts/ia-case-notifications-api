@@ -3,8 +3,9 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.BailCaseFieldDefinition.*;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
+
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
@@ -15,11 +16,11 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdVa
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.NationalityFieldValue;
 
 public class BailCaseTest {
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new JsonMapper();
     private BailCase bailCase;
 
     @BeforeEach
-    public void setUp() throws JsonProcessingException {
+    public void setUp() {
         String caseData = "{\"applicantFamilyName\": \"family\", \"applicantGivenNames\": \"test\", \"applicantDateOfBirth\": \"2000-02-02\", \"applicantDetainedLoc\": \"immigrationRemovalCentre\", \"applicantNationality\": \"HAS_NATIONALITY\", \"applicantNationalities\": [{\"id\": \"f90f10db-1a34-43d9-a8f8-1cc9fac91891\", \"value\": {\"code\": \"Algerian\"}}], \"applicantPrisonDetails\": null, \"hasAppealHearingPending\": \"DontKnow\", \"applicantArrivalInUKDate\": \"2021-12-12\"}";
         bailCase = objectMapper.readValue(caseData, BailCase.class);
     }
