@@ -45,9 +45,6 @@ public class SpringBootIntegrationTest {
     @Autowired
     protected JsonMapper objectMapper;
 
-    @Autowired
-    private WebApplicationContext wac;
-
     protected static WireMockServer server;
 
     @BeforeAll

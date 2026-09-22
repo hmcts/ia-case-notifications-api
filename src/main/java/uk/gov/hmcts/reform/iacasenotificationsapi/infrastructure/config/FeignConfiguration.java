@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config;
 
-import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.json.JsonMapper;
 import feign.codec.Decoder;
 import feign.codec.Encoder;
@@ -17,18 +16,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.JacksonJsonHttpMessageConverter;
-import tools.jackson.databind.cfg.EnumFeature;
 
 @Configuration
 public class FeignConfiguration {
-
-    @Bean
-    @Primary
-    public ObjectMapper objectMapper() {
-        return JsonMapper.builder()
-                .configure(EnumFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE, true)
-                .build();
-    }
 
     @Bean
     public HttpMessageConverter<?> feignJacksonHttpMessageConverter(JsonMapper jsonMapper) {
