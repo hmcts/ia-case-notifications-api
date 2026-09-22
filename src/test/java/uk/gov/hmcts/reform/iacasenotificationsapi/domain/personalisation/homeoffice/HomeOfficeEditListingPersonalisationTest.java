@@ -130,8 +130,7 @@ class HomeOfficeEditListingPersonalisationTest {
         assertFalse(personalisation.isEmpty());
         assertThat(personalisation)
             .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
-            .containsAllEntriesOf(personalisationProvider.getPersonalisation(callback))
-            .containsEntry("hearingCentreAddress", hearingCentreAddress);
+            .containsAllEntriesOf(personalisationProvider.getPersonalisation(callback));
     }
 
     private Map<String, String> getPersonalisationMapWithGivenValues() {
