@@ -191,8 +191,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isFeeExemptAppeal;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isHearingChannel;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isHearingDetailsUpdated;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasStf24WeeksStatus;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isInternalCase;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isLegalRepEjp;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isRemissionApproved;
@@ -7981,28 +7979,6 @@ public class NotificationHandlerConfiguration {
                 return callback.getEvent() == Event.EDIT_CASE_LISTING
                     && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && isInternalCase(asylumCase);
-            }, notificationGenerators
-        );
-    }
-
-    @Bean
-    public PreSubmitCallbackHandler<AsylumCase> reListCase24WeeksNotificationHandler(
-        @Qualifier("reListCase24WeeksNotificationGenerator") List<NotificationGenerator> notificationGenerators
-    ) {
-        return new NotificationHandler(
-            (callbackStage, callback) -> {
-                final AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
-                boolean isStf24W = hasStf24WeeksStatus(asylumCase);
-                boolean relisting = callback.getCaseDetailsBefore()
-                    .map(CaseDetails::getCaseData)
-                    .map(AsylumCaseUtils::isRelisting)
-                    .orElse(false);
-                log.debug("reListCase24WeeksNotificationHandler canHandle: event={}, stage={}, isStf24W={}, isRelisting={}, caseId={}",
-                    callback.getEvent(), callbackStage, isStf24W, relisting, callback.getCaseDetails().getId());
-                return callback.getEvent() == LIST_CASE
-                    && callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && isStf24W
-                    && relisting;
             }, notificationGenerators
         );
     }
