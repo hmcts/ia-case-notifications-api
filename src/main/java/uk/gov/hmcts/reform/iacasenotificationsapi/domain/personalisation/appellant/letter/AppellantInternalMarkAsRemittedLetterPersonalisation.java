@@ -52,7 +52,6 @@ public class AppellantInternalMarkAsRemittedLetterPersonalisation  implements Le
                 .getCaseDetails()
                 .getCaseData();
 
-        List<String> address =  getAppellantOrLegalRepAddressLetterPersonalisation(asylumCase);
 
         ImmutableMap.Builder<String, String> personalizationBuilder = ImmutableMap
             .<String, String>builder()
@@ -65,9 +64,7 @@ public class AppellantInternalMarkAsRemittedLetterPersonalisation  implements Le
                 .orElseThrow(() -> new IllegalStateException("sourceOfRemittal is not present"))
                 .getValue());
 
-        for (int i = 0; i < address.size(); i++) {
-            personalizationBuilder.put("address_line_" + (i + 1), address.get(i));
-        }
+        buildAddressForIccLetter(asylumCase, personalizationBuilder);
         return personalizationBuilder.build();
     }
 }

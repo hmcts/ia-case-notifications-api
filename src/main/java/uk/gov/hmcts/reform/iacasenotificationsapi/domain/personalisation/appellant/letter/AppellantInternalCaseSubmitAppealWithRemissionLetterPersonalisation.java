@@ -69,11 +69,7 @@ public class AppellantInternalCaseSubmitAppealWithRemissionLetterPersonalisation
             .put("appellantFamilyName", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
             .put("tenDaysAfterSubmitDate", dueDate);
 
-        List<String> address =  getAppellantOrLegalRepAddressLetterPersonalisation(asylumCase);
-
-        for (int i = 0; i < address.size(); i++) {
-            personalizationBuilder.put("address_line_" + (i + 1), address.get(i));
-        }
+        buildAddressForIccLetter(asylumCase, personalizationBuilder);
         return personalizationBuilder.build();
     }
 }

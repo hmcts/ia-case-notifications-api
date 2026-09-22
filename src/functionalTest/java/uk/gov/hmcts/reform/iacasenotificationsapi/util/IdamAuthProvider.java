@@ -120,6 +120,14 @@ public class IdamAuthProvider {
         );
     }
 
+    @Cacheable(value = "nlrTokenCache", key = "'nlrTokenCache'")
+    public String getNlrToken() {
+        return getUserToken(
+            System.getenv("TEST_NLR_USERNAME"),
+            System.getenv("TEST_NLR_PASSWORD")
+        );
+    }
+
     @Cacheable(value = "systemUserTokenCache", key = "'systemUserTokenCache'")
     public String getSystemToken() {
         return getUserToken(

@@ -9,15 +9,20 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -27,10 +32,20 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.EMAIL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_DECISION_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation.DAYS_14;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation.DAYS_42;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation.DAYS_56;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.JOURNEY_TYPE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.D_MMM_YYYY;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.APPEAL_RECEIVED_DATE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.APPELLANT_FULL_NAME;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.DAYS_14;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.DAYS_14_FROM_DATE_OF_DIRECTION_KEY;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.DAYS_42;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.DAYS_42_FROM_DATE_OF_DIRECTION_KEY;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.DAYS_56;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.DAYS_56_FROM_DATE_OF_DIRECTION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.DECISION_SENT_DATE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.PRACTICE_DIRECTION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.WEEKS_DEADLINE;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -39,22 +54,17 @@ class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationEmailTe
     public static final String REVIEW_DATE = "2002-02-02";
     public static final String JUL_2002 = "20 Jul 2002";
     public static final String FEB_2002 = "2 Feb 2002";
-    public static final String DAYS_42_FROM_DATE_OF_DIRECTION_KEY = "42DaysFromDateOfDirection";
-    public static final String DECISION_SENT_DATE = "decisionSentDate";
     public static final String DECISION_SENT_DATE_KEY = DECISION_SENT_DATE;
-    public static final String WEEKS_DEADLINE = "24WeeksDeadline";
     public static final String WEEKS_DEADLINE_KEY = WEEKS_DEADLINE;
-    public static final String APPEAL_RECEIVED_DATE = "appealReceivedDate";
     public static final String APPEAL_RECEIVED_DATE_KEY = APPEAL_RECEIVED_DATE;
-    public static final String PRACTICE_DIRECTION_KEY = "practiceDirection";
-    public static final String DAYS_14_FROM_DATE_OF_DIRECTION_KEY = "14DaysFromDateOfDirection";
-    public static final String DAYS_56_FROM_DATE_OF_DIRECTION = "56DaysFromDateOfDirection";
+    public static final String PRACTICE_DIRECTION_KEY = PRACTICE_DIRECTION;
     public static final String FULL_NAME = "Given Family";
-    public static final String APPELLANT_FULL_NAME_KEY = "appellantFullName";
+    public static final String APPELLANT_FULL_NAME_KEY = APPELLANT_FULL_NAME;
     private static final String APPELLANT_GIVEN_NAMES_KEY = "appellantGivenNames";
     private static final String APPELLANT_FAMILY_NAME_KEY = "appellantFamilyName";
     private static final String IA_EX_UI_FRONTEND_URL = "http://localhost";
     private static final String EMAIL_ADDRESS = "legal@example.com";
+    private static final String AIP_EMAIL_ADDRESS = "aip@example.com";
     private static final String APPELLANT_GIVEN_NAMES_VALUE = "Given";
     private static final String APPELLANT_FAMILY_NAME_VALUE = "Family";
     private static final String MOCK_PREFIX = "some mock prefix";
@@ -67,12 +77,15 @@ class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationEmailTe
     private static final String CUSTOMER_SERVICE_EMAIL = "dummy@email.com";
     private static final Long CASE_ID = 12345L;
     private static final String EXPECTED_REFERENCE_ID =
-            CASE_ID + "_STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL";
+            CASE_ID + STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_APPELLANT_EMAIL;
     @Mock
     private AsylumCase asylumCase;
 
     @Mock
     private CustomerServicesProvider customerServicesProvider;
+
+    @Mock
+    private RecipientsFinder recipientFinder;
 
     private AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationEmail personalisation;
 
@@ -85,6 +98,7 @@ class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationEmailTe
                 EMAIL_TEMPLATE_ID,
                 IA_EX_UI_FRONTEND_URL,
                 MOCK_PREFIX,
+                recipientFinder,
                 customerServicesProvider
         );
     }
@@ -100,8 +114,11 @@ class AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationEmailTe
     }
 
     @Test
-    void shouldReturnGivenEmailAddress() {
-        assertTrue(personalisation.getRecipientsList(asylumCase).contains(EMAIL_ADDRESS));
+    void shouldReturnGivenEmailAddress_aip() {
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
+        when(recipientFinder.findAll(asylumCase, NotificationType.EMAIL)).thenReturn(Set.of(AIP_EMAIL_ADDRESS));
+        assertFalse(personalisation.getRecipientsList(asylumCase).contains(EMAIL_ADDRESS));
+        assertTrue(personalisation.getRecipientsList(asylumCase).contains(AIP_EMAIL_ADDRESS));
     }
 
     @Test
