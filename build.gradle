@@ -14,6 +14,12 @@ plugins {
     id 'au.com.dius.pact' version '4.6.20'
     id 'org.gradle.test-retry' version '1.6.6'
     id 'net.serenity-bdd.serenity-gradle-plugin' version '5.3.9'
+    id 'org.openrewrite.rewrite' version '7.39.0'
+}
+
+rewrite {
+    activeRecipe("org.openrewrite.java.spring.boot4.UpgradeSpringBoot_4_0")
+    setExportDatatables(true)
 }
 
 apply plugin: 'java'
@@ -304,6 +310,13 @@ repositories {
     maven {
         url 'https://pkgs.dev.azure.com/hmcts/Artifacts/_packaging/hmcts-lib/maven/v1'
     }
+    maven {
+        url = 'https://artifacts.codegenomeproject.org/maven'
+        credentials {
+            username = 'kleovoulosg@gmail.com'
+            password = 'cgp_QXEVn76YX34jPNw3ItjthnHibaXWjqcfM_vxfz9ZvGQ'
+        }
+    }
 }
 
 ext["tomcat.version"] = "10.1.59"
@@ -364,7 +377,6 @@ dependencyManagement {
 }
 
 dependencies {
-    rewrite("org.openrewrite.recipe:rewrite-spring:6.37.0")
 
     constraints {
         implementation('org.apache.groovy:groovy') {
