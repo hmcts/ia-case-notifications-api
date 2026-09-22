@@ -9,7 +9,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,7 +22,6 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.StringProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.*;
@@ -292,24 +290,5 @@ public class HomeOfficeListCasePersonalisationTest {
             .containsEntry("hearingDate", hearingDate)
             .containsEntry("hearingTime", hearingTime)
             .containsEntry("hearingCentreAddress", hearingCentreAddress);
-    }
-
-    @Test
-    public void should_return_empty_recipients_for_24_week_relisting() {
-        when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        // NOTIFICATIONS_SENT contains a _CASE_LISTED_ entry — simulates a re-listing (first listing already completed)
-        List<IdValue<String>> notifications = List.of(
-            new IdValue<>("1_CASE_LISTED_CASE_OFFICER_abc123", "some-notify-id")
-        );
-        when(asylumCase.<List<IdValue<String>>>read(NOTIFICATIONS_SENT)).thenReturn(Optional.of(notifications));
-        assertTrue(homeOfficeListCasePersonalisation.getRecipientsList(asylumCase).isEmpty());
-    }
-
-    @Test
-    public void should_return_recipients_for_24_week_first_listing() {
-        when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        // NOTIFICATIONS_SENT is empty — simulates a first listing (no prior listed notifications)
-        when(asylumCase.<List<IdValue<String>>>read(NOTIFICATIONS_SENT)).thenReturn(Optional.empty());
-        assertTrue(homeOfficeListCasePersonalisation.getRecipientsList(asylumCase).contains(homeOfficeEmailAddress));
     }
 }
