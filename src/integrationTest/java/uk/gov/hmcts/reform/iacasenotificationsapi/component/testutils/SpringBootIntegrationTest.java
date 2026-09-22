@@ -1,5 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils;
 
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import tools.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.common.Slf4jNotifier;
@@ -16,6 +18,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
+import tools.jackson.databind.json.JsonMapper;
 import uk.gov.hmcts.reform.iacasenotificationsapi.Application;
 
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
@@ -40,8 +43,11 @@ public class SpringBootIntegrationTest {
     @Autowired
     protected MockMvc mockMvc;
 
+    @MockitoBean
+    protected JwtDecoder jwtDecoder;
+
     @Autowired
-    protected ObjectMapper objectMapper;
+    protected JsonMapper objectMapper;
 
     @Autowired
     private WebApplicationContext wac;
@@ -54,11 +60,6 @@ public class SpringBootIntegrationTest {
             .notifier(new Slf4jNotifier(true))
             .port(8990));
         server.start();
-    }
-
-    @BeforeEach
-    void setUp() {
-        mockMvc = webAppContextSetup(wac).build();
     }
 
     @AfterEach
