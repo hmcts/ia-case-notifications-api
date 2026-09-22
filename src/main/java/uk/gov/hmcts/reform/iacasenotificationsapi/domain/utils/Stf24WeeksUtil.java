@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils;
 
 import com.google.common.collect.ImmutableMap;
+import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
@@ -20,6 +21,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.REVIEW_HEARING_REQUIREMENTS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
+@Slf4j
 public class Stf24WeeksUtil {
     public static final int DAYS_14 = 14;
     public static final int DAYS_42 = 42;
@@ -187,6 +189,11 @@ public class Stf24WeeksUtil {
         requireNonNull(asylumCase, "asylumCase must not be null");
         ImmutableMap.Builder<String, String> builder = buildCommonParams(notificationFor, asylumCase, customerServicesProvider, dateTimeExtractor, hearingDetailsFinder);
         builder.put(LEGAL_SUPPORT_INFO, buildLegalSupportInfo(notificationFor));
+        if (notificationFor == Stf24WeeksNotificationFor.LEGAL_REPRESENTATIVE) {
+            buildAddressForLegalRepIccLetter(asylumCase, builder);
+        } else if (notificationFor == Stf24WeeksNotificationFor.APPELLANT) {
+            buildAddressForAppellantIccLetter(asylumCase, builder);
+        }
         return builder.build();
     }
 
@@ -226,7 +233,7 @@ public class Stf24WeeksUtil {
                 && isHearingRequirementsFor24WeeksCase(event, asylumCase);
     }
 
-    public static boolean canRunHearingReqInternalCase(PreSubmitCallbackStage callbackStage, Event event, AsylumCase asylumCase, boolean canRunFor24Weeks) {
+    public static boolean canRunHearingReqReviewInternalCase(PreSubmitCallbackStage callbackStage, Event event, AsylumCase asylumCase, boolean canRunFor24Weeks) {
         return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                 && canRunFor24Weeks
                 && isHearingRequirementsFor24WeeksCase(event, asylumCase);

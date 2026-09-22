@@ -5889,7 +5889,7 @@ public class NotificationHandlerConfiguration {
                             callback
                                     .getCaseDetails()
                                     .getCaseData();
-                    return canRunHearingReqInternalCase(callbackStage, callback.getEvent(), asylumCase, true);
+                    return canRunHearingReqReviewInternalCase(callbackStage, callback.getEvent(), asylumCase, true);
                 },
                 notificationGenerators, getErrorHandler()
         );
@@ -5904,7 +5904,7 @@ public class NotificationHandlerConfiguration {
                             callback
                                     .getCaseDetails()
                                     .getCaseData();
-                    return canRunHearingReqInternalCase(callbackStage, callback.getEvent(), asylumCase, isAipJourney(asylumCase));
+                    return canRunHearingReqReviewInternalCase(callbackStage, callback.getEvent(), asylumCase, isAipJourney(asylumCase));
                 },
                 notificationGenerators, getErrorHandler()
         );
@@ -5935,7 +5935,7 @@ public class NotificationHandlerConfiguration {
                             callback
                                     .getCaseDetails()
                                     .getCaseData();
-                    return canRunHearingReqInternalCase(callbackStage, callback.getEvent(), asylumCase, isInternalWithoutLegalRepresentation(asylumCase));
+                    return canRunHearingReqReviewInternalCase(callbackStage, callback.getEvent(), asylumCase, isInternalWithoutLegalRepresentation(asylumCase));
                 },
                 notificationGenerators, getErrorHandler()
         );
@@ -5950,7 +5950,7 @@ public class NotificationHandlerConfiguration {
                             callback
                                     .getCaseDetails()
                                     .getCaseData();
-                    return canRunHearingReqInternalCase(callbackStage, callback.getEvent(), asylumCase, hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase));
+                    return canRunHearingReqReviewInternalCase(callbackStage, callback.getEvent(), asylumCase, hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase));
                 },
                 notificationGenerators, getErrorHandler()
         );
