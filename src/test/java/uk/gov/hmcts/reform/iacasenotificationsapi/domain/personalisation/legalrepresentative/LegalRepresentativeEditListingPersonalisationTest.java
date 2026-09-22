@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ACCELERATED_DETAINED_APPEAL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
 
 import com.google.common.collect.ImmutableMap;
@@ -39,6 +40,7 @@ public class LegalRepresentativeEditListingPersonalisationTest {
     private final String adaTemplateId = "adaTemplateId";
     private final String nonAdaTemplateId = "nonAdaTemplateId";
     private final String templateIdRemoteHearing = "remoteTemplateId";
+    private final String stf24WeeksTemplateId = "24wTemplateId";
     private final String iaExUiFrontendUrl = "http://localhost";
     private final String legalRepEmailAddress = "legalRep@example.com";
     private final String hearingCentreNameBefore = HearingCentre.MANCHESTER.toString();
@@ -69,6 +71,7 @@ public class LegalRepresentativeEditListingPersonalisationTest {
             templateIdRemoteHearing,
             listAssistHearingTemplateId,
             listAssistHearingTemplateIdRemoteHearing,
+            stf24WeeksTemplateId,
             personalisationProvider,
             customerServicesProvider
         );
@@ -88,6 +91,10 @@ public class LegalRepresentativeEditListingPersonalisationTest {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
 
         assertEquals(adaTemplateId, legalRepresentativeEditListingPersonalisation.getTemplateId(asylumCase));
+
+        when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+
+        assertEquals(stf24WeeksTemplateId, legalRepresentativeEditListingPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test

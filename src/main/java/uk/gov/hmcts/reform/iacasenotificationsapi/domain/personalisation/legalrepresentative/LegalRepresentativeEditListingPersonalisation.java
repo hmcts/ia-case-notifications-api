@@ -24,6 +24,7 @@ public class LegalRepresentativeEditListingPersonalisation implements LegalRepre
     private final String legalRepresentativeCaseEditedRemoteHearingTemplateId;
     private final String listAssistHearingLegalRepresentativeCaseEditedTemplateId;
     private final String listAssistHearingLegalRepresentativeCaseEditedRemoteHearingTemplateId;
+    private final String stf24WeeksTemplateId;
     private final PersonalisationProvider personalisationProvider;
     private final CustomerServicesProvider customerServicesProvider;
 
@@ -38,6 +39,7 @@ public class LegalRepresentativeEditListingPersonalisation implements LegalRepre
         @Value("${govnotify.template.caseEditedRemoteHearing.legalRep.email}") String legalRepresentativeCaseEditedRemoteHearingTemplateId,
         @Value("${govnotify.template.listAssistHearing.caseEdited.legalRep.email}") String listAssistHearingLegalRepresentativeCaseEditedTemplateId,
         @Value("${govnotify.template.listAssistHearing.caseEditedRemoteHearing.legalRep.email}") String listAssistHearingLegalRepresentativeCaseEditedRemoteHearingTemplateId,
+        @Value("${govnotify.template.reListCase24Weeks.legalRep24Weeks.email}") String stf24WeeksTemplateId,
         PersonalisationProvider personalisationProvider,
         CustomerServicesProvider customerServicesProvider
     ) {
@@ -46,12 +48,16 @@ public class LegalRepresentativeEditListingPersonalisation implements LegalRepre
         this.legalRepresentativeCaseEditedRemoteHearingTemplateId = legalRepresentativeCaseEditedRemoteHearingTemplateId;
         this.listAssistHearingLegalRepresentativeCaseEditedTemplateId = listAssistHearingLegalRepresentativeCaseEditedTemplateId;
         this.listAssistHearingLegalRepresentativeCaseEditedRemoteHearingTemplateId = listAssistHearingLegalRepresentativeCaseEditedRemoteHearingTemplateId;
+        this.stf24WeeksTemplateId = stf24WeeksTemplateId;
         this.personalisationProvider = personalisationProvider;
         this.customerServicesProvider = customerServicesProvider;
     }
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
+        if (AsylumCaseUtils.hasStf24WeeksStatus(asylumCase)) {
+            return stf24WeeksTemplateId;
+        }
         YesOrNo isIntegrated = asylumCase.read(IS_INTEGRATED, YesOrNo.class).orElse(YesOrNo.NO);
         HearingCentre hearingCentre = asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class).orElse(null);
         if (AsylumCaseUtils.isAcceleratedDetainedAppeal(asylumCase)) {
