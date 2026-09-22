@@ -11,11 +11,14 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 import jakarta.validation.constraints.NotNull;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
+
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppealListed;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.HOME_OFFICE_REFERENCE_NUMBER_KEY;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL;
 
@@ -23,7 +26,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24Weeks
 @Service
 @Slf4j
 public class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation
-        implements EmailNotificationPersonalisation {
+    implements EmailNotificationPersonalisation {
 
 
     private static final String SUBJECT_PREFIX_KEY = "subjectPrefix";
@@ -36,21 +39,24 @@ public class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation
     private final String templateId;
     private final String iaExUiFrontendUrl;
     private final String apcPrivateHomeOfficeEmailAddress;
+    private final EmailAddressFinder emailAddressFinder;
     private final CustomerServicesProvider customerServicesProvider;
     private final String nonAdaPrefix;
 
 
     public HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation(
-            @NotNull(message = "templateId cannot be null") @Value("${govnotify.template.removeStatutoryTimeframe24Weeks.homeOffice.email}") String templateId,
-            @Value("${apcPrivateHomeOfficeEmailAddress}") String apcPrivateHomeOfficeEmailAddress,
-            @Value("${govnotify.emailPrefix.nonAda}") String nonAdaPrefix,
-            @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
-            CustomerServicesProvider customerServicesProvider) {
+        @NotNull(message = "templateId cannot be null") @Value("${govnotify.template.removeStatutoryTimeframe24Weeks.homeOffice.email}") String templateId,
+        @Value("${apcPrivateHomeOfficeEmailAddress}") String apcPrivateHomeOfficeEmailAddress,
+        @Value("${govnotify.emailPrefix.nonAda}") String nonAdaPrefix,
+        @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
+        EmailAddressFinder emailAddressFinder,
+        CustomerServicesProvider customerServicesProvider) {
         this.templateId = templateId;
         this.apcPrivateHomeOfficeEmailAddress = apcPrivateHomeOfficeEmailAddress;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.customerServicesProvider = customerServicesProvider;
         this.nonAdaPrefix = nonAdaPrefix;
+        this.emailAddressFinder = emailAddressFinder;
     }
 
     @Override
@@ -60,10 +66,9 @@ public class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-
-        Set<String> emails = Collections.singleton(apcPrivateHomeOfficeEmailAddress);
-        log.info("HO Emails {}", emails);
-        return emails;
+        return isAppealListed(asylumCase)
+            ? Collections.singleton(emailAddressFinder.getListCaseHomeOfficeEmailAddress(asylumCase)) :
+            Collections.singleton(apcPrivateHomeOfficeEmailAddress);
     }
 
     @Override
@@ -76,15 +81,15 @@ public class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation
         requireNonNull(asylumCase, "asylumCase must not be null");
 
         return ImmutableMap.<String, String>builder()
-                .put(SUBJECT_PREFIX_KEY, nonAdaPrefix)
-                .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
-                .put(HOME_OFFICE_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
-                .put(APPEAL_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING))
-                .put(APPELLANT_GIVEN_NAMES_KEY, asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(EMPTY_STRING))
-                .put(APPELLANT_FAMILY_NAME_KEY, asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(EMPTY_STRING))
-                .put(LINK_TO_ONLINE_SERVICE_KEY, iaExUiFrontendUrl)
-                .put(COMPLETE_CASE_REVIEW_DATE_KEY, AsylumCaseUtils.getCompleteCasedReviewDate(asylumCase))
-                .build();
+            .put(SUBJECT_PREFIX_KEY, nonAdaPrefix)
+            .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
+            .put(HOME_OFFICE_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
+            .put(APPEAL_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING))
+            .put(APPELLANT_GIVEN_NAMES_KEY, asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(EMPTY_STRING))
+            .put(APPELLANT_FAMILY_NAME_KEY, asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(EMPTY_STRING))
+            .put(LINK_TO_ONLINE_SERVICE_KEY, iaExUiFrontendUrl)
+            .put(COMPLETE_CASE_REVIEW_DATE_KEY, AsylumCaseUtils.getCompleteCasedReviewDate(asylumCase))
+            .build();
     }
 
 }
