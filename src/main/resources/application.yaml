@@ -353,6 +353,12 @@ govnotify:
         email: b96c8935-66b1-4a46-aca6-f8e86d7a5d8f
         detention:
           email: 68fdfc26-6bef-45c8-84cf-ae1ece8572cf
+    raiseQuery:
+      legalRep:
+        email: 18fc759f-0292-461e-82ad-ce094b3fe2fe
+    respondQuery:
+      legalRep:
+        email: 967dd872-890e-4c0c-86aa-6e34638b4f1b
     reviewDirection:
       legalRep:
         email: 99f45880-25a3-4ca4-bce0-fdc7e0a81a88
@@ -1788,6 +1794,7 @@ security:
       - "applyForCosts"
       - "respondToCosts"
       - "addEvidenceForCosts"
+      - "queryManagementRaiseQuery"
     tribunal-caseworker:
       - "sendDirection"
       - "changeDirectionDueDate"
@@ -2006,6 +2013,7 @@ security:
       - "generatePinInPost"
     # These events are used by the bails service, they will need to be migrated to the admin access management roles - see DIAC-855
     caseworker-ia-admofficer:
+      - "queryManagementRespondQuery"
       - "editBailApplication"
       - "uploadSignedDecisionNotice"
       - "uploadSignedDecisionNoticeConditionalGrant"
@@ -2078,6 +2086,7 @@ security:
       - "requestRespondentEvidence"
       - "generatePinInPost"
     ctsc:
+      - "queryManagementRespondQuery"
       - "progressMigratedCase"
       - "requestFeeRemission"
       - "buildCase"
@@ -2774,9 +2783,9 @@ homeOfficeEmailAddresses:
   hattonCross: ${IA_HOME_OFFICE_HATTON_CROSS_EMAIL:ho-hatton-cross@example.com}
   glasgow: ${IA_HOME_OFFICE_GLASGOW_EMAIL:ho-glasgow@example.com}
   belfast: ${IA_HOME_OFFICE_GLASGOW_EMAIL:ho-glasgow@example.com}
-  harmondsworth: ${IA_HOME_OFFICE_HARMONDSWORTH_EMAIL:ho-harmondsworth@example.com}
+  harmondsworth: ${IA_HOME_OFFICE_HATTON_CROSS_EMAIL:ho-harmondsworth@example.com}
   hendon: ${IA_HOME_OFFICE_HENDON_EMAIL:ho-hendon@example.com}
-  yarlsWood: ${IA_HOME_OFFICE_YARLS_WOOD_EMAIL:ho-yarls-wood@example.com}
+  yarlsWood: ${IA_HOME_OFFICE_TAYLOR_HOUSE_EMAIL:ho-yarls-wood@example.com}
   bradfordKeighley: ${IA_HOME_OFFICE_BRADFORD_KEIGHLEY_EMAIL:ho-bradford-keighley@example.com}
   mccMinshull: ${IA_HOME_OFFICE_MCC_MINSHULL_EMAIL:ho-mcc-minshull@example.com}
   mccCrownSquare: ${IA_HOME_OFFICE_MCC_CROWN_SQUARE_EMAIL:ho-mcc-crown-square@example.com}
