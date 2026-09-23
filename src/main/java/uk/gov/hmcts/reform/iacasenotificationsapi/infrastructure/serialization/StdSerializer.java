@@ -1,16 +1,16 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.serialization;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 @Component
 public class StdSerializer<T> implements Serializer<T> {
 
-    private final ObjectMapper mapper;
+    private final JsonMapper mapper;
 
     public StdSerializer(
-        ObjectMapper mapper
+            JsonMapper mapper
     ) {
         this.mapper = mapper;
     }
@@ -22,7 +22,7 @@ public class StdSerializer<T> implements Serializer<T> {
 
             return mapper.writeValueAsString(data);
 
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             throw new IllegalArgumentException("Could not serialize data", e);
         }
     }

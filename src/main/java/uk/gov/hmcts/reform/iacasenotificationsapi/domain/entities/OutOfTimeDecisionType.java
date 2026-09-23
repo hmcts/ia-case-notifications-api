@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum OutOfTimeDecisionType {
@@ -12,6 +13,7 @@ public enum OutOfTimeDecisionType {
     @JsonValue
     private final String value;
 
+    @JsonCreator
     OutOfTimeDecisionType(String value) {
         this.value = value;
     }

@@ -1,24 +1,22 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.common.Slf4jNotifier;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.context.WebApplicationContext;
+import tools.jackson.databind.json.JsonMapper;
 import uk.gov.hmcts.reform.iacasenotificationsapi.Application;
-
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @SpringBootTest(classes = {
     TestConfiguration.class,
@@ -40,11 +38,11 @@ public class SpringBootIntegrationTest {
     @Autowired
     protected MockMvc mockMvc;
 
-    @Autowired
-    protected ObjectMapper objectMapper;
+    @MockitoBean
+    protected JwtDecoder jwtDecoder;
 
     @Autowired
-    private WebApplicationContext wac;
+    protected JsonMapper objectMapper;
 
     protected static WireMockServer server;
 
@@ -54,11 +52,6 @@ public class SpringBootIntegrationTest {
             .notifier(new Slf4jNotifier(true))
             .port(8990));
         server.start();
-    }
-
-    @BeforeEach
-    void setUp() {
-        mockMvc = webAppContextSetup(wac).build();
     }
 
     @AfterEach

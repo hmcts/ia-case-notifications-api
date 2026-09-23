@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 
@@ -14,6 +15,7 @@ public enum FeeUpdateReason {
     @Getter
     private final String normalizedValue;
 
+    @JsonCreator
     FeeUpdateReason(String value, String normalizedValue) {
         this.value = value;
         this.normalizedValue = normalizedValue;

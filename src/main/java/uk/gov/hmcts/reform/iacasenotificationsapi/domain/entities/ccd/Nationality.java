@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 import com.fasterxml.jackson.annotation.JsonValue;
 
@@ -262,6 +263,7 @@ public enum Nationality {
     @JsonValue
     private final String id;
 
+    @JsonCreator
     Nationality(String id) {
         this.id = id;
     }
