@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalr
 
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ACCELERATED_DETAINED_APPEAL;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
 
@@ -36,6 +37,7 @@ public class LegalRepresentativeSubmittedHearingRequirementsPersonalisationTest 
 
     private final String templateId = "someTemplateId";
     private final String adaTemplateId = "someAdaTemplateId";
+    private final String stf24wTemplateId = "some24WeeksTemplateId";
     private final String iaExUiFrontendUrl = "http://localhost";
     private final String legalRepEmailAddress = "legalrep@something.com";
     @Mock
@@ -58,6 +60,7 @@ public class LegalRepresentativeSubmittedHearingRequirementsPersonalisationTest 
             new LegalRepresentativeSubmittedHearingRequirementsPersonalisation(
                 templateId,
                 adaTemplateId,
+                stf24wTemplateId,
                 iaExUiFrontendUrl,
                 personalisationProvider,
                 customerServicesProvider
@@ -69,6 +72,8 @@ public class LegalRepresentativeSubmittedHearingRequirementsPersonalisationTest 
         assertEquals(templateId, legalRepresentativeSubmittedHearingRequirementsPersonalisation.getTemplateId(asylumCase));
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YES));
         assertEquals(adaTemplateId, legalRepresentativeSubmittedHearingRequirementsPersonalisation.getTemplateId(asylumCase));
+        when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YES));
+        assertEquals(stf24wTemplateId, legalRepresentativeSubmittedHearingRequirementsPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test

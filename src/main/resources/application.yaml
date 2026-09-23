@@ -628,6 +628,7 @@ govnotify:
     submittedHearingRequirements:
       legalRep:
         email: 1b7fe0be-1ca0-47d6-bec4-21b65fed27c6
+        email24Weeks: 445af3a3-bc75-49ef-b5b9-8f0e7e2ff73e
         ada:
           email: c68173ec-1300-43c7-ae82-0371560a5559
       caseOfficer:
