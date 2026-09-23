@@ -132,6 +132,23 @@ configurations {
     contractTestRuntime.extendsFrom testRuntime
 }
 
+configurations.configureEach {
+    resolutionStrategy {
+        // Enforce Groovy 4.x explicitly across all transitive configurations
+        force 'org.apache.groovy:groovy:4.0.28'
+        force 'org.apache.groovy:groovy-xml:4.0.28'
+        force 'org.apache.groovy:groovy-json:4.0.28'
+
+        // Prevent Groovy 5 BOM from overriding forced versions
+        eachDependency { DependencyResolveDetails details ->
+            if (details.requested.group == 'org.apache.groovy') {
+                details.useVersion '4.0.28'
+                details.because 'REST Assured requires Groovy 4.x and breaks with NPEs under Groovy 5'
+            }
+        }
+    }
+}
+
 checkstyle {
     maxWarnings = 0
     toolVersion = '13.4.2'
