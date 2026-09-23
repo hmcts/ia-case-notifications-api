@@ -33,6 +33,7 @@ public class EmailAddressFinderTest {
     private final String listCaseHearingCenterEmailAddress = "listCaseHearingCentre@example.com";
     private final String legalRepEmailAddress = "legalRep@example.com";
     private final String listCaseCaseOfficerEmailAddress = "co-list-case@example.com";
+    private final String yarlsWoodCaseOfficerEmailAddress = "co-example.yarlswood@example.gov.uk";
     @Mock
     AsylumCase asylumCase;
     @Mock
@@ -80,8 +81,10 @@ public class EmailAddressFinderTest {
             homeOfficeFtpaEmailAddresses,
             bailHearingCentreEmailAddresses,
             adminEmailAddresses,
-            listCaseCaseOfficerEmailAddress
-        );
+            listCaseCaseOfficerEmailAddress,
+            yarlsWoodCaseOfficerEmailAddress
+
+                );
     }
 
     @Test
@@ -389,5 +392,14 @@ public class EmailAddressFinderTest {
         when(hearingCentreEmailAddresses.get(BRADFORD)).thenReturn("ho-bradford@example.com");
         assertEquals("ho-bradford@example.com",
             emailAddressFinder.getListCaseCaseOfficerHearingCentreEmailAddress(asylumCase));
+
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(REMOTE_HEARING));
+        when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(YARLS_WOOD));
+        assertEquals(yarlsWoodCaseOfficerEmailAddress,
+                emailAddressFinder.getListCaseCaseOfficerHearingCentreEmailAddress(asylumCase));
+
+        when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(YARLS_WOOD));
+        assertEquals(yarlsWoodCaseOfficerEmailAddress,
+                emailAddressFinder.getListCaseCaseOfficerHearingCentreEmailAddress(asylumCase));
     }
 }
