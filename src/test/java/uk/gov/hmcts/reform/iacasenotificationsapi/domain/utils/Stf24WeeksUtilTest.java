@@ -496,8 +496,8 @@ public class Stf24WeeksUtilTest {
         assertTrue(Stf24WeeksUtil.canRunEventForInternalCase(
             PreSubmitCallbackStage.ABOUT_TO_SUBMIT,
             Event.REVIEW_HEARING_REQUIREMENTS,
-            asylumCase,
-            true, REVIEW_HEARING_REQUIREMENTS
+                REVIEW_HEARING_REQUIREMENTS, asylumCase,
+            true
         ));
     }
 
@@ -506,8 +506,8 @@ public class Stf24WeeksUtilTest {
         assertFalse(Stf24WeeksUtil.canRunEventForInternalCase(
             PreSubmitCallbackStage.ABOUT_TO_START,
             Event.REVIEW_HEARING_REQUIREMENTS,
-            asylumCase,
-            true, REVIEW_HEARING_REQUIREMENTS
+                REVIEW_HEARING_REQUIREMENTS, asylumCase,
+            true
         ));
     }
 
@@ -516,8 +516,8 @@ public class Stf24WeeksUtilTest {
         assertFalse(Stf24WeeksUtil.canRunEventForInternalCase(
             PreSubmitCallbackStage.ABOUT_TO_SUBMIT,
             Event.REVIEW_HEARING_REQUIREMENTS,
-            asylumCase,
-            false, REVIEW_HEARING_REQUIREMENTS
+                REVIEW_HEARING_REQUIREMENTS, asylumCase,
+            false
         ));
     }
 
@@ -529,8 +529,8 @@ public class Stf24WeeksUtilTest {
         assertFalse(Stf24WeeksUtil.canRunEventForInternalCase(
             PreSubmitCallbackStage.ABOUT_TO_SUBMIT,
             Event.COMPLETE_CASE_REVIEW,
-            asylumCase,
-            true, REVIEW_HEARING_REQUIREMENTS
+                REVIEW_HEARING_REQUIREMENTS, asylumCase,
+            true
         ));
     }
 
@@ -542,8 +542,8 @@ public class Stf24WeeksUtilTest {
         assertFalse(Stf24WeeksUtil.canRunEventForInternalCase(
             PreSubmitCallbackStage.ABOUT_TO_SUBMIT,
             Event.REVIEW_HEARING_REQUIREMENTS,
-            asylumCase,
-            true, REVIEW_HEARING_REQUIREMENTS
+                REVIEW_HEARING_REQUIREMENTS, asylumCase,
+            true
         ));
     }
 }

@@ -50,7 +50,7 @@ public class LegalRepUploadEvidenceStatutoryTimeframe24WeeksPersonalisationLette
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + STATUTORY_TIMEFRAME_24WEEKS_SUBMITTED_HEARING_REQUIREMENTS_APPELLANT_LETTER;
+        return caseId + STATUTORY_TIMEFRAME_24WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_LR_LETTER;
     }
 
     @Override

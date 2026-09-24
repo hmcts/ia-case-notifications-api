@@ -76,6 +76,8 @@ public class Stf24WeeksUtil {
     public static final String STF_24_WEEKS_HEARING_REQUIREMENTS_EMAIL_TEMPLATE = "${govnotify.template.submittedHearingRequirements24Weeks.email}";
     public static final String STF_24_WEEKS_HEARING_REQUIREMENTS_LETTER_TEMPLATE = "${govnotify.template.submittedHearingRequirements24Weeks.letter}";
     public static final String STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_APPELLANT_LETTER_TEMPLATE = "${govnotify.template.uploadAdditionalEvidence24Weeks.letter}";
+    public static final String STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE_EMAIL_TEMPLATE = "${govnotify.template.uploadAdditionalEvidence24Weeks.email}";
+
     public static final String STF_24_WEEKS_HEARING_REQ_HO_EMAIL_GENERATOR = "hearingRequirementsStatutoryTimeframe24WeeksHomeOfficeNotificationGenerator";
     public static final String STF_24_WEEKS_HEARING_REQ_APPELLANT_EMAIL_GENERATOR = "hearingRequirementsStatutoryTimeframe24WeeksAppellantNotificationGenerator";
     public static final String STF_24_WEEKS_HEARING_REQ_LR_EMAIL_GENERATOR = "hearingRequirementsStatutoryTimeframe24WeeksLegalRepresentativeNotificationGenerator";
@@ -86,7 +88,7 @@ public class Stf24WeeksUtil {
     public static final String STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE_EMAIL_GENERATOR = "uploadAdditionalEvidenceStf24WeeksHomeOfficeEmailNotificationGenerator";
 
 
-    private static final String HO_REFERENCE_WITH_TEXT = "hoReferenceWithText";
+    public static final String HO_REFERENCE_WITH_TEXT = "hoReferenceWithText";
     private static final String LR_REFERENCE_WITH_TEXT = "lrReferenceWithText";
     private static final String HEARING_DATE = "hearingDate";
     private static final String HEARING_CENTRE_ADDRESS = "hearingCentreAddress";
@@ -243,7 +245,7 @@ public class Stf24WeeksUtil {
                 && is24WeeksCaseEvent(asylumCase, event, event1);
     }
 
-    public static boolean canRunEventForInternalCase(PreSubmitCallbackStage callbackStage, Event event, AsylumCase asylumCase, boolean canRunFor24Weeks, Event desiredEvent) {
+    public static boolean canRunEventForInternalCase(PreSubmitCallbackStage callbackStage, Event event, Event desiredEvent, AsylumCase asylumCase, boolean canRunFor24Weeks) {
         return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                 && canRunFor24Weeks
                 && is24WeeksCaseEvent(asylumCase, event, desiredEvent);

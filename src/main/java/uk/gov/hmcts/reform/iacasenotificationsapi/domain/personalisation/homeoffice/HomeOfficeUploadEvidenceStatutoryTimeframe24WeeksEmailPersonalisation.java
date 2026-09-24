@@ -14,8 +14,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_SUBMITTED_HEARING_REQUIREMENTS_HOME_OFFICE_EMAIL;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STF_24_WEEKS_HEARING_REQUIREMENTS_EMAIL_TEMPLATE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.*;
 
 @Slf4j
 @Service
@@ -32,7 +31,7 @@ public class HomeOfficeUploadEvidenceStatutoryTimeframe24WeeksEmailPersonalisati
 
     public HomeOfficeUploadEvidenceStatutoryTimeframe24WeeksEmailPersonalisation(
             @Value("${apcPrivateHomeOfficeEmailAddress}") String apcPrivateHomeOfficeEmailAddress,
-            @Value(STF_24_WEEKS_HEARING_REQUIREMENTS_EMAIL_TEMPLATE) String templateID,
+            @Value(STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE_EMAIL_TEMPLATE) String templateID,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
             @Value("${govnotify.emailPrefix.nonAda}") String nonAdaPrefix, CustomerServicesProvider customerServicesProvider, DateTimeExtractor dateTimeExtractor, HearingDetailsFinder hearingDetailsFinder) {
         this.templateID = templateID;
@@ -57,7 +56,7 @@ public class HomeOfficeUploadEvidenceStatutoryTimeframe24WeeksEmailPersonalisati
 
     @Override
     public String getReferenceId(Long caseId) {
-        return caseId + STATUTORY_TIMEFRAME_24WEEKS_SUBMITTED_HEARING_REQUIREMENTS_HOME_OFFICE_EMAIL;
+        return caseId + STATUTORY_TIMEFRAME_24WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE_EMAIL;
     }
 
     @Override
