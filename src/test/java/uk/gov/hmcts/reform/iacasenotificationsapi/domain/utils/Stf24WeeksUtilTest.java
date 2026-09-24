@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.REVIEW_HEARING_REQUIREMENTS;
 
 @ExtendWith(MockitoExtension.class)
 public class Stf24WeeksUtilTest {
@@ -233,7 +234,7 @@ public class Stf24WeeksUtilTest {
         when(asylumCase.read(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class))
             .thenReturn(Optional.of(YesOrNo.YES));
 
-        assertTrue(Stf24WeeksUtil.isHearingRequirementsFor24WeeksCase(Event.REVIEW_HEARING_REQUIREMENTS, asylumCase));
+        assertTrue(Stf24WeeksUtil.is24WeeksCaseEvent(asylumCase, Event.REVIEW_HEARING_REQUIREMENTS, REVIEW_HEARING_REQUIREMENTS));
     }
 
     @Test
@@ -241,7 +242,7 @@ public class Stf24WeeksUtilTest {
         when(asylumCase.read(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class))
             .thenReturn(Optional.of(YesOrNo.YES));
 
-        assertFalse(Stf24WeeksUtil.isHearingRequirementsFor24WeeksCase(Event.COMPLETE_CASE_REVIEW, asylumCase));
+        assertFalse(Stf24WeeksUtil.is24WeeksCaseEvent(asylumCase, Event.COMPLETE_CASE_REVIEW, REVIEW_HEARING_REQUIREMENTS));
     }
 
     @Test
@@ -249,7 +250,7 @@ public class Stf24WeeksUtilTest {
         when(asylumCase.read(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class))
             .thenReturn(Optional.of(YesOrNo.NO));
 
-        assertFalse(Stf24WeeksUtil.isHearingRequirementsFor24WeeksCase(Event.REVIEW_HEARING_REQUIREMENTS, asylumCase));
+        assertFalse(Stf24WeeksUtil.is24WeeksCaseEvent(asylumCase, Event.REVIEW_HEARING_REQUIREMENTS, REVIEW_HEARING_REQUIREMENTS));
     }
 
     @Test
@@ -258,11 +259,11 @@ public class Stf24WeeksUtilTest {
         when(asylumCase.read(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class))
             .thenReturn(Optional.of(YesOrNo.YES));
 
-        assertTrue(Stf24WeeksUtil.canRunHearingReq(
+        assertTrue(Stf24WeeksUtil.canRunEventForNonInternalCase(
             PreSubmitCallbackStage.ABOUT_TO_SUBMIT,
             Event.REVIEW_HEARING_REQUIREMENTS,
             asylumCase,
-            true
+            true, REVIEW_HEARING_REQUIREMENTS
         ));
     }
 
@@ -270,11 +271,11 @@ public class Stf24WeeksUtilTest {
     void should_return_false_when_hearing_requirements_run_for_internal_case() {
         when(asylumCase.read(AsylumCaseDefinition.IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
 
-        assertFalse(Stf24WeeksUtil.canRunHearingReq(
+        assertFalse(Stf24WeeksUtil.canRunEventForNonInternalCase(
             PreSubmitCallbackStage.ABOUT_TO_SUBMIT,
             Event.REVIEW_HEARING_REQUIREMENTS,
             asylumCase,
-            true
+            true, REVIEW_HEARING_REQUIREMENTS
         ));
     }
 
@@ -441,11 +442,11 @@ public class Stf24WeeksUtilTest {
     @Test
     void should_return_false_when_callback_stage_is_not_about_to_submit() {
 
-        assertFalse(Stf24WeeksUtil.canRunHearingReq(
+        assertFalse(Stf24WeeksUtil.canRunEventForNonInternalCase(
             PreSubmitCallbackStage.ABOUT_TO_START,
             Event.REVIEW_HEARING_REQUIREMENTS,
             asylumCase,
-            true
+            true, REVIEW_HEARING_REQUIREMENTS
         ));
     }
 
@@ -453,11 +454,11 @@ public class Stf24WeeksUtilTest {
     void should_return_false_when_24_week_flag_is_disabled() {
         when(asylumCase.read(AsylumCaseDefinition.IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
 
-        assertFalse(Stf24WeeksUtil.canRunHearingReq(
+        assertFalse(Stf24WeeksUtil.canRunEventForNonInternalCase(
             PreSubmitCallbackStage.ABOUT_TO_SUBMIT,
             Event.REVIEW_HEARING_REQUIREMENTS,
             asylumCase,
-            false
+            false, REVIEW_HEARING_REQUIREMENTS
         ));
     }
 
@@ -465,11 +466,11 @@ public class Stf24WeeksUtilTest {
     void should_return_false_when_case_is_internal() {
         when(asylumCase.read(AsylumCaseDefinition.IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
 
-        assertFalse(Stf24WeeksUtil.canRunHearingReq(
+        assertFalse(Stf24WeeksUtil.canRunEventForNonInternalCase(
             PreSubmitCallbackStage.ABOUT_TO_SUBMIT,
             Event.REVIEW_HEARING_REQUIREMENTS,
             asylumCase,
-            true
+            true, REVIEW_HEARING_REQUIREMENTS
         ));
     }
 
@@ -479,11 +480,11 @@ public class Stf24WeeksUtilTest {
         when(asylumCase.read(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class))
             .thenReturn(Optional.of(YesOrNo.YES));
 
-        assertFalse(Stf24WeeksUtil.canRunHearingReq(
+        assertFalse(Stf24WeeksUtil.canRunEventForNonInternalCase(
             PreSubmitCallbackStage.ABOUT_TO_SUBMIT,
             Event.COMPLETE_CASE_REVIEW,
             asylumCase,
-            true
+            true, REVIEW_HEARING_REQUIREMENTS
         ));
     }
 
@@ -492,31 +493,31 @@ public class Stf24WeeksUtilTest {
         when(asylumCase.read(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class))
             .thenReturn(Optional.of(YesOrNo.YES));
 
-        assertTrue(Stf24WeeksUtil.canRunHearingReqReviewInternalCase(
+        assertTrue(Stf24WeeksUtil.canRunEventForInternalCase(
             PreSubmitCallbackStage.ABOUT_TO_SUBMIT,
             Event.REVIEW_HEARING_REQUIREMENTS,
             asylumCase,
-            true
+            true, REVIEW_HEARING_REQUIREMENTS
         ));
     }
 
     @Test
     void should_return_false_for_review_hearing_requirements_internal_case_when_callback_stage_is_not_about_to_submit() {
-        assertFalse(Stf24WeeksUtil.canRunHearingReqReviewInternalCase(
+        assertFalse(Stf24WeeksUtil.canRunEventForInternalCase(
             PreSubmitCallbackStage.ABOUT_TO_START,
             Event.REVIEW_HEARING_REQUIREMENTS,
             asylumCase,
-            true
+            true, REVIEW_HEARING_REQUIREMENTS
         ));
     }
 
     @Test
     void should_return_false_for_review_hearing_requirements_internal_case_when_24_week_flag_is_disabled() {
-        assertFalse(Stf24WeeksUtil.canRunHearingReqReviewInternalCase(
+        assertFalse(Stf24WeeksUtil.canRunEventForInternalCase(
             PreSubmitCallbackStage.ABOUT_TO_SUBMIT,
             Event.REVIEW_HEARING_REQUIREMENTS,
             asylumCase,
-            false
+            false, REVIEW_HEARING_REQUIREMENTS
         ));
     }
 
@@ -525,11 +526,11 @@ public class Stf24WeeksUtilTest {
         when(asylumCase.read(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class))
             .thenReturn(Optional.of(YesOrNo.YES));
 
-        assertFalse(Stf24WeeksUtil.canRunHearingReqReviewInternalCase(
+        assertFalse(Stf24WeeksUtil.canRunEventForInternalCase(
             PreSubmitCallbackStage.ABOUT_TO_SUBMIT,
             Event.COMPLETE_CASE_REVIEW,
             asylumCase,
-            true
+            true, REVIEW_HEARING_REQUIREMENTS
         ));
     }
 
@@ -538,11 +539,11 @@ public class Stf24WeeksUtilTest {
         when(asylumCase.read(AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class))
             .thenReturn(Optional.of(YesOrNo.NO));
 
-        assertFalse(Stf24WeeksUtil.canRunHearingReqReviewInternalCase(
+        assertFalse(Stf24WeeksUtil.canRunEventForInternalCase(
             PreSubmitCallbackStage.ABOUT_TO_SUBMIT,
             Event.REVIEW_HEARING_REQUIREMENTS,
             asylumCase,
-            true
+            true, REVIEW_HEARING_REQUIREMENTS
         ));
     }
 }

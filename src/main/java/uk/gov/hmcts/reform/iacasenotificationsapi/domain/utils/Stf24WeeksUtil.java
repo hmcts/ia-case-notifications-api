@@ -18,7 +18,6 @@ import java.util.Objects;
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.REVIEW_HEARING_REQUIREMENTS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.*;
 
 @Slf4j
@@ -49,6 +48,12 @@ public class Stf24WeeksUtil {
     public static final String STATUTORY_TIMEFRAME_24WEEKS_SUBMITTED_HEARING_REQUIREMENTS_LR_LETTER = "_STATUTORY_TIMEFRAME_24WEEKS_SUBMITTED_HEARING_REQUIREMENTS_LR_LETTER";
     public static final String STATUTORY_TIMEFRAME_24WEEKS_SUBMITTED_HEARING_REQUIREMENTS_APPELLANT_LETTER = "_STATUTORY_TIMEFRAME_24WEEKS_SUBMITTED_HEARING_REQUIREMENTS_APPELLANT_LETTER";
 
+    public static final String STATUTORY_TIMEFRAME_24WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_APPELLANT_LETTER = "_STATUTORY_TIMEFRAME_24WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_APPELLANT_LETTER";
+    public static final String STATUTORY_TIMEFRAME_24WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_LR_LETTER = "_STATUTORY_TIMEFRAME_24WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_LR_LETTER";
+    public static final String STATUTORY_TIMEFRAME_24WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE_EMAIL = "_STATUTORY_TIMEFRAME_24WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE_EMAIL";
+
+
+
     public static final String WEEKS_DEADLINE = "24WeeksDeadline";
     public static final String DECISION_SENT_DATE = "decisionSentDate";
     public static final String PRACTICE_DIRECTION = "practiceDirection";
@@ -70,11 +75,16 @@ public class Stf24WeeksUtil {
 
     public static final String STF_24_WEEKS_HEARING_REQUIREMENTS_EMAIL_TEMPLATE = "${govnotify.template.submittedHearingRequirements24Weeks.email}";
     public static final String STF_24_WEEKS_HEARING_REQUIREMENTS_LETTER_TEMPLATE = "${govnotify.template.submittedHearingRequirements24Weeks.letter}";
-    public static final String STF_24_WEEKS_HEARING_REQ_HO_GENERATOR = "hearingRequirementsStatutoryTimeframe24WeeksHomeOfficeNotificationGenerator";
-    public static final String STF_24_WEEKS_HEARING_REQ_APPELLANT_GENERATOR = "hearingRequirementsStatutoryTimeframe24WeeksAppellantNotificationGenerator";
-    public static final String STF_24_WEEKS_HEARING_REQ_LR_GENERATOR = "hearingRequirementsStatutoryTimeframe24WeeksLegalRepresentativeNotificationGenerator";
+    public static final String STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_APPELLANT_LETTER_TEMPLATE = "${govnotify.template.uploadAdditionalEvidence24Weeks.letter}";
+    public static final String STF_24_WEEKS_HEARING_REQ_HO_EMAIL_GENERATOR = "hearingRequirementsStatutoryTimeframe24WeeksHomeOfficeNotificationGenerator";
+    public static final String STF_24_WEEKS_HEARING_REQ_APPELLANT_EMAIL_GENERATOR = "hearingRequirementsStatutoryTimeframe24WeeksAppellantNotificationGenerator";
+    public static final String STF_24_WEEKS_HEARING_REQ_LR_EMAIL_GENERATOR = "hearingRequirementsStatutoryTimeframe24WeeksLegalRepresentativeNotificationGenerator";
     public static final String STF_24_WEEKS_HEARING_REQ_APPELLANT_LETTER_GENERATOR = "hearingRequirementsStatutoryTimeframe24WeeksAppellantLetterNotificationGenerator";
     public static final String STF_24_WEEKS_HEARING_REQ_LR_LETTER_GENERATOR = "hearingRequirementsStatutoryTimeframe24WeeksLegalRepresentativeLetterNotificationGenerator";
+    public static final String STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_APPELLANT_LETTER_GENERATOR = "uploadAdditionalEvidenceStf24WeeksAppellantLetterNotificationGenerator";
+    public static final String STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_LR_LETTER_GENERATOR = "uploadAdditionalEvidenceStf24WeeksLegalRepresentativeLetterNotificationGenerator";
+    public static final String STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE_EMAIL_GENERATOR = "uploadAdditionalEvidenceStf24WeeksHomeOfficeEmailNotificationGenerator";
+
 
     private static final String HO_REFERENCE_WITH_TEXT = "hoReferenceWithText";
     private static final String LR_REFERENCE_WITH_TEXT = "lrReferenceWithText";
@@ -220,23 +230,23 @@ public class Stf24WeeksUtil {
 
     }
 
-    public static boolean isHearingRequirementsFor24WeeksCase(Event event, AsylumCase asylumCase) {
+    public static boolean is24WeeksCaseEvent(AsylumCase asylumCase, Event actualEvent, Event desiredEvent) {
         boolean hasStf24W = AsylumCaseUtils.hasStf24WeeksStatus(asylumCase);
-        return Objects.equals(REVIEW_HEARING_REQUIREMENTS, event)
+        return Objects.equals(desiredEvent, actualEvent)
                 && hasStf24W;
     }
 
-    public static boolean canRunHearingReq(PreSubmitCallbackStage callbackStage, Event event, AsylumCase asylumCase, boolean canRunFor24Weeks) {
+    public static boolean canRunEventForNonInternalCase(PreSubmitCallbackStage callbackStage, Event event, AsylumCase asylumCase, boolean canRunFor24Weeks, Event event1) {
         return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                 && !isInternalCase(asylumCase)
                 && canRunFor24Weeks
-                && isHearingRequirementsFor24WeeksCase(event, asylumCase);
+                && is24WeeksCaseEvent(asylumCase, event, event1);
     }
 
-    public static boolean canRunHearingReqReviewInternalCase(PreSubmitCallbackStage callbackStage, Event event, AsylumCase asylumCase, boolean canRunFor24Weeks) {
+    public static boolean canRunEventForInternalCase(PreSubmitCallbackStage callbackStage, Event event, AsylumCase asylumCase, boolean canRunFor24Weeks, Event desiredEvent) {
         return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                 && canRunFor24Weeks
-                && isHearingRequirementsFor24WeeksCase(event, asylumCase);
+                && is24WeeksCaseEvent(asylumCase, event, desiredEvent);
     }
 
 

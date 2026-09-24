@@ -5198,7 +5198,7 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean(STF_24_WEEKS_HEARING_REQ_HO_GENERATOR)
+    @Bean(STF_24_WEEKS_HEARING_REQ_HO_EMAIL_GENERATOR)
     public List<NotificationGenerator> hearingRequirementsStatutoryTimeframe24WeeksHomeOfficeNotificationGenerator(
             HomeOfficeHearingRequirementsStf24WeeksEmailPersonalisation homeOfficeEmailPersonalisation,
             GovNotifyNotificationSender notificationSender,
@@ -5215,7 +5215,7 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean(STF_24_WEEKS_HEARING_REQ_APPELLANT_GENERATOR)
+    @Bean(STF_24_WEEKS_HEARING_REQ_APPELLANT_EMAIL_GENERATOR)
     public List<NotificationGenerator> hearingRequirementsStatutoryTimeframe24WeeksAppellantNotificationGenerator(
             AppellantSubmittedHearingRequirementsStf24WeeksEmailPersonalisation emailPersonalisation,
             GovNotifyNotificationSender notificationSender,
@@ -5233,7 +5233,7 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean(STF_24_WEEKS_HEARING_REQ_LR_GENERATOR)
+    @Bean(STF_24_WEEKS_HEARING_REQ_LR_EMAIL_GENERATOR)
     public List<NotificationGenerator> hearingRequirementsStatutoryTimeframe24WeeksLegalRepresentativeNotificationGenerator(
             AppellantSubmittedHearingRequirementsStf24WeeksEmailPersonalisation emailPersonalisation,
             LegalRepHearingRequirementsStf24WeeksEmailPersonalisation lrEmailPersonalisation,
@@ -5278,6 +5278,69 @@ public class NotificationGeneratorConfiguration {
     @Bean(STF_24_WEEKS_HEARING_REQ_LR_LETTER_GENERATOR)
     public List<NotificationGenerator> hearingRequirementsStatutoryTimeframe24WeeksLegalRepresentativeLetterNotificationGenerator(
             LegalRepresentativeHearingReqReviewStatutoryTimeframe24WeeksPersonalisationLetter lrPersonalizationLetter,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new LetterNotificationGenerator(
+                        newArrayList(
+                                lrPersonalizationLetter
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success", "body");
+                    }
+                }
+        );
+    }
+
+    @Bean(STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE_EMAIL_GENERATOR)
+    public List<NotificationGenerator> uploadAdditionalEvidenceStf24WeeksHomeOfficeEmailNotificationGenerator(
+            HomeOfficeUploadEvidenceStatutoryTimeframe24WeeksEmailPersonalisation homeOfficeEmailPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+        return singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                homeOfficeEmailPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean(STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_APPELLANT_LETTER_GENERATOR)
+    public List<NotificationGenerator> uploadAdditionalEvidenceStf24WeeksAppellantLetterNotificationGenerator(
+            AppellantUploadEvidenceStatutoryTimeframe24WeeksPersonalisationLetter appellantPersonalizationLetter,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new LetterNotificationGenerator(
+                        newArrayList(
+                                appellantPersonalizationLetter
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success", "body");
+                    }
+                }
+        );
+    }
+
+    @Bean(STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_LR_LETTER_GENERATOR)
+    public List<NotificationGenerator> uploadAdditionalEvidenceStf24WeeksLegalRepresentativeLetterNotificationGenerator(
+            LegalRepUploadEvidenceStatutoryTimeframe24WeeksPersonalisationLetter lrPersonalizationLetter,
             GovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender
     ) {
