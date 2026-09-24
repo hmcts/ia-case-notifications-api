@@ -44,7 +44,7 @@ public class LegalRepresentativeUploadAdditionalEvidencePersonalisation implemen
     public LegalRepresentativeUploadAdditionalEvidencePersonalisation(
         @Value("${govnotify.template.uploadedAdditionalEvidenceBeforeListing.legalRep.email}") String legalRepUploadedAdditionalEvidenceBeforeListingTemplateId,
         @Value("${govnotify.template.uploadedAdditionalEvidenceAfterListing.legalRep.email}") String legalRepUploadedAdditionalEvidenceAfterListingTemplateId,
-        @Value("${govnotify.template.uploadedAdditionalEvidenceAfterListing.legalRep.email24weeks}") String legalRep24WeeksUploadedAdditionalEvidenceAfterListingTemplateId,
+        @Value("${govnotify.template.uploadedAdditionalEvidenceAfterListing.legalRep.email24Weeks}") String legalRep24WeeksUploadedAdditionalEvidenceAfterListingTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         PersonalisationProvider personalisationProvider,
         CustomerServicesProvider customerServicesProvider
