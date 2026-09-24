@@ -33,6 +33,7 @@ public class EmailAddressFinder {
     private final Map<BailHearingCentre, String> bailHearingCentreEmailAddresses;
 
     private final Map<HearingCentre, String> adminEmailAddresses;
+    private final Map<HearingCentre, String> adminHearingCentreEmailAddresses;
 
     private final String listCaseCaseOfficerEmailAddress;
 
@@ -43,6 +44,7 @@ public class EmailAddressFinder {
             Map<HearingCentre, String> homeOfficeFtpaEmailAddresses,
             Map<BailHearingCentre, String> bailHearingCentreEmailAddresses,
             Map<HearingCentre, String> adminEmailAddresses,
+            Map<HearingCentre, String> adminHearingCentreEmailAddresses,
             @Value("${listCaseCaseOfficerEmailAddress}") String listCaseCaseOfficerEmailAddress) {
 
         this.hearingCentreEmailAddresses = hearingCentreEmailAddresses;
@@ -50,6 +52,7 @@ public class EmailAddressFinder {
         this.homeOfficeFtpaEmailAddresses = homeOfficeFtpaEmailAddresses;
         this.bailHearingCentreEmailAddresses = bailHearingCentreEmailAddresses;
         this.adminEmailAddresses = adminEmailAddresses;
+        this.adminHearingCentreEmailAddresses = adminHearingCentreEmailAddresses;
         this.listCaseCaseOfficerEmailAddress = listCaseCaseOfficerEmailAddress;
     }
 
@@ -177,12 +180,20 @@ public class EmailAddressFinder {
     }
 
     public String getAdminEmailAddress(AsylumCase asylumCase) {
+        return getHearingCentreAdminEmailAddress(asylumCase, adminEmailAddresses);
+    }
+
+    public String getAdminHearingCentreEmailAddress(AsylumCase asylumCase) {
+        return getHearingCentreAdminEmailAddress(asylumCase, adminHearingCentreEmailAddresses);
+    }
+
+    private String getHearingCentreAdminEmailAddress(AsylumCase asylumCase, Map<HearingCentre, String> emailAddresses) {
         return asylumCase
-                .read(HEARING_CENTRE, HearingCentre.class)
-                .map(it -> Optional.ofNullable(getAdminHearingCentreAddress(adminEmailAddresses, it))
-                        .orElseThrow(() -> new IllegalStateException("Hearing centre email address not found: " + it.toString()))
-                )
-                .orElseThrow(() -> new IllegalStateException("hearingCentre is not present"));
+            .read(HEARING_CENTRE, HearingCentre.class)
+            .map(it -> Optional.ofNullable(getAdminHearingCentreAddress(emailAddresses, it))
+                .orElseThrow(() -> new IllegalStateException("Hearing centre email address not found: " + it.toString()))
+            )
+            .orElseThrow(() -> new IllegalStateException("hearingCentre is not present"));
     }
 
 
