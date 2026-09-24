@@ -1864,6 +1864,7 @@ security:
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
       - "joinAppealConfirmation"
+      - "generatePinInPost"
     challenged-access-legal-operations:
       - "sendDirection"
       - "changeDirectionDueDate"
@@ -1935,6 +1936,7 @@ security:
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
       - "joinAppealConfirmation"
+      - "generatePinInPost"
     senior-tribunal-caseworker:
       - "sendDirection"
       - "changeDirectionDueDate"
@@ -2006,6 +2008,7 @@ security:
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
       - "joinAppealConfirmation"
+      - "generatePinInPost"
     # These events are used by the bails service, they will need to be migrated to the admin access management roles - see DIAC-855
     caseworker-ia-admofficer:
       - "queryManagementRespondQuery"
@@ -2079,6 +2082,7 @@ security:
       - "removeStatutoryTimeframe24Weeks"
       - "completeCaseReview"
       - "requestRespondentEvidence"
+      - "generatePinInPost"
     ctsc:
       - "queryManagementRespondQuery"
       - "progressMigratedCase"
@@ -2131,6 +2135,7 @@ security:
       - "removeStatutoryTimeframe24Weeks"
       - "completeCaseReview"
       - "requestRespondentEvidence"
+      - "generatePinInPost"
     ctsc-team-leader:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2182,6 +2187,7 @@ security:
       - "removeStatutoryTimeframe24Weeks"
       - "completeCaseReview"
       - "requestRespondentEvidence"
+      - "generatePinInPost"
     national-business-centre:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2233,6 +2239,7 @@ security:
       - "removeStatutoryTimeframe24Weeks"
       - "completeCaseReview"
       - "requestRespondentEvidence"
+      - "generatePinInPost"
     challenged-access-ctsc:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2264,6 +2271,7 @@ security:
       - "listCase"
       - "editDocuments"
       - "uploadAdditionalEvidence"
+      - "generatePinInPost"
       - "endAppeal"
       - "recordAdjournmentDetails"
       - "createCaseLink"
@@ -2335,6 +2343,7 @@ security:
       - "removeStatutoryTimeframe24Weeks"
       - "completeCaseReview"
       - "requestRespondentEvidence"
+      - "generatePinInPost"
     caseworker-ia-homeofficeapc:
       - "startApplication"
       - "editBailApplication"
@@ -2772,9 +2781,9 @@ homeOfficeEmailAddresses:
   hattonCross: ${IA_HOME_OFFICE_HATTON_CROSS_EMAIL:ho-hatton-cross@example.com}
   glasgow: ${IA_HOME_OFFICE_GLASGOW_EMAIL:ho-glasgow@example.com}
   belfast: ${IA_HOME_OFFICE_GLASGOW_EMAIL:ho-glasgow@example.com}
-  harmondsworth: ${IA_HOME_OFFICE_HARMONDSWORTH_EMAIL:ho-harmondsworth@example.com}
+  harmondsworth: ${IA_HOME_OFFICE_HATTON_CROSS_EMAIL:ho-harmondsworth@example.com}
   hendon: ${IA_HOME_OFFICE_HENDON_EMAIL:ho-hendon@example.com}
-  yarlsWood: ${IA_HOME_OFFICE_YARLS_WOOD_EMAIL:ho-yarls-wood@example.com}
+  yarlsWood: ${IA_HOME_OFFICE_TAYLOR_HOUSE_EMAIL:ho-yarls-wood@example.com}
   bradfordKeighley: ${IA_HOME_OFFICE_BRADFORD_KEIGHLEY_EMAIL:ho-bradford-keighley@example.com}
   mccMinshull: ${IA_HOME_OFFICE_MCC_MINSHULL_EMAIL:ho-mcc-minshull@example.com}
   mccCrownSquare: ${IA_HOME_OFFICE_MCC_CROWN_SQUARE_EMAIL:ho-mcc-crown-square@example.com}
