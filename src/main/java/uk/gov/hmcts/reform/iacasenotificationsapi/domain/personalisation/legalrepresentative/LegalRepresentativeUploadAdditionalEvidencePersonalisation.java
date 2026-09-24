@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType.AIP;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLegalRepEmailInternalOrLegalRepJourney;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasStf24WeeksStatus;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
 import com.google.common.collect.ImmutableMap;
@@ -30,6 +31,7 @@ public class LegalRepresentativeUploadAdditionalEvidencePersonalisation implemen
 
     private final String legalRepUploadedAdditionalEvidenceBeforeListingTemplateId;
     private final String legalRepUploadedAdditionalEvidenceAfterListingTemplateId;
+    private final String legalRep24WeeksUploadedAdditionalEvidenceAfterListingTemplateId;
     private final String iaExUiFrontendUrl;
     private final PersonalisationProvider personalisationProvider;
     private final CustomerServicesProvider customerServicesProvider;
@@ -42,12 +44,14 @@ public class LegalRepresentativeUploadAdditionalEvidencePersonalisation implemen
     public LegalRepresentativeUploadAdditionalEvidencePersonalisation(
         @Value("${govnotify.template.uploadedAdditionalEvidenceBeforeListing.legalRep.email}") String legalRepUploadedAdditionalEvidenceBeforeListingTemplateId,
         @Value("${govnotify.template.uploadedAdditionalEvidenceAfterListing.legalRep.email}") String legalRepUploadedAdditionalEvidenceAfterListingTemplateId,
+        @Value("${govnotify.template.uploadedAdditionalEvidenceAfterListing.legalRep.email24Weeks}") String legalRep24WeeksUploadedAdditionalEvidenceAfterListingTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         PersonalisationProvider personalisationProvider,
         CustomerServicesProvider customerServicesProvider
     ) {
         this.legalRepUploadedAdditionalEvidenceBeforeListingTemplateId = legalRepUploadedAdditionalEvidenceBeforeListingTemplateId;
         this.legalRepUploadedAdditionalEvidenceAfterListingTemplateId = legalRepUploadedAdditionalEvidenceAfterListingTemplateId;
+        this.legalRep24WeeksUploadedAdditionalEvidenceAfterListingTemplateId = legalRep24WeeksUploadedAdditionalEvidenceAfterListingTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.personalisationProvider = personalisationProvider;
         this.customerServicesProvider = customerServicesProvider;
@@ -55,8 +59,13 @@ public class LegalRepresentativeUploadAdditionalEvidencePersonalisation implemen
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return isAppealListed(asylumCase)
-            ? legalRepUploadedAdditionalEvidenceAfterListingTemplateId : legalRepUploadedAdditionalEvidenceBeforeListingTemplateId;
+        if (hasStf24WeeksStatus(asylumCase)) {
+            return legalRep24WeeksUploadedAdditionalEvidenceAfterListingTemplateId;
+        } else if (isAppealListed(asylumCase)) {
+            return legalRepUploadedAdditionalEvidenceAfterListingTemplateId;
+        } else {
+            return legalRepUploadedAdditionalEvidenceBeforeListingTemplateId;
+        }
     }
 
     @Override
