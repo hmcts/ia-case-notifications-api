@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CMR_HEARING_CENTRE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HEARING_CENTRE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
@@ -389,5 +390,108 @@ public class EmailAddressFinderTest {
         when(hearingCentreEmailAddresses.get(BRADFORD)).thenReturn("ho-bradford@example.com");
         assertEquals("ho-bradford@example.com",
             emailAddressFinder.getListCaseCaseOfficerHearingCentreEmailAddress(asylumCase));
+    }
+
+    @Test
+    public void should_return_cmr_listing_case_officer_email_from_lookup_map_when_not_remote() {
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(BRADFORD));
+        when(asylumCase.read(CMR_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(NORTH_SHIELDS));
+        when(hearingCentreEmailAddresses.get(NORTH_SHIELDS)).thenReturn("co-north-shields@example.com");
+
+        assertEquals("co-north-shields@example.com",
+            emailAddressFinder.getCmrListingCaseOfficerHearingCentreEmailAddress(asylumCase));
+    }
+
+    @Test
+    public void should_return_list_case_case_officer_email_for_cmr_listing_when_cmr_centre_is_glasgow_or_belfast() {
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(BRADFORD));
+
+        when(asylumCase.read(CMR_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(GLASGOW));
+        assertEquals(listCaseCaseOfficerEmailAddress,
+            emailAddressFinder.getCmrListingCaseOfficerHearingCentreEmailAddress(asylumCase));
+
+        when(asylumCase.read(CMR_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(BELFAST));
+        assertEquals(listCaseCaseOfficerEmailAddress,
+            emailAddressFinder.getCmrListingCaseOfficerHearingCentreEmailAddress(asylumCase));
+    }
+
+    @Test
+    public void should_throw_when_cmr_hearing_centre_is_empty_for_cmr_listing_case_officer_email() {
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(BRADFORD));
+        when(asylumCase.read(CMR_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> emailAddressFinder.getCmrListingCaseOfficerHearingCentreEmailAddress(asylumCase))
+            .isExactlyInstanceOf(IllegalStateException.class)
+            .hasMessage("cmrHearingCentre is not present");
+    }
+
+    @Test
+    public void should_return_list_case_case_officer_email_for_cmr_listing_remote_hearing_when_cmr_centre_is_glasgow() {
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(REMOTE_HEARING));
+        when(asylumCase.read(CMR_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(GLASGOW));
+
+        assertEquals(listCaseCaseOfficerEmailAddress,
+            emailAddressFinder.getCmrListingCaseOfficerHearingCentreEmailAddress(asylumCase));
+    }
+
+    @Test
+    public void should_return_hearing_centre_email_for_cmr_listing_remote_hearing_when_cmr_centre_is_not_glasgow_or_belfast() {
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(REMOTE_HEARING));
+        when(asylumCase.read(CMR_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(TAYLOR_HOUSE));
+        when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(TAYLOR_HOUSE));
+
+        assertEquals(hearingCentreEmailAddress,
+            emailAddressFinder.getCmrListingCaseOfficerHearingCentreEmailAddress(asylumCase));
+    }
+
+    @Test
+    public void should_return_cmr_listing_home_office_email_from_lookup_map_when_not_remote() {
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(BRADFORD));
+        when(asylumCase.read(CMR_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(NORTH_SHIELDS));
+        when(homeOfficeEmailAddresses.get(NORTH_SHIELDS)).thenReturn("ho-north-shields@example.com");
+
+        assertEquals("ho-north-shields@example.com",
+            emailAddressFinder.getCmrListingHomeOfficeEmailAddress(asylumCase));
+    }
+
+    @Test
+    public void should_throw_when_cmr_hearing_centre_is_empty_for_cmr_listing_home_office_email() {
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(BRADFORD));
+        when(asylumCase.read(CMR_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> emailAddressFinder.getCmrListingHomeOfficeEmailAddress(asylumCase))
+            .isExactlyInstanceOf(IllegalStateException.class)
+            .hasMessage(CMR_HEARING_CENTRE.value() + " is not present");
+    }
+
+    @Test
+    public void should_throw_when_email_not_found_for_cmr_listing_home_office_email() {
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(BRADFORD));
+        when(asylumCase.read(CMR_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(NORTH_SHIELDS));
+        when(homeOfficeEmailAddresses.get(NORTH_SHIELDS)).thenReturn(null);
+
+        assertThatThrownBy(() -> emailAddressFinder.getCmrListingHomeOfficeEmailAddress(asylumCase))
+            .isExactlyInstanceOf(IllegalStateException.class)
+            .hasMessage("List case hearing centre email address not found: " + NORTH_SHIELDS.getValue());
+    }
+
+    @Test
+    public void should_return_home_office_email_for_cmr_listing_when_remote_hearing() {
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(REMOTE_HEARING));
+        when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(TAYLOR_HOUSE));
+        when(homeOfficeEmailAddresses.get(TAYLOR_HOUSE)).thenReturn("ho-taylorhouse@example.com");
+
+        assertEquals("ho-taylorhouse@example.com",
+            emailAddressFinder.getCmrListingHomeOfficeEmailAddress(asylumCase));
+    }
+
+    @Test
+    public void should_return_home_office_email_for_cmr_listing_when_decision_without_hearing() {
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(DECISION_WITHOUT_HEARING));
+        when(asylumCase.read(HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(TAYLOR_HOUSE));
+        when(homeOfficeEmailAddresses.get(TAYLOR_HOUSE)).thenReturn("ho-taylorhouse@example.com");
+
+        assertEquals("ho-taylorhouse@example.com",
+            emailAddressFinder.getCmrListingHomeOfficeEmailAddress(asylumCase));
     }
 }
