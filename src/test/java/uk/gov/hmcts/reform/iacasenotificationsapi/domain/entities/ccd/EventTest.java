@@ -154,7 +154,10 @@ public class EventTest {
             Arguments.of("joinAppealConfirmation", Event.JOIN_APPEAL_CONFIRMATION.toString()),
             Arguments.of("nlrDetailsUpdated", Event.NLR_DETAILS_UPDATED.toString()),
             Arguments.of("removeNonLegalRep", REMOVE_NON_LEGAL_REP.toString()),
+            Arguments.of("queryManagementRaiseQuery", QUERY_MANAGEMENT_RAISE_QUERY.toString()),
+            Arguments.of("queryManagementRespondQuery", QUERY_MANAGEMENT_RESPOND_QUERY.toString()),
             Arguments.of("unknown", Event.UNKNOWN.toString()));
+
     }
 
     @ParameterizedTest
