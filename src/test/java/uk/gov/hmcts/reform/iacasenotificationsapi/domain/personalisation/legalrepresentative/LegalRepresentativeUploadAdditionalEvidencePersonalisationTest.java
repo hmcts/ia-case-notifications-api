@@ -39,6 +39,7 @@ public class LegalRepresentativeUploadAdditionalEvidencePersonalisationTest {
 
     private final String beforeListingTemplateId = "beforeListingTemplateId";
     private final String afterListingTemplateId = "afterListingTemplateId";
+    private final String afterListing24WeeksTemplateId = "afterListing24WeeksTemplateId";
     private final String iaExUiFrontendUrl = "http://localhost";
     private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
     private final String legalRepEmailAddress = "legalRep@example.com";
@@ -62,6 +63,7 @@ public class LegalRepresentativeUploadAdditionalEvidencePersonalisationTest {
             new LegalRepresentativeUploadAdditionalEvidencePersonalisation(
                 beforeListingTemplateId,
                 afterListingTemplateId,
+                afterListing24WeeksTemplateId,
                 iaExUiFrontendUrl,
                 personalisationProvider,
                 customerServicesProvider
@@ -122,6 +124,11 @@ public class LegalRepresentativeUploadAdditionalEvidencePersonalisationTest {
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
 
         assertEquals(afterListingTemplateId,
+            legalRepresentativeUploadAdditionalEvidencePersonalisation.getTemplateId(asylumCase));
+
+        when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+
+        assertEquals(afterListing24WeeksTemplateId,
             legalRepresentativeUploadAdditionalEvidencePersonalisation.getTemplateId(asylumCase));
 
     }

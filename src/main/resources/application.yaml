@@ -648,6 +648,7 @@ govnotify:
     uploadedAdditionalEvidenceAfterListing:
       legalRep:
         email: 2f7f4021-a85c-4dfa-a177-c9c7f4be76f6
+        email24weeks: b843fe0b-d9c7-45ed-b34b-4e140cf0ed5d
       caseOfficer:
         email: 40ea5aed-cee6-4425-943b-7d3cf0a954a5
       homeOffice:
