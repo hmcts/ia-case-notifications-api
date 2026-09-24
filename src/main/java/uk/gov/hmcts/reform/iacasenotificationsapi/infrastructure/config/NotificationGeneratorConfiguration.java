@@ -3379,9 +3379,9 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("paymentPendingPaidLegalRepNotificationGenerator")
-    public List<NotificationGenerator> paymentPendingPaidNotificationHandler(
-        LegalRepresentativePendingPaymentPaidPersonalisation legalRepresentativePendingPaymentPaidPersonalisation,
+    @Bean("legalRepresentationRaiseQueryNotificationGenerator")
+    public List<NotificationGenerator> legalRepresentativeRaiseQueryNotificationHandler(
+        LegalRepresentativeRaiseQueryPersonalisation legalRepresentativeRaiseQueryPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
@@ -3389,11 +3389,47 @@ public class NotificationGeneratorConfiguration {
         return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
-                    legalRepresentativePendingPaymentPaidPersonalisation
+                        legalRepresentativeRaiseQueryPersonalisation
                 ),
                 notificationSender,
                 notificationIdAppender
             )
+        );
+    }
+
+    @Bean("legalRepresentationRespondQueryNotificationGenerator")
+    public List<NotificationGenerator> legalRepresentativeRespondQueryNotificationHandler(
+            LegalRepresentativeRespondQueryPersonalisation legalRepresentativeRespondQueryPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeRespondQueryPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("paymentPendingPaidLegalRepNotificationGenerator")
+    public List<NotificationGenerator> paymentPendingPaidNotificationHandler(
+            LegalRepresentativePendingPaymentPaidPersonalisation legalRepresentativePendingPaymentPaidPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativePendingPaymentPaidPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
