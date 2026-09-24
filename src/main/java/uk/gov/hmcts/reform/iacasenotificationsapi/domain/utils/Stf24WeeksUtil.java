@@ -76,7 +76,7 @@ public class Stf24WeeksUtil {
     public static final String STF_24_WEEKS_HEARING_REQUIREMENTS_EMAIL_TEMPLATE = "${govnotify.template.submittedHearingRequirements24Weeks.email}";
     public static final String STF_24_WEEKS_HEARING_REQUIREMENTS_LETTER_TEMPLATE = "${govnotify.template.submittedHearingRequirements24Weeks.letter}";
     public static final String STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_APPELLANT_LETTER_TEMPLATE = "${govnotify.template.uploadAdditionalEvidence24Weeks.letter}";
-    public static final String STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE_EMAIL_TEMPLATE = "${govnotify.template.uploadAdditionalEvidence24Weeks.email}";
+    public static final String STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE_EMAIL_TEMPLATE = "${govnotify.template.uploadAdditionalEvidence24Weeks.hoEmail}";
 
     public static final String STF_24_WEEKS_HEARING_REQ_HO_EMAIL_GENERATOR = "hearingRequirementsStatutoryTimeframe24WeeksHomeOfficeNotificationGenerator";
     public static final String STF_24_WEEKS_HEARING_REQ_APPELLANT_EMAIL_GENERATOR = "hearingRequirementsStatutoryTimeframe24WeeksAppellantNotificationGenerator";
