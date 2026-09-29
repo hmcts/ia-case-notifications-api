@@ -2054,7 +2054,8 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.UPLOAD_ADDITIONAL_EVIDENCE
-                    && isRepJourney(callback.getCaseDetails().getCaseData()),
+                    && isRepJourney(callback.getCaseDetails().getCaseData())
+                    && !is24WeeksCaseEvent(callback.getCaseDetails().getCaseData(), callback.getEvent(), UPLOAD_ADDITIONAL_EVIDENCE),
             notificationGenerator
         );
     }
@@ -2067,7 +2068,8 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.UPLOAD_ADDITIONAL_EVIDENCE
-                    && isAipJourney(callback.getCaseDetails().getCaseData()),
+                    && isAipJourney(callback.getCaseDetails().getCaseData())
+                    && !is24WeeksCaseEvent(callback.getCaseDetails().getCaseData(), callback.getEvent(), UPLOAD_ADDITIONAL_EVIDENCE),
             notificationGenerator
         );
     }
@@ -5921,6 +5923,21 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
+    public PreSubmitCallbackHandler<AsylumCase> uploadAdditionalEvidenceStf24WeeksHoEmailNotificationHandler(
+            @Qualifier(STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE_EMAIL_GENERATOR) List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase =
+                            callback
+                                    .getCaseDetails()
+                                    .getCaseData();
+                    return canRunEventForInternalCase(callbackStage, callback.getEvent(), UPLOAD_ADDITIONAL_EVIDENCE, asylumCase, true);
+                },
+                notificationGenerators, getErrorHandler()
+        );
+    }
+
+    @Bean
     public PreSubmitCallbackHandler<AsylumCase> uploadAdditionalEvidenceStf24WeeksAppellantLetterNotificationHandler(
             @Qualifier(STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_APPELLANT_LETTER_GENERATOR) List<NotificationGenerator> notificationGenerators) {
         return new NotificationHandler(
@@ -5929,7 +5946,7 @@ public class NotificationHandlerConfiguration {
                             callback
                                     .getCaseDetails()
                                     .getCaseData();
-                    return false;
+                    return canRunEventForInternalCase(callbackStage, callback.getEvent(), UPLOAD_ADDITIONAL_EVIDENCE, asylumCase, isInternalWithoutLegalRepresentation(asylumCase));
                 },
                 notificationGenerators, getErrorHandler()
         );
@@ -5944,7 +5961,7 @@ public class NotificationHandlerConfiguration {
                             callback
                                     .getCaseDetails()
                                     .getCaseData();
-                    return false;
+                    return canRunEventForInternalCase(callbackStage, callback.getEvent(), UPLOAD_ADDITIONAL_EVIDENCE, asylumCase, hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase));
                 },
                 notificationGenerators, getErrorHandler()
         );

@@ -1,23 +1,5 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
-// HO_REFERENCE_WITH_TEXT is private in Stf24WeeksUtil; use the literal key instead of importing it
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.SUBJECT_PREFIX_KEY;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.LINK_TO_ONLINE_SERVICE_KEY;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE_EMAIL;
-
-import java.util.Map;
-import java.util.Optional;
-import java.util.HashMap;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,11 +7,20 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.*;
+
+// HO_REFERENCE_WITH_TEXT is private in Stf24WeeksUtil; use the literal key instead of importing it
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -51,10 +42,6 @@ class HomeOfficeUploadEvidenceStatutoryTimeframe24WeeksEmailPersonalisationTest 
     private AsylumCase asylumCase;
     @Mock
     private CustomerServicesProvider customerServicesProvider;
-    @Mock
-    private DateTimeExtractor dateTimeExtractor;
-    @Mock
-    private HearingDetailsFinder hearingDetailsFinder;
 
     private HomeOfficeUploadEvidenceStatutoryTimeframe24WeeksEmailPersonalisation personalisation;
 
@@ -70,18 +57,12 @@ class HomeOfficeUploadEvidenceStatutoryTimeframe24WeeksEmailPersonalisationTest 
         customerServices.put("customerServicesEmail", "cust.services@example.com");
         when(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase)).thenReturn(customerServices);
 
-        when(hearingDetailsFinder.getHearingDateTime(asylumCase)).thenReturn(HEARING_DATE_TIME);
-        when(dateTimeExtractor.extractHearingDate(HEARING_DATE_TIME)).thenReturn(HEARING_DATE);
-        when(hearingDetailsFinder.getHearingCentreAddress(asylumCase)).thenReturn(HEARING_CENTRE_ADDRESS);
-
         personalisation = new HomeOfficeUploadEvidenceStatutoryTimeframe24WeeksEmailPersonalisation(
-            APC_PRIVATE_HO_EMAIL,
-            TEMPLATE_ID,
-            IA_EX_UI_FRONTEND_URL,
-            NON_ADA_PREFIX,
-            customerServicesProvider,
-            dateTimeExtractor,
-            hearingDetailsFinder
+                APC_PRIVATE_HO_EMAIL,
+                TEMPLATE_ID,
+                IA_EX_UI_FRONTEND_URL,
+                NON_ADA_PREFIX,
+                customerServicesProvider
         );
     }
 
@@ -106,14 +87,14 @@ class HomeOfficeUploadEvidenceStatutoryTimeframe24WeeksEmailPersonalisationTest 
         Map<String, String> result = personalisation.getPersonalisation(asylumCase);
 
         assertThat(result)
-            .containsEntry("appealReferenceNumber", APPEAL_REFERENCE)
-            .containsEntry("appellantGivenNames", APPELLANT_GIVEN)
-            .containsEntry("appellantFamilyName", APPELLANT_FAMILY)
-            .containsEntry(LINK_TO_ONLINE_SERVICE_KEY, IA_EX_UI_FRONTEND_URL)
-            .containsEntry("hearingDate", HEARING_DATE)
-            .containsEntry("hearingCentreAddress", HEARING_CENTRE_ADDRESS)
-            .containsEntry(SUBJECT_PREFIX_KEY, NON_ADA_PREFIX)
-            .containsEntry("hoReferenceWithText", "Home office reference:" + HOME_OFFICE_REF);
+                .containsEntry("appealReferenceNumber", APPEAL_REFERENCE)
+                .containsEntry("appellantGivenNames", APPELLANT_GIVEN)
+                .containsEntry("appellantFamilyName", APPELLANT_FAMILY)
+                .containsEntry(LINK_TO_ONLINE_SERVICE_KEY, IA_EX_UI_FRONTEND_URL)
+                .containsEntry("hearingDate", HEARING_DATE)
+                .containsEntry("hearingCentreAddress", HEARING_CENTRE_ADDRESS)
+                .containsEntry(SUBJECT_PREFIX_KEY, NON_ADA_PREFIX)
+                .containsEntry("hoReferenceWithText", "Home office reference:" + HOME_OFFICE_REF);
     }
 
     @Test

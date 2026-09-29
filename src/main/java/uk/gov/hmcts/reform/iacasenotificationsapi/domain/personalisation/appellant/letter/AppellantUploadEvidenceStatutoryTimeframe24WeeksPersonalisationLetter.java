@@ -7,8 +7,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.LetterNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
 
 import java.util.Map;
 import java.util.Set;
@@ -22,20 +20,14 @@ public class AppellantUploadEvidenceStatutoryTimeframe24WeeksPersonalisationLett
 
     private final String removeStatutoryTimeframe24WeeksAppellantLetterId;
     private final CustomerServicesProvider customerServicesProvider;
-    private final DateTimeExtractor dateTimeExtractor;
-    private final HearingDetailsFinder hearingDetailsFinder;
 
     public AppellantUploadEvidenceStatutoryTimeframe24WeeksPersonalisationLetter(
             @Value(STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_APPELLANT_LETTER_TEMPLATE) String removeStatutoryTimeframe24WeeksAppellantLetterId,
-            CustomerServicesProvider customerServicesProvider,
-            DateTimeExtractor dateTimeExtractor,
-            HearingDetailsFinder hearingDetailsFinder
+            CustomerServicesProvider customerServicesProvider
     ) {
         this.removeStatutoryTimeframe24WeeksAppellantLetterId = removeStatutoryTimeframe24WeeksAppellantLetterId;
 
         this.customerServicesProvider = customerServicesProvider;
-        this.dateTimeExtractor = dateTimeExtractor;
-        this.hearingDetailsFinder = hearingDetailsFinder;
     }
 
     @Override
@@ -55,6 +47,6 @@ public class AppellantUploadEvidenceStatutoryTimeframe24WeeksPersonalisationLett
 
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
-        return Stf24WeeksUtil.buildHearingRequirementsLetterParameters(Stf24WeeksNotificationFor.APPELLANT, asylumCase, customerServicesProvider, dateTimeExtractor, hearingDetailsFinder);
+        return Stf24WeeksUtil.buildCommonParams(Stf24WeeksNotificationFor.APPELLANT, asylumCase, customerServicesProvider).build();
     }
 }
