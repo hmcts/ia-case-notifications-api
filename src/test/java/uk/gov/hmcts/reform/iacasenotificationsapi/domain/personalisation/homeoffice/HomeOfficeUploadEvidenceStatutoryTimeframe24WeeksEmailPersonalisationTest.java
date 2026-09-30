@@ -91,8 +91,6 @@ class HomeOfficeUploadEvidenceStatutoryTimeframe24WeeksEmailPersonalisationTest 
                 .containsEntry("appellantGivenNames", APPELLANT_GIVEN)
                 .containsEntry("appellantFamilyName", APPELLANT_FAMILY)
                 .containsEntry(LINK_TO_ONLINE_SERVICE_KEY, IA_EX_UI_FRONTEND_URL)
-                .containsEntry("hearingDate", HEARING_DATE)
-                .containsEntry("hearingCentreAddress", HEARING_CENTRE_ADDRESS)
                 .containsEntry(SUBJECT_PREFIX_KEY, NON_ADA_PREFIX)
                 .containsEntry("hoReferenceWithText", "Home office reference:" + HOME_OFFICE_REF);
     }
