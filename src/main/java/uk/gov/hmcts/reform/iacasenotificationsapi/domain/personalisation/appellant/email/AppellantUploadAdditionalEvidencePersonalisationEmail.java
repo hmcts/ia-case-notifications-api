@@ -47,11 +47,6 @@ public class AppellantUploadAdditionalEvidencePersonalisationEmail implements Em
     }
 
     @Override
-    public String getTemplateId() {
-        return null;
-    }
-
-    @Override
     public String getTemplateId(AsylumCase asylumCase) {
         if (!isAppealListed(asylumCase)) {
             return uploadAdditionalEvidenceEmailBeforeListingNotificationTemplateId;
