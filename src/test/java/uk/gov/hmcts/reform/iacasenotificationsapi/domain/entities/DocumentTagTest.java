@@ -74,6 +74,14 @@ class DocumentTagTest {
         assertEquals("internalCaseListedLetter", DocumentTag.INTERNAL_CASE_LISTED_LETTER.toString());
         assertEquals("internalCaseListedLrLetter", DocumentTag.INTERNAL_CASE_LISTED_LR_LETTER.toString());
         assertEquals("internalCaseListedLetterBundle", DocumentTag.INTERNAL_CASE_LISTED_LETTER_BUNDLE.toString());
+        assertEquals("internalCmrListingLetter", DocumentTag.INTERNAL_CMR_LISTING_LETTER.toString());
+        assertEquals("internalCmrListingLetterBundle", DocumentTag.INTERNAL_CMR_LISTING_LETTER_BUNDLE.toString());
+        assertEquals("internalCmrListingLrLetter", DocumentTag.INTERNAL_CMR_LISTING_LR_LETTER.toString());
+        assertEquals("internalCmrListingLrLetterBundle", DocumentTag.INTERNAL_CMR_LISTING_LR_LETTER_BUNDLE.toString());
+        assertEquals("internalCmrReListingLetter", DocumentTag.INTERNAL_CMR_RE_LISTING_LETTER.toString());
+        assertEquals("internalCmrReListingLetterBundle", DocumentTag.INTERNAL_CMR_RE_LISTING_LETTER_BUNDLE.toString());
+        assertEquals("internalCmrReListingLrLetter", DocumentTag.INTERNAL_CMR_RE_LISTING_LR_LETTER.toString());
+        assertEquals("internalCmrReListingLrLetterBundle", DocumentTag.INTERNAL_CMR_RE_LISTING_LR_LETTER_BUNDLE.toString());
         assertEquals("internalCaseListedLrLetterBundle", DocumentTag.INTERNAL_CASE_LISTED_LR_LETTER_BUNDLE.toString());
         assertEquals("internalEditCaseListingLetterBundle", DocumentTag.INTERNAL_EDIT_CASE_LISTING_LETTER_BUNDLE.toString());
         assertEquals("internalEditCaseListingLrLetterBundle", DocumentTag.INTERNAL_EDIT_CASE_LISTING_LR_LETTER_BUNDLE.toString());
@@ -102,6 +110,9 @@ class DocumentTagTest {
         assertEquals("aipmDetainedInPrisonOrIrcReinstateAppealLetter", DocumentTag.AIPM_DETAINED_IN_PRISON_IRC_REINSTATE_APPEAL_LETTER.toString());
         assertEquals("internalEditCaseListingLetter", DocumentTag.INTERNAL_EDIT_CASE_LISTING_LETTER.toString());
         assertEquals("internalEditCaseListingLrLetter", DocumentTag.INTERNAL_EDIT_CASE_LISTING_LR_LETTER.toString());
+        assertEquals("cmrHearingCancelledLetter", DocumentTag.CMR_HEARING_CANCELLED_LETTER.toString());
+        assertEquals("cmrHearingCancelledLrLetter", DocumentTag.CMR_HEARING_CANCELLED_LR_LETTER.toString());
+
         assertEquals("stf24WeeksRemovalDecisionDocument", DocumentTag.STF_24WEEKS_REMOVAL_DECISION_DOCUMENT.toString());
         assertEquals("stf24WeeksRemovalDecisionLetter", DocumentTag.STF_24WEEKS_REMOVAL_DECISION_LETTER.toString());
         assertEquals("stf24WeeksRemovalDecisionLetterBundle", DocumentTag.STF_24WEEKS_REMOVAL_DECISION_LETTER_BUNDLE.toString());
@@ -116,6 +127,6 @@ class DocumentTagTest {
 
     @Test
     void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(111, DocumentTag.values().length);
+        assertEquals(121, DocumentTag.values().length);
     }
 }

@@ -3,9 +3,6 @@
     <suppress until="2026-10-30">
         <cve>CVE-2026-59313</cve>
         <cve>CVE-2026-59314</cve>
-
-        <cve>CVE-2026-41707</cve>
-
         <cve>CVE-2026-47891</cve>
         <cve>CVE-2026-47890</cve>
         <cve>CVE-2026-47893</cve>
@@ -26,5 +23,6 @@
         <cve>CVE-2026-47842</cve>
         <cve>CVE-2026-47885</cve>
         <cve>CVE-2026-47841</cve>
+        <cve>CVE-2026-41707</cve>
     </suppress>
 </suppressions>
