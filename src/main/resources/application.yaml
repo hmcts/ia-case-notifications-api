@@ -823,6 +823,8 @@ govnotify:
     reListCase24Weeks:
       homeOffice:
         email: 84ff2820-437e-4a13-a682-a0fdeb027b07
+      legalRep24Weeks:
+        email: c35b138b-7dd4-40be-8412-f68c520da0c1
     requestCmaRequirements:
       appellant:
         email: 84c2958e-cea0-4a5f-a1e2-7099673d8aa1
