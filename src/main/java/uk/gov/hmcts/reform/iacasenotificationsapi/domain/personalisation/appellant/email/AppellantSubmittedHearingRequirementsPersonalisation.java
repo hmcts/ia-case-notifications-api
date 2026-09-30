@@ -48,11 +48,6 @@ public class AppellantSubmittedHearingRequirementsPersonalisation implements Ema
     }
 
     @Override
-    public String getTemplateId() {
-        return null;
-    }
-
-    @Override
     public String getTemplateId(AsylumCase asylumCase) {
         return hasStf24WeeksStatus(asylumCase)
             ? submittedHearingRequirementsEmail24WeeksTemplateId
