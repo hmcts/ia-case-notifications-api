@@ -13,28 +13,31 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsF
 import java.util.Map;
 import java.util.Set;
 
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_SUBMITTED_HEARING_REQUIREMENTS_APPELLANT_EMAIL;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STF_24_WEEKS_HEARING_REQUIREMENTS_AIP_EMAIL_TEMPLATE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.Stf24WeeksNotificationFor;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.buildHearingRequirementsEmailParams;
 
 @Service
 public class AppellantSubmittedHearingRequirementsStf24WeeksEmailPersonalisation implements EmailNotificationPersonalisation {
     private final String templateID;
     private final RecipientsFinder recipientsFinder;
     private final String nonAdaPrefix;
-    private final String iaExUiFrontendUrl;
+    private final String iaAipFrontendUrl;
     private final CustomerServicesProvider customerServicesProvider;
     private final DateTimeExtractor dateTimeExtractor;
     private final HearingDetailsFinder hearingDetailsFinder;
 
     public AppellantSubmittedHearingRequirementsStf24WeeksEmailPersonalisation(
-            @Value(STF_24_WEEKS_HEARING_REQUIREMENTS_EMAIL_TEMPLATE) String templateID,
-            @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
+            @Value(STF_24_WEEKS_HEARING_REQUIREMENTS_AIP_EMAIL_TEMPLATE) String templateID,
+            @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
             @Value("${govnotify.emailPrefix.nonAda}") String nonAdaPrefix,
             RecipientsFinder recipientsFinder, CustomerServicesProvider customerServicesProvider, DateTimeExtractor dateTimeExtractor, HearingDetailsFinder hearingDetailsFinder
     ) {
         this.templateID = templateID;
         this.recipientsFinder = recipientsFinder;
         this.nonAdaPrefix = nonAdaPrefix;
-        this.iaExUiFrontendUrl = iaExUiFrontendUrl;
+        this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.customerServicesProvider = customerServicesProvider;
         this.dateTimeExtractor = dateTimeExtractor;
         this.hearingDetailsFinder = hearingDetailsFinder;
@@ -58,7 +61,7 @@ public class AppellantSubmittedHearingRequirementsStf24WeeksEmailPersonalisation
 
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
-        return buildHearingRequirementsEmailParams(Stf24WeeksNotificationFor.APPELLANT, asylumCase, nonAdaPrefix, iaExUiFrontendUrl, customerServicesProvider, dateTimeExtractor, hearingDetailsFinder);
+        return buildHearingRequirementsEmailParams(Stf24WeeksNotificationFor.APPELLANT, asylumCase, nonAdaPrefix, iaAipFrontendUrl, customerServicesProvider, dateTimeExtractor, hearingDetailsFinder);
     }
 
 
