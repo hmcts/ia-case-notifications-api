@@ -23,12 +23,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AppellantUploadAdditionalEvidencePersonalisationSmsTest {
     private final String beforeListingTemplateId = "beforeListingTemplateId";
     private final String afterListingTemplateId = "afterListingTemplateId";
+    private final String afterListing24WeeksTemplateId = "afterListing24WeeksTemplateId";
     private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
     private final String iaAipFrontendUrl = "iaAipFrontendUrl";
     private final String mockedAppealReferenceNumber = "someReferenceNumber";
@@ -47,18 +51,31 @@ class AppellantUploadAdditionalEvidencePersonalisationSmsTest {
         appellantUploadAdditionalEvidencePersonalisationSms = new AppellantUploadAdditionalEvidencePersonalisationSms(
             beforeListingTemplateId,
             afterListingTemplateId,
+            afterListing24WeeksTemplateId,
             iaAipFrontendUrl,
             recipientsFinder);
     }
 
     @Test
-    void should_return_given_template_id() {
+    void should_return_before_listing_template_id_when_not_listed() {
         assertEquals(beforeListingTemplateId,
             appellantUploadAdditionalEvidencePersonalisationSms.getTemplateId(asylumCase));
+    }
 
+    @Test
+    void should_return_after_listing_template_id_when_listed_and_not_24_weeks() {
         when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
 
         assertEquals(afterListingTemplateId,
+            appellantUploadAdditionalEvidencePersonalisationSms.getTemplateId(asylumCase));
+    }
+
+    @Test
+    void should_return_after_listing_24_weeks_template_id_when_listed_and_24_weeks() {
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
+        when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YES));
+
+        assertEquals(afterListing24WeeksTemplateId,
             appellantUploadAdditionalEvidencePersonalisationSms.getTemplateId(asylumCase));
     }
 
