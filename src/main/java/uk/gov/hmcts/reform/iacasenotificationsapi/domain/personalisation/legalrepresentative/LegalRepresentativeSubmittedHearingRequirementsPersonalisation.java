@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasStf24WeeksStatus;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
 import com.google.common.collect.ImmutableMap;
@@ -17,6 +18,7 @@ public class LegalRepresentativeSubmittedHearingRequirementsPersonalisation impl
 
     private final String submittedHearingRequirementsLegalRepTemplateId;
     private final String submittedHearingRequirementsAdaLegalRepTemplateId;
+    private final String submittedHearingRequirements24WeeksLegalRepTemplateId;
     private final String iaExUiFrontendUrl;
     private final PersonalisationProvider personalisationProvider;
     private final CustomerServicesProvider customerServicesProvider;
@@ -29,12 +31,14 @@ public class LegalRepresentativeSubmittedHearingRequirementsPersonalisation impl
     public LegalRepresentativeSubmittedHearingRequirementsPersonalisation(
         @Value("${govnotify.template.submittedHearingRequirements.legalRep.email}") String submittedHearingRequirementsLegalRepTemplateId,
         @Value("${govnotify.template.submittedHearingRequirements.legalRep.ada.email}") String submittedHearingRequirementsAdaLegalRepTemplateId,
+        @Value("${govnotify.template.submittedHearingRequirements.legalRep.email24Weeks}") String submittedHearingRequirements24WeeksLegalRepTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         PersonalisationProvider personalisationProvider,
         CustomerServicesProvider customerServicesProvider
     ) {
         this.submittedHearingRequirementsLegalRepTemplateId = submittedHearingRequirementsLegalRepTemplateId;
         this.submittedHearingRequirementsAdaLegalRepTemplateId = submittedHearingRequirementsAdaLegalRepTemplateId;
+        this.submittedHearingRequirements24WeeksLegalRepTemplateId = submittedHearingRequirements24WeeksLegalRepTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.personalisationProvider = personalisationProvider;
         this.customerServicesProvider = customerServicesProvider;
@@ -42,7 +46,9 @@ public class LegalRepresentativeSubmittedHearingRequirementsPersonalisation impl
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        if (isAcceleratedDetainedAppeal(asylumCase)) {
+        if (hasStf24WeeksStatus(asylumCase)) {
+            return submittedHearingRequirements24WeeksLegalRepTemplateId;
+        } else if (isAcceleratedDetainedAppeal(asylumCase)) {
             return submittedHearingRequirementsAdaLegalRepTemplateId;
         }
         return submittedHearingRequirementsLegalRepTemplateId;
