@@ -160,6 +160,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Eve
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.REQUEST_RESPONDENT_REVIEW;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.RESIDENT_JUDGE_FTPA_DECISION;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.RESPOND_TO_COSTS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.REVIEW_HEARING_REQUIREMENTS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.REVOKE_CITIZEN_ACCESS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.SEND_DECISION_AND_REASONS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.SEND_PAYMENT_REMINDER_NOTIFICATION;
@@ -175,7 +176,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.fie
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.CommonUtils.isLastEditNotificationNotToday;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isRepJourney;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLatestAddendumEvidenceDocument;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasAppellantAddressInCountryOrOutOfCountry;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasBeenSubmittedAsLegalRepresentedInternalCase;
@@ -201,6 +201,16 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.remissionDecisionGranted;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.remissionDecisionPartiallyGranted;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.remissionDecisionPartiallyGrantedOrRefused;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STF_24_WEEKS_HEARING_REQ_APPELLANT_EMAIL_GENERATOR;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STF_24_WEEKS_HEARING_REQ_APPELLANT_LETTER_GENERATOR;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STF_24_WEEKS_HEARING_REQ_HO_EMAIL_GENERATOR;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STF_24_WEEKS_HEARING_REQ_LR_EMAIL_GENERATOR;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STF_24_WEEKS_HEARING_REQ_LR_LETTER_GENERATOR;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_APPELLANT_LETTER_GENERATOR;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_LR_LETTER_GENERATOR;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.canRunEventForInternalCase;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.canRunEventForNonInternalCase;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.is24WeeksCaseEvent;
 
 @Slf4j
 @Configuration
@@ -2074,7 +2084,8 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.REVIEW_HEARING_REQUIREMENTS
-                    && !isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData()),
+                    && !isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData())
+                    && !is24WeeksCaseEvent(callback.getCaseDetails().getCaseData(), callback.getEvent(), REVIEW_HEARING_REQUIREMENTS),
             notificationGenerator
         );
     }
@@ -5902,6 +5913,112 @@ public class NotificationHandlerConfiguration {
                     && callback.getEvent() == REMOVE_STATUTORY_TIMEFRAME_24_WEEKS;
             },
             notificationGenerators, getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> hearingRequirementsStatutoryTimeframe24WeeksHoHandler(
+            @Qualifier(STF_24_WEEKS_HEARING_REQ_HO_EMAIL_GENERATOR) List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase =
+                            callback
+                                    .getCaseDetails()
+                                    .getCaseData();
+                    return canRunEventForInternalCase(callbackStage, callback.getEvent(), REVIEW_HEARING_REQUIREMENTS, asylumCase, true);
+                },
+                notificationGenerators, getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> hearingRequirementsStatutoryTimeframe24WeeksAppellantNotificationHandler(
+            @Qualifier(STF_24_WEEKS_HEARING_REQ_APPELLANT_EMAIL_GENERATOR) List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase =
+                            callback
+                                    .getCaseDetails()
+                                    .getCaseData();
+                    return canRunEventForInternalCase(callbackStage, callback.getEvent(), REVIEW_HEARING_REQUIREMENTS, asylumCase, isAipJourney(asylumCase));
+                },
+                notificationGenerators, getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> hearingRequirementsStatutoryTimeframe24WeeksLrNotificationHandler(
+            @Qualifier(STF_24_WEEKS_HEARING_REQ_LR_EMAIL_GENERATOR) List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase =
+                            callback
+                                    .getCaseDetails()
+                                    .getCaseData();
+                    return canRunEventForNonInternalCase(callbackStage, callback.getEvent(), asylumCase, isRepJourney(asylumCase), REVIEW_HEARING_REQUIREMENTS);
+                },
+                notificationGenerators, getErrorHandler()
+        );
+    }
+
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> hearingRequirementsStatutoryTimeframe24WeeksAppellantLetterNotificationHandler(
+            @Qualifier(STF_24_WEEKS_HEARING_REQ_APPELLANT_LETTER_GENERATOR) List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase =
+                            callback
+                                    .getCaseDetails()
+                                    .getCaseData();
+                    return canRunEventForInternalCase(callbackStage, callback.getEvent(), REVIEW_HEARING_REQUIREMENTS, asylumCase, isInternalWithoutLegalRepresentation(asylumCase));
+                },
+                notificationGenerators, getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> hearingRequirementsStatutoryTimeframe24WeeksLegalRepresentativeLetterNotificationHandler(
+            @Qualifier(STF_24_WEEKS_HEARING_REQ_LR_LETTER_GENERATOR) List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase =
+                            callback
+                                    .getCaseDetails()
+                                    .getCaseData();
+                    return canRunEventForInternalCase(callbackStage, callback.getEvent(), REVIEW_HEARING_REQUIREMENTS, asylumCase, hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase));
+                },
+                notificationGenerators, getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> uploadAdditionalEvidenceStf24WeeksAppellantLetterNotificationHandler(
+            @Qualifier(STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_APPELLANT_LETTER_GENERATOR) List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase =
+                            callback
+                                    .getCaseDetails()
+                                    .getCaseData();
+                    return false;
+                },
+                notificationGenerators, getErrorHandler()
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> uploadAdditionalEvidenceStf24WeeksLegalRepresentativeLetterNotificationHandler(
+            @Qualifier(STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_LR_LETTER_GENERATOR) List<NotificationGenerator> notificationGenerators) {
+        return new NotificationHandler(
+                (callbackStage, callback) -> {
+                    AsylumCase asylumCase =
+                            callback
+                                    .getCaseDetails()
+                                    .getCaseData();
+                    return false;
+                },
+                notificationGenerators, getErrorHandler()
         );
     }
 
