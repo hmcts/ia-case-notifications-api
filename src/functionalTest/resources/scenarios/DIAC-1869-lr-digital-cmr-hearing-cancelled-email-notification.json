@@ -1,0 +1,63 @@
+{
+  "description": "DIAC-1869 Send CMR hearing cancelled email notification to appellant, legal rep, case officer and home office",
+  "request": {
+    "uri": "/asylum/ccdAboutToSubmit",
+    "credentials": "SystemUser",
+    "input": {
+      "id": 60008,
+      "eventId": "cmrHearingCancelled",
+      "state": "prepareForHearing",
+      "caseData": {
+        "template": "minimal-appeal-submitted.json",
+        "replacements": {
+          "journeyType": "rep",
+          "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
+          "contactPreference": "wantsEmail",
+          "appealReferenceNumber": "PA/12346/2023",
+          "homeOfficeReferenceNumber": "012345678",
+          "email": "{$TEST_CITIZEN_USERNAME}",
+          "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
+          "appellantInDetention": "No",
+          "cmrHearingCentre": "taylorHouse",
+          "cmrHearingCentreAddress": {
+            "value": {
+              "code": "Taylor House Tribunal Hearing Centre, York Road, SE1 7PB",
+              "label": "Taylor House Tribunal Hearing Centre, York Road, SE1 7PB"
+            }
+          },
+          "cmrHearingDate": "2023-09-19T10:00:00.000"
+        }
+      }
+    }
+  },
+  "expectation": {
+    "status": 200,
+    "errors": [],
+    "caseData": {
+      "template": "minimal-appeal-submitted.json",
+      "replacements": {
+        "appealReferenceNumber": "PA/12346/2023",
+        "homeOfficeReferenceNumber": "012345678",
+        "legalRepresentativeEmailAddress": "{$TEST_LAW_FIRM_A_USERNAME}",
+        "notificationsSent": [
+          {
+            "id": "60008_CMR_HEARING_CANCELLED_APPELLANT_EMAIL",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "60008_CMR_HEARING_CANCELLED_LEGAL_REPRESENTATIVE",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "60008_CMR_CANCELLED_CASE_OFFICER_EMAIL",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "60008_CMR_CANCELLED_HOME_OFFICE_EMAIL",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }
+        ]
+      }
+    }
+  }
+}
