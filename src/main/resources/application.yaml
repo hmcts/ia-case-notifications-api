@@ -446,11 +446,13 @@ govnotify:
         email:
           nonAda: 7288fdae-0616-4215-9d5b-bc3cda60583e
           ada: 2a651831-f119-4aa4-8e2a-a55154ce978d
+          stf24Weeks: 38973a4e-1dc3-4fb4-a629-4b0bb79ea271
       appellant:
         email: c87b9b3d-9054-4f75-a7df-aa53b317422d
         sms: 5b7faa5a-792e-48bf-a512-d21a27ae9b23
       legallyReppedAppellant:
         email: 3593d788-2d44-452f-a0c8-218e33be57da
+        stf24Weeks: aa2e301c-bbca-4622-9a98-3728e252b847
         sms: 367f98a9-57f2-4905-a696-529b27341b47
       remoteHearing:
         legalRep:
