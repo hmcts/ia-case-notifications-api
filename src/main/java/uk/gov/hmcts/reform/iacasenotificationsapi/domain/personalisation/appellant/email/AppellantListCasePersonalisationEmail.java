@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appell
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasStf24WeeksStatus;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAipJourney;
 
@@ -30,6 +31,7 @@ public class AppellantListCasePersonalisationEmail implements EmailNotificationP
     private final String appellantCaseListedTemplateId;
     private final String listAssistHearingAppellantCaseListedTemplateId;
     private final String legallyReppedAppellantCaseListedTemplateId;
+    private final String legallyReppedAppellantCaseListedStf24WeeksTemplateId;
     private final String listAssistHearingLegallyReppedAppellantCaseListedTemplateId;
     private final DateTimeExtractor dateTimeExtractor;
     private final CustomerServicesProvider customerServicesProvider;
@@ -46,6 +48,7 @@ public class AppellantListCasePersonalisationEmail implements EmailNotificationP
         @Value("${govnotify.template.caseListed.appellant.email}") String appellantCaseListedEmailTemplateId,
         @Value("${govnotify.template.listAssistHearing.caseListed.appellant.email}") String listAssistHearingAppellantCaseListedTemplateId,
         @Value("${govnotify.template.caseListed.legallyReppedAppellant.email}") String legallyReppedAppellantCaseListedTemplateId,
+        @Value("${govnotify.template.caseListed.legallyReppedAppellant.stf24Weeks}") String legallyReppedAppellantCaseListedStf24WeeksTemplateId,
         @Value("${govnotify.template.listAssistHearing.caseListed.legallyReppedAppellant.email}") String listAssistHearingLegallyReppedAppellantCaseListedTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         DateTimeExtractor dateTimeExtractor,
@@ -56,6 +59,7 @@ public class AppellantListCasePersonalisationEmail implements EmailNotificationP
         this.appellantCaseListedTemplateId = appellantCaseListedEmailTemplateId;
         this.listAssistHearingAppellantCaseListedTemplateId = listAssistHearingAppellantCaseListedTemplateId;
         this.legallyReppedAppellantCaseListedTemplateId = legallyReppedAppellantCaseListedTemplateId;
+        this.legallyReppedAppellantCaseListedStf24WeeksTemplateId = legallyReppedAppellantCaseListedStf24WeeksTemplateId;
         this.listAssistHearingLegallyReppedAppellantCaseListedTemplateId = listAssistHearingLegallyReppedAppellantCaseListedTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.dateTimeExtractor = dateTimeExtractor;
@@ -66,6 +70,9 @@ public class AppellantListCasePersonalisationEmail implements EmailNotificationP
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
+        if (!isAipJourney(asylumCase) && hasStf24WeeksStatus(asylumCase)) {
+            return legallyReppedAppellantCaseListedStf24WeeksTemplateId;
+        }
         if (asylumCase.read(IS_INTEGRATED, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES) {
             return isAipJourney(asylumCase) ?
                 listAssistHearingAppellantCaseListedTemplateId :
