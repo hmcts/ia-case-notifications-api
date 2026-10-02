@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum SourceOfRemittal {
@@ -10,6 +11,7 @@ public enum SourceOfRemittal {
     @JsonValue
     private String value;
 
+    @JsonCreator
     SourceOfRemittal(String value) {
         this.value = value;
     }
