@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 import lombok.ToString;
@@ -18,6 +19,7 @@ public enum ReasonForLinkAppealOptions {
     @JsonValue
     private final String id;
 
+    @JsonCreator
     ReasonForLinkAppealOptions(String id) {
         this.id = id;
     }
