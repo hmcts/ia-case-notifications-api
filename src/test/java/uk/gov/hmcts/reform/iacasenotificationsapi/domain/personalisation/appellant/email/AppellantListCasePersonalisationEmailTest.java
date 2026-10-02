@@ -38,6 +38,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsF
 public class AppellantListCasePersonalisationEmailTest {
 
     private final String templateId = "someTemplateId";
+    private final String stf24wTemplateId = "some24WeeksTemplateId";
     private final String listAssistHearingTemplateId = "listAssistHearingTemplateId";
     private final String legallyReppedTemplateId = "legallyReppedTemplateId";
     private final String listAssistHearingLegallyReppedTemplateId = "listAssistHearingLegallyReppedTemplateId";
@@ -93,6 +94,7 @@ public class AppellantListCasePersonalisationEmailTest {
 
         appellantListCasePersonalisationEmail = new AppellantListCasePersonalisationEmail(
             templateId,
+            stf24wTemplateId,
             listAssistHearingTemplateId,
             legallyReppedTemplateId,
             listAssistHearingLegallyReppedTemplateId,
@@ -116,6 +118,9 @@ public class AppellantListCasePersonalisationEmailTest {
         when(asylumCase.read(IS_INTEGRATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
         when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
         assertEquals(templateId, appellantListCasePersonalisationEmail.getTemplateId(asylumCase));
+
+        when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        assertEquals(stf24wTemplateId, appellantListCasePersonalisationEmail.getTemplateId(asylumCase));
 
         when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.REP));
         assertEquals(legallyReppedTemplateId, appellantListCasePersonalisationEmail.getTemplateId(asylumCase));

@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appell
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasStf24WeeksStatus;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAipJourney;
 
@@ -28,6 +29,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsF
 public class AppellantListCasePersonalisationEmail implements EmailNotificationPersonalisation {
 
     private final String appellantCaseListedTemplateId;
+    private final String appellantCaseListed24WeeksTemplateId;
     private final String listAssistHearingAppellantCaseListedTemplateId;
     private final String legallyReppedAppellantCaseListedTemplateId;
     private final String listAssistHearingLegallyReppedAppellantCaseListedTemplateId;
@@ -44,6 +46,7 @@ public class AppellantListCasePersonalisationEmail implements EmailNotificationP
 
     public AppellantListCasePersonalisationEmail(
         @Value("${govnotify.template.caseListed.appellant.email}") String appellantCaseListedEmailTemplateId,
+        @Value("${govnotify.template.caseListed.appellant.email24Weeks}") String appellantCaseListed24WeeksEmailTemplateId,
         @Value("${govnotify.template.listAssistHearing.caseListed.appellant.email}") String listAssistHearingAppellantCaseListedTemplateId,
         @Value("${govnotify.template.caseListed.legallyReppedAppellant.email}") String legallyReppedAppellantCaseListedTemplateId,
         @Value("${govnotify.template.listAssistHearing.caseListed.legallyReppedAppellant.email}") String listAssistHearingLegallyReppedAppellantCaseListedTemplateId,
@@ -54,6 +57,7 @@ public class AppellantListCasePersonalisationEmail implements EmailNotificationP
         RecipientsFinder recipientsFinder
     ) {
         this.appellantCaseListedTemplateId = appellantCaseListedEmailTemplateId;
+        this.appellantCaseListed24WeeksTemplateId = appellantCaseListed24WeeksEmailTemplateId;
         this.listAssistHearingAppellantCaseListedTemplateId = listAssistHearingAppellantCaseListedTemplateId;
         this.legallyReppedAppellantCaseListedTemplateId = legallyReppedAppellantCaseListedTemplateId;
         this.listAssistHearingLegallyReppedAppellantCaseListedTemplateId = listAssistHearingLegallyReppedAppellantCaseListedTemplateId;
@@ -70,9 +74,10 @@ public class AppellantListCasePersonalisationEmail implements EmailNotificationP
             return isAipJourney(asylumCase) ?
                 listAssistHearingAppellantCaseListedTemplateId :
                 listAssistHearingLegallyReppedAppellantCaseListedTemplateId;
+        } else if (isAipJourney(asylumCase)) {
+            return hasStf24WeeksStatus(asylumCase) ? appellantCaseListed24WeeksTemplateId : appellantCaseListedTemplateId;
         } else {
-            return isAipJourney(asylumCase) ?
-                appellantCaseListedTemplateId : legallyReppedAppellantCaseListedTemplateId;
+            return legallyReppedAppellantCaseListedTemplateId;
         }
     }
 
