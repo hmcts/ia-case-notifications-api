@@ -36,6 +36,7 @@ public class AppellantListCasePersonalisationSmsTest {
 
     private final String templateId = "someTemplateId";
     private final String legallyReppedTemplateId = "legallyReppedTemplateId";
+    private final String legallyReppedStf24WeeksSmsTemplateId = "legallyReppedStf24WeeksSmsTemplateId";
     private final String iaAipFrontendUrl = "http://somefrontendurl";
     private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
     private final String hearingCentreAddress = "some hearing centre address";
@@ -80,6 +81,7 @@ public class AppellantListCasePersonalisationSmsTest {
         appellantListCasePersonalisationSms = new AppellantListCasePersonalisationSms(
             templateId,
             legallyReppedTemplateId,
+            legallyReppedStf24WeeksSmsTemplateId,
             iaAipFrontendUrl,
             dateTimeExtractor,
             hearingDetailsFinder,
@@ -103,6 +105,20 @@ public class AppellantListCasePersonalisationSmsTest {
         assertEquals(legallyReppedTemplateId, appellantListCasePersonalisationSms.getTemplateId(asylumCase));
     }
 
+
+    @Test
+    public void should_return_stf24_weeks_sms_template_id_for_repped_appellant_on_24_week_case() {
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.REP));
+        when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        assertEquals(legallyReppedStf24WeeksSmsTemplateId, appellantListCasePersonalisationSms.getTemplateId(asylumCase));
+    }
+
+    @Test
+    public void should_not_return_stf24_weeks_sms_template_id_for_aip_appellant_on_24_week_case() {
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
+        when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        assertEquals(templateId, appellantListCasePersonalisationSms.getTemplateId(asylumCase));
+    }
 
     @Test
     public void should_throw_exception_on_recipients_when_case_is_null() {
