@@ -124,10 +124,6 @@
         "subject": "",
         "body": [
           "PA/12345/2019",
-          "The Tribunal has sent your appeal to the Home Office.",
-          "The Home Office will now review their decision to refuse your application to stay in or enter the UK and will either withdraw or maintain their decision.",
-          "If the Home Office withdraw their decision, it means they will look again at their decision to refuse your application to stay in or enter the UK.",
-          "If the Home Office maintain their decision, it means they have looked at all the information and evidence you sent to the Tribunal but still think they were correct to refuse your application to stay in or enter the UK. The appeal will continue and will be decided by a judge.",
           "Sign in to your account to read more about what happens if the Home Office withdraw or maintain their decision.",
           "{$iaAipFrontendUrl}"
         ]
