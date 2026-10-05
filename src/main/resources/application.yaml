@@ -441,6 +441,7 @@ govnotify:
       homeOffice:
         email:
           nonAda: a6c8d1c1-afae-4ea8-986e-34f81f250b47
+          nonAdaStf24Weeks: 5cbe31c9-f7fd-49a8-845e-9107d828bcdf
           ada: d73305bb-0fbe-4ce7-82c3-c53bd3a506c1
       legalRep:
         email:

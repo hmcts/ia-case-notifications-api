@@ -119,8 +119,9 @@ public class HomeOfficeListCasePersonalisationTest {
         when(hearingDetailsFinder.getHearingCentreLocation(asylumCase)).thenReturn(hearingCentreAddress);
 
         String listAssistHearingTemplateId = "listAssistHearingTemplateId";
+        String homeOfficeCaseListedNonAdaStf24WeeksTemplateId = "homeOfficeCaseListedNonAdaStf24WeeksTemplateId";
         homeOfficeListCasePersonalisation = new HomeOfficeListCasePersonalisation(
-            nonAdaTemplateId,
+            nonAdaTemplateId,homeOfficeCaseListedNonAdaStf24WeeksTemplateId,
             adaTemplateId,
             listAssistHearingTemplateId,
             iaExUiFrontendUrl,
