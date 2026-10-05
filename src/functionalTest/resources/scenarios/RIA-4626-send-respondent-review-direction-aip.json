@@ -112,8 +112,7 @@
           "PA/12345/2019",
           "1212-0099-0062-8083",
           "Pablo Jimenez,",
-          "A Tribunal Caseworker has sent your appeal to the Home Office.",
-          "The Home Office will now review their decision to refuse your application to stay in or enter the UK.",
+          "A Legal Officer has sent the documents you have provided to the Home Office",
           "{$iaAipFrontendUrl}",
           "{$customerServices.telephoneNumber}",
           "{$customerServices.emailAddress}"

@@ -13,21 +13,13 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.EMPTY_STRING;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.LEGAL_REP_REFERENCE_NUMBER_KEY;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.getLegalRepReferenceNo;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.*;
 
 @Service
 @Slf4j
 public class LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisation implements LegalRepresentativeEmailNotificationPersonalisation {
 
 
-    private static final String SUBJECT_PREFIX_KEY = "subjectPrefix";
-    private static final String APPEAL_REFERENCE_NUMBER_KEY = "appealReferenceNumber";
-    private static final String APPELLANT_GIVEN_NAMES_KEY = "appellantGivenNames";
-    private static final String APPELLANT_FAMILY_NAME_KEY = "appellantFamilyName";
-    private static final String LINK_TO_ONLINE_SERVICE_KEY = "linkToOnlineService";
     private static final String COMPLETE_CASE_REVIEW_DATE_KEY = "completeCaseReviewDate";
     private final String templateId;
     private final String iaExUiFrontendUrl;
