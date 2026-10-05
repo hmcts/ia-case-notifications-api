@@ -148,7 +148,7 @@ public class NotificationVerifier implements Verifier {
                             assertEquals(
                                 expectedBodyUnknownType,
                                 actualBody,
-                                fileName + ": Notification "
+                                fileName + ": Notification with ID " + deliveredNotificationId + " and reference "
                                     + expectedReference + " was delivered with wrong body content"
                             );
 
