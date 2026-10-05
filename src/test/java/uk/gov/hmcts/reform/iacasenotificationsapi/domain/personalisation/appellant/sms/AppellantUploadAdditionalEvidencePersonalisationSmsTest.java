@@ -3,6 +3,8 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appell
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
@@ -70,9 +72,10 @@ class AppellantUploadAdditionalEvidencePersonalisationSmsTest {
             appellantUploadAdditionalEvidencePersonalisationSms.getTemplateId(asylumCase));
     }
 
-    @Test
-    void should_return_after_listing_24_weeks_template_id_when_listed_and_24_weeks() {
-        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
+    @ParameterizedTest
+    @CsvSource(value = {"HATTON_CROSS", "null"}, nullValues = "null")
+    void should_return_after_listing_24_weeks_template_id_when_24_weeks(HearingCentre hearingCentre) {
+        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.ofNullable(hearingCentre));
         when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YES));
 
         assertEquals(afterListing24WeeksTemplateId,

@@ -28,11 +28,11 @@ public class AppellantUploadAdditionalEvidencePersonalisationSms implements SmsN
     private final RecipientsFinder recipientsFinder;
 
     public AppellantUploadAdditionalEvidencePersonalisationSms(
-            @Value("${govnotify.template.uploadedAdditionalEvidenceBeforeListing.appellant.sms}") String uploadAdditionalEvidenceSmsBeforeListingNotificationTemplateId,
-            @Value("${govnotify.template.uploadedAdditionalEvidenceAfterListing.appellant.sms}") String uploadAdditionalEvidenceSmsAfterListingNotificationTemplateId,
-            @Value("${govnotify.template.uploadedAdditionalEvidenceAfterListing.appellant.sms24Weeks}") String uploadAdditionalEvidenceSmsAfterListing24WeeksNotificationTemplateId,
-            @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
-            RecipientsFinder recipientsFinder
+        @Value("${govnotify.template.uploadedAdditionalEvidenceBeforeListing.appellant.sms}") String uploadAdditionalEvidenceSmsBeforeListingNotificationTemplateId,
+        @Value("${govnotify.template.uploadedAdditionalEvidenceAfterListing.appellant.sms}") String uploadAdditionalEvidenceSmsAfterListingNotificationTemplateId,
+        @Value("${govnotify.template.uploadedAdditionalEvidenceAfterListing.appellant.sms24Weeks}") String uploadAdditionalEvidenceSmsAfterListing24WeeksNotificationTemplateId,
+        @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
+        RecipientsFinder recipientsFinder
     ) {
 
         this.uploadAdditionalEvidenceSmsBeforeListingNotificationTemplateId = uploadAdditionalEvidenceSmsBeforeListingNotificationTemplateId;
@@ -44,12 +44,11 @@ public class AppellantUploadAdditionalEvidencePersonalisationSms implements SmsN
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        if (isAppealListed(asylumCase)) {
-            return AsylumCaseUtils.hasStf24WeeksStatus(asylumCase)
-                    ? uploadAdditionalEvidenceSmsAfterListing24WeeksNotificationTemplateId
-                    : uploadAdditionalEvidenceSmsAfterListingNotificationTemplateId;
+        if (AsylumCaseUtils.hasStf24WeeksStatus(asylumCase)) {
+            return uploadAdditionalEvidenceSmsAfterListing24WeeksNotificationTemplateId;
         }
-        return uploadAdditionalEvidenceSmsBeforeListingNotificationTemplateId;
+        return isAppealListed(asylumCase) ? uploadAdditionalEvidenceSmsAfterListingNotificationTemplateId
+            : uploadAdditionalEvidenceSmsBeforeListingNotificationTemplateId;
     }
 
     @Override
@@ -75,7 +74,7 @@ public class AppellantUploadAdditionalEvidencePersonalisationSms implements SmsN
 
     protected boolean isAppealListed(AsylumCase asylumCase) {
         final Optional<HearingCentre> appealListed = asylumCase
-                .read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class);
+            .read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class);
 
         return appealListed.isPresent();
     }
