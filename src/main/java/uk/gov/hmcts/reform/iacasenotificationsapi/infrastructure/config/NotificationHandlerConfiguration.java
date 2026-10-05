@@ -129,45 +129,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Remissi
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionType.HO_WAIVER_REMISSION;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.RemissionType.NO_REMISSION;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.UserRole.getAdminOfficerRoles;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.ADD_EVIDENCE_FOR_COSTS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.ADJOURN_HEARING_WITHOUT_DATE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.APPLY_FOR_COSTS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.APPLY_FOR_FTPA_RESPONDENT;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.BUILD_CASE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.CONSIDER_MAKING_COSTS_ORDER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.DECIDE_AN_APPLICATION;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.DECIDE_COSTS_APPLICATION;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.DECISION_WITHOUT_HEARING;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.EDIT_APPEAL;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.EDIT_CASE_LISTING;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.END_APPEAL;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.END_APPEAL_AUTOMATICALLY;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.GENERATE_HEARING_BUNDLE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.GENERATE_PIN_IN_POST;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.HEARING_CANCELLED;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.LIST_CASE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.MANAGE_FEE_UPDATE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.MARK_APPEAL_AS_REMITTED;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.QUERY_MANAGEMENT_RAISE_QUERY;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.QUERY_MANAGEMENT_RESPOND_QUERY;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.RECORD_ADJOURNMENT_DETAILS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.RECORD_OUT_OF_TIME_DECISION;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.RECORD_REMISSION_DECISION;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.REINSTATE_APPEAL;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.REMOVE_STATUTORY_TIMEFRAME_24_WEEKS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.REQUEST_REASONS_FOR_APPEAL;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.REQUEST_RESPONDENT_EVIDENCE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.REQUEST_RESPONDENT_REVIEW;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.RESIDENT_JUDGE_FTPA_DECISION;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.RESPOND_TO_COSTS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.REVOKE_CITIZEN_ACCESS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.SEND_DECISION_AND_REASONS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.SEND_PAYMENT_REMINDER_NOTIFICATION;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.START_APPEAL;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.SUBMIT_APPEAL;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.TURN_ON_NOTIFICATIONS;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.UPLOAD_ADDENDUM_EVIDENCE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.UPLOAD_ADDENDUM_EVIDENCE_ADMIN_OFFICER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.PaymentStatus.FAILED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.PaymentStatus.PAID;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.PaymentStatus.PAYMENT_PENDING;
@@ -201,6 +163,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCase
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.remissionDecisionGranted;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.remissionDecisionPartiallyGranted;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.remissionDecisionPartiallyGrantedOrRefused;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.*;
 
 @Slf4j
 @Configuration
@@ -2115,7 +2078,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.UPLOAD_ADDITIONAL_EVIDENCE
+                    && callback.getEvent() == UPLOAD_ADDITIONAL_EVIDENCE
                     && isRepJourney(callback.getCaseDetails().getCaseData())
                     && !is24WeeksCaseEvent(callback.getCaseDetails().getCaseData(), callback.getEvent(), UPLOAD_ADDITIONAL_EVIDENCE),
             notificationGenerator
@@ -2129,7 +2092,7 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.UPLOAD_ADDITIONAL_EVIDENCE
+                    && callback.getEvent() == UPLOAD_ADDITIONAL_EVIDENCE
                     && isAipJourney(callback.getCaseDetails().getCaseData())
                     && !is24WeeksCaseEvent(callback.getCaseDetails().getCaseData(), callback.getEvent(), UPLOAD_ADDITIONAL_EVIDENCE),
             notificationGenerator

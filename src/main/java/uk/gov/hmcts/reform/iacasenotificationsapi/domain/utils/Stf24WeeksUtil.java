@@ -241,7 +241,7 @@ public class Stf24WeeksUtil {
                 .put(APPELLANT_GIVEN_NAMES_KEY, asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(EMPTY_STRING))
                 .put(APPELLANT_FAMILY_NAME_KEY, asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(EMPTY_STRING))
                 .put(APPEAL_REFERENCE_NUMBER_KEY, asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""));
-        builder.putAll(PersonalisationProvider.getHearingRequirementsFields(asylumCase));
+        PersonalisationProvider.buildHearingRequirementsFields(asylumCase, builder);
         builder.put(LR_REFERENCE_WITH_TEXT, legalRefText(notificationFor, asylumCase));
         builder.put(HO_REFERENCE_WITH_TEXT, hoRefText(notificationFor, asylumCase));
         return builder;
