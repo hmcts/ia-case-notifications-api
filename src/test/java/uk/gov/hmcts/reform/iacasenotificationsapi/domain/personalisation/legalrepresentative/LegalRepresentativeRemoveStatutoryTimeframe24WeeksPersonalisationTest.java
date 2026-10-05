@@ -26,8 +26,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.LEGAL_REP_REFERENCE_NUMBER_KEY;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.REMOVE_STATUTORY_TIMEFRAME_24WEEKS_LEGAL_REP_EMAIL;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.*;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -38,7 +37,7 @@ class LegalRepresentativeRemoveStatutoryTimeframe24WeeksPersonalisationTest {
     private static final String APPELLANT_GIVEN_NAMES_KEY = "appellantGivenNames";
     private static final String APPEAL_REFERENCE_NUMBER_KEY = "appealReferenceNumber";
     private static final String APPELLANT_FAMILY_NAME_KEY = "appellantFamilyName";
-    private static final String LINK_TO_ONLINE_SERVICE_KEY = "linkToOnlineService";
+
     private static final String COMPLETE_CASE_REVIEW_DATE_KEY = "completeCaseReviewDate";
     private static final String STF_24_WEEKS_TEMPLATE_ID = "stf24WeeksTemplateId";
     private static final String IA_EX_UI_FRONTEND_URL = "http://localhost";

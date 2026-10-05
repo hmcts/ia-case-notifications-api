@@ -148,7 +148,7 @@ public class NotificationVerifier implements Verifier {
                             assertEquals(
                                 expectedBodyUnknownType,
                                 actualBody,
-                                fileName + ": Notification "
+                                fileName + ": Notification with ID " + deliveredNotificationId + " and reference "
                                     + expectedReference + " was delivered with wrong body content"
                             );
 
@@ -158,7 +158,7 @@ public class NotificationVerifier implements Verifier {
 
                             expectedBodyMatches.forEach(expectedBodyMatch -> assertTrue(
                                     getVerification(expectedBodyMatch, actualBody),
-                                    "Notification "
+                                    "Notification with ID " + deliveredNotificationId + " and reference "
                                         + expectedReference + " was delivered with wrong body content. Expected body to contain: "
                                         + expectedBodyMatch + " but was: " + actualBody
                                 )
@@ -168,7 +168,7 @@ public class NotificationVerifier implements Verifier {
                         for (String expectedBodyExclusion : (List<String>) expectedBodyExclusions) {
                             assertFalse(
                                 actualBody.contains(expectedBodyExclusion),
-                                "Notification "
+                                "Notification with ID " + deliveredNotificationId + " and reference "
                                     + expectedReference + " was delivered with wrong body content. Expected body to not contain: "
                                     + expectedBodyExclusion + " but was: " + actualBody
                             );
