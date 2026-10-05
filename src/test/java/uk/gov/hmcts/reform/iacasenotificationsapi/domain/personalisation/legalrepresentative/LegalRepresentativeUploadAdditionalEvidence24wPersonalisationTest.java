@@ -1,21 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType.AIP;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
-
 import com.google.common.collect.ImmutableMap;
-
-import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,7 +10,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DynamicList;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Value;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetails;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.ChangeOrganisationRequest;
@@ -33,12 +22,30 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesO
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
 
+import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.Optional;
+
+import static com.google.common.collect.Lists.newArrayList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CHANGE_ORGANISATION_REQUEST_FIELD;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ACCELERATED_DETAINED_APPEAL;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.JOURNEY_TYPE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType.AIP;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
+
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class LegalRepresentativeUploadAdditionalEvidencePersonalisationTest {
+public class LegalRepresentativeUploadAdditionalEvidence24wPersonalisationTest {
 
-    private final String beforeListingTemplateId = "beforeListingTemplateId";
-    private final String afterListingTemplateId = "afterListingTemplateId";
+    private final String afterListing24WeeksTemplateId = "afterListing24WeeksTemplateId";
     private final String iaExUiFrontendUrl = "http://localhost";
     private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
     private final String legalRepEmailAddress = "legalRep@example.com";
@@ -52,16 +59,15 @@ public class LegalRepresentativeUploadAdditionalEvidencePersonalisationTest {
     PersonalisationProvider personalisationProvider;
     @Mock
     CustomerServicesProvider customerServicesProvider;
-    private LegalRepresentativeUploadAdditionalEvidencePersonalisation
+    private LegalRepresentativeUploadAdditionalEvidence24wPersonalisation
         legalRepresentativeUploadAdditionalEvidencePersonalisation;
 
     @BeforeEach
     public void setUp() {
 
         legalRepresentativeUploadAdditionalEvidencePersonalisation =
-            new LegalRepresentativeUploadAdditionalEvidencePersonalisation(
-                beforeListingTemplateId,
-                afterListingTemplateId,
+            new LegalRepresentativeUploadAdditionalEvidence24wPersonalisation(
+                afterListing24WeeksTemplateId,
                 iaExUiFrontendUrl,
                 personalisationProvider,
                 customerServicesProvider
@@ -116,12 +122,9 @@ public class LegalRepresentativeUploadAdditionalEvidencePersonalisationTest {
 
     @Test
     public void should_return_the_given_template_id() {
-        assertEquals(beforeListingTemplateId,
-            legalRepresentativeUploadAdditionalEvidencePersonalisation.getTemplateId(asylumCase));
+        when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
 
-        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
-
-        assertEquals(afterListingTemplateId,
+        assertEquals(afterListing24WeeksTemplateId,
             legalRepresentativeUploadAdditionalEvidencePersonalisation.getTemplateId(asylumCase));
 
     }
@@ -171,14 +174,5 @@ public class LegalRepresentativeUploadAdditionalEvidencePersonalisationTest {
             .put("customerServicesTelephone", customerServicesTelephone)
             .put("customerServicesEmail", customerServicesEmail)
             .build();
-    }
-
-    @Test
-    public void should_return_false_if_appeal_not_yet_listed() {
-        assertFalse(legalRepresentativeUploadAdditionalEvidencePersonalisation.isAppealListed(asylumCase));
-
-        when(asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)).thenReturn(Optional.of(hearingCentre));
-
-        assertTrue(legalRepresentativeUploadAdditionalEvidencePersonalisation.isAppealListed(asylumCase));
     }
 }

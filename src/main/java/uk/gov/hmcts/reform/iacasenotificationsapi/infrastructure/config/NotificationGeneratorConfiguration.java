@@ -1743,7 +1743,7 @@ public class NotificationGeneratorConfiguration {
     public List<NotificationGenerator> uploadAdditionalEvidence24w(
         HomeOfficeUploadAdditionalEvidencePersonalisation homeOfficeUploadAdditionalEvidencePersonalisation,
         CaseOfficerUploadAdditionalEvidencePersonalisation caseOfficerUploadAdditionalEvidencePersonalisation,
-        LegalRepresentativeUploadAdditionalEvidencePersonalisation legalRepresentativeUploadAdditionalEvidencePersonalisation,
+        LegalRepresentativeUploadAdditionalEvidence24wPersonalisation legalRepresentativeUploadAdditionalEvidencePersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
