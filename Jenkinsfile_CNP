@@ -175,7 +175,17 @@ def secrets = [
         secret('det-irc-dungavel-email', 'IA_DET_IRC_HARMONDSWORTH_EMAIL'),
         secret('det-irc-swinderby-email', 'IA_DET_IRC_SWINDERBY_EMAIL'),
         secret('det-irc-tinsleyhouse-email', 'IA_DET_IRC_TINSLEYHOUSE_EMAIL'),
-        secret('det-irc-yarlswood-email', 'IA_DET_IRC_YARLSWOOD_EMAIL')
+        secret('det-irc-yarlswood-email', 'IA_DET_IRC_YARLSWOOD_EMAIL'),
+
+        secret('admin-hearing-centre-hatton-cross-email', 'IA_ADMIN_HEARING_CENTRE_HATTON_CROSS_EMAIL'),
+        secret('admin-hearing-centre-yarlswood-email', 'IA_ADMIN_HEARING_CENTRE_YARLSWOOD_EMAIL'),
+        secret('admin-hearing-centre-bradford-email', 'IA_ADMIN_HEARING_CENTRE_BRADFORD_EMAIL'),
+        secret('admin-hearing-centre-glasgow-email', 'IA_ADMIN_HEARING_CENTRE_GLASGOW_EMAIL'),
+        secret('admin-hearing-centre-taylor-house-email', 'IA_ADMIN_HEARING_CENTRE_TAYLOR_HOUSE_EMAIL'),
+        secret('admin-hearing-centre-manchester-email', 'IA_ADMIN_HEARING_CENTRE_MANCHESTER_EMAIL'),
+        secret('admin-hearing-centre-birmingham-email', 'IA_ADMIN_HEARING_CENTRE_BIRMINGHAM_EMAIL'),
+        secret('admin-hearing-centre-newport-email', 'IA_ADMIN_HEARING_CENTRE_NEWPORT_EMAIL'),
+        secret('admin-hearing-centre-virtual-region-email', 'IA_ADMIN_HEARING_CENTRE_VIRTUAL_REGION_EMAIL')
     ]
 ]
 

@@ -1,0 +1,66 @@
+{
+  "description": "DIAC-2363 No notification is sent when the re-listed CMR hearing is a paper hearing for AiP digital appeal (not in attendance)",
+  "request": {
+    "uri": "/asylum/ccdAboutToSubmit",
+    "credentials": "SystemUser",
+    "input": {
+      "id": 62005,
+      "eventId": "cmrReListing",
+      "state": "prepareForHearing",
+      "caseData": {
+        "template": "minimal-appeal-submitted.json",
+        "replacements": {
+          "journeyType": "aip",
+          "appealReferenceNumber": "PA/12345/2023",
+          "ariaListingReference": "LP/12345/2021",
+          "contactPreference": "wantsEmail",
+          "subscriptions": [
+            {
+              "id": "1",
+              "value": {
+                "subscriber": "appellant",
+                "email": "{$TEST_CITIZEN_USERNAME}",
+                "wantsEmail": "Yes",
+                "mobileNumber": "{$TEST_CITIZEN_MOBILE}",
+                "wantsSms": "No"
+              }
+            }
+          ],
+          "cmrHearingCentre": "taylorHouse",
+          "cmrHearingCentreAddress": {
+            "value": {
+              "code": "Taylor House Tribunal Hearing Centre, York Road, SE1 7PB",
+              "label": "Taylor House Tribunal Hearing Centre, York Road, SE1 7PB"
+            }
+          },
+          "cmrHearingDate": "2023-09-19T10:00:00.000",
+          "cmrIsRemoteHearing": "No",
+          "cmrHearingChannel": {
+            "value": {
+              "code": "NA",
+              "label": "Not in Attendance"
+            },
+            "list_items": [
+              { "code": "INTER", "label": "In Person" },
+              { "code": "NA", "label": "Not in Attendance" },
+              { "code": "TEL", "label": "Telephone" },
+              { "code": "VID", "label": "Video" }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "expectation": {
+    "status": 200,
+    "errors": [],
+    "caseData": {
+      "template": "minimal-appeal-submitted.json",
+      "replacements": {
+        "appealReferenceNumber": "PA/12345/2023",
+        "ariaListingReference": "LP/12345/2021",
+        "notificationsSent": null
+      }
+    }
+  }
+}
