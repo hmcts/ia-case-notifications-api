@@ -747,6 +747,8 @@ govnotify:
     changeToHearingRequirements:
       adminOfficer:
         email: d3317a7a-4ce5-4032-b6b4-2806683b8b9a
+      adminHearingCentre24Weeks:
+        email: 2d11161d-36d1-4265-8cd8-f15671836aac
     removeAppealFromOnlineBeforeListing:
       homeOffice:
         email: d681269e-397a-407a-bf76-d7990f8e4ddb
@@ -884,6 +886,11 @@ govnotify:
     reListCase:
       adminOfficer:
         email: 495c6f2b-46da-431f-a890-22371f2150dd
+    reListCase24Weeks:
+      homeOffice:
+        email: 84ff2820-437e-4a13-a682-a0fdeb027b07
+      legalRep24Weeks:
+        email: c35b138b-7dd4-40be-8412-f68c520da0c1
     requestCmaRequirements:
       appellant:
         email: 84c2958e-cea0-4a5f-a1e2-7099673d8aa1
@@ -2842,6 +2849,27 @@ hearingCentreEmailAddresses:
   leedsMags: ${IA_HEARING_CENTRE_LEEDS_MAGS_EMAIL:hc-leeds-mags-default@example.com}
   alloaSherrif: ${IA_HEARING_CENTRE_ALLOA_SHERRIF_EMAIL:hc-alloa-sherrif-default@example.com}
   iacNationalVirtual: ${IA_HEARING_CENTRE_VIRTUAL_REGION_EMAIL:hc-virtualregion-default@example.com}
+
+adminHearingCentreEmailAddresses:
+  harmondsworth: ${IA_ADMIN_HEARING_CENTRE_HATTON_CROSS_EMAIL:admin-hc-harmondsworth-default@example.com}
+  hattonCross: ${IA_ADMIN_HEARING_CENTRE_HATTON_CROSS_EMAIL:admin-hc-hatton-cross-default@example.com}
+  yarlsWood: ${IA_ADMIN_HEARING_CENTRE_YARLSWOOD_EMAIL:admin-hc-yarls-wood-default@example.com}
+  northShields: ${IA_ADMIN_HEARING_CENTRE_BRADFORD_EMAIL:admin-hc-north-shields-default@example.com}
+  glasgow: ${IA_ADMIN_HEARING_CENTRE_GLASGOW_EMAIL:admin-hc-glasgow-default@example.com}
+  hendon: ${IA_ADMIN_HEARING_CENTRE_TAYLOR_HOUSE_EMAIL:admin-hc-hendon-default@example.com}
+  bradfordKeighley: ${IA_ADMIN_HEARING_CENTRE_BRADFORD_EMAIL:admin-hc-bradford-keighley-default@example.com}
+  mccMinshull: ${IA_ADMIN_HEARING_CENTRE_MANCHESTER_EMAIL:admin-hc-mcc-minshull-default@example.com}
+  mccCrownSquare: ${IA_ADMIN_HEARING_CENTRE_MANCHESTER_EMAIL:admin-hc-mcc-crown-square-default@example.com}
+  manchesterMags: ${IA_ADMIN_HEARING_CENTRE_MANCHESTER_EMAIL:admin-hc-manchester-mags-default@example.com}
+  nthTyneMags: ${IA_ADMIN_HEARING_CENTRE_BRADFORD_EMAIL:admin-hc-nth-tyne-mags-default@example.com}
+  leedsMags: ${IA_ADMIN_HEARING_CENTRE_BRADFORD_EMAIL:admin-hc-leeds-mags-default@example.com}
+  alloaSherrif: ${IA_ADMIN_HEARING_CENTRE_GLASGOW_EMAIL:admin-hc-alloa-sherrif-default@example.com}
+  newport: ${IA_ADMIN_HEARING_CENTRE_NEWPORT_EMAIL:admin-hc-newport-default@example.com}
+  iacNationalVirtual: ${IA_ADMIN_HEARING_CENTRE_VIRTUAL_REGION_EMAIL:admin-hc-virtualregion-default@example.com}
+  bradford: ${IA_ADMIN_HEARING_CENTRE_BRADFORD_EMAIL:admin-hc-bradford-default@example.com}
+  birmingham: ${IA_ADMIN_HEARING_CENTRE_BIRMINGHAM_EMAIL:admin-hc-birmingham-default@example.com}
+  manchester: ${IA_ADMIN_HEARING_CENTRE_MANCHESTER_EMAIL:admin-hc-manchester-default@example.com}
+  taylorHouse: ${IA_ADMIN_HEARING_CENTRE_TAYLOR_HOUSE_EMAIL:admin-hc-taylorhouse-default@example.com}
 
 ### Bail Hearing Email addresses
 bailHearingCentreEmailAddresses:
