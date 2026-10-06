@@ -20,6 +20,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.JOURNEY_TYPE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType.AIP;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getLegalRepEmailInternalOrLegalRepJourney;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasBeenSubmittedByAppellantInternalCase;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
 @Service
@@ -54,7 +55,7 @@ public class LegalRepresentativeUploadAdditionalEvidence24wPersonalisation imple
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        if (isAipJourney(asylumCase) || asylumCase.read(CHANGE_ORGANISATION_REQUEST_FIELD, ChangeOrganisationRequest.class)
+        if (hasBeenSubmittedByAppellantInternalCase(asylumCase) || isAipJourney(asylumCase) || asylumCase.read(CHANGE_ORGANISATION_REQUEST_FIELD, ChangeOrganisationRequest.class)
                 .map(it -> it.getCaseRoleId() == null)
                 .orElse(false)) {
 

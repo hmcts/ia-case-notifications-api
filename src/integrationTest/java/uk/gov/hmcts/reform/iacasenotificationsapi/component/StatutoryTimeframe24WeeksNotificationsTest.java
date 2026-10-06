@@ -458,10 +458,10 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
 
     private static Stream<Arguments> uploadAdditionalEvidenceCaseDataPermutations() {
         return Stream.of(
-            Arguments.of(true, TestJourneyType.AIP, true, true, false, Set.of()),
-            Arguments.of(true, TestJourneyType.AIP_MANUAL, true, true, false, Set.of(STATUTORY_TIMEFRAME_24WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_APPELLANT_LETTER)),
-            Arguments.of(true, TestJourneyType.LR, true, true, false, Set.of()),
-            Arguments.of(true, TestJourneyType.LR_MANUAL, true, true, false, Set.of(STATUTORY_TIMEFRAME_24WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_LR_LETTER)),
+            Arguments.of(true, TestJourneyType.AIP, true, true, false, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_AIP_APPELLANT_EMAIL", "_UPLOADED_ADDITIONAL_EVIDENCE_HOME_OFFICE")),
+            Arguments.of(true, TestJourneyType.AIP_MANUAL, true, true, false, Set.of(STATUTORY_TIMEFRAME_24WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_APPELLANT_LETTER, "_UPLOADED_ADDITIONAL_EVIDENCE_HOME_OFFICE")),
+            Arguments.of(true, TestJourneyType.LR, true, true, false, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_HOME_OFFICE", "_UPLOADED_ADDITIONAL_EVIDENCE_LEGAL_REP_24W")),
+            Arguments.of(true, TestJourneyType.LR_MANUAL, true, true, false, Set.of(STATUTORY_TIMEFRAME_24WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_LR_LETTER, "_UPLOADED_ADDITIONAL_EVIDENCE_HOME_OFFICE", "_UPLOADED_ADDITIONAL_EVIDENCE_LEGAL_REP_24W")),
 
             Arguments.of(false, TestJourneyType.AIP_MANUAL, true, true, true, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_HOME_OFFICE")),
             Arguments.of(false, TestJourneyType.AIP, true, true, true, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_AIP_APPELLANT_SMS", "_UPLOADED_ADDITIONAL_EVIDENCE_AIP_APPELLANT_EMAIL", "_UPLOADED_ADDITIONAL_EVIDENCE_HOME_OFFICE")),

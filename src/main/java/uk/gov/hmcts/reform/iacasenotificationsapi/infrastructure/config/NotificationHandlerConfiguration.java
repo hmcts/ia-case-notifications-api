@@ -5959,7 +5959,7 @@ public class NotificationHandlerConfiguration {
                             callback
                                     .getCaseDetails()
                                     .getCaseData();
-                    return false;
+                    return canRunEventForInternalCase(callbackStage, callback.getEvent(), UPLOAD_ADDITIONAL_EVIDENCE, asylumCase, hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase));
                 },
                 notificationGenerators, getErrorHandler()
         );
