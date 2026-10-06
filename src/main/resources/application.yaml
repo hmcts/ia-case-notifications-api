@@ -695,6 +695,7 @@ govnotify:
         email: 9fd3928e-a004-4572-8208-297df1cef925
       appellant:
         email: 770dbf2c-b8b4-4a63-9b46-5330c3aa6d76
+        email24Weeks: beb5fb69-e293-4759-a8e7-2e86b8dc0f3f
         sms: c7c18cf5-619d-427e-b984-d161689baec4
     uploadedAddendumEvidence:
       legalRep:
