@@ -48,12 +48,11 @@ public class AppellantUploadAdditionalEvidencePersonalisationEmail implements Em
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        if (!isAppealListed(asylumCase)) {
-            return uploadAdditionalEvidenceEmailBeforeListingNotificationTemplateId;
+        if (hasStf24WeeksStatus(asylumCase)) {
+            return uploadAdditionalEvidenceEmailAfterListing24WeeksNotificationTemplateId;
         }
-        return hasStf24WeeksStatus(asylumCase)
-                ? uploadAdditionalEvidenceEmailAfterListing24WeeksNotificationTemplateId
-                : uploadAdditionalEvidenceEmailAfterListingNotificationTemplateId;
+        return isAppealListed(asylumCase) ? uploadAdditionalEvidenceEmailAfterListingNotificationTemplateId
+            : uploadAdditionalEvidenceEmailBeforeListingNotificationTemplateId;
     }
 
     @Override
