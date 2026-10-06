@@ -5936,21 +5936,6 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> uploadAdditionalEvidenceStf24WeeksHoEmailNotificationHandler(
-            @Qualifier(STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE_EMAIL_GENERATOR) List<NotificationGenerator> notificationGenerators) {
-        return new NotificationHandler(
-                (callbackStage, callback) -> {
-                    AsylumCase asylumCase =
-                            callback
-                                    .getCaseDetails()
-                                    .getCaseData();
-                    return canRunEventForInternalCase(callbackStage, callback.getEvent(), UPLOAD_ADDITIONAL_EVIDENCE, asylumCase, true);
-                },
-                notificationGenerators, getErrorHandler()
-        );
-    }
-
-    @Bean
     public PreSubmitCallbackHandler<AsylumCase> uploadAdditionalEvidenceStf24WeeksAppellantLetterNotificationHandler(
             @Qualifier(STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_APPELLANT_LETTER_GENERATOR) List<NotificationGenerator> notificationGenerators) {
         return new NotificationHandler(
