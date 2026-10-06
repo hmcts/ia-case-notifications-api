@@ -677,6 +677,7 @@ govnotify:
         email: 70a0ff4c-8822-4e6a-be3b-71bc1676bc83
       appellant:
         email: fe78b847-225f-4fc5-963b-cd5a0b3e671e
+        email24Weeks: 7078f646-6598-44cc-8213-2be4827d4652
         sms: b43b2fe3-f662-4b25-ad15-af3ddc07ec81
     uploadedAdditionalEvidenceBeforeListing:
       legalRep:
@@ -1612,6 +1613,14 @@ govnotify:
     editAppealPostSubmit:
       appellant:
         letter: e68faac4-cf30-4e0b-b746-a7baf036dc65
+    uploadAdditionalEvidence24Weeks:
+        letter: 1d05b6b7-7c37-4afb-a7cd-edc830c78785
+        hoEmail: 1d05b6b7-7c37-4afb-a7cd-edc830c78785
+    submittedHearingRequirements24Weeks:
+      aip:
+        email: 22147d29-651c-41ab-850a-8ded3bbdd382
+      email: 7959139c-1483-480b-a0ec-dae60066f374
+      letter: c6995a07-2587-47aa-a09f-5d7466c4fcbf
     removeStatutoryTimeframe24Weeks:
       homeOffice:
         email: 2d0c35b4-5bb5-49e2-ad87-856d5682ea0f
