@@ -7,8 +7,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
 
 import java.util.Collections;
 import java.util.Map;
@@ -26,22 +24,18 @@ public class HomeOfficeUploadEvidenceStatutoryTimeframe24WeeksEmailPersonalisati
     private final String iaExUiFrontendUrl;
     private final String apcPrivateHomeOfficeEmailAddress;
     private final CustomerServicesProvider customerServicesProvider;
-    private final DateTimeExtractor dateTimeExtractor;
-    private final HearingDetailsFinder hearingDetailsFinder;
 
     public HomeOfficeUploadEvidenceStatutoryTimeframe24WeeksEmailPersonalisation(
             @Value("${apcPrivateHomeOfficeEmailAddress}") String apcPrivateHomeOfficeEmailAddress,
             @Value(STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE_EMAIL_TEMPLATE) String templateID,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
-            @Value("${govnotify.emailPrefix.nonAda}") String nonAdaPrefix, CustomerServicesProvider customerServicesProvider, DateTimeExtractor dateTimeExtractor, HearingDetailsFinder hearingDetailsFinder) {
+            @Value("${govnotify.emailPrefix.nonAda}") String nonAdaPrefix, CustomerServicesProvider customerServicesProvider) {
         this.templateID = templateID;
 
         this.nonAdaPrefix = nonAdaPrefix;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.apcPrivateHomeOfficeEmailAddress = apcPrivateHomeOfficeEmailAddress;
         this.customerServicesProvider = customerServicesProvider;
-        this.dateTimeExtractor = dateTimeExtractor;
-        this.hearingDetailsFinder = hearingDetailsFinder;
     }
 
     @Override
@@ -61,7 +55,9 @@ public class HomeOfficeUploadEvidenceStatutoryTimeframe24WeeksEmailPersonalisati
 
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
-        return Stf24WeeksUtil.buildHearingRequirementsEmailParams(Stf24WeeksUtil.Stf24WeeksNotificationFor.HOME_OFFICE, asylumCase, nonAdaPrefix, iaExUiFrontendUrl, customerServicesProvider, dateTimeExtractor, hearingDetailsFinder);
+
+        return Stf24WeeksUtil.buildCommonParams(Stf24WeeksUtil.Stf24WeeksNotificationFor.HOME_OFFICE, asylumCase, customerServicesProvider)
+                .put(SUBJECT_PREFIX_KEY, nonAdaPrefix).put(LINK_TO_ONLINE_SERVICE_KEY, iaExUiFrontendUrl).build();
     }
 
 }
