@@ -76,7 +76,6 @@
           "PA/12345/2019",
           "A1234567",
           "Pablo Jimenez,",
-          "{$TODAY+28|d MMM yyyy}",
           "{$iaAipFrontendUrl}"
         ]
       },
