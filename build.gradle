@@ -439,11 +439,7 @@ dependencies {
 
     implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.9.3'
 
-    implementation 'tools.jackson.core:jackson-core'
-    implementation 'tools.jackson.core:jackson-databind'
     implementation 'com.fasterxml.jackson.core:jackson-annotations'
-    implementation 'tools.jackson.core:jackson-databind'
-    implementation 'tools.jackson.dataformat:jackson-dataformat-csv'
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '3.0.3'
 
     implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '8.1'
