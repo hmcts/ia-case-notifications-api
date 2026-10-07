@@ -2078,9 +2078,23 @@ public class NotificationHandlerConfiguration {
         return new NotificationHandler(
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == UPLOAD_ADDITIONAL_EVIDENCE
-                    && isRepJourney(callback.getCaseDetails().getCaseData())
-                    && !is24WeeksCaseEvent(callback.getCaseDetails().getCaseData(), callback.getEvent(), UPLOAD_ADDITIONAL_EVIDENCE),
+                    && callback.getEvent() == Event.UPLOAD_ADDITIONAL_EVIDENCE
+                    && !hasStf24WeeksStatus(callback.getCaseDetails().getCaseData())
+                    && isRepJourney(callback.getCaseDetails().getCaseData()),
+            notificationGenerator
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> uploadAdditionalEvidence24wHandler(
+        @Qualifier("uploadAdditionalEvidence24w") List<NotificationGenerator> notificationGenerator) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) ->
+                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.UPLOAD_ADDITIONAL_EVIDENCE
+                    && hasStf24WeeksStatus(callback.getCaseDetails().getCaseData())
+                    && isRepJourney(callback.getCaseDetails().getCaseData()),
             notificationGenerator
         );
     }
@@ -2093,8 +2107,7 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == UPLOAD_ADDITIONAL_EVIDENCE
-                    && isAipJourney(callback.getCaseDetails().getCaseData())
-                    && !is24WeeksCaseEvent(callback.getCaseDetails().getCaseData(), callback.getEvent(), UPLOAD_ADDITIONAL_EVIDENCE),
+                    && isAipJourney(callback.getCaseDetails().getCaseData()),
             notificationGenerator
         );
     }
