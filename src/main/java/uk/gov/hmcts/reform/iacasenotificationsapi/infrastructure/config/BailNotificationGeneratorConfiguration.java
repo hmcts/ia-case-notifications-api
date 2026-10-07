@@ -59,7 +59,6 @@ public class BailNotificationGeneratorConfiguration {
 
     @Bean("submitApplicationNotificationGenerator")
     public List<BailNotificationGenerator> submitApplicationNotificationGenerator(
-        HearingCentreSubmitApplicationPersonalisation hearingCentreSubmitApplicationPersonalisation,
         LegalRepresentativeBailApplicationSubmittedPersonalisation legalRepresentativeBailApplicationSubmittedPersonalisation,
         HomeOfficeBailApplicationSubmittedPersonalisation homeOfficeBailApplicationSubmittedPersonalisation,
         ApplicantBailApplicationSubmittedPersonalisationSms applicantBailApplicationSubmittedPersonalisationSms,
@@ -68,8 +67,7 @@ public class BailNotificationGeneratorConfiguration {
 
         return Arrays.asList(
             new BailEmailNotificationGenerator(
-                    newArrayList(hearingCentreSubmitApplicationPersonalisation,
-                            legalRepresentativeBailApplicationSubmittedPersonalisation,
+                    newArrayList(legalRepresentativeBailApplicationSubmittedPersonalisation,
                             homeOfficeBailApplicationSubmittedPersonalisation),
                     notificationSender,
                     notificationIdAppender
@@ -436,7 +434,6 @@ public class BailNotificationGeneratorConfiguration {
 
     @Bean("stopLegalRepresentingNotificationGenerator")
     public List<BailNotificationGenerator> stopLegalRepresentingNotificationGenerator(
-            AdminOfficerBailStopLegalRepresentingPersonalisation adminOfficerBailStopLegalRepresentingPersonalisation,
             LegalRepresentativeBailStopLegalRepresentingPersonalisation legalRepresentativeBailStopLegalRepresentingPersonalisation,
             HomeOfficeBailStopLegalRepresentingPersonalisation homeOfficeBailStopLegalRepresentingPersonalisation,
             ApplicantBailStopLegalRepresentingPersonalisationSms applicantBailStopLegalRepresentingPersonalisationSms,
@@ -445,7 +442,7 @@ public class BailNotificationGeneratorConfiguration {
 
         return Arrays.asList(
                 new BailEmailNotificationGenerator(
-                        newArrayList(adminOfficerBailStopLegalRepresentingPersonalisation,
+                        newArrayList(
                                 legalRepresentativeBailStopLegalRepresentingPersonalisation,
                                 homeOfficeBailStopLegalRepresentingPersonalisation),
                         notificationSender,
@@ -635,24 +632,8 @@ public class BailNotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("bailChangeTribunalCentreNotificationGeneratorWithoutLegalRep")
-    public List<BailNotificationGenerator> bailChangeTribunalCentreNotificationGeneratorWithoutLegalRep(
-            AdminOfficerBailChangeTribunalCentrePersonalisation adminOfficerBailChangeTribunalCentrePersonalisation,
-            BailGovNotifyNotificationSender notificationSender,
-            NotificationIdAppender notificationIdAppender) {
-
-        return List.of(
-                new BailEmailNotificationGenerator(
-                        newArrayList(adminOfficerBailChangeTribunalCentrePersonalisation),
-                        notificationSender,
-                        notificationIdAppender
-                )
-        );
-    }
-
     @Bean("bailChangeTribunalCentreNotificationGeneratorWithLegalRep")
     public List<BailNotificationGenerator> bailChangeTribunalCentreNotificationGeneratorWithLegalRep(
-            AdminOfficerBailChangeTribunalCentrePersonalisation adminOfficerBailChangeTribunalCentrePersonalisation,
             LegalRepresentativeBailChangeTribunalCentrePersonalisation legalRepresentativeBailChangeTribunalCentrePersonalisation,
             BailGovNotifyNotificationSender notificationSender,
             NotificationIdAppender notificationIdAppender) {
@@ -660,7 +641,6 @@ public class BailNotificationGeneratorConfiguration {
         return List.of(
                 new BailEmailNotificationGenerator(
                         newArrayList(
-                                adminOfficerBailChangeTribunalCentrePersonalisation,
                                 legalRepresentativeBailChangeTribunalCentrePersonalisation),
                         notificationSender,
                         notificationIdAppender
