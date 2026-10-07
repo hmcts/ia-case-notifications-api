@@ -667,6 +667,7 @@ govnotify:
     submittedHearingRequirements:
       legalRep:
         email: 1b7fe0be-1ca0-47d6-bec4-21b65fed27c6
+        email24Weeks: 445af3a3-bc75-49ef-b5b9-8f0e7e2ff73e
         ada:
           email: c68173ec-1300-43c7-ae82-0371560a5559
       caseOfficer:
@@ -695,7 +696,9 @@ govnotify:
         email: 9fd3928e-a004-4572-8208-297df1cef925
       appellant:
         email: 770dbf2c-b8b4-4a63-9b46-5330c3aa6d76
+        email24Weeks: beb5fb69-e293-4759-a8e7-2e86b8dc0f3f
         sms: c7c18cf5-619d-427e-b984-d161689baec4
+        sms24Weeks: 8c1bca0c-0ba2-45cb-8d8a-0cb81c4d11b5
     uploadedAddendumEvidence:
       legalRep:
         email: 33309293-c535-415b-bd2f-08aec3161b76
@@ -1611,11 +1614,9 @@ govnotify:
       appellant:
         letter: e68faac4-cf30-4e0b-b746-a7baf036dc65
     uploadAdditionalEvidence24Weeks:
-        letter: 1d05b6b7-7c37-4afb-a7cd-edc830c78785
-        hoEmail: 1d05b6b7-7c37-4afb-a7cd-edc830c78785
+      letter: 2e90f112-ccd1-4bf4-8143-0a552c8b522f
+      hoEmail: c145b064-fd90-4fa0-ab65-9cc3af75fd34
     submittedHearingRequirements24Weeks:
-      aip:
-        email: 22147d29-651c-41ab-850a-8ded3bbdd382
       email: 7959139c-1483-480b-a0ec-dae60066f374
       letter: c6995a07-2587-47aa-a09f-5d7466c4fcbf
     removeStatutoryTimeframe24Weeks:
