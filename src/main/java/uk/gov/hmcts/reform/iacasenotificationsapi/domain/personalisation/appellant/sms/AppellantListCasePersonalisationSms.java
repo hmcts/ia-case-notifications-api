@@ -54,10 +54,11 @@ public class AppellantListCasePersonalisationSms implements SmsNotificationPerso
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        if (!isAipJourney(asylumCase) && hasStf24WeeksStatus(asylumCase)) {
+        boolean isAip = isAipJourney(asylumCase);
+        if (!isAip && hasStf24WeeksStatus(asylumCase)) {
             return legallyReppedAppellantCaseListedStf24WeeksSmsTemplateId;
         }
-        return isAipJourney(asylumCase) ? appellantCaseListedSmsTemplateId : legallyReppedAppellantCaseListedSmsTemplateId;
+        return isAip ? appellantCaseListedSmsTemplateId : legallyReppedAppellantCaseListedSmsTemplateId;
     }
 
     @Override

@@ -70,15 +70,16 @@ public class AppellantListCasePersonalisationEmail implements EmailNotificationP
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        if (!isAipJourney(asylumCase) && hasStf24WeeksStatus(asylumCase)) {
+        boolean isAip = isAipJourney(asylumCase);
+        if (!isAip && hasStf24WeeksStatus(asylumCase)) {
             return legallyReppedAppellantCaseListedStf24WeeksTemplateId;
         }
         if (asylumCase.read(IS_INTEGRATED, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES) {
-            return isAipJourney(asylumCase) ?
+            return isAip ?
                 listAssistHearingAppellantCaseListedTemplateId :
                 listAssistHearingLegallyReppedAppellantCaseListedTemplateId;
         } else {
-            return isAipJourney(asylumCase) ?
+            return isAip ?
                 appellantCaseListedTemplateId : legallyReppedAppellantCaseListedTemplateId;
         }
     }
