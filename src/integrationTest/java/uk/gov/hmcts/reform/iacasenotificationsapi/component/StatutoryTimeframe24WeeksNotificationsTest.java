@@ -6,6 +6,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MvcResult;
@@ -60,6 +61,12 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
     @MockitoBean
     private HearingDetailsFinder hearingDetailsFinder;
 
+    @Value("${govnotify.template.caseListed.homeOffice.email.nonAda}")
+    private String homeOfficeCaseListedNonAdaTemplateId;
+
+    @Value("${govnotify.template.caseListed.homeOffice.email.nonAdaStf24Weeks}")
+    private String homeOfficeCaseListedNonAdaStf24WeeksTemplateId;
+
     // --- Test data builders / helpers ---
     private enum TestJourneyType {
         AIP_MANUAL, AIP, LR, LR_MANUAL
@@ -84,6 +91,7 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
         );
         AsylumCaseForTest someCase = anAsylumCase()
                 .with(HEARING_CENTRE, HearingCentre.MANCHESTER)
+                .with(LIST_CASE_HEARING_CENTRE, HearingCentre.MANCHESTER)
                 .with(APPEAL_REFERENCE_NUMBER, "some-appeal-reference-number")
                 .with(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, StatutoryTimeframe24WeeksNotificationsTest.LR_EMAIL)
                 .with(CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL, APPEAL_SUBMITTED)
@@ -223,7 +231,9 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
 
         when(hearingDetailsFinder.getHearingDateTime(Mockito.any(AsylumCase.class))).thenReturn("2002-02-02T12:00:00");
         when(dateTimeExtractor.extractHearingDate(Mockito.anyString())).thenReturn(String.valueOf(LocalDateTime.of(2002, 2, 2, 12, 0)));
+        when(dateTimeExtractor.extractHearingTime(Mockito.anyString())).thenReturn("12:00");
         when(hearingDetailsFinder.getHearingCentreAddress(Mockito.any(AsylumCase.class))).thenReturn("Hearing Centre Address");
+        when(hearingDetailsFinder.getHearingCentreLocation(Mockito.any(AsylumCase.class))).thenReturn("Hearing Centre Address");
 
         return aboutToSubmit(callback()
                 .event(event)
@@ -335,6 +345,38 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
                                                             Set<String> expectedIds) {
         PreSubmitCallbackResponseForTest response = mockResponse(mockCaseData(testJourneyType, inCountry, wantsEmail, wantsSms, true), REMOVE_STATUTORY_TIMEFRAME_24_WEEKS);
         assertNotificationsContain(response, expectedIds);
+    }
+
+    @ParameterizedTest
+    @MethodSource("caseListedTemplatePermutations")
+    @WithMockUser(authorities = {"caseworker-ia", "tribunal-caseworker"})
+    void should_send_home_office_case_listed_notification_with_correct_template(boolean is24wCase) {
+        PreSubmitCallbackResponseForTest response = mockResponse(
+                mockCaseData(TestJourneyType.AIP, true, true, false, is24wCase),
+                LIST_CASE
+        );
+
+        assertNotificationsContain(response, Set.of(
+                "_CASE_LISTED_CASE_OFFICER",
+                "_CASE_LISTED_HOME_OFFICE",
+                "_CASE_LISTED_AIP_APPELLANT_EMAIL"
+        ));
+        Mockito.verify(notificationSender).sendEmail(
+                Mockito.eq(is24wCase
+                        ? homeOfficeCaseListedNonAdaStf24WeeksTemplateId
+                        : homeOfficeCaseListedNonAdaTemplateId),
+                Mockito.anyString(),
+                Mockito.anyMap(),
+                Mockito.anyString(),
+                Mockito.any(Callback.class)
+        );
+    }
+
+    private static Stream<Arguments> caseListedTemplatePermutations() {
+        return Stream.of(
+                Arguments.of(true),
+                Arguments.of(false)
+        );
     }
 
     @ParameterizedTest(name = "Is 24w case: {0}, JourneyType: {1}, inCountry: {2}, wantsEmail: {3}, wantsSms: {4}")
