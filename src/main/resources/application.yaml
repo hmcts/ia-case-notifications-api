@@ -441,6 +441,7 @@ govnotify:
       homeOffice:
         email:
           nonAda: a6c8d1c1-afae-4ea8-986e-34f81f250b47
+          nonAdaStf24Weeks: 5cbe31c9-f7fd-49a8-845e-9107d828bcdf
           ada: d73305bb-0fbe-4ce7-82c3-c53bd3a506c1
       legalRep:
         email:
@@ -1610,11 +1611,9 @@ govnotify:
       appellant:
         letter: e68faac4-cf30-4e0b-b746-a7baf036dc65
     uploadAdditionalEvidence24Weeks:
-        letter: 1d05b6b7-7c37-4afb-a7cd-edc830c78785
-        hoEmail: 1d05b6b7-7c37-4afb-a7cd-edc830c78785
+      letter: 2e90f112-ccd1-4bf4-8143-0a552c8b522f
+      hoEmail: c145b064-fd90-4fa0-ab65-9cc3af75fd34
     submittedHearingRequirements24Weeks:
-      aip:
-        email: 22147d29-651c-41ab-850a-8ded3bbdd382
       email: 7959139c-1483-480b-a0ec-dae60066f374
       letter: c6995a07-2587-47aa-a09f-5d7466c4fcbf
     removeStatutoryTimeframe24Weeks:

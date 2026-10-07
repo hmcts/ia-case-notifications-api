@@ -119,8 +119,9 @@ public class HomeOfficeListCasePersonalisationTest {
         when(hearingDetailsFinder.getHearingCentreLocation(asylumCase)).thenReturn(hearingCentreAddress);
 
         String listAssistHearingTemplateId = "listAssistHearingTemplateId";
+        String homeOfficeCaseListedNonAdaStf24WeeksTemplateId = "homeOfficeCaseListedNonAdaStf24WeeksTemplateId";
         homeOfficeListCasePersonalisation = new HomeOfficeListCasePersonalisation(
-            nonAdaTemplateId,
+            nonAdaTemplateId,homeOfficeCaseListedNonAdaStf24WeeksTemplateId,
             adaTemplateId,
             listAssistHearingTemplateId,
             iaExUiFrontendUrl,
@@ -140,6 +141,28 @@ public class HomeOfficeListCasePersonalisationTest {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
         assertEquals(nonAdaTemplateId, homeOfficeListCasePersonalisation.getTemplateId(asylumCase));
+    }
+
+    @Test
+    public void should_return_stf_24_weeks_template_id_before_other_case_listed_templates() {
+        when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class))
+            .thenReturn(Optional.of(YesOrNo.YES));
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class))
+            .thenReturn(Optional.of(YesOrNo.YES));
+        when(asylumCase.read(IS_INTEGRATED, YesOrNo.class))
+            .thenReturn(Optional.of(YesOrNo.YES));
+
+        assertEquals(
+            "homeOfficeCaseListedNonAdaStf24WeeksTemplateId",
+            homeOfficeListCasePersonalisation.getTemplateId(asylumCase)
+        );
+    }
+
+    @Test
+    public void should_return_list_assist_template_id_for_integrated_case() {
+        when(asylumCase.read(IS_INTEGRATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+
+        assertEquals("listAssistHearingTemplateId", homeOfficeListCasePersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
