@@ -29,20 +29,9 @@
     "errors": [],
     "confirmation": {
       "header": "success",
-      "body": "contains([2104_BAIL_STOP_LEGAL_REPRESENTING_ADMIN_OFFICER,2104_BAIL_STOP_LEGAL_REPRESENTING_LEGAL_REP,2104_BAIL_STOP_LEGAL_REPRESENTING_HOME_OFFICE,2104_BAIL_STOP_LEGAL_REPRESENTING_APPLICANT_SMS])"
+      "body": "contains([2104_BAIL_STOP_LEGAL_REPRESENTING_LEGAL_REP,2104_BAIL_STOP_LEGAL_REPRESENTING_HOME_OFFICE,2104_BAIL_STOP_LEGAL_REPRESENTING_APPLICANT_SMS])"
     },
     "notifications": [
-      {
-        "reference": "2104_BAIL_STOP_LEGAL_REPRESENTING_ADMIN_OFFICER",
-        "recipient": "{$bailHearingCentreEmailAddresses.newport}",
-        "subject": "Bail application: Applicant no longer represented",
-        "body": [
-          "1650-6221-2061-5101",
-          "John Smith",
-          "A12345",
-          "123654LR"
-        ]
-      },
       {
         "reference": "2104_BAIL_STOP_LEGAL_REPRESENTING_LEGAL_REP",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",

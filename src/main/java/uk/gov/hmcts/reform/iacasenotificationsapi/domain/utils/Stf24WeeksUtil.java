@@ -50,7 +50,6 @@ public class Stf24WeeksUtil {
 
     public static final String STATUTORY_TIMEFRAME_24WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_APPELLANT_LETTER = "_STATUTORY_TIMEFRAME_24WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_APPELLANT_LETTER";
     public static final String STATUTORY_TIMEFRAME_24WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_LR_LETTER = "_STATUTORY_TIMEFRAME_24WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_LR_LETTER";
-    public static final String STATUTORY_TIMEFRAME_24WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE_EMAIL = "_STATUTORY_TIMEFRAME_24WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE_EMAIL";
 
 
     public static final String WEEKS_DEADLINE = "24WeeksDeadline";
@@ -75,7 +74,6 @@ public class Stf24WeeksUtil {
     public static final String STF_24_WEEKS_HEARING_REQUIREMENTS_EMAIL_TEMPLATE = "${govnotify.template.submittedHearingRequirements24Weeks.email}";
     public static final String STF_24_WEEKS_HEARING_REQUIREMENTS_LETTER_TEMPLATE = "${govnotify.template.submittedHearingRequirements24Weeks.letter}";
     public static final String STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_LETTER_TEMPLATE = "${govnotify.template.uploadAdditionalEvidence24Weeks.letter}";
-    public static final String STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE_EMAIL_TEMPLATE = "${govnotify.template.uploadAdditionalEvidence24Weeks.hoEmail}";
 
     public static final String STF_24_WEEKS_HEARING_REQ_HO_EMAIL_GENERATOR = "hearingRequirementsStatutoryTimeframe24WeeksHomeOfficeNotificationGenerator";
     public static final String STF_24_WEEKS_HEARING_REQ_APPELLANT_EMAIL_GENERATOR = "hearingRequirementsStatutoryTimeframe24WeeksAppellantNotificationGenerator";
@@ -84,7 +82,6 @@ public class Stf24WeeksUtil {
     public static final String STF_24_WEEKS_HEARING_REQ_LR_LETTER_GENERATOR = "hearingRequirementsStatutoryTimeframe24WeeksLegalRepresentativeLetterNotificationGenerator";
     public static final String STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_APPELLANT_LETTER_GENERATOR = "uploadAdditionalEvidenceStf24WeeksAppellantLetterNotificationGenerator";
     public static final String STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_LR_LETTER_GENERATOR = "uploadAdditionalEvidenceStf24WeeksLegalRepresentativeLetterNotificationGenerator";
-    public static final String STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE_EMAIL_GENERATOR = "uploadAdditionalEvidenceStf24WeeksHomeOfficeEmailNotificationGenerator";
 
 
     public static final String HO_REFERENCE_WITH_TEXT = "hoReferenceWithText";
