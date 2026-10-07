@@ -2054,6 +2054,21 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) ->
                 callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.UPLOAD_ADDITIONAL_EVIDENCE
+                    && !hasStf24WeeksStatus(callback.getCaseDetails().getCaseData())
+                    && isRepJourney(callback.getCaseDetails().getCaseData()),
+            notificationGenerator
+        );
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> uploadAdditionalEvidence24wHandler(
+        @Qualifier("uploadAdditionalEvidence24w") List<NotificationGenerator> notificationGenerator) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) ->
+                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.UPLOAD_ADDITIONAL_EVIDENCE
+                    && hasStf24WeeksStatus(callback.getCaseDetails().getCaseData())
                     && isRepJourney(callback.getCaseDetails().getCaseData()),
             notificationGenerator
         );
@@ -2862,7 +2877,7 @@ public class NotificationHandlerConfiguration {
 
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.EDIT_APPEAL_AFTER_SUBMIT
+                    && Set.of(EDIT_APPEAL_AFTER_SUBMIT, EDIT_APPELLANT_PERSONAL_DATA).contains(callback.getEvent())
                     && isRepJourney(asylumCase)
                     && !isInternalCase(asylumCase);
             },
@@ -2878,7 +2893,7 @@ public class NotificationHandlerConfiguration {
 
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.EDIT_APPEAL_AFTER_SUBMIT
+                    && Set.of(EDIT_APPEAL_AFTER_SUBMIT, EDIT_APPELLANT_PERSONAL_DATA).contains(callback.getEvent())
                     && isInternalCase(asylumCase);
             },
             notificationGenerator
@@ -2893,7 +2908,7 @@ public class NotificationHandlerConfiguration {
 
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.EDIT_APPEAL_AFTER_SUBMIT
+                    && Set.of(EDIT_APPEAL_AFTER_SUBMIT, EDIT_APPELLANT_PERSONAL_DATA).contains(callback.getEvent())
                     && hasBeenSubmittedByAppellantInternalCase(asylumCase)
                     && isDetainedInOneOfFacilityTypes(asylumCase, IRC, PRISON);
             },
@@ -5929,7 +5944,7 @@ public class NotificationHandlerConfiguration {
                             callback
                                     .getCaseDetails()
                                     .getCaseData();
-                    return false;
+                    return canRunEventForInternalCase(callbackStage, callback.getEvent(), UPLOAD_ADDITIONAL_EVIDENCE, asylumCase, isInternalWithoutLegalRepresentation(asylumCase));
                 },
                 notificationGenerators, getErrorHandler()
         );
@@ -5944,7 +5959,7 @@ public class NotificationHandlerConfiguration {
                             callback
                                     .getCaseDetails()
                                     .getCaseData();
-                    return false;
+                    return canRunEventForInternalCase(callbackStage, callback.getEvent(), UPLOAD_ADDITIONAL_EVIDENCE, asylumCase, hasBeenSubmittedAsLegalRepresentedInternalCase(asylumCase));
                 },
                 notificationGenerators, getErrorHandler()
         );
@@ -7875,7 +7890,7 @@ public class NotificationHandlerConfiguration {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.EDIT_APPEAL_AFTER_SUBMIT
+                    && Set.of(EDIT_APPEAL_AFTER_SUBMIT, EDIT_APPELLANT_PERSONAL_DATA).contains(callback.getEvent())
                     && isInternalCase(asylumCase)
                     && (!isAppellantInDetention(asylumCase)
                     || (hasBeenSubmittedByAppellantInternalCase(asylumCase)

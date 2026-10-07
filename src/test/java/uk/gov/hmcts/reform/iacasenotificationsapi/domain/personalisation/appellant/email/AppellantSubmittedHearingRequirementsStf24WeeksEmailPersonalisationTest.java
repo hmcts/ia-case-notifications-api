@@ -41,7 +41,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24Weeks
 class AppellantSubmittedHearingRequirementsStf24WeeksEmailPersonalisationTest {
 
     private static final String TEMPLATE_ID = "templateId";
-    private static final String AIP_FRONTEND_URL = "http://localhost/appeal";
+    private static final String IA_EX_UI_FRONTEND_URL = "http://localhost/appeal";
     private static final String NON_ADA_PREFIX = "Immigration and Asylum appeal";
     private static final String APPELLANT_GIVEN_NAMES_VALUE = "someAppellantGivenNames";
     private static final String APPELLANT_FAMILY_NAME_VALUE = "someAppellantFamilyName";
@@ -89,7 +89,7 @@ class AppellantSubmittedHearingRequirementsStf24WeeksEmailPersonalisationTest {
 
         personalisation = new AppellantSubmittedHearingRequirementsStf24WeeksEmailPersonalisation(
             TEMPLATE_ID,
-            AIP_FRONTEND_URL,
+            IA_EX_UI_FRONTEND_URL,
             NON_ADA_PREFIX,
             recipientsFinder,
             customerServicesProvider,
@@ -122,7 +122,7 @@ class AppellantSubmittedHearingRequirementsStf24WeeksEmailPersonalisationTest {
 
         assertThat(result)
             .containsEntry("subjectPrefix", NON_ADA_PREFIX)
-            .containsEntry("linkToOnlineService", AIP_FRONTEND_URL)
+            .containsEntry("linkToOnlineService", IA_EX_UI_FRONTEND_URL)
             .containsEntry("appellantGivenNames", APPELLANT_GIVEN_NAMES_VALUE)
             .containsEntry("appellantFamilyName", APPELLANT_FAMILY_NAME_VALUE)
             .containsEntry("appealReferenceNumber", APPEAL_REFERENCE_NUMBER_VALUE)
@@ -145,7 +145,7 @@ class AppellantSubmittedHearingRequirementsStf24WeeksEmailPersonalisationTest {
 
         assertThat(result)
             .containsEntry("subjectPrefix", NON_ADA_PREFIX)
-            .containsEntry("linkToOnlineService", AIP_FRONTEND_URL)
+            .containsEntry("linkToOnlineService", IA_EX_UI_FRONTEND_URL)
             .containsEntry("appellantGivenNames", "")
             .containsEntry("appellantFamilyName", "")
             .containsEntry("appealReferenceNumber", "")
