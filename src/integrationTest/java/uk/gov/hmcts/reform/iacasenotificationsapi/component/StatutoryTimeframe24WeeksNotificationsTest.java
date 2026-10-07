@@ -448,25 +448,22 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
     @WithMockUser(authorities = {"hearing-centre-admin", "caseworker-ia-homeofficepou"})
     void should_send_upload_additional_evidence_notifications_correctly(boolean is24w,
                                                                         TestJourneyType testJourneyType,
-                                                                        boolean inCountry,
-                                                                        boolean wantsEmail,
-                                                                        boolean wantsSms,
                                                                         Set<String> expectedIds) {
-        PreSubmitCallbackResponseForTest response = mockResponse(mockCaseData(testJourneyType, inCountry, wantsEmail, wantsSms, is24w), UPLOAD_ADDITIONAL_EVIDENCE);
+        PreSubmitCallbackResponseForTest response = mockResponse(mockCaseData(testJourneyType, true, true, true, is24w), UPLOAD_ADDITIONAL_EVIDENCE);
         assertNotificationsContain(response, expectedIds);
     }
 
     private static Stream<Arguments> uploadAdditionalEvidenceCaseDataPermutations() {
         return Stream.of(
-            Arguments.of(true, TestJourneyType.AIP, true, true, false, Set.of()),
-            Arguments.of(true, TestJourneyType.AIP_MANUAL, true, true, false, Set.of(STATUTORY_TIMEFRAME_24WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_APPELLANT_LETTER)),
-            Arguments.of(true, TestJourneyType.LR, true, true, false, Set.of()),
-            Arguments.of(true, TestJourneyType.LR_MANUAL, true, true, false, Set.of(STATUTORY_TIMEFRAME_24WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_LR_LETTER)),
+            Arguments.of(true, TestJourneyType.AIP, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_AIP_APPELLANT_EMAIL", "_UPLOADED_ADDITIONAL_EVIDENCE_AIP_APPELLANT_SMS", "_UPLOADED_ADDITIONAL_EVIDENCE_HOME_OFFICE")),
+            Arguments.of(true, TestJourneyType.AIP_MANUAL, Set.of(STATUTORY_TIMEFRAME_24WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_APPELLANT_LETTER, "_UPLOADED_ADDITIONAL_EVIDENCE_HOME_OFFICE")),
+            Arguments.of(true, TestJourneyType.LR, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_HOME_OFFICE", "_UPLOADED_ADDITIONAL_EVIDENCE_LEGAL_REP_24W")),
+            Arguments.of(true, TestJourneyType.LR_MANUAL, Set.of(STATUTORY_TIMEFRAME_24WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_LR_LETTER, "_UPLOADED_ADDITIONAL_EVIDENCE_HOME_OFFICE", "_UPLOADED_ADDITIONAL_EVIDENCE_LEGAL_REP_24W")),
 
-            Arguments.of(false, TestJourneyType.AIP_MANUAL, true, true, true, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_HOME_OFFICE")),
-            Arguments.of(false, TestJourneyType.AIP, true, true, true, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_AIP_APPELLANT_SMS", "_UPLOADED_ADDITIONAL_EVIDENCE_AIP_APPELLANT_EMAIL", "_UPLOADED_ADDITIONAL_EVIDENCE_HOME_OFFICE")),
-            Arguments.of(false, TestJourneyType.LR, true, true, true, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_HOME_OFFICE")),
-            Arguments.of(false, TestJourneyType.LR_MANUAL, true, true, true, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_HOME_OFFICE"))
+            Arguments.of(false, TestJourneyType.AIP_MANUAL, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_HOME_OFFICE")),
+            Arguments.of(false, TestJourneyType.AIP, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_AIP_APPELLANT_SMS", "_UPLOADED_ADDITIONAL_EVIDENCE_AIP_APPELLANT_EMAIL", "_UPLOADED_ADDITIONAL_EVIDENCE_HOME_OFFICE")),
+            Arguments.of(false, TestJourneyType.LR, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_HOME_OFFICE")),
+            Arguments.of(false, TestJourneyType.LR_MANUAL, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_HOME_OFFICE"))
         );
     }
 
@@ -475,25 +472,22 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
     @WithMockUser(authorities = {"hearing-centre-admin", "caseworker-ia-homeofficepou"})
     void should_send_upload_ho_additional_evidence_notifications_correctly(boolean is24w,
                                                                            TestJourneyType testJourneyType,
-                                                                           boolean inCountry,
-                                                                           boolean wantsEmail,
-                                                                           boolean wantsSms,
                                                                            Set<String> expectedIds) {
-        PreSubmitCallbackResponseForTest response = mockResponse(mockCaseData(testJourneyType, inCountry, wantsEmail, wantsSms, is24w), UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE);
+        PreSubmitCallbackResponseForTest response = mockResponse(mockCaseData(testJourneyType, true, true, true, is24w), UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE);
         assertNotificationsContain(response, expectedIds);
     }
 
     private static Stream<Arguments> uploadAdditionalEvidenceAsHoCaseDataPermutations() {
         return Stream.of(
-            Arguments.of(true, TestJourneyType.AIP, true, true, false, Set.of()),
-            Arguments.of(true, TestJourneyType.AIP_MANUAL, true, true, false, Set.of()),
-            Arguments.of(true, TestJourneyType.LR, true, true, false, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_LEGAL_REP")),
-            Arguments.of(true, TestJourneyType.LR_MANUAL, true, true, false, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_LEGAL_REP")),
+            Arguments.of(true, TestJourneyType.AIP, Set.of()),
+            Arguments.of(true, TestJourneyType.AIP_MANUAL, Set.of()),
+            Arguments.of(true, TestJourneyType.LR, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_LEGAL_REP")),
+            Arguments.of(true, TestJourneyType.LR_MANUAL, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_LEGAL_REP")),
 
-            Arguments.of(false, TestJourneyType.AIP_MANUAL, true, true, true, Set.of()),
-            Arguments.of(false, TestJourneyType.AIP, true, true, true, Set.of()),
-            Arguments.of(false, TestJourneyType.LR, true, true, true, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_LEGAL_REP")),
-            Arguments.of(false, TestJourneyType.LR_MANUAL, true, true, true, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_LEGAL_REP"))
+            Arguments.of(false, TestJourneyType.AIP_MANUAL, Set.of()),
+            Arguments.of(false, TestJourneyType.AIP, Set.of()),
+            Arguments.of(false, TestJourneyType.LR, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_LEGAL_REP")),
+            Arguments.of(false, TestJourneyType.LR_MANUAL, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_LEGAL_REP"))
         );
     }
 }
