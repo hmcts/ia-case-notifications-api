@@ -48,7 +48,6 @@ public class LegalRepresentativeUploadAdditionalEvidence24wPersonalisationTest {
 
     private final String afterListing24WeeksTemplateId = "afterListing24WeeksTemplateId";
     private final String iaExUiFrontendUrl = "http://localhost";
-    private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
     private final String legalRepEmailAddress = "legalRep@example.com";
     @Mock
     Callback<AsylumCase> callback;
@@ -64,7 +63,7 @@ public class LegalRepresentativeUploadAdditionalEvidence24wPersonalisationTest {
         legalRepresentativeUploadAdditionalEvidencePersonalisation;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
 
         legalRepresentativeUploadAdditionalEvidencePersonalisation =
             new LegalRepresentativeUploadAdditionalEvidence24wPersonalisation(
@@ -76,7 +75,7 @@ public class LegalRepresentativeUploadAdditionalEvidence24wPersonalisationTest {
     }
 
     @Test
-    public void should_return_given_email_address_from_asylum_case() {
+    void should_return_given_email_address_from_asylum_case() {
         when(asylumCase.read(CHANGE_ORGANISATION_REQUEST_FIELD, ChangeOrganisationRequest.class))
             .thenReturn(Optional.empty());
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class))
@@ -87,14 +86,14 @@ public class LegalRepresentativeUploadAdditionalEvidence24wPersonalisationTest {
     }
 
     @Test
-    public void should_return_empty_recipients_from_asylum_case_for_aip_journey() {
+    void should_return_empty_recipients_from_asylum_case_for_aip_journey() {
         when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(AIP));
 
         assertTrue(legalRepresentativeUploadAdditionalEvidencePersonalisation.getRecipientsList(asylumCase).isEmpty());
     }
 
     @Test
-    public void should_return_given_email_address_for_change_org_request_field_and_field() {
+    void should_return_given_email_address_for_change_org_request_field_and_field() {
         Value caseRole =
             new Value("[LEGALREPRESENTATIVE]", "Legal Representative");
         when(asylumCase.read(CHANGE_ORGANISATION_REQUEST_FIELD, ChangeOrganisationRequest.class))
@@ -114,7 +113,7 @@ public class LegalRepresentativeUploadAdditionalEvidence24wPersonalisationTest {
     }
 
     @Test
-    public void should_return_given_email_address_for_empty_change_org_request_field_and_field() {
+    void should_return_given_email_address_for_empty_change_org_request_field_and_field() {
         when(asylumCase.read(CHANGE_ORGANISATION_REQUEST_FIELD, ChangeOrganisationRequest.class))
             .thenReturn(Optional.of(new ChangeOrganisationRequest(null, null, null)));
 
@@ -122,14 +121,14 @@ public class LegalRepresentativeUploadAdditionalEvidence24wPersonalisationTest {
     }
 
     @Test
-    public void should_return_given_email_address_for_internal_appellant_case() {
+    void should_return_given_email_address_for_internal_appellant_case() {
         when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
 
         assertTrue(legalRepresentativeUploadAdditionalEvidencePersonalisation.getRecipientsList(asylumCase).isEmpty());
     }
 
     @Test
-    public void should_return_the_given_template_id() {
+    void should_return_the_given_template_id() {
         when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
 
         assertEquals(afterListing24WeeksTemplateId,
@@ -139,7 +138,7 @@ public class LegalRepresentativeUploadAdditionalEvidence24wPersonalisationTest {
 
     @ParameterizedTest
     @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
-    public void should_return_given_personalisation_when_all_information_given(YesOrNo isAda) {
+    void should_return_given_personalisation_when_all_information_given(YesOrNo isAda) {
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisationForLegalRep());
@@ -157,7 +156,7 @@ public class LegalRepresentativeUploadAdditionalEvidence24wPersonalisationTest {
     }
 
     @Test
-    public void should_throw_exception_on_personalistaion_when_case_is_null() {
+    void should_throw_exception_on_personalistaion_when_case_is_null() {
         NullPointerException exception =
             assertThrows(NullPointerException.class, () -> legalRepresentativeUploadAdditionalEvidencePersonalisation
                 .getPersonalisation((Callback<AsylumCase>) null));
