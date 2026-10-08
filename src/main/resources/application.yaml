@@ -73,6 +73,7 @@ govnotify:
   emailPrefix:
     ada: "Accelerated detained appeal"
     nonAda: "Immigration and Asylum appeal"
+    detainedNonAda: "Detained - Immigration and Asylum appeal"
     adaInPerson: "ADA - SERVE IN PERSON"
     nonAdaInPerson: "IAFT - SERVE IN PERSON"
     adaByPost: "ADA - SERVE BY POST"

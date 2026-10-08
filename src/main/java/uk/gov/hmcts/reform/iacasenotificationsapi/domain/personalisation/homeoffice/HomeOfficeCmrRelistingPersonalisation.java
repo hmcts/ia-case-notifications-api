@@ -2,7 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeof
 
 import static java.util.Collections.singleton;
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -28,8 +28,8 @@ public class HomeOfficeCmrRelistingPersonalisation implements EmailNotificationP
 
     @Value("${govnotify.emailPrefix.ada}")
     private String adaPrefix;
-    @Value("${govnotify.emailPrefix.nonAda}")
-    private String nonAdaPrefix;
+    @Value("${govnotify.emailPrefix.detainedNonAda}")
+    private String detainedNonAda;
 
     public HomeOfficeCmrRelistingPersonalisation(
         @Value("${govnotify.template.listAssistHearing.cmrReListing.homeOffice.email}") String listAssistHearingHomeOfficeCaseEditedTemplateId,
@@ -66,9 +66,9 @@ public class HomeOfficeCmrRelistingPersonalisation implements EmailNotificationP
             .<String, String>builder()
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation(callback))
             .putAll(personalisationProvider.getPersonalisation(callback))
-            .put("subjectPrefix", isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData())
+            .put("subjectPrefix", isAppellantInDetention(callback.getCaseDetails().getCaseData())
                 ? adaPrefix
-                : nonAdaPrefix)
+                : detainedNonAda)
             .build();
     }
 }
