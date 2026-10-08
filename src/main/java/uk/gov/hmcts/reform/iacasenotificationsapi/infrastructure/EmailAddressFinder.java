@@ -45,10 +45,9 @@ public class EmailAddressFinder {
             Map<HearingCentre, String> homeOfficeFtpaEmailAddresses,
             Map<BailHearingCentre, String> bailHearingCentreEmailAddresses,
             Map<HearingCentre, String> adminEmailAddresses,
+            Map<HearingCentre, String> adminHearingCentreEmailAddresses,
             @Value("${listCaseCaseOfficerEmailAddress}") String listCaseCaseOfficerEmailAddress,
             @Value("${yarlsWoodCaseOfficerEmailAddress}") String yarlsWoodCaseOfficerEmailAddress) {
-            Map<HearingCentre, String> adminHearingCentreEmailAddresses,
-            @Value("${listCaseCaseOfficerEmailAddress}") String listCaseCaseOfficerEmailAddress) {
 
         this.hearingCentreEmailAddresses = hearingCentreEmailAddresses;
         this.homeOfficeEmailAddresses = homeOfficeEmailAddresses;
