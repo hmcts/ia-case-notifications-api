@@ -353,6 +353,12 @@ govnotify:
         email: b96c8935-66b1-4a46-aca6-f8e86d7a5d8f
         detention:
           email: 68fdfc26-6bef-45c8-84cf-ae1ece8572cf
+    raiseQuery:
+      legalRep:
+        email: 18fc759f-0292-461e-82ad-ce094b3fe2fe
+    respondQuery:
+      legalRep:
+        email: 967dd872-890e-4c0c-86aa-6e34638b4f1b
     reviewDirection:
       legalRep:
         email: 99f45880-25a3-4ca4-bce0-fdc7e0a81a88
@@ -483,6 +489,45 @@ govnotify:
       legalRep:
         email: 74825ed3-240e-4b2a-afe9-9167c0ae29f5
     listAssistHearing:
+      cmrListing:
+        appellant:
+          email: be338005-287b-4fdc-af89-1f2efc9c290a
+          sms: c5b9e556-49cd-4874-af39-d3740bd302a3
+          legallyRepresented:
+            email: e021c0e0-c436-4c9d-ab1e-cd8742ec97b5
+            sms: 654a09fd-cdd6-4cff-87f6-5db7c65a4989
+          detained:
+            prison:
+              letter: 13b27666-9b88-4528-bc00-b789beec9fbf
+            irc:
+              letter: 13b27666-9b88-4528-bc00-b789beec9fbf
+        caseOfficer:
+          email: e30f3490-4649-4138-9711-749ecea07f8d
+        homeOffice:
+          email: becd75f2-613e-482c-9df8-3ebc76251f9e
+        legalRep:
+          inPerson:
+            email: f7bea6a0-2173-4c0a-b0dd-543e5a8b6b23
+          remote:
+            email: 0c63ae4d-bce7-4b11-9b66-1181052eaba6
+        detentionEngagementTeam:
+          email: fe92c79d-212e-4ffe-b619-c2fb4dd304ac
+          production:
+            email: 4d479ce3-9139-44a8-a42b-e242086016eb
+      cmrReListing:
+        homeOffice:
+          email: 33312031-bb84-4598-81b7-faa0fd81da50
+        caseOfficer:
+          email: e67dbf06-5b6c-40a5-8fbf-98154ecf6e2a
+        legalRep:
+          email: f529bb68-28de-4cb4-988e-bfa32975e429
+        appellant:
+          email: 9580b7bd-0c9f-4dc0-bbf3-9f8a8c91421b
+        reppedAppellant:
+          email: 5a94de6b-1984-442e-9a4b-8fb43ecd6b7b
+      cmrRelistingRemoteHearing:
+        legalRep:
+          email: 57f7c73c-25d9-474b-9e03-966d4f608d62
       caseListed:
         caseOfficer:
           email: ddb88c55-c97e-45df-a6b1-dc92fd0433b3
@@ -622,12 +667,14 @@ govnotify:
     submittedHearingRequirements:
       legalRep:
         email: 1b7fe0be-1ca0-47d6-bec4-21b65fed27c6
+        email24Weeks: 445af3a3-bc75-49ef-b5b9-8f0e7e2ff73e
         ada:
           email: c68173ec-1300-43c7-ae82-0371560a5559
       caseOfficer:
         email: 70a0ff4c-8822-4e6a-be3b-71bc1676bc83
       appellant:
         email: fe78b847-225f-4fc5-963b-cd5a0b3e671e
+        email24Weeks: 7078f646-6598-44cc-8213-2be4827d4652
         sms: b43b2fe3-f662-4b25-ad15-af3ddc07ec81
     uploadedAdditionalEvidenceBeforeListing:
       legalRep:
@@ -642,13 +689,16 @@ govnotify:
     uploadedAdditionalEvidenceAfterListing:
       legalRep:
         email: 2f7f4021-a85c-4dfa-a177-c9c7f4be76f6
+        email24Weeks: b843fe0b-d9c7-45ed-b34b-4e140cf0ed5d
       caseOfficer:
         email: 40ea5aed-cee6-4425-943b-7d3cf0a954a5
       homeOffice:
         email: 9fd3928e-a004-4572-8208-297df1cef925
       appellant:
         email: 770dbf2c-b8b4-4a63-9b46-5330c3aa6d76
+        email24Weeks: beb5fb69-e293-4759-a8e7-2e86b8dc0f3f
         sms: c7c18cf5-619d-427e-b984-d161689baec4
+        sms24Weeks: 8c1bca0c-0ba2-45cb-8d8a-0cb81c4d11b5
     uploadedAddendumEvidence:
       legalRep:
         email: 33309293-c535-415b-bd2f-08aec3161b76
@@ -700,6 +750,8 @@ govnotify:
     changeToHearingRequirements:
       adminOfficer:
         email: d3317a7a-4ce5-4032-b6b4-2806683b8b9a
+      adminHearingCentre24Weeks:
+        email: 2d11161d-36d1-4265-8cd8-f15671836aac
     removeAppealFromOnlineBeforeListing:
       homeOffice:
         email: d681269e-397a-407a-bf76-d7990f8e4ddb
@@ -817,9 +869,31 @@ govnotify:
       detentionEngagementTeam:
         production:
           email: b92c6233-5729-4844-a64c-4100274ecdc4
+    cmrCancelled:
+      appellant:
+        email: 0d6aad51-43c7-44e3-bc5c-e1b04ee54a98
+        sms: 344a7601-711b-4403-9c38-955cf52af870
+      legallyReppedAppellant:
+        email: a3e5d408-882b-4584-b310-8063154a6b90
+        sms: a1122d71-1dc0-4037-8f33-4c83e275ae28
+      legalRep:
+        email: 7b1591cd-8c44-4b5c-921c-04b8c8d07bd6
+      caseOfficer:
+        email: 97fdd824-7adf-46a2-973d-ad7d96bf76bd
+      homeOffice:
+        email: 2c9c4d9a-551d-480e-874e-46ef72b044ac
+      detentionEngagementTeam:
+        email: fe92c79d-212e-4ffe-b619-c2fb4dd304ac
+        production:
+          email: b92c6233-5729-4844-a64c-4100274ecdc4
     reListCase:
       adminOfficer:
         email: 495c6f2b-46da-431f-a890-22371f2150dd
+    reListCase24Weeks:
+      homeOffice:
+        email: 84ff2820-437e-4a13-a682-a0fdeb027b07
+      legalRep24Weeks:
+        email: c35b138b-7dd4-40be-8412-f68c520da0c1
     requestCmaRequirements:
       appellant:
         email: 84c2958e-cea0-4a5f-a1e2-7099673d8aa1
@@ -1539,6 +1613,12 @@ govnotify:
     editAppealPostSubmit:
       appellant:
         letter: e68faac4-cf30-4e0b-b746-a7baf036dc65
+    uploadAdditionalEvidence24Weeks:
+      letter: 2e90f112-ccd1-4bf4-8143-0a552c8b522f
+      hoEmail: c145b064-fd90-4fa0-ab65-9cc3af75fd34
+    submittedHearingRequirements24Weeks:
+      email: 7959139c-1483-480b-a0ec-dae60066f374
+      letter: c6995a07-2587-47aa-a09f-5d7466c4fcbf
     removeStatutoryTimeframe24Weeks:
       homeOffice:
         email: 2d0c35b4-5bb5-49e2-ad87-856d5682ea0f
@@ -1786,6 +1866,7 @@ security:
       - "applyForCosts"
       - "respondToCosts"
       - "addEvidenceForCosts"
+      - "queryManagementRaiseQuery"
     tribunal-caseworker:
       - "sendDirection"
       - "changeDirectionDueDate"
@@ -1847,6 +1928,8 @@ security:
       - "editAppeal"
       - "buildCase"
       - "listCase"
+      - "cmrListing"
+      - "cmrReListing"
       - "turnOnNotifications"
       - "updateTribunalDecision"
       - "recordRemissionReminder"
@@ -1919,6 +2002,8 @@ security:
       - "editAppeal"
       - "buildCase"
       - "listCase"
+      - "cmrListing"
+      - "cmrReListing"
       - "turnOnNotifications"
       - "updateTribunalDecision"
       - "recordRemissionReminder"
@@ -1991,6 +2076,8 @@ security:
       - "editAppeal"
       - "buildCase"
       - "listCase"
+      - "cmrListing"
+      - "cmrReListing"
       - "turnOnNotifications"
       - "updateTribunalDecision"
       - "recordRemissionReminder"
@@ -2004,6 +2091,7 @@ security:
       - "generatePinInPost"
     # These events are used by the bails service, they will need to be migrated to the admin access management roles - see DIAC-855
     caseworker-ia-admofficer:
+      - "queryManagementRespondQuery"
       - "editBailApplication"
       - "uploadSignedDecisionNotice"
       - "uploadSignedDecisionNoticeConditionalGrant"
@@ -2052,6 +2140,8 @@ security:
       - "markAppealAsDetained"
       - "updateDetentionLocation"
       - "listCase"
+      - "cmrListing"
+      - "cmrReListing"
       - "editDocuments"
       - "uploadAdditionalEvidence"
       - "endAppeal"
@@ -2067,6 +2157,7 @@ security:
       - "startAppeal"
       - "refundConfirmation"
       - "hearingCancelled"
+      - "cmrHearingCancelled"
       - "revokeCitizenAccess"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
@@ -2076,6 +2167,7 @@ security:
       - "requestRespondentEvidence"
       - "generatePinInPost"
     ctsc:
+      - "queryManagementRespondQuery"
       - "progressMigratedCase"
       - "requestFeeRemission"
       - "buildCase"
@@ -2105,6 +2197,8 @@ security:
       - "markAppealAsDetained"
       - "updateDetentionLocation"
       - "listCase"
+      - "cmrListing"
+      - "cmrReListing"
       - "uploadAdditionalEvidence"
       - "endAppeal"
       - "recordAdjournmentDetails"
@@ -2119,6 +2213,7 @@ security:
       - "startAppeal"
       - "refundConfirmation"
       - "hearingCancelled"
+      - "cmrHearingCancelled"
       - "revokeCitizenAccess"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
@@ -2156,6 +2251,8 @@ security:
       - "markAppealAsDetained"
       - "updateDetentionLocation"
       - "listCase"
+      - "cmrListing"
+      - "cmrReListing"
       - "uploadAdditionalEvidence"
       - "endAppeal"
       - "recordAdjournmentDetails"
@@ -2171,6 +2268,7 @@ security:
       - "refundConfirmation"
       - "editDocuments"
       - "hearingCancelled"
+      - "cmrHearingCancelled"
       - "revokeCitizenAccess"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
@@ -2208,6 +2306,8 @@ security:
       - "markAppealAsDetained"
       - "updateDetentionLocation"
       - "listCase"
+      - "cmrListing"
+      - "cmrReListing"
       - "editDocuments"
       - "uploadAdditionalEvidence"
       - "endAppeal"
@@ -2223,6 +2323,7 @@ security:
       - "startAppeal"
       - "refundConfirmation"
       - "hearingCancelled"
+      - "cmrHearingCancelled"
       - "revokeCitizenAccess"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
@@ -2260,6 +2361,8 @@ security:
       - "markAppealAsDetained"
       - "updateDetentionLocation"
       - "listCase"
+      - "cmrListing"
+      - "cmrReListing"
       - "editDocuments"
       - "uploadAdditionalEvidence"
       - "generatePinInPost"
@@ -2276,6 +2379,7 @@ security:
       - "startAppeal"
       - "refundConfirmation"
       - "hearingCancelled"
+      - "cmrHearingCancelled"
       - "revokeCitizenAccess"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
@@ -2312,6 +2416,8 @@ security:
       - "markAppealAsDetained"
       - "updateDetentionLocation"
       - "listCase"
+      - "cmrListing"
+      - "cmrReListing"
       - "editDocuments"
       - "uploadAdditionalEvidence"
       - "endAppeal"
@@ -2327,6 +2433,7 @@ security:
       - "startAppeal"
       - "refundConfirmation"
       - "hearingCancelled"
+      - "cmrHearingCancelled"
       - "revokeCitizenAccess"
       - "sendInviteToNonLegalRep"
       - "sendPipToNonLegalRep"
@@ -2667,6 +2774,8 @@ security:
       - "endAppealAutomatically"
       - "updatePaymentStatus"
       - "listCase"
+      - "cmrListing"
+      - "cmrReListing"
       - "recordAdjournmentDetails"
       - "editCaseListing"
       - "caseListing"
@@ -2674,6 +2783,7 @@ security:
       - "recordRemissionReminder"
       - "changeHearingCentre"
       - "hearingCancelled"
+      - "cmrHearingCancelled"
       - "removeStatutoryTimeframe24Weeks"
       - "completeCaseReview"
       - "revokeCitizenAccess"
@@ -2749,6 +2859,27 @@ hearingCentreEmailAddresses:
   alloaSherrif: ${IA_HEARING_CENTRE_ALLOA_SHERRIF_EMAIL:hc-alloa-sherrif-default@example.com}
   iacNationalVirtual: ${IA_HEARING_CENTRE_VIRTUAL_REGION_EMAIL:hc-virtualregion-default@example.com}
 
+adminHearingCentreEmailAddresses:
+  harmondsworth: ${IA_ADMIN_HEARING_CENTRE_HATTON_CROSS_EMAIL:admin-hc-harmondsworth-default@example.com}
+  hattonCross: ${IA_ADMIN_HEARING_CENTRE_HATTON_CROSS_EMAIL:admin-hc-hatton-cross-default@example.com}
+  yarlsWood: ${IA_ADMIN_HEARING_CENTRE_YARLSWOOD_EMAIL:admin-hc-yarls-wood-default@example.com}
+  northShields: ${IA_ADMIN_HEARING_CENTRE_BRADFORD_EMAIL:admin-hc-north-shields-default@example.com}
+  glasgow: ${IA_ADMIN_HEARING_CENTRE_GLASGOW_EMAIL:admin-hc-glasgow-default@example.com}
+  hendon: ${IA_ADMIN_HEARING_CENTRE_TAYLOR_HOUSE_EMAIL:admin-hc-hendon-default@example.com}
+  bradfordKeighley: ${IA_ADMIN_HEARING_CENTRE_BRADFORD_EMAIL:admin-hc-bradford-keighley-default@example.com}
+  mccMinshull: ${IA_ADMIN_HEARING_CENTRE_MANCHESTER_EMAIL:admin-hc-mcc-minshull-default@example.com}
+  mccCrownSquare: ${IA_ADMIN_HEARING_CENTRE_MANCHESTER_EMAIL:admin-hc-mcc-crown-square-default@example.com}
+  manchesterMags: ${IA_ADMIN_HEARING_CENTRE_MANCHESTER_EMAIL:admin-hc-manchester-mags-default@example.com}
+  nthTyneMags: ${IA_ADMIN_HEARING_CENTRE_BRADFORD_EMAIL:admin-hc-nth-tyne-mags-default@example.com}
+  leedsMags: ${IA_ADMIN_HEARING_CENTRE_BRADFORD_EMAIL:admin-hc-leeds-mags-default@example.com}
+  alloaSherrif: ${IA_ADMIN_HEARING_CENTRE_GLASGOW_EMAIL:admin-hc-alloa-sherrif-default@example.com}
+  newport: ${IA_ADMIN_HEARING_CENTRE_NEWPORT_EMAIL:admin-hc-newport-default@example.com}
+  iacNationalVirtual: ${IA_ADMIN_HEARING_CENTRE_VIRTUAL_REGION_EMAIL:admin-hc-virtualregion-default@example.com}
+  bradford: ${IA_ADMIN_HEARING_CENTRE_BRADFORD_EMAIL:admin-hc-bradford-default@example.com}
+  birmingham: ${IA_ADMIN_HEARING_CENTRE_BIRMINGHAM_EMAIL:admin-hc-birmingham-default@example.com}
+  manchester: ${IA_ADMIN_HEARING_CENTRE_MANCHESTER_EMAIL:admin-hc-manchester-default@example.com}
+  taylorHouse: ${IA_ADMIN_HEARING_CENTRE_TAYLOR_HOUSE_EMAIL:admin-hc-taylorhouse-default@example.com}
+
 ### Bail Hearing Email addresses
 bailHearingCentreEmailAddresses:
   yarlswood: ${IA_BAIL_HEARING_CENTRE_YARLSWOOD_EMAIL:hc-bradford@example.com}
@@ -2772,9 +2903,9 @@ homeOfficeEmailAddresses:
   hattonCross: ${IA_HOME_OFFICE_HATTON_CROSS_EMAIL:ho-hatton-cross@example.com}
   glasgow: ${IA_HOME_OFFICE_GLASGOW_EMAIL:ho-glasgow@example.com}
   belfast: ${IA_HOME_OFFICE_GLASGOW_EMAIL:ho-glasgow@example.com}
-  harmondsworth: ${IA_HOME_OFFICE_HARMONDSWORTH_EMAIL:ho-harmondsworth@example.com}
+  harmondsworth: ${IA_HOME_OFFICE_HATTON_CROSS_EMAIL:ho-harmondsworth@example.com}
   hendon: ${IA_HOME_OFFICE_HENDON_EMAIL:ho-hendon@example.com}
-  yarlsWood: ${IA_HOME_OFFICE_YARLS_WOOD_EMAIL:ho-yarls-wood@example.com}
+  yarlsWood: ${IA_HOME_OFFICE_TAYLOR_HOUSE_EMAIL:ho-yarls-wood@example.com}
   bradfordKeighley: ${IA_HOME_OFFICE_BRADFORD_KEIGHLEY_EMAIL:ho-bradford-keighley@example.com}
   mccMinshull: ${IA_HOME_OFFICE_MCC_MINSHULL_EMAIL:ho-mcc-minshull@example.com}
   mccCrownSquare: ${IA_HOME_OFFICE_MCC_CROWN_SQUARE_EMAIL:ho-mcc-crown-square@example.com}

@@ -97,8 +97,7 @@
           "Pablo Jimenez,",
           "{$iaAipFrontendUrl}",
           "{$customerServices.telephoneNumber}",
-          "{$customerServices.emailAddress}",
-          "{$TODAY+5|d MMM yyyy}"
+          "{$customerServices.emailAddress}"
         ]
       },
       {
@@ -107,8 +106,7 @@
         "subject": "",
         "body": [
           "PA/12345/2019",
-          "{$iaAipFrontendUrl}",
-          "{$TODAY+5|d MMM yyyy}"
+          "{$iaAipFrontendUrl}"
         ]
       }
     ]

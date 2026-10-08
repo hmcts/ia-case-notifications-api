@@ -178,6 +178,16 @@ def secrets = [
         secret('det-irc-yarlswood-email', 'IA_DET_IRC_YARLSWOOD_EMAIL'),
         secret('ia-home-office-yarlswood-email', 'IA_HOME_OFFICE_YARLS_WOOD_EMAIL'),
         secret('ia-legal-officer-yarlswood-email', 'IA_LEGAL_OFFICER_YARLS_WOOD_EMAIL')
+
+        secret('admin-hearing-centre-hatton-cross-email', 'IA_ADMIN_HEARING_CENTRE_HATTON_CROSS_EMAIL'),
+        secret('admin-hearing-centre-yarlswood-email', 'IA_ADMIN_HEARING_CENTRE_YARLSWOOD_EMAIL'),
+        secret('admin-hearing-centre-bradford-email', 'IA_ADMIN_HEARING_CENTRE_BRADFORD_EMAIL'),
+        secret('admin-hearing-centre-glasgow-email', 'IA_ADMIN_HEARING_CENTRE_GLASGOW_EMAIL'),
+        secret('admin-hearing-centre-taylor-house-email', 'IA_ADMIN_HEARING_CENTRE_TAYLOR_HOUSE_EMAIL'),
+        secret('admin-hearing-centre-manchester-email', 'IA_ADMIN_HEARING_CENTRE_MANCHESTER_EMAIL'),
+        secret('admin-hearing-centre-birmingham-email', 'IA_ADMIN_HEARING_CENTRE_BIRMINGHAM_EMAIL'),
+        secret('admin-hearing-centre-newport-email', 'IA_ADMIN_HEARING_CENTRE_NEWPORT_EMAIL'),
+        secret('admin-hearing-centre-virtual-region-email', 'IA_ADMIN_HEARING_CENTRE_VIRTUAL_REGION_EMAIL')
     ]
 ]
 
