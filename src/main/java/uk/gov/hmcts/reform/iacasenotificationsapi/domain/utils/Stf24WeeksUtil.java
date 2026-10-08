@@ -50,8 +50,6 @@ public class Stf24WeeksUtil {
 
     public static final String STATUTORY_TIMEFRAME_24WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_APPELLANT_LETTER = "_STATUTORY_TIMEFRAME_24WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_APPELLANT_LETTER";
     public static final String STATUTORY_TIMEFRAME_24WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_LR_LETTER = "_STATUTORY_TIMEFRAME_24WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_LR_LETTER";
-    public static final String STATUTORY_TIMEFRAME_24WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE_EMAIL = "_STATUTORY_TIMEFRAME_24WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE_EMAIL";
-
 
 
     public static final String WEEKS_DEADLINE = "24WeeksDeadline";
@@ -74,10 +72,8 @@ public class Stf24WeeksUtil {
     public static final String LINK_TO_ONLINE_SERVICE_KEY = "linkToOnlineService";
 
     public static final String STF_24_WEEKS_HEARING_REQUIREMENTS_EMAIL_TEMPLATE = "${govnotify.template.submittedHearingRequirements24Weeks.email}";
-    public static final String STF_24_WEEKS_HEARING_REQUIREMENTS_AIP_EMAIL_TEMPLATE = "${govnotify.template.submittedHearingRequirements24Weeks.aip.email}";
     public static final String STF_24_WEEKS_HEARING_REQUIREMENTS_LETTER_TEMPLATE = "${govnotify.template.submittedHearingRequirements24Weeks.letter}";
-    public static final String STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_APPELLANT_LETTER_TEMPLATE = "${govnotify.template.uploadAdditionalEvidence24Weeks.letter}";
-    public static final String STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE_EMAIL_TEMPLATE = "${govnotify.template.uploadAdditionalEvidence24Weeks.hoEmail}";
+    public static final String STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_LETTER_TEMPLATE = "${govnotify.template.uploadAdditionalEvidence24Weeks.letter}";
 
     public static final String STF_24_WEEKS_HEARING_REQ_HO_EMAIL_GENERATOR = "hearingRequirementsStatutoryTimeframe24WeeksHomeOfficeNotificationGenerator";
     public static final String STF_24_WEEKS_HEARING_REQ_APPELLANT_EMAIL_GENERATOR = "hearingRequirementsStatutoryTimeframe24WeeksAppellantNotificationGenerator";
@@ -86,7 +82,6 @@ public class Stf24WeeksUtil {
     public static final String STF_24_WEEKS_HEARING_REQ_LR_LETTER_GENERATOR = "hearingRequirementsStatutoryTimeframe24WeeksLegalRepresentativeLetterNotificationGenerator";
     public static final String STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_APPELLANT_LETTER_GENERATOR = "uploadAdditionalEvidenceStf24WeeksAppellantLetterNotificationGenerator";
     public static final String STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_LR_LETTER_GENERATOR = "uploadAdditionalEvidenceStf24WeeksLegalRepresentativeLetterNotificationGenerator";
-    public static final String STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE_EMAIL_GENERATOR = "uploadAdditionalEvidenceStf24WeeksHomeOfficeEmailNotificationGenerator";
 
 
     public static final String HO_REFERENCE_WITH_TEXT = "hoReferenceWithText";
@@ -198,34 +193,51 @@ public class Stf24WeeksUtil {
                 .put(DAYS_56_FROM_DATE_OF_DIRECTION, now.plusDays(DAYS_56).format(ofPattern(D_MMM_YYYY)));
     }
 
+    public static ImmutableMap.@NonNull Builder<String, String> populateUploadEvidenceLetterParams(AsylumCase asylumCase, Stf24WeeksNotificationFor notificationFor, final CustomerServicesProvider customerServicesProvider) {
+        ImmutableMap.Builder<String, String> stringStringBuilder = buildCommonParams(notificationFor, asylumCase, customerServicesProvider);
+        buildAddressParams(notificationFor, asylumCase, stringStringBuilder);
+        return stringStringBuilder;
+    }
+
     public static ImmutableMap<String, String> buildHearingRequirementsLetterParameters(Stf24WeeksNotificationFor notificationFor, AsylumCase asylumCase, CustomerServicesProvider customerServicesProvider, DateTimeExtractor dateTimeExtractor, HearingDetailsFinder hearingDetailsFinder) {
         requireNonNull(asylumCase, "asylumCase must not be null");
-        ImmutableMap.Builder<String, String> builder = buildCommonParams(notificationFor, asylumCase, customerServicesProvider, dateTimeExtractor, hearingDetailsFinder);
+        ImmutableMap.Builder<String, String> builder = buildCommonParams(notificationFor, asylumCase, customerServicesProvider);
         builder.put(LEGAL_SUPPORT_INFO, buildLegalSupportInfo(notificationFor));
+        buildHearingReqParams(builder, asylumCase, dateTimeExtractor, hearingDetailsFinder);
+        buildAddressParams(notificationFor, asylumCase, builder);
+        return builder.build();
+    }
+
+    public static void buildAddressParams(Stf24WeeksNotificationFor notificationFor, AsylumCase asylumCase, ImmutableMap.Builder<String, String> builder) {
         if (notificationFor == Stf24WeeksNotificationFor.LEGAL_REPRESENTATIVE) {
             buildAddressForLegalRepIccLetter(asylumCase, builder);
         } else if (notificationFor == Stf24WeeksNotificationFor.APPELLANT) {
             buildAddressForAppellantIccLetter(asylumCase, builder);
         }
-        return builder.build();
     }
 
     public static ImmutableMap<String, String> buildHearingRequirementsEmailParams(Stf24WeeksNotificationFor notificationFor, AsylumCase asylumCase, String nonAdaPrefix, String iaExUiFrontendUrl, CustomerServicesProvider customerServicesProvider, DateTimeExtractor dateTimeExtractor, HearingDetailsFinder hearingDetailsFinder) {
         requireNonNull(asylumCase, "asylumCase must not be null");
-        ImmutableMap.Builder<String, String> builder = buildCommonParams(notificationFor, asylumCase, customerServicesProvider, dateTimeExtractor, hearingDetailsFinder)
+        ImmutableMap.Builder<String, String> builder = buildCommonParams(notificationFor, asylumCase, customerServicesProvider)
                 .put(SUBJECT_PREFIX_KEY, nonAdaPrefix).put(LINK_TO_ONLINE_SERVICE_KEY, iaExUiFrontendUrl);
+        buildHearingReqParams(builder, asylumCase, dateTimeExtractor, hearingDetailsFinder);
 
         return builder.build();
     }
 
-    private static ImmutableMap.@NonNull Builder<String, String> buildCommonParams(Stf24WeeksNotificationFor notificationFor, AsylumCase asylumCase, CustomerServicesProvider customerServicesProvider, DateTimeExtractor dateTimeExtractor, HearingDetailsFinder hearingDetailsFinder) {
+    private static void buildHearingReqParams(ImmutableMap.Builder<String, String> builder, AsylumCase asylumCase, DateTimeExtractor dateTimeExtractor, HearingDetailsFinder hearingDetailsFinder) {
+
+        builder.put(HEARING_DATE, dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getHearingDateTime(asylumCase)))
+                .put(HEARING_CENTRE_ADDRESS, hearingDetailsFinder.getHearingCentreAddress(asylumCase));
+    }
+
+    public static ImmutableMap.@NonNull Builder<String, String> buildCommonParams(Stf24WeeksNotificationFor notificationFor, AsylumCase asylumCase, CustomerServicesProvider customerServicesProvider) {
+        requireNonNull(asylumCase, "asylumCase must not be null");
         ImmutableMap.Builder<String, String> builder = ImmutableMap.<String, String>builder()
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
                 .put(APPELLANT_GIVEN_NAMES_KEY, asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(EMPTY_STRING))
                 .put(APPELLANT_FAMILY_NAME_KEY, asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(EMPTY_STRING))
-                .put(APPEAL_REFERENCE_NUMBER_KEY, asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
-                .put(HEARING_DATE, dateTimeExtractor.extractHearingDate(hearingDetailsFinder.getHearingDateTime(asylumCase)))
-                .put(HEARING_CENTRE_ADDRESS, hearingDetailsFinder.getHearingCentreAddress(asylumCase));
+                .put(APPEAL_REFERENCE_NUMBER_KEY, asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""));
         PersonalisationProvider.buildHearingRequirementsFields(asylumCase, builder);
         builder.put(LR_REFERENCE_WITH_TEXT, legalRefText(notificationFor, asylumCase));
         builder.put(HO_REFERENCE_WITH_TEXT, hoRefText(notificationFor, asylumCase));
