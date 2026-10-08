@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appell
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HEARING_CENTRE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasStf24WeeksStatus;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAipJourney;
 
 import com.google.common.collect.ImmutableMap;
@@ -26,6 +27,7 @@ public class AppellantListCasePersonalisationSms implements SmsNotificationPerso
 
     private final String appellantCaseListedSmsTemplateId;
     private final String legallyReppedAppellantCaseListedSmsTemplateId;
+    private final String legallyReppedAppellantCaseListedStf24WeeksSmsTemplateId;
     private final DateTimeExtractor dateTimeExtractor;
     private final HearingDetailsFinder hearingDetailsFinder;
     private final RecipientsFinder recipientsFinder;
@@ -35,6 +37,7 @@ public class AppellantListCasePersonalisationSms implements SmsNotificationPerso
     public AppellantListCasePersonalisationSms(
         @Value("${govnotify.template.caseListed.appellant.sms}") String appellantCaseListedSmsTemplateId,
         @Value("${govnotify.template.caseListed.legallyReppedAppellant.sms}") String legallyReppedAppellantCaseListedSmsTemplateId,
+        @Value("${govnotify.template.caseListed.legallyReppedAppellant.stf24WeeksSms}") String legallyReppedAppellantCaseListedStf24WeeksSmsTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         DateTimeExtractor dateTimeExtractor,
         HearingDetailsFinder hearingDetailsFinder,
@@ -42,6 +45,7 @@ public class AppellantListCasePersonalisationSms implements SmsNotificationPerso
     ) {
         this.appellantCaseListedSmsTemplateId = appellantCaseListedSmsTemplateId;
         this.legallyReppedAppellantCaseListedSmsTemplateId = legallyReppedAppellantCaseListedSmsTemplateId;
+        this.legallyReppedAppellantCaseListedStf24WeeksSmsTemplateId = legallyReppedAppellantCaseListedStf24WeeksSmsTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.dateTimeExtractor = dateTimeExtractor;
         this.hearingDetailsFinder = hearingDetailsFinder;
@@ -50,8 +54,11 @@ public class AppellantListCasePersonalisationSms implements SmsNotificationPerso
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-
-        return isAipJourney(asylumCase) ? appellantCaseListedSmsTemplateId : legallyReppedAppellantCaseListedSmsTemplateId;
+        boolean isAip = isAipJourney(asylumCase);
+        if (!isAip && hasStf24WeeksStatus(asylumCase)) {
+            return legallyReppedAppellantCaseListedStf24WeeksSmsTemplateId;
+        }
+        return isAip ? appellantCaseListedSmsTemplateId : legallyReppedAppellantCaseListedSmsTemplateId;
     }
 
     @Override

@@ -40,6 +40,7 @@ public class AppellantListCasePersonalisationEmailTest {
     private final String templateId = "someTemplateId";
     private final String listAssistHearingTemplateId = "listAssistHearingTemplateId";
     private final String legallyReppedTemplateId = "legallyReppedTemplateId";
+    private final String legallyReppedStf24WeeksTemplateId = "legallyReppedStf24WeeksTemplateId";
     private final String listAssistHearingLegallyReppedTemplateId = "listAssistHearingLegallyReppedTemplateId";
     private final String iaAipFrontendUrl = "http://somefrontendurl";
     private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
@@ -95,6 +96,7 @@ public class AppellantListCasePersonalisationEmailTest {
             templateId,
             listAssistHearingTemplateId,
             legallyReppedTemplateId,
+            legallyReppedStf24WeeksTemplateId,
             listAssistHearingLegallyReppedTemplateId,
             iaAipFrontendUrl,
             dateTimeExtractor,
@@ -126,6 +128,22 @@ public class AppellantListCasePersonalisationEmailTest {
 
         when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.REP));
         assertEquals(listAssistHearingLegallyReppedTemplateId, appellantListCasePersonalisationEmail.getTemplateId(asylumCase));
+    }
+
+    @Test
+    public void should_return_stf24_weeks_template_id_for_repped_appellant_on_24_week_case() {
+        when(asylumCase.read(IS_INTEGRATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.REP));
+        when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        assertEquals(legallyReppedStf24WeeksTemplateId, appellantListCasePersonalisationEmail.getTemplateId(asylumCase));
+    }
+
+    @Test
+    public void should_not_return_stf24_weeks_template_id_for_aip_appellant_on_24_week_case() {
+        when(asylumCase.read(IS_INTEGRATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
+        when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        assertEquals(templateId, appellantListCasePersonalisationEmail.getTemplateId(asylumCase));
     }
 
     @Test
