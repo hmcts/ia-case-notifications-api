@@ -807,6 +807,8 @@ govnotify:
     respondentReview:
       legalRep:
         email: ed2d12f7-c5d0-40c1-a603-3a9f3dd1a95b
+        stf24weeks:
+          email: b915e43d-83af-458e-8081-89aa4e4c3317
     submitTimeExtension:
       caseOfficer:
         email: f8e02ced-03ef-4252-83b4-86ebcab9e52f
