@@ -52,11 +52,6 @@ public class EmailNotificationGenerator implements NotificationGenerator {
     ) {
         EmailNotificationPersonalisation emailNotificationPersonalisation = (EmailNotificationPersonalisation) personalisation;
         Set<String> subscriberEmails = emailNotificationPersonalisation.getRecipientsList(asylumCase);
-        log.info("-------personalisation: {}", personalisation.getClass().getName());
-        log.info("-------subscriberEmails: {}", subscriberEmails);
-        for (String email : subscriberEmails) {
-            log.info("-------email: {}", email);
-        }
 
         return subscriberEmails.stream()
             .filter(this::isValidEmailAddress)
