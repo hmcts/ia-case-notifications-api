@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixesDetained;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
@@ -84,7 +85,7 @@ public class HomeOfficeMarkAsReadyForUtTransferPersonalisationTest {
             emailAddressFinder,
             personalisationProvider,
             customerServicesProvider);
-        initializePrefixes(homeOfficeMarkAppealReadyForUtTransferPersonalisation);
+        initializePrefixesDetained(homeOfficeMarkAppealReadyForUtTransferPersonalisation);
         when(personalisationProvider.getRespondentHeaderPersonalisation(asylumCase)).thenReturn(getPersonalisationForHomeOffice());
 
     }
@@ -182,9 +183,9 @@ public class HomeOfficeMarkAsReadyForUtTransferPersonalisationTest {
 
     @ParameterizedTest
     @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
-    public void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
-        initializePrefixes(homeOfficeMarkAppealReadyForUtTransferPersonalisation);
-        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
+    public void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isDetained) {
+        initializePrefixesDetained(homeOfficeMarkAppealReadyForUtTransferPersonalisation);
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(isDetained));
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
@@ -194,7 +195,7 @@ public class HomeOfficeMarkAsReadyForUtTransferPersonalisationTest {
         Map<String, String> personalisation =
             homeOfficeMarkAppealReadyForUtTransferPersonalisation.getPersonalisation(asylumCase);
         assertThat(personalisation)
-            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal"
+            .containsEntry("subjectPrefix", isDetained.equals(YesOrNo.YES) ? "Detained - Immigration and Asylum appeal"
                 : "Immigration and Asylum appeal")
             .containsEntry("utAppealReferenceNumber", "")
             .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))

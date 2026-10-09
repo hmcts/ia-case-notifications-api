@@ -79,7 +79,7 @@
       {
         "reference": "1332_REINSTATE_APPEAL_HOME_OFFICE",
         "recipient": "{$apcHomeOfficeEmailAddress}",
-        "subject": "Accelerated detained appeal: appeal reinstated",
+        "subject": "Detained – Immigration and Asylum appeal: appeal reinstated",
         "body": [
           "HMCTS reference: PA/12345/2019",
           "Home Office reference: A1234567",
