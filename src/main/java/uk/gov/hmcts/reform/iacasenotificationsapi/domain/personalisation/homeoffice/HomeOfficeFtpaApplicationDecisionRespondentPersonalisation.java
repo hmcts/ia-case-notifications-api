@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice;
 
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
 
 import com.google.common.collect.ImmutableMap;
@@ -144,7 +143,7 @@ public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisation implemen
 
         if (setDynamicDate) {
             boolean inCountryAppeal = asylumCase.read(APPELLANT_IN_UK, YesOrNo.class).map(value -> value.equals(YesOrNo.YES)).orElse(true);
-            if (isAcceleratedDetainedAppeal(asylumCase)) {
+            if (isAppellantInDetention(asylumCase)) {
                 return personalisationBuilder.put("due date", dueDateService.calculateWorkingDaysDueDate(ZonedDateTime.now(), workingDaysaysToWaitAda)
                     .format(DateTimeFormatter.ofPattern("d MMMM yyyy"))).build();
             } else if (inCountryAppeal) {
