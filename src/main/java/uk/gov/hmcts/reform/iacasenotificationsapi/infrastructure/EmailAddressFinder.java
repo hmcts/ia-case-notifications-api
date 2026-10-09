@@ -36,6 +36,7 @@ public class EmailAddressFinder {
     private final Map<HearingCentre, String> adminHearingCentreEmailAddresses;
 
     private final String listCaseCaseOfficerEmailAddress;
+    private final String yarlsWoodCaseOfficerEmailAddress;
 
 
     public EmailAddressFinder(
@@ -45,7 +46,8 @@ public class EmailAddressFinder {
             Map<BailHearingCentre, String> bailHearingCentreEmailAddresses,
             Map<HearingCentre, String> adminEmailAddresses,
             Map<HearingCentre, String> adminHearingCentreEmailAddresses,
-            @Value("${listCaseCaseOfficerEmailAddress}") String listCaseCaseOfficerEmailAddress) {
+            @Value("${listCaseCaseOfficerEmailAddress}") String listCaseCaseOfficerEmailAddress,
+            @Value("${yarlsWoodCaseOfficerEmailAddress}") String yarlsWoodCaseOfficerEmailAddress) {
 
         this.hearingCentreEmailAddresses = hearingCentreEmailAddresses;
         this.homeOfficeEmailAddresses = homeOfficeEmailAddresses;
@@ -54,6 +56,7 @@ public class EmailAddressFinder {
         this.adminEmailAddresses = adminEmailAddresses;
         this.adminHearingCentreEmailAddresses = adminHearingCentreEmailAddresses;
         this.listCaseCaseOfficerEmailAddress = listCaseCaseOfficerEmailAddress;
+        this.yarlsWoodCaseOfficerEmailAddress = yarlsWoodCaseOfficerEmailAddress;
     }
 
     public String getHearingCentreEmailAddress(AsylumCase asylumCase) {
@@ -264,6 +267,8 @@ public class EmailAddressFinder {
             final HearingCentre hearingCentre = getHearingCentre(asylumCase, HEARING_CENTRE);
             if (asList(HearingCentre.GLASGOW, HearingCentre.BELFAST).contains(hearingCentre)) {
                 return listCaseCaseOfficerEmailAddress;
+            } else if (hearingCentre.equals(HearingCentre.YARLS_WOOD)) {
+                return yarlsWoodCaseOfficerEmailAddress;
             } else {
                 return getHearingCentreEmailAddress(asylumCase);
             }
@@ -278,6 +283,8 @@ public class EmailAddressFinder {
 
             if (asList(HearingCentre.GLASGOW, HearingCentre.BELFAST).contains(hearingCentre)) {
                 return listCaseCaseOfficerEmailAddress;
+            } else if (hearingCentre.equals(HearingCentre.YARLS_WOOD)) {
+                return yarlsWoodCaseOfficerEmailAddress;
             } else {
                 return getEmailAddress(hearingCentreEmailAddresses, hearingCentre);
             }
