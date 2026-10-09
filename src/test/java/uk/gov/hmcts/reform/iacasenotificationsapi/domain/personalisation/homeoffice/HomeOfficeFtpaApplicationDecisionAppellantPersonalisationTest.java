@@ -182,17 +182,17 @@ public class HomeOfficeFtpaApplicationDecisionAppellantPersonalisationTest {
 
     @ParameterizedTest
     @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
-    public void should_return_personalisation_of_all_information_given(YesOrNo isAda) {
+    public void should_return_personalisation_of_all_information_given(YesOrNo isDetained) {
         initializePrefixesDetained(homeOfficeFtpaApplicationDecisionAppellantPersonalisation);
-        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(isAda));
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(isDetained));
         when(personalisationProvider.getHomeOfficeHeaderPersonalisation(asylumCase))
             .thenReturn(getPersonalisationMapWithGivenValues());
         Map<String, String> personalisation =
             homeOfficeFtpaApplicationDecisionAppellantPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals(isAda.equals(YesOrNo.YES)
-            ? "Accelerated detained appeal"
-            : "Detained - Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
+        assertEquals(isDetained.equals(YesOrNo.YES)
+            ? "Detained - Immigration and Asylum appeal"
+            : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
         assertThat(personalisation)
             .containsEntry("appealReferenceNumber", appealReferenceNumber)
             .containsEntry("appellantGivenNames", appellantGivenNames)

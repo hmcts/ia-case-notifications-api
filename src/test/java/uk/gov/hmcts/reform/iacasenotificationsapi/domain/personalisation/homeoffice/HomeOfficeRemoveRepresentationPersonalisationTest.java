@@ -216,9 +216,9 @@ class HomeOfficeRemoveRepresentationPersonalisationTest {
 
     @ParameterizedTest
     @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
-    void should_return_personalisation_when_all_information_given_case_listed(YesOrNo isAda) {
+    void should_return_personalisation_when_all_information_given_case_listed(YesOrNo isDetained) {
         when(appealService.isAppealListed(asylumCase)).thenReturn(true);
-        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(isAda));
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(isDetained));
         initializePrefixesDetained(homeOfficeRemoveRepresentationPersonalisation);
 
         Map<String, String> personalisation = homeOfficeRemoveRepresentationPersonalisation.getPersonalisation(asylumCase);
@@ -231,15 +231,15 @@ class HomeOfficeRemoveRepresentationPersonalisationTest {
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
             .containsEntry("legalRepresentativeName", legalRepName)
             .containsEntry("legalRepresentativeEmailAddress", legalRepEmailAddress);
-        assertEquals(isAda.equals(YesOrNo.YES)
-            ? "Accelerated detained appeal"
-            : "Detained - Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
+        assertEquals(isDetained.equals(YesOrNo.YES)
+            ? "Detained - Immigration and Asylum appeal"
+            : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
     @ParameterizedTest
     @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
-    void should_return_personalisation_when_all_information_given_and_case_not_listed(YesOrNo isAda) {
-        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(isAda));
+    void should_return_personalisation_when_all_information_given_and_case_not_listed(YesOrNo isDetained) {
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(isDetained));
         initializePrefixesDetained(homeOfficeRemoveRepresentationPersonalisation);
         Map<String, String> personalisation = homeOfficeRemoveRepresentationPersonalisation.getPersonalisation(asylumCase);
 
@@ -250,8 +250,8 @@ class HomeOfficeRemoveRepresentationPersonalisationTest {
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
             .containsEntry("legalRepresentativeName", legalRepName)
             .containsEntry("legalRepresentativeEmailAddress", legalRepEmailAddress);
-        assertEquals(isAda.equals(YesOrNo.YES)
-            ? "Accelerated detained appeal"
-            : "Detained - Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
+        assertEquals(isDetained.equals(YesOrNo.YES)
+            ? "Detained - Immigration and Asylum appeal"
+            : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 }

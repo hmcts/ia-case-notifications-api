@@ -106,7 +106,7 @@ public class HomeOfficeDecisionWithoutHearingPersonalisationTesting {
         Map<String, String> personalisation =
             homeOfficeDecisionWithoutHearingPersonalisation.getPersonalisation(asylumCase);
 
-        String subjectPrefix = "Detained - Immigration and Asylum appeal";
+        String subjectPrefix = "Immigration and Asylum appeal";
         assertThat(personalisation)
             .containsEntry("appealReferenceNumber", mockedAppealReferenceNumber)
             .containsEntry("ariaListingReference", mockedAriaListingReference)

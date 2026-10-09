@@ -27,10 +27,10 @@ public class HomeOfficeCaseUnlinkPersonalisation implements EmailNotificationPer
     private final CustomerServicesProvider customerServicesProvider;
     private final AppealService appealService;
 
-    @Value("${govnotify.emailPrefix.ada}")
-    private String adaPrefix;
-    @Value("${govnotify.emailPrefix.detainedNonAda}")
-    private String detainedNonAda;
+    @Value("${govnotify.emailPrefix.detained}")
+    private String detainedPrefix;
+    @Value("${govnotify.emailPrefix.nonAda}")
+    private String nonAdaPrefix;
 
     public HomeOfficeCaseUnlinkPersonalisation(
         @NotNull(message = "maintainCaseLinksHomeOfficeBeforeListingTemplateId cannot be null")
@@ -73,7 +73,7 @@ public class HomeOfficeCaseUnlinkPersonalisation implements EmailNotificationPer
 
         return ImmutableMap
             .<String, String>builder()
-            .put("subjectPrefix", isAppellantInDetention(asylumCase) ? adaPrefix : detainedNonAda)
+            .put("subjectPrefix", isAppellantInDetention(asylumCase) ? detainedPrefix : nonAdaPrefix)
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class)
                 .orElse(""))

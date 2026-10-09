@@ -14,10 +14,10 @@ public class SubjectPrefixesInitializer {
     }
 
     public static void initializePrefixesDetained(Object testClass) {
-        ReflectionTestUtils.setField(testClass, "adaPrefix", "Accelerated detained appeal");
+        ReflectionTestUtils.setField(testClass, "nonAdaPrefix", "Immigration and Asylum appeal");
         ReflectionTestUtils.setField(
                 testClass,
-                "detainedNonAda",
+                "detainedPrefix",
                 "Detained - Immigration and Asylum appeal"
         );
     }

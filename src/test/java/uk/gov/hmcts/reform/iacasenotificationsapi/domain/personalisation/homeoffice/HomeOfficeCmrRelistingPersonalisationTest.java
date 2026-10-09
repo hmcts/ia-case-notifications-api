@@ -90,11 +90,11 @@ class HomeOfficeCmrRelistingPersonalisationTest {
 
     @ParameterizedTest
     @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
-    void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
+    void should_return_personalisation_when_all_information_given(YesOrNo isDetained) {
         initializePrefixesDetained(homeOfficeCmrRelistingPersonalisation);
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
-        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(isAda));
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(isDetained));
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getCmrRelistingPersonalisationMap());
 
         Map<String, String> personalisation = homeOfficeCmrRelistingPersonalisation.getPersonalisation(callback);
@@ -102,9 +102,9 @@ class HomeOfficeCmrRelistingPersonalisationTest {
         assertFalse(personalisation.isEmpty());
         assertThat(personalisation)
             .containsAllEntriesOf(getCmrRelistingPersonalisationMap())
-            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES)
-                ? "Accelerated detained appeal"
-                : "Detained - Immigration and Asylum appeal");
+            .containsEntry("subjectPrefix", isDetained.equals(YesOrNo.YES)
+                ? "Detained - Immigration and Asylum appeal"
+                : "Immigration and Asylum appeal");
     }
 
     private Map<String, String> getCmrRelistingPersonalisationMap() {

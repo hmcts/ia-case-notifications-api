@@ -32,10 +32,10 @@ public class HomeOfficeMarkAppealReadyForUtTransferPersonalisation implements Em
     private final String endAppealEmailAddresses;
 
     private final PersonalisationProvider personalisationProvider;
-    @Value("${govnotify.emailPrefix.ada}")
-    private String adaPrefix;
-    @Value("${govnotify.emailPrefix.detainedNonAda}")
-    private String detainedNonAda;
+    @Value("${govnotify.emailPrefix.detained}")
+    private String detainedPrefix;
+    @Value("${govnotify.emailPrefix.nonAda}")
+    private String nonAdaPrefix;
 
     public HomeOfficeMarkAppealReadyForUtTransferPersonalisation(
             @NotNull(message = "markReadyForUtTransferBeforeListingTemplateId cannot be null")
@@ -93,7 +93,7 @@ public class HomeOfficeMarkAppealReadyForUtTransferPersonalisation implements Em
 
         return ImmutableMap
                 .<String, String>builder()
-                .put("subjectPrefix", isAppellantInDetention(asylumCase) ? adaPrefix : detainedNonAda)
+                .put("subjectPrefix", isAppellantInDetention(asylumCase) ? detainedPrefix : nonAdaPrefix)
                 .put("utAppealReferenceNumber", asylumCase.read(AsylumCaseDefinition.UT_APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
                 .putAll(personalisationProvider.getRespondentHeaderPersonalisation(asylumCase))

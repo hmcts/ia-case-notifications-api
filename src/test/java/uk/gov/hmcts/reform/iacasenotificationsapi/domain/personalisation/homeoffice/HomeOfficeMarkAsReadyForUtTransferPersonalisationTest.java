@@ -183,9 +183,9 @@ public class HomeOfficeMarkAsReadyForUtTransferPersonalisationTest {
 
     @ParameterizedTest
     @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
-    public void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
+    public void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isDetained) {
         initializePrefixesDetained(homeOfficeMarkAppealReadyForUtTransferPersonalisation);
-        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(isAda));
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(isDetained));
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
@@ -195,8 +195,8 @@ public class HomeOfficeMarkAsReadyForUtTransferPersonalisationTest {
         Map<String, String> personalisation =
             homeOfficeMarkAppealReadyForUtTransferPersonalisation.getPersonalisation(asylumCase);
         assertThat(personalisation)
-            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal"
-                : "Detained - Immigration and Asylum appeal")
+            .containsEntry("subjectPrefix", isDetained.equals(YesOrNo.YES) ? "Detained - Immigration and Asylum appeal"
+                : "Immigration and Asylum appeal")
             .containsEntry("utAppealReferenceNumber", "")
             .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .containsAllEntriesOf(getPersonalisationForHomeOffice())
