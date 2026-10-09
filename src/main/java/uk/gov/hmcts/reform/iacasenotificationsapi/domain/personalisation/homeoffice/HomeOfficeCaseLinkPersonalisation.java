@@ -39,7 +39,7 @@ public class HomeOfficeCaseLinkPersonalisation implements EmailNotificationPerso
         @NotNull(message = "createCaseLinkHomeOfficeAfterListingTemplateId cannot be null")
         @Value("${govnotify.template.createCaseLink.homeOffice.afterListing.email}")
             String createCaseLinkHomeOfficeAfterListingTemplateId,
-        @Value("${endAppealHomeOfficeEmailAddress}") String linkAppealEmailAddress,
+        @Value("${apcPrivateHomeOfficeEmailAddress}") String linkAppealEmailAddress,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         CustomerServicesProvider customerServicesProvider,
         AppealService appealService) {
