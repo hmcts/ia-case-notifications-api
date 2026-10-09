@@ -84,12 +84,10 @@ public class EmailAddressFinderTest {
             homeOfficeFtpaEmailAddresses,
             bailHearingCentreEmailAddresses,
             adminEmailAddresses,
+            adminHearingCentreEmailAddresses,
             listCaseCaseOfficerEmailAddress,
             yarlsWoodCaseOfficerEmailAddress
 
-                
-            adminHearingCentreEmailAddresses,
-            listCaseCaseOfficerEmailAddress
         );
     }
 
