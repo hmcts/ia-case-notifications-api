@@ -8,7 +8,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixesDetained;
 
 import java.util.Map;
 import java.util.Optional;
@@ -99,14 +99,14 @@ public class HomeOfficeDecisionWithoutHearingPersonalisationTesting {
     @Test
     public void should_return_personalisation_when_all_information_given() {
 
-        initializePrefixes(homeOfficeDecisionWithoutHearingPersonalisation);
+        initializePrefixesDetained(homeOfficeDecisionWithoutHearingPersonalisation);
         when(customerServicesProvider.getCustomerServicesPersonalisation(any(AsylumCase.class))).thenReturn(customerServices);
 
 
         Map<String, String> personalisation =
             homeOfficeDecisionWithoutHearingPersonalisation.getPersonalisation(asylumCase);
 
-        String subjectPrefix = "Immigration and Asylum appeal";
+        String subjectPrefix = "Detained - Immigration and Asylum appeal";
         assertThat(personalisation)
             .containsEntry("appealReferenceNumber", mockedAppealReferenceNumber)
             .containsEntry("ariaListingReference", mockedAriaListingReference)

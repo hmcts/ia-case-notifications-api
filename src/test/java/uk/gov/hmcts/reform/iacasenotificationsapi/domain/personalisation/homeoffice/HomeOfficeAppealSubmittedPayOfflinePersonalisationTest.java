@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixesDetained;
 
 import java.util.Map;
 import java.util.Optional;
@@ -81,8 +81,8 @@ public class HomeOfficeAppealSubmittedPayOfflinePersonalisationTest {
     @ParameterizedTest
     @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
-        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
-        initializePrefixes(homeOfficeAppealSubmittedPayOfflinePersonalisation);
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(isAda));
+        initializePrefixesDetained(homeOfficeAppealSubmittedPayOfflinePersonalisation);
         Map<String, String> personalisation =
             homeOfficeAppealSubmittedPayOfflinePersonalisation.getPersonalisation(asylumCase);
 
@@ -93,7 +93,7 @@ public class HomeOfficeAppealSubmittedPayOfflinePersonalisationTest {
             .containsEntry("appealReferenceNumber", appealReferenceNumber)
             .containsEntry("appellantGivenNames", appellantGivenNames)
             .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal"
-                : "Immigration and Asylum appeal")
+                : "Detained - Immigration and Asylum appeal")
             .containsEntry("appellantFamilyName", appellantFamilyName);
     }
 

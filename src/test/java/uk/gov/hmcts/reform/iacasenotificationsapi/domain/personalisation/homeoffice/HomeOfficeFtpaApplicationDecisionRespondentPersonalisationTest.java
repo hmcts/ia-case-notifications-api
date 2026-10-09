@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixesDetained;
 
 import com.google.common.collect.ImmutableMap;
 import java.time.ZonedDateTime;
@@ -195,12 +195,11 @@ public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisationTest {
 
     @Test
     public void should_return_personalisation_of_all_information_given_decision_partially_granted_ada() {
-        initializePrefixes(homeOfficeFtpaApplicationDecisionRespondentPersonalisation);
-        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        initializePrefixesDetained(homeOfficeFtpaApplicationDecisionRespondentPersonalisation);
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(personalisationProvider.getRespondentHeaderPersonalisation(asylumCase)).thenReturn(getPersonalisationforHomeOffice());
         when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class))
             .thenReturn(Optional.of(partiallyGranted));
-        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         when(dueDateService.calculateWorkingDaysDueDate(any(ZonedDateTime.class), any(Integer.class))).thenReturn(ZonedDateTime.now());
         Map<String, String> personalisation =
             homeOfficeFtpaApplicationDecisionRespondentPersonalisation.getPersonalisation(asylumCase);
@@ -218,7 +217,7 @@ public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisationTest {
 
     @Test
     public void should_return_personalisation_of_all_information_given_decision_refused_in_country() {
-        initializePrefixes(homeOfficeFtpaApplicationDecisionRespondentPersonalisation);
+        initializePrefixesDetained(homeOfficeFtpaApplicationDecisionRespondentPersonalisation);
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
         when(personalisationProvider.getRespondentHeaderPersonalisation(asylumCase)).thenReturn(getPersonalisationforHomeOffice());
         when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class))
@@ -233,14 +232,14 @@ public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisationTest {
             .containsEntry("appellantFamilyName", appellantFamilyName)
             .containsEntry("ariaListingReference", ariaListingReference)
             .containsEntry("respondentReferenceNumber", homeOfficeRefNumber)
-            .containsEntry("subjectPrefix", "Immigration and Asylum appeal");
+            .containsEntry("subjectPrefix", "Detained - Immigration and Asylum appeal");
 
         verify(dueDateService, times(1)).calculateCalendarDaysDueDate(any(ZonedDateTime.class), any(Integer.class));
     }
 
     @Test
     public void should_return_personalisation_of_all_information_given_decision_not_admitted_out_of_country() {
-        initializePrefixes(homeOfficeFtpaApplicationDecisionRespondentPersonalisation);
+        initializePrefixesDetained(homeOfficeFtpaApplicationDecisionRespondentPersonalisation);
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
         when(personalisationProvider.getRespondentHeaderPersonalisation(asylumCase)).thenReturn(getPersonalisationforHomeOffice());
         when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class))
@@ -256,7 +255,7 @@ public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisationTest {
             .containsEntry("appellantFamilyName", appellantFamilyName)
             .containsEntry("ariaListingReference", ariaListingReference)
             .containsEntry("respondentReferenceNumber", homeOfficeRefNumber)
-            .containsEntry("subjectPrefix", "Immigration and Asylum appeal");
+            .containsEntry("subjectPrefix", "Detained - Immigration and Asylum appeal");
 
         verify(dueDateService, times(1)).calculateCalendarDaysDueDate(any(ZonedDateTime.class), any(Integer.class));
     }
@@ -264,8 +263,8 @@ public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisationTest {
     @ParameterizedTest
     @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_of_all_information_given_others(YesOrNo isAda) {
-        initializePrefixes(homeOfficeFtpaApplicationDecisionRespondentPersonalisation);
-        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
+        initializePrefixesDetained(homeOfficeFtpaApplicationDecisionRespondentPersonalisation);
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(isAda));
         when(personalisationProvider.getRespondentHeaderPersonalisation(asylumCase)).thenReturn(getPersonalisationforHomeOffice());
         when(asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeRefNumber));
         when(asylumCase.read(FTPA_RESPONDENT_DECISION_OUTCOME_TYPE, FtpaDecisionOutcomeType.class))
@@ -281,7 +280,7 @@ public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisationTest {
             .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber);
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
-            : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
+            : "Detained - Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
 
         verify(dueDateService, times(0)).calculateWorkingDaysDueDate(any(ZonedDateTime.class), any(Integer.class));
         verify(dueDateService, times(0)).calculateCalendarDaysDueDate(any(ZonedDateTime.class), any(Integer.class));
