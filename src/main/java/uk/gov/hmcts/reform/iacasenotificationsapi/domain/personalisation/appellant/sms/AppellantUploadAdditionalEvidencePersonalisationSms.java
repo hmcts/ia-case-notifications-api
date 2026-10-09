@@ -9,6 +9,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.NotificationType;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.SmsNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 
 import java.util.Map;
 import java.util.Optional;
@@ -22,26 +23,32 @@ public class AppellantUploadAdditionalEvidencePersonalisationSms implements SmsN
 
     private final String uploadAdditionalEvidenceSmsBeforeListingNotificationTemplateId;
     private final String uploadAdditionalEvidenceSmsAfterListingNotificationTemplateId;
+    private final String uploadAdditionalEvidenceSmsAfterListing24WeeksNotificationTemplateId;
     private final String iaAipFrontendUrl;
     private final RecipientsFinder recipientsFinder;
 
     public AppellantUploadAdditionalEvidencePersonalisationSms(
-            @Value("${govnotify.template.uploadedAdditionalEvidenceBeforeListing.appellant.sms}") String uploadAdditionalEvidenceSmsBeforeListingNotificationTemplateId,
-            @Value("${govnotify.template.uploadedAdditionalEvidenceAfterListing.appellant.sms}") String uploadAdditionalEvidenceSmsAfterListingNotificationTemplateId,
-            @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
-            RecipientsFinder recipientsFinder
+        @Value("${govnotify.template.uploadedAdditionalEvidenceBeforeListing.appellant.sms}") String uploadAdditionalEvidenceSmsBeforeListingNotificationTemplateId,
+        @Value("${govnotify.template.uploadedAdditionalEvidenceAfterListing.appellant.sms}") String uploadAdditionalEvidenceSmsAfterListingNotificationTemplateId,
+        @Value("${govnotify.template.uploadedAdditionalEvidenceAfterListing.appellant.sms24Weeks}") String uploadAdditionalEvidenceSmsAfterListing24WeeksNotificationTemplateId,
+        @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
+        RecipientsFinder recipientsFinder
     ) {
 
         this.uploadAdditionalEvidenceSmsBeforeListingNotificationTemplateId = uploadAdditionalEvidenceSmsBeforeListingNotificationTemplateId;
         this.uploadAdditionalEvidenceSmsAfterListingNotificationTemplateId = uploadAdditionalEvidenceSmsAfterListingNotificationTemplateId;
+        this.uploadAdditionalEvidenceSmsAfterListing24WeeksNotificationTemplateId = uploadAdditionalEvidenceSmsAfterListing24WeeksNotificationTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.recipientsFinder = recipientsFinder;
     }
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return isAppealListed(asylumCase)
-                ? uploadAdditionalEvidenceSmsAfterListingNotificationTemplateId : uploadAdditionalEvidenceSmsBeforeListingNotificationTemplateId;
+        if (AsylumCaseUtils.hasStf24WeeksStatus(asylumCase)) {
+            return uploadAdditionalEvidenceSmsAfterListing24WeeksNotificationTemplateId;
+        }
+        return isAppealListed(asylumCase) ? uploadAdditionalEvidenceSmsAfterListingNotificationTemplateId
+            : uploadAdditionalEvidenceSmsBeforeListingNotificationTemplateId;
     }
 
     @Override
@@ -67,7 +74,7 @@ public class AppellantUploadAdditionalEvidencePersonalisationSms implements SmsN
 
     protected boolean isAppealListed(AsylumCase asylumCase) {
         final Optional<HearingCentre> appealListed = asylumCase
-                .read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class);
+            .read(AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE, HearingCentre.class);
 
         return appealListed.isPresent();
     }
