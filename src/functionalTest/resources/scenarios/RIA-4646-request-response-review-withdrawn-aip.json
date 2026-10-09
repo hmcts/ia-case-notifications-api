@@ -96,7 +96,6 @@
           "1212-0099-0062-8083",
           "Pablo Jimenez,",
           "{$iaAipFrontendUrl}",
-          "{$hearingCentreEmailAddresses.taylorHouse}",
           "{$customerServices.telephoneNumber}",
           "{$customerServices.emailAddress}"
         ]
@@ -107,8 +106,7 @@
         "subject": "",
         "body": [
           "PA/12345/2019",
-          "{$iaAipFrontendUrl}",
-          "{$hearingCentreEmailAddresses.taylorHouse}"
+          "{$iaAipFrontendUrl}"
         ]
       }
     ]
