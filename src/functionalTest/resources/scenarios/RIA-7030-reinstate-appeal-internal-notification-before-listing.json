@@ -55,7 +55,7 @@
       {
         "reference": "1436_REINSTATE_APPEAL_HOME_OFFICE",
         "recipient": "{$apcHomeOfficeEmailAddress}",
-        "subject": "Immigration and Asylum appeal: appeal reinstated",
+        "subject": "Detained – Immigration and Asylum appeal: appeal reinstated",
         "body": [
           "PA/12345/2019",
           "Talha Awan",
