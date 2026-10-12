@@ -17,12 +17,14 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.*;
 
 @Service
 public class HomeOfficeListCasePersonalisation implements EmailNotificationPersonalisation {
 
     private final String homeOfficeCaseListedNonAdaTemplateId;
+    private final String homeOfficeCaseListedNonAdaStf24WeeksTemplateId;
     private final String homeOfficeCaseListedAdaTemplateId;
     private final String homeOfficeCaseListedStf24WeeksTemplateId;
     private final String listAssistHearingHomeOfficeCaseListedTemplateId;
@@ -36,6 +38,7 @@ public class HomeOfficeListCasePersonalisation implements EmailNotificationPerso
 
     public HomeOfficeListCasePersonalisation(
         @Value("${govnotify.template.caseListed.homeOffice.email.nonAda}") String homeOfficeCaseListedNonAdaTemplateId,
+        @Value("${govnotify.template.caseListed.homeOffice.email.nonAdaStf24Weeks}") String homeOfficeCaseListedNonAdaStf24WeeksTemplateId,
         @Value("${govnotify.template.caseListed.homeOffice.email.ada}") String homeOfficeCaseListedAdaTemplateId,
         @Value("${govnotify.template.caseListed.homeOffice.email.stf24Weeks}") String homeOfficeCaseListedStf24WeeksTemplateId,
         @Value("${govnotify.template.listAssistHearing.caseListed.homeOffice.email}") String listAssistHearingHomeOfficeCaseListedTemplateId,
@@ -48,6 +51,7 @@ public class HomeOfficeListCasePersonalisation implements EmailNotificationPerso
         HearingDetailsFinder hearingDetailsFinder
     ) {
         this.homeOfficeCaseListedNonAdaTemplateId = homeOfficeCaseListedNonAdaTemplateId;
+        this.homeOfficeCaseListedNonAdaStf24WeeksTemplateId = homeOfficeCaseListedNonAdaStf24WeeksTemplateId;
         this.homeOfficeCaseListedAdaTemplateId = homeOfficeCaseListedAdaTemplateId;
         this.homeOfficeCaseListedStf24WeeksTemplateId = homeOfficeCaseListedStf24WeeksTemplateId;
         this.listAssistHearingHomeOfficeCaseListedTemplateId = listAssistHearingHomeOfficeCaseListedTemplateId;
