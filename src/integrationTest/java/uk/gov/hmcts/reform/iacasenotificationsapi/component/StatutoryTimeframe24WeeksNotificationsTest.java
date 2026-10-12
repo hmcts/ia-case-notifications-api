@@ -54,6 +54,10 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
@@ -86,6 +90,8 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Eve
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.LIST_CASE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.REMOVE_STATUTORY_TIMEFRAME_24_WEEKS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.REVIEW_HEARING_REQUIREMENTS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.UPLOAD_ADDITIONAL_EVIDENCE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State.APPEAL_SUBMITTED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_SMS;
@@ -104,6 +110,8 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24Weeks
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_SUBMITTED_HEARING_REQUIREMENTS_HOME_OFFICE_EMAIL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_SUBMITTED_HEARING_REQUIREMENTS_LR_EMAIL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_SUBMITTED_HEARING_REQUIREMENTS_LR_LETTER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_APPELLANT_LETTER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_LR_LETTER;
 
 @Slf4j
 @SuppressWarnings("unchecked")
@@ -124,11 +132,35 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
     @MockitoBean
     private HearingDetailsFinder hearingDetailsFinder;
 
-    @Value("${govnotify.template.caseListed.homeOffice.email.nonAda}")
-    private String homeOfficeCaseListedNonAdaTemplateId;
+    @Value("${govnotify.template.caseListed.legalRep.email.nonAda}")
+    private String legalRepNon24wListedTemplateId;
 
-    @Value("${govnotify.template.caseListed.homeOffice.email.nonAdaStf24Weeks}")
-    private String homeOfficeCaseListedNonAdaStf24WeeksTemplateId;
+    @Value("${govnotify.template.caseListed.legalRep.email.stf24Weeks}")
+    private String legalRep24wListedTemplateId;
+
+    @Value("${govnotify.template.caseListed.homeOffice.email.nonAda}")
+    private String homeOfficeNon24wListedTemplateId;
+
+    @Value("${govnotify.template.caseListed.homeOffice.email.stf24Weeks}")
+    private String homeOffice24wListedTemplateId;
+
+    @Value("${govnotify.template.caseListed.appellant.email}")
+    private String appellantCaseListedEmailTemplateId;
+
+    @Value("${govnotify.template.caseListed.legallyReppedAppellant.email}")
+    private String lrAppellantCaseListedNon24wTemplateId;
+
+    @Value("${govnotify.template.caseListed.legallyReppedAppellant.stf24Weeks}")
+    private String lrAppellantCaseListed24wTemplateId;
+
+    @Value("${govnotify.template.caseListed.appellant.sms}")
+    private String appellantCaseListedSmsTemplateId;
+
+    @Value("${govnotify.template.caseListed.legallyReppedAppellant.sms}")
+    private String lrAppellantCaseListedNon24wSmsTemplateId;
+
+    @Value("${govnotify.template.caseListed.legallyReppedAppellant.stf24WeeksSms}")
+    private String lrAppellantCaseListed24wSmsTemplateId;
 
     // --- Test data builders / helpers ---
     private enum TestJourneyType {
@@ -411,35 +443,149 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
         assertNotificationsContain(response, expectedIds);
     }
 
-    @ParameterizedTest
-    @MethodSource("caseListedTemplatePermutations")
-    @WithMockUser(authorities = {"caseworker-ia", "tribunal-caseworker"})
-    void should_send_home_office_case_listed_notification_with_correct_template(boolean is24wCase) {
-        PreSubmitCallbackResponseForTest response = mockResponse(
-                mockCaseData(TestJourneyType.AIP, true, true, false, is24wCase),
-                LIST_CASE
+    void verifyNoLrTemplatesSent() {
+        verify(notificationSender, never()).sendEmail(
+            eq(legalRep24wListedTemplateId),
+            anyString(),
+            anyMap(),
+            anyString(),
+            any(Callback.class)
         );
-
-        assertNotificationsContain(response, Set.of(
-                "_CASE_LISTED_CASE_OFFICER",
-                "_CASE_LISTED_HOME_OFFICE",
-                "_CASE_LISTED_AIP_APPELLANT_EMAIL"
-        ));
-        Mockito.verify(notificationSender).sendEmail(
-                Mockito.eq(is24wCase
-                        ? homeOfficeCaseListedNonAdaStf24WeeksTemplateId
-                        : homeOfficeCaseListedNonAdaTemplateId),
-                Mockito.anyString(),
-                Mockito.anyMap(),
-                Mockito.anyString(),
-                Mockito.any(Callback.class)
+        verify(notificationSender, never()).sendEmail(
+            eq(legalRepNon24wListedTemplateId),
+            anyString(),
+            anyMap(),
+            anyString(),
+            any(Callback.class)
         );
     }
 
-    private static Stream<Arguments> caseListedTemplatePermutations() {
+    void verifyNoHomeOfficeTemplatesSent() {
+        verify(notificationSender, never()).sendEmail(
+            eq(homeOffice24wListedTemplateId),
+            anyString(),
+            anyMap(),
+            anyString(),
+            any(Callback.class)
+        );
+        verify(notificationSender, never()).sendEmail(
+            eq(homeOfficeNon24wListedTemplateId),
+            anyString(),
+            anyMap(),
+            anyString(),
+            any(Callback.class)
+        );
+    }
+
+    void verifyNoAppellantEmailTemplatesSent() {
+        verify(notificationSender, never()).sendEmail(
+            eq(appellantCaseListedEmailTemplateId),
+            anyString(),
+            anyMap(),
+            anyString(),
+            any(Callback.class)
+        );
+        verify(notificationSender, never()).sendSms(
+            eq(lrAppellantCaseListed24wTemplateId),
+            anyString(),
+            anyMap(),
+            anyString(),
+            any(Callback.class)
+        );
+        verify(notificationSender, never()).sendSms(
+            eq(lrAppellantCaseListedNon24wTemplateId),
+            anyString(),
+            anyMap(),
+            anyString(),
+            any(Callback.class)
+        );
+    }
+
+    void verifyNoAppellantSmsTemplatesSent() {
+        verify(notificationSender, never()).sendSms(
+            eq(appellantCaseListedSmsTemplateId),
+            anyString(),
+            anyMap(),
+            anyString(),
+            any(Callback.class)
+        );
+        verify(notificationSender, never()).sendSms(
+            eq(lrAppellantCaseListedNon24wSmsTemplateId),
+            anyString(),
+            anyMap(),
+            anyString(),
+            any(Callback.class)
+        );
+        verify(notificationSender, never()).sendSms(
+            eq(lrAppellantCaseListed24wSmsTemplateId),
+            anyString(),
+            anyMap(),
+            anyString(),
+            any(Callback.class)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("caseListedTemplatePermutations")
+    @WithMockUser(authorities = {"caseworker-ia", "tribunal-caseworker"})
+    void should_send_home_office_case_listed_notification_with_correct_template(TestJourneyType journeyType, boolean is24wCase, String legalRepTemplateId, String homeOfficeTemplateId, String appellantTemplateId, String appellantSmsTemplateId) {
+        mockResponse(mockCaseData(journeyType, true, true, true, is24wCase), LIST_CASE);
+
+        if (legalRepTemplateId == null) {
+            verifyNoLrTemplatesSent();
+        } else {
+            verify(notificationSender, times(1)).sendEmail(
+                eq(legalRepTemplateId),
+                anyString(),
+                anyMap(),
+                anyString(),
+                any(Callback.class)
+            );
+        }
+
+        verify(notificationSender, times(1)).sendEmail(
+            eq(homeOfficeTemplateId),
+            anyString(),
+            anyMap(),
+            anyString(),
+            any(Callback.class)
+        );
+
+        if (appellantTemplateId == null) {
+            verifyNoAppellantEmailTemplatesSent();
+        } else {
+            verify(notificationSender, times(1)).sendEmail(
+                eq(appellantTemplateId),
+                anyString(),
+                anyMap(),
+                anyString(),
+                any(Callback.class)
+            );
+        }
+
+        if (appellantSmsTemplateId == null) {
+            verifyNoAppellantSmsTemplatesSent();
+        } else {
+            verify(notificationSender, times(1)).sendSms(
+                eq(appellantSmsTemplateId),
+                anyString(),
+                anyMap(),
+                anyString(),
+                any(Callback.class)
+            );
+        }
+    }
+
+    private Stream<Arguments> caseListedTemplatePermutations() {
         return Stream.of(
-                Arguments.of(true),
-                Arguments.of(false)
+            Arguments.of(TestJourneyType.AIP, true, null, homeOffice24wListedTemplateId, appellantCaseListedEmailTemplateId, appellantCaseListedSmsTemplateId),
+            Arguments.of(TestJourneyType.AIP, false, null, homeOfficeNon24wListedTemplateId, appellantCaseListedEmailTemplateId, appellantCaseListedSmsTemplateId),
+            Arguments.of(TestJourneyType.AIP_MANUAL, true, null, homeOffice24wListedTemplateId, null, null),
+            Arguments.of(TestJourneyType.AIP_MANUAL, false, null, homeOfficeNon24wListedTemplateId, null, null),
+            Arguments.of(TestJourneyType.LR, true, legalRep24wListedTemplateId, homeOffice24wListedTemplateId, lrAppellantCaseListed24wTemplateId, null),
+            Arguments.of(TestJourneyType.LR, false, legalRepNon24wListedTemplateId, homeOfficeNon24wListedTemplateId, lrAppellantCaseListedNon24wTemplateId, null),
+            Arguments.of(TestJourneyType.LR_MANUAL, true, null, homeOffice24wListedTemplateId, null, null),
+            Arguments.of(TestJourneyType.LR_MANUAL, false, null, homeOfficeNon24wListedTemplateId, null, null)
         );
     }
 

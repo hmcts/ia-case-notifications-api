@@ -120,9 +120,8 @@ public class HomeOfficeListCasePersonalisationTest {
         when(hearingDetailsFinder.getHearingCentreLocation(asylumCase)).thenReturn(hearingCentreAddress);
 
         String listAssistHearingTemplateId = "listAssistHearingTemplateId";
-        String homeOfficeCaseListedNonAdaStf24WeeksTemplateId = "homeOfficeCaseListedNonAdaStf24WeeksTemplateId";
         homeOfficeListCasePersonalisation = new HomeOfficeListCasePersonalisation(
-            nonAdaTemplateId,homeOfficeCaseListedNonAdaStf24WeeksTemplateId,
+            nonAdaTemplateId,
             adaTemplateId,
             stf24WeeksTemplateId,
             listAssistHearingTemplateId,
@@ -155,7 +154,7 @@ public class HomeOfficeListCasePersonalisationTest {
             .thenReturn(Optional.of(YesOrNo.YES));
 
         assertEquals(
-            "homeOfficeCaseListedNonAdaStf24WeeksTemplateId",
+            "stf24WeeksTemplateId",
             homeOfficeListCasePersonalisation.getTemplateId(asylumCase)
         );
     }
