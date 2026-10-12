@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -76,20 +77,20 @@ class AppellantSubmittedHearingRequirementsPersonalisationEmailTest {
     }
 
     @Test
-    void should_return_null_template_id_so_case_aware_override_is_used() {
-        assertThat(appellantSubmittedHearingRequirementsPersonalisation.getTemplateId()).isNull();
+    void should_return_null_for_getTemplateId_without_case() {
+        assertNull(appellantSubmittedHearingRequirementsPersonalisation.getTemplateId());
+    }
+
+    @Test
+    void should_return_standard_template_id_for_non_24_week_case() {
+        when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.empty());
+        assertEquals(templateId, appellantSubmittedHearingRequirementsPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
     void should_return_24_weeks_template_id_for_24_week_case() {
         when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
         assertEquals(templateId24Weeks, appellantSubmittedHearingRequirementsPersonalisation.getTemplateId(asylumCase));
-    }
-
-    @Test
-    void should_return_standard_template_id_for_non_24_week_case() {
-        when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
-        assertEquals(templateId, appellantSubmittedHearingRequirementsPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
@@ -107,7 +108,6 @@ class AppellantSubmittedHearingRequirementsPersonalisationEmailTest {
         assertTrue(appellantSubmittedHearingRequirementsPersonalisation.getRecipientsList(asylumCase)
             .contains(appellantEmailAddress));
     }
-
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {

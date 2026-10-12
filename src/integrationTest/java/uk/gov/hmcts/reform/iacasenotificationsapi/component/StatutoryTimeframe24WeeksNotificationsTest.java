@@ -60,8 +60,32 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fixtures.AsylumCaseForTest.anAsylumCase;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fixtures.CallbackForTest.CallbackForTestBuilder.callback;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.component.testutils.fixtures.CaseDetailsForTest.CaseDetailsForTestBuilder.someCaseDetailsWith;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_SUBMISSION_DATE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANTS_REPRESENTATION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_IN_UK;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.COMPLETE_CASE_REVIEW_DATE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CONTACT_PREFERENCE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.CURRENT_CASE_STATE_VISIBLE_TO_HOME_OFFICE_ALL;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.EMAIL;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HEARING_CENTRE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_DECISION_DATE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ADMIN;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.JOURNEY_TYPE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_EMAIL;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_HAS_ADDRESS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LETTER_BUNDLE_DOCUMENTS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.MOBILE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.NOTIFICATIONS_SENT;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.SUBSCRIPTIONS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.TRIBUNAL_RECEIVED_DATE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.COMPLETE_CASE_REVIEW;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.LIST_CASE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.REMOVE_STATUTORY_TIMEFRAME_24_WEEKS;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.Event.REVIEW_HEARING_REQUIREMENTS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.State.APPEAL_SUBMITTED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_EMAIL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.REMOVE_STATUTORY_TIMEFRAME_24WEEKS_APPELLANT_SMS;
@@ -80,8 +104,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24Weeks
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_SUBMITTED_HEARING_REQUIREMENTS_HOME_OFFICE_EMAIL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_SUBMITTED_HEARING_REQUIREMENTS_LR_EMAIL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_SUBMITTED_HEARING_REQUIREMENTS_LR_LETTER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_APPELLANT_LETTER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_LR_LETTER;
 
 @Slf4j
 @SuppressWarnings("unchecked")
@@ -466,25 +488,22 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
     @WithMockUser(authorities = {"hearing-centre-admin", "caseworker-ia-homeofficepou"})
     void should_send_upload_additional_evidence_notifications_correctly(boolean is24w,
                                                                         TestJourneyType testJourneyType,
-                                                                        boolean inCountry,
-                                                                        boolean wantsEmail,
-                                                                        boolean wantsSms,
                                                                         Set<String> expectedIds) {
-        PreSubmitCallbackResponseForTest response = mockResponse(mockCaseData(testJourneyType, inCountry, wantsEmail, wantsSms, is24w), UPLOAD_ADDITIONAL_EVIDENCE);
+        PreSubmitCallbackResponseForTest response = mockResponse(mockCaseData(testJourneyType, true, true, true, is24w), UPLOAD_ADDITIONAL_EVIDENCE);
         assertNotificationsContain(response, expectedIds);
     }
 
     private static Stream<Arguments> uploadAdditionalEvidenceCaseDataPermutations() {
         return Stream.of(
-            Arguments.of(true, TestJourneyType.AIP, true, true, false, Set.of()),
-            Arguments.of(true, TestJourneyType.AIP_MANUAL, true, true, false, Set.of(STATUTORY_TIMEFRAME_24WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_APPELLANT_LETTER)),
-            Arguments.of(true, TestJourneyType.LR, true, true, false, Set.of()),
-            Arguments.of(true, TestJourneyType.LR_MANUAL, true, true, false, Set.of(STATUTORY_TIMEFRAME_24WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_LR_LETTER)),
+            Arguments.of(true, TestJourneyType.AIP, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_AIP_APPELLANT_EMAIL", "_UPLOADED_ADDITIONAL_EVIDENCE_AIP_APPELLANT_SMS", "_UPLOADED_ADDITIONAL_EVIDENCE_HOME_OFFICE")),
+            Arguments.of(true, TestJourneyType.AIP_MANUAL, Set.of(STATUTORY_TIMEFRAME_24WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_APPELLANT_LETTER, "_UPLOADED_ADDITIONAL_EVIDENCE_HOME_OFFICE")),
+            Arguments.of(true, TestJourneyType.LR, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_HOME_OFFICE", "_UPLOADED_ADDITIONAL_EVIDENCE_LEGAL_REP_24W")),
+            Arguments.of(true, TestJourneyType.LR_MANUAL, Set.of(STATUTORY_TIMEFRAME_24WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_LR_LETTER, "_UPLOADED_ADDITIONAL_EVIDENCE_HOME_OFFICE", "_UPLOADED_ADDITIONAL_EVIDENCE_LEGAL_REP_24W")),
 
-            Arguments.of(false, TestJourneyType.AIP_MANUAL, true, true, true, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_HOME_OFFICE")),
-            Arguments.of(false, TestJourneyType.AIP, true, true, true, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_AIP_APPELLANT_SMS", "_UPLOADED_ADDITIONAL_EVIDENCE_AIP_APPELLANT_EMAIL", "_UPLOADED_ADDITIONAL_EVIDENCE_HOME_OFFICE")),
-            Arguments.of(false, TestJourneyType.LR, true, true, true, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_HOME_OFFICE")),
-            Arguments.of(false, TestJourneyType.LR_MANUAL, true, true, true, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_HOME_OFFICE"))
+            Arguments.of(false, TestJourneyType.AIP_MANUAL, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_HOME_OFFICE")),
+            Arguments.of(false, TestJourneyType.AIP, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_AIP_APPELLANT_SMS", "_UPLOADED_ADDITIONAL_EVIDENCE_AIP_APPELLANT_EMAIL", "_UPLOADED_ADDITIONAL_EVIDENCE_HOME_OFFICE")),
+            Arguments.of(false, TestJourneyType.LR, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_HOME_OFFICE")),
+            Arguments.of(false, TestJourneyType.LR_MANUAL, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_HOME_OFFICE"))
         );
     }
 
@@ -493,25 +512,22 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
     @WithMockUser(authorities = {"hearing-centre-admin", "caseworker-ia-homeofficepou"})
     void should_send_upload_ho_additional_evidence_notifications_correctly(boolean is24w,
                                                                            TestJourneyType testJourneyType,
-                                                                           boolean inCountry,
-                                                                           boolean wantsEmail,
-                                                                           boolean wantsSms,
                                                                            Set<String> expectedIds) {
-        PreSubmitCallbackResponseForTest response = mockResponse(mockCaseData(testJourneyType, inCountry, wantsEmail, wantsSms, is24w), UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE);
+        PreSubmitCallbackResponseForTest response = mockResponse(mockCaseData(testJourneyType, true, true, true, is24w), UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE);
         assertNotificationsContain(response, expectedIds);
     }
 
     private static Stream<Arguments> uploadAdditionalEvidenceAsHoCaseDataPermutations() {
         return Stream.of(
-            Arguments.of(true, TestJourneyType.AIP, true, true, false, Set.of()),
-            Arguments.of(true, TestJourneyType.AIP_MANUAL, true, true, false, Set.of()),
-            Arguments.of(true, TestJourneyType.LR, true, true, false, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_LEGAL_REP")),
-            Arguments.of(true, TestJourneyType.LR_MANUAL, true, true, false, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_LEGAL_REP")),
+            Arguments.of(true, TestJourneyType.AIP, Set.of()),
+            Arguments.of(true, TestJourneyType.AIP_MANUAL, Set.of()),
+            Arguments.of(true, TestJourneyType.LR, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_LEGAL_REP")),
+            Arguments.of(true, TestJourneyType.LR_MANUAL, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_LEGAL_REP")),
 
-            Arguments.of(false, TestJourneyType.AIP_MANUAL, true, true, true, Set.of()),
-            Arguments.of(false, TestJourneyType.AIP, true, true, true, Set.of()),
-            Arguments.of(false, TestJourneyType.LR, true, true, true, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_LEGAL_REP")),
-            Arguments.of(false, TestJourneyType.LR_MANUAL, true, true, true, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_LEGAL_REP"))
+            Arguments.of(false, TestJourneyType.AIP_MANUAL, Set.of()),
+            Arguments.of(false, TestJourneyType.AIP, Set.of()),
+            Arguments.of(false, TestJourneyType.LR, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_LEGAL_REP")),
+            Arguments.of(false, TestJourneyType.LR_MANUAL, Set.of("_UPLOADED_ADDITIONAL_EVIDENCE_LEGAL_REP"))
         );
     }
 }
