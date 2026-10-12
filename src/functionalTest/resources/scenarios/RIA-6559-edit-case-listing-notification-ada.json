@@ -56,7 +56,7 @@
       {
         "reference": "1490_CASE_RE_LISTED_HOME_OFFICE",
         "recipient": "{$homeOfficeEmailAddresses.bradford}",
-        "subject": "Accelerated detained appeal: case re-listed",
+        "subject": "Immigration and Asylum appeal: case re-listed",
         "body": [
           "PA/12345/2019",
           "LP/12345/2019",
