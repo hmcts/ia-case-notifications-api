@@ -32,6 +32,7 @@ public class HomeOfficeListCasePersonalisationTest {
 
     private final String adaTemplateId = "adaTemplateId";
     private final String nonAdaTemplateId = "nonAdaTemplateId";
+    private final String stf24WeeksTemplateId = "stf24WeeksTemplateId";
     private final String iaExUiFrontendUrl = "http://somefrontendurl";
     private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
     private final String homeOfficeEmailAddress = "homeoffice@example.com";
@@ -123,6 +124,7 @@ public class HomeOfficeListCasePersonalisationTest {
         homeOfficeListCasePersonalisation = new HomeOfficeListCasePersonalisation(
             nonAdaTemplateId,homeOfficeCaseListedNonAdaStf24WeeksTemplateId,
             adaTemplateId,
+            stf24WeeksTemplateId,
             listAssistHearingTemplateId,
             iaExUiFrontendUrl,
             appellantProvidingAppealArgumentDeadline,
@@ -163,6 +165,36 @@ public class HomeOfficeListCasePersonalisationTest {
         when(asylumCase.read(IS_INTEGRATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
 
         assertEquals("listAssistHearingTemplateId", homeOfficeListCasePersonalisation.getTemplateId(asylumCase));
+    }
+    
+    @Test
+    public void should_return_stf24Weeks_template_id_for_24_week_case() {
+        when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        assertEquals(stf24WeeksTemplateId, homeOfficeListCasePersonalisation.getTemplateId(asylumCase));
+    }
+
+    @Test
+    public void should_not_include_hearing_requirements_for_24_week_case() {
+        when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+
+        Map<String, String> personalisation = homeOfficeListCasePersonalisation.getPersonalisation(asylumCase);
+
+        assertThat(personalisation)
+            .containsEntry("appealReferenceNumber", appealReferenceNumber)
+            .containsEntry("ariaListingReference", ariaListingReference)
+            .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
+            .containsEntry("appellantGivenNames", appellantGivenNames)
+            .containsEntry("appellantFamilyName", appellantFamilyName)
+            .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
+            .containsEntry("hearingDate", hearingDate)
+            .containsEntry("hearingTime", hearingTime)
+            .containsEntry("hearingCentreAddress", hearingCentreAddress);
+
+        assertFalse(personalisation.containsKey("hearingRequirementVulnerabilities"));
+        assertFalse(personalisation.containsKey("hearingRequirementMultimedia"));
+        assertFalse(personalisation.containsKey("hearingRequirementSingleSexCourt"));
+        assertFalse(personalisation.containsKey("hearingRequirementInCameraCourt"));
+        assertFalse(personalisation.containsKey("hearingRequirementOther"));
     }
 
     @Test
