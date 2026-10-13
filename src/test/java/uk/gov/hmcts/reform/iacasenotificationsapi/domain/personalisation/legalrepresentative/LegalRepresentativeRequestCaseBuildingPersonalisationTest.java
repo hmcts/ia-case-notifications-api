@@ -88,10 +88,10 @@ public class LegalRepresentativeRequestCaseBuildingPersonalisationTest {
 
     @Test
     public void should_return_given_template_id() {
-        assertEquals(templateId, legalRepresentativeRequestCaseBuildingPersonalisation.getTemplateId());
+        assertEquals(templateId, legalRepresentativeRequestCaseBuildingPersonalisation.getTemplateId(asylumCase));
 
         when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        assertEquals(stf24wTemplateId, legalRepresentativeRequestCaseBuildingPersonalisation.getTemplateId());
+        assertEquals(stf24wTemplateId, legalRepresentativeRequestCaseBuildingPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
