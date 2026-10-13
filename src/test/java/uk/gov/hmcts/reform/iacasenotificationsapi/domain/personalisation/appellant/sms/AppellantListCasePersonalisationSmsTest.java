@@ -35,6 +35,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsF
 public class AppellantListCasePersonalisationSmsTest {
 
     private final String templateId = "someTemplateId";
+    private final String sms24WeeksTemplateId = "some24WeeksTemplateId";
     private final String legallyReppedTemplateId = "legallyReppedTemplateId";
     private final String iaAipFrontendUrl = "http://somefrontendurl";
     private final HearingCentre hearingCentre = HearingCentre.TAYLOR_HOUSE;
@@ -79,6 +80,7 @@ public class AppellantListCasePersonalisationSmsTest {
 
         appellantListCasePersonalisationSms = new AppellantListCasePersonalisationSms(
             templateId,
+            sms24WeeksTemplateId,
             legallyReppedTemplateId,
             iaAipFrontendUrl,
             dateTimeExtractor,
@@ -97,10 +99,18 @@ public class AppellantListCasePersonalisationSmsTest {
     @Test
     public void should_return_correct_template_id() {
         when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
+        when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.empty());
         assertEquals(templateId, appellantListCasePersonalisationSms.getTemplateId(asylumCase));
 
         when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.REP));
         assertEquals(legallyReppedTemplateId, appellantListCasePersonalisationSms.getTemplateId(asylumCase));
+    }
+
+    @Test
+    public void should_return_24_weeks_template_id_for_aip_24_week_case() {
+        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
+        when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        assertEquals(sms24WeeksTemplateId, appellantListCasePersonalisationSms.getTemplateId(asylumCase));
     }
 
 
