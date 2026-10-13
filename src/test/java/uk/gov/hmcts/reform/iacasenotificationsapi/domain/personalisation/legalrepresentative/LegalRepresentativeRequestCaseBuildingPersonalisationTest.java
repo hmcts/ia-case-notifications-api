@@ -11,6 +11,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ACCELERATED_DETAINED_APPEAL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
 
 import java.util.List;
@@ -38,6 +39,7 @@ public class LegalRepresentativeRequestCaseBuildingPersonalisationTest {
 
     private final String iaExUiFrontendUrl = "http://localhost";
     private final String templateId = "someTemplateId";
+    private final String stf24wTemplateId = "some24WeeksTemplateId";
     private final String expectedDirectionDueDate = "10 Sep 2019";
     private final String legalRepEmailAddress = "legalrep@example.com";
     private final String appealReferenceNumber = "someReferenceNumber";
@@ -77,6 +79,7 @@ public class LegalRepresentativeRequestCaseBuildingPersonalisationTest {
         legalRepresentativeRequestCaseBuildingPersonalisation =
             new LegalRepresentativeRequestCaseBuildingPersonalisation(
                 templateId,
+                stf24wTemplateId,
                 iaExUiFrontendUrl,
                 directionFinder,
                 customerServicesProvider
@@ -86,6 +89,9 @@ public class LegalRepresentativeRequestCaseBuildingPersonalisationTest {
     @Test
     public void should_return_given_template_id() {
         assertEquals(templateId, legalRepresentativeRequestCaseBuildingPersonalisation.getTemplateId());
+
+        when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        assertEquals(stf24wTemplateId, legalRepresentativeRequestCaseBuildingPersonalisation.getTemplateId());
     }
 
     @Test
