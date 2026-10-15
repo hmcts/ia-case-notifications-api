@@ -149,9 +149,11 @@ public class LegalRepresentativeListCasePersonalisationTest {
 
         String listAssistHearingOutOfCountryTemplateId = "listAssistHearingOocTemplateId";
         String listAssistHearingTemplateId = "listAssistHearingTemplateId";
+        String stf24WeeksTemplateId = "stf24WeeksTemplateId";
         legalRepresentativeListCasePersonalisation = new LegalRepresentativeListCasePersonalisation(
             nonAdaTemplateId,
             adaTemplateId,
+            stf24WeeksTemplateId,
             outOfCountryTemplateId,
             listAssistHearingTemplateId,
             listAssistHearingOutOfCountryTemplateId,
