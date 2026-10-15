@@ -1,5 +1,5 @@
 {
-  "description": "RIA-7031 Send appeal submitted notification to Taylor House hearing centre (unrep)",
+  "description": "RIA-7031 Send appeal submitted notification to Taylor House hearing centre (unrep detained)",
   "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",

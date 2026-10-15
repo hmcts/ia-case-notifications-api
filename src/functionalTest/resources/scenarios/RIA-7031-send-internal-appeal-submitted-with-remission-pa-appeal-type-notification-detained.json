@@ -1,18 +1,19 @@
 {
-  "description": "RIA-7031 Send appeal submitted notification to Home Office Unrepped",
+  "description": "RIA-7031 send appeal submitted with remission and payOffline, for PA appeal notification (Unrepped detained)",
   "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 1409,
+      "id": 1407,
       "eventId": "submitAppeal",
-      "state": "pendingPayment",
+      "state": "appealSubmitted",
       "caseData": {
         "template": "minimal-internal-appeal-submitted.json",
         "replacements": {
-          "hearingCentre": "manchester",
-          "paymentStatus": "Paid"
+          "isRemissionsEnabled": "Yes",
+          "remissionType": "hoWaiverRemission",
+          "appealType": "protection"
         }
       }
     }
@@ -24,11 +25,17 @@
       "template": "minimal-internal-appeal-submitted.json",
       "replacements": {
         "isAdmin": "Yes",
-        "hearingCentre": "manchester",
-        "paymentStatus": "Paid",
+        "hearingCentre": "taylorHouse",
+        "isRemissionsEnabled": "Yes",
+        "remissionType":"hoWaiverRemission",
+        "appealType":"protection",
         "notificationsSent": [
           {
-            "id": "1409_APPEAL_SUBMITTED_HOME_OFFICE",
+            "id": "1407_APPEAL_SUBMITTED_PAY_OFFLINE_ADMIN_OFFICER",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "1407_APPEAL_SUBMITTED_PAY_OFFLINE_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -36,13 +43,15 @@
     },
     "notifications": [
       {
-        "reference": "1409_APPEAL_SUBMITTED_HOME_OFFICE",
+        "reference": "1407_APPEAL_SUBMITTED_PAY_OFFLINE_HOME_OFFICE",
         "recipient": "{$apcPrivateHomeOfficeEmailAddress}",
         "subject": "Detained – Immigration and Asylum appeal: appeal submitted",
         "body": [
           "PA/12345/2019",
           "Talha Awan",
-          "{$iaExUiFrontendUrl}"
+          "{$iaExUiFrontendUrl}",
+          "{$customerServices.telephoneNumber}",
+          "{$customerServices.emailAddress}"
         ]
       }
     ]

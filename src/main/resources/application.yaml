@@ -467,7 +467,7 @@ govnotify:
     caseEdited:
       homeOffice:
         email:
-          ada: 6786d68c-df1c-4196-965b-3c9fd6cc290a
+          detained: 6786d68c-df1c-4196-965b-3c9fd6cc290a
           nonAda: 0006932c-4a3f-4609-bb5e-0ed2c455caf8
       caseOfficer:
         email: 1b16a4fb-7c3c-473a-a5ac-e44bb2a3d19e

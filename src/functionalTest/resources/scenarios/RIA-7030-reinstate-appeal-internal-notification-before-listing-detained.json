@@ -1,18 +1,16 @@
 {
-  "description": "RIA-7030 Send reinstate appeal notification after listing to HO (unrepped case)",
+  "description": "RIA-7030 Send reinstate appeal notification before listing to HO (unrepped detained case)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 1437,
+      "id": 1436,
       "eventId": "reinstateAppeal",
-      "state": "submitHearingRequirements",
+      "state": "appealSubmitted",
       "caseData": {
         "template": "minimal-internal-appeal-submitted.json",
         "replacements": {
-          "listCaseHearingCentre": "taylorHouse",
-          "ariaListingReference": "LP/12345/2019",
-          "stateBeforeEndAppeal": "prepareForHearing",
+          "stateBeforeEndAppeal": "appealSubmitted",
           "reinstateAppealDate": "{$TODAY}",
           "reinstateAppealReason": "Withdraw",
           "reinstatedDecisionMaker": "Admin Officer",
@@ -37,19 +35,17 @@
     "caseData": {
       "template": "minimal-internal-appeal-submitted.json",
       "replacements": {
-        "listCaseHearingCentre": "taylorHouse",
-        "ariaListingReference": "LP/12345/2019",
-        "stateBeforeEndAppeal": "prepareForHearing",
+        "stateBeforeEndAppeal": "appealSubmitted",
         "reinstateAppealDate": "{$TODAY}",
         "reinstateAppealReason": "Withdraw",
         "reinstatedDecisionMaker": "Admin Officer",
         "notificationsSent": [
           {
-            "id": "1437_REINSTATE_APPEAL_HOME_OFFICE",
+            "id": "1436_REINSTATE_APPEAL_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           },
           {
-            "id": "1437_INTERNAL_REINSTATE_APPEAL_APPELLANT_LETTER",
+            "id": "1436_INTERNAL_REINSTATE_APPEAL_APPELLANT_LETTER",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -57,8 +53,8 @@
     },
     "notifications": [
       {
-        "reference": "1437_REINSTATE_APPEAL_HOME_OFFICE",
-        "recipient": "{$homeOfficeEmailAddresses.taylorHouse}",
+        "reference": "1436_REINSTATE_APPEAL_HOME_OFFICE",
+        "recipient": "{$apcHomeOfficeEmailAddress}",
         "subject": "Detained – Immigration and Asylum appeal: appeal reinstated",
         "body": [
           "PA/12345/2019",

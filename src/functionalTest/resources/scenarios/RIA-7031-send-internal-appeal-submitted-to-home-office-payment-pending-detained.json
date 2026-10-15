@@ -1,21 +1,17 @@
 {
-  "description": "RIA-7031 Send paid appeal submitted DC appeal type notification Unrepped",
+  "description": "RIA-7031 Send appeal submitted notification to Home Office Unrepped Detained",
   "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 1404,
+      "id": 1409,
       "eventId": "submitAppeal",
-      "state": "appealSubmitted",
+      "state": "pendingPayment",
       "caseData": {
         "template": "minimal-internal-appeal-submitted.json",
         "replacements": {
-          "hearingCentre": "taylorHouse",
-          "listCaseHearingCentre": "taylorHouse",
-          "ariaListingReference": "LP/12345/2019",
-          "legalRepReferenceNumber": "REF54321",
-          "appealType":"deprivation",
+          "hearingCentre": "manchester",
           "paymentStatus": "Paid"
         }
       }
@@ -28,19 +24,11 @@
       "template": "minimal-internal-appeal-submitted.json",
       "replacements": {
         "isAdmin": "Yes",
-        "hearingCentre": "taylorHouse",
-        "listCaseHearingCentre": "taylorHouse",
-        "ariaListingReference": "LP/12345/2019",
-        "legalRepReferenceNumber": "REF54321",
-        "appealType":"deprivation",
+        "hearingCentre": "manchester",
         "paymentStatus": "Paid",
         "notificationsSent": [
           {
-            "id": "1404_APPEAL_SUBMITTED_HOME_OFFICE",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          },
-          {
-            "id": "1404_APPEAL_SUBMITTED_HOME_OFFICE",
+            "id": "1409_APPEAL_SUBMITTED_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -48,15 +36,13 @@
     },
     "notifications": [
       {
-        "reference": "1404_APPEAL_SUBMITTED_HOME_OFFICE",
+        "reference": "1409_APPEAL_SUBMITTED_HOME_OFFICE",
         "recipient": "{$apcPrivateHomeOfficeEmailAddress}",
         "subject": "Detained – Immigration and Asylum appeal: appeal submitted",
         "body": [
           "PA/12345/2019",
           "Talha Awan",
-          "{$iaExUiFrontendUrl}",
-          "{$customerServices.telephoneNumber}",
-          "{$customerServices.emailAddress}"
+          "{$iaExUiFrontendUrl}"
         ]
       }
     ]
