@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.HearingCentre;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
@@ -27,11 +28,13 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
+
 @Service
 public class LegalRepresentativeListCasePersonalisation implements LegalRepresentativeEmailNotificationPersonalisation {
 
     private final String legalRepresentativeCaseListedNonAdaTemplateId;
     private final String legalRepresentativeCaseListedAdaTemplateId;
+    private final String legalRepresentativeCaseListedStf24WeeksTemplateId;
     private final String legalRepresentativeOutOfCountryCaseListedTemplateId;
     private final String listAssistHearingLegalRepresentativeCaseListedTemplateId;
     private final String listAssistHearingLegalRepresentativeOutOfCountryCaseListedTemplateId;
@@ -50,6 +53,7 @@ public class LegalRepresentativeListCasePersonalisation implements LegalRepresen
     public LegalRepresentativeListCasePersonalisation(
         @Value("${govnotify.template.caseListed.legalRep.email.nonAda}") String legalRepresentativeCaseListedNonAdaTemplateId,
         @Value("${govnotify.template.caseListed.legalRep.email.ada}") String legalRepresentativeCaseListedAdaTemplateId,
+        @Value("${govnotify.template.caseListed.legalRep.email.stf24Weeks}") String legalRepresentativeCaseListedStf24WeeksTemplateId,
         @Value("${govnotify.template.caseListed.remoteHearing.legalRep.email}") String legalRepresentativeOutOfCountryCaseListedTemplateId,
         @Value("${govnotify.template.listAssistHearing.caseListed.legalRep.email}") String listAssistHearingLegalRepresentativeCaseListedTemplateId,
         @Value("${govnotify.template.listAssistHearing.caseListed.remoteHearing.legalRep.email}") String listAssistHearingLegalRepresentativeOutOfCountryCaseListedTemplateId,
@@ -62,6 +66,7 @@ public class LegalRepresentativeListCasePersonalisation implements LegalRepresen
     ) {
         this.legalRepresentativeCaseListedNonAdaTemplateId = legalRepresentativeCaseListedNonAdaTemplateId;
         this.legalRepresentativeCaseListedAdaTemplateId = legalRepresentativeCaseListedAdaTemplateId;
+        this.legalRepresentativeCaseListedStf24WeeksTemplateId = legalRepresentativeCaseListedStf24WeeksTemplateId;
         this.legalRepresentativeOutOfCountryCaseListedTemplateId = legalRepresentativeOutOfCountryCaseListedTemplateId;
         this.listAssistHearingLegalRepresentativeCaseListedTemplateId = listAssistHearingLegalRepresentativeCaseListedTemplateId;
         this.listAssistHearingLegalRepresentativeOutOfCountryCaseListedTemplateId = listAssistHearingLegalRepresentativeOutOfCountryCaseListedTemplateId;
@@ -75,6 +80,9 @@ public class LegalRepresentativeListCasePersonalisation implements LegalRepresen
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
+        if (AsylumCaseUtils.hasStf24WeeksStatus(asylumCase)) {
+            return legalRepresentativeCaseListedStf24WeeksTemplateId;
+        }
         YesOrNo isIntegrated = asylumCase.read(IS_INTEGRATED, YesOrNo.class).orElse(YesOrNo.NO);
         if (asylumCase.read(LIST_CASE_HEARING_CENTRE, HearingCentre.class)
             .map(centre -> centre == HearingCentre.REMOTE_HEARING)
@@ -127,7 +135,9 @@ public class LegalRepresentativeListCasePersonalisation implements LegalRepresen
                         .format(DateTimeFormatter.ofPattern("dd MMMM yyyy")));
         }
 
-        PersonalisationProvider.buildHearingRequirementsFields(asylumCase, listCaseFields);
+        if (!AsylumCaseUtils.hasStf24WeeksStatus(asylumCase)) {
+            PersonalisationProvider.buildHearingRequirementsFields(asylumCase, listCaseFields);
+        }
 
         return listCaseFields.build();
 
