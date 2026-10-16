@@ -24,6 +24,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminof
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantCompleteCaseReviewStatutoryTimeframe24WeeksLrCopyPersonalisationLetter;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationLetter;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantHearingReqReviewStatutoryTimeframe24WeeksPersonalisationLetter;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalCaseAdjournedWithoutDatePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalCaseDecisionWithoutHearingPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalCaseDisposeUnderRule31Or32Personalisation;
@@ -52,6 +53,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appella
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalRespondentApplicationDecidedLetterPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalUpdateTribunalDecisionRule31LetterPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantRemoveRepresentationDetainedOtherPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantUploadEvidenceStatutoryTimeframe24WeeksPersonalisationLetter;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.LegalRepUploadEvidenceStatutoryTimeframe24WeeksPersonalisationLetter;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.*;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.applyforcosts.AddEvidenceForCostsSubmittedSubmitterPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.applyforcosts.AdditionalEvidenceSubmittedOtherPartyNotificationPersonalisation;
@@ -159,6 +162,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoff
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeFtpaApplicationDecisionRespondentPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeGenerateHearingBundlePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeHearingBundleReadyPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeHearingRequirementsStf24WeeksEmailPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeListCasePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeListCmaPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeMakeAnApplicationPersonalisation;
@@ -221,6 +225,13 @@ import java.util.List;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STF_24_WEEKS_HEARING_REQ_APPELLANT_EMAIL_GENERATOR;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STF_24_WEEKS_HEARING_REQ_APPELLANT_LETTER_GENERATOR;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STF_24_WEEKS_HEARING_REQ_HO_EMAIL_GENERATOR;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STF_24_WEEKS_HEARING_REQ_LR_EMAIL_GENERATOR;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STF_24_WEEKS_HEARING_REQ_LR_LETTER_GENERATOR;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_APPELLANT_LETTER_GENERATOR;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_LR_LETTER_GENERATOR;
 
 @Configuration
 @Slf4j
@@ -1795,9 +1806,26 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Arrays.asList(
+        return List.of(
             new EmailNotificationGenerator(
                 newArrayList(homeOfficeUploadAdditionalEvidencePersonalisation, caseOfficerUploadAdditionalEvidencePersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("uploadAdditionalEvidence24w")
+    public List<NotificationGenerator> uploadAdditionalEvidence24w(
+        HomeOfficeUploadAdditionalEvidencePersonalisation homeOfficeUploadAdditionalEvidencePersonalisation,
+        CaseOfficerUploadAdditionalEvidencePersonalisation caseOfficerUploadAdditionalEvidencePersonalisation,
+        LegalRepresentativeUploadAdditionalEvidence24wPersonalisation legalRepresentativeUploadAdditionalEvidencePersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+            new EmailNotificationGenerator(
+                newArrayList(homeOfficeUploadAdditionalEvidencePersonalisation, caseOfficerUploadAdditionalEvidencePersonalisation, legalRepresentativeUploadAdditionalEvidencePersonalisation),
                 notificationSender,
                 notificationIdAppender
             )
@@ -3444,9 +3472,9 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("paymentPendingPaidLegalRepNotificationGenerator")
-    public List<NotificationGenerator> paymentPendingPaidNotificationHandler(
-        LegalRepresentativePendingPaymentPaidPersonalisation legalRepresentativePendingPaymentPaidPersonalisation,
+    @Bean("legalRepresentationRaiseQueryNotificationGenerator")
+    public List<NotificationGenerator> legalRepresentativeRaiseQueryNotificationHandler(
+        LegalRepresentativeRaiseQueryPersonalisation legalRepresentativeRaiseQueryPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
@@ -3454,11 +3482,47 @@ public class NotificationGeneratorConfiguration {
         return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
-                    legalRepresentativePendingPaymentPaidPersonalisation
+                        legalRepresentativeRaiseQueryPersonalisation
                 ),
                 notificationSender,
                 notificationIdAppender
             )
+        );
+    }
+
+    @Bean("legalRepresentationRespondQueryNotificationGenerator")
+    public List<NotificationGenerator> legalRepresentativeRespondQueryNotificationHandler(
+            LegalRepresentativeRespondQueryPersonalisation legalRepresentativeRespondQueryPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativeRespondQueryPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean("paymentPendingPaidLegalRepNotificationGenerator")
+    public List<NotificationGenerator> paymentPendingPaidNotificationHandler(
+            LegalRepresentativePendingPaymentPaidPersonalisation legalRepresentativePendingPaymentPaidPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                legalRepresentativePendingPaymentPaidPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
         );
     }
 
@@ -5260,6 +5324,152 @@ public class NotificationGeneratorConfiguration {
                         notificationSender,
                         notificationIdAppender
                 )
+        );
+    }
+
+    @Bean(STF_24_WEEKS_HEARING_REQ_HO_EMAIL_GENERATOR)
+    public List<NotificationGenerator> hearingRequirementsStatutoryTimeframe24WeeksHomeOfficeNotificationGenerator(
+            HomeOfficeHearingRequirementsStf24WeeksEmailPersonalisation homeOfficeEmailPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+        return singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                homeOfficeEmailPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean(STF_24_WEEKS_HEARING_REQ_APPELLANT_EMAIL_GENERATOR)
+    public List<NotificationGenerator> hearingRequirementsStatutoryTimeframe24WeeksAppellantNotificationGenerator(
+            AppellantSubmittedHearingRequirementsStf24WeeksEmailPersonalisation emailPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+        return singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                emailPersonalisation
+
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean(STF_24_WEEKS_HEARING_REQ_LR_EMAIL_GENERATOR)
+    public List<NotificationGenerator> hearingRequirementsStatutoryTimeframe24WeeksLegalRepresentativeNotificationGenerator(
+            AppellantSubmittedHearingRequirementsStf24WeeksEmailPersonalisation emailPersonalisation,
+            LegalRepHearingRequirementsStf24WeeksEmailPersonalisation lrEmailPersonalisation,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+        return singletonList(
+                new EmailNotificationGenerator(
+                        newArrayList(
+                                emailPersonalisation,
+                                lrEmailPersonalisation
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                )
+        );
+    }
+
+    @Bean(STF_24_WEEKS_HEARING_REQ_APPELLANT_LETTER_GENERATOR)
+    public List<NotificationGenerator> hearingRequirementsStatutoryTimeframe24WeeksAppellantLetterNotificationGenerator(
+            AppellantHearingReqReviewStatutoryTimeframe24WeeksPersonalisationLetter appellantPersonalizationLetter,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new LetterNotificationGenerator(
+                        newArrayList(
+                                appellantPersonalizationLetter
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success", "body");
+                    }
+                }
+        );
+    }
+
+    @Bean(STF_24_WEEKS_HEARING_REQ_LR_LETTER_GENERATOR)
+    public List<NotificationGenerator> hearingRequirementsStatutoryTimeframe24WeeksLegalRepresentativeLetterNotificationGenerator(
+            LegalRepresentativeHearingReqReviewStatutoryTimeframe24WeeksPersonalisationLetter lrPersonalizationLetter,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new LetterNotificationGenerator(
+                        newArrayList(
+                                lrPersonalizationLetter
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success", "body");
+                    }
+                }
+        );
+    }
+
+    @Bean(STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_APPELLANT_LETTER_GENERATOR)
+    public List<NotificationGenerator> uploadAdditionalEvidenceStf24WeeksAppellantLetterNotificationGenerator(
+            AppellantUploadEvidenceStatutoryTimeframe24WeeksPersonalisationLetter appellantPersonalizationLetter,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new LetterNotificationGenerator(
+                        newArrayList(
+                                appellantPersonalizationLetter
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success", "body");
+                    }
+                }
+        );
+    }
+
+    @Bean(STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_LR_LETTER_GENERATOR)
+    public List<NotificationGenerator> uploadAdditionalEvidenceStf24WeeksLegalRepresentativeLetterNotificationGenerator(
+            LegalRepUploadEvidenceStatutoryTimeframe24WeeksPersonalisationLetter lrPersonalizationLetter,
+            GovNotifyNotificationSender notificationSender,
+            NotificationIdAppender notificationIdAppender
+    ) {
+
+        return singletonList(
+                new LetterNotificationGenerator(
+                        newArrayList(
+                                lrPersonalizationLetter
+                        ),
+                        notificationSender,
+                        notificationIdAppender
+                ) {
+                    @Override
+                    public Message getSuccessMessage() {
+                        return new Message("success", "body");
+                    }
+                }
         );
     }
 

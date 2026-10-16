@@ -44,6 +44,8 @@ public class EventTest {
             Arguments.of("uploadAdditionalEvidence", Event.UPLOAD_ADDITIONAL_EVIDENCE.toString()),
             Arguments.of("uploadAdditionalEvidenceHomeOffice", Event.UPLOAD_ADDITIONAL_EVIDENCE_HOME_OFFICE.toString()),
             Arguments.of("listCase", Event.LIST_CASE.toString()),
+            Arguments.of("cmrListing", Event.CMR_LISTING.toString()),
+            Arguments.of("cmrReListing", CMR_RE_LISTING.toString()),
             Arguments.of("createCaseSummary", Event.CREATE_CASE_SUMMARY.toString()),
             Arguments.of("revertStateToAwaitingRespondentEvidence", Event.REVERT_STATE_TO_AWAITING_RESPONDENT_EVIDENCE.toString()),
             Arguments.of("generateHearingBundle", Event.GENERATE_HEARING_BUNDLE.toString()),
@@ -82,6 +84,7 @@ public class EventTest {
             Arguments.of("submitCmaRequirements", Event.SUBMIT_CMA_REQUIREMENTS.toString()),
             Arguments.of("listCma", Event.LIST_CMA.toString()),
             Arguments.of("editAppealAfterSubmit", Event.EDIT_APPEAL_AFTER_SUBMIT.toString()),
+            Arguments.of("editAppellantPersonalData", EDIT_APPELLANT_PERSONAL_DATA.toString()),
             Arguments.of("linkAppeal", Event.LINK_APPEAL.toString()),
             Arguments.of("unlinkAppeal", Event.UNLINK_APPEAL.toString()),
             Arguments.of("leadershipJudgeFtpaDecision", Event.LEADERSHIP_JUDGE_FTPA_DECISION.toString()),
@@ -146,6 +149,7 @@ public class EventTest {
             Arguments.of("recordRemissionReminder", Event.RECORD_REMISSION_REMINDER.toString()),
             Arguments.of("refundConfirmation", Event.REFUND_CONFIRMATION.toString()),
             Arguments.of("hearingCancelled", HEARING_CANCELLED.toString()),
+            Arguments.of("cmrHearingCancelled", CMR_HEARING_CANCELLED.toString()),
             Arguments.of("revokeCitizenAccess", REVOKE_CITIZEN_ACCESS.toString()),
             Arguments.of("generatePinInPost", GENERATE_PIN_IN_POST.toString()),
             Arguments.of("sendLateTimelineNotice", SEND_LATE_TIMELINE_NOTICE.toString()),
@@ -154,7 +158,10 @@ public class EventTest {
             Arguments.of("joinAppealConfirmation", Event.JOIN_APPEAL_CONFIRMATION.toString()),
             Arguments.of("nlrDetailsUpdated", Event.NLR_DETAILS_UPDATED.toString()),
             Arguments.of("removeNonLegalRep", REMOVE_NON_LEGAL_REP.toString()),
+            Arguments.of("queryManagementRaiseQuery", QUERY_MANAGEMENT_RAISE_QUERY.toString()),
+            Arguments.of("queryManagementRespondQuery", QUERY_MANAGEMENT_RESPOND_QUERY.toString()),
             Arguments.of("unknown", Event.UNKNOWN.toString()));
+
     }
 
     @ParameterizedTest
