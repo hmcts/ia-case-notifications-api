@@ -2,8 +2,8 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeof
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppealListed;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.*;
@@ -32,8 +32,8 @@ public class HomeOfficeMarkAppealReadyForUtTransferPersonalisation implements Em
     private final String endAppealEmailAddresses;
 
     private final PersonalisationProvider personalisationProvider;
-    @Value("${govnotify.emailPrefix.ada}")
-    private String adaPrefix;
+    @Value("${govnotify.emailPrefix.detained}")
+    private String detainedPrefix;
     @Value("${govnotify.emailPrefix.nonAda}")
     private String nonAdaPrefix;
 
@@ -93,7 +93,7 @@ public class HomeOfficeMarkAppealReadyForUtTransferPersonalisation implements Em
 
         return ImmutableMap
                 .<String, String>builder()
-                .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
+                .put("subjectPrefix", isAppellantInDetention(asylumCase) ? detainedPrefix : nonAdaPrefix)
                 .put("utAppealReferenceNumber", asylumCase.read(AsylumCaseDefinition.UT_APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
                 .putAll(personalisationProvider.getRespondentHeaderPersonalisation(asylumCase))

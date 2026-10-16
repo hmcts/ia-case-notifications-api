@@ -1,5 +1,5 @@
 {
-  "description": "RIA-7031 send appeal submitted with remission and payment pending, for HU appeal notification Unrepped",
+  "description": "RIA-7031 send appeal submitted with remission and payment pending, for HU appeal notification Unrepped Detained",
   "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
@@ -43,7 +43,7 @@
       {
         "reference": "1405_APPEAL_SUBMITTED_PENDING_PAYMENT_HOME_OFFICE",
         "recipient": "{$apcPrivateHomeOfficeEmailAddress}",
-        "subject": "Immigration and Asylum appeal: appeal submitted",
+        "subject": "Detained – Immigration and Asylum appeal: appeal submitted",
         "body": [
           "PA/12345/2019",
           "Talha Awan",

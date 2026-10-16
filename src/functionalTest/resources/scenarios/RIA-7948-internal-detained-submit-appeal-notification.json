@@ -1,5 +1,5 @@
 {
-  "description": "RIA-7948 Internal non Ada submit appeal",
+  "description": "RIA-7948 Internal detained submit appeal",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
@@ -40,7 +40,7 @@
       {
         "reference": "1263_APPEAL_SUBMITTED_HOME_OFFICE",
         "recipient": "apc_privatebetainbox@example.com",
-        "subject": "Immigration and Asylum appeal: appeal submitted",
+        "subject": "Detained – Immigration and Asylum appeal: appeal submitted",
         "body": [
           "HMCTS reference: PA/12345/2019",
           "Home Office reference: A1234567",

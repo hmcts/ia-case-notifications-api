@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ACCELERATED_DETAINED_APPEAL;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_IN_DETENTION;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixesDetained;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
@@ -83,11 +83,11 @@ public class HomeOfficeUploadAddendumEvidencePersonalisationTest {
 
     @ParameterizedTest
     @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
-    public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
+    public void should_return_personalisation_when_all_information_given(YesOrNo isDetained) {
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
-        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
-        initializePrefixes(homeOfficeUploadAddendumEvidencePersonalisation);
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(isDetained));
+        initializePrefixesDetained(homeOfficeUploadAddendumEvidencePersonalisation);
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisationForHomeOffice());
 
         Map<String, String> personalisation =
@@ -97,7 +97,7 @@ public class HomeOfficeUploadAddendumEvidencePersonalisationTest {
         assertThat(personalisation)
             .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
-            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal"
+            .containsEntry("subjectPrefix", isDetained.equals(YesOrNo.YES) ? "Detained - Immigration and Asylum appeal"
                 : "Immigration and Asylum appeal")
             .containsAllEntriesOf(getPersonalisationForHomeOffice());
     }
