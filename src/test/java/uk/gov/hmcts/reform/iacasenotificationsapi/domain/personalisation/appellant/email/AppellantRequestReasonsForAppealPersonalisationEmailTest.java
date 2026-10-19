@@ -9,10 +9,12 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED;
 
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,6 +35,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 public class AppellantRequestReasonsForAppealPersonalisationEmailTest {
 
     private final String emailTemplateId = "someEmailTemplateId";
+    private final String email24WeeksTemplateId = "some24WeeksEmailTemplateId";
     private final String iaAipFrontendUrl = "http://localhost";
     private final String expectedDirectionDueDate = "27 Aug 2019";
     private final String mockedAppealReferenceNumber = "someReferenceNumber";
@@ -65,9 +68,12 @@ public class AppellantRequestReasonsForAppealPersonalisationEmailTest {
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.of(mockedAppellantGivenNames));
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(mockedAppellantFamilyName));
 
+        when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.empty());
+
         appellantRequestReasonsForAppealSubmissionPersonalisationEmail =
             new AppellantRequestReasonsForAppealPersonalisationEmail(
                 emailTemplateId,
+                email24WeeksTemplateId,
                 iaAipFrontendUrl,
                 directionFinder,
                 recipientsFinder
@@ -76,7 +82,13 @@ public class AppellantRequestReasonsForAppealPersonalisationEmailTest {
 
     @Test
     public void should_return_given_template_id() {
-        assertEquals(emailTemplateId, appellantRequestReasonsForAppealSubmissionPersonalisationEmail.getTemplateId());
+        assertEquals(emailTemplateId, appellantRequestReasonsForAppealSubmissionPersonalisationEmail.getTemplateId(asylumCase));
+    }
+
+    @Test
+    public void should_return_24_weeks_template_id_for_stf_case() {
+        when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        assertEquals(email24WeeksTemplateId, appellantRequestReasonsForAppealSubmissionPersonalisationEmail.getTemplateId(asylumCase));
     }
 
     @Test

@@ -328,6 +328,7 @@ govnotify:
     requestReasonsForAppeal:
       appellant:
         email: 50f1b88e-51d5-446c-b2da-1188feb7e26c
+        emailStf24Weeks: 4838811a-1e28-43e7-9f41-45c15c13242d
         sms: a7056fd8-6de7-408e-881b-c6f9984fe5cf
         paPayLater:
           email: d85f7601-5129-4b53-9c14-2e4e33cc2500
