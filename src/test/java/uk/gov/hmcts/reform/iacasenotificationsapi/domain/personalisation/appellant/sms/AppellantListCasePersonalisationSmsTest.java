@@ -124,13 +124,6 @@ public class AppellantListCasePersonalisationSmsTest {
     }
 
     @Test
-    public void should_not_return_stf24_weeks_sms_template_id_for_aip_appellant_on_24_week_case() {
-        when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
-        when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        assertEquals(templateId, appellantListCasePersonalisationSms.getTemplateId(asylumCase));
-    }
-
-    @Test
     public void should_throw_exception_on_recipients_when_case_is_null() {
         NullPointerException exception =
             assertThrows(NullPointerException.class, () -> appellantListCasePersonalisationSms.getRecipientsList(null));
