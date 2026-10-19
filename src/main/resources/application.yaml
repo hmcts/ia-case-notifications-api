@@ -330,6 +330,7 @@ govnotify:
         email: 50f1b88e-51d5-446c-b2da-1188feb7e26c
         emailStf24Weeks: 4838811a-1e28-43e7-9f41-45c15c13242d
         sms: a7056fd8-6de7-408e-881b-c6f9984fe5cf
+        smsStf24Weeks: 7c466949-bc2d-4604-bb6a-6c59f950e992
         paPayLater:
           email: d85f7601-5129-4b53-9c14-2e4e33cc2500
           sms: da116491-7668-445e-86c4-192528fe7c18

@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms;
 
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasStf24WeeksStatus;
 
 import com.google.common.collect.ImmutableMap;
 import java.time.LocalDate;
@@ -22,6 +23,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 public class AppellantRequestReasonsForAppealPersonalisationSms implements SmsNotificationPersonalisation {
 
     private final String requestReasonForAppealSmsTemplateId;
+    private final String requestReasonForAppealSms24WeeksTemplateId;
     private final String iaAipFrontendUrl;
     private final RecipientsFinder recipientsFinder;
     private final DirectionFinder directionFinder;
@@ -29,21 +31,23 @@ public class AppellantRequestReasonsForAppealPersonalisationSms implements SmsNo
 
     public AppellantRequestReasonsForAppealPersonalisationSms(
         @Value("${govnotify.template.requestReasonsForAppeal.appellant.sms}") String requestReasonForAppealSmsTemplateId,
+        @Value("${govnotify.template.requestReasonsForAppeal.appellant.smsStf24Weeks}") String requestReasonForAppealSms24WeeksTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         RecipientsFinder recipientsFinder,
         DirectionFinder directionFinder
     ) {
         this.requestReasonForAppealSmsTemplateId = requestReasonForAppealSmsTemplateId;
+        this.requestReasonForAppealSms24WeeksTemplateId = requestReasonForAppealSms24WeeksTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.recipientsFinder = recipientsFinder;
         this.directionFinder = directionFinder;
-
     }
 
-
     @Override
-    public String getTemplateId() {
-        return requestReasonForAppealSmsTemplateId;
+    public String getTemplateId(AsylumCase asylumCase) {
+        return hasStf24WeeksStatus(asylumCase)
+            ? requestReasonForAppealSms24WeeksTemplateId
+            : requestReasonForAppealSmsTemplateId;
     }
 
     @Override
