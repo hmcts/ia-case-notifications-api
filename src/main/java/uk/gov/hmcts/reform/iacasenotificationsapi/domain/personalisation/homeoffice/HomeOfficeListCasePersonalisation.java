@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeof
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
@@ -23,6 +24,7 @@ public class HomeOfficeListCasePersonalisation implements EmailNotificationPerso
 
     private final String homeOfficeCaseListedNonAdaTemplateId;
     private final String homeOfficeCaseListedAdaTemplateId;
+    private final String homeOfficeCaseListedStf24WeeksTemplateId;
     private final String listAssistHearingHomeOfficeCaseListedTemplateId;
     private final String iaExUiFrontendUrl;
     private final int appellantProvidingAppealArgumentDeadlineDelay;
@@ -35,6 +37,7 @@ public class HomeOfficeListCasePersonalisation implements EmailNotificationPerso
     public HomeOfficeListCasePersonalisation(
         @Value("${govnotify.template.caseListed.homeOffice.email.nonAda}") String homeOfficeCaseListedNonAdaTemplateId,
         @Value("${govnotify.template.caseListed.homeOffice.email.ada}") String homeOfficeCaseListedAdaTemplateId,
+        @Value("${govnotify.template.caseListed.homeOffice.email.stf24Weeks}") String homeOfficeCaseListedStf24WeeksTemplateId,
         @Value("${govnotify.template.listAssistHearing.caseListed.homeOffice.email}") String listAssistHearingHomeOfficeCaseListedTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         @Value("${adaCaseListed.deadlines.appellantProvidingAppealArgumentDelay}") int appellantProvidingAppealArgumentDeadlineDelay,
@@ -46,6 +49,7 @@ public class HomeOfficeListCasePersonalisation implements EmailNotificationPerso
     ) {
         this.homeOfficeCaseListedNonAdaTemplateId = homeOfficeCaseListedNonAdaTemplateId;
         this.homeOfficeCaseListedAdaTemplateId = homeOfficeCaseListedAdaTemplateId;
+        this.homeOfficeCaseListedStf24WeeksTemplateId = homeOfficeCaseListedStf24WeeksTemplateId;
         this.listAssistHearingHomeOfficeCaseListedTemplateId = listAssistHearingHomeOfficeCaseListedTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.appellantProvidingAppealArgumentDeadlineDelay = appellantProvidingAppealArgumentDeadlineDelay;
@@ -58,6 +62,9 @@ public class HomeOfficeListCasePersonalisation implements EmailNotificationPerso
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
+        if (AsylumCaseUtils.hasStf24WeeksStatus(asylumCase)) {
+            return homeOfficeCaseListedStf24WeeksTemplateId;
+        }
         if (isAcceleratedDetainedAppeal(asylumCase)) {
             return homeOfficeCaseListedAdaTemplateId;
         }
@@ -104,7 +111,9 @@ public class HomeOfficeListCasePersonalisation implements EmailNotificationPerso
                         .format(DateTimeFormatter.ofPattern("dd MMMM yyyy")));
         }
 
-        PersonalisationProvider.buildHearingRequirementsFields(asylumCase, listCaseFields);
+        if (!AsylumCaseUtils.hasStf24WeeksStatus(asylumCase)) {
+            PersonalisationProvider.buildHearingRequirementsFields(asylumCase, listCaseFields);
+        }
 
         return listCaseFields.build();
     }
