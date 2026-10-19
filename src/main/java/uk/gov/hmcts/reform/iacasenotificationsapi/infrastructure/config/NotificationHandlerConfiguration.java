@@ -1699,7 +1699,6 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.SEND_DIRECTION
                     && isRepJourney(asylumCase)
-                    && !isInternalCase(asylumCase)
                     && directionFinder
                     .findFirst(asylumCase, DirectionTag.NONE)
                     .map(direction -> direction.getParties().equals(Parties.BOTH))
