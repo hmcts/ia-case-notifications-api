@@ -15,6 +15,7 @@ public enum BailHearingLocation {
     HARMONDSWORTH("harmondsworth", "Harmondsworth"),
     HATTON_CROSS("hattonCross", "Hatton Cross"),
     HENDON("hendon", "Hendon"),
+    KIRKLEES("kirklees", "Kirklees"),
     NEWCASTLE("newcastle", "Newcastle Civil & Family Courts and Tribunals Centre"),
     NEWPORT("newport", "Newport"),
     TAYLOR_HOUSE("taylorHouse", "Taylor House"),

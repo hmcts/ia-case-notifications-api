@@ -16,6 +16,7 @@ class BailHearingLocationTest {
         assertEquals(BailHearingLocation.HARMONDSWORTH, BailHearingLocation.from("harmondsworth").get());
         assertEquals(BailHearingLocation.HATTON_CROSS, BailHearingLocation.from("hattonCross").get());
         assertEquals(BailHearingLocation.HENDON, BailHearingLocation.from("hendon").get());
+        assertEquals(BailHearingLocation.KIRKLEES, BailHearingLocation.from("kirklees").get());
         assertEquals(BailHearingLocation.NEWCASTLE, BailHearingLocation.from("newcastle").get());
         assertEquals(BailHearingLocation.NEWPORT, BailHearingLocation.from("newport").get());
         assertEquals(BailHearingLocation.TAYLOR_HOUSE, BailHearingLocation.from("taylorHouse").get());
@@ -43,6 +44,7 @@ class BailHearingLocationTest {
         assertEquals("Harmondsworth", BailHearingLocation.HARMONDSWORTH.getDescription());
         assertEquals("Hatton Cross", BailHearingLocation.HATTON_CROSS.getDescription());
         assertEquals("Hendon", BailHearingLocation.HENDON.getDescription());
+        assertEquals("Kirklees", BailHearingLocation.KIRKLEES.getDescription());
         assertEquals("Newcastle Civil & Family Courts and Tribunals Centre", BailHearingLocation.NEWCASTLE.getDescription());
         assertEquals("Newport", BailHearingLocation.NEWPORT.getDescription());
         assertEquals("Taylor House", BailHearingLocation.TAYLOR_HOUSE.getDescription());
@@ -67,6 +69,6 @@ class BailHearingLocationTest {
 
     @Test
     void if_this_test_fails_it_is_because_it_needs_updating_with_your_changes() {
-        assertEquals(23, BailHearingLocation.values().length);
+        assertEquals(24, BailHearingLocation.values().length);
     }
 }

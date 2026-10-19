@@ -29,6 +29,7 @@ hearingCentreName	decisionWithoutHearing	Decision Without Hearing
 hearingCentreName	belfast	Belfast
 hearingCentreName	harmondsworth	Harmondsworth
 hearingCentreName	hendon	Hendon
+hearingCentreName	kirklees	Kirklees
 hearingCentreName	yarlsWood	Yarl's Wood
 hearingCentreName	bradfordKeighley	Bradford & Keighley
 hearingCentreName	mccMinshull	MCC Minshull st
@@ -54,6 +55,7 @@ hearingCentreAddress	taylorHouse	IAC Taylor House, 88 Rosebery Avenue, London, E
 hearingCentreAddress	belfast	Belfast Laganside Court, Oxford Street, Belfast, BT1 3LL
 hearingCentreAddress	harmondsworth	Harmondsworth Tribunal Hearing Centre, Colnbrook Bypass, UB7 0HB
 hearingCentreAddress	hendon	Hendon Magistrates' Court, The Court House, The Hyde, NW9 7BY
+hearingCentreAddress	kirklees	Kirklees (Huddersfield) Magistrates' Court and Family Court, "The Court House, Civic Centre, High Street, HD1 2NW
 hearingCentreAddress	yarlsWood	Yarl's Wood Immigration and Asylum Hearing Centre, Twinwood Road, MK44 1FD
 hearingCentreAddress	bradfordKeighley	Bradford and Keighley Magistrates' Court and Family Court, The Tyrls, PO Box 187, BD1 1JL
 hearingCentreAddress	mccMinshull	Manchester Crown Court (Minshull St), The Court House, Minshull Street, M1 3FS
