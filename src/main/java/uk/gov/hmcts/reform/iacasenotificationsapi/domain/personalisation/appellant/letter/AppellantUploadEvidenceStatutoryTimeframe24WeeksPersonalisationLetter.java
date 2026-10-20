@@ -1,14 +1,12 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter;
 
+import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.LetterNotificationPersonalisation;
-import uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
 
 import java.util.Map;
 import java.util.Set;
@@ -20,27 +18,20 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24Weeks
 @Slf4j
 public class AppellantUploadEvidenceStatutoryTimeframe24WeeksPersonalisationLetter implements LetterNotificationPersonalisation {
 
-    private final String removeStatutoryTimeframe24WeeksAppellantLetterId;
+    private final String templateId;
     private final CustomerServicesProvider customerServicesProvider;
-    private final DateTimeExtractor dateTimeExtractor;
-    private final HearingDetailsFinder hearingDetailsFinder;
 
     public AppellantUploadEvidenceStatutoryTimeframe24WeeksPersonalisationLetter(
-            @Value(STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_APPELLANT_LETTER_TEMPLATE) String removeStatutoryTimeframe24WeeksAppellantLetterId,
-            CustomerServicesProvider customerServicesProvider,
-            DateTimeExtractor dateTimeExtractor,
-            HearingDetailsFinder hearingDetailsFinder
+            @Value(STF_24_WEEKS_UPLOAD_ADDITIONAL_EVIDENCE_LETTER_TEMPLATE) String templateId,
+            CustomerServicesProvider customerServicesProvider
     ) {
-        this.removeStatutoryTimeframe24WeeksAppellantLetterId = removeStatutoryTimeframe24WeeksAppellantLetterId;
-
+        this.templateId = templateId;
         this.customerServicesProvider = customerServicesProvider;
-        this.dateTimeExtractor = dateTimeExtractor;
-        this.hearingDetailsFinder = hearingDetailsFinder;
     }
 
     @Override
     public String getTemplateId() {
-        return removeStatutoryTimeframe24WeeksAppellantLetterId;
+        return templateId;
     }
 
     @Override
@@ -55,6 +46,7 @@ public class AppellantUploadEvidenceStatutoryTimeframe24WeeksPersonalisationLett
 
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
-        return Stf24WeeksUtil.buildHearingRequirementsLetterParameters(Stf24WeeksNotificationFor.APPELLANT, asylumCase, customerServicesProvider, dateTimeExtractor, hearingDetailsFinder);
+        ImmutableMap.Builder<String, String> builder = populateUploadEvidenceLetterParams(asylumCase, Stf24WeeksNotificationFor.APPELLANT, customerServicesProvider);
+        return builder.build();
     }
 }
