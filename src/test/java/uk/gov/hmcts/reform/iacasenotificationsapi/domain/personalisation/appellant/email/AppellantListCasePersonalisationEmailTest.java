@@ -137,9 +137,9 @@ public class AppellantListCasePersonalisationEmailTest {
         "YES, NO, AIP, listAssistHearingTemplateId",
         "NO, YES, AIP, some24WeeksTemplateId",
         "NO, NO, AIP, someTemplateId",
-        "YES, YES, REP, listAssistHearingLegallyReppedTemplateId",
+        "YES, YES, REP, legallyReppedStf24WeeksTemplateId",
         "YES, NO, REP, listAssistHearingLegallyReppedTemplateId",
-        "NO, YES, REP, legallyReppedTemplateId",
+        "NO, YES, REP, legallyReppedStf24WeeksTemplateId",
         "NO, NO, REP, legallyReppedTemplateId",
     })
     public void should_return_correct_template_id(YesOrNo isIntegrated, YesOrNo isStf24w, JourneyType journeyType, String expectedTemplateId) {
@@ -162,7 +162,7 @@ public class AppellantListCasePersonalisationEmailTest {
         when(asylumCase.read(IS_INTEGRATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
         when(asylumCase.read(JOURNEY_TYPE, JourneyType.class)).thenReturn(Optional.of(JourneyType.AIP));
         when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
-        assertEquals(templateId, appellantListCasePersonalisationEmail.getTemplateId(asylumCase));
+        assertEquals(stf24wTemplateId, appellantListCasePersonalisationEmail.getTemplateId(asylumCase));
     }
 
     @Test
