@@ -1,6 +1,16 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
 
+import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasStf24WeeksStatus;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAipJourney;
+
 import com.google.common.collect.ImmutableMap;
+
+import java.util.Map;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
@@ -14,20 +24,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.DateTimeExtractor;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsFinder;
 
-import java.util.Map;
-import java.util.Set;
-
-import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ARIA_LISTING_REFERENCE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HEARING_CENTRE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_INTEGRATED;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasStf24WeeksStatus;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAipJourney;
-
 
 @Service
 public class AppellantListCasePersonalisationEmail implements EmailNotificationPersonalisation {
@@ -36,6 +32,7 @@ public class AppellantListCasePersonalisationEmail implements EmailNotificationP
     private final String appellantCaseListed24WeeksTemplateId;
     private final String listAssistHearingAppellantCaseListedTemplateId;
     private final String legallyReppedAppellantCaseListedTemplateId;
+    private final String legallyReppedAppellantCaseListedStf24WeeksTemplateId;
     private final String listAssistHearingLegallyReppedAppellantCaseListedTemplateId;
     private final DateTimeExtractor dateTimeExtractor;
     private final CustomerServicesProvider customerServicesProvider;
@@ -53,6 +50,7 @@ public class AppellantListCasePersonalisationEmail implements EmailNotificationP
         @Value("${govnotify.template.caseListed.appellant.email24Weeks}") String appellantCaseListed24WeeksEmailTemplateId,
         @Value("${govnotify.template.listAssistHearing.caseListed.appellant.email}") String listAssistHearingAppellantCaseListedTemplateId,
         @Value("${govnotify.template.caseListed.legallyReppedAppellant.email}") String legallyReppedAppellantCaseListedTemplateId,
+        @Value("${govnotify.template.caseListed.legallyReppedAppellant.stf24Weeks}") String legallyReppedAppellantCaseListedStf24WeeksTemplateId,
         @Value("${govnotify.template.listAssistHearing.caseListed.legallyReppedAppellant.email}") String listAssistHearingLegallyReppedAppellantCaseListedTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         DateTimeExtractor dateTimeExtractor,
@@ -64,6 +62,7 @@ public class AppellantListCasePersonalisationEmail implements EmailNotificationP
         this.appellantCaseListed24WeeksTemplateId = appellantCaseListed24WeeksEmailTemplateId;
         this.listAssistHearingAppellantCaseListedTemplateId = listAssistHearingAppellantCaseListedTemplateId;
         this.legallyReppedAppellantCaseListedTemplateId = legallyReppedAppellantCaseListedTemplateId;
+        this.legallyReppedAppellantCaseListedStf24WeeksTemplateId = legallyReppedAppellantCaseListedStf24WeeksTemplateId;
         this.listAssistHearingLegallyReppedAppellantCaseListedTemplateId = listAssistHearingLegallyReppedAppellantCaseListedTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.dateTimeExtractor = dateTimeExtractor;
@@ -75,16 +74,17 @@ public class AppellantListCasePersonalisationEmail implements EmailNotificationP
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
         boolean isAip = isAipJourney(asylumCase);
-        if (isAip && hasStf24WeeksStatus(asylumCase)) {
-            return appellantCaseListed24WeeksTemplateId;
+        if (hasStf24WeeksStatus(asylumCase)) {
+            return isAip ? appellantCaseListed24WeeksTemplateId : legallyReppedAppellantCaseListedStf24WeeksTemplateId;
         }
         if (asylumCase.read(IS_INTEGRATED, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES) {
             return isAip ?
                 listAssistHearingAppellantCaseListedTemplateId :
                 listAssistHearingLegallyReppedAppellantCaseListedTemplateId;
+        } else {
+            return isAip ?
+                appellantCaseListedTemplateId : legallyReppedAppellantCaseListedTemplateId;
         }
-        return isAip ? appellantCaseListedTemplateId : legallyReppedAppellantCaseListedTemplateId;
-
     }
 
     @Override
