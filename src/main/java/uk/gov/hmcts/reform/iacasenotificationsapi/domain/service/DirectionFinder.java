@@ -28,19 +28,4 @@ public class DirectionFinder {
                 .filter(direction -> direction.getTag() == directionTag)
                 .findFirst();
     }
-
-    public Optional<Direction> findFirst(
-            AsylumCase asylumCase,
-            DirectionTag directionTag,
-            Parties parties
-    ) {
-        return asylumCase
-                .<List<IdValue<Direction>>>read(AsylumCaseDefinition.DIRECTIONS)
-                .orElse(Collections.emptyList())
-                .stream()
-                .map(IdValue::getValue)
-                .filter(direction -> direction.getTag() == directionTag)
-                .filter(direction -> direction.getParties() == parties)
-                .findFirst();
-    }
 }

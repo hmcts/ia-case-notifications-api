@@ -1726,8 +1726,9 @@ public class NotificationHandlerConfiguration {
                     && callback.getEvent() == Event.SEND_DIRECTION
                     && isRepJourney(asylumCase)
                     && directionFinder
-                        .findFirst(asylumCase, DirectionTag.NONE, Parties.BOTH)
-                        .isPresent();
+                        .findFirst(asylumCase, DirectionTag.NONE)
+                        .map(direction -> direction.getParties().equals(Parties.BOTH))
+                        .orElse(false);
             },
             notificationGenerators
         );
