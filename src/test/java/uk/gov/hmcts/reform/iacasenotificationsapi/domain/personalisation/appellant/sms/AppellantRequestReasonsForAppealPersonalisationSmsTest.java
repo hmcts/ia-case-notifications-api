@@ -139,6 +139,7 @@ public class AppellantRequestReasonsForAppealPersonalisationSmsTest {
             appellantRequestReasonsForAppealSubmissionPersonalisationSms.getPersonalisation(asylumCase);
         assertThat(personalisation)
             .containsEntry("Appeal Ref Number", mockedAppealReferenceNumber)
+            .containsEntry("appealReferenceNumber", mockedAppealReferenceNumber)
             .containsEntry("Hyperlink to service", iaAipFrontendUrl)
             .containsEntry("due date", expectedDirectionDueDate);
 
@@ -154,6 +155,7 @@ public class AppellantRequestReasonsForAppealPersonalisationSmsTest {
 
         assertThat(personalisation)
             .containsEntry("Appeal Ref Number", "")
+            .containsEntry("appealReferenceNumber", "")
             .containsEntry("Hyperlink to service", iaAipFrontendUrl)
             .containsEntry("due date", expectedDirectionDueDate);
     }

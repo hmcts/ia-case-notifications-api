@@ -73,10 +73,12 @@ public class AppellantRequestReasonsForAppealPersonalisationSms implements SmsNo
                 .parse(direction.getDateDue())
                 .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
 
+        String appealReferenceNumber = asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse("");
         return
             ImmutableMap
                 .<String, String>builder()
-                .put("Appeal Ref Number", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
+                .put("Appeal Ref Number", appealReferenceNumber)
+                .put("appealReferenceNumber", appealReferenceNumber)
                 .put("Hyperlink to service", iaAipFrontendUrl)
                 .put("due date", dueDate)
                 .build();
