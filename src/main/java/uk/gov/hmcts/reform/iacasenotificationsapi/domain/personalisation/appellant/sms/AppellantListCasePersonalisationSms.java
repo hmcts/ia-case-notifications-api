@@ -26,6 +26,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsF
 public class AppellantListCasePersonalisationSms implements SmsNotificationPersonalisation {
 
     private final String appellantCaseListedSmsTemplateId;
+    private final String appellantCaseListedSms24WeeksTemplateId;
     private final String legallyReppedAppellantCaseListedSmsTemplateId;
     private final String legallyReppedAppellantCaseListedStf24WeeksSmsTemplateId;
     private final DateTimeExtractor dateTimeExtractor;
@@ -36,6 +37,7 @@ public class AppellantListCasePersonalisationSms implements SmsNotificationPerso
 
     public AppellantListCasePersonalisationSms(
         @Value("${govnotify.template.caseListed.appellant.sms}") String appellantCaseListedSmsTemplateId,
+        @Value("${govnotify.template.caseListed.appellant.sms24Weeks}") String appellantCaseListedSms24WeeksTemplateId,
         @Value("${govnotify.template.caseListed.legallyReppedAppellant.sms}") String legallyReppedAppellantCaseListedSmsTemplateId,
         @Value("${govnotify.template.caseListed.legallyReppedAppellant.stf24WeeksSms}") String legallyReppedAppellantCaseListedStf24WeeksSmsTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
@@ -44,6 +46,7 @@ public class AppellantListCasePersonalisationSms implements SmsNotificationPerso
         RecipientsFinder recipientsFinder
     ) {
         this.appellantCaseListedSmsTemplateId = appellantCaseListedSmsTemplateId;
+        this.appellantCaseListedSms24WeeksTemplateId = appellantCaseListedSms24WeeksTemplateId;
         this.legallyReppedAppellantCaseListedSmsTemplateId = legallyReppedAppellantCaseListedSmsTemplateId;
         this.legallyReppedAppellantCaseListedStf24WeeksSmsTemplateId = legallyReppedAppellantCaseListedStf24WeeksSmsTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
@@ -55,7 +58,11 @@ public class AppellantListCasePersonalisationSms implements SmsNotificationPerso
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
         boolean isAip = isAipJourney(asylumCase);
-        if (!isAip && hasStf24WeeksStatus(asylumCase)) {
+        boolean is24Weeks = hasStf24WeeksStatus(asylumCase);
+        if (isAip && is24Weeks) {
+            return appellantCaseListedSms24WeeksTemplateId;
+        }
+        if (!isAip && is24Weeks) {
             return legallyReppedAppellantCaseListedStf24WeeksSmsTemplateId;
         }
         return isAip ? appellantCaseListedSmsTemplateId : legallyReppedAppellantCaseListedSmsTemplateId;
