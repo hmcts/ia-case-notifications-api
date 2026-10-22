@@ -53,10 +53,6 @@
         ],
         "notificationsSent": [
           {
-            "id": "2013_RESPONDENT_NON_STANDARD_DIRECTION",
-            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
-          },
-          {
             "id": "2013_LEGAL_REP_NON_STANDARD_DIRECTION",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
@@ -65,20 +61,6 @@
       }
     },
     "notifications": [
-      {
-        "reference": "2013_RESPONDENT_NON_STANDARD_DIRECTION",
-        "recipient": "{$homeOfficeEmailAddresses.taylorHouse}",
-        "subject": "Immigration and Asylum appeal: direction",
-        "body": [
-          "PA/12345/2019",
-          "Talha Awan",
-          "{$iaExUiFrontendUrl}",
-          "The non-standard direction explanation goes here",
-          "{$TODAY+14|d MMM yyyy}",
-          "{$customerServices.telephoneNumber}",
-          "{$customerServices.emailAddress}"
-        ]
-      },
       {
         "reference": "2013_LEGAL_REP_NON_STANDARD_DIRECTION",
         "recipient": "RIA-1191-test-case-1@example.com",
