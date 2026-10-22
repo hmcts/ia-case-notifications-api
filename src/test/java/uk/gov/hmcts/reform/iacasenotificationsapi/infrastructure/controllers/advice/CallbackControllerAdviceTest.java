@@ -188,7 +188,7 @@ class CallbackControllerAdviceTest {
 
     @Test
     void should_handle_no_resource_found_exception() {
-        NoResourceFoundException exception = new NoResourceFoundException(null, "/unknown");
+        NoResourceFoundException exception = new NoResourceFoundException(null, null, "/unknown");
         ErrorResponse expectedResponse = buildErrorResponse(ErrorCode.NOT_FOUND);
 
         when(errorResponseBuilder.build(eq(ErrorCode.NOT_FOUND), eq(request), eq(null)))
