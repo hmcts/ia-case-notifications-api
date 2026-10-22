@@ -83,6 +83,7 @@ public class AppellantRequestReasonsForAppealPersonalisationEmail implements Ema
                 .put("Family name", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
                 .put("Hyperlink to service", iaAipFrontendUrl)
                 .put("due date", dueDate)
+                .put("date in the timetabling directions", dueDate)
                 .build();
     }
 }

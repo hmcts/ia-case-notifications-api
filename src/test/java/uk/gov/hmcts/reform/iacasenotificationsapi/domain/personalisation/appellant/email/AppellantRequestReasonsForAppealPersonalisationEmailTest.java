@@ -144,7 +144,8 @@ public class AppellantRequestReasonsForAppealPersonalisationEmailTest {
             .containsEntry("Given names", mockedAppellantGivenNames)
             .containsEntry("Family name", mockedAppellantFamilyName)
             .containsEntry("Hyperlink to service", iaAipFrontendUrl)
-            .containsEntry("due date", expectedDirectionDueDate);
+            .containsEntry("due date", expectedDirectionDueDate)
+            .containsEntry("date in the timetabling directions", expectedDirectionDueDate);
 
 
     }
@@ -166,6 +167,7 @@ public class AppellantRequestReasonsForAppealPersonalisationEmailTest {
             .containsEntry("Given names", "")
             .containsEntry("Family name", "")
             .containsEntry("Hyperlink to service", iaAipFrontendUrl)
-            .containsEntry("due date", expectedDirectionDueDate);
+            .containsEntry("due date", expectedDirectionDueDate)
+            .containsEntry("date in the timetabling directions", expectedDirectionDueDate);
     }
 }
