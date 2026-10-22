@@ -253,3 +253,7 @@ java:
           alias: IA_REDIS_ACCESS_KEY
         - name: ia-redis-encryption-key
           alias: IA_REDIS_ENCRYPTION_KEY
+        - name: ia-home-office-yarlswood-email
+          alias: IA_HOME_OFFICE_YARLS_WOOD_EMAIL
+        - name: ia-legal-officer-yarlswood-email
+          alias: IA_LEGAL_OFFICER_YARLS_WOOD_EMAIL
