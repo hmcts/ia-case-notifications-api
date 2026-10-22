@@ -1386,7 +1386,7 @@ public class NotificationGeneratorConfiguration {
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Arrays.asList(
+        return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(legalRepresentativeNonStandardDirectionPersonalisation),
                 notificationSender,
