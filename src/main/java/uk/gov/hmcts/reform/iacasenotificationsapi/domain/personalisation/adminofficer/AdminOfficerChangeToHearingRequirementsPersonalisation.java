@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer;
 
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasStf24WeeksStatus;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
 import com.google.common.collect.ImmutableMap;
@@ -12,14 +13,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 
 
 @Service
 public class AdminOfficerChangeToHearingRequirementsPersonalisation implements EmailNotificationPersonalisation {
 
     private final String changeToHearingRequirementsAdminOfficerTemplateId;
+    private final String changeToHearingRequirementsAdminHearingCentreTemplateId;
     private final String reviewHearingRequirementsAdminOfficerEmailAddress;
     private final AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider;
+    private final EmailAddressFinder emailAddressFinder;
 
     @Value("${govnotify.emailPrefix.ada}")
     private String adaPrefix;
@@ -28,12 +32,16 @@ public class AdminOfficerChangeToHearingRequirementsPersonalisation implements E
 
     public AdminOfficerChangeToHearingRequirementsPersonalisation(
         @NotNull(message = "changeToHearingRequirementsAdminOfficerTemplateId cannot be null") @Value("${govnotify.template.changeToHearingRequirements.adminOfficer.email}") String changeToHearingRequirementsAdminOfficerTemplateId,
+        @NotNull(message = "changeToHearingRequirementsAdminHearingCentreTemplateId cannot be null") @Value("${govnotify.template.changeToHearingRequirements.adminHearingCentre24Weeks.email}") String changeToHearingRequirementsAdminHearingCentreTemplateId,
         @Value("${reviewHearingRequirementsAdminOfficerEmailAddress}") String reviewHearingRequirementsAdminOfficerEmailAddress,
-        AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider
+        AdminOfficerPersonalisationProvider adminOfficerPersonalisationProvider,
+        EmailAddressFinder emailAddressFinder
     ) {
         this.changeToHearingRequirementsAdminOfficerTemplateId = changeToHearingRequirementsAdminOfficerTemplateId;
+        this.changeToHearingRequirementsAdminHearingCentreTemplateId = changeToHearingRequirementsAdminHearingCentreTemplateId;
         this.reviewHearingRequirementsAdminOfficerEmailAddress = reviewHearingRequirementsAdminOfficerEmailAddress;
         this.adminOfficerPersonalisationProvider = adminOfficerPersonalisationProvider;
+        this.emailAddressFinder = emailAddressFinder;
     }
 
     @Override
@@ -42,13 +50,17 @@ public class AdminOfficerChangeToHearingRequirementsPersonalisation implements E
     }
 
     @Override
-    public String getTemplateId() {
-        return changeToHearingRequirementsAdminOfficerTemplateId;
+    public String getTemplateId(AsylumCase asylumCase) {
+        return hasStf24WeeksStatus(asylumCase) ? changeToHearingRequirementsAdminHearingCentreTemplateId : changeToHearingRequirementsAdminOfficerTemplateId;
     }
 
     @Override
     public Set<String> getRecipientsList(AsylumCase asylumCase) {
-        return Collections.singleton(reviewHearingRequirementsAdminOfficerEmailAddress);
+        if (hasStf24WeeksStatus(asylumCase)) {
+            return Collections.singleton(emailAddressFinder.getAdminHearingCentreEmailAddress(asylumCase));
+        } else {
+            return Collections.singleton(reviewHearingRequirementsAdminOfficerEmailAddress);
+        }
     }
 
     @Override

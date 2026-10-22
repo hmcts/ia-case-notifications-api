@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -10,6 +11,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ACCELERATED_DETAINED_APPEAL;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
 
 import java.util.Collections;
@@ -36,6 +38,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvi
 class AppellantSubmittedHearingRequirementsPersonalisationEmailTest {
 
     private final String templateId = "someTemplateId";
+    private final String templateId24Weeks = "someTemplateId24Weeks";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String homeOfficeRefeNumber = "homeOfficeRefeNumber";
     private final String appellantGivenNames = "someAppellantGivenNames";
@@ -65,6 +68,7 @@ class AppellantSubmittedHearingRequirementsPersonalisationEmailTest {
         appellantSubmittedHearingRequirementsPersonalisation =
             new AppellantSubmittedHearingRequirementsPersonalisation(
                 templateId,
+                templateId24Weeks,
                 14,
                 recipientsFinder,
                 customerServicesProvider,
@@ -73,8 +77,20 @@ class AppellantSubmittedHearingRequirementsPersonalisationEmailTest {
     }
 
     @Test
-    void should_return_given_template_id() {
-        assertEquals(templateId, appellantSubmittedHearingRequirementsPersonalisation.getTemplateId());
+    void should_return_null_for_getTemplateId_without_case() {
+        assertNull(appellantSubmittedHearingRequirementsPersonalisation.getTemplateId());
+    }
+
+    @Test
+    void should_return_standard_template_id_for_non_24_week_case() {
+        when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.empty());
+        assertEquals(templateId, appellantSubmittedHearingRequirementsPersonalisation.getTemplateId(asylumCase));
+    }
+
+    @Test
+    void should_return_24_weeks_template_id_for_24_week_case() {
+        when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        assertEquals(templateId24Weeks, appellantSubmittedHearingRequirementsPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
@@ -92,7 +108,6 @@ class AppellantSubmittedHearingRequirementsPersonalisationEmailTest {
         assertTrue(appellantSubmittedHearingRequirementsPersonalisation.getRecipientsList(asylumCase)
             .contains(appellantEmailAddress));
     }
-
 
     @Test
     void should_throw_exception_on_personalisation_when_case_is_null() {
