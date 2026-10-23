@@ -74,6 +74,13 @@ public class AppellantRequestReasonsForAppealPersonalisationEmail implements Ema
                 .parse(direction.getDateDue())
                 .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
 
+        final String hearingRequirementsDeadline =
+            LocalDate
+                .parse(asylumCase.read(AsylumCaseDefinition.COMPLETE_CASE_REVIEW_DATE, String.class)
+                    .orElseThrow(() -> new IllegalStateException("completeCaseReviewDate is not present")))
+                .plusDays(42)
+                .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+
         return
             ImmutableMap
                 .<String, String>builder()
@@ -83,7 +90,7 @@ public class AppellantRequestReasonsForAppealPersonalisationEmail implements Ema
                 .put("Family name", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
                 .put("Hyperlink to service", iaAipFrontendUrl)
                 .put("due date", dueDate)
-                .put("date in the timetabling directions", dueDate)
+                .put("date in the timetabling directions", hearingRequirementsDeadline)
                 .build();
     }
 }
