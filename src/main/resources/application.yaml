@@ -2930,7 +2930,7 @@ homeOfficeEmailAddresses:
   belfast: ${IA_HOME_OFFICE_GLASGOW_EMAIL:ho-glasgow@example.com}
   harmondsworth: ${IA_HOME_OFFICE_HATTON_CROSS_EMAIL:ho-harmondsworth@example.com}
   hendon: ${IA_HOME_OFFICE_HENDON_EMAIL:ho-hendon@example.com}
-  yarlsWood: ${IA_HOME_OFFICE_TAYLOR_HOUSE_EMAIL:ho-yarls-wood@example.com}
+  yarlsWood: ${IA_HOME_OFFICE_YARLS_WOOD_EMAIL:ho-yarls-wood@example.com}
   bradfordKeighley: ${IA_HOME_OFFICE_BRADFORD_KEIGHLEY_EMAIL:ho-bradford-keighley@example.com}
   mccMinshull: ${IA_HOME_OFFICE_MCC_MINSHULL_EMAIL:ho-mcc-minshull@example.com}
   mccCrownSquare: ${IA_HOME_OFFICE_MCC_CROWN_SQUARE_EMAIL:ho-mcc-crown-square@example.com}
@@ -2976,6 +2976,7 @@ dismissedAppealHomeOfficeEmailAddress: ${IA_HOME_OFFICE_DISMISSED_APPEAL_EMAIL:h
 apcPrivateHomeOfficeEmailAddress: ${IA_HOME_OFFICE_APC_EMAIL}
 reviewHearingRequirementsAdminOfficerEmailAddress: ${IA_ADMIN_OFFICER_REVIEW_HEARING_REQUIREMENTS_EMAIL:ao-review@example.com}
 listCaseCaseOfficerEmailAddress: ${IA_CASE_OFFICER_LIST_CASE_EMAIL:co-list-case@example.com}
+yarlsWoodCaseOfficerEmailAddress: ${IA_LEGAL_OFFICER_YARLS_WOOD_EMAIL:co-example.yarlswood@example.gov.uk}
 ctscAdminFtpaDecisionEmailAddress: ${IA_CTSC_ADMIN_FTPA_DECISION:ctscFtpaDecision@example.gov.uk}
 feesAdminOfficerEmailAddress: ${FEES_ADMIN_OFFICER_EMAIL}
 paymentExceptionsAdminOfficerEmailAddress: ${PAYMENT_EXCEPTIONS_ADMIN_OFFICER_EMAIL:payment-exceptions-ao@example.com}
