@@ -1946,6 +1946,7 @@ security:
       - "sendPipToNonLegalRep"
       - "joinAppealConfirmation"
       - "generatePinInPost"
+      - "queryManagementRespondQuery"
     challenged-access-legal-operations:
       - "sendDirection"
       - "changeDirectionDueDate"
@@ -2096,6 +2097,7 @@ security:
       - "sendPipToNonLegalRep"
       - "joinAppealConfirmation"
       - "generatePinInPost"
+      - "queryManagementRespondQuery"
     # These events are used by the bails service, they will need to be migrated to the admin access management roles - see DIAC-855
     caseworker-ia-admofficer:
       - "queryManagementRespondQuery"
