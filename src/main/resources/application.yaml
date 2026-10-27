@@ -2876,6 +2876,7 @@ hearingCentreEmailAddresses:
   belfast: ${IA_HEARING_CENTRE_GLASGOW_EMAIL:hc-glasgow-default@example.com}
   harmondsworth: ${IA_HEARING_CENTRE_HATTON_CROSS_EMAIL:hc-hatton-cross-default@example.com}
   hendon: ${IA_HEARING_CENTRE_HENDON_EMAIL:hc-hendon-default@example.com}
+  kirklees: ${IA_HEARING_CENTRE_BRADFORD_EMAIL:hc-bradford-default@example.com}
   yarlsWood: ${IA_HEARING_CENTRE_YARLSWOOD_EMAIL:hc-yarlswood-default@example.com}
   bradfordKeighley: ${IA_HEARING_CENTRE_BRADFORD_KEIGHLEY_EMAIL:hc-bradford-keighley-default@example.com}
   mccMinshull: ${IA_HEARING_CENTRE_MCC_MINSHULL_EMAIL:hc-mcc-minshull-default@example.com}
@@ -2893,6 +2894,7 @@ adminHearingCentreEmailAddresses:
   northShields: ${IA_ADMIN_HEARING_CENTRE_BRADFORD_EMAIL:admin-hc-north-shields-default@example.com}
   glasgow: ${IA_ADMIN_HEARING_CENTRE_GLASGOW_EMAIL:admin-hc-glasgow-default@example.com}
   hendon: ${IA_ADMIN_HEARING_CENTRE_TAYLOR_HOUSE_EMAIL:admin-hc-hendon-default@example.com}
+  kirklees: ${IA_ADMIN_HEARING_CENTRE_BRADFORD_EMAIL:admin-hc-bradford-default@example.com}
   bradfordKeighley: ${IA_ADMIN_HEARING_CENTRE_BRADFORD_EMAIL:admin-hc-bradford-keighley-default@example.com}
   mccMinshull: ${IA_ADMIN_HEARING_CENTRE_MANCHESTER_EMAIL:admin-hc-mcc-minshull-default@example.com}
   mccCrownSquare: ${IA_ADMIN_HEARING_CENTRE_MANCHESTER_EMAIL:admin-hc-mcc-crown-square-default@example.com}
@@ -2932,6 +2934,7 @@ homeOfficeEmailAddresses:
   belfast: ${IA_HOME_OFFICE_GLASGOW_EMAIL:ho-glasgow@example.com}
   harmondsworth: ${IA_HOME_OFFICE_HATTON_CROSS_EMAIL:ho-harmondsworth@example.com}
   hendon: ${IA_HOME_OFFICE_HENDON_EMAIL:ho-hendon@example.com}
+  kirklees: ${IA_HOME_OFFICE_BRADFORD_EMAIL:ho-bradford@example.com}
   yarlsWood: ${IA_HOME_OFFICE_TAYLOR_HOUSE_EMAIL:ho-yarls-wood@example.com}
   bradfordKeighley: ${IA_HOME_OFFICE_BRADFORD_KEIGHLEY_EMAIL:ho-bradford-keighley@example.com}
   mccMinshull: ${IA_HOME_OFFICE_MCC_MINSHULL_EMAIL:ho-mcc-minshull@example.com}
