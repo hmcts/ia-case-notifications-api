@@ -450,6 +450,7 @@ govnotify:
           stf24Weeks: 38973a4e-1dc3-4fb4-a629-4b0bb79ea271
       appellant:
         email: c87b9b3d-9054-4f75-a7df-aa53b317422d
+        email24Weeks: 8b63d810-c959-4b0d-845b-33fdd4adbccf
         sms: 5b7faa5a-792e-48bf-a512-d21a27ae9b23
       legallyReppedAppellant:
         email: 3593d788-2d44-452f-a0c8-218e33be57da
