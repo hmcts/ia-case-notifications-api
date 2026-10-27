@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email;
 
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasStf24WeeksStatus;
 
 import com.google.common.collect.ImmutableMap;
 import java.time.LocalDate;
@@ -22,25 +23,30 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 public class AppellantRequestReasonsForAppealPersonalisationEmail implements EmailNotificationPersonalisation {
 
     private final String requestReasonForAppealEmailTemplateId;
+    private final String requestReasonForAppealEmail24WeeksTemplateId;
     private final String iaAipFrontendUrl;
     private final DirectionFinder directionFinder;
     private final RecipientsFinder recipientsFinder;
 
     public AppellantRequestReasonsForAppealPersonalisationEmail(
         @Value("${govnotify.template.requestReasonsForAppeal.appellant.email}") String requestReasonForAppealEmailTemplateId,
+        @Value("${govnotify.template.requestReasonsForAppeal.appellant.emailStf24Weeks}") String requestReasonForAppealEmail24WeeksTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
         DirectionFinder directionFinder,
         RecipientsFinder recipientsFinder
     ) {
         this.requestReasonForAppealEmailTemplateId = requestReasonForAppealEmailTemplateId;
+        this.requestReasonForAppealEmail24WeeksTemplateId = requestReasonForAppealEmail24WeeksTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.directionFinder = directionFinder;
         this.recipientsFinder = recipientsFinder;
     }
 
     @Override
-    public String getTemplateId() {
-        return requestReasonForAppealEmailTemplateId;
+    public String getTemplateId(AsylumCase asylumCase) {
+        return hasStf24WeeksStatus(asylumCase)
+            ? requestReasonForAppealEmail24WeeksTemplateId
+            : requestReasonForAppealEmailTemplateId;
     }
 
     @Override
@@ -68,6 +74,13 @@ public class AppellantRequestReasonsForAppealPersonalisationEmail implements Ema
                 .parse(direction.getDateDue())
                 .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
 
+        final String hearingRequirementsDeadline =
+            LocalDate
+                .parse(asylumCase.read(AsylumCaseDefinition.COMPLETE_CASE_REVIEW_DATE, String.class)
+                    .orElseThrow(() -> new IllegalStateException("completeCaseReviewDate is not present")))
+                .plusDays(42)
+                .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+
         return
             ImmutableMap
                 .<String, String>builder()
@@ -77,6 +90,7 @@ public class AppellantRequestReasonsForAppealPersonalisationEmail implements Ema
                 .put("Family name", asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
                 .put("Hyperlink to service", iaAipFrontendUrl)
                 .put("due date", dueDate)
+                .put("date in the timetabling directions", hearingRequirementsDeadline)
                 .build();
     }
 }
