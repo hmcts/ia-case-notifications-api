@@ -613,6 +613,7 @@ govnotify:
     requestCaseBuilding:
       legalRep:
         email: 190f9645-8fe7-4f28-a854-62fb312622ec
+        email24Weeks: 0cecebab-8666-4f83-a1c2-201c4bd7c2f0
         detention:
           email: 7fd3785b-082e-4b91-bed4-aff3d95fce52
           letter: fa0b0ba8-4cf6-419c-b829-1f5c3a1430df
