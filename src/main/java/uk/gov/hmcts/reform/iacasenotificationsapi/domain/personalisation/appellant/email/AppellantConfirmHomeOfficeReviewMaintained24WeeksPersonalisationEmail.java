@@ -14,14 +14,14 @@ import java.util.Set;
 import static java.util.Objects.requireNonNull;
 
 @Service
-public class AppellantConfirmHOReviewMaintainedStatutoryTimeframe24WeeksPersonalisationEmail implements EmailNotificationPersonalisation {
+public class AppellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationEmail implements EmailNotificationPersonalisation {
 
     private final String maintainedResponseReviewDirectionTemplateId;
     private final String iaAipFrontendUrl;
     private final RecipientsFinder recipientsFinder;
     private final CustomerServicesProvider customerServicesProvider;
 
-    public AppellantConfirmHOReviewMaintainedStatutoryTimeframe24WeeksPersonalisationEmail(
+    public AppellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationEmail(
             @Value("${govnotify.template.responseReviewDirection.appellant.maintained.email24Weeks}") String maintainedResponseReviewDirectionTemplateId,
             @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
             RecipientsFinder recipientsFinder,

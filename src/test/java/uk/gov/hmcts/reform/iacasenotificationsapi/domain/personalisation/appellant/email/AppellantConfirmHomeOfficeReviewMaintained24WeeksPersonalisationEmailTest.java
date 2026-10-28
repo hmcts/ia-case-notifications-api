@@ -20,7 +20,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 
 
 @ExtendWith(MockitoExtension.class)
-class AppellantConfirmHOReviewMaintainedStatutoryTimeframe24WeeksPersonalisationEmailTest {
+class AppellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationEmailTest {
 
     private final String maintainedResponseReviewDirectionTemplateId = "maintainedResponseReviewDirectionTemplateId";
     private final String iaAipFrontendUrl = "http://localhost";
@@ -31,14 +31,14 @@ class AppellantConfirmHOReviewMaintainedStatutoryTimeframe24WeeksPersonalisation
     @Mock
     RecipientsFinder recipientsFinder;
 
-    private AppellantConfirmHOReviewMaintainedStatutoryTimeframe24WeeksPersonalisationEmail
-        appellantConfirmHOReviewMaintainedStatutoryTimeframe24WeeksPersonalisationEmail;
+    private AppellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationEmail
+        appellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationEmail;
 
     @BeforeEach
     void setUp() {
 
-        appellantConfirmHOReviewMaintainedStatutoryTimeframe24WeeksPersonalisationEmail =
-            new AppellantConfirmHOReviewMaintainedStatutoryTimeframe24WeeksPersonalisationEmail(
+        appellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationEmail =
+            new AppellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationEmail(
                 maintainedResponseReviewDirectionTemplateId, iaAipFrontendUrl, recipientsFinder, customerServicesProvider);
     }
 
@@ -57,7 +57,7 @@ class AppellantConfirmHOReviewMaintainedStatutoryTimeframe24WeeksPersonalisation
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.of(appellantFamilyName));
 
         Map<String, String> personalisation =
-            appellantConfirmHOReviewMaintainedStatutoryTimeframe24WeeksPersonalisationEmail.getPersonalisation(asylumCase);
+            appellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationEmail.getPersonalisation(asylumCase);
 
         assertThat(personalisation)
             .containsEntry("appealReferenceNumber", appealReferenceNumber)
@@ -77,7 +77,7 @@ class AppellantConfirmHOReviewMaintainedStatutoryTimeframe24WeeksPersonalisation
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
 
         Map<String, String> personalisation =
-            appellantConfirmHOReviewMaintainedStatutoryTimeframe24WeeksPersonalisationEmail.getPersonalisation(asylumCase);
+            appellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationEmail.getPersonalisation(asylumCase);
 
         assertThat(personalisation)
             .containsEntry("appealReferenceNumber", "")
@@ -90,14 +90,14 @@ class AppellantConfirmHOReviewMaintainedStatutoryTimeframe24WeeksPersonalisation
     @Test
     public void should_return_given_template_id_for_decision_maintained() {
 
-        assertEquals(maintainedResponseReviewDirectionTemplateId, appellantConfirmHOReviewMaintainedStatutoryTimeframe24WeeksPersonalisationEmail.getTemplateId(asylumCase));
+        assertEquals(maintainedResponseReviewDirectionTemplateId, appellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationEmail.getTemplateId(asylumCase));
     }
 
     @Test
     void should_return_given_reference_id() {
         Long caseId = 12345L;
         assertEquals(caseId + "_STATUTORY_TIMEFRAME_24WEEKS_CONFIRM_HO_REVIEW_MAINTAINED_AIP_EMAIL",
-            appellantConfirmHOReviewMaintainedStatutoryTimeframe24WeeksPersonalisationEmail.getReferenceId(caseId));
+            appellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationEmail.getReferenceId(caseId));
     }
 
     @Test
@@ -106,7 +106,7 @@ class AppellantConfirmHOReviewMaintainedStatutoryTimeframe24WeeksPersonalisation
         when(recipientsFinder.findAll(asylumCase, NotificationType.EMAIL))
             .thenReturn(Collections.singleton(mockedAppellantEmailAddress));
 
-        assertTrue(appellantConfirmHOReviewMaintainedStatutoryTimeframe24WeeksPersonalisationEmail.getRecipientsList(asylumCase)
+        assertTrue(appellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationEmail.getRecipientsList(asylumCase)
             .contains(mockedAppellantEmailAddress));
     }
 
@@ -115,7 +115,7 @@ class AppellantConfirmHOReviewMaintainedStatutoryTimeframe24WeeksPersonalisation
 
         NullPointerException exception =
             assertThrows(NullPointerException.class,
-                () -> appellantConfirmHOReviewMaintainedStatutoryTimeframe24WeeksPersonalisationEmail.getPersonalisation((AsylumCase) null));
+                () -> appellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationEmail.getPersonalisation((AsylumCase) null));
         assertEquals("asylumCase must not be null", exception.getMessage());
     }
 }

@@ -7829,15 +7829,15 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
-    @Bean("confirmHOReviewMaintainedAipNotificationGenerator")
-    public List<NotificationGenerator> confirmHOReviewMaintainedAipNotificationGenerator(
-        AppellantConfirmHOReviewMaintainedStatutoryTimeframe24WeeksPersonalisationEmail appellantConfirmHOReviewMaintainedStatutoryTimeframe24WeeksPersonalisationEmail,
+    @Bean("confirmHomeOfficeReviewMaintainedAipNotificationGenerator")
+    public List<NotificationGenerator> confirmHomeOfficeReviewMaintainedAipNotificationGenerator(
+        AppellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationEmail appellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationEmail,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
         return List.of(
             new EmailNotificationGenerator(
-                newArrayList(appellantConfirmHOReviewMaintainedStatutoryTimeframe24WeeksPersonalisationEmail),
+                newArrayList(appellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationEmail),
                 notificationSender,
                 notificationIdAppender
             )

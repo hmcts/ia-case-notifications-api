@@ -8530,8 +8530,8 @@ public class NotificationHandlerConfiguration {
     }
 
     @Bean
-    public PreSubmitCallbackHandler<AsylumCase> confirmHOReviewMaintainedAipNotificationGenerator(
-        @Qualifier("confirmHOReviewMaintainedAipNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+    public PreSubmitCallbackHandler<AsylumCase> confirmHomeOfficeReviewMaintainedAipNotificationGenerator(
+        @Qualifier("confirmHomeOfficeReviewMaintainedAipNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
             (callbackStage, callback) -> {
