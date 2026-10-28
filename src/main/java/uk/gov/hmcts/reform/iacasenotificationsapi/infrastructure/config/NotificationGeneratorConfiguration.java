@@ -7828,4 +7828,19 @@ public class NotificationGeneratorConfiguration {
             )
         );
     }
+
+    @Bean("confirmHOReviewMaintainedAipNotificationGenerator")
+    public List<NotificationGenerator> confirmHOReviewMaintainedAipNotificationGenerator(
+        AppellantConfirmHOReviewMaintainedStatutoryTimeframe24WeeksPersonalisationEmail appellantConfirmHOReviewMaintainedStatutoryTimeframe24WeeksPersonalisationEmail,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+            new EmailNotificationGenerator(
+                newArrayList(appellantConfirmHOReviewMaintainedStatutoryTimeframe24WeeksPersonalisationEmail),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
 }
