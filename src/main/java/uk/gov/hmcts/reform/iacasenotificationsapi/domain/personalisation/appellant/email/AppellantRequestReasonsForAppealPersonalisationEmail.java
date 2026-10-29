@@ -75,11 +75,12 @@ public class AppellantRequestReasonsForAppealPersonalisationEmail implements Ema
                 .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
 
         final String hearingRequirementsDeadline =
-            LocalDate
-                .parse(asylumCase.read(AsylumCaseDefinition.COMPLETE_CASE_REVIEW_DATE, String.class)
-                    .orElseThrow(() -> new IllegalStateException("completeCaseReviewDate is not present")))
-                .plusDays(42)
-                .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
+            asylumCase.read(AsylumCaseDefinition.COMPLETE_CASE_REVIEW_DATE, String.class)
+                .map(date -> LocalDate
+                    .parse(date)
+                    .plusDays(42)
+                    .format(DateTimeFormatter.ofPattern("d MMM yyyy")))
+                .orElse("");
 
         return
             ImmutableMap
