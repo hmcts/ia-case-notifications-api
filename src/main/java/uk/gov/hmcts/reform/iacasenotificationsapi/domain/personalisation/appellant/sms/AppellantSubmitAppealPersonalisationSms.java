@@ -17,7 +17,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.C
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.SmsNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AppealService;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
 @Service
 public class AppellantSubmitAppealPersonalisationSms implements SmsNotificationPersonalisation {
@@ -25,9 +24,7 @@ public class AppellantSubmitAppealPersonalisationSms implements SmsNotificationP
     private final String appealSubmittedAppellantSmsTemplateId;
     private final String appealSubmittedAppellantSmsRepJourneyTemplateId;
     private final String iaAipFrontendUrl;
-    private final int daysToWaitAfterSubmission;
     private final RecipientsFinder recipientsFinder;
-    private final SystemDateProvider systemDateProvider;
     private final AppealService appealService;
 
 
@@ -35,17 +32,13 @@ public class AppellantSubmitAppealPersonalisationSms implements SmsNotificationP
         @Value("${govnotify.template.appealSubmitted.appellant.sms}") String appealSubmittedAppellantSmsTemplateId,
         @Value("${govnotify.template.appealSubmitted.appellant.legalRep.sms}") String appealSubmittedAppellantSmsRepJourneyTemplateId,
         @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
-        @Value("${appellantDaysToWait.afterSubmission}") int daysToWaitAfterSubmission,
         RecipientsFinder recipientsFinder,
-        SystemDateProvider systemDateProvider,
         AppealService appealService
     ) {
         this.appealSubmittedAppellantSmsTemplateId = appealSubmittedAppellantSmsTemplateId;
         this.appealSubmittedAppellantSmsRepJourneyTemplateId = appealSubmittedAppellantSmsRepJourneyTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
-        this.daysToWaitAfterSubmission = daysToWaitAfterSubmission;
         this.recipientsFinder = recipientsFinder;
-        this.systemDateProvider = systemDateProvider;
         this.appealService = appealService;
     }
 
@@ -91,14 +84,11 @@ public class AppellantSubmitAppealPersonalisationSms implements SmsNotificationP
 
         final  String formattedDateOfBirth = LocalDate.parse(dateOfBirth).format(DateTimeFormatter.ofPattern("d MMM yyyy"));
 
-        final String dueDate = systemDateProvider.dueDate(daysToWaitAfterSubmission);
-
         return
             ImmutableMap
                 .<String, String>builder()
                 .put("Appeal Ref Number", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("Hyperlink to service", iaAipFrontendUrl)
-                .put("due date", dueDate)
                 .put("Ref Number", String.valueOf(callback.getCaseDetails().getId()))
                 .put("Legal Rep Ref", asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("HO Ref Number", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
