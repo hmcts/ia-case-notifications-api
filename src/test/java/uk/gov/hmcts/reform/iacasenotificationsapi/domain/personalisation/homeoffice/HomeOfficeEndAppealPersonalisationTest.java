@@ -9,15 +9,15 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_IN_DETENTION;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ARIA_LISTING_REFERENCE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.END_APPEAL_APPROVER_TYPE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.END_APPEAL_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.END_APPEAL_OUTCOME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.END_APPEAL_OUTCOME_REASON;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ACCELERATED_DETAINED_APPEAL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixesDetained;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.WITHDRAWN;
 
 import java.util.Map;
@@ -123,15 +123,15 @@ public class HomeOfficeEndAppealPersonalisationTest {
 
     @ParameterizedTest
     @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
-    public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
+    public void should_return_personalisation_when_all_information_given(YesOrNo isDetained) {
 
-        initializePrefixes(homeOfficeEndAppealPersonalisation);
-        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
+        initializePrefixesDetained(homeOfficeEndAppealPersonalisation);
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(isDetained));
 
         Map<String, String> personalisation = homeOfficeEndAppealPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals(isAda.equals(YesOrNo.YES)
-            ? "Accelerated detained appeal"
+        assertEquals(isDetained.equals(YesOrNo.YES)
+            ? "Detained - Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
         String expectedEndAppealDate = "27 Aug 2019";
         assertThat(personalisation)
@@ -149,10 +149,10 @@ public class HomeOfficeEndAppealPersonalisationTest {
 
     @ParameterizedTest
     @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
-    public void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
+    public void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isDetained) {
 
-        initializePrefixes(homeOfficeEndAppealPersonalisation);
-        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
+        initializePrefixesDetained(homeOfficeEndAppealPersonalisation);
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(isDetained));
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
@@ -165,8 +165,8 @@ public class HomeOfficeEndAppealPersonalisationTest {
 
         Map<String, String> personalisation = homeOfficeEndAppealPersonalisation.getPersonalisation(asylumCase);
 
-        assertEquals(isAda.equals(YesOrNo.YES)
-            ? "Accelerated detained appeal"
+        assertEquals(isDetained.equals(YesOrNo.YES)
+            ? "Detained - Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
         assertThat(personalisation)
             .containsEntry("appealReferenceNumber", "")
