@@ -5,6 +5,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasStf24WeeksStatus;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
 import com.google.common.collect.ImmutableMap;
@@ -23,6 +24,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 public class LegalRepresentativeRequestCaseBuildingPersonalisation implements LegalRepresentativeEmailNotificationPersonalisation {
 
     private final String legalRepresentativeRequestCaseBuildingTemplateId;
+    private final String legalRepresentativeRequestCaseBuilding24WeeksTemplateId;
     private final String iaExUiFrontendUrl;
     private final DirectionFinder directionFinder;
     private final CustomerServicesProvider customerServicesProvider;
@@ -34,19 +36,21 @@ public class LegalRepresentativeRequestCaseBuildingPersonalisation implements Le
 
     public LegalRepresentativeRequestCaseBuildingPersonalisation(
         @Value("${govnotify.template.requestCaseBuilding.legalRep.email}") String legalRepresentativeRequestCaseBuildingTemplateId,
+        @Value("${govnotify.template.requestCaseBuilding.legalRep.email24Weeks}") String legalRepresentativeRequestCaseBuilding24WeeksTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         DirectionFinder directionFinder,
         CustomerServicesProvider customerServicesProvider
     ) {
         this.legalRepresentativeRequestCaseBuildingTemplateId = legalRepresentativeRequestCaseBuildingTemplateId;
+        this.legalRepresentativeRequestCaseBuilding24WeeksTemplateId = legalRepresentativeRequestCaseBuilding24WeeksTemplateId;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.directionFinder = directionFinder;
         this.customerServicesProvider = customerServicesProvider;
     }
 
     @Override
-    public String getTemplateId() {
-        return legalRepresentativeRequestCaseBuildingTemplateId;
+    public String getTemplateId(AsylumCase asylumCase) {
+        return hasStf24WeeksStatus(asylumCase) ? legalRepresentativeRequestCaseBuilding24WeeksTemplateId : legalRepresentativeRequestCaseBuildingTemplateId;
     }
 
     @Override

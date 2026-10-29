@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasStf24WeeksStatus;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
 
 import com.google.common.collect.ImmutableMap;
@@ -20,6 +21,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder
 public class LegalRepresentativeRespondentReviewPersonalisation implements LegalRepresentativeEmailNotificationPersonalisation {
 
     private final String reviewCaseLegalRepresentativeTemplateId;
+    private final String reviewCaseLegalRepresentativeStf24WeeksTemplateId;
     private final DirectionFinder directionFinder;
 
     @Value("${govnotify.emailPrefix.ada}")
@@ -30,15 +32,20 @@ public class LegalRepresentativeRespondentReviewPersonalisation implements Legal
     public LegalRepresentativeRespondentReviewPersonalisation(
         @NotNull(message = "reviewCaseLegalRepresentativeTemplateId cannot be null")
         @Value("${govnotify.template.respondentReview.legalRep.email}") String reviewCaseLegalRepresentativeTemplateId,
+        @NotNull(message = "reviewCaseLegalRepresentativeStf24WeeksTemplateId cannot be null")
+        @Value("${govnotify.template.respondentReview.legalRep.stf24weeks.email}") String reviewCaseLegalRepresentativeStf24WeeksTemplateId,
         DirectionFinder directionFinder) {
 
         this.reviewCaseLegalRepresentativeTemplateId = reviewCaseLegalRepresentativeTemplateId;
+        this.reviewCaseLegalRepresentativeStf24WeeksTemplateId = reviewCaseLegalRepresentativeStf24WeeksTemplateId;
         this.directionFinder = directionFinder;
     }
 
     @Override
-    public String getTemplateId() {
-        return reviewCaseLegalRepresentativeTemplateId;
+    public String getTemplateId(AsylumCase asylumCase) {
+        return hasStf24WeeksStatus(asylumCase)
+            ? reviewCaseLegalRepresentativeStf24WeeksTemplateId
+            : reviewCaseLegalRepresentativeTemplateId;
     }
 
     @Override
