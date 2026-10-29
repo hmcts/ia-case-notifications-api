@@ -70,6 +70,28 @@ public class AsylumCaseUtils24WeeksTest {
         assertFalse(AsylumCaseUtils.hasStf24WeeksStatus(asylumCase));
     }
 
+    @Test
+    void had_stf_24_weeks() {
+        AsylumCase asylumCase = mock(AsylumCase.class);
+        when(asylumCase.read(AsylumCaseDefinition.STF_24W_PREVIOUS_STATUS_WAS_YES_AUTO_GENERATED, YesOrNo.class))
+                .thenReturn(Optional.of(YES));
+        assertTrue(AsylumCaseUtils.wasPreviouslyStf24WeeksStatus(asylumCase));
+    }
+
+    @Test
+    void never_set_to_stf_24_weeks() {
+        AsylumCase asylumCase = mock(AsylumCase.class);
+        when(asylumCase.read(AsylumCaseDefinition.STF_24W_PREVIOUS_STATUS_WAS_YES_AUTO_GENERATED, YesOrNo.class))
+                .thenReturn(Optional.of(NO));
+        assertFalse(AsylumCaseUtils.wasPreviouslyStf24WeeksStatus(asylumCase));
+    }
+
+    @Test
+    void previously_stf_24_weeks_false_if_empty() {
+        AsylumCase asylumCase = mock(AsylumCase.class);
+        assertFalse(AsylumCaseUtils.wasPreviouslyStf24WeeksStatus(asylumCase));
+    }
+
 
     @Test
     void should_return_tribunal_received_date_when_present() {

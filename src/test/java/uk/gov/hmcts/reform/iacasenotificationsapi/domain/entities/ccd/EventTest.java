@@ -160,6 +160,7 @@ public class EventTest {
             Arguments.of("removeNonLegalRep", REMOVE_NON_LEGAL_REP.toString()),
             Arguments.of("queryManagementRaiseQuery", QUERY_MANAGEMENT_RAISE_QUERY.toString()),
             Arguments.of("queryManagementRespondQuery", QUERY_MANAGEMENT_RESPOND_QUERY.toString()),
+            Arguments.of("confirmHOReviewMaintained", CONFIRM_HO_REVIEW_MAINTAINED.toString()),
             Arguments.of("unknown", Event.UNKNOWN.toString()));
 
     }

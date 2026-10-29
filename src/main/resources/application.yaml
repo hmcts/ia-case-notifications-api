@@ -347,6 +347,7 @@ govnotify:
           sms: f886d73a-3528-4fbb-82ff-d39b97829c92
         maintained:
           email: 70e06b8e-e36a-42db-b1f8-9b04a6654dc2
+          email24Weeks: ada9598b-0d27-464e-b806-fa62bc0adfc1
           sms: 62e2bca9-c245-49cb-a7cd-e1afec345d9b
     buildCaseDirection:
       legalRep:
