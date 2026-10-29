@@ -11,6 +11,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ACCELERATED_DETAINED_APPEAL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REPRESENTATIVE_EMAIL_ADDRESS;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LEGAL_REP_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
 
 import com.google.common.collect.ImmutableMap;
@@ -36,6 +37,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder
 public class LegalRepresentativeRespondentReviewPersonalisationTest {
 
     private final String templateId = "someTemplateId";
+    private final String stf24WeeksTemplateId = "someStf24WeeksTemplateId";
     private final String legalRepEmailAddress = "legalrep@example.com";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String legalRepRefNumber = "somelegalRepRefNumber";
@@ -63,15 +65,25 @@ public class LegalRepresentativeRespondentReviewPersonalisationTest {
         when(asylumCase.read(LEGAL_REPRESENTATIVE_EMAIL_ADDRESS, String.class))
             .thenReturn(Optional.of(legalRepEmailAddress));
 
+        when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+
         legalRepresentativeRespondentReviewPersonalisation = new LegalRepresentativeRespondentReviewPersonalisation(
             templateId,
+            stf24WeeksTemplateId,
             directionFinder
         );
     }
 
     @Test
-    public void should_return_given_template_id() {
-        assertEquals(templateId, legalRepresentativeRespondentReviewPersonalisation.getTemplateId());
+    public void should_return_bau_template_id_for_non_24_week_case() {
+        when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+        assertEquals(templateId, legalRepresentativeRespondentReviewPersonalisation.getTemplateId(asylumCase));
+    }
+
+    @Test
+    public void should_return_stf24weeks_template_id_for_24_week_case() {
+        when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        assertEquals(stf24WeeksTemplateId, legalRepresentativeRespondentReviewPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
