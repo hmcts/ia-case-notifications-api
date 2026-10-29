@@ -148,6 +148,9 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
     @Value("${govnotify.template.caseListed.appellant.email}")
     private String appellantCaseListedEmailTemplateId;
 
+    @Value("${govnotify.template.caseListed.appellant.email24Weeks}")
+    private String appellantCaseListed24WeeksEmailTemplateId;
+
     @Value("${govnotify.template.caseListed.legallyReppedAppellant.email}")
     private String lrAppellantCaseListedNon24wTemplateId;
 
@@ -575,7 +578,7 @@ public class StatutoryTimeframe24WeeksNotificationsTest extends SpringBootIntegr
 
     private Stream<Arguments> caseListedTemplatePermutations() {
         return Stream.of(
-            Arguments.of(TestJourneyType.AIP, true, null, homeOffice24wListedTemplateId, appellantCaseListedEmailTemplateId, appellantCaseListedSmsTemplateId, Set.of()),
+            Arguments.of(TestJourneyType.AIP, true, null, homeOffice24wListedTemplateId, appellantCaseListed24WeeksEmailTemplateId, appellantCaseListedSmsTemplateId, Set.of()),
             Arguments.of(TestJourneyType.AIP, false, null, homeOfficeNon24wListedTemplateId, appellantCaseListedEmailTemplateId, appellantCaseListedSmsTemplateId, Set.of()),
             Arguments.of(TestJourneyType.AIP_MANUAL, true, null, homeOffice24wListedTemplateId, null, null, Set.of("_INTERNAL_CASE_LISTED_LETTER_BUNDLE")),
             Arguments.of(TestJourneyType.AIP_MANUAL, false, null, homeOfficeNon24wListedTemplateId, null, null, Set.of("_INTERNAL_CASE_LISTED_LETTER_BUNDLE")),

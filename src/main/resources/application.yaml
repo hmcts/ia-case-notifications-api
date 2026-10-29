@@ -134,7 +134,7 @@ govnotify:
           email: eabaebca-a4b9-4cfe-8619-2843349700d3
       appellant:
         email: 4625616a-178b-45fb-aebf-8cb945369ae0
-        sms: 5b7091e5-908a-4c5b-ac66-5dc5216fc53b
+        sms: 4d70fc1d-7809-493c-bf26-81ff12857b6a
         letter:
           inTime:
             withExemption: f161d437-d17d-421b-8118-48ec0f2c5446
@@ -452,6 +452,7 @@ govnotify:
           stf24Weeks: 38973a4e-1dc3-4fb4-a629-4b0bb79ea271
       appellant:
         email: c87b9b3d-9054-4f75-a7df-aa53b317422d
+        email24Weeks: 8b63d810-c959-4b0d-845b-33fdd4adbccf
         sms: 5b7faa5a-792e-48bf-a512-d21a27ae9b23
       legallyReppedAppellant:
         email: 3593d788-2d44-452f-a0c8-218e33be57da
