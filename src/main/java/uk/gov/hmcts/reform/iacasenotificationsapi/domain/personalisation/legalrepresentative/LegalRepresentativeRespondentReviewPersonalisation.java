@@ -20,6 +20,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder
 public class LegalRepresentativeRespondentReviewPersonalisation implements LegalRepresentativeEmailNotificationPersonalisation {
 
     private final String reviewCaseLegalRepresentativeTemplateId;
+    private final String reviewCaseLegalRepresentativeStfTemplateId;
     private final DirectionFinder directionFinder;
 
     @Value("${govnotify.emailPrefix.ada}")
@@ -30,15 +31,20 @@ public class LegalRepresentativeRespondentReviewPersonalisation implements Legal
     public LegalRepresentativeRespondentReviewPersonalisation(
         @NotNull(message = "reviewCaseLegalRepresentativeTemplateId cannot be null")
         @Value("${govnotify.template.respondentReview.legalRep.email}") String reviewCaseLegalRepresentativeTemplateId,
+        @NotNull(message = "reviewCaseLegalRepresentativeStfTemplateId cannot be null")
+        @Value("${govnotify.template.respondentReview.legalRep.stf.email}") String reviewCaseLegalRepresentativeStfTemplateId,
         DirectionFinder directionFinder) {
 
         this.reviewCaseLegalRepresentativeTemplateId = reviewCaseLegalRepresentativeTemplateId;
+        this.reviewCaseLegalRepresentativeStfTemplateId = reviewCaseLegalRepresentativeStfTemplateId;
         this.directionFinder = directionFinder;
     }
 
     @Override
-    public String getTemplateId() {
-        return reviewCaseLegalRepresentativeTemplateId;
+    public String getTemplateId(AsylumCase asylumCase) {
+        return isAcceleratedDetainedAppeal(asylumCase)
+            ? reviewCaseLegalRepresentativeTemplateId
+            : reviewCaseLegalRepresentativeStfTemplateId;
     }
 
     @Override

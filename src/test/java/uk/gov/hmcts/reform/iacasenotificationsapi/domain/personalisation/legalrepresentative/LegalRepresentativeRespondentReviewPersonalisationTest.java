@@ -36,6 +36,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder
 public class LegalRepresentativeRespondentReviewPersonalisationTest {
 
     private final String templateId = "someTemplateId";
+    private final String stfTemplateId = "someStfTemplateId";
     private final String legalRepEmailAddress = "legalrep@example.com";
     private final String appealReferenceNumber = "someReferenceNumber";
     private final String legalRepRefNumber = "somelegalRepRefNumber";
@@ -65,13 +66,21 @@ public class LegalRepresentativeRespondentReviewPersonalisationTest {
 
         legalRepresentativeRespondentReviewPersonalisation = new LegalRepresentativeRespondentReviewPersonalisation(
             templateId,
+            stfTemplateId,
             directionFinder
         );
     }
 
     @Test
-    public void should_return_given_template_id() {
-        assertEquals(templateId, legalRepresentativeRespondentReviewPersonalisation.getTemplateId());
+    public void should_return_ada_template_id_for_ada_case() {
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        assertEquals(templateId, legalRepresentativeRespondentReviewPersonalisation.getTemplateId(asylumCase));
+    }
+
+    @Test
+    public void should_return_stf_template_id_for_non_ada_case() {
+        when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.NO));
+        assertEquals(stfTemplateId, legalRepresentativeRespondentReviewPersonalisation.getTemplateId(asylumCase));
     }
 
     @Test
