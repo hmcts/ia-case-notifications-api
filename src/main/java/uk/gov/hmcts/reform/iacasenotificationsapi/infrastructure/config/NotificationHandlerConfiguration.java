@@ -8539,7 +8539,7 @@ public class NotificationHandlerConfiguration {
 
                 boolean isAppealReviewOutcomeMaintained =
                     asylumCase.read(AsylumCaseDefinition.APPEAL_REVIEW_OUTCOME, AppealReviewOutcome.class)
-                        .map(appealReviewOutcome -> appealReviewOutcome.equals(AppealReviewOutcome.DECISION_MAINTAINED))
+                        .map(appealReviewOutcome -> appealReviewOutcome == AppealReviewOutcome.DECISION_MAINTAINED)
                         .orElse(false);
 
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
