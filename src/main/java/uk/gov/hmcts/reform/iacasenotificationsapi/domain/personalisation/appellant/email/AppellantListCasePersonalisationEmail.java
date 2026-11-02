@@ -29,6 +29,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.HearingDetailsF
 public class AppellantListCasePersonalisationEmail implements EmailNotificationPersonalisation {
 
     private final String appellantCaseListedTemplateId;
+    private final String appellantCaseListed24WeeksTemplateId;
     private final String listAssistHearingAppellantCaseListedTemplateId;
     private final String legallyReppedAppellantCaseListedTemplateId;
     private final String legallyReppedAppellantCaseListedStf24WeeksTemplateId;
@@ -46,6 +47,7 @@ public class AppellantListCasePersonalisationEmail implements EmailNotificationP
 
     public AppellantListCasePersonalisationEmail(
         @Value("${govnotify.template.caseListed.appellant.email}") String appellantCaseListedEmailTemplateId,
+        @Value("${govnotify.template.caseListed.appellant.email24Weeks}") String appellantCaseListed24WeeksEmailTemplateId,
         @Value("${govnotify.template.listAssistHearing.caseListed.appellant.email}") String listAssistHearingAppellantCaseListedTemplateId,
         @Value("${govnotify.template.caseListed.legallyReppedAppellant.email}") String legallyReppedAppellantCaseListedTemplateId,
         @Value("${govnotify.template.caseListed.legallyReppedAppellant.stf24Weeks}") String legallyReppedAppellantCaseListedStf24WeeksTemplateId,
@@ -57,6 +59,7 @@ public class AppellantListCasePersonalisationEmail implements EmailNotificationP
         RecipientsFinder recipientsFinder
     ) {
         this.appellantCaseListedTemplateId = appellantCaseListedEmailTemplateId;
+        this.appellantCaseListed24WeeksTemplateId = appellantCaseListed24WeeksEmailTemplateId;
         this.listAssistHearingAppellantCaseListedTemplateId = listAssistHearingAppellantCaseListedTemplateId;
         this.legallyReppedAppellantCaseListedTemplateId = legallyReppedAppellantCaseListedTemplateId;
         this.legallyReppedAppellantCaseListedStf24WeeksTemplateId = legallyReppedAppellantCaseListedStf24WeeksTemplateId;
@@ -71,8 +74,8 @@ public class AppellantListCasePersonalisationEmail implements EmailNotificationP
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
         boolean isAip = isAipJourney(asylumCase);
-        if (!isAip && hasStf24WeeksStatus(asylumCase)) {
-            return legallyReppedAppellantCaseListedStf24WeeksTemplateId;
+        if (hasStf24WeeksStatus(asylumCase)) {
+            return isAip ? appellantCaseListed24WeeksTemplateId : legallyReppedAppellantCaseListedStf24WeeksTemplateId;
         }
         if (asylumCase.read(IS_INTEGRATED, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES) {
             return isAip ?
