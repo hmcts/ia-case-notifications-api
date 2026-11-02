@@ -1948,6 +1948,7 @@ security:
       - "joinAppealConfirmation"
       - "generatePinInPost"
       - "queryManagementRespondQuery"
+      - "confirmHOReviewMaintained"
     challenged-access-legal-operations:
       - "sendDirection"
       - "changeDirectionDueDate"
@@ -2099,6 +2100,7 @@ security:
       - "joinAppealConfirmation"
       - "generatePinInPost"
       - "queryManagementRespondQuery"
+      - "confirmHOReviewMaintained"
     # These events are used by the bails service, they will need to be migrated to the admin access management roles - see DIAC-855
     caseworker-ia-admofficer:
       - "queryManagementRespondQuery"
