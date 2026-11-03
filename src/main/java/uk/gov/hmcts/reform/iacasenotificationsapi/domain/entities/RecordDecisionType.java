@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum RecordDecisionType {
@@ -12,6 +13,7 @@ public enum RecordDecisionType {
     @JsonValue
     private final String value;
 
+    @JsonCreator
     RecordDecisionType(String value) {
         this.value = value;
     }

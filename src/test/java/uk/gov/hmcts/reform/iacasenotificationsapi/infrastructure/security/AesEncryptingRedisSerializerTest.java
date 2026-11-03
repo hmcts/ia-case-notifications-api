@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.security;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.clients.model.idam.UserInfo;
 
@@ -14,17 +13,18 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@SuppressWarnings("removal")
 class AesEncryptingRedisSerializerTest {
 
     private static final String VALID_KEY_256 = Base64.getEncoder()
         .encodeToString("01234567890123456789012345678901".getBytes());
 
     private AesEncryptingRedisSerializer<String> serializer;
-    private Jackson2JsonRedisSerializer<String> delegateSerializer;
+    private org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer<String> delegateSerializer;
 
     @BeforeEach
     void setUp() {
-        delegateSerializer = new Jackson2JsonRedisSerializer<>(String.class);
+        delegateSerializer = new org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer<>(String.class);
         serializer = new AesEncryptingRedisSerializer<>(delegateSerializer, VALID_KEY_256);
     }
 
@@ -50,8 +50,8 @@ class AesEncryptingRedisSerializerTest {
 
     @Test
     void roundTrip_pojoDelegate() {
-        Jackson2JsonRedisSerializer<UserInfo> userInfoDelegate =
-            new Jackson2JsonRedisSerializer<>(UserInfo.class);
+        org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer<UserInfo> userInfoDelegate =
+            new org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer<>(UserInfo.class);
         AesEncryptingRedisSerializer<UserInfo> userInfoSerializer =
             new AesEncryptingRedisSerializer<>(userInfoDelegate, VALID_KEY_256);
 

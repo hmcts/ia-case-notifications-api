@@ -36,6 +36,9 @@ management:
 spring:
   application:
     name: Immigration & Asylum case notifications API
+  http:
+    converters:
+      preferred-json-mapper: jackson2
   jackson.date-format: yyyy-MM-dd
   main:
     allow-bean-definition-overriding: true
