@@ -117,6 +117,7 @@ class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmailTest {
 
         assertEquals(MOCK_PREFIX, result.get(SUBJECT_PREFIX_KEY));
 
+        assertEquals(HOME_OFFICE_REFERENCE_NUMBER_VALUE, result.get("homeOfficeReferenceNumber"));
         assertEquals(APPELLANT_GIVEN_NAMES, result.get(APPELLANT_GIVEN_NAMES_KEY));
         assertEquals(APPELLANT_FAMILY_NAME, result.get(APPELLANT_FAMILY_NAME_KEY));
         assertEquals(IA_EX_UI_FRONTEND_URL, result.get(LINK_TO_SERVICE_KEY));
@@ -159,6 +160,8 @@ class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmailTest {
             .thenReturn(Optional.empty());
         when(asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class))
             .thenReturn(Optional.empty());
+        when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class))
+            .thenReturn(Optional.empty());
     }
 
     private void setupCustomerServicesMocks() {
@@ -173,6 +176,7 @@ class AppellantRemoveStatutoryTimeframe24WeeksPersonalisationEmailTest {
         assertThat(personalisation)
             .containsEntry(APPELLANT_GIVEN_NAMES_KEY, "")
             .containsEntry(APPELLANT_FAMILY_NAME_KEY, "")
+            .containsEntry("homeOfficeReferenceNumber", "")
             .containsEntry(LINK_TO_SERVICE_KEY, IA_EX_UI_FRONTEND_URL);
     }
 }
