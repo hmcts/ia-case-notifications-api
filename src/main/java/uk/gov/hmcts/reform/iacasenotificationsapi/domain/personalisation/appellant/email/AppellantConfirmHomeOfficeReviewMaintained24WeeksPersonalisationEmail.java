@@ -16,18 +16,18 @@ import static java.util.Objects.requireNonNull;
 @Service
 public class AppellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationEmail implements EmailNotificationPersonalisation {
 
-    private final String maintainedResponseReviewDirectionTemplateId;
+    private final String confirmHOReviewMaintainedTemplateId;
     private final String iaAipFrontendUrl;
     private final RecipientsFinder recipientsFinder;
     private final CustomerServicesProvider customerServicesProvider;
 
     public AppellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationEmail(
-            @Value("${govnotify.template.responseReviewDirection.appellant.maintained.email24Weeks}") String maintainedResponseReviewDirectionTemplateId,
+            @Value("${govnotify.template.confirmHOReviewMaintained.appellant.email24Weeks}") String confirmHOReviewMaintainedTemplateId,
             @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
             RecipientsFinder recipientsFinder,
             CustomerServicesProvider customerServicesProvider
     ) {
-        this.maintainedResponseReviewDirectionTemplateId = maintainedResponseReviewDirectionTemplateId;
+        this.confirmHOReviewMaintainedTemplateId = confirmHOReviewMaintainedTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.recipientsFinder = recipientsFinder;
         this.customerServicesProvider = customerServicesProvider;
@@ -35,7 +35,7 @@ public class AppellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationEma
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return maintainedResponseReviewDirectionTemplateId;
+        return confirmHOReviewMaintainedTemplateId;
     }
 
     @Override

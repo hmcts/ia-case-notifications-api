@@ -22,7 +22,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 class AppellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationSmsTest {
 
 
-    private final String maintainedResponseReviewDirectionTemplateId = "maintainedResponseReviewDirectionTemplateId";
+    private final String confirmHOReviewMaintainedTemplateId = "confirmHOReviewMaintainedTemplateId";
     private final String iaAipFrontendUrl = "http://localhost";
     @Mock
     AsylumCase asylumCase;
@@ -37,7 +37,7 @@ class AppellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationSmsTest {
 
         appellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationSms =
             new AppellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationSms(
-                maintainedResponseReviewDirectionTemplateId, iaAipFrontendUrl, recipientsFinder);
+                confirmHOReviewMaintainedTemplateId, iaAipFrontendUrl, recipientsFinder);
 
     }
 
@@ -70,7 +70,7 @@ class AppellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationSmsTest {
 
     @Test
     public void should_return_given_template_id_for_decision_maintained() {
-        assertEquals(maintainedResponseReviewDirectionTemplateId, appellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationSms.getTemplateId(asylumCase));
+        assertEquals(confirmHOReviewMaintainedTemplateId, appellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationSms.getTemplateId(asylumCase));
     }
 
     @Test

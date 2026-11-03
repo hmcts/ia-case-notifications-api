@@ -22,7 +22,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 @ExtendWith(MockitoExtension.class)
 class AppellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationEmailTest {
 
-    private final String maintainedResponseReviewDirectionTemplateId = "maintainedResponseReviewDirectionTemplateId";
+    private final String confirmHOReviewMaintainedTemplateId = "confirmHOReviewMaintainedTemplateId";
     private final String iaAipFrontendUrl = "http://localhost";
     @Mock
     AsylumCase asylumCase;
@@ -39,7 +39,7 @@ class AppellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationEmailTest 
 
         appellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationEmail =
             new AppellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationEmail(
-                maintainedResponseReviewDirectionTemplateId, iaAipFrontendUrl, recipientsFinder, customerServicesProvider);
+                confirmHOReviewMaintainedTemplateId, iaAipFrontendUrl, recipientsFinder, customerServicesProvider);
     }
 
     @Test
@@ -90,7 +90,7 @@ class AppellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationEmailTest 
     @Test
     public void should_return_given_template_id_for_decision_maintained() {
 
-        assertEquals(maintainedResponseReviewDirectionTemplateId, appellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationEmail.getTemplateId(asylumCase));
+        assertEquals(confirmHOReviewMaintainedTemplateId, appellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationEmail.getTemplateId(asylumCase));
     }
 
     @Test
