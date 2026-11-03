@@ -353,7 +353,7 @@ govnotify:
     confirmHOReviewMaintained:
       appellant:
         email24Weeks: ada9598b-0d27-464e-b806-fa62bc0adfc1
-        sms24Weeks: 62e2bca9-c245-49cb-a7cd-e1afec345d9b
+        sms24Weeks: a1365cd8-0b02-4760-83ac-2cf5be30a5e0
     buildCaseDirection:
       legalRep:
         email: b96c8935-66b1-4a46-aca6-f8e86d7a5d8f
