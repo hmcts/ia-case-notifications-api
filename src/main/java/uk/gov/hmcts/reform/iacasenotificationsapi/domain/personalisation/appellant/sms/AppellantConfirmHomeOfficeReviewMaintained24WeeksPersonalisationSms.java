@@ -16,16 +16,16 @@ import static java.util.Objects.requireNonNull;
 @Service
 public class AppellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationSms implements SmsNotificationPersonalisation {
 
-    private final String confirmHOReviewMaintainedTemplateId;
+    private final String confirmHomeOfficeReviewMaintainedTemplateId;
     private final String iaAipFrontendUrl;
     private final RecipientsFinder recipientsFinder;
 
     public AppellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationSms(
-            @Value("${govnotify.template.confirmHOReviewMaintained.appellant.sms24Weeks}") String confirmHOReviewMaintainedTemplateId,
+            @Value("${govnotify.template.confirmHOReviewMaintained.appellant.sms24Weeks}") String confirmHomeOfficeReviewMaintainedTemplateId,
             @Value("${iaAipFrontendUrl}") String iaAipFrontendUrl,
             RecipientsFinder recipientsFinder
     ) {
-        this.confirmHOReviewMaintainedTemplateId = confirmHOReviewMaintainedTemplateId;
+        this.confirmHomeOfficeReviewMaintainedTemplateId = confirmHomeOfficeReviewMaintainedTemplateId;
         this.iaAipFrontendUrl = iaAipFrontendUrl;
         this.recipientsFinder = recipientsFinder;
     }
@@ -33,7 +33,7 @@ public class AppellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationSms
 
     @Override
     public String getTemplateId(AsylumCase asylumCase) {
-        return confirmHOReviewMaintainedTemplateId;
+        return confirmHomeOfficeReviewMaintainedTemplateId;
     }
 
 
