@@ -8542,13 +8542,6 @@ public class NotificationHandlerConfiguration {
                         .map(appealReviewOutcome -> appealReviewOutcome == AppealReviewOutcome.DECISION_MAINTAINED)
                         .orElse(false);
 
-                log.info("confirmHomeOfficeReviewMaintainedAipNotificationGenerator has been hit");
-                log.info(asylumCase.read(AsylumCaseDefinition.APPEAL_REVIEW_OUTCOME, AppealReviewOutcome.class)
-                    .map(AppealReviewOutcome::toString).orElse("none found"));
-                log.info(String.valueOf(isAppealReviewOutcomeMaintained));
-                log.info(String.valueOf(isAipJourney(callback.getCaseDetails().getCaseData())));
-                log.info(String.valueOf(wasPreviouslyStf24WeeksStatus(callback.getCaseDetails().getCaseData())));
-
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.CONFIRM_HO_REVIEW_MAINTAINED
                     && isAipJourney(callback.getCaseDetails().getCaseData())
