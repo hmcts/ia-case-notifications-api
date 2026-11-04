@@ -8529,6 +8529,32 @@ public class NotificationHandlerConfiguration {
         );
     }
 
+    private boolean isAppealReviewOutcomeMaintained(AsylumCase asylumCase) {
+
+        return asylumCase.read(AsylumCaseDefinition.APPEAL_REVIEW_OUTCOME, AppealReviewOutcome.class)
+            .map(appealReviewOutcome -> appealReviewOutcome == AppealReviewOutcome.DECISION_MAINTAINED)
+            .orElse(false);
+    }
+
+    @Bean
+    public PreSubmitCallbackHandler<AsylumCase> confirmHomeOfficeReviewMaintainedNotificationHandler(
+        @Qualifier("confirmHomeOfficeReviewMaintainedNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
+
+        return new NotificationHandler(
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.CONFIRM_HO_REVIEW_MAINTAINED
+                    && isRepJourney(asylumCase)
+                    && !isInternalCase(asylumCase)
+                    && wasPreviouslyStf24WeeksStatus(asylumCase)
+                    && isAppealReviewOutcomeMaintained(asylumCase);
+            },
+            notificationGenerators
+        );
+    }
+
     @Bean
     public PreSubmitCallbackHandler<AsylumCase> confirmHomeOfficeReviewMaintainedAipNotificationHandler(
         @Qualifier("confirmHomeOfficeReviewMaintainedAipNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
@@ -8537,16 +8563,11 @@ public class NotificationHandlerConfiguration {
             (callbackStage, callback) -> {
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
-                boolean isAppealReviewOutcomeMaintained =
-                    asylumCase.read(AsylumCaseDefinition.APPEAL_REVIEW_OUTCOME, AppealReviewOutcome.class)
-                        .map(appealReviewOutcome -> appealReviewOutcome == AppealReviewOutcome.DECISION_MAINTAINED)
-                        .orElse(false);
-
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.CONFIRM_HO_REVIEW_MAINTAINED
-                    && isAipJourney(callback.getCaseDetails().getCaseData())
-                    && wasPreviouslyStf24WeeksStatus(callback.getCaseDetails().getCaseData())
-                    && isAppealReviewOutcomeMaintained;
+                    && isAipJourney(asylumCase)
+                    && wasPreviouslyStf24WeeksStatus(asylumCase)
+                    && isAppealReviewOutcomeMaintained(asylumCase);
             },
             notificationGenerators,
             getErrorHandler()

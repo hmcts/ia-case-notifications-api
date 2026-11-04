@@ -7829,6 +7829,21 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("confirmHomeOfficeReviewMaintainedNotificationGenerator")
+    public List<NotificationGenerator> confirmHomeOfficeReviewMaintainedNotificationGenerator(
+        LegalRepresentativeConfirmHomeOfficeReviewMaintained24WeeksPersonalisation legalRepresentativeConfirmHomeOfficeReviewMaintained24WeeksPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(legalRepresentativeConfirmHomeOfficeReviewMaintained24WeeksPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("confirmHomeOfficeReviewMaintainedAipNotificationGenerator")
     public List<NotificationGenerator> confirmHomeOfficeReviewMaintainedAipNotificationGenerator(
         AppellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationEmail appellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationEmail,
