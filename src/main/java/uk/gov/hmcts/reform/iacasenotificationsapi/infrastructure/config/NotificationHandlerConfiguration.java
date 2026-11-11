@@ -8394,8 +8394,10 @@ public class NotificationHandlerConfiguration {
 
         return new NotificationHandler(
                 (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == QUERY_MANAGEMENT_RAISE_QUERY;
+                            && callback.getEvent() == QUERY_MANAGEMENT_RAISE_QUERY
+                            && isRepJourney(asylumCase);
                 },
                 notificationGenerators,
                 getErrorHandler()
@@ -8409,8 +8411,10 @@ public class NotificationHandlerConfiguration {
 
         return new NotificationHandler(
                 (callbackStage, callback) -> {
+                    AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
                     return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                            && callback.getEvent() == QUERY_MANAGEMENT_RESPOND_QUERY;
+                            && callback.getEvent() == QUERY_MANAGEMENT_RESPOND_QUERY
+                            && isRepJourney(asylumCase);
                 },
                 notificationGenerators,
                 getErrorHandler()
