@@ -1,7 +1,5 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-
 import static java.util.Objects.requireNonNull;
 
 public class PreviousDates {
@@ -9,7 +7,6 @@ public class PreviousDates {
     private String dateDue;
     private String dateSent;
 
-    @JsonCreator
     private PreviousDates() {
         // noop -- for deserializer
     }

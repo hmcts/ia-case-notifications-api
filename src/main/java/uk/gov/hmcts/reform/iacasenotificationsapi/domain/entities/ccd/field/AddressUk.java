@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field;
 
 import static java.util.Objects.requireNonNull;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Optional;
 
@@ -29,7 +28,6 @@ public class AddressUk {
     @JsonProperty("Country")
     private Optional<String> country = Optional.empty();
 
-    @JsonCreator
     private AddressUk() {
         // noop -- for deserializer
     }

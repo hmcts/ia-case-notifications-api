@@ -3,8 +3,6 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities;
 import static java.util.Objects.requireNonNull;
 
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.IdValue;
@@ -21,7 +19,7 @@ public class BailDirection {
     private String dateTimeDirectionModified;
     private List<IdValue<PreviousDates>> previousDates;
 
-    @JsonCreator
+
     private BailDirection() {
     }
 
