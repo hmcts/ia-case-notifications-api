@@ -1881,7 +1881,8 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.REQUEST_RESPONSE_REVIEW
                     && isRepJourney(asylumCase)
-                    && !isInternalCase(asylumCase);
+                    && !isInternalCase(asylumCase)
+                    && !isAppealReviewOutcomeWithdrawn(asylumCase);
             },
             notificationGenerators
         );
@@ -1892,12 +1893,22 @@ public class NotificationHandlerConfiguration {
         @Qualifier("requestResponseReviewAipNotificationGenerator") List<NotificationGenerator> notificationGenerators) {
 
         return new NotificationHandler(
-            (callbackStage, callback) ->
-                callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+            (callbackStage, callback) -> {
+                AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
+
+                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.REQUEST_RESPONSE_REVIEW
-                    && isAipJourney(callback.getCaseDetails().getCaseData()),
+                    && isAipJourney(asylumCase)
+                    && !isAppealReviewOutcomeWithdrawn(asylumCase);
+            },
             notificationGenerators
         );
+    }
+
+    private boolean isAppealReviewOutcomeWithdrawn(AsylumCase asylumCase) {
+        return  asylumCase.read(AsylumCaseDefinition.APPEAL_REVIEW_OUTCOME, AppealReviewOutcome.class)
+                .map(appealReviewOutcome -> appealReviewOutcome == AppealReviewOutcome.DECISION_WITHDRAWN)
+                .orElse(false);
     }
 
     @Bean
