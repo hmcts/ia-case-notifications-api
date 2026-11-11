@@ -13,6 +13,7 @@ public enum YesOrNo {
 
     private final String id;
 
+    @JsonCreator
     YesOrNo(String id) {
         this.id = id;
     }
