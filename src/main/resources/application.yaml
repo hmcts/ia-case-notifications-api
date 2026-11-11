@@ -1848,6 +1848,7 @@ security:
       - "nlrDetailsUpdated"
       - "removeNonLegalRep"
       - "queryManagementRaiseQuery"
+      - "queryManagementRespondQuery"
     caseworker-ia-legalrep-solicitor:
       - "startAppeal"
       - "editAppeal"
