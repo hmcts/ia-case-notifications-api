@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field;
 
 import static java.util.Objects.requireNonNull;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.databind.annotation.JsonNaming;
 import lombok.EqualsAndHashCode;
@@ -16,6 +17,7 @@ public class Document {
     private String documentBinaryUrl;
     private String documentFilename;
 
+    @JsonCreator
     private Document() {
         // noop -- for deserializer
     }
