@@ -3765,6 +3765,7 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("internalMakeAnApplicationNotificationGenerator")
     public List<NotificationGenerator> internalMakeAnApplicationNotificationHandler(
+        LegalRepresentativeMakeAnApplicationPersonalisation legalRepresentativeMakeApplicationPersonalisation,
         HomeOfficeMakeAnApplicationPersonalisation homeOfficeMakeAnApplicationPersonalisation,        
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
@@ -3773,6 +3774,7 @@ public class NotificationGeneratorConfiguration {
         return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
+                    legalRepresentativeMakeApplicationPersonalisation,
                     homeOfficeMakeAnApplicationPersonalisation                    
                 ),
                 notificationSender,
