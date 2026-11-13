@@ -10,6 +10,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.ARIA_LISTING_REFERENCE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ACCELERATED_DETAINED_APPEAL;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ADMIN;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
 
 import java.util.Map;
@@ -18,6 +19,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
@@ -80,10 +82,17 @@ public class CaseOfficerMakeAnApplicationPersonalisationTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"Judge's review of application decision", "Judge's review of Legal Officer decision"})
-    public void should_return_given_template_id_for_judge_review(String applicationType) {
+    @CsvSource({
+        "Judge's review of application decision, false",
+        "Judge's review of application decision, true",
+        "Judge's review of Legal Officer decision, false",
+        "Judge's review of Legal Officer decision, true"
+    })
+    public void should_return_given_template_id_for_judge_review(String applicationType, boolean isInternalCase) {
         when(makeAnApplication.getType())
             .thenReturn(applicationType);
+        when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(isInternalCase ? YesOrNo.YES : YesOrNo.NO));
+
         when(appealService.isAppealListed(asylumCase)).thenReturn(false);
         assertEquals(makeAnApplicationCaseOfficerJudgeReviewBeforeListingTemplateId,
             caseOfficerMakeAnApplicationPersonalisation.getTemplateId(asylumCase));
@@ -93,8 +102,11 @@ public class CaseOfficerMakeAnApplicationPersonalisationTest {
             caseOfficerMakeAnApplicationPersonalisation.getTemplateId(asylumCase));
     }
 
-    @Test
-    public void should_return_given_template_id() {
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    public void should_return_given_template_id(boolean isInternalCase) {
+        when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(isInternalCase ? YesOrNo.YES : YesOrNo.NO));
+
         when(makeAnApplication.getType()).thenReturn("some application type");
         when(appealService.isAppealListed(asylumCase)).thenReturn(false);
         assertEquals(makeAnApplicationCaseOfficerBeforeListingTemplateId,
