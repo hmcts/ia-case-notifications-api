@@ -4,12 +4,14 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.util.HashMap;
 import java.util.Optional;
+
+import tools.jackson.databind.json.JsonMapper;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseData;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.config.JsonMapperFactory;
 
 public class BailCase extends HashMap<String, Object> implements CaseData {
 
-    private final ObjectMapper objectMapper = JsonMapperFactory.CUSTOM_MAPPER;
+    private final ObjectMapper objectMapper = new JsonMapper();
 
     public BailCase() {
     }
