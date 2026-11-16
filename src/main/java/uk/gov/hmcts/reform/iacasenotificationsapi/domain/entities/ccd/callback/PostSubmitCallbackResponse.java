@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.databind.annotation.JsonNaming;
 import java.util.Optional;
@@ -26,6 +27,7 @@ public class PostSubmitCallbackResponse {
         this.confirmationBody = Optional.ofNullable(confirmationBody);
     }
 
+    @JsonCreator
     public PostSubmitCallbackResponse() {
         // noop -- for deserializer
     }

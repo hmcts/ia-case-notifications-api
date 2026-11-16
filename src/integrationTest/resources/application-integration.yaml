@@ -24,11 +24,8 @@ app:
     enabled: false
 
 spring:
-  data:
-    redis:
-      url: ${REDIS_URL:redis://localhost:6379}
   autoconfigure:
     exclude:
-      - org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration
-      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
-      - org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration
+      - org.springframework.boot.cache.autoconfigure.CacheAutoConfiguration
+      - org.springframework.boot.data.redis.autoconfigure.DataRedisAutoConfiguration
+      - org.springframework.boot.data.redis.autoconfigure.DataRedisRepositoriesAutoConfiguration
