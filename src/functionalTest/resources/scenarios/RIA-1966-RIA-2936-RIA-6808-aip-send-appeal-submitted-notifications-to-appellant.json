@@ -85,7 +85,6 @@
         "subject": "",
         "body": [
           "PA/12345/2019",
-          "{$TODAY+28|d MMM yyyy}",
           "{$iaAipFrontendUrl}"
         ]
       }

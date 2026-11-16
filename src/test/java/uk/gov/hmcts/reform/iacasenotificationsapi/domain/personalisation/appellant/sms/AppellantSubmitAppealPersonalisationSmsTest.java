@@ -7,8 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -25,7 +23,6 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.CaseDetail
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.callback.Callback;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AppealService;
-import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.SystemDateProvider;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -49,8 +46,6 @@ class AppellantSubmitAppealPersonalisationSmsTest {
     AsylumCase asylumCase;
     @Mock
     RecipientsFinder recipientsFinder;
-    @Mock
-    SystemDateProvider systemDateProvider;
     @Mock
     AppealService appealService;
     @Mock
@@ -85,9 +80,7 @@ class AppellantSubmitAppealPersonalisationSmsTest {
             smsTemplateId,
             nonAipSmsTemplateId,
             iaAipFrontendUrl,
-            28,
             recipientsFinder,
-            systemDateProvider,
             appealService);
     }
 
@@ -169,15 +162,9 @@ class AppellantSubmitAppealPersonalisationSmsTest {
 
     @Test
     void should_return_personalisation_when_all_information_given() {
-        final String dueDate = LocalDate.now().plusDays(28)
-            .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
-
-        when(systemDateProvider.dueDate(28)).thenReturn(dueDate);
-
         Map<String, String> personalisation = appellantSubmitAppealPersonalisationSms.getPersonalisation(callback);
         assertThat(personalisation)
             .containsEntry("Appeal Ref Number", mockedAppealReferenceNumber)
-            .containsEntry("due date", dueDate)
             .containsEntry("Hyperlink to service", iaAipFrontendUrl);
 
         assertThat(personalisation)
@@ -193,11 +180,7 @@ class AppellantSubmitAppealPersonalisationSmsTest {
 
     @Test
     void should_return_personalisation_when_only_mandatory_information_given() {
-        final String dueDate = LocalDate.now().plusDays(28)
-            .format(DateTimeFormatter.ofPattern("d MMM yyyy"));
-
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
-        when(systemDateProvider.dueDate(28)).thenReturn(dueDate);
 
 
         when(asylumCase.read(LEGAL_REP_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
@@ -211,7 +194,6 @@ class AppellantSubmitAppealPersonalisationSmsTest {
 
         assertThat(personalisation)
             .containsEntry("Appeal Ref Number", "")
-            .containsEntry("due date", dueDate)
             .containsEntry("Hyperlink to service", iaAipFrontendUrl);
 
         assertThat(personalisation)

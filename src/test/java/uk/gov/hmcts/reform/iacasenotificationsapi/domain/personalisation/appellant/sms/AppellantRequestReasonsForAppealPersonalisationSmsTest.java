@@ -6,10 +6,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.STF_24W_CURRENT_STATUS_AUTO_GENERATED;
 
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,6 +32,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.RecipientsFinde
 public class AppellantRequestReasonsForAppealPersonalisationSmsTest {
 
     private final String smsTemplateId = "someSmsTemplateId";
+    private final String sms24WeeksTemplateId = "some24WeeksSmsTemplateId";
     private final String iaAipFrontendUrl = "http://localhost";
     private final String mockedAppealReferenceNumber = "someReferenceNumber";
     private final String expectedDirectionDueDate = "27 Aug 2019";
@@ -55,12 +58,13 @@ public class AppellantRequestReasonsForAppealPersonalisationSmsTest {
 
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class))
             .thenReturn(Optional.of(mockedAppealReferenceNumber));
-        when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class))
-            .thenReturn(Optional.of(mockedAppealReferenceNumber));
+
+        when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.empty());
 
         appellantRequestReasonsForAppealSubmissionPersonalisationSms =
             new AppellantRequestReasonsForAppealPersonalisationSms(
                 smsTemplateId,
+                sms24WeeksTemplateId,
                 iaAipFrontendUrl,
                 recipientsFinder,
                 directionFinder);
@@ -68,7 +72,13 @@ public class AppellantRequestReasonsForAppealPersonalisationSmsTest {
 
     @Test
     public void should_return_given_template_id() {
-        assertEquals(smsTemplateId, appellantRequestReasonsForAppealSubmissionPersonalisationSms.getTemplateId());
+        assertEquals(smsTemplateId, appellantRequestReasonsForAppealSubmissionPersonalisationSms.getTemplateId(asylumCase));
+    }
+
+    @Test
+    public void should_return_24_weeks_template_id_for_stf_case() {
+        when(asylumCase.read(STF_24W_CURRENT_STATUS_AUTO_GENERATED, YesOrNo.class)).thenReturn(Optional.of(YesOrNo.YES));
+        assertEquals(sms24WeeksTemplateId, appellantRequestReasonsForAppealSubmissionPersonalisationSms.getTemplateId(asylumCase));
     }
 
     @Test
@@ -129,6 +139,7 @@ public class AppellantRequestReasonsForAppealPersonalisationSmsTest {
             appellantRequestReasonsForAppealSubmissionPersonalisationSms.getPersonalisation(asylumCase);
         assertThat(personalisation)
             .containsEntry("Appeal Ref Number", mockedAppealReferenceNumber)
+            .containsEntry("appealReferenceNumber", mockedAppealReferenceNumber)
             .containsEntry("Hyperlink to service", iaAipFrontendUrl)
             .containsEntry("due date", expectedDirectionDueDate);
 
@@ -144,6 +155,7 @@ public class AppellantRequestReasonsForAppealPersonalisationSmsTest {
 
         assertThat(personalisation)
             .containsEntry("Appeal Ref Number", "")
+            .containsEntry("appealReferenceNumber", "")
             .containsEntry("Hyperlink to service", iaAipFrontendUrl)
             .containsEntry("due date", expectedDirectionDueDate);
     }
