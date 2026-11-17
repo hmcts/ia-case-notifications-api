@@ -1725,11 +1725,10 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.SEND_DIRECTION
                     && isRepJourney(asylumCase)
-                    && !isInternalCase(asylumCase)
                     && directionFinder
-                    .findFirst(asylumCase, DirectionTag.NONE)
-                    .map(direction -> direction.getParties().equals(Parties.BOTH))
-                    .orElse(false);
+                        .findFirst(asylumCase, DirectionTag.NONE)
+                        .map(direction -> direction.getParties().equals(Parties.BOTH))
+                        .orElse(false);
             },
             notificationGenerators
         );
@@ -7445,7 +7444,7 @@ public class NotificationHandlerConfiguration {
                 return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
                     && callback.getEvent() == Event.SEND_DIRECTION
                     && (isInternalNonStdDirectionWithParty(asylumCase, Parties.APPELLANT, directionFinder) ||
-                    isInternalNonStdDirectionWithParty(asylumCase, Parties.LEGAL_REPRESENTATIVE, directionFinder))
+                    isInternalNonStdDirectionWithParty(asylumCase, Parties.APPELLANT_AND_RESPONDENT, directionFinder))
                     && (!isAppellantInDetention(asylumCase)
                     || (hasBeenSubmittedByAppellantInternalCase(asylumCase)
                     && isDetainedInFacilityType(asylumCase, OTHER))
