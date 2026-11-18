@@ -3489,6 +3489,32 @@ public class NotificationGeneratorConfiguration {
         );
     }
 
+    @Bean("appellantRaiseQueryNotificationGenerator")
+    public List<NotificationGenerator> appellantRaiseQueryNotificationHandler(
+        AppellantRaiseQueryPersonalisationEmail appellantRaiseQueryPersonalisationEmail,
+        AppellantRaiseQueryPersonalisationSms appellantRaiseQueryPersonalisationSms,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    appellantRaiseQueryPersonalisationEmail
+                ),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(
+                    appellantRaiseQueryPersonalisationSms
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
     @Bean("legalRepresentationRespondQueryNotificationGenerator")
     public List<NotificationGenerator> legalRepresentativeRespondQueryNotificationHandler(
             LegalRepresentativeRespondQueryPersonalisation legalRepresentativeRespondQueryPersonalisation,
@@ -3504,6 +3530,32 @@ public class NotificationGeneratorConfiguration {
                         notificationSender,
                         notificationIdAppender
                 )
+        );
+    }
+
+    @Bean("appellantRespondQueryNotificationGenerator")
+    public List<NotificationGenerator> appellantRespondQueryNotificationHandler(
+        AppellantRespondQueryPersonalisationEmail appellantRespondQueryPersonalisationEmail,
+        AppellantRespondQueryPersonalisationSms appellantRespondQueryPersonalisationSms,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+
+        return Arrays.asList(
+            new EmailNotificationGenerator(
+                newArrayList(
+                    appellantRespondQueryPersonalisationEmail
+                ),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(
+                    appellantRespondQueryPersonalisationSms
+                ),
+                notificationSender,
+                notificationIdAppender
+            )
         );
     }
 
