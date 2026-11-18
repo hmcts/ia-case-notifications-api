@@ -92,7 +92,7 @@ public class AppellantRaiseQueryPersonalisationSmsTest {
         assertEquals(appellantGivenNames, personalisation.get("appellantGivenNames"));
         assertEquals(appellantFamilyName, personalisation.get("appellantFamilyName"));
         assertEquals(aipFrontendUrl, personalisation.get("linkToOnlineService"));
-        String viewMessagesUrl = aipFrontendUrl + "/view-queries";
+        String viewMessagesUrl = aipFrontendUrl + "/view-messages";
         assertEquals(viewMessagesUrl, personalisation.get("viewMessagesUrl"));
     }
 

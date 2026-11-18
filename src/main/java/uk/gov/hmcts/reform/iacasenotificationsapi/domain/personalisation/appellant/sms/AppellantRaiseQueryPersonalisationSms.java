@@ -57,7 +57,7 @@ public class AppellantRaiseQueryPersonalisationSms implements SmsNotificationPer
             .put("appellantFamilyName",
                 asylumCase.read(AsylumCaseDefinition.APPELLANT_FAMILY_NAME, String.class).orElse(""))
             .put("linkToOnlineService", iaAipFrontendUrl)
-            .put("viewMessagesUrl", iaAipFrontendUrl + "/view-queries")
+            .put("viewMessagesUrl", iaAipFrontendUrl + "/view-messages")
             .build();
     }
 }
