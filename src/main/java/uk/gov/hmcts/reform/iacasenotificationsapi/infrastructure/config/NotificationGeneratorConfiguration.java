@@ -6,6 +6,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DocumentTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Message;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantUpdateFtpaDecision24WeeksLrContentPersonalisationEmail;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.email.AppellantUpdateFtpaDecisionPersonalisationEmail;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.letter.AppellantInternalUpdateFtpaDecisionLetterPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.appellant.sms.AppellantUpdateFtpaDecisionPersonalisationSms;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice.HomeOfficeUpdateFtpaDecisionPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative.LegalRepresentativeUpdateFtpaDecisionPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.nonlegalrep.NlrUpdateFtpaDecisionPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNotificationPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerAdjournHearingWithoutDateNonDetainedPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.adminofficer.AdminOfficerAdjournHearingWithoutDatePersonalisation;
@@ -138,6 +145,7 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detenti
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamRequestHearingRequirementPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamRespondentReviewPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamTransferOutOfAdaPersonalisation;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamUpdateFtpaDecisionIrcPrisonPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamUpdateTribunalDecisionRule31IrcPrisonPersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamUploadAdditionalEvidencePersonalisation;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.detentionengagementteam.DetentionEngagementTeamUploadAppealResponsePersonalisation;
@@ -6556,6 +6564,124 @@ public class NotificationGeneratorConfiguration {
                 notificationSender,
                 notificationIdAppender
             )
+        );
+    }
+
+    @Bean("updateFtpaDecisionAipNotificationGenerator")
+    public List<NotificationGenerator> updateFtpaDecisionAipNotificationGenerator(
+        HomeOfficeUpdateFtpaDecisionPersonalisation homeOfficeUpdateFtpaDecisionPersonalisation,
+        AppellantUpdateFtpaDecisionPersonalisationEmail appellantUpdateFtpaDecisionPersonalisationEmail,
+        AppellantUpdateFtpaDecisionPersonalisationSms appellantUpdateFtpaDecisionPersonalisationSms,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return List.of(
+            new EmailNotificationGenerator(
+                newArrayList(homeOfficeUpdateFtpaDecisionPersonalisation, appellantUpdateFtpaDecisionPersonalisationEmail),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(appellantUpdateFtpaDecisionPersonalisationSms),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("updateFtpaDecisionNlrNotificationGenerator")
+    public List<NotificationGenerator> updateFtpaDecisionNlrNotificationGenerator(
+        NlrUpdateFtpaDecisionPersonalisation nlrUpdateFtpaDecisionPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return List.of(
+            new EmailNotificationGenerator(
+                newArrayList(nlrUpdateFtpaDecisionPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("updateFtpaDecisionLegalRepNotificationGenerator")
+    public List<NotificationGenerator> updateFtpaDecisionLegalRepNotificationGenerator(
+        HomeOfficeUpdateFtpaDecisionPersonalisation homeOfficeUpdateFtpaDecisionPersonalisation,
+        LegalRepresentativeUpdateFtpaDecisionPersonalisation legalRepresentativeUpdateFtpaDecisionPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return List.of(
+            new EmailNotificationGenerator(
+                newArrayList(homeOfficeUpdateFtpaDecisionPersonalisation, legalRepresentativeUpdateFtpaDecisionPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("updateFtpaDecision24WeeksAppellantNotificationGenerator")
+    public List<NotificationGenerator> updateFtpaDecision24WeeksAppellantNotificationGenerator(
+        AppellantUpdateFtpaDecision24WeeksLrContentPersonalisationEmail appellantUpdateFtpaDecision24WeeksLrContentPersonalisationEmail,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return List.of(
+            new EmailNotificationGenerator(
+                newArrayList(appellantUpdateFtpaDecision24WeeksLrContentPersonalisationEmail),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("internalUpdateFtpaDecisionDetainedIrcPrisonNotificationGenerator")
+    public List<NotificationGenerator> internalUpdateFtpaDecisionDetainedIrcPrisonNotificationGenerator(
+        DetentionEngagementTeamUpdateFtpaDecisionIrcPrisonPersonalisation detentionEngagementTeamUpdateFtpaDecisionIrcPrisonPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return List.of(
+            new EmailWithLinkNotificationGenerator(
+                newArrayList(detentionEngagementTeamUpdateFtpaDecisionIrcPrisonPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("internalUpdateFtpaDecisionHomeOfficeNotificationGenerator")
+    public List<NotificationGenerator> internalUpdateFtpaDecisionHomeOfficeNotificationGenerator(
+        HomeOfficeUpdateFtpaDecisionPersonalisation homeOfficeUpdateFtpaDecisionPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return List.of(
+            new EmailNotificationGenerator(
+                newArrayList(homeOfficeUpdateFtpaDecisionPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("internalUpdateFtpaDecisionLetterNotificationGenerator")
+    public List<NotificationGenerator> internalUpdateFtpaDecisionLetterNotificationGenerator(
+        AppellantInternalUpdateFtpaDecisionLetterPersonalisation appellantInternalUpdateFtpaDecisionLetterPersonalisation,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender
+    ) {
+        return List.of(
+            new LetterNotificationGenerator(
+                newArrayList(appellantInternalUpdateFtpaDecisionLetterPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            ) {
+                @Override
+                public Message getSuccessMessage() {
+                    return new Message("success", "body");
+                }
+            }
         );
     }
 

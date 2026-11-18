@@ -1577,6 +1577,17 @@ govnotify:
         appellant:
           email: 7baedad6-6aeb-45b5-ae00-420ff2b80bba
           sms: 5ad1fc01-101a-4dbc-84d1-191cc6b715f5
+    updateFtpaDecision:
+      homeOffice:
+        email: fb227393-ac95-4c89-b568-b768fc929919
+      legalRep:
+        email: ed2fc32f-5f3c-4d87-8011-96fb3f6e3ca7
+      appellant:
+        email:   6e92bd09-737f-4c1d-8cfb-cd2995a51f49
+        sms: b486443a-6cca-455a-a668-d80fb0bc9b71
+        nlr: 6e92bd09-737f-4c1d-8cfb-cd2995a51f49
+        letter: ff71240a-d98b-4b2c-aa22-d1990dae5497
+        lrContentEmail: ed2fc32f-5f3c-4d87-8011-96fb3f6e3ca7
     markAppealAsRemitted:
       legalRep:
         email: 0e8e1bc7-feea-4b7d-9cd8-09606ca0bcf9
