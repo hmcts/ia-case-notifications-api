@@ -29,10 +29,10 @@ public class RespondentDirectionPersonalisation implements EmailNotificationPers
     private final DirectionFinder directionFinder;
     private final CustomerServicesProvider customerServicesProvider;
 
-    @Value("${govnotify.emailPrefix.ada}")
-    private String adaPrefix;
-    @Value("${govnotify.emailPrefix.nonAda}")
-    private String nonAdaPrefix;
+    @Value("${govnotify.emailPrefix.detained}")
+    private String detainedPrefix;
+    @Value("${govnotify.emailPrefix.nonDetained}")
+    private String nonDetainedPrefix;
 
     public RespondentDirectionPersonalisation(
         @Value("${govnotify.template.reviewDirection.respondent.email}") String respondentReviewDirectionTemplateId,
@@ -94,7 +94,7 @@ public class RespondentDirectionPersonalisation implements EmailNotificationPers
         return ImmutableMap
             .<String, String>builder()
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
-            .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
+            .put("subjectPrefix", isAppellantInDetention(asylumCase) ? detainedPrefix : nonDetainedPrefix)
             .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .put("homeOfficeReferenceNumber", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))

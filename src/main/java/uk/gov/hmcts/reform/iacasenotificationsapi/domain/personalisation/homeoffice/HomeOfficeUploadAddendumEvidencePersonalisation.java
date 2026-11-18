@@ -27,8 +27,8 @@ public class HomeOfficeUploadAddendumEvidencePersonalisation implements EmailNot
 
     @Value("${govnotify.emailPrefix.detained}")
     private String detainedPrefix;
-    @Value("${govnotify.emailPrefix.nonAda}")
-    private String nonAdaPrefix;
+    @Value("${govnotify.emailPrefix.nonDetained}")
+    private String nonDetainedPrefix;
 
     public HomeOfficeUploadAddendumEvidencePersonalisation(
         @Value("${govnotify.template.uploadedAddendumEvidence.homeOffice.email}") String homeOfficeUploadedAddendumEvidenceTemplateId,
@@ -67,7 +67,7 @@ public class HomeOfficeUploadAddendumEvidencePersonalisation implements EmailNot
             .<String, String>builder()
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation(callback))
             .put("linkToOnlineService", iaExUiFrontendUrl)
-            .put("subjectPrefix", isAppellantInDetention(callback.getCaseDetails().getCaseData()) ? detainedPrefix : nonAdaPrefix)
+            .put("subjectPrefix", isAppellantInDetention(callback.getCaseDetails().getCaseData()) ? detainedPrefix : nonDetainedPrefix)
             .putAll(personalisationProvider.getPersonalisation(callback));
 
         return listCaseFields.build();

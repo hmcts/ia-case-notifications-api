@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeof
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
@@ -25,6 +26,11 @@ public class HomeOfficeAdaSuitabilityPersonalisation implements EmailNotificatio
     private final EmailAddressFinder emailAddressFinder;
     private final CustomerServicesProvider customerServicesProvider;
     private final String iaExUiFrontendUrl;
+
+    @Value("${govnotify.emailPrefix.detained}")
+    private String detainedPrefix;
+    @Value("${govnotify.emailPrefix.nonDetained}")
+    private String nonDetainedPrefix;
 
     public HomeOfficeAdaSuitabilityPersonalisation(
             @NotNull(message = "adaSuitabilityUnsuitableHomeOfficeTemplateId cannot be null")
@@ -71,6 +77,7 @@ public class HomeOfficeAdaSuitabilityPersonalisation implements EmailNotificatio
         return ImmutableMap
                 .<String, String>builder()
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
+                .put("subjectPrefix", isAppellantInDetention(asylumCase) ? detainedPrefix : nonDetainedPrefix)
                 .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("ariaListingReference", asylumCase.read(ARIA_LISTING_REFERENCE, String.class).orElse(""))
                 .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))

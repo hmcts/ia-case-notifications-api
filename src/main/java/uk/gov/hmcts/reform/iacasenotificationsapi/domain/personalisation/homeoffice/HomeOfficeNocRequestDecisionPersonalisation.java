@@ -35,8 +35,8 @@ public class HomeOfficeNocRequestDecisionPersonalisation implements EmailNotific
 
     @Value("${govnotify.emailPrefix.detained}")
     private String detainedPrefix;
-    @Value("${govnotify.emailPrefix.nonAda}")
-    private String nonAdaPrefix;
+    @Value("${govnotify.emailPrefix.nonDetained}")
+    private String nonDetainedPrefix;
 
     public HomeOfficeNocRequestDecisionPersonalisation(
             @Value("${govnotify.template.nocRequestDecision.homeOffice.beforeListing.email}") String homeOfficeNocRequestDecisionBeforeListingTemplateId,
@@ -117,7 +117,7 @@ public class HomeOfficeNocRequestDecisionPersonalisation implements EmailNotific
         return ImmutableMap
                 .<String, String>builder()
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
-                .put("subjectPrefix", isAppellantInDetention(asylumCase) ? detainedPrefix : nonAdaPrefix)
+                .put("subjectPrefix", isAppellantInDetention(asylumCase) ? detainedPrefix : nonDetainedPrefix)
                 .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("ariaListingReference", asylumCase.read(ARIA_LISTING_REFERENCE, String.class).orElse(""))
                 .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))

@@ -70,7 +70,7 @@ class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisationTest {
         when(asylumCase.read(COMPLETE_CASE_REVIEW_DATE, String.class))
             .thenReturn(Optional.of(REVIEW_DATE));
 
-        personalisation = new HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation(TEMPLATE_ID, BEFORE_LISTING_EMAIL_ADDRESS, MOCK_PREFIX, IA_EX_UI_FRONTEND_URL, emailAddressFinder, customerServicesProvider);
+        personalisation = new HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation(TEMPLATE_ID, BEFORE_LISTING_EMAIL_ADDRESS, IA_EX_UI_FRONTEND_URL, emailAddressFinder, customerServicesProvider);
     }
 
     @Test

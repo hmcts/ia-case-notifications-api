@@ -28,8 +28,8 @@ public class HomeOfficeCmrRelistingPersonalisation implements EmailNotificationP
 
     @Value("${govnotify.emailPrefix.detained}")
     private String detainedPrefix;
-    @Value("${govnotify.emailPrefix.nonAda}")
-    private String nonAdaPrefix;
+    @Value("${govnotify.emailPrefix.nonDetained}")
+    private String nonDetainedPrefix;
 
     public HomeOfficeCmrRelistingPersonalisation(
         @Value("${govnotify.template.listAssistHearing.cmrReListing.homeOffice.email}") String listAssistHearingHomeOfficeCaseEditedTemplateId,
@@ -66,7 +66,7 @@ public class HomeOfficeCmrRelistingPersonalisation implements EmailNotificationP
             .<String, String>builder()
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation(callback))
             .putAll(personalisationProvider.getPersonalisation(callback))
-            .put("subjectPrefix", isAppellantInDetention(callback.getCaseDetails().getCaseData()) ? detainedPrefix : nonAdaPrefix)
+            .put("subjectPrefix", isAppellantInDetention(callback.getCaseDetails().getCaseData()) ? detainedPrefix : nonDetainedPrefix)
             .build();
     }
 }

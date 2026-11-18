@@ -17,6 +17,7 @@ import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
 
 @Service
 public class RespondentUpdateTribunalDecisionRule31PersonalisationEmail implements EmailNotificationPersonalisation {
@@ -26,6 +27,11 @@ public class RespondentUpdateTribunalDecisionRule31PersonalisationEmail implemen
 
     private final EmailAddressFinder emailAddressFinder;
     private final String exUiFrontendUrl;
+
+    @Value("${govnotify.emailPrefix.detained}")
+    private String detainedPrefix;
+    @Value("${govnotify.emailPrefix.nonDetained}")
+    private String nonDetainedPrefix;
 
     public RespondentUpdateTribunalDecisionRule31PersonalisationEmail(
         @Value("${govnotify.template.updateTribunalDecision.rule31.respondent.email}") String respondentUpdateTribunalDecisionRule31EmailTemplateId,
@@ -79,6 +85,7 @@ public class RespondentUpdateTribunalDecisionRule31PersonalisationEmail implemen
             ImmutableMap
                 .<String, String>builder()
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
+                .put("subjectPrefix", isAppellantInDetention(callback.getCaseDetails().getCaseData()) ? detainedPrefix : nonDetainedPrefix)
                 .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("respondentReferenceNumber", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))

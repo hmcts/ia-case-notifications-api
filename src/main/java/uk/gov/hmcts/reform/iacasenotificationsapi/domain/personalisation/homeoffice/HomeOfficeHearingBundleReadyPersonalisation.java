@@ -25,8 +25,8 @@ public class HomeOfficeHearingBundleReadyPersonalisation implements EmailNotific
 
     @Value("${govnotify.emailPrefix.detained}")
     private String detainedPrefix;
-    @Value("${govnotify.emailPrefix.nonAda}")
-    private String nonAdaPrefix;
+    @Value("${govnotify.emailPrefix.nonDetained}")
+    private String nonDetainedPrefix;
 
     public HomeOfficeHearingBundleReadyPersonalisation(
         @Value("${govnotify.template.hearingBundleReady.homeOffice.email}") String hearingBundleReadyHomeOfficeTemplateId,
@@ -62,7 +62,7 @@ public class HomeOfficeHearingBundleReadyPersonalisation implements EmailNotific
         return ImmutableMap
             .<String, String>builder()
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
-            .put("subjectPrefix", isAppellantInDetention(asylumCase) ? detainedPrefix : nonAdaPrefix)
+            .put("subjectPrefix", isAppellantInDetention(asylumCase) ? detainedPrefix : nonDetainedPrefix)
             .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .put("ccdReferenceNumber", asylumCase.read(CCD_REFERENCE_NUMBER_FOR_DISPLAY, String.class).orElse(""))
             .put("ariaListingReference", asylumCase.read(ARIA_LISTING_REFERENCE, String.class).orElse(""))

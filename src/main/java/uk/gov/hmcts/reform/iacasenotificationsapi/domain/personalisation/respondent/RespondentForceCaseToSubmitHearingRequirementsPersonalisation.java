@@ -21,11 +21,11 @@ public class RespondentForceCaseToSubmitHearingRequirementsPersonalisation imple
     private final String respondentForceCaseToSubmitHearingRequirementsDetentionTemplateId;
     private final String respondentEmailAddressAtRespondentReview;
 
-    @Value("${govnotify.emailPrefix.ada}")
-    private String adaPrefix;
+    @Value("${govnotify.emailPrefix.detained}")
+    private String detainedPrefix;
 
-    @Value("${govnotify.emailPrefix.nonAda}")
-    private String nonAdaPrefix;
+    @Value("${govnotify.emailPrefix.nonDetained}")
+    private String nonDetainedPrefix;
 
     public RespondentForceCaseToSubmitHearingRequirementsPersonalisation(
         @NotNull(message = "respondentForceCaseToSubmitHearingRequirementsTemplateId cannot be null")
@@ -65,7 +65,7 @@ public class RespondentForceCaseToSubmitHearingRequirementsPersonalisation imple
 
         return ImmutableMap
             .<String, String>builder()
-            .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
+            .put("subjectPrefix", isAppellantInDetention(asylumCase) ? detainedPrefix : nonDetainedPrefix)
             .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .put("homeOfficeReferenceNumber", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))

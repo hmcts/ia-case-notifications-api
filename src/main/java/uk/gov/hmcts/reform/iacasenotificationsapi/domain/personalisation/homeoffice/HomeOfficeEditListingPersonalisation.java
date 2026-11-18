@@ -36,7 +36,7 @@ public class HomeOfficeEditListingPersonalisation implements EmailNotificationPe
     private final CustomerServicesProvider customerServicesProvider;
 
     public HomeOfficeEditListingPersonalisation(
-        @Value("${govnotify.template.caseEdited.homeOffice.email.nonAda}") String homeOfficeCaseEditedNonAdaTemplateId,
+        @Value("${govnotify.template.caseEdited.homeOffice.email.nonDetained}") String homeOfficeCaseEditedNonDetainedTemplateId,
         @Value("${govnotify.template.caseEdited.homeOffice.email.detained}") String homeOfficeCaseEditedDetainedTemplateId,
         @Value("${govnotify.template.listAssistHearing.caseEdited.homeOffice.email}") String listAssistHearingHomeOfficeCaseEditedTemplateId,
         @Value("${govnotify.template.reListCase24Weeks.homeOffice.email}") String homeOfficeCaseEdited24wTemplateId,
@@ -45,7 +45,7 @@ public class HomeOfficeEditListingPersonalisation implements EmailNotificationPe
         CustomerServicesProvider customerServicesProvider
     ) {
 
-        this.homeOfficeCaseEditedNonAdaTemplateId = homeOfficeCaseEditedNonAdaTemplateId;
+        this.homeOfficeCaseEditedNonAdaTemplateId = homeOfficeCaseEditedNonDetainedTemplateId;
         this.homeOfficeCaseEditedDetainedTemplateId = homeOfficeCaseEditedDetainedTemplateId;
         this.listAssistHearingHomeOfficeCaseEditedTemplateId = listAssistHearingHomeOfficeCaseEditedTemplateId;
         this.homeOfficeCaseEdited24wTemplateId = homeOfficeCaseEdited24wTemplateId;

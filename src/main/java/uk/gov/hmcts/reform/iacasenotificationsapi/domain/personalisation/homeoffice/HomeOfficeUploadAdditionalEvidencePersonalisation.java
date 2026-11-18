@@ -30,8 +30,8 @@ public class HomeOfficeUploadAdditionalEvidencePersonalisation implements EmailN
 
     @Value("${govnotify.emailPrefix.detained}")
     private String detainedPrefix;
-    @Value("${govnotify.emailPrefix.nonAda}")
-    private String nonAdaPrefix;
+    @Value("${govnotify.emailPrefix.nonDetained}")
+    private String nonDetainedPrefix;
 
     public HomeOfficeUploadAdditionalEvidencePersonalisation(
         @Value("${govnotify.template.uploadedAdditionalEvidenceBeforeListing.homeOffice.email}") String homeOfficeUploadedAdditionalEvidenceBeforeListingTemplateId,
@@ -72,7 +72,7 @@ public class HomeOfficeUploadAdditionalEvidencePersonalisation implements EmailN
         final ImmutableMap.Builder<String, String> listCaseFields = ImmutableMap
             .<String, String>builder()
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation(callback))
-            .put("subjectPrefix", isAppellantInDetention(callback.getCaseDetails().getCaseData()) ? detainedPrefix : nonAdaPrefix)
+            .put("subjectPrefix", isAppellantInDetention(callback.getCaseDetails().getCaseData()) ? detainedPrefix : nonDetainedPrefix)
             .put("linkToOnlineService", iaExUiFrontendUrl)
             .putAll(personalisationProvider.getPersonalisation(callback));
 

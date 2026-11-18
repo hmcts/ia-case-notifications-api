@@ -35,8 +35,8 @@ public class HomeOfficeFtpaApplicationDecisionAppellantPersonalisation implement
 
     @Value("${govnotify.emailPrefix.detained}")
     private String detainedPrefix;
-    @Value("${govnotify.emailPrefix.nonAda}")
-    private String nonAdaPrefix;
+    @Value("${govnotify.emailPrefix.nonDetained}")
+    private String nonDetainedPrefix;
 
     public HomeOfficeFtpaApplicationDecisionAppellantPersonalisation(
         @Value("${govnotify.template.applicationGranted.otherParty.homeOffice.email}") String applicationGrantedOtherPartyHomeOfficeTemplateId,
@@ -118,7 +118,7 @@ public class HomeOfficeFtpaApplicationDecisionAppellantPersonalisation implement
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         return ImmutableMap.<String, String>builder()
-            .put("subjectPrefix", isAppellantInDetention(asylumCase) ? detainedPrefix : nonAdaPrefix)
+            .put("subjectPrefix", isAppellantInDetention(asylumCase) ? detainedPrefix : nonDetainedPrefix)
             .putAll(personalisationProvider.getHomeOfficeHeaderPersonalisation(asylumCase))
             .build();
     }

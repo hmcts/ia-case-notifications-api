@@ -29,8 +29,8 @@ public class HomeOfficeEditListingNoChangePersonalisation implements EmailNotifi
 
     @Value("${govnotify.emailPrefix.detained}")
     private String detainedPrefix;
-    @Value("${govnotify.emailPrefix.nonAda}")
-    private String nonAdaPrefix;
+    @Value("${govnotify.emailPrefix.nonDetained}")
+    private String nonDetainedPrefix;
 
     public HomeOfficeEditListingNoChangePersonalisation(
         @Value("${govnotify.template.caseEditedNoChange.homeOffice.email}") String homeOfficeCaseEditedNoChangeTemplateId,
@@ -70,7 +70,7 @@ public class HomeOfficeEditListingNoChangePersonalisation implements EmailNotifi
             .<String, String>builder()
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation(callback))
             .putAll(personalisationProvider.getPersonalisation(callback))
-            .put("subjectPrefix", isAppellantInDetention(callback.getCaseDetails().getCaseData()) ? detainedPrefix : nonAdaPrefix);
+            .put("subjectPrefix", isAppellantInDetention(callback.getCaseDetails().getCaseData()) ? detainedPrefix : nonDetainedPrefix);
 
         return listCaseFields.build();
     }

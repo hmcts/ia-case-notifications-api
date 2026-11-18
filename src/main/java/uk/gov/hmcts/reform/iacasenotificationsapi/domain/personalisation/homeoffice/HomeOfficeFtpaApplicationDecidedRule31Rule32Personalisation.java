@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice;
 
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
 
 import jakarta.validation.constraints.NotNull;
 import java.util.Collections;
@@ -21,6 +22,11 @@ public class HomeOfficeFtpaApplicationDecidedRule31Rule32Personalisation impleme
     private final String upperTribunalNoticesEmailAddress;
     private final CustomerServicesProvider customerServicesProvider;
     private final String iaExUiFrontendUrl;
+
+    @Value("${govnotify.emailPrefix.detained}")
+    private String detainedPrefix;
+    @Value("${govnotify.emailPrefix.nonDetained}")
+    private String nonDetainedPrefix;
 
     public HomeOfficeFtpaApplicationDecidedRule31Rule32Personalisation(
             @Value("${upperTribunalNoticesEmailAddress}") String upperTribunalNoticesEmailAddress,
@@ -57,6 +63,7 @@ public class HomeOfficeFtpaApplicationDecidedRule31Rule32Personalisation impleme
         return ImmutableMap
                 .<String, String>builder()
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
+                .put("subjectPrefix", isAppellantInDetention(asylumCase) ? detainedPrefix : nonDetainedPrefix)
                 .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
                 .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))

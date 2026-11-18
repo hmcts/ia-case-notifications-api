@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respon
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
@@ -22,6 +23,12 @@ public class RespondentForceCaseToCaseUnderReviewPersonalisation implements Emai
     private final String respondentEmailAddress;
     private final String iaExUiFrontendUrl;
     private final CustomerServicesProvider customerServicesProvider;
+
+    @Value("${govnotify.emailPrefix.detained}")
+    private String detainedPrefix;
+
+    @Value("${govnotify.emailPrefix.nonDetained}")
+    private String nonDetainedPrefix;
 
     public RespondentForceCaseToCaseUnderReviewPersonalisation(
         @NotNull(message = "appealDocumentDeletedTemplateId cannot be null")
@@ -56,6 +63,7 @@ public class RespondentForceCaseToCaseUnderReviewPersonalisation implements Emai
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
         return ImmutableMap.<String, String>builder()
+            .put("subjectPrefix", isAppellantInDetention(asylumCase) ? detainedPrefix : nonDetainedPrefix)
             .put("appealReferenceNumber",
                 asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .put("homeOfficeReferenceNumber",

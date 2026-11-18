@@ -69,7 +69,6 @@ public class HomeOfficeHearingRequirementsStf24WeeksEmailPersonalisationTest {
             HOME_OFFICE_EMAIL,
             TEMPLATE_ID,
             IA_EX_UI_FRONTEND_URL,
-            NON_ADA_PREFIX,
             customerServicesProvider,
             dateTimeExtractor,
             hearingDetailsFinder

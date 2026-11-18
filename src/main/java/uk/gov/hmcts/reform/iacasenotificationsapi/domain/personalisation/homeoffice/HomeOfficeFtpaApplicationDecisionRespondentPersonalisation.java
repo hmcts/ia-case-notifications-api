@@ -42,8 +42,8 @@ public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisation implemen
 
     @Value("${govnotify.emailPrefix.detained}")
     private String detainedPrefix;
-    @Value("${govnotify.emailPrefix.nonAda}")
-    private String nonAdaPrefix;
+    @Value("${govnotify.emailPrefix.nonDetained}")
+    private String nonDetainedPrefix;
 
     public HomeOfficeFtpaApplicationDecisionRespondentPersonalisation(
         @Value("${govnotify.template.applicationGranted.applicant.homeOffice.email}") String applicationGrantedApplicantHomeOfficeTemplateId,
@@ -133,7 +133,7 @@ public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisation implemen
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         ImmutableMap.Builder<String, String> personalisationBuilder = ImmutableMap
             .<String, String>builder()
-            .put("subjectPrefix", isAppellantInDetention(asylumCase) ? detainedPrefix : nonAdaPrefix)
+            .put("subjectPrefix", isAppellantInDetention(asylumCase) ? detainedPrefix : nonDetainedPrefix)
             .putAll(personalisationProvider.getRespondentHeaderPersonalisation(asylumCase));
 
         boolean setDynamicDate = Arrays.asList(
