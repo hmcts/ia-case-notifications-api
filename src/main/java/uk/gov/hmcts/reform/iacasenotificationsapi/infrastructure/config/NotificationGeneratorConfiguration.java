@@ -3764,7 +3764,8 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("internalMakeAnApplicationNotificationGenerator")
     public List<NotificationGenerator> internalMakeAnApplicationNotificationHandler(
-        HomeOfficeMakeAnApplicationPersonalisation homeOfficeMakeAnApplicationPersonalisation,        
+        HomeOfficeMakeAnApplicationPersonalisation homeOfficeMakeAnApplicationPersonalisation,
+        CaseOfficerMakeAnApplicationPersonalisation caseOfficerMakeAnApplicationPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender
     ) {
@@ -3772,7 +3773,8 @@ public class NotificationGeneratorConfiguration {
         return singletonList(
             new EmailNotificationGenerator(
                 newArrayList(
-                    homeOfficeMakeAnApplicationPersonalisation                    
+                    homeOfficeMakeAnApplicationPersonalisation,
+                    caseOfficerMakeAnApplicationPersonalisation
                 ),
                 notificationSender,
                 notificationIdAppender
@@ -7822,6 +7824,27 @@ public class NotificationGeneratorConfiguration {
         return List.of(
             new EmailNotificationGenerator(
                 newArrayList(revokeCitizenAccessPersonalisation),
+                notificationSender,
+                notificationIdAppender
+            )
+        );
+    }
+
+    @Bean("confirmHomeOfficeReviewMaintainedAipNotificationGenerator")
+    public List<NotificationGenerator> confirmHomeOfficeReviewMaintainedAipNotificationGenerator(
+        AppellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationEmail appellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationEmail,
+        AppellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationSms appellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationSms,
+        GovNotifyNotificationSender notificationSender,
+        NotificationIdAppender notificationIdAppender) {
+
+        return List.of(
+            new EmailNotificationGenerator(
+                newArrayList(appellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationEmail),
+                notificationSender,
+                notificationIdAppender
+            ),
+            new SmsNotificationGenerator(
+                newArrayList(appellantConfirmHomeOfficeReviewMaintained24WeeksPersonalisationSms),
                 notificationSender,
                 notificationIdAppender
             )
