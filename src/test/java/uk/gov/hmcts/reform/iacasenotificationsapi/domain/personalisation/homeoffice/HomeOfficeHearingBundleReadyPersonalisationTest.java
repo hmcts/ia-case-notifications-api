@@ -113,7 +113,7 @@ public class HomeOfficeHearingBundleReadyPersonalisationTest {
             .containsEntry("appellantFamilyName", appellantFamilyName)
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
             .containsEntry("ccdReferenceNumber", ccdReferenceNumber)
-            .containsEntry("subjectPrefix", isDetained.equals(YesOrNo.YES) ? "Detained - Immigration and Asylum appeal"
+            .containsEntry("subjectPrefix", isDetained.equals(YesOrNo.YES) ? "Detained Appeal - Immigration and Asylum appeal"
                 : "Immigration and Asylum appeal");
     }
 
@@ -141,7 +141,7 @@ public class HomeOfficeHearingBundleReadyPersonalisationTest {
             .containsEntry("appellantFamilyName", "")
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals(isDetained.equals(YesOrNo.YES)
-            ? "Detained - Immigration and Asylum appeal"
+            ? "Detained Appeal - Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 }

@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixesDetained;
 
 import java.util.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -257,7 +258,8 @@ class RespondentNonStandardDirectionPersonalisationTest {
     void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
-        initializePrefixes(respondentNonStandardDirectionPersonalisation);
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(isAda));
+        initializePrefixesDetained(respondentNonStandardDirectionPersonalisation);
         Map<String, String> personalisation =
             respondentNonStandardDirectionPersonalisation.getPersonalisation(asylumCase);
 
@@ -271,7 +273,7 @@ class RespondentNonStandardDirectionPersonalisationTest {
             .containsEntry("explanation", directionExplanation)
             .containsEntry("dueDate", expectedDirectionDueDate);
         assertEquals(isAda.equals(YesOrNo.YES)
-            ? "Accelerated detained appeal"
+            ? "Detained Appeal - Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
@@ -279,7 +281,8 @@ class RespondentNonStandardDirectionPersonalisationTest {
     @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     void should_return_personalisation_when_all_mandatory_information_given(YesOrNo isAda) {
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
-        initializePrefixes(respondentNonStandardDirectionPersonalisation);
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(isAda));
+        initializePrefixesDetained(respondentNonStandardDirectionPersonalisation);
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(ARIA_LISTING_REFERENCE, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
@@ -301,7 +304,7 @@ class RespondentNonStandardDirectionPersonalisationTest {
             .containsEntry("explanation", directionExplanation)
             .containsEntry("dueDate", expectedDirectionDueDate);
         assertEquals(isAda.equals(YesOrNo.YES)
-            ? "Accelerated detained appeal"
+            ? "Detained Appeal - Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 

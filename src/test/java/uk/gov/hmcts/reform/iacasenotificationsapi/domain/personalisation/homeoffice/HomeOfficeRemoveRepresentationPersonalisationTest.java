@@ -232,7 +232,7 @@ class HomeOfficeRemoveRepresentationPersonalisationTest {
             .containsEntry("legalRepresentativeName", legalRepName)
             .containsEntry("legalRepresentativeEmailAddress", legalRepEmailAddress);
         assertEquals(isDetained.equals(YesOrNo.YES)
-            ? "Detained - Immigration and Asylum appeal"
+            ? "Detained Appeal - Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
@@ -251,7 +251,7 @@ class HomeOfficeRemoveRepresentationPersonalisationTest {
             .containsEntry("legalRepresentativeName", legalRepName)
             .containsEntry("legalRepresentativeEmailAddress", legalRepEmailAddress);
         assertEquals(isDetained.equals(YesOrNo.YES)
-            ? "Detained - Immigration and Asylum appeal"
+            ? "Detained Appeal - Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 }

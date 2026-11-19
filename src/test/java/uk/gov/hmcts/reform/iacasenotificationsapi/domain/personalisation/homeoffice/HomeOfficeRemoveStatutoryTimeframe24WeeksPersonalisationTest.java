@@ -26,6 +26,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.COMPLETE_CASE_REVIEW_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixesDetained;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL;
 
 @ExtendWith(MockitoExtension.class)
@@ -71,6 +72,7 @@ class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisationTest {
             .thenReturn(Optional.of(REVIEW_DATE));
 
         personalisation = new HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation(TEMPLATE_ID, BEFORE_LISTING_EMAIL_ADDRESS, IA_EX_UI_FRONTEND_URL, emailAddressFinder, customerServicesProvider);
+        initializePrefixesDetained(personalisation);
     }
 
     @Test

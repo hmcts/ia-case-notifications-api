@@ -113,7 +113,7 @@ public class HomeOfficeEditListingNoChangePersonalisationTest {
         assertThat(personalisation)
             .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .containsAllEntriesOf(personalisationProvider.getPersonalisation(callback))
-            .containsEntry("subjectPrefix", isDetained.equals(YesOrNo.YES) ? "Detained - Immigration and Asylum appeal"
+            .containsEntry("subjectPrefix", isDetained.equals(YesOrNo.YES) ? "Detained Appeal - Immigration and Asylum appeal"
                 : "Immigration and Asylum appeal");
     }
 

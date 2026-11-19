@@ -103,7 +103,7 @@ class HomeOfficeCmrRelistingPersonalisationTest {
         assertThat(personalisation)
             .containsAllEntriesOf(getCmrRelistingPersonalisationMap())
             .containsEntry("subjectPrefix", isDetained.equals(YesOrNo.YES)
-                ? "Detained - Immigration and Asylum appeal"
+                ? "Detained Appeal - Immigration and Asylum appeal"
                 : "Immigration and Asylum appeal");
     }
 

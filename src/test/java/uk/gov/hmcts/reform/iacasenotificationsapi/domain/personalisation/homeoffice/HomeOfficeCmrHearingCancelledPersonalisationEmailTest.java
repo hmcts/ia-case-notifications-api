@@ -7,6 +7,8 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixesDetained;
 
 import java.util.Map;
 import java.util.Optional;
@@ -67,6 +69,7 @@ class HomeOfficeCmrHearingCancelledPersonalisationEmailTest {
             dateTimeExtractor,
             hearingDetailsFinder
         );
+        initializePrefixesDetained(homeOfficeCmrHearingCancelledPersonalisationEmail);
     }
 
     @Test

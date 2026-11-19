@@ -284,7 +284,7 @@ class HomeOfficeNocRequestDecisionPersonalisationTest {
         Map<String, String> personalisation = homeOfficeNocRequestDecisionPersonalisation.getPersonalisation(asylumCase);
 
         assertEquals(isDetained.equals(YesOrNo.YES)
-            ? "Detained - Immigration and Asylum appeal"
+            ? "Detained Appeal - Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
         assertThat(personalisation)
             .containsEntry("appealReferenceNumber", appealReferenceNumber)
@@ -310,7 +310,7 @@ class HomeOfficeNocRequestDecisionPersonalisationTest {
         Map<String, String> personalisation = homeOfficeNocRequestDecisionPersonalisation.getPersonalisation(asylumCase);
 
         assertEquals(isDetained.equals(YesOrNo.YES)
-            ? "Detained - Immigration and Asylum appeal"
+            ? "Detained Appeal - Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
         assertThat(personalisation)
             .containsEntry("appealReferenceNumber", "")

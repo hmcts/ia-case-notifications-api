@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
+import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_SUBMITTED_HEARING_REQUIREMENTS_HOME_OFFICE_EMAIL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STF_24_WEEKS_HEARING_REQUIREMENTS_EMAIL_TEMPLATE;
@@ -64,6 +65,7 @@ public class HomeOfficeHearingRequirementsStf24WeeksEmailPersonalisation impleme
 
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
+        requireNonNull(asylumCase, "asylumCase must not be null");
         return Stf24WeeksUtil.buildHearingRequirementsEmailParams(Stf24WeeksUtil.Stf24WeeksNotificationFor.HOME_OFFICE, asylumCase, isAppellantInDetention(asylumCase) ? detainedPrefix : nonDetainedPrefix, iaExUiFrontendUrl, customerServicesProvider, dateTimeExtractor, hearingDetailsFinder);
     }
 

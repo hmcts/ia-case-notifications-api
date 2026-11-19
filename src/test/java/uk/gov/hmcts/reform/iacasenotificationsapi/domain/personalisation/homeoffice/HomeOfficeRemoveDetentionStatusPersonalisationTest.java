@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixesDetained;
 
 import java.util.Collections;
 import java.util.Map;
@@ -65,6 +66,7 @@ public class HomeOfficeRemoveDetentionStatusPersonalisationTest {
             emailAddressFinder,
             customerServicesProvider
         );
+        initializePrefixesDetained(homeOfficeRemoveDetentionStatusPersonalisation);
     }
 
     @Test

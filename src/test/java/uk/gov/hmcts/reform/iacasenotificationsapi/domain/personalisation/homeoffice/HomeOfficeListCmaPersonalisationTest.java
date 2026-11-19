@@ -121,7 +121,7 @@ public class HomeOfficeListCmaPersonalisationTest {
         Map<String, String> personalisation = homeOfficeListCmaPersonalisation.getPersonalisation(asylumCase);
 
         assertEquals(isDetained.equals(YesOrNo.YES)
-            ? "Detained - Immigration and Asylum appeal"
+            ? "Detained Appeal - Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
         assertThat(personalisation)
             .containsEntry("Appeal Ref Number", appealReferenceNumber)

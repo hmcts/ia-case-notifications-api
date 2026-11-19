@@ -145,7 +145,7 @@ public class HomeOfficeAppealOutcomePersonalisationTest {
         Map<String, String> personalisation = homeOfficeAppealOutcomePersonalisation.getPersonalisation(asylumCase);
 
         assertEquals(isDetained.equals(YesOrNo.YES)
-            ? "Detained - Immigration and Asylum appeal"
+            ? "Detained Appeal - Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
         assertThat(personalisation)
             .containsEntry("appealReferenceNumber", appealReferenceNumber)
@@ -171,7 +171,7 @@ public class HomeOfficeAppealOutcomePersonalisationTest {
         Map<String, String> personalisation = homeOfficeAppealOutcomePersonalisation.getPersonalisation(asylumCase);
 
         assertEquals(isDetained.equals(YesOrNo.YES)
-            ? "Detained - Immigration and Asylum appeal"
+            ? "Detained Appeal - Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
         assertThat(personalisation)
             .containsEntry("appealReferenceNumber", "")

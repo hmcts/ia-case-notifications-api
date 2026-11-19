@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixesDetained;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -133,6 +134,7 @@ public class HomeOfficeListCasePersonalisationTest {
             customerServicesProvider,
             hearingDetailsFinder
         );
+        initializePrefixesDetained(homeOfficeListCasePersonalisation);
     }
 
     @Test
@@ -210,7 +212,6 @@ public class HomeOfficeListCasePersonalisationTest {
     @ParameterizedTest
     @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
-
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
 
         Map<String, String> personalisation = homeOfficeListCasePersonalisation.getPersonalisation(asylumCase);

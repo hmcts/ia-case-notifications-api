@@ -4,12 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_ACCELERATED_DETAINED_APPEAL;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixesDetained;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
@@ -72,7 +69,7 @@ public class RespondentForceCaseProgressionPersonalisationTest {
 
         AsylumCase asylumCase = writeTestAsylumCase(isAda);
 
-        initializePrefixes(personalisation);
+        initializePrefixesDetained(personalisation);
 
         Map<String, String> actualPersonalisation = personalisation.getPersonalisation(asylumCase);
 
@@ -83,17 +80,17 @@ public class RespondentForceCaseProgressionPersonalisationTest {
         assertEquals("555 555 555", actualPersonalisation.get("customerServicesTelephone"));
         assertEquals("cust.services@example.com", actualPersonalisation.get("customerServicesEmail"));
         assertEquals(isAda.equals(YesOrNo.YES)
-            ? "Accelerated detained appeal"
+            ? "Detained Appeal - Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", actualPersonalisation.get("subjectPrefix"));
     }
 
-    private AsylumCase writeTestAsylumCase(YesOrNo isAda) {
+    private AsylumCase writeTestAsylumCase(YesOrNo isDetained) {
         AsylumCase asylumCase = new AsylumCase();
         asylumCase.write(APPEAL_REFERENCE_NUMBER, "RP/50001/2020");
         asylumCase.write(APPELLANT_GIVEN_NAMES, "Lacy Dawson");
         asylumCase.write(APPELLANT_FAMILY_NAME, "Venus Blevins");
         asylumCase.write(HOME_OFFICE_REFERENCE_NUMBER, "A1234567");
-        asylumCase.write(IS_ACCELERATED_DETAINED_APPEAL, isAda);
+        asylumCase.write(APPELLANT_IN_DETENTION, isDetained);
         return asylumCase;
     }
 }

@@ -96,7 +96,7 @@ public class HomeOfficeAppealSubmittedPendingPaymentPersonalisationTest {
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
             .containsEntry("appealReferenceNumber", appealReferenceNumber)
             .containsEntry("appellantGivenNames", appellantGivenNames)
-            .containsEntry("subjectPrefix", isDetained.equals(YesOrNo.YES) ? "Detained - Immigration and Asylum appeal"
+            .containsEntry("subjectPrefix", isDetained.equals(YesOrNo.YES) ? "Detained Appeal - Immigration and Asylum appeal"
                 : "Immigration and Asylum appeal")
             .containsEntry("appellantFamilyName", appellantFamilyName);
     }

@@ -210,7 +210,7 @@ public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisationTest {
             .containsEntry("appellantFamilyName", appellantFamilyName)
             .containsEntry("ariaListingReference", ariaListingReference)
             .containsEntry("respondentReferenceNumber", homeOfficeRefNumber)
-            .containsEntry("subjectPrefix", "Detained - Immigration and Asylum appeal");
+            .containsEntry("subjectPrefix", "Detained Appeal - Immigration and Asylum appeal");
 
         verify(dueDateService, times(1)).calculateWorkingDaysDueDate(any(ZonedDateTime.class), any(Integer.class));
     }
@@ -279,7 +279,7 @@ public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisationTest {
             .containsEntry("ariaListingReference", ariaListingReference)
             .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber);
         assertEquals(isDetained.equals(YesOrNo.YES)
-            ? "Detained - Immigration and Asylum appeal"
+            ? "Detained Appeal - Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
 
         verify(dueDateService, times(0)).calculateWorkingDaysDueDate(any(ZonedDateTime.class), any(Integer.class));

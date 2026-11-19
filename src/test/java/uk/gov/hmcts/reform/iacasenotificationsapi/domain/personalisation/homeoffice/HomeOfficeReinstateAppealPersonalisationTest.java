@@ -214,7 +214,7 @@ public class HomeOfficeReinstateAppealPersonalisationTest {
             .containsEntry("reinstatedDecisionMaker", reinstatedDecisionMaker)
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals(isDetained.equals(YesOrNo.YES)
-            ? "Detained - Immigration and Asylum appeal"
+            ? "Detained Appeal - Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
@@ -247,7 +247,7 @@ public class HomeOfficeReinstateAppealPersonalisationTest {
             .containsEntry("reinstatedDecisionMaker", "")
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals(isDetained.equals(YesOrNo.YES)
-            ? "Detained - Immigration and Asylum appeal"
+            ? "Detained Appeal - Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 

@@ -135,7 +135,7 @@ public class HomeOfficeRecordApplicationPersonalisationTest {
         Map<String, String> personalisation = homeOfficeRecordApplicationPersonalisation.getPersonalisation(asylumCase);
 
         assertEquals(isDetained.equals(YesOrNo.YES)
-            ? "Detained - Immigration and Asylum appeal"
+            ? "Detained Appeal - Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
         String expectedApplicationSupplier = "someapplicationsupplier";
         String expectedApplicationType = "someapplicationtype";
@@ -169,7 +169,7 @@ public class HomeOfficeRecordApplicationPersonalisationTest {
         Map<String, String> personalisation = homeOfficeRecordApplicationPersonalisation.getPersonalisation(asylumCase);
 
         assertEquals(isDetained.equals(YesOrNo.YES)
-            ? "Detained - Immigration and Asylum appeal"
+            ? "Detained Appeal - Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
         assertThat(personalisation)
             .containsEntry("appealReferenceNumber", "")
