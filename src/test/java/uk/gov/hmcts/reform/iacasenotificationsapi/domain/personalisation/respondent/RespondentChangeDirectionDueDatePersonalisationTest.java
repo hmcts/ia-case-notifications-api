@@ -7,7 +7,7 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType.AIP;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.Parties.RESPONDENT;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixesDetained;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.HashMap;
@@ -241,7 +241,8 @@ public class RespondentChangeDirectionDueDatePersonalisationTest {
         when(callback.getCaseDetails()).thenReturn(caseDetails);
         when(caseDetails.getCaseData()).thenReturn(asylumCase);
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
-        initializePrefixes(respondentChangeDirectionDueDatePersonalisation);
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(isAda));
+        initializePrefixesDetained(respondentChangeDirectionDueDatePersonalisation);
         when(personalisationProvider.getPersonalisation(callback)).thenReturn(getPersonalisation());
 
         Map<String, String> personalisation =
@@ -250,7 +251,7 @@ public class RespondentChangeDirectionDueDatePersonalisationTest {
         assertFalse(personalisation.isEmpty());
         assertThat(personalisation)
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
-            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Accelerated detained appeal"
+            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Detained Appeal - Immigration and Asylum appeal"
                 : "Immigration and Asylum appeal")
             .containsAllEntriesOf(getPersonalisation());
     }

@@ -18,6 +18,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
 
 
 @Service
@@ -30,7 +31,10 @@ public class RespondentTurnOnNotificationsPersonalisation implements EmailNotifi
     private final CustomerServicesProvider customerServicesProvider;
     private final HomeOfficeEmailFinder hoEmailAddressFinder;
 
-
+    @Value("${govnotify.emailPrefix.detained}")
+    private String detainedPrefix;
+    @Value("${govnotify.emailPrefix.nonDetained}")
+    private String nonDetainedPrefix;
 
     public RespondentTurnOnNotificationsPersonalisation(
             @NotNull(message = "homeOfficeTurnOnNotificationsBeforeListingTemplateId cannot be null")
@@ -73,7 +77,7 @@ public class RespondentTurnOnNotificationsPersonalisation implements EmailNotifi
         final ImmutableMap.Builder<String, String> listCaseFields = ImmutableMap
             .<String, String>builder()
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation(callback))
-            .put("subjectPrefix", "Immigration and Asylum appeal")
+            .put("subjectPrefix", isAppellantInDetention(callback.getCaseDetails().getCaseData()) ? detainedPrefix : nonDetainedPrefix)
             .put("linkToOnlineService", iaExUiFrontendUrl)
             .put("upperTribunalReferenceNumber", callback.getCaseDetails().getCaseData().read(AsylumCaseDefinition.UPPER_TRIBUNAL_REFERENCE_NUMBER, String.class).orElse(""))
             .putAll(personalisationProvider.getRespondentHeaderPersonalisation(callback.getCaseDetails().getCaseData()));

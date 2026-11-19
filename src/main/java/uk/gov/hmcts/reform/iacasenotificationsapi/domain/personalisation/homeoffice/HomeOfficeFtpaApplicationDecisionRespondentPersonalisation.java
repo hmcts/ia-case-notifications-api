@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice;
 
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
 
 import com.google.common.collect.ImmutableMap;
 import java.time.ZonedDateTime;
@@ -40,10 +40,10 @@ public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisation implemen
     private final int calendarDaysToWaitOutOfCountry;
     private final int workingDaysaysToWaitAda;
 
-    @Value("${govnotify.emailPrefix.ada}")
-    private String adaPrefix;
-    @Value("${govnotify.emailPrefix.nonAda}")
-    private String nonAdaPrefix;
+    @Value("${govnotify.emailPrefix.detained}")
+    private String detainedPrefix;
+    @Value("${govnotify.emailPrefix.nonDetained}")
+    private String nonDetainedPrefix;
 
     public HomeOfficeFtpaApplicationDecisionRespondentPersonalisation(
         @Value("${govnotify.template.applicationGranted.applicant.homeOffice.email}") String applicationGrantedApplicantHomeOfficeTemplateId,
@@ -131,9 +131,10 @@ public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisation implemen
 
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
+        boolean appellantInDetention = isAppellantInDetention(asylumCase);
         ImmutableMap.Builder<String, String> personalisationBuilder = ImmutableMap
             .<String, String>builder()
-            .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
+            .put("subjectPrefix", appellantInDetention ? detainedPrefix : nonDetainedPrefix)
             .putAll(personalisationProvider.getRespondentHeaderPersonalisation(asylumCase));
 
         boolean setDynamicDate = Arrays.asList(
@@ -143,7 +144,7 @@ public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisation implemen
 
         if (setDynamicDate) {
             boolean inCountryAppeal = asylumCase.read(APPELLANT_IN_UK, YesOrNo.class).map(value -> value.equals(YesOrNo.YES)).orElse(true);
-            if (isAcceleratedDetainedAppeal(asylumCase)) {
+            if (appellantInDetention) {
                 return personalisationBuilder.put("due date", dueDateService.calculateWorkingDaysDueDate(ZonedDateTime.now(), workingDaysaysToWaitAda)
                     .format(DateTimeFormatter.ofPattern("d MMMM yyyy"))).build();
             } else if (inCountryAppeal) {

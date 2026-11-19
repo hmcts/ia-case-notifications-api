@@ -9,7 +9,7 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixesDetained;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -170,7 +170,8 @@ public class RespondentEvidenceDirectionPersonalisationTest {
 
         when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(NO));
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
-        initializePrefixes(respondentEvidenceDirectionPersonalisation);
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(isAda));
+        initializePrefixesDetained(respondentEvidenceDirectionPersonalisation);
         Map<String, String> personalisation = respondentEvidenceDirectionPersonalisation.getPersonalisation(asylumCase);
 
         assertThat(personalisation)
@@ -185,7 +186,7 @@ public class RespondentEvidenceDirectionPersonalisationTest {
             .containsEntry("legalRepReference", legalRepReference)
             .containsEntry("dueDate", expectedDirectionDueDate);
         assertEquals(isAda.equals(YES)
-            ? "Accelerated detained appeal"
+            ? "Detained Appeal - Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
 
     }
@@ -196,7 +197,8 @@ public class RespondentEvidenceDirectionPersonalisationTest {
         when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(NO));
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
-        initializePrefixes(respondentEvidenceDirectionPersonalisation);
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(isAda));
+        initializePrefixesDetained(respondentEvidenceDirectionPersonalisation);
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
@@ -233,7 +235,7 @@ public class RespondentEvidenceDirectionPersonalisationTest {
             .containsEntry("legalRepReference", legalRepReference)
             .containsEntry("dueDate", expectedDirectionDueDate);
         assertEquals(isAda.equals(YES)
-            ? "Accelerated detained appeal"
+            ? "Detained Appeal - Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
@@ -243,7 +245,8 @@ public class RespondentEvidenceDirectionPersonalisationTest {
         when(asylumCase.read(IS_ADMIN, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(APPELLANTS_REPRESENTATION, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
-        initializePrefixes(respondentEvidenceDirectionPersonalisation);
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(isAda));
+        initializePrefixesDetained(respondentEvidenceDirectionPersonalisation);
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
@@ -280,7 +283,7 @@ public class RespondentEvidenceDirectionPersonalisationTest {
             .containsEntry("legalRepReference", legalRepReference)
             .containsEntry("dueDate", expectedDirectionDueDate);
         assertEquals(isAda.equals(YES)
-            ? "Accelerated detained appeal"
+            ? "Detained Appeal - Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
@@ -288,7 +291,7 @@ public class RespondentEvidenceDirectionPersonalisationTest {
     public void should_return_personalisation_when_all_mandatory_information_given_detained_appeal() {
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(YES));
 
-        initializePrefixes(respondentEvidenceDirectionPersonalisation);
+        initializePrefixesDetained(respondentEvidenceDirectionPersonalisation);
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
@@ -307,7 +310,7 @@ public class RespondentEvidenceDirectionPersonalisationTest {
             .containsEntry("legalRepEmail", legalRepEmail)
             .containsEntry("legalRepReference", legalRepReference)
             .containsEntry("dueDate", expectedDirectionDueDate);
-        assertEquals("Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
+        assertEquals("Detained Appeal - Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
     @ParameterizedTest
@@ -315,7 +318,8 @@ public class RespondentEvidenceDirectionPersonalisationTest {
     public void should_return_empty_company_details_for_notice_of_change_found(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
-        initializePrefixes(respondentEvidenceDirectionPersonalisation);
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(isAda));
+        initializePrefixesDetained(respondentEvidenceDirectionPersonalisation);
         when(asylumCase.read(CHANGE_ORGANISATION_REQUEST_FIELD, ChangeOrganisationRequest.class))
             .thenReturn(Optional.of(
                 new ChangeOrganisationRequest(
@@ -338,7 +342,7 @@ public class RespondentEvidenceDirectionPersonalisationTest {
             .containsEntry("legalRepReference", "")
             .containsEntry("dueDate", expectedDirectionDueDate);
         assertEquals(isAda.equals(YES)
-            ? "Accelerated detained appeal"
+            ? "Detained Appeal - Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
@@ -346,11 +350,12 @@ public class RespondentEvidenceDirectionPersonalisationTest {
     @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_company_details_for_notice_of_change_found_with_valid_case_role(YesOrNo isAda) {
 
-        Value caseRole =
-            new Value("[LEGALREPRESENTATIVE]", "Legal Representative");
-
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
-        initializePrefixes(respondentEvidenceDirectionPersonalisation);
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(isAda));
+        initializePrefixesDetained(respondentEvidenceDirectionPersonalisation);
+
+        Value caseRole =
+                new Value("[LEGALREPRESENTATIVE]", "Legal Representative");
 
         when(asylumCase.read(CHANGE_ORGANISATION_REQUEST_FIELD, ChangeOrganisationRequest.class))
             .thenReturn(Optional.of(
@@ -374,7 +379,7 @@ public class RespondentEvidenceDirectionPersonalisationTest {
             .containsEntry("legalRepReference", legalRepReference)
             .containsEntry("dueDate", expectedDirectionDueDate);
         assertEquals(isAda.equals(YES)
-            ? "Accelerated detained appeal"
+            ? "Detained Appeal - Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
@@ -391,7 +396,7 @@ public class RespondentEvidenceDirectionPersonalisationTest {
     @Test
     public void should_return_ejp_personalisation_when_all_information_given() {
 
-        initializePrefixes(respondentEvidenceDirectionPersonalisation);
+        initializePrefixesDetained(respondentEvidenceDirectionPersonalisation);
         when(asylumCase.read(IS_EJP, YesOrNo.class)).thenReturn(Optional.of(YES));
         when(asylumCase.read(LEGAL_REP_NAME, String.class)).thenReturn(Optional.empty());
         Map<String, String> personalisation = respondentEvidenceDirectionPersonalisation.getPersonalisation(asylumCase);

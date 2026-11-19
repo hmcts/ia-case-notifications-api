@@ -1,5 +1,5 @@
 {
-  "description": "RIA-7031 Send appeal submitted notification to Taylor House hearing centre (unrep)",
+  "description": "RIA-7031 Send appeal submitted notification to Taylor House hearing centre (unrep detained)",
   "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
@@ -38,7 +38,7 @@
       {
         "reference": "1417_APPEAL_SUBMITTED_HOME_OFFICE",
         "recipient": "{$apcPrivateHomeOfficeEmailAddress}",
-        "subject": "Immigration and Asylum appeal: appeal submitted",
+        "subject": "Detained – Immigration and Asylum appeal: appeal submitted",
         "body": [
           "PA/12345/2019",
           "Talha Awan",

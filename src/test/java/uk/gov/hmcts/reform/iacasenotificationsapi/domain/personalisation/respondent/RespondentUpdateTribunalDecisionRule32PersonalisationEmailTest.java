@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixesDetained;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -64,6 +65,7 @@ class RespondentUpdateTribunalDecisionRule32PersonalisationEmailTest {
             customerServicesProvider,
             emailAddressFinder
         );
+        initializePrefixesDetained(respondentUpdateTribunalDecisionRule32PersonalisationEmail);
     }
 
     @Test

@@ -14,6 +14,8 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
+import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_SUBMITTED_HEARING_REQUIREMENTS_HOME_OFFICE_EMAIL;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STF_24_WEEKS_HEARING_REQUIREMENTS_EMAIL_TEMPLATE;
 
@@ -22,22 +24,23 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24Weeks
 public class HomeOfficeHearingRequirementsStf24WeeksEmailPersonalisation implements EmailNotificationPersonalisation {
     private final String templateID;
 
-
-    private final String nonAdaPrefix;
     private final String iaExUiFrontendUrl;
     private final String apcPrivateHomeOfficeEmailAddress;
     private final CustomerServicesProvider customerServicesProvider;
     private final DateTimeExtractor dateTimeExtractor;
     private final HearingDetailsFinder hearingDetailsFinder;
 
+    @Value("${govnotify.emailPrefix.detained}")
+    private String detainedPrefix;
+    @Value("${govnotify.emailPrefix.nonDetained}")
+    private String nonDetainedPrefix;
+
     public HomeOfficeHearingRequirementsStf24WeeksEmailPersonalisation(
             @Value("${apcPrivateHomeOfficeEmailAddress}") String apcPrivateHomeOfficeEmailAddress,
             @Value(STF_24_WEEKS_HEARING_REQUIREMENTS_EMAIL_TEMPLATE) String templateID,
-            @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
-            @Value("${govnotify.emailPrefix.nonAda}") String nonAdaPrefix, CustomerServicesProvider customerServicesProvider, DateTimeExtractor dateTimeExtractor, HearingDetailsFinder hearingDetailsFinder) {
+            @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl, CustomerServicesProvider customerServicesProvider, DateTimeExtractor dateTimeExtractor, HearingDetailsFinder hearingDetailsFinder) {
         this.templateID = templateID;
 
-        this.nonAdaPrefix = nonAdaPrefix;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.apcPrivateHomeOfficeEmailAddress = apcPrivateHomeOfficeEmailAddress;
         this.customerServicesProvider = customerServicesProvider;
@@ -62,7 +65,8 @@ public class HomeOfficeHearingRequirementsStf24WeeksEmailPersonalisation impleme
 
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
-        return Stf24WeeksUtil.buildHearingRequirementsEmailParams(Stf24WeeksUtil.Stf24WeeksNotificationFor.HOME_OFFICE, asylumCase, nonAdaPrefix, iaExUiFrontendUrl, customerServicesProvider, dateTimeExtractor, hearingDetailsFinder);
+        requireNonNull(asylumCase, "asylumCase must not be null");
+        return Stf24WeeksUtil.buildHearingRequirementsEmailParams(Stf24WeeksUtil.Stf24WeeksNotificationFor.HOME_OFFICE, asylumCase, isAppellantInDetention(asylumCase) ? detainedPrefix : nonDetainedPrefix, iaExUiFrontendUrl, customerServicesProvider, dateTimeExtractor, hearingDetailsFinder);
     }
 
 }

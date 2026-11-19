@@ -19,6 +19,7 @@ import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppealListed;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.HOME_OFFICE_REFERENCE_NUMBER_KEY;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.REMOVE_STATUTORY_TIMEFRAME_24WEEKS_HOME_OFFICE_EMAIL;
 
@@ -41,13 +42,15 @@ public class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation
     private final String apcPrivateHomeOfficeEmailAddress;
     private final EmailAddressFinder emailAddressFinder;
     private final CustomerServicesProvider customerServicesProvider;
-    private final String nonAdaPrefix;
 
+    @Value("${govnotify.emailPrefix.detained}")
+    private String detainedPrefix;
+    @Value("${govnotify.emailPrefix.nonDetained}")
+    private String nonDetainedPrefix;
 
     public HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation(
         @NotNull(message = "templateId cannot be null") @Value("${govnotify.template.removeStatutoryTimeframe24Weeks.homeOffice.email}") String templateId,
         @Value("${apcPrivateHomeOfficeEmailAddress}") String apcPrivateHomeOfficeEmailAddress,
-        @Value("${govnotify.emailPrefix.nonAda}") String nonAdaPrefix,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
         EmailAddressFinder emailAddressFinder,
         CustomerServicesProvider customerServicesProvider) {
@@ -55,7 +58,6 @@ public class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation
         this.apcPrivateHomeOfficeEmailAddress = apcPrivateHomeOfficeEmailAddress;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
         this.customerServicesProvider = customerServicesProvider;
-        this.nonAdaPrefix = nonAdaPrefix;
         this.emailAddressFinder = emailAddressFinder;
     }
 
@@ -81,7 +83,7 @@ public class HomeOfficeRemoveStatutoryTimeframe24WeeksPersonalisation
         requireNonNull(asylumCase, "asylumCase must not be null");
 
         return ImmutableMap.<String, String>builder()
-            .put(SUBJECT_PREFIX_KEY, nonAdaPrefix)
+            .put(SUBJECT_PREFIX_KEY, isAppellantInDetention(asylumCase) ? detainedPrefix : nonDetainedPrefix)
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .put(HOME_OFFICE_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put(APPEAL_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING))

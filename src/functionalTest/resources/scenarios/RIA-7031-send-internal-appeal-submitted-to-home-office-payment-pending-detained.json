@@ -1,5 +1,5 @@
 {
-  "description": "RIA-7031 Send appeal submitted notification to Home Office Unrepped",
+  "description": "RIA-7031 Send appeal submitted notification to Home Office Unrepped Detained",
   "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
@@ -38,7 +38,7 @@
       {
         "reference": "1409_APPEAL_SUBMITTED_HOME_OFFICE",
         "recipient": "{$apcPrivateHomeOfficeEmailAddress}",
-        "subject": "Immigration and Asylum appeal: appeal submitted",
+        "subject": "Detained – Immigration and Asylum appeal: appeal submitted",
         "body": [
           "PA/12345/2019",
           "Talha Awan",

@@ -14,12 +14,18 @@ import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
 
 @Service
 public class RespondentRecordAdjournmentDetailsPersonalisation implements EmailNotificationPersonalisation {
 
     private final String respondentRecordAdjournmentDetailsTemplateId;
     private final EmailAddressFinder respondentEmailAddressAfterRespondentReview;
+
+    @Value("${govnotify.emailPrefix.detained}")
+    private String detainedPrefix;
+    @Value("${govnotify.emailPrefix.nonDetained}")
+    private String nonDetainedPrefix;
 
     public RespondentRecordAdjournmentDetailsPersonalisation(
         @Value("${govnotify.template.recordAdjournmentDetails.respondent.email}") String respondentRecordAdjournmentDetailsTemplateId,
@@ -51,6 +57,7 @@ public class RespondentRecordAdjournmentDetailsPersonalisation implements EmailN
 
         return ImmutableMap
             .<String, String>builder()
+            .put("subjectPrefix", isAppellantInDetention(asylumCase) ? detainedPrefix : nonDetainedPrefix)
             .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .put("homeOfficeReferenceNumber", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))

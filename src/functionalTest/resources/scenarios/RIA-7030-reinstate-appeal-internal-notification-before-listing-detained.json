@@ -1,5 +1,5 @@
 {
-  "description": "RIA-7030 Send reinstate appeal notification before listing to HO (unrepped case)",
+  "description": "RIA-7030 Send reinstate appeal notification before listing to HO (unrepped detained case)",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
@@ -55,7 +55,7 @@
       {
         "reference": "1436_REINSTATE_APPEAL_HOME_OFFICE",
         "recipient": "{$apcHomeOfficeEmailAddress}",
-        "subject": "Immigration and Asylum appeal: appeal reinstated",
+        "subject": "Detained – Immigration and Asylum appeal: appeal reinstated",
         "body": [
           "PA/12345/2019",
           "Talha Awan",

@@ -22,22 +22,27 @@ import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.IS_INTEGRATED;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.hasStf24WeeksStatus;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
 
 @Service
 public class HomeOfficeEditListingPersonalisation implements EmailNotificationPersonalisation {
 
     private final String homeOfficeCaseEditedNonAdaTemplateId;
-    private final String homeOfficeCaseEditedAdaTemplateId;
+    private final String homeOfficeCaseEditedDetainedTemplateId;
     private final String listAssistHearingHomeOfficeCaseEditedTemplateId;
     private final String homeOfficeCaseEdited24wTemplateId;
     private final PersonalisationProvider personalisationProvider;
     private final EmailAddressFinder emailAddressFinder;
     private final CustomerServicesProvider customerServicesProvider;
 
+    @Value("${govnotify.emailPrefix.detained}")
+    private String detainedPrefix;
+    @Value("${govnotify.emailPrefix.nonDetained}")
+    private String nonDetainedPrefix;
+
     public HomeOfficeEditListingPersonalisation(
-        @Value("${govnotify.template.caseEdited.homeOffice.email.nonAda}") String homeOfficeCaseEditedNonAdaTemplateId,
-        @Value("${govnotify.template.caseEdited.homeOffice.email.ada}") String homeOfficeCaseEditedAdaTemplateId,
+        @Value("${govnotify.template.caseEdited.homeOffice.email.nonDetained}") String homeOfficeCaseEditedNonDetainedTemplateId,
+        @Value("${govnotify.template.caseEdited.homeOffice.email.detained}") String homeOfficeCaseEditedDetainedTemplateId,
         @Value("${govnotify.template.listAssistHearing.caseEdited.homeOffice.email}") String listAssistHearingHomeOfficeCaseEditedTemplateId,
         @Value("${govnotify.template.reListCase24Weeks.homeOffice.email}") String homeOfficeCaseEdited24wTemplateId,
         EmailAddressFinder emailAddressFinder,
@@ -45,8 +50,8 @@ public class HomeOfficeEditListingPersonalisation implements EmailNotificationPe
         CustomerServicesProvider customerServicesProvider
     ) {
 
-        this.homeOfficeCaseEditedNonAdaTemplateId = homeOfficeCaseEditedNonAdaTemplateId;
-        this.homeOfficeCaseEditedAdaTemplateId = homeOfficeCaseEditedAdaTemplateId;
+        this.homeOfficeCaseEditedNonAdaTemplateId = homeOfficeCaseEditedNonDetainedTemplateId;
+        this.homeOfficeCaseEditedDetainedTemplateId = homeOfficeCaseEditedDetainedTemplateId;
         this.listAssistHearingHomeOfficeCaseEditedTemplateId = listAssistHearingHomeOfficeCaseEditedTemplateId;
         this.homeOfficeCaseEdited24wTemplateId = homeOfficeCaseEdited24wTemplateId;
         this.emailAddressFinder = emailAddressFinder;
@@ -59,8 +64,8 @@ public class HomeOfficeEditListingPersonalisation implements EmailNotificationPe
         if (hasStf24WeeksStatus(asylumCase)) {
             return homeOfficeCaseEdited24wTemplateId;
         }
-        if (isAcceleratedDetainedAppeal(asylumCase)) {
-            return homeOfficeCaseEditedAdaTemplateId;
+        if (isAppellantInDetention(asylumCase)) {
+            return homeOfficeCaseEditedDetainedTemplateId;
         }
         if (asylumCase.read(IS_INTEGRATED, YesOrNo.class).orElse(YesOrNo.NO) == YesOrNo.YES) {
             return listAssistHearingHomeOfficeCaseEditedTemplateId;
@@ -88,6 +93,7 @@ public class HomeOfficeEditListingPersonalisation implements EmailNotificationPe
         final Map<String, String> listCaseFields = new HashMap<>();
         listCaseFields.putAll(customerServicesProvider.getCustomerServicesPersonalisation(callback));
         listCaseFields.putAll(personalisationProvider.getPersonalisation(callback));
+        listCaseFields.put("subjectPrefix", isAppellantInDetention(callback.getCaseDetails().getCaseData()) ? detainedPrefix : nonDetainedPrefix);
         return ImmutableMap.copyOf(listCaseFields);
     }
 }

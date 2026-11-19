@@ -73,6 +73,8 @@ govnotify:
   emailPrefix:
     ada: "Accelerated detained appeal"
     nonAda: "Immigration and Asylum appeal"
+    detained: "Detained Appeal - Immigration and Asylum appeal"
+    nonDetained: "Immigration and Asylum appeal"
     adaInPerson: "ADA - SERVE IN PERSON"
     nonAdaInPerson: "IAFT - SERVE IN PERSON"
     adaByPost: "ADA - SERVE BY POST"
@@ -88,13 +90,13 @@ govnotify:
         legalRep:
           email: 2b0f853d-1ef9-4d9c-ae26-b83b32efa2c9
         respondent:
-          email: 6461398b-d3b2-4dbc-aac9-ef87f34a9833
+          email: 270d29a9-d14d-4e09-9aab-35d9e71ff766
       caseBuilding.to.caseUnderReviewAiP:
         appellant:
           email: 1c0389ce-7ea6-4e3a-a3a8-efe3fcf499e9
           sms: d19e0f56-6ea6-4d58-ae49-070b94f30489
         respondent:
-          email: 6461398b-d3b2-4dbc-aac9-ef87f34a9833
+          email: 270d29a9-d14d-4e09-9aab-35d9e71ff766
       respondentReview.to.submitHearingRequirements:
         respondent:
           email: 7b597ead-8218-4227-8168-31d24a2824c5
@@ -312,7 +314,7 @@ govnotify:
           nonEjp: dfc0ee96-c71a-4db3-98ca-f70d7eec1525
           ejp: 492e19f3-6e91-4eb2-961c-7abe1931a0b2
         detention:
-          email: c3829e8a-e9e5-4661-8e8e-222e0f0b46e8
+          email: 6bc97c1a-7c04-4c12-a7b3-19d75140f307
       detentionEngagementTeam:
         email:
           nonAda: f965b4b2-98d8-4ff3-bd92-add1938b1580
@@ -442,9 +444,9 @@ govnotify:
         email: e399dede-a313-49ca-9e3c-a80f9a3ebd59
       homeOffice:
         email:
-          nonAda: a6c8d1c1-afae-4ea8-986e-34f81f250b47
-          ada: d73305bb-0fbe-4ce7-82c3-c53bd3a506c1
-          stf24Weeks: 5cbe31c9-f7fd-49a8-845e-9107d828bcdf
+          nonAda: dc1b062f-b0bc-4f24-8426-ba6f134a8826
+          ada: 7fad2fa6-a572-4b47-b61c-8acab0a09393
+          stf24Weeks: 97b862db-dad7-4fe0-9f54-c466e273a5cb
       legalRep:
         email:
           nonAda: 7288fdae-0616-4215-9d5b-bc3cda60583e
@@ -474,8 +476,8 @@ govnotify:
     caseEdited:
       homeOffice:
         email:
-          ada: 6786d68c-df1c-4196-965b-3c9fd6cc290a
-          nonAda: 0006932c-4a3f-4609-bb5e-0ed2c455caf8
+          detained: a1f9d379-ede6-40c8-b255-65d6996a32de
+          nonDetained: f3fba721-45e6-4d26-8d99-ede1dfeefa84
       caseOfficer:
         email: 1b16a4fb-7c3c-473a-a5ac-e44bb2a3d19e
       legalRep:
@@ -512,7 +514,7 @@ govnotify:
         caseOfficer:
           email: e30f3490-4649-4138-9711-749ecea07f8d
         homeOffice:
-          email: becd75f2-613e-482c-9df8-3ebc76251f9e
+          email: 3812ac0b-21e3-4a40-9f83-7b0170653c3b
         legalRep:
           inPerson:
             email: f7bea6a0-2173-4c0a-b0dd-543e5a8b6b23
@@ -524,7 +526,7 @@ govnotify:
             email: 4d479ce3-9139-44a8-a42b-e242086016eb
       cmrReListing:
         homeOffice:
-          email: 33312031-bb84-4598-81b7-faa0fd81da50
+          email: c5633e26-1f7e-4c0a-b4a1-2c9c4f0c5483
         caseOfficer:
           email: e67dbf06-5b6c-40a5-8fbf-98154ecf6e2a
         legalRep:
@@ -540,7 +542,7 @@ govnotify:
         caseOfficer:
           email: ddb88c55-c97e-45df-a6b1-dc92fd0433b3
         homeOffice:
-          email: 9e7b4606-78c1-41dd-b294-5eb432a6b92f
+          email: 145c3255-40af-4659-b990-94c33c4160a7
         legalRep:
           email: 59000d04-4a97-45ae-8a1e-036ca9faa9b5
         legallyReppedAppellant:
@@ -666,7 +668,7 @@ govnotify:
           email: 44529dbc-1beb-4c0c-aa75-7f9bcef64b05
       homeOffice:
         ada:
-          email: 78086792-ced6-4940-b227-bc95967101cc
+          email: 5b6e87f6-0b0b-4632-a44e-5220e91b4e6b
     reviewReheardHearingRequirements:
       adminOfficer:
         email: 18d40fd7-50d0-4eb9-a7fb-57a5bb154c96
@@ -755,7 +757,7 @@ govnotify:
         email: c81bf72e-d601-42ce-8c13-3c8d9abb62b3
         sms: b3f900b1-5905-461e-9611-63c1c6be906e
       homeOffice:
-        email: 1a16daed-a2f2-4d10-9f67-49cb543ab7bb
+        email: b119d7c4-827f-416a-8257-300232dae48d
     changeToHearingRequirements:
       adminOfficer:
         email: d3317a7a-4ce5-4032-b6b4-2806683b8b9a
@@ -859,14 +861,14 @@ govnotify:
           email: 8d9cb04d-b5ab-4607-846a-dd8601df25b0
       nonDetained:
         homeOffice:
-          email: 59774cb8-1360-448b-ad65-192c1157a7ee
+          email: 87765a2e-456f-4c37-9c63-b1f1f3f8f14b # should not have new prefix
         admin:
           email: fce53459-8463-43a5-86ce-b160b4a26bb4
         appellant:
           letter: 9843c2a6-c416-4c19-9a73-563487bab982
     recordAdjournmentDetails:
       respondent:
-        email: 85442b94-d5ed-4542-b483-94556cc4e3bb
+        email: 29143775-4152-4da3-b059-a809695d82a6
       caseOfficer:
         email: ea5abf36-c37b-4d9d-88ff-ef9cda6fd3cf
       legalRep:
@@ -892,7 +894,7 @@ govnotify:
       caseOfficer:
         email: 97fdd824-7adf-46a2-973d-ad7d96bf76bd
       homeOffice:
-        email: 2c9c4d9a-551d-480e-874e-46ef72b044ac
+        email: 508df5ab-795e-41b1-8da7-4a7551b70173
       detentionEngagementTeam:
         email: fe92c79d-212e-4ffe-b619-c2fb4dd304ac
         production:
@@ -1092,7 +1094,7 @@ govnotify:
         beforeListing:
           email: 18deee1b-635a-4821-8119-34c146e14c03
         afterListing:
-          email: 15242842-2a21-4ac2-921c-1b125efe0dba
+          email: 18deee1b-635a-4821-8119-34c146e14c03
       appellant:
         beforeListing:
           email: cdae7658-29d9-48ce-a477-1e542b7d3c8b
@@ -1353,17 +1355,17 @@ govnotify:
           email: 45efcaae-72b0-49e0-9b07-802d1a65bd6e
       homeOffice:
         unsuitable:
-          email: 0c8d72c1-7c63-4426-8d73-f178a540e1ff
+          email: d715b8f2-cf83-4444-98a9-8de31e3bb3fd
         suitable:
-          email: 1adfdfcf-1eac-44aa-8c2f-90dffd956796
+          email: 63052010-402d-4408-9678-2ba06b00922b
       detentionEngagementTeam:
         email: e6c27617-dfaf-45ec-a0ca-a4003d6d971a
     transferOutOfAda:
       homeOffice:
         beforeListing:
-          email: 9c5130fe-c389-4e90-aa26-b8a6f6cc3f71
+          email: e3d18e55-8f92-4e92-9ab7-db3253f887ee
         afterListing:
-          email: 554c969a-27e0-441d-b188-42216e00b097
+          email: 53cf279d-df30-4495-b718-8402d326b086
       legalRep:
         beforeListing:
           email: 814064a8-18c2-4d8c-8ed0-c8366e6ce60b
@@ -1374,7 +1376,7 @@ govnotify:
           2837a666-07bc-4286-a3e4-c37e78292d8e
     markAppealAsAda:
       homeOffice:
-        email: 671af79b-6c0d-4d49-8b9d-3a29efa0758d
+        email: fabeefb0-6a2e-4bf3-9ae2-2328c03844ac
       legalRep:
         email: 427d6a0f-4f67-41b7-8814-1fe44fec4ee0
       detentionEngagementTeam:
@@ -1384,13 +1386,13 @@ govnotify:
         email: 1baf79a7-1a7f-4a2c-9a03-eb5ec6ff7a49
         letter: 40b7c42a-a378-46b5-a636-3add03e3a1c8
       homeOffice:
-        email: 7b972a67-7665-4b3b-a64c-ed74d1ca8d55
+        email: 03baf787-ae05-4e65-931e-724e9cb31af9
     removeDetentionStatus:
       legalRep:
         email: 23669485-ffb0-4ae2-9d36-26c437a57e92
         letter: 753d6f8c-19b1-498e-b80a-868be0c33e3f
       homeOffice:
-        email: 3891dcd8-a9d1-47e8-8b87-3da77789a913
+        email: 1586b745-2aff-419e-aff5-ad6385bfa8d0
       appellant:
         email:
           beforeListing: 5bc75d7e-37ac-4382-a43a-0d27038c81de
@@ -1544,7 +1546,7 @@ govnotify:
         legalRep:
           206cb8d2-a237-4b5d-9b49-74c9372838c3
         homeOffice:
-          206cb8d2-a237-4b5d-9b49-74c9372838c3
+          a25ac2ba-9062-447b-bd0f-b499c8ba9888
         appellant:
           email: d84a747f-64b9-4c98-bb8f-387ef920ba89
           sms: 3f59be15-89e4-4241-9d6d-61a516dcd159
@@ -1554,7 +1556,7 @@ govnotify:
           email: 47f31922-1e17-4be5-84c9-0d65340a8e18
           sms: 24dd4193-554b-40be-a0b3-56b0f80e37ab
         respondent:
-          email: 6ebfdf22-9d9c-468e-a7cb-0fa84a7986e9
+          email: 05bf1825-0197-488e-8a8f-803d2670b755
         legalRep:
           email: ce51c82d-a084-4d0f-9163-c642240cb209
     updateTribunalDecision:
@@ -1562,7 +1564,7 @@ govnotify:
         legalrep:
           email: da39849d-58cd-4e91-ab79-ea3083acd753
         respondent:
-          email: 41da27eb-91be-4b8d-821a-1ba8c480b3ef
+          email: 22fc693a-f276-44dc-a02d-4c9d2d3b0d74
         appellant:
           emailUpdatedDecision: 86fa3afc-a886-4e8c-8101-c40e5f908357
           emailUpdatedDocument: f1cc5830-ae63-4dc6-a270-770121dfd110
@@ -1575,7 +1577,7 @@ govnotify:
         legalrep:
           email: 6b948ce8-b9aa-4b36-aa21-9b4c0ba6ff6e
         respondent:
-          email: 7fffa448-51ad-462c-b6dd-9c5a3a3dd8b4
+          email: 63673640-2fc9-47d9-afa6-3a4b8b13513f
         appellant:
           email: 7baedad6-6aeb-45b5-ae00-420ff2b80bba
           sms: 5ad1fc01-101a-4dbc-84d1-191cc6b715f5
@@ -1583,7 +1585,7 @@ govnotify:
       legalRep:
         email: 0e8e1bc7-feea-4b7d-9cd8-09606ca0bcf9
       homeOffice:
-        email: 0d55ec2a-b33c-478e-b467-4291b0f66563
+        email: 7e6e3862-9245-4234-9efe-7804da88d328
       nonDetained:
         appellant:
           email: 48a76c74-0109-4885-9a2e-b12d0cef34bc
@@ -1620,7 +1622,7 @@ govnotify:
     generateHearingBundle:
       nonDetainedAndOoc:
         homeOffice:
-          email: 3b756f11-4c9c-4aac-9f39-b1d594a933b3
+          email: dbbcd5f8-ce0b-4b94-86d0-37ce6b520c4a
     editAppealPostSubmit:
       appellant:
         letter: e68faac4-cf30-4e0b-b746-a7baf036dc65
