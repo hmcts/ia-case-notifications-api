@@ -128,7 +128,7 @@ public class AppellantRequestHearingRequirementsPersonalisationEmailTest {
             .containsEntry("homeOfficeReferenceNumber", homeOfficeRefeNumber)
             .containsEntry("appellantGivenNames", appellantGivenNames)
             .containsEntry("appellantFamilyName", appellantFamilyName)
-            .containsEntry("dueDate", "22 Sep 2021")
+            .containsEntry("dueDate", "22 Sept 2021")
             .containsEntry("Hyperlink to service", iaAipFrontendUrl);
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"
@@ -154,7 +154,7 @@ public class AppellantRequestHearingRequirementsPersonalisationEmailTest {
             .containsEntry("homeOfficeReferenceNumber", "")
             .containsEntry("appellantGivenNames", "")
             .containsEntry("appellantFamilyName", "")
-            .containsEntry("dueDate", "22 Sep 2021")
+            .containsEntry("dueDate", "22 Sept 2021")
             .containsEntry("Hyperlink to service", iaAipFrontendUrl);
         assertEquals(isAda.equals(YesOrNo.YES)
             ? "Accelerated detained appeal"

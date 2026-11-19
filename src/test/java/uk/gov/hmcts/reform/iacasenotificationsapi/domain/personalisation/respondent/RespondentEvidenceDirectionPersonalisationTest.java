@@ -9,7 +9,6 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.NO;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo.YES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixesDetained;
 
 import java.time.LocalDateTime;
@@ -351,12 +350,12 @@ public class RespondentEvidenceDirectionPersonalisationTest {
     @EnumSource(value = YesOrNo.class, names = {"YES", "NO"})
     public void should_return_company_details_for_notice_of_change_found_with_valid_case_role(YesOrNo isAda) {
 
-        Value caseRole =
-            new Value("[LEGALREPRESENTATIVE]", "Legal Representative");
-
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
         when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(isAda));
         initializePrefixesDetained(respondentEvidenceDirectionPersonalisation);
+
+        Value caseRole =
+                new Value("[LEGALREPRESENTATIVE]", "Legal Representative");
 
         when(asylumCase.read(CHANGE_ORGANISATION_REQUEST_FIELD, ChangeOrganisationRequest.class))
             .thenReturn(Optional.of(
