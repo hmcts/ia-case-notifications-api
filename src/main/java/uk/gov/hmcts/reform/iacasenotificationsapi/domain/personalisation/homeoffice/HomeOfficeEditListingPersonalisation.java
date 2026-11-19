@@ -35,6 +35,11 @@ public class HomeOfficeEditListingPersonalisation implements EmailNotificationPe
     private final EmailAddressFinder emailAddressFinder;
     private final CustomerServicesProvider customerServicesProvider;
 
+    @Value("${govnotify.emailPrefix.detained}")
+    private String detainedPrefix;
+    @Value("${govnotify.emailPrefix.nonDetained}")
+    private String nonDetainedPrefix;
+
     public HomeOfficeEditListingPersonalisation(
         @Value("${govnotify.template.caseEdited.homeOffice.email.nonDetained}") String homeOfficeCaseEditedNonDetainedTemplateId,
         @Value("${govnotify.template.caseEdited.homeOffice.email.detained}") String homeOfficeCaseEditedDetainedTemplateId,
@@ -88,6 +93,7 @@ public class HomeOfficeEditListingPersonalisation implements EmailNotificationPe
         final Map<String, String> listCaseFields = new HashMap<>();
         listCaseFields.putAll(customerServicesProvider.getCustomerServicesPersonalisation(callback));
         listCaseFields.putAll(personalisationProvider.getPersonalisation(callback));
+        listCaseFields.put("subjectPrefix", isAppellantInDetention(callback.getCaseDetails().getCaseData()) ? detainedPrefix : nonDetainedPrefix);
         return ImmutableMap.copyOf(listCaseFields);
     }
 }

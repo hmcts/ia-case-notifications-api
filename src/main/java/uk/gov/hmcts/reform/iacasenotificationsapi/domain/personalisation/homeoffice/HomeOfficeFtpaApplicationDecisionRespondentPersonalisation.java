@@ -131,9 +131,10 @@ public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisation implemen
 
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
+        boolean appellantInDetention = isAppellantInDetention(asylumCase);
         ImmutableMap.Builder<String, String> personalisationBuilder = ImmutableMap
             .<String, String>builder()
-            .put("subjectPrefix", isAppellantInDetention(asylumCase) ? detainedPrefix : nonDetainedPrefix)
+            .put("subjectPrefix", appellantInDetention ? detainedPrefix : nonDetainedPrefix)
             .putAll(personalisationProvider.getRespondentHeaderPersonalisation(asylumCase));
 
         boolean setDynamicDate = Arrays.asList(
@@ -143,7 +144,7 @@ public class HomeOfficeFtpaApplicationDecisionRespondentPersonalisation implemen
 
         if (setDynamicDate) {
             boolean inCountryAppeal = asylumCase.read(APPELLANT_IN_UK, YesOrNo.class).map(value -> value.equals(YesOrNo.YES)).orElse(true);
-            if (isAppellantInDetention(asylumCase)) {
+            if (appellantInDetention) {
                 return personalisationBuilder.put("due date", dueDateService.calculateWorkingDaysDueDate(ZonedDateTime.now(), workingDaysaysToWaitAda)
                     .format(DateTimeFormatter.ofPattern("d MMMM yyyy"))).build();
             } else if (inCountryAppeal) {

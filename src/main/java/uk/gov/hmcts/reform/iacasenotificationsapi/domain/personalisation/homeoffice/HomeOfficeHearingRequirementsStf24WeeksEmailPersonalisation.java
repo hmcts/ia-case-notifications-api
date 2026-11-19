@@ -23,7 +23,6 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24Weeks
 public class HomeOfficeHearingRequirementsStf24WeeksEmailPersonalisation implements EmailNotificationPersonalisation {
     private final String templateID;
 
-
     private final String iaExUiFrontendUrl;
     private final String apcPrivateHomeOfficeEmailAddress;
     private final CustomerServicesProvider customerServicesProvider;
@@ -65,11 +64,7 @@ public class HomeOfficeHearingRequirementsStf24WeeksEmailPersonalisation impleme
 
     @Override
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
-        String prefix = nonDetainedPrefix;
-        if (isAppellantInDetention(asylumCase)){
-            prefix = detainedPrefix;
-        }
-        return Stf24WeeksUtil.buildHearingRequirementsEmailParams(Stf24WeeksUtil.Stf24WeeksNotificationFor.HOME_OFFICE, asylumCase, prefix, iaExUiFrontendUrl, customerServicesProvider, dateTimeExtractor, hearingDetailsFinder);
+        return Stf24WeeksUtil.buildHearingRequirementsEmailParams(Stf24WeeksUtil.Stf24WeeksNotificationFor.HOME_OFFICE, asylumCase, isAppellantInDetention(asylumCase) ? detainedPrefix : nonDetainedPrefix, iaExUiFrontendUrl, customerServicesProvider, dateTimeExtractor, hearingDetailsFinder);
     }
 
 }

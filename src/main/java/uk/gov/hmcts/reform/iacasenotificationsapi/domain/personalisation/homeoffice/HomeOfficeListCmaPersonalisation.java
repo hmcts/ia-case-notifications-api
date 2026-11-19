@@ -31,7 +31,6 @@ public class HomeOfficeListCmaPersonalisation implements EmailNotificationPerson
     @Value("${govnotify.emailPrefix.nonDetained}")
     private String nonDetainedPrefix;
 
-
     public HomeOfficeListCmaPersonalisation(
         @NotNull(message = "listCmaAdminOfficerTemplateId cannot be null") @Value("${govnotify.template.listCma.homeOffice.email}") String listCmaAdminOfficerTemplateId,
         @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl,
