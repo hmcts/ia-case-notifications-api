@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -19,6 +20,7 @@ public class ApplyForCosts {
     private String applyForCostsCreationDate;
     private String applyForCostsDecision;
 
+    @JsonCreator
     public ApplyForCosts() {
         // noop -- for deserializer
     }
