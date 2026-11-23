@@ -861,7 +861,7 @@ govnotify:
           email: 8d9cb04d-b5ab-4607-846a-dd8601df25b0
       nonDetained:
         homeOffice:
-          email: 87765a2e-456f-4c37-9c63-b1f1f3f8f14b # should not have new prefix
+          email: 87765a2e-456f-4c37-9c63-b1f1f3f8f14b
         admin:
           email: fce53459-8463-43a5-86ce-b160b4a26bb4
         appellant:
