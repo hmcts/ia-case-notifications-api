@@ -4,9 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_APPELLANT_DECISION_REMADE_RULE_32_TEXT;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_APPLICANT_TYPE;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.FTPA_RESPONDENT_DECISION_REMADE_RULE_32_TEXT;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.buildAddressForIccLetter;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.getAppellantAddressInCountryOrOoc;
@@ -25,6 +23,8 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerService
 
 @Service
 public class AppellantInternalUpdateFtpaDecisionLetterPersonalisation implements LetterNotificationPersonalisation {
+
+    private static final String FTPA_DISPOSED_REASON = "Correct decision error under rule 31";
 
     private final String appellantInternalUpdateFtpaDecisionLetterTemplateId;
     private final CustomerServicesProvider customerServicesProvider;
@@ -66,7 +66,7 @@ public class AppellantInternalUpdateFtpaDecisionLetterPersonalisation implements
             .put("appellantGivenNames", asylumCase.read(APPELLANT_GIVEN_NAMES, String.class).orElse(""))
             .put("appellantFamilyName", asylumCase.read(APPELLANT_FAMILY_NAME, String.class).orElse(""))
             .put("applicant", isAppellantApplicant(asylumCase) ? "your" : "the Home Office's")
-            .put("ftpaDisposedReason", getDisposedReason(asylumCase));
+            .put("ftpaDisposedReason", FTPA_DISPOSED_REASON);
 
         buildAddressForIccLetter(asylumCase, builder);
 
@@ -77,14 +77,5 @@ public class AppellantInternalUpdateFtpaDecisionLetterPersonalisation implements
         return asylumCase.read(FTPA_APPLICANT_TYPE, ApplicantType.class)
             .orElseThrow(() -> new IllegalStateException("ftpaApplicantType is not present"))
             == ApplicantType.APPELLANT;
-    }
-
-    private String getDisposedReason(AsylumCase asylumCase) {
-        return asylumCase.read(
-            isAppellantApplicant(asylumCase)
-                ? FTPA_APPELLANT_DECISION_REMADE_RULE_32_TEXT
-                : FTPA_RESPONDENT_DECISION_REMADE_RULE_32_TEXT,
-            String.class
-        ).orElse("");
     }
 }

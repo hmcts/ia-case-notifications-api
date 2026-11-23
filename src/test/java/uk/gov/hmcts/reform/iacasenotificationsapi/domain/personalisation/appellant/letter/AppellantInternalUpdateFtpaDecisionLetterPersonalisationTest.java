@@ -44,8 +44,7 @@ class AppellantInternalUpdateFtpaDecisionLetterPersonalisationTest {
     private final String oocAddressLine2 = "Madrid";
     private final String oocAddressLine3 = "28003";
     private final NationalityFieldValue oocAddressCountry = mock(NationalityFieldValue.class);
-    private final String appellantDisposedReason = "Appellant rule 31 reason";
-    private final String respondentDisposedReason = "Respondent rule 31 reason";
+    private final String ftpaDisposedReason = "Correct decision error under rule 31";
     private final Map<String, String> customerServices = ImmutableMap.of(
         "customerServicesTelephone", "555 555 555",
         "customerServicesEmail", "cust.services@example.com"
@@ -79,10 +78,6 @@ class AppellantInternalUpdateFtpaDecisionLetterPersonalisationTest {
         when(oocAddressCountry.getCode()).thenReturn(Nationality.ES.name());
         when(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase)).thenReturn(customerServices);
         when(asylumCase.read(AsylumCaseDefinition.FTPA_APPLICANT_TYPE, ApplicantType.class)).thenReturn(Optional.of(ApplicantType.APPELLANT));
-        when(asylumCase.read(AsylumCaseDefinition.FTPA_APPELLANT_DECISION_REMADE_RULE_32_TEXT, String.class))
-            .thenReturn(Optional.of(appellantDisposedReason));
-        when(asylumCase.read(AsylumCaseDefinition.FTPA_RESPONDENT_DECISION_REMADE_RULE_32_TEXT, String.class))
-            .thenReturn(Optional.of(respondentDisposedReason));
 
         personalisation = new AppellantInternalUpdateFtpaDecisionLetterPersonalisation(templateId, customerServicesProvider);
     }
@@ -138,7 +133,7 @@ class AppellantInternalUpdateFtpaDecisionLetterPersonalisationTest {
             .containsEntry("appellantGivenNames", appellantGivenNames)
             .containsEntry("appellantFamilyName", appellantFamilyName)
             .containsEntry("applicant", "your")
-            .containsEntry("ftpaDisposedReason", appellantDisposedReason)
+            .containsEntry("ftpaDisposedReason", ftpaDisposedReason)
             .containsEntry("address_line_1", "someAppellantGivenNames someAppellantFamil")
             .containsEntry("address_line_2", addressLine1)
             .containsEntry("address_line_3", addressLine2)
@@ -168,16 +163,7 @@ class AppellantInternalUpdateFtpaDecisionLetterPersonalisationTest {
 
         assertThat(personalisation.getPersonalisation(asylumCase))
             .containsEntry("applicant", "the Home Office's")
-            .containsEntry("ftpaDisposedReason", respondentDisposedReason);
-    }
-
-    @Test
-    void should_return_empty_disposed_reason_when_not_present() {
-        appellantSubmittedSetup(YesOrNo.YES);
-        when(asylumCase.read(AsylumCaseDefinition.FTPA_APPELLANT_DECISION_REMADE_RULE_32_TEXT, String.class))
-            .thenReturn(Optional.empty());
-
-        assertThat(personalisation.getPersonalisation(asylumCase)).containsEntry("ftpaDisposedReason", "");
+            .containsEntry("ftpaDisposedReason", ftpaDisposedReason);
     }
 
     @Test
