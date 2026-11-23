@@ -20,7 +20,8 @@
           "singleSexCourtTribunalResponse": "LO reviewed single sex court response",
           "inCameraCourtTribunalResponse": "LO reviewed in camera court response",
           "submitHearingRequirementsAvailable": "Yes",
-          "appellantInDetention": "Yes"
+          "appellantInDetention": "Yes",
+          "isAcceleratedDetainedAppeal":"Yes"
         }
       }
     }
