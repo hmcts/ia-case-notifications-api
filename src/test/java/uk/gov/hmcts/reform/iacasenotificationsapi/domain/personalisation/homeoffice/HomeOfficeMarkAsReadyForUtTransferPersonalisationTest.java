@@ -195,7 +195,7 @@ public class HomeOfficeMarkAsReadyForUtTransferPersonalisationTest {
         Map<String, String> personalisation =
             homeOfficeMarkAppealReadyForUtTransferPersonalisation.getPersonalisation(asylumCase);
         assertThat(personalisation)
-            .containsEntry("subjectPrefix", isDetained.equals(YesOrNo.YES) ? "Detained Appeal - Immigration and Asylum appeal"
+            .containsEntry("subjectPrefix", isDetained.equals(YesOrNo.YES) ? "Detained Appeal – Immigration and Asylum appeal"
                 : "Immigration and Asylum appeal")
             .containsEntry("utAppealReferenceNumber", "")
             .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))

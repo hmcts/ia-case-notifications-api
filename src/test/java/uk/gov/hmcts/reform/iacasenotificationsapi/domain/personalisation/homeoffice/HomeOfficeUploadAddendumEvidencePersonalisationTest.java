@@ -97,7 +97,7 @@ public class HomeOfficeUploadAddendumEvidencePersonalisationTest {
         assertThat(personalisation)
             .containsAllEntriesOf(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
-            .containsEntry("subjectPrefix", isDetained.equals(YesOrNo.YES) ? "Detained Appeal - Immigration and Asylum appeal"
+            .containsEntry("subjectPrefix", isDetained.equals(YesOrNo.YES) ? "Detained Appeal – Immigration and Asylum appeal"
                 : "Immigration and Asylum appeal")
             .containsAllEntriesOf(getPersonalisationForHomeOffice());
     }

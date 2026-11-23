@@ -106,7 +106,7 @@ public class HomeOfficeLinkAppealPersonalisationTest {
         Map<String, String> personalisation = this.personalisation.getPersonalisation(asylumCase);
 
         assertEquals(isDetained.equals(YesOrNo.YES)
-            ? "Detained Appeal - Immigration and Asylum appeal"
+            ? "Detained Appeal – Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
         assertThat(personalisation)
             .containsEntry("reason", ReasonForLinkAppealOptions.FAMILIAL.getId())
@@ -133,7 +133,7 @@ public class HomeOfficeLinkAppealPersonalisationTest {
         Map<String, String> personalisation = this.personalisation.getPersonalisation(asylumCase);
 
         assertEquals(isDetained.equals(YesOrNo.YES)
-            ? "Detained Appeal - Immigration and Asylum appeal"
+            ? "Detained Appeal – Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
         assertThat(personalisation)
             .containsEntry("reason", "")

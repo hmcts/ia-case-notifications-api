@@ -143,7 +143,7 @@ public class RespondentEditAppealAfterSubmitPersonalisationTest {
             .containsEntry("ariaListingReference", ariaListingReference);
         assertEquals(iaExUiFrontendUrl, personalisation.get("linkToOnlineService"));
         assertEquals(isAda.equals(YesOrNo.YES)
-            ? "Detained Appeal - Immigration and Asylum appeal"
+            ? "Detained Appeal – Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 

@@ -100,7 +100,7 @@ class HomeOfficeCaseUnlinkPersonalisationTest {
             .containsEntry("ariaListingReference", ariaListingReference)
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals(isDetained.equals(YesOrNo.YES)
-            ? "Detained Appeal - Immigration and Asylum appeal"
+            ? "Detained Appeal – Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
@@ -125,7 +125,7 @@ class HomeOfficeCaseUnlinkPersonalisationTest {
             .containsEntry("ariaListingReference", "")
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl);
         assertEquals(isDetained.equals(YesOrNo.YES)
-            ? "Detained Appeal - Immigration and Asylum appeal"
+            ? "Detained Appeal – Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 }

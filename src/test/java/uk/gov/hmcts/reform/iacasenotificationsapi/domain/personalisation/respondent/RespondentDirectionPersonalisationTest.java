@@ -151,7 +151,7 @@ public class RespondentDirectionPersonalisationTest {
             .containsEntry("explanation", directionExplanation)
             .containsEntry("dueDate", expectedDirectionDueDate);
         assertEquals(isAda.equals(YesOrNo.YES)
-            ? "Detained Appeal - Immigration and Asylum appeal"
+            ? "Detained Appeal – Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
@@ -178,7 +178,7 @@ public class RespondentDirectionPersonalisationTest {
             .containsEntry("explanation", directionExplanation)
             .containsEntry("dueDate", expectedDirectionDueDate);
         assertEquals(isAda.equals(YesOrNo.YES)
-            ? "Detained Appeal - Immigration and Asylum appeal"
+            ? "Detained Appeal – Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 

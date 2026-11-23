@@ -230,7 +230,7 @@ class RespondentNonStandardDirectionOfAppellantPersonalizationTest {
             .containsEntry("explanation", directionExplanation)
             .containsEntry("dueDate", expectedDirectionDueDate);
         Assertions.assertEquals(isDetained.equals(YesOrNo.YES)
-            ? "Detained Appeal - Immigration and Asylum appeal"
+            ? "Detained Appeal – Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
@@ -259,7 +259,7 @@ class RespondentNonStandardDirectionOfAppellantPersonalizationTest {
             .containsEntry("explanation", directionExplanation)
             .containsEntry("dueDate", expectedDirectionDueDate);
         Assertions.assertEquals(isDetained.equals(YesOrNo.YES)
-            ? "Detained Appeal - Immigration and Asylum appeal"
+            ? "Detained Appeal – Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 

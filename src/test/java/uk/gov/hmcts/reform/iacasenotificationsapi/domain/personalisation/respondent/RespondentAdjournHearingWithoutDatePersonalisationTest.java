@@ -97,7 +97,7 @@ public class RespondentAdjournHearingWithoutDatePersonalisationTest {
             .containsEntry("appellantFamilyName", appellantFamilyName)
             .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber);
         assertEquals(isAda.equals(YesOrNo.YES)
-            ? "Detained Appeal - Immigration and Asylum appeal"
+            ? "Detained Appeal – Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 }

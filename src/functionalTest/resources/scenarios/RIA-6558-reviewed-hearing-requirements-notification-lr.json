@@ -48,15 +48,14 @@
         "multimediaTribunalResponse": "LO reviewed multimedia response",
         "singleSexCourtTribunalResponse": "LO reviewed single sex court response",
         "inCameraCourtTribunalResponse": "LO reviewed in camera court response",
-        "submitHearingRequirementsAvailable": "Yes",
-        "isAcceleratedDetainedAppeal":"Yes"
+        "submitHearingRequirementsAvailable": "Yes"
       }
     },
     "notifications": [
       {
         "reference": "1491_HEARING_REQUIREMENTS_AGREED_LEGAL_REPRESENTATIVE",
         "recipient": "{$TEST_LAW_FIRM_A_USERNAME}",
-        "subject": "Detained Appeal - Immigration and Asylum appeal: hearing requirements agreed",
+        "subject": "Detained Appeal – Immigration and Asylum appeal: hearing requirements agreed",
         "body": [
           "PA/12345/2019",
           "LP/12345/2019",
@@ -74,7 +73,7 @@
       {
         "reference": "1491_HEARING_REQUIREMENTS_AGREED_HOME_OFFICE",
         "recipient": "{$homeOfficeEmailAddresses.bradford}",
-        "subject": "Detained Appeal - Immigration and Asylum appeal: hearing requirements agreed",
+        "subject": "Detained Appeal – Immigration and Asylum appeal: hearing requirements agreed",
         "body": [
           "PA/12345/2019",
           "LP/12345/2019",

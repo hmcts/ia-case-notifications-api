@@ -80,7 +80,7 @@ public class RespondentForceCaseProgressionPersonalisationTest {
         assertEquals("555 555 555", actualPersonalisation.get("customerServicesTelephone"));
         assertEquals("cust.services@example.com", actualPersonalisation.get("customerServicesEmail"));
         assertEquals(isAda.equals(YesOrNo.YES)
-            ? "Detained Appeal - Immigration and Asylum appeal"
+            ? "Detained Appeal – Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", actualPersonalisation.get("subjectPrefix"));
     }
 

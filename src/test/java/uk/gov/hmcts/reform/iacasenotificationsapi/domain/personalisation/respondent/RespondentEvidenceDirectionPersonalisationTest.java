@@ -186,7 +186,7 @@ public class RespondentEvidenceDirectionPersonalisationTest {
             .containsEntry("legalRepReference", legalRepReference)
             .containsEntry("dueDate", expectedDirectionDueDate);
         assertEquals(isAda.equals(YES)
-            ? "Detained Appeal - Immigration and Asylum appeal"
+            ? "Detained Appeal – Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
 
     }
@@ -235,7 +235,7 @@ public class RespondentEvidenceDirectionPersonalisationTest {
             .containsEntry("legalRepReference", legalRepReference)
             .containsEntry("dueDate", expectedDirectionDueDate);
         assertEquals(isAda.equals(YES)
-            ? "Detained Appeal - Immigration and Asylum appeal"
+            ? "Detained Appeal – Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
@@ -283,7 +283,7 @@ public class RespondentEvidenceDirectionPersonalisationTest {
             .containsEntry("legalRepReference", legalRepReference)
             .containsEntry("dueDate", expectedDirectionDueDate);
         assertEquals(isAda.equals(YES)
-            ? "Detained Appeal - Immigration and Asylum appeal"
+            ? "Detained Appeal – Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
@@ -310,7 +310,7 @@ public class RespondentEvidenceDirectionPersonalisationTest {
             .containsEntry("legalRepEmail", legalRepEmail)
             .containsEntry("legalRepReference", legalRepReference)
             .containsEntry("dueDate", expectedDirectionDueDate);
-        assertEquals("Detained Appeal - Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
+        assertEquals("Detained Appeal – Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
     @ParameterizedTest
@@ -342,7 +342,7 @@ public class RespondentEvidenceDirectionPersonalisationTest {
             .containsEntry("legalRepReference", "")
             .containsEntry("dueDate", expectedDirectionDueDate);
         assertEquals(isAda.equals(YES)
-            ? "Detained Appeal - Immigration and Asylum appeal"
+            ? "Detained Appeal – Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
@@ -379,7 +379,7 @@ public class RespondentEvidenceDirectionPersonalisationTest {
             .containsEntry("legalRepReference", legalRepReference)
             .containsEntry("dueDate", expectedDirectionDueDate);
         assertEquals(isAda.equals(YES)
-            ? "Detained Appeal - Immigration and Asylum appeal"
+            ? "Detained Appeal – Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 

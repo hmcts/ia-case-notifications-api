@@ -18,7 +18,7 @@ public class SubjectPrefixesInitializer {
         ReflectionTestUtils.setField(
                 testClass,
                 "detainedPrefix",
-                "Detained Appeal - Immigration and Asylum appeal"
+                "Detained Appeal – Immigration and Asylum appeal"
         );
     }
 

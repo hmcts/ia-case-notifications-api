@@ -104,7 +104,7 @@ public class HomeOfficeEndAppealAutomaticallyPersonalisationTest {
         Map<String, String> personalisation = homeOfficeEndAppealAutomaticallyPersonalisation.getPersonalisation(asylumCase);
 
         assertEquals(isDetained.equals(YesOrNo.YES)
-            ? "Detained Appeal - Immigration and Asylum appeal"
+            ? "Detained Appeal – Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
         String expectedEndAppealDate = "28 Jul 2022";
         assertThat(personalisation)
@@ -132,7 +132,7 @@ public class HomeOfficeEndAppealAutomaticallyPersonalisationTest {
             .getPersonalisation(asylumCase);
 
         assertEquals(isDetained.equals(YesOrNo.YES)
-            ? "Detained Appeal - Immigration and Asylum appeal"
+            ? "Detained Appeal – Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
         assertThat(personalisation)
             .containsEntry("appealReferenceNumber", "")

@@ -97,7 +97,7 @@ public class RespondentFtpaSubmittedPersonalisationTest {
 
         assertThat(personalisation)
             .containsEntry("linkToOnlineService", iaExUiFrontendUrl)
-            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Detained Appeal - Immigration and Asylum appeal"
+            .containsEntry("subjectPrefix", isAda.equals(YesOrNo.YES) ? "Detained Appeal – Immigration and Asylum appeal"
                 : "Immigration and Asylum appeal")
             .containsAllEntriesOf(getPersonalisation());
     }
