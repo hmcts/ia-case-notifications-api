@@ -265,8 +265,6 @@ public class EmailAddressFinder {
             final HearingCentre hearingCentre = getHearingCentre(asylumCase, HEARING_CENTRE);
             if (asList(HearingCentre.GLASGOW, HearingCentre.BELFAST).contains(hearingCentre)) {
                 return listCaseCaseOfficerEmailAddress;
-            //} else if (hearingCentre.equals(HearingCentre.YARLS_WOOD)) {
-                //return yarlsWoodCaseOfficerEmailAddress;
             } else {
                 return getHearingCentreEmailAddress(asylumCase);
             }
@@ -281,8 +279,6 @@ public class EmailAddressFinder {
 
             if (asList(HearingCentre.GLASGOW, HearingCentre.BELFAST).contains(hearingCentre)) {
                 return listCaseCaseOfficerEmailAddress;
-            //} else if (hearingCentre.equals(HearingCentre.YARLS_WOOD)) {
-                //return yarlsWoodCaseOfficerEmailAddress;
             } else {
                 return getEmailAddress(hearingCentreEmailAddresses, hearingCentre);
             }
