@@ -1382,14 +1382,13 @@ public class NotificationGeneratorConfiguration {
 
     @Bean("legalRepDirectionNotificationGenerator")
     public List<NotificationGenerator> legalRepDirectionNotificationGenerator(
-        RespondentNonStandardDirectionPersonalisation respondentNonStandardDirectionPersonalisation,
         LegalRepresentativeNonStandardDirectionPersonalisation legalRepresentativeNonStandardDirectionPersonalisation,
         GovNotifyNotificationSender notificationSender,
         NotificationIdAppender notificationIdAppender) {
 
-        return Arrays.asList(
+        return singletonList(
             new EmailNotificationGenerator(
-                newArrayList(respondentNonStandardDirectionPersonalisation, legalRepresentativeNonStandardDirectionPersonalisation),
+                newArrayList(legalRepresentativeNonStandardDirectionPersonalisation),
                 notificationSender,
                 notificationIdAppender
             )
