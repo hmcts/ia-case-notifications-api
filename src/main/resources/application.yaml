@@ -1886,6 +1886,7 @@ security:
       - "respondToCosts"
       - "addEvidenceForCosts"
       - "queryManagementRaiseQuery"
+      - "queryManagementRespondQuery"
     tribunal-caseworker:
       - "sendDirection"
       - "changeDirectionDueDate"
@@ -1961,6 +1962,7 @@ security:
       - "sendPipToNonLegalRep"
       - "joinAppealConfirmation"
       - "generatePinInPost"
+      - "queryManagementRaiseQuery"
       - "queryManagementRespondQuery"
     challenged-access-legal-operations:
       - "sendDirection"
@@ -2037,6 +2039,8 @@ security:
       - "sendPipToNonLegalRep"
       - "joinAppealConfirmation"
       - "generatePinInPost"
+      - "queryManagementRaiseQuery"
+      - "queryManagementRespondQuery"
     senior-tribunal-caseworker:
       - "sendDirection"
       - "changeDirectionDueDate"
@@ -2112,10 +2116,10 @@ security:
       - "sendPipToNonLegalRep"
       - "joinAppealConfirmation"
       - "generatePinInPost"
+      - "queryManagementRaiseQuery"
       - "queryManagementRespondQuery"
     # These events are used by the bails service, they will need to be migrated to the admin access management roles - see DIAC-855
     caseworker-ia-admofficer:
-      - "queryManagementRespondQuery"
       - "editBailApplication"
       - "uploadSignedDecisionNotice"
       - "uploadSignedDecisionNoticeConditionalGrant"
@@ -2191,8 +2195,9 @@ security:
       - "completeCaseReview"
       - "requestRespondentEvidence"
       - "generatePinInPost"
-    ctsc:
+      - "queryManagementRaiseQuery"
       - "queryManagementRespondQuery"
+    ctsc:
       - "progressMigratedCase"
       - "requestFeeRemission"
       - "buildCase"
@@ -2248,6 +2253,8 @@ security:
       - "completeCaseReview"
       - "requestRespondentEvidence"
       - "generatePinInPost"
+      - "queryManagementRaiseQuery"
+      - "queryManagementRespondQuery"
     ctsc-team-leader:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2304,6 +2311,8 @@ security:
       - "completeCaseReview"
       - "requestRespondentEvidence"
       - "generatePinInPost"
+      - "queryManagementRaiseQuery"
+      - "queryManagementRespondQuery"
     national-business-centre:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2360,6 +2369,8 @@ security:
       - "completeCaseReview"
       - "requestRespondentEvidence"
       - "generatePinInPost"
+      - "queryManagementRaiseQuery"
+      - "queryManagementRespondQuery"
     challenged-access-ctsc:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2416,6 +2427,8 @@ security:
       - "removeStatutoryTimeframe24Weeks"
       - "completeCaseReview"
       - "requestRespondentEvidence"
+      - "queryManagementRaiseQuery"
+      - "queryManagementRespondQuery"
     challenged-access-admin:
       - "progressMigratedCase"
       - "requestFeeRemission"
@@ -2472,6 +2485,8 @@ security:
       - "completeCaseReview"
       - "requestRespondentEvidence"
       - "generatePinInPost"
+      - "queryManagementRaiseQuery"
+      - "queryManagementRespondQuery"
     caseworker-ia-homeofficeapc:
       - "startApplication"
       - "editBailApplication"
