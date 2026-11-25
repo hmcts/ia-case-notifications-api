@@ -30,7 +30,8 @@
           "stateBeforeEndAppeal": "appealSubmitted",
           "reinstateAppealDate": "{$TODAY}",
           "reinstateAppealReason": "Withdraw",
-          "reinstatedDecisionMaker": "Admin Officer"
+          "reinstatedDecisionMaker": "Admin Officer",
+          "appellantInDetention": "Yes"
         }
       }
     }
@@ -109,7 +110,7 @@
       {
         "reference": "1577_REINSTATE_APPEAL_HOME_OFFICE",
         "recipient": "{$homeOfficeEmailAddresses.birmingham}",
-        "subject": "Immigration and Asylum appeal: appeal reinstated",
+        "subject": "Detained Appeal – Immigration and Asylum appeal: appeal reinstated",
         "body": [
           "PA/12345/2019",
           "LP/12345/2019",
