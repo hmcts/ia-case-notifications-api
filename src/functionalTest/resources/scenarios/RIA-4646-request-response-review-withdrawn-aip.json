@@ -73,8 +73,7 @@
             }
           }
         ],
-        "appealReviewOutcome": "decisionWithdrawn",
-        "notificationsSent": []
+        "appealReviewOutcome": "decisionWithdrawn"
       }
     }
   }
