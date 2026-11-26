@@ -1,0 +1,66 @@
+{
+  "description": "DIAC-2881 Update FTPA decision internal out of country letter (respondent FTPA)",
+  "request": {
+    "uri": "/asylum/ccdAboutToSubmit",
+    "credentials": "Judge",
+    "input": {
+      "id": 28816,
+      "eventId": "updateFtpaDecision",
+      "state": "ftpaDecided",
+      "caseData": {
+        "template": "minimal-appeal-submitted.json",
+        "replacements": {
+          "listCaseHearingCentre": "taylorHouse",
+          "ftpaApplicantType": "respondent",
+          "ftpaRespondentSubmitted": "Yes",
+          "ftpaRespondentRjDecisionOutcomeType": "granted",
+          "isAdmin": "Yes",
+          "appellantsRepresentation": "Yes",
+          "appellantInDetention": "No",
+          "appellantInUk": "No",
+          "ccdReferenceNumberForDisplay": "1111222233334444",
+          "appellantHasFixedAddress": "Yes",
+          "appellantHasFixedAddressAdminJ": "Yes",
+          "addressLine1AdminJ": "Calle Toledo 32",
+          "addressLine2AdminJ": "Madrid",
+          "addressLine3AdminJ": "28003",
+          "countryGovUkOocAdminJ": "ES"
+        }
+      }
+    }
+  },
+  "expectation": {
+    "status": 200,
+    "errors": [],
+    "caseData": {
+      "template": "minimal-appeal-submitted.json",
+      "replacements": {
+        "listCaseHearingCentre": "taylorHouse",
+        "ftpaApplicantType": "respondent",
+        "ftpaRespondentSubmitted": "Yes",
+        "ftpaRespondentRjDecisionOutcomeType": "granted",
+        "isAdmin": "Yes",
+        "appellantsRepresentation": "Yes",
+        "appellantInDetention": "No",
+        "appellantInUk": "No",
+        "ccdReferenceNumberForDisplay": "1111222233334444",
+        "appellantHasFixedAddress": "Yes",
+        "appellantHasFixedAddressAdminJ": "Yes",
+        "addressLine1AdminJ": "Calle Toledo 32",
+        "addressLine2AdminJ": "Madrid",
+        "addressLine3AdminJ": "28003",
+        "countryGovUkOocAdminJ": "ES",
+        "notificationsSent": [
+          {
+            "id": "28816_UPDATE_FTPA_DECISION_HOME_OFFICE_EMAIL",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "28816_INTERNAL_UPDATE_FTPA_DECISION_LETTER",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          }
+        ]
+      }
+    }
+  }
+}

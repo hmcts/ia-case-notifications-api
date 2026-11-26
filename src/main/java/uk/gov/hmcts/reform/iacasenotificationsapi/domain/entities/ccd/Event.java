@@ -147,6 +147,7 @@ public enum Event {
     NLR_DETAILS_UPDATED("nlrDetailsUpdated"),
     REMOVE_NON_LEGAL_REP("removeNonLegalRep"),
     GENERATE_PIN_IN_POST("generatePinInPost"),
+    UPDATE_FTPA_DECISION("updateFtpaDecision"),
 
     START_APPLICATION("startApplication"),
     EDIT_BAIL_APPLICATION("editBailApplication"),
