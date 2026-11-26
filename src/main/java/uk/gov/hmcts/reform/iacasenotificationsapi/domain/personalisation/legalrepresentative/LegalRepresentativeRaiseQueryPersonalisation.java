@@ -1,14 +1,14 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.legalrepresentative;
 
-import static java.util.Objects.requireNonNull;
-
-import java.util.Map;
-
 import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition;
+
+import java.util.Map;
+
+import static java.util.Objects.requireNonNull;
 
 
 @Service
@@ -18,7 +18,7 @@ public class LegalRepresentativeRaiseQueryPersonalisation implements LegalRepres
     private final String iaExUiFrontendUrl;
 
     public LegalRepresentativeRaiseQueryPersonalisation(
-            @Value("${govnotify.template.raiseQuery.legalRep.email}") String legalRepresentativeRaiseQueryTemplateId,
+        @Value("${govnotify.template.raiseQueryToTribunal.legalRep.email}") String legalRepresentativeRaiseQueryTemplateId,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl
     ) {
         this.legalRepresentativeRaiseQueryTemplateId = legalRepresentativeRaiseQueryTemplateId;
