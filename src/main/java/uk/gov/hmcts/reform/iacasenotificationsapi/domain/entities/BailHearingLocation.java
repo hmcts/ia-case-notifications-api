@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities;
 
 import static java.util.Arrays.stream;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Optional;
 
@@ -36,6 +37,7 @@ public enum BailHearingLocation {
 
     private String description;
 
+    @JsonCreator
     BailHearingLocation(String value, String description) {
         this.value = value;
         this.description = description;

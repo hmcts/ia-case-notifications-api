@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities;
 
 import static java.util.Arrays.stream;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Optional;
 
@@ -12,6 +13,7 @@ public enum JourneyType {
     @JsonValue
     private final String value;
 
+    @JsonCreator
     JourneyType(String value) {
         this.value = value;
     }

@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field;
 
 import static java.util.Objects.requireNonNull;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -12,6 +13,7 @@ public class IdValue<T> {
     private String id = "";
     private T value;
 
+    @JsonCreator
     private IdValue() {
         // noop -- for deserializer
     }
@@ -20,7 +22,6 @@ public class IdValue<T> {
         String id,
         T value
     ) {
-        requireNonNull(id);
         requireNonNull(value);
 
         this.id = id;
@@ -28,7 +29,6 @@ public class IdValue<T> {
     }
 
     public String getId() {
-        requireNonNull(id);
         return id;
     }
 

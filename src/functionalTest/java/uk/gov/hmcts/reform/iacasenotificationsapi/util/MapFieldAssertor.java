@@ -157,10 +157,10 @@ public final class MapFieldAssertor {
 
         } else {
 
-            if ((expectedValue instanceof String expectedValueString) && (actualValue instanceof String)) {
+            if ((expectedValue instanceof String expectedValueString) && (actualValue instanceof String string)) {
 
                 if (isRegex(expectedValueString)) {
-                    assertRegexMatches(expectedValueString, (String) actualValue, path);
+                    assertRegexMatches(expectedValueString, string, path);
                     return;
                 }
 

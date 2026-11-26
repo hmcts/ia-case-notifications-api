@@ -1,10 +1,13 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 public class InterpreterLanguage {
 
     private String language;
     private String languageDialect;
 
+    @JsonCreator
     public InterpreterLanguage() {
         // noop -- for deserializer
     }
