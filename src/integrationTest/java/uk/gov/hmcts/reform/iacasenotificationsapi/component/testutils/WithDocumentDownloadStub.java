@@ -18,18 +18,22 @@ public interface WithDocumentDownloadStub {
                     .build(),
                 aResponse()
                     .withStatus(201)
-                    .withBody("{\n"
-                        + "  \"id\" : \"" + "" + "\",\n"
-                        + "  \"content\": {\n"
-                        + "    \"body\" : \"some-body\",\n"
-                        + "    \"subject\" : \"some-subject\"\n"
-                        + "  },\n"
-                        + "  \"template\": {\n"
-                        + "    \"id\" : \"" + "" + "\",\n"
-                        + "    \"version\" : 1,\n"
-                        + "    \"uri\" : \"some-uri\"\n"
-                        + "  }\n"
-                        + "}")
+                    .withBody("""
+                        {
+                          "id" : "\
+                        ",
+                          "content": {
+                            "body" : "some-body",
+                            "subject" : "some-subject"
+                          },
+                          "template": {
+                            "id" : "\
+                        ",
+                            "version" : 1,
+                            "uri" : "some-uri"
+                          }
+                        }\
+                        """)
                     .build()));
     }
 }
