@@ -150,6 +150,7 @@ public enum Event {
 
     START_APPLICATION("startApplication"),
     EDIT_BAIL_APPLICATION("editBailApplication"),
+    CONFIRM_HO_REVIEW_MAINTAINED("confirmHOReviewMaintained"),
 
     @JsonEnumDefaultValue
     UNKNOWN("unknown");

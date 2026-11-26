@@ -660,6 +660,11 @@ public class AsylumCaseUtils {
         return read.map(value -> value.equals(YES)).orElse(false);
     }
 
+    public static boolean wasPreviouslyStf24WeeksStatus(AsylumCase asylumCase) {
+        Optional<YesOrNo> read = asylumCase.read(STF_24W_PREVIOUS_STATUS_WAS_YES_AUTO_GENERATED, YesOrNo.class);
+        return read.map(value -> value.equals(YES)).orElse(false);
+    }
+
     public static String getAppealReceivedDate(AsylumCase asylumCase) {
         String tribunalReceivedDate = getCaseDateDate(asylumCase, TRIBUNAL_RECEIVED_DATE);
         String appealReceivedDate;
