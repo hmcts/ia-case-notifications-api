@@ -267,15 +267,16 @@ public class Stf24WeeksUtil {
 
     private static String buildLegalSupportInfo(Stf24WeeksNotificationFor notificationFor) {
 
-        String appellantInfo = "#How to find legal support and more information\n" +
-                "\n" +
-                "You may be able to find a solicitor or immigration adviser to help with your appeal. If you have access to a computer, you can:\n" +
-                "\n" +
-                "* search for a solicitor or immigration adviser\n" +
-                "https://www.gov.uk/find-an-immigration-adviser\n" +
-                "\n" +
-                "* find out more about appealing an immigration or asylum decision\n" +
-                "https://www.gov.uk/immigration-asylum-tribunal";
+        String appellantInfo = """
+                #How to find legal support and more information
+                
+                You may be able to find a solicitor or immigration adviser to help with your appeal. If you have access to a computer, you can:
+                
+                * search for a solicitor or immigration adviser
+                https://www.gov.uk/find-an-immigration-adviser
+                
+                * find out more about appealing an immigration or asylum decision
+                https://www.gov.uk/immigration-asylum-tribunal""";
         if (notificationFor == Stf24WeeksNotificationFor.APPELLANT) {
             return appellantInfo;
         } else {
