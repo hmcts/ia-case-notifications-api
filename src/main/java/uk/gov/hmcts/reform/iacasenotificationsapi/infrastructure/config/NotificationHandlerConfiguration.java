@@ -1818,6 +1818,11 @@ public class NotificationHandlerConfiguration {
 
                 AsylumCase asylumCase = callback.getCaseDetails().getCaseData();
 
+                if (!(callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
+                    && callback.getEvent() == Event.RECORD_APPLICATION)) {
+                    return false;
+                }
+
                 boolean isApplicationRefused = asylumCase
                     .read(AsylumCaseDefinition.APPLICATION_DECISION, String.class)
                     .map(decision -> decision.equals(ApplicationDecision.REFUSED.toString()))
@@ -1825,9 +1830,7 @@ public class NotificationHandlerConfiguration {
 
                 boolean requiresEmail = recordApplicationRespondentFinder.requiresEmail(asylumCase);
 
-                return callbackStage == PreSubmitCallbackStage.ABOUT_TO_SUBMIT
-                    && callback.getEvent() == Event.RECORD_APPLICATION
-                    && isApplicationRefused
+                return isApplicationRefused
                     && requiresEmail;
             },
             notificationGenerators
