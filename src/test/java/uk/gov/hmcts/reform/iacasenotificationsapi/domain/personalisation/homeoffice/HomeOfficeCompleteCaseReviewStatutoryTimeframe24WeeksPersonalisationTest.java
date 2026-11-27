@@ -29,6 +29,7 @@ import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumC
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.LIST_CASE_HEARING_CENTRE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.TRIBUNAL_RECEIVED_DATE;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixesDetained;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.D_MMM_YYYY;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.APPEAL_RECEIVED_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.DAYS_14;
@@ -84,7 +85,8 @@ class HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisationTest {
         setupAsylumCaseMocks();
         setupCustomerServicesMocks();
 
-        personalisation = new HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation(BEFORE_LISTING_TEMPLATE_ID, BEFORE_LISTING_EMAIL_ADDRESS, MOCK_PREFIX, IA_EX_UI_FRONTEND_URL, customerServicesProvider);
+        personalisation = new HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation(BEFORE_LISTING_TEMPLATE_ID, BEFORE_LISTING_EMAIL_ADDRESS, IA_EX_UI_FRONTEND_URL, customerServicesProvider);
+        initializePrefixesDetained(personalisation);
     }
 
     @Test

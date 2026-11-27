@@ -1,17 +1,21 @@
 {
-  "description": "RIA-7031 Send appeal submitted notification to Taylor House hearing centre (unrep)",
+  "description": "RIA-7031 Send paid appeal submitted DC appeal type notification Unrepped Detained",
   "disabled": "!{$featureFlag.homeOfficeGovNotifyEnabled}",
   "request": {
     "uri": "/asylum/ccdAboutToSubmit",
     "credentials": "AdminOfficer",
     "input": {
-      "id": 1417,
+      "id": 1404,
       "eventId": "submitAppeal",
       "state": "appealSubmitted",
       "caseData": {
         "template": "minimal-internal-appeal-submitted.json",
         "replacements": {
           "hearingCentre": "taylorHouse",
+          "listCaseHearingCentre": "taylorHouse",
+          "ariaListingReference": "LP/12345/2019",
+          "legalRepReferenceNumber": "REF54321",
+          "appealType":"deprivation",
           "paymentStatus": "Paid"
         }
       }
@@ -25,10 +29,18 @@
       "replacements": {
         "isAdmin": "Yes",
         "hearingCentre": "taylorHouse",
+        "listCaseHearingCentre": "taylorHouse",
+        "ariaListingReference": "LP/12345/2019",
+        "legalRepReferenceNumber": "REF54321",
+        "appealType":"deprivation",
         "paymentStatus": "Paid",
         "notificationsSent": [
           {
-            "id": "1417_APPEAL_SUBMITTED_HOME_OFFICE",
+            "id": "1404_APPEAL_SUBMITTED_HOME_OFFICE",
+            "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
+          },
+          {
+            "id": "1404_APPEAL_SUBMITTED_HOME_OFFICE",
             "value": "$/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/"
           }
         ]
@@ -36,13 +48,15 @@
     },
     "notifications": [
       {
-        "reference": "1417_APPEAL_SUBMITTED_HOME_OFFICE",
+        "reference": "1404_APPEAL_SUBMITTED_HOME_OFFICE",
         "recipient": "{$apcPrivateHomeOfficeEmailAddress}",
-        "subject": "Immigration and Asylum appeal: appeal submitted",
+        "subject": "Detained Appeal – Immigration and Asylum appeal: appeal submitted",
         "body": [
           "PA/12345/2019",
           "Talha Awan",
-          "{$iaExUiFrontendUrl}"
+          "{$iaExUiFrontendUrl}",
+          "{$customerServices.telephoneNumber}",
+          "{$customerServices.emailAddress}"
         ]
       }
     ]

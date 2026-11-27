@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
+
 import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,11 @@ public class HomeOfficeMarkAppealAsRemittedPersonalisation implements EmailNotif
     private final String homeOfficeMarkAppealAsRemittedTemplateId;
     private final String upperTribunalNoticesEmailAddress;
     private final CustomerServicesProvider customerServicesProvider;
+
+    @Value("${govnotify.emailPrefix.detained}")
+    private String detainedPrefix;
+    @Value("${govnotify.emailPrefix.nonDetained}")
+    private String nonDetainedPrefix;
 
     public HomeOfficeMarkAppealAsRemittedPersonalisation(
         @Value("${upperTribunalNoticesEmailAddress}") String upperTribunalNoticesEmailAddress,
@@ -52,6 +59,7 @@ public class HomeOfficeMarkAppealAsRemittedPersonalisation implements EmailNotif
         return ImmutableMap
             .<String, String>builder()
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
+            .put("subjectPrefix", isAppellantInDetention(asylumCase) ? detainedPrefix : nonDetainedPrefix)
             .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
             .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))

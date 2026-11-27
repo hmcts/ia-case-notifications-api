@@ -24,11 +24,11 @@ public class RespondentForceCaseProgressionPersonalisation implements EmailNotif
     private final String iaExUiFrontendUrl;
     private final CustomerServicesProvider customerServicesProvider;
 
-    @Value("${govnotify.emailPrefix.ada}")
-    private String adaPrefix;
+    @Value("${govnotify.emailPrefix.detained}")
+    private String detainedPrefix;
 
-    @Value("${govnotify.emailPrefix.nonAda}")
-    private String nonAdaPrefix;
+    @Value("${govnotify.emailPrefix.nonDetained}")
+    private String nonDetainedPrefix;
 
     public RespondentForceCaseProgressionPersonalisation(
         @NotNull(message = "appealDocumentDeletedTemplateId cannot be null")
@@ -63,7 +63,7 @@ public class RespondentForceCaseProgressionPersonalisation implements EmailNotif
     public Map<String, String> getPersonalisation(AsylumCase asylumCase) {
         requireNonNull(asylumCase, "asylumCase must not be null");
         return ImmutableMap.<String, String>builder()
-            .put("subjectPrefix", isAcceleratedDetainedAppeal(asylumCase) ? adaPrefix : nonAdaPrefix)
+            .put("subjectPrefix", isAppellantInDetention(asylumCase) ? detainedPrefix : nonDetainedPrefix)
             .put("appealReferenceNumber",
                 asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .put("homeOfficeReferenceNumber",

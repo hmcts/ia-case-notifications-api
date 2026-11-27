@@ -5,10 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_FAMILY_NAME;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.APPELLANT_GIVEN_NAMES;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixesDetained;
 
 import java.util.Map;
 import java.util.Optional;
@@ -18,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
+import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 
 @ExtendWith(MockitoExtension.class)
@@ -41,6 +40,7 @@ class HomeOfficeFtpaApplicationDecidedRule31Rule32PersonalisationTest {
             templateId,
             iaExUiFrontendUrl,
             customerServicesProvider);
+        initializePrefixesDetained(personalisation);
     }
 
     @Test
@@ -69,6 +69,8 @@ class HomeOfficeFtpaApplicationDecidedRule31Rule32PersonalisationTest {
 
     @Test
     public void getPersonalisation() {
+        YesOrNo appellantInDetention = YesOrNo.NO;
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(appellantInDetention));
         String appealReferenceNumber = "someReferenceNumber";
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(appealReferenceNumber));
         String appellantGivenNames = "appellantGivenNames";
@@ -81,6 +83,7 @@ class HomeOfficeFtpaApplicationDecidedRule31Rule32PersonalisationTest {
         Map<String, String> personalisation = this.personalisation.getPersonalisation(asylumCase);
 
         assertThat(personalisation)
+            .containsEntry("subjectPrefix", "Immigration and Asylum appeal")
             .containsEntry("appealReferenceNumber", appealReferenceNumber)
             .containsEntry("homeOfficeReferenceNumber", homeOfficeRefNumber)
             .containsEntry("appellantGivenNames", appellantGivenNames)
@@ -90,6 +93,7 @@ class HomeOfficeFtpaApplicationDecidedRule31Rule32PersonalisationTest {
 
     @Test
     public void get_personalisation_when_values_are_no_present() {
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_GIVEN_NAMES, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
@@ -98,6 +102,7 @@ class HomeOfficeFtpaApplicationDecidedRule31Rule32PersonalisationTest {
         Map<String, String> personalisation = this.personalisation.getPersonalisation(asylumCase);
 
         assertThat(personalisation)
+            .containsEntry("subjectPrefix", "Immigration and Asylum appeal")
             .containsEntry("appealReferenceNumber", "")
             .containsEntry("homeOfficeReferenceNumber", "")
             .containsEntry("appellantGivenNames", "")

@@ -38,7 +38,7 @@
       {
         "reference": "1989_EDIT_APPEAL_AFTER_SUBMIT_RESPONDENT",
         "recipient": "{$respondentEmailAddresses.nonStandardDirectionUntilListing}",
-        "subject": "Immigration and Asylum appeal: application amended",
+        "subject": "Detained Appeal – Immigration and Asylum appeal: application amended",
         "body": [
           "PA/12345/2019",
           "A1234567",

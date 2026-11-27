@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixesDetained;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
@@ -51,6 +52,7 @@ class RespondentForceCaseToCaseUnderReviewPersonalisationTest {
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.of(homeOfficeReferenceNumber));
         when(customerServicesProvider.getCustomerServicesPersonalisation(any(AsylumCase.class))).thenReturn(customerServiceMap);
         sut = new RespondentForceCaseToCaseUnderReviewPersonalisation(templateId, respondentEmail, frontendUrl, customerServicesProvider);
+        initializePrefixesDetained(sut);
     }
 
     @Test

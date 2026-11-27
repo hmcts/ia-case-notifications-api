@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.APPEAL_RECEIVED_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.DECISION_SENT_DATE;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.Stf24WeeksUtil.STATUTORY_TIMEFRAME_24WEEKS_CASE_REVIEW_HOME_OFFICE_EMAIL;
@@ -39,18 +40,20 @@ public class HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisatio
     private final String templateId;
     private final String iaExUiFrontendUrl;
     private final String apcPrivateHomeOfficeEmailAddress;
-    private final String nonAdaPrefix;
     private final CustomerServicesProvider customerServicesProvider;
+
+    @Value("${govnotify.emailPrefix.detained}")
+    private String detainedPrefix;
+    @Value("${govnotify.emailPrefix.nonDetained}")
+    private String nonDetainedPrefix;
 
     public HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisation(
             @NotNull(message = "templateId cannot be null") @Value("${govnotify.template.completeCaseReviewStatutoryTimeframe24Weeks.homeOffice.email}") String templateId,
             @Value("${apcPrivateHomeOfficeEmailAddress}") String apcPrivateHomeOfficeEmailAddress,
-            @Value("${govnotify.emailPrefix.nonAda}") String nonAdaPrefix,
             @Value("${iaExUiFrontendUrl}") String iaExUiFrontendUrl, CustomerServicesProvider customerServicesProvider) {
         this.templateId = templateId;
         this.apcPrivateHomeOfficeEmailAddress = apcPrivateHomeOfficeEmailAddress;
         this.iaExUiFrontendUrl = iaExUiFrontendUrl;
-        this.nonAdaPrefix = nonAdaPrefix;
         this.customerServicesProvider = customerServicesProvider;
     }
 
@@ -77,7 +80,7 @@ public class HomeOfficeCompleteCaseReviewStatutoryTimeframe24WeeksPersonalisatio
         requireNonNull(asylumCase, "asylumCase must not be null");
 
         ImmutableMap.Builder<String, String> builder = ImmutableMap.<String, String>builder()
-                .put(SUBJECT_PREFIX_KEY, nonAdaPrefix)
+                .put(SUBJECT_PREFIX_KEY, isAppellantInDetention(asylumCase) ? detainedPrefix : nonDetainedPrefix)
                 .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
                 .put(HOME_OFFICE_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
                 .put(APPEAL_REFERENCE_NUMBER_KEY, asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(EMPTY_STRING))

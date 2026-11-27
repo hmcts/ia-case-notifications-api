@@ -17,6 +17,7 @@ import static java.util.Collections.singleton;
 import static java.util.Objects.requireNonNull;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
 import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
 
 @Service
 public class HomeOfficeInPersonCmrListingCasePersonalisation implements EmailNotificationPersonalisation {
@@ -29,6 +30,11 @@ public class HomeOfficeInPersonCmrListingCasePersonalisation implements EmailNot
     private final EmailAddressFinder emailAddressFinder;
     private final CustomerServicesProvider customerServicesProvider;
     private final HearingDetailsFinder hearingDetailsFinder;
+
+    @Value("${govnotify.emailPrefix.detained}")
+    private String detainedPrefix;
+    @Value("${govnotify.emailPrefix.nonDetained}")
+    private String nonDetainedPrefix;
 
     public HomeOfficeInPersonCmrListingCasePersonalisation(
         @Value("${govnotify.template.listAssistHearing.cmrListing.homeOffice.email}") String listAssistHearingHomeOfficeCaseListedTemplateId,
@@ -72,6 +78,7 @@ public class HomeOfficeInPersonCmrListingCasePersonalisation implements EmailNot
         final Builder<String, String> listCaseFields = ImmutableMap
             .<String, String>builder()
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation(asylumCase))
+            .put("subjectPrefix", isAppellantInDetention(asylumCase) ? detainedPrefix : nonDetainedPrefix)
             .put("appealReferenceNumber", asylumCase.read(APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
             .put("ariaListingReference", asylumCase.read(ARIA_LISTING_REFERENCE, String.class).orElse(""))
             .put("homeOfficeReferenceNumber", asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))

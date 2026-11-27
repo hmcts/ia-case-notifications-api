@@ -15,6 +15,7 @@ import java.util.Set;
 
 import static java.util.Collections.singleton;
 import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
 
 @Service
 public class HomeOfficeCmrHearingCancelledPersonalisationEmail implements EmailNotificationPersonalisation {
@@ -25,6 +26,10 @@ public class HomeOfficeCmrHearingCancelledPersonalisationEmail implements EmailN
     private final DateTimeExtractor dateTimeExtractor;
     private final HearingDetailsFinder hearingDetailsFinder;
 
+    @Value("${govnotify.emailPrefix.detained}")
+    private String detainedPrefix;
+    @Value("${govnotify.emailPrefix.nonDetained}")
+    private String nonDetainedPrefix;
 
     public HomeOfficeCmrHearingCancelledPersonalisationEmail(
             @Value("${govnotify.template.cmrCancelled.homeOffice.email}") String cmrCancelledHomeOfficeEmailTemplateId,
@@ -64,6 +69,7 @@ public class HomeOfficeCmrHearingCancelledPersonalisationEmail implements EmailN
         return
             ImmutableMap
                 .<String, String>builder()
+                    .put("subjectPrefix", isAppellantInDetention(asylumCase) ? detainedPrefix : nonDetainedPrefix)
                     .put("appealReferenceNumber", asylumCase.read(AsylumCaseDefinition.APPEAL_REFERENCE_NUMBER, String.class).orElse(""))
                     .put("homeOfficeReferenceNumber", asylumCase.read(AsylumCaseDefinition.HOME_OFFICE_REFERENCE_NUMBER, String.class).orElse(""))
                     .put("appellantGivenNames", asylumCase.read(AsylumCaseDefinition.APPELLANT_GIVEN_NAMES, String.class).orElse(""))

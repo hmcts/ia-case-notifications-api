@@ -1,12 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent;
 
-import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
-
 import com.google.common.collect.ImmutableMap;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCase;
@@ -15,6 +9,13 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.EmailNo
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
+
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
+
+import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
 
 @Service
 public class RespondentAppellantFtpaSubmittedPersonalisation implements EmailNotificationPersonalisation {
@@ -25,10 +26,10 @@ public class RespondentAppellantFtpaSubmittedPersonalisation implements EmailNot
     private final CustomerServicesProvider customerServicesProvider;
     private final EmailAddressFinder emailAddressFinder;
 
-    @Value("${govnotify.emailPrefix.ada}")
-    private String adaPrefix;
-    @Value("${govnotify.emailPrefix.nonAda}")
-    private String nonAdaPrefix;
+    @Value("${govnotify.emailPrefix.detained}")
+    private String detainedPrefix;
+    @Value("${govnotify.emailPrefix.nonDetained}")
+    private String nonDetainedPrefix;
 
     public RespondentAppellantFtpaSubmittedPersonalisation(
         @Value("${govnotify.template.applyForFtpa.otherHomeOffice.email}") String applyForFtpaTemplateId,
@@ -66,9 +67,9 @@ public class RespondentAppellantFtpaSubmittedPersonalisation implements EmailNot
         final ImmutableMap.Builder<String, String> listCaseFields = ImmutableMap
             .<String, String>builder()
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation(callback))
-            .put("subjectPrefix", isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData())
-                ? adaPrefix
-                : nonAdaPrefix)
+            .put("subjectPrefix", isAppellantInDetention(callback.getCaseDetails().getCaseData())
+                ? detainedPrefix
+                : nonDetainedPrefix)
             .put("linkToOnlineService", iaExUiFrontendUrl)
             .putAll(personalisationProvider.getPersonalisation(callback));
 

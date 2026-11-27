@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.homeoffice;
 
 import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
@@ -28,10 +28,10 @@ public class HomeOfficeUploadAdditionalEvidencePersonalisation implements EmailN
     private final String homeOfficeEmailAddress;
     private final CustomerServicesProvider customerServicesProvider;
 
-    @Value("${govnotify.emailPrefix.ada}")
-    private String adaPrefix;
-    @Value("${govnotify.emailPrefix.nonAda}")
-    private String nonAdaPrefix;
+    @Value("${govnotify.emailPrefix.detained}")
+    private String detainedPrefix;
+    @Value("${govnotify.emailPrefix.nonDetained}")
+    private String nonDetainedPrefix;
 
     public HomeOfficeUploadAdditionalEvidencePersonalisation(
         @Value("${govnotify.template.uploadedAdditionalEvidenceBeforeListing.homeOffice.email}") String homeOfficeUploadedAdditionalEvidenceBeforeListingTemplateId,
@@ -72,9 +72,7 @@ public class HomeOfficeUploadAdditionalEvidencePersonalisation implements EmailN
         final ImmutableMap.Builder<String, String> listCaseFields = ImmutableMap
             .<String, String>builder()
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation(callback))
-            .put("subjectPrefix", isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData())
-                ? adaPrefix
-                : nonAdaPrefix)
+            .put("subjectPrefix", isAppellantInDetention(callback.getCaseDetails().getCaseData()) ? detainedPrefix : nonDetainedPrefix)
             .put("linkToOnlineService", iaExUiFrontendUrl)
             .putAll(personalisationProvider.getPersonalisation(callback));
 

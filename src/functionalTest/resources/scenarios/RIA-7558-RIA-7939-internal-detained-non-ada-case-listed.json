@@ -95,7 +95,7 @@
       {
         "reference": "1316_CASE_LISTED_HOME_OFFICE",
         "recipient": "{$homeOfficeEmailAddresses.taylorHouse}",
-        "subject": "Immigration and Asylum appeal: case listed",
+        "subject": "Detained Appeal – Immigration and Asylum appeal: case listed",
         "body": [
           "PA/12345/2019",
           "LP/12345/2019",

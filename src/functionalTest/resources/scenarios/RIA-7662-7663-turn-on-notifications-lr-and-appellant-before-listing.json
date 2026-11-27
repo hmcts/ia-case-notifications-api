@@ -88,7 +88,7 @@
 
         "reference": "1312_TURN_ON_NOTIFICATIONS_RESPONDENT",
         "recipient": "{$HOME_OFFICE_EMAIL_APC}",
-        "subject": "Immigration and Asylum appeal: Appeal transferred to the First-tier tribunal",
+        "subject": "Detained Appeal – Immigration and Asylum appeal: Appeal transferred to the First-tier tribunal",
         "body": [
           "PA/12345/2018",
           "123456789",

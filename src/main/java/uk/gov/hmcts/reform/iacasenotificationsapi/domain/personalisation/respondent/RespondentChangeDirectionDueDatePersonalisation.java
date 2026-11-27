@@ -1,13 +1,6 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent;
 
-import static java.util.Objects.requireNonNull;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType.AIP;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAcceleratedDetainedAppeal;
-
 import com.google.common.collect.ImmutableMap;
-import java.util.*;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.*;
@@ -18,6 +11,13 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.AppealService;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.EmailAddressFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.PersonalisationProvider;
+
+import java.util.*;
+
+import static java.util.Objects.requireNonNull;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.JourneyType.AIP;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.utils.AsylumCaseUtils.isAppellantInDetention;
 
 @Service
 public class RespondentChangeDirectionDueDatePersonalisation implements EmailNotificationPersonalisation {
@@ -34,10 +34,10 @@ public class RespondentChangeDirectionDueDatePersonalisation implements EmailNot
     private final AppealService appealService;
     private final EmailAddressFinder emailAddressFinder;
 
-    @Value("${govnotify.emailPrefix.ada}")
-    private String adaPrefix;
-    @Value("${govnotify.emailPrefix.nonAda}")
-    private String nonAdaPrefix;
+    @Value("${govnotify.emailPrefix.detained}")
+    private String detainedPrefix;
+    @Value("${govnotify.emailPrefix.nonDetained}")
+    private String nonDetainedPrefix;
 
     public RespondentChangeDirectionDueDatePersonalisation(
         @Value("${govnotify.template.changeDirectionDueDate.respondent.afterListing.email}") String respondentChangeDirectionDueDateAfterListingTemplateId,
@@ -153,9 +153,9 @@ public class RespondentChangeDirectionDueDatePersonalisation implements EmailNot
         final ImmutableMap.Builder<String, String> listCaseFields = ImmutableMap
             .<String, String>builder()
             .putAll(customerServicesProvider.getCustomerServicesPersonalisation(callback))
-            .put("subjectPrefix", isAcceleratedDetainedAppeal(callback.getCaseDetails().getCaseData())
-                ? adaPrefix
-                : nonAdaPrefix)
+            .put("subjectPrefix", isAppellantInDetention(callback.getCaseDetails().getCaseData())
+                ? detainedPrefix
+                : nonDetainedPrefix)
             .put("linkToOnlineService", iaExUiFrontendUrl)
             .put("listingReferenceLine", listingReferenceLine)
             .putAll(personalisationProvider.getPersonalisation(callback));

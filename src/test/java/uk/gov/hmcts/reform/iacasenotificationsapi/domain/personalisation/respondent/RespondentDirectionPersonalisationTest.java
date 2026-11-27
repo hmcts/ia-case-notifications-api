@@ -1,15 +1,5 @@
 package uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.respondent;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
-import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixes;
-
-import java.util.Map;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,6 +15,15 @@ import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.DirectionTag;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.ccd.field.YesOrNo;
 import uk.gov.hmcts.reform.iacasenotificationsapi.domain.service.DirectionFinder;
 import uk.gov.hmcts.reform.iacasenotificationsapi.infrastructure.CustomerServicesProvider;
+
+import java.util.Map;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.entities.AsylumCaseDefinition.*;
+import static uk.gov.hmcts.reform.iacasenotificationsapi.domain.personalisation.utils.SubjectPrefixesInitializer.initializePrefixesDetained;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -139,7 +138,8 @@ public class RespondentDirectionPersonalisationTest {
     public void should_return_personalisation_when_all_information_given(YesOrNo isAda) {
 
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
-        initializePrefixes(respondentDirectionPersonalisation);
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(isAda));
+        initializePrefixesDetained(respondentDirectionPersonalisation);
         Map<String, String> personalisation = respondentDirectionPersonalisation.getPersonalisation(asylumCase);
 
         assertThat(personalisation)
@@ -151,7 +151,7 @@ public class RespondentDirectionPersonalisationTest {
             .containsEntry("explanation", directionExplanation)
             .containsEntry("dueDate", expectedDirectionDueDate);
         assertEquals(isAda.equals(YesOrNo.YES)
-            ? "Accelerated detained appeal"
+            ? "Detained Appeal – Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
@@ -164,7 +164,8 @@ public class RespondentDirectionPersonalisationTest {
         when(asylumCase.read(APPELLANT_FAMILY_NAME, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(HOME_OFFICE_REFERENCE_NUMBER, String.class)).thenReturn(Optional.empty());
         when(asylumCase.read(IS_ACCELERATED_DETAINED_APPEAL, YesOrNo.class)).thenReturn(Optional.of(isAda));
-        initializePrefixes(respondentDirectionPersonalisation);
+        when(asylumCase.read(APPELLANT_IN_DETENTION, YesOrNo.class)).thenReturn(Optional.of(isAda));
+        initializePrefixesDetained(respondentDirectionPersonalisation);
 
         Map<String, String> personalisation = respondentDirectionPersonalisation.getPersonalisation(asylumCase);
 
@@ -177,7 +178,7 @@ public class RespondentDirectionPersonalisationTest {
             .containsEntry("explanation", directionExplanation)
             .containsEntry("dueDate", expectedDirectionDueDate);
         assertEquals(isAda.equals(YesOrNo.YES)
-            ? "Accelerated detained appeal"
+            ? "Detained Appeal – Immigration and Asylum appeal"
             : "Immigration and Asylum appeal", personalisation.get("subjectPrefix"));
     }
 
